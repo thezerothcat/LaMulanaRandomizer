@@ -125,45 +125,36 @@ Scalesphere => Location: Spring in the Sky [Main], Helmet
 Serpent Staff => Location: Temple of Moonlight [Lower], Location: Temple of Moonlight [Upper], Birth Seal, Book of the Dead
 Shell Horn => None
 Shuriken => Location: Gate of Guidance
-
-
-
-
-
-
-
-
-
-
-
 mekuri.exe => None
-Mini Doll => Anchor
-mirai.exe => Feather
+Mini Doll => Location: Gate of Illusion [Lower], Hand Scanner, Anchor
+mirai.exe => Location: Graveyard of the Giants [West], Feather
 Mulana Talisman => Diary
-Origin Seal => Event: Nuckelavee Defeated
-Pepper => None
-Perfume => Event: Activate Mudmen
-Philosopher's Ocarina => Feather, Maternity Statue
-Plane Model => Eye of Truth
-Pochette Key => Event: Dance of Life, Event: Skanda Defeated
-Ring => None
-Rolling Shuriken => None
-Sacred Orb  (Gate of Guidance) => None
-Sacred Orb (Chamber of Extinction) => None
-Sacred Orb (Dimensional Corridor) => Feather, Death Seal, Lamp of Time
-Sacred Orb (Mausoleum of the Giants) => None
-Sacred Orb (Shrine of the Mother) => Origin Seal, Birth Seal, Life Seal, Death Seal
-Sacred Orb (Spring in the Sky) => Birth Seal
+Origin Seal => Location: Spring in the Sky [Main], Helmet
+Pepper => Location: Gate of Illusion [Lower], Hand Scanner
+Perfume => Location: Chamber of Birth [East], Location: Gate of Illusion [Upper], Location: Gate of Illusion [Pot Room], Location: Gate of Illusion [Middle], Lamp of Time, Hand Scanner, reader.exe, Feather, Cog of the Soul
+Philosopher's Ocarina => Location: Temple of Moonlight [Upper], Feather, Maternity Statue
+Plane Model => Location: Tower of the Goddess [Grail], Eye of Truth
+Pochette Key => Location: Chamber of Birth [West], Location: Gate of Illusion [Upper], Location: Gate of Illusion [Pot Room], Location: Gate of Illusion [Middle], Lamp of Time, Hand Scanner, reader.exe, Feather, Cog of the Soul, Chakram, Serpent Staff, ?
+Ring => Location: Twin Labyrinths [Upper]
+Rolling Shuriken => Location: Mausoleum of the Giants
+Sacred Orb  (Gate of Guidance) => Location: Gate of Guidance
+Sacred Orb (Chamber of Extinction) => Location: Chamber of Extinction [Main]
+Sacred Orb (Dimensional Corridor) => Location: Dimensional Corridor, Feather, Death Seal, Lamp of Time
+Sacred Orb (Mausoleum of the Giants) => Location: Mausoleum of the Giants
+Sacred Orb (Shrine of the Mother) => Location: Shrine of the Mother [Main], Origin Seal, Birth Seal, Life Seal, Death Seal
+Sacred Orb (Spring in the Sky) => Location: Spring in the Sky [Main], Birth Seal
 Sacred Orb (Surface) => Hermes' Boots
-Sacred Orb (Temple of the Sun) => None
-Sacred Orb (Tower of Ruin) => None
-Sacred Orb (Twin Labyrinths) => Event: Zu Defeated
-Silver Shield => (Knife OR Axe OR Katana)
-Spaulder => Event: Unlock Fairies
-Talisman => Event: Viy Defeated
-Treasures => Pepper
-Twin Statue => None
-Vessel => Angel Shield
-Woman Statue => Grapple Claw
+Sacred Orb (Temple of the Sun) => Location: Temple of the Sun
+Sacred Orb (Tower of Ruin) => Location: Tower of Ruin [Lower]
+Sacred Orb (Twin Labyrinths) => Location: Twin Labyrinths [Lower]
+Silver Shield => Location: Graveyard of the Giants [West], Knife
+Silver Shield => Location: Graveyard of the Giants [West], Axe
+Silver Shield => Location: Graveyard of the Giants [West], Katana
+Spaulder => Location: Tower of the Goddess [Grail], Isis' Pendant, Location: Dimensional Corridor [1F]
+Talisman => Location: Temple of the Sun, Event: Viy Defeated
+Treasures => Location: Gate of Guidance, Pepper
+Twin Statue => Location: Endless Corridor [2F-4F]
+Vessel => Location: Chamber of Birth [East], Angel Shield
+Woman Statue => Location: Chamber of Birth [East], Grapple Claw
 xmailer.exe => None
 yagostr.exe => Location: Gate of Illusion [Grail], Bronze Mirror, Event: Amphisbaena Defeated
