@@ -1,0 +1,9 @@
+Shop 1 Inventory
+Shop 2 Inventory
+Shop 3 Inventory
+Shop 4 Inventory
+Shop 6 Inventory
+Shop 9 Inventory
+Shop 15 Inventory
+Shop 19 Inventory
+Shop 20 Inventory
