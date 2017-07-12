@@ -11,14 +11,14 @@ Ankh Jewel (Twin Labyrinths)
 Axe
 beolamu.exe
 Birth Seal
-Bombs
+Bomb
 Book of the Dead
 bounce.exe
 Bronze Mirror
 bunplus.com
 Caltrops
 Chain Whip
-Chakrams
+Chakram
 Cog of the Soul
 Crucifix
 Crystal Skull
@@ -27,7 +27,7 @@ deathv.exe
 Diary
 Dimensional Key
 Djed Pillar
-Earth Spears
+Earth Spear
 emusic.exe
 Eye of Truth
 Fairy Clothes
