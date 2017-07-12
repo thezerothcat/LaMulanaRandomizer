@@ -26,9 +26,15 @@ public class Main {
         ShopRandomizer shopRandomizer = new ShopRandomizer(itemRandomizer.getTotalShopItems());
         shopRandomizer.determineItemTypes(random, initialSubweapon);
 
+        Requirements requirements = new Requirements();
+        FileUtils.populateRequirements(requirements, "requirement/location_reqs.txt");
+
         try {
             outputLocations(startingSeed, itemRandomizer, shopRandomizer);
+
+            requirements.outputRequirements();
         } catch (Exception ex) {
+            return;
             // No exception handling in v1
         }
     }

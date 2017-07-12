@@ -1,5 +1,7 @@
 package lmr.randomizer;
 
+import javafx.util.Pair;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,8 +42,18 @@ public class FileUtils {
         return listContents;
     }
 
-    public static Map<String, List<String>> readRequirementsMap(String file) {
-        return new HashMap<>(); // todo: actually implement this
+    public static void populateRequirements(Requirements requirements, String file) {
+        BufferedReader reader = getFileReader(file);
+        try {
+            String line;
+            String[] lineParts;
+            while((line = reader.readLine()) != null) {
+                lineParts = line.trim().split(" => "); // delimiter
+                requirements.addNode(lineParts[0], lineParts[1]);
+            }
+        } catch (Exception ex) {
+            return;
+        }
     }
 }
 
