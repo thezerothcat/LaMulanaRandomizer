@@ -1,12 +1,10 @@
 package lmr.randomizer;
 
-import javafx.util.Pair;
+import lmr.randomizer.node.AccessChecker;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by thezerothcat on 7/10/2017.
@@ -42,14 +40,14 @@ public class FileUtils {
         return listContents;
     }
 
-    public static void populateRequirements(Requirements requirements, String file) {
+    public static void populateRequirements(AccessChecker accessChecker, String file, String prefix) {
         BufferedReader reader = getFileReader(file);
         try {
             String line;
             String[] lineParts;
             while((line = reader.readLine()) != null) {
                 lineParts = line.trim().split(" => "); // delimiter
-                requirements.addNode(lineParts[0], lineParts[1]);
+                accessChecker.addNode(prefix == null ? lineParts[0] : (prefix + lineParts[0]), lineParts[1]);
             }
         } catch (Exception ex) {
             return;

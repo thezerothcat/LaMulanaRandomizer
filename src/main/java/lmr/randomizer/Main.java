@@ -1,6 +1,7 @@
 package lmr.randomizer;
 
-import java.io.BufferedWriter;
+import lmr.randomizer.node.AccessChecker;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -19,6 +20,25 @@ public class Main {
         Random random = new Random(startingSeed);
 
         ItemRandomizer itemRandomizer = new ItemRandomizer();
+        ShopRandomizer shopRandomizer = buildShopRandomizer(random, itemRandomizer);
+        AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer);
+
+        accessChecker.computeAccessibleNodes(new ArrayList<>(0));
+        for(int i = 0; i < 10; i++) {
+            itemRandomizer.placeItem(random);
+        }
+
+        try {
+            outputLocations(startingSeed, itemRandomizer, shopRandomizer);
+
+            accessChecker.outputRequirements();
+        } catch (Exception ex) {
+            return;
+            // No exception handling in v1
+        }
+    }
+
+    private static ShopRandomizer buildShopRandomizer(Random random, ItemRandomizer itemRandomizer) {
         String initialSubweapon = null;
         if(guaranteeSubweapon) {
             initialSubweapon = ItemRandomizer.ALL_SUBWEAPONS.get(random.nextInt(ItemRandomizer.ALL_SUBWEAPONS.size()));
@@ -26,21 +46,24 @@ public class Main {
         ShopRandomizer shopRandomizer = new ShopRandomizer(itemRandomizer.getTotalShopItems());
         shopRandomizer.determineItemTypes(random, initialSubweapon);
 
-        Requirements requirements = new Requirements();
-        FileUtils.populateRequirements(requirements, "requirement/location_reqs.txt");
+        itemRandomizer.setShopRandomizer(shopRandomizer);
+        return shopRandomizer;
+    }
 
-        try {
-            outputLocations(startingSeed, itemRandomizer, shopRandomizer);
-
-            requirements.outputRequirements();
-        } catch (Exception ex) {
-            return;
-            // No exception handling in v1
-        }
+    private static AccessChecker buildAccessChecker(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer) {
+        AccessChecker accessChecker = new AccessChecker();
+        FileUtils.populateRequirements(accessChecker, "requirement/location_reqs.txt", "Location: ");
+        FileUtils.populateRequirements(accessChecker, "requirement/item_reqs.txt", null);
+        FileUtils.populateRequirements(accessChecker, "requirement/event_reqs.txt", null);
+//        FileUtils.populateRequirements(requirements, "requirement/shop_reqs.txt", null);
+        accessChecker.setItemRandomizer(itemRandomizer);
+        accessChecker.setShopRandomizer(shopRandomizer);
+        itemRandomizer.setAccessChecker(accessChecker);
+        return accessChecker;
     }
 
     private static void outputLocations(long startingSeed, ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer) throws IOException {
-//        itemRandomizer.outputLocations(writer);
+        itemRandomizer.outputLocations(startingSeed);
         shopRandomizer.outputLocations(startingSeed);
     }
 

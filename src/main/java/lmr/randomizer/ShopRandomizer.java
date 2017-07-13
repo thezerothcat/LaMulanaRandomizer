@@ -18,6 +18,8 @@ public class ShopRandomizer {
     private List<String> unassignedLocations = new ArrayList<>();
     private List<String> unassignedSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
 
+    List<String> accessibleItemLocations = new ArrayList<>();
+
     private int totalUniqueShopItems; // Unique items that can be purchased in shops. In order to fill all chests, only a limited amount can be placed.
 
     public ShopRandomizer(int totalUniqueShopItems) {
@@ -41,6 +43,10 @@ public class ShopRandomizer {
                 }
             }
         }
+    }
+
+    public List<String> getAccessibleItemLocations() {
+        return accessibleItemLocations;
     }
 
     // Note: This also places some unique shop items that have special requirements.
