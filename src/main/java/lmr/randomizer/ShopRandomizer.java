@@ -15,10 +15,10 @@ public class ShopRandomizer {
 
     private Map<String, String> mapOfShopInventoryItemToContents = new HashMap<>(); // The thing we're trying to build.
     private List<String> allShops;
-    private List<String> unassignedLocations = new ArrayList<>();
+    private List<String> unassignedShopLocations = new ArrayList<>(); // Shop locations which still need something placed.
     private List<String> unassignedSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
 
-    List<String> accessibleItemLocations = new ArrayList<>();
+    List<String> accessibleShopItemLocations = new ArrayList<>();
 
     private int totalUniqueShopItems; // Unique items that can be purchased in shops. In order to fill all chests, only a limited amount can be placed.
 
@@ -31,22 +31,37 @@ public class ShopRandomizer {
 
         for(String shop : allShops) {
             if(SHIELD_SHOP_NAME.equals(shop)) {
-                unassignedLocations.add(String.format("%s Item %d", shop, 1));
-                unassignedLocations.add(String.format("%s Item %d", shop, 3));
+                unassignedShopLocations.add(String.format("%s Item %d", shop, 1));
+                unassignedShopLocations.add(String.format("%s Item %d", shop, 3));
             }
             else if(FISH_SHOP_NAME.equals(shop)) {
-                unassignedLocations.add(String.format("%s Item %d", shop, 3));
+                unassignedShopLocations.add(String.format("%s Item %d", shop, 3));
             }
             else {
                 for (int i = 1; i <= 3; i++) {
-                    unassignedLocations.add(String.format("%s Item %d", shop, i));
+                    unassignedShopLocations.add(String.format("%s Item %d", shop, i));
                 }
             }
         }
     }
 
-    public List<String> getAccessibleItemLocations() {
-        return accessibleItemLocations;
+    // todo: this is not exactly ideal
+    public void addShopAccess(String shopName) {
+        for(String unassignedShopLocation : unassignedShopLocations) {
+            if(unassignedShopLocation.startsWith(shopName)) {
+                accessibleShopItemLocations.add(unassignedShopLocation);
+            }
+        }
+    }
+
+    public void placeItem(String item, int locationIndex) {
+        String location = accessibleShopItemLocations.get(locationIndex);
+        mapOfShopInventoryItemToContents.put(location, item);
+        accessibleShopItemLocations.remove(location);
+    }
+
+    public List<String> getAccessibleShopItemLocations() {
+        return accessibleShopItemLocations;
     }
 
     // Note: This also places some unique shop items that have special requirements.
@@ -54,21 +69,18 @@ public class ShopRandomizer {
         placeSurfaceWeights();
         if(firstSubweapon != null) {
             String firstAmmoLocation = String.format("%s Item %d", SHURIKEN_SHOP_NAME, 3);
-            mapOfShopInventoryItemToContents.put(firstAmmoLocation, firstSubweapon);
+            mapOfShopInventoryItemToContents.put(firstAmmoLocation, firstSubweapon + " Ammo");
             unassignedSubweapons.remove(firstSubweapon);
-            unassignedLocations.remove(firstAmmoLocation);
+            unassignedShopLocations.remove(firstAmmoLocation);
         }
         assignWeights(random);
         assignSubweaponAmmoLocations(random);
-        for(String location : unassignedLocations) {
-            mapOfShopInventoryItemToContents.put(location, "Unique Item");
-        }
     }
 
     public void placeSurfaceWeights() {
         String surfaceWeightsLocation = String.format("%s Item %d", MSX_SHOP_NAME, 1);
         mapOfShopInventoryItemToContents.put(surfaceWeightsLocation, "Weights");
-        unassignedLocations.remove(surfaceWeightsLocation);
+        unassignedShopLocations.remove(surfaceWeightsLocation);
     }
 
     private void assignWeights(Random random) {
@@ -85,9 +97,9 @@ public class ShopRandomizer {
             while(!shopItems.isEmpty()) {
                 shopItemIndex = random.nextInt(shopItems.size());
                 location = String.format("%s Item %d", shop, shopItems.get(shopItemIndex));
-                if(unassignedLocations.contains(location)) {
+                if(unassignedShopLocations.contains(location)) {
                     mapOfShopInventoryItemToContents.put(location, "Weights");
-                    unassignedLocations.remove(location);
+                    unassignedShopLocations.remove(location);
                     break;
                 }
             }
@@ -96,7 +108,7 @@ public class ShopRandomizer {
     }
 
     private int getWeightCount(Random random) {
-        int maxAdditionalWeights = Math.min(allShops.size() - 1, unassignedLocations.size() - ItemRandomizer.ALL_SUBWEAPONS.size() - totalUniqueShopItems); // Must have enough room for all shop items plus one of each ammo type plus one weight. The remaining ammo to weights ratio can be random.
+        int maxAdditionalWeights = Math.min(allShops.size() - 1, unassignedShopLocations.size() - ItemRandomizer.ALL_SUBWEAPONS.size() - totalUniqueShopItems); // Must have enough room for all shop items plus one of each ammo type plus one weight. The remaining ammo to weights ratio can be random.
         if(maxAdditionalWeights < 0) {
             maxAdditionalWeights = 0;
         }
@@ -105,12 +117,12 @@ public class ShopRandomizer {
 
     // todo: current logic could theoretically generate a shop where all 3 items are shurikens
     private void assignSubweaponAmmoLocations(Random random) {
-        int totalSubweaponLocations = unassignedLocations.size() - totalUniqueShopItems;
+        int totalSubweaponLocations = unassignedShopLocations.size() - totalUniqueShopItems;
 
         String location;
         String subweapon;
         for(int i = 0; i < totalSubweaponLocations; i++) {
-            location = unassignedLocations.get(random.nextInt(unassignedLocations.size()));
+            location = unassignedShopLocations.get(random.nextInt(unassignedShopLocations.size()));
             if(unassignedSubweapons.isEmpty()) {
                 subweapon = ItemRandomizer.ALL_SUBWEAPONS.get(random.nextInt(ItemRandomizer.ALL_SUBWEAPONS.size()));
             }
@@ -118,12 +130,12 @@ public class ShopRandomizer {
                 subweapon = unassignedSubweapons.get(random.nextInt(unassignedSubweapons.size()));
             }
             mapOfShopInventoryItemToContents.put(location, subweapon + " Ammo");
-            unassignedLocations.remove(location);
+            unassignedShopLocations.remove(location);
         }
     }
 
     public void outputLocations(long startingSeed) throws IOException {
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("seed%s.txt", startingSeed));
+        BufferedWriter writer = FileUtils.getFileWriter(String.format("shops%s.txt", startingSeed));
         if (writer == null) {
             return;
         }

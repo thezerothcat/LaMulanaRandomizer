@@ -55,7 +55,7 @@ public class Main {
         FileUtils.populateRequirements(accessChecker, "requirement/location_reqs.txt", "Location: ");
         FileUtils.populateRequirements(accessChecker, "requirement/item_reqs.txt", null);
         FileUtils.populateRequirements(accessChecker, "requirement/event_reqs.txt", null);
-//        FileUtils.populateRequirements(requirements, "requirement/shop_reqs.txt", null);
+        FileUtils.populateRequirements(accessChecker, "requirement/shop_reqs.txt", null);
         accessChecker.setItemRandomizer(itemRandomizer);
         accessChecker.setShopRandomizer(shopRandomizer);
         itemRandomizer.setAccessChecker(accessChecker);

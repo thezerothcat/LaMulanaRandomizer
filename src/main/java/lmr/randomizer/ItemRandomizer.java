@@ -41,7 +41,7 @@ public class ItemRandomizer {
 
     // todo: update for shop logic
     public void placeItem(Random random) {
-        int availableLocations = accessibleNonShopItemLocations.size() + shopRandomizer.getAccessibleItemLocations().size();
+        int availableLocations = accessibleNonShopItemLocations.size() + shopRandomizer.getAccessibleShopItemLocations().size();
         if(availableLocations < accessChecker.getMinRequirementsToNextItemLocation()) {
             // todo: die in a fire - really, we don't want to wind up in this situation
             // todo: alternatively, maybe check a list of items that don't give progress, and make replacements?
@@ -50,12 +50,18 @@ public class ItemRandomizer {
             // todo: logic to select one of the possible sets of progress items that will allow further progress
         }
         else {
-            String location = accessibleNonShopItemLocations.get(random.nextInt(accessibleNonShopItemLocations.size()));
-            // todo: check for exceptions
             String item = unplacedItems.get(random.nextInt(unplacedItems.size()));
-            mapOfItemLocationToItem.put(location, item);
+            int locationIndex = random.nextInt(availableLocations);
+            if(locationIndex < accessibleNonShopItemLocations.size()) {
+                // todo: check for exceptions
+                String location = accessibleNonShopItemLocations.get(locationIndex);
+                mapOfItemLocationToItem.put(location, item);
+                accessibleNonShopItemLocations.remove(location);
+            }
+            else {
+                shopRandomizer.placeItem(item, locationIndex - accessibleNonShopItemLocations.size());
+            }
             unplacedItems.remove(item);
-            accessibleNonShopItemLocations.remove(location);
             accessChecker.updateRequirements(item);
             while(!accessChecker.getQueuedUpdates().isEmpty()) {
                 accessChecker.updateRequirements(null);

@@ -87,7 +87,7 @@ public class AccessChecker {
                 queuedUpdates.add(nodeName);
                 break;
             case SHOP:
-                // todo: tell ShopRandomizer that we have access to the shop, so it can tell ItemRandomizer if there are any new item locations
+                shopRandomizer.addShopAccess(nodeName);
                 break;
         }
     }
