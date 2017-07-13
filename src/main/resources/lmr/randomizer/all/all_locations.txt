@@ -1,7 +1,6 @@
 Surface
 Gate of Guidance
 Gate of Illusion [Lower]
-Gate of Illusion [Maze]
 Gate of Illusion [Middle]
 Gate of Illusion [Grail]
 Gate of Illusion [Upper]
@@ -13,8 +12,7 @@ Graveyard of the Giants [East]
 Temple of the Sun
 Temple of Moonlight [Upper]
 Temple of Moonlight [Lower]
-Spring in the Sky [Main]
-Spring in the Sky [Waterfall]
+Spring in the Sky
 Tower of the Goddess [Lower]
 Tower of the Goddess [Lamp]
 Tower of the Goddess [Grail]
