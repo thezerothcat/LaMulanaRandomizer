@@ -11,6 +11,7 @@ Shop 9 (Sun) => None
 Shop 10 (Sun) => Death Seal
 Shop 11 (Moonlight) => Location: Temple of Moonlight [Lower], Bomb, Birth Seal
 Shop 12 (Spring) => Helmet, Origin Seal
+Shop 12 Alt (Spring) => Helmet, Origin Seal, Isis' Pendant
 Shop 13 (Goddess) => Location: Tower of the Goddess [Lamp], Lamp of Time
 Shop 14 (Inferno) => None
 Shop 15 (Ruin) => Location: Tower of Ruin [Grail], Axe

@@ -23,10 +23,15 @@ public class Main {
         ShopRandomizer shopRandomizer = buildShopRandomizer(random, itemRandomizer);
         AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer);
 
-        accessChecker.computeAccessibleNodes(new ArrayList<>(0));
-        for(int i = 0; i < 10; i++) {
-            itemRandomizer.placeItem(random);
-        }
+        itemRandomizer.placeRequiredItem("Holy Grail", random);
+        itemRandomizer.placeRequiredItem("Hand Scanner", random);
+        itemRandomizer.placeRequiredItem("reader.exe", random);
+        itemRandomizer.placeRequiredItem("Ankh Jewel (Gate of Guidance)", random);
+        itemRandomizer.placeRequiredItem("Ankh Jewel (Mausoleum of the Giants)", random);
+        itemRandomizer.placeRequiredItem("Ankh Jewel (Temple of the Sun)", random);
+        itemRandomizer.placeRequiredItem("Ankh Jewel (Spring in the Sky)", random);
+
+        itemRandomizer.placeAllItems(random);
 
         try {
             outputLocations(startingSeed, itemRandomizer, shopRandomizer);

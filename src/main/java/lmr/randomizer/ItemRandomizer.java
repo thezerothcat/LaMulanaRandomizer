@@ -17,7 +17,8 @@ public class ItemRandomizer {
     private List<String> allItems; // All possible items.
     private List<String> unplacedItems; // Items that haven't been placed yet.
 
-    private List<String> accessibleNonShopItemLocations;
+    private List<String> nonShopItemLocations;
+    private List<String> unassignedNonShopItemLocations;
     private int totalShopItems;
 
     private ShopRandomizer shopRandomizer;
@@ -27,46 +28,71 @@ public class ItemRandomizer {
         allItems = FileUtils.getList("all/all_items.txt");
         unplacedItems = new ArrayList<>(allItems);
 
-        accessibleNonShopItemLocations = new ArrayList<>();
-        totalShopItems = allItems.size() - FileUtils.getList("all/non_shop_items.txt").size();
+        nonShopItemLocations = FileUtils.getList("all/non_shop_items.txt");
+        unassignedNonShopItemLocations = new ArrayList<>(nonShopItemLocations);
+        totalShopItems = allItems.size() - nonShopItemLocations.size();
     }
 
     public int getTotalShopItems() {
         return totalShopItems;
     }
 
-    public void addLocation(String location) {
-        accessibleNonShopItemLocations.add(location);
+//    public void addLocation(String location) {
+//        nonShopItemLocations.add(location);
+//    }
+
+    public void placeRequiredItem(String item, Random random) {
+        int availableLocations = unassignedNonShopItemLocations.size() + shopRandomizer.getUnassignedShopItemLocations().size();
+        placeItem(item, availableLocations, random);
     }
 
-    // todo: update for shop logic
-    public void placeItem(Random random) {
-        int availableLocations = accessibleNonShopItemLocations.size() + shopRandomizer.getAccessibleShopItemLocations().size();
-        if(availableLocations < accessChecker.getMinRequirementsToNextItemLocation()) {
-            // todo: die in a fire - really, we don't want to wind up in this situation
-            // todo: alternatively, maybe check a list of items that don't give progress, and make replacements?
+    public void placeAllItems(Random random) {
+        while(!unplacedItems.isEmpty()) {
+            placeRequiredItem(unplacedItems.get(random.nextInt(unplacedItems.size())), random);
         }
-        else if(availableLocations == accessChecker.getMinRequirementsToNextItemLocation()) {
-            // todo: logic to select one of the possible sets of progress items that will allow further progress
+    }
+//    // todo: update for shop logic
+//    public void placeItem(Random random) {
+//        int availableLocations = nonShopItemLocations.size() + shopRandomizer.getUnassignedShopItemLocations().size();
+//        if(availableLocations < accessChecker.getMinRequirementsToNextItemLocation()) {
+//            // todo: die in a fire - really, we don't want to wind up in this situation
+//            // todo: alternatively, maybe check a list of items that don't give progress, and make replacements?
+//        }
+//        else if(availableLocations == accessChecker.getMinRequirementsToNextItemLocation()) {
+//            // todo: logic to select one of the possible sets of progress items that will allow further progress
+//        }
+//        else {
+//            String item = unplacedItems.get(random.nextInt(unplacedItems.size()));
+//            int locationIndex = random.nextInt(availableLocations);
+//            if(locationIndex < nonShopItemLocations.size()) {
+//                // todo: check for exceptions
+//                String location = nonShopItemLocations.get(locationIndex);
+//                mapOfItemLocationToItem.put(location, item);
+//                nonShopItemLocations.remove(location);
+//            }
+//            else {
+//                shopRandomizer.placeItem(item, locationIndex - nonShopItemLocations.size());
+//            }
+//            unplacedItems.remove(item);
+//            accessChecker.updateRequirements(item);
+//            while(!accessChecker.getQueuedUpdates().isEmpty()) {
+//                accessChecker.updateRequirements(null);
+//            }
+//        }
+//    }
+
+    private void placeItem(String item, int availableLocations, Random random) {
+        int locationIndex = random.nextInt(availableLocations);
+        if(locationIndex < unassignedNonShopItemLocations.size()) {
+            // todo: check for exceptions
+            String location = unassignedNonShopItemLocations.get(locationIndex);
+            mapOfItemLocationToItem.put(location, item);
+            unassignedNonShopItemLocations.remove(location);
         }
         else {
-            String item = unplacedItems.get(random.nextInt(unplacedItems.size()));
-            int locationIndex = random.nextInt(availableLocations);
-            if(locationIndex < accessibleNonShopItemLocations.size()) {
-                // todo: check for exceptions
-                String location = accessibleNonShopItemLocations.get(locationIndex);
-                mapOfItemLocationToItem.put(location, item);
-                accessibleNonShopItemLocations.remove(location);
-            }
-            else {
-                shopRandomizer.placeItem(item, locationIndex - accessibleNonShopItemLocations.size());
-            }
-            unplacedItems.remove(item);
-            accessChecker.updateRequirements(item);
-            while(!accessChecker.getQueuedUpdates().isEmpty()) {
-                accessChecker.updateRequirements(null);
-            }
+            shopRandomizer.placeItem(item, locationIndex - unassignedNonShopItemLocations .size());
         }
+        unplacedItems.remove(item);
     }
 
     public void outputLocations(long startingSeed) throws IOException {

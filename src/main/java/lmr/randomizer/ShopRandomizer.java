@@ -45,23 +45,30 @@ public class ShopRandomizer {
         }
     }
 
-    // todo: this is not exactly ideal
-    public void addShopAccess(String shopName) {
-        for(String unassignedShopLocation : unassignedShopLocations) {
-            if(unassignedShopLocation.startsWith(shopName)) {
-                accessibleShopItemLocations.add(unassignedShopLocation);
+    /**
+     * @param shopName shop we've gained access to
+     * @return list of relevant things we can get from the shop
+     */
+    public List<String> addShopContents(String shopName) {
+        List<String> shopContents = new ArrayList<>();
+        String contents;
+        for (int i = 1; i <= 3; i++) {
+            contents = mapOfShopInventoryItemToContents.get(String.format("%s Item %d", shopName, i));
+            if(!"Weights".equals(contents) && !contents.contains("Ammo")) {
+                shopContents.add(contents);
             }
         }
+        return shopContents;
     }
 
     public void placeItem(String item, int locationIndex) {
-        String location = accessibleShopItemLocations.get(locationIndex);
+        String location = unassignedShopLocations.get(locationIndex);
         mapOfShopInventoryItemToContents.put(location, item);
-        accessibleShopItemLocations.remove(location);
+        unassignedShopLocations.remove(location);
     }
 
-    public List<String> getAccessibleShopItemLocations() {
-        return accessibleShopItemLocations;
+    public List<String> getUnassignedShopItemLocations() {
+        return unassignedShopLocations;
     }
 
     // Note: This also places some unique shop items that have special requirements.

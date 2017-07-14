@@ -64,7 +64,7 @@ public class AccessChecker {
         for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
             node = mapOfNodeNameToRequirementsObject.get(nodeName);
             if(node.canAccessNode(currentState)) {
-                handleNodeAccess(nodeName, node.getType());
+//                handleNodeAccess(nodeName, node.getType());
                 nodesToRemove.add(nodeName);
             }
         }
@@ -73,24 +73,24 @@ public class AccessChecker {
         }
     }
 
-    private void handleNodeAccess(String nodeName, NodeType nodeType) {
-        switch (nodeType) {
-            case ITEM_LOCATION:
-                itemRandomizer.addLocation(nodeName);
-                break;
-            case MAP_LOCATION:
-                // wait for the current loop to finish, then call update requirements again with this location
-                queuedUpdates.add(nodeName);
-                break;
-            case EVENT:
-                // wait for the current loop to finish, then call update requirements again with this event
-                queuedUpdates.add(nodeName);
-                break;
-            case SHOP:
-                shopRandomizer.addShopAccess(nodeName);
-                break;
-        }
-    }
+//    private void handleNodeAccess(String nodeName, NodeType nodeType) {
+//        switch (nodeType) {
+//            case ITEM_LOCATION:
+//                itemRandomizer.addLocation(nodeName);
+//                break;
+//            case MAP_LOCATION:
+//                // wait for the current loop to finish, then call update requirements again with this location
+//                queuedUpdates.add(nodeName);
+//                break;
+//            case EVENT:
+//                // wait for the current loop to finish, then call update requirements again with this event
+//                queuedUpdates.add(nodeName);
+//                break;
+//            case SHOP:
+//                shopRandomizer.addShopAccess(nodeName);
+//                break;
+//        }
+//    }
 
     /**
      * Traverses the map of nodes, removes requirements that are met by the provided argument, and returns the minimum
@@ -110,7 +110,7 @@ public class AccessChecker {
             currentNodeMinRequirements = node.updateRequirements(newState);
             if(currentNodeMinRequirements == 0) {
                 // Node is now accessible
-                handleNodeAccess(nodeName, node.getType());
+//                handleNodeAccess(nodeName, node.getType());
 //                    if(!NodeType.BOSS.equals(node.getType())) {
                 nodesToRemove.add(nodeName);
 //                    }
