@@ -37,66 +37,70 @@ public class ItemRandomizer {
         return totalShopItems;
     }
 
-//    public void addLocation(String location) {
-//        nonShopItemLocations.add(location);
-//    }
+    public List<String> getAllItems() {
+        return allItems;
+    }
 
-    public void placeRequiredItem(String item, Random random) {
-        int availableLocations = unassignedNonShopItemLocations.size() + shopRandomizer.getUnassignedShopItemLocations().size();
-        placeItem(item, availableLocations, random);
+    public String getItem(String location) {
+        return mapOfItemLocationToItem.get(location);
+    }
+
+    public void placeRequiredItems(List<String> items, Random random) {
+        List<String> initialUnassignedNonShopLocations = FileUtils.getList("initial/initial_chests.txt");
+        List<String> initialUnassignedShopItemLocations = shopRandomizer.getInitialUnassignedShopItemLocations();
+
+        // todo: properly randomize the order in which the list of initial items is placed
+        for(String item : items) {
+            while(true) {
+                int availableLocations = initialUnassignedNonShopLocations.size() + initialUnassignedShopItemLocations.size();
+
+                int locationIndex = random.nextInt(availableLocations);
+                if(locationIndex < initialUnassignedNonShopLocations.size()) {
+                    // todo: check for exceptions
+                    String location = initialUnassignedNonShopLocations.get(locationIndex);
+                    mapOfItemLocationToItem.put(location, item);
+                    if(accessChecker.validRequirements(item, location)) {
+                        initialUnassignedNonShopLocations.remove(location);
+                        unassignedNonShopItemLocations.remove(location);
+                        unplacedItems.remove(item);
+                        break;
+                    }
+                }
+                else if(shopRandomizer.placeRequiredItem(item, initialUnassignedShopItemLocations, locationIndex - initialUnassignedNonShopLocations.size())) {
+                    unplacedItems.remove(item);
+                    break;
+                }
+            }
+        }
     }
 
     public void placeAllItems(Random random) {
         while(!unplacedItems.isEmpty()) {
-            placeRequiredItem(unplacedItems.get(random.nextInt(unplacedItems.size())), random);
+            int availableLocations = unassignedNonShopItemLocations.size() + shopRandomizer.getUnassignedShopItemLocations().size();
+            placeItem(unplacedItems.get(random.nextInt(unplacedItems.size())), availableLocations, random);
         }
     }
-//    // todo: update for shop logic
-//    public void placeItem(Random random) {
-//        int availableLocations = nonShopItemLocations.size() + shopRandomizer.getUnassignedShopItemLocations().size();
-//        if(availableLocations < accessChecker.getMinRequirementsToNextItemLocation()) {
-//            // todo: die in a fire - really, we don't want to wind up in this situation
-//            // todo: alternatively, maybe check a list of items that don't give progress, and make replacements?
-//        }
-//        else if(availableLocations == accessChecker.getMinRequirementsToNextItemLocation()) {
-//            // todo: logic to select one of the possible sets of progress items that will allow further progress
-//        }
-//        else {
-//            String item = unplacedItems.get(random.nextInt(unplacedItems.size()));
-//            int locationIndex = random.nextInt(availableLocations);
-//            if(locationIndex < nonShopItemLocations.size()) {
-//                // todo: check for exceptions
-//                String location = nonShopItemLocations.get(locationIndex);
-//                mapOfItemLocationToItem.put(location, item);
-//                nonShopItemLocations.remove(location);
-//            }
-//            else {
-//                shopRandomizer.placeItem(item, locationIndex - nonShopItemLocations.size());
-//            }
-//            unplacedItems.remove(item);
-//            accessChecker.updateRequirements(item);
-//            while(!accessChecker.getQueuedUpdates().isEmpty()) {
-//                accessChecker.updateRequirements(null);
-//            }
-//        }
-//    }
 
-    private void placeItem(String item, int availableLocations, Random random) {
+    private boolean placeItem(String item, int availableLocations, Random random) {
         int locationIndex = random.nextInt(availableLocations);
         if(locationIndex < unassignedNonShopItemLocations.size()) {
-            // todo: check for exceptions
             String location = unassignedNonShopItemLocations.get(locationIndex);
-            mapOfItemLocationToItem.put(location, item);
-            unassignedNonShopItemLocations.remove(location);
+            if (accessChecker.validRequirements(item, location)) {
+                mapOfItemLocationToItem.put(location, item);
+                unassignedNonShopItemLocations.remove(location);
+                unplacedItems.remove(item);
+                return true;
+            }
         }
-        else {
-            shopRandomizer.placeItem(item, locationIndex - unassignedNonShopItemLocations .size());
+        else if(shopRandomizer.placeItem(item, locationIndex - unassignedNonShopItemLocations .size())) {
+            unplacedItems.remove(item);
+            return true;
         }
-        unplacedItems.remove(item);
+        return false;
     }
 
-    public void outputLocations(long startingSeed) throws IOException {
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("items%d.txt", startingSeed));
+    public void outputLocations(long startingSeed, int attemptNumber) throws IOException {
+        BufferedWriter writer = FileUtils.getFileWriter(String.format("target/items%d_%d.txt", startingSeed, attemptNumber));
         if (writer == null) {
             return;
         }

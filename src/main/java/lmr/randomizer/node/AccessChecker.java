@@ -14,25 +14,22 @@ import java.util.*;
  */
 public class AccessChecker {
     private Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject = new HashMap<>();
-    private List<String> accessibleMapLocations = new ArrayList<>();
-    private List<String> accessibleEvents = new ArrayList<>();
 
+    private List<String> accessedNodes = new ArrayList<>();
     private Set<String> queuedUpdates = new HashSet<>();
 
     private ItemRandomizer itemRandomizer;
     private ShopRandomizer shopRandomizer;
 
-    private int minRequirementsToNextItemLocation = 1; // todo: hardcoding first pass might come back to bite me later
-
     public AccessChecker() {
-    }
-
-    public int getMinRequirementsToNextItemLocation() {
-        return minRequirementsToNextItemLocation;
     }
 
     public Set<String> getQueuedUpdates() {
         return queuedUpdates;
+    }
+
+    public boolean isSuccess() {
+        return mapOfNodeNameToRequirementsObject.isEmpty();
     }
 
     public void addNode(String name, String requirementSet) {
@@ -58,72 +55,113 @@ public class AccessChecker {
         return requirements;
     }
 
-    public void computeAccessibleNodes(List<String> currentState) {
+    public void computeAccessibleNodes(String newState) {
+        String stateToUpdate = newState;
+        if(stateToUpdate.contains("Ankh Jewel")) {
+            stateToUpdate = "Ankh Jewel";
+        }
+        if(stateToUpdate.contains("Sacred Orb")) {
+            stateToUpdate = "Sacred Orb";
+        }
+
+        accessedNodes.add(newState);
+
         NodeWithRequirements node;
         List<String> nodesToRemove = new ArrayList<>();
         for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
             node = mapOfNodeNameToRequirementsObject.get(nodeName);
-            if(node.canAccessNode(currentState)) {
-//                handleNodeAccess(nodeName, node.getType());
+            if(node.updateRequirements(stateToUpdate)) {
+                handleNodeAccess(nodeName, node.getType());
                 nodesToRemove.add(nodeName);
             }
         }
         for(String nodeToRemove : nodesToRemove) {
             mapOfNodeNameToRequirementsObject.remove(nodeToRemove);
         }
+        queuedUpdates.remove(newState);
     }
 
-//    private void handleNodeAccess(String nodeName, NodeType nodeType) {
-//        switch (nodeType) {
-//            case ITEM_LOCATION:
-//                itemRandomizer.addLocation(nodeName);
-//                break;
-//            case MAP_LOCATION:
-//                // wait for the current loop to finish, then call update requirements again with this location
-//                queuedUpdates.add(nodeName);
-//                break;
-//            case EVENT:
-//                // wait for the current loop to finish, then call update requirements again with this event
-//                queuedUpdates.add(nodeName);
-//                break;
-//            case SHOP:
-//                shopRandomizer.addShopAccess(nodeName);
-//                break;
-//        }
-//    }
+    private void handleNodeAccess(String nodeName, NodeType nodeType) {
+        switch (nodeType) {
+            case ITEM_LOCATION:
+                String item = itemRandomizer.getItem(nodeName);
+                queuedUpdates.add(item);
+                break;
+            case MAP_LOCATION:
+                queuedUpdates.add(nodeName);
+                break;
+            case EVENT:
+                queuedUpdates.add(nodeName);
+                break;
+            case SHOP:
+                queuedUpdates.addAll(shopRandomizer.getShopItems(nodeName));
+                break;
+        }
+    }
 
-    /**
-     * Traverses the map of nodes, removes requirements that are met by the provided argument, and returns the minimum
-     * @param newState item/event/location/shop/whatever that was just placed or made accessible
-     */
-    public void updateRequirements(String newState) {
-        if(newState == null) {
-            newState = queuedUpdates.iterator().next();
+    public boolean validRequirements(String item, String location) {
+        if(location.contains("Shop")) {
+            location = location.substring(0, location.indexOf(")") + 1);
         }
 
-        minRequirementsToNextItemLocation = Integer.MAX_VALUE;
-        int currentNodeMinRequirements;
+        NodeWithRequirements node = mapOfNodeNameToRequirementsObject.get(location);
+        if(node == null) {
+            FileUtils.log("No requirements for item " + item);
+        }
+
+        if(item.contains("Ankh Jewel")) {
+            item = "Ankh Jewel";
+        }
+        else if(item.contains("Sacred Orb")) {
+            item = "Sacred Orb";
+        }
+
+        return mapOfNodeNameToRequirementsObject.get(location).canContainItem(item);
+    }
+
+    public void outputRemaining(long startingSeed, int attemptNumber) throws IOException {
+        BufferedWriter writer = FileUtils.getFileWriter(String.format("target/inaccessible%s_%s.txt", startingSeed, attemptNumber));
+        if (writer == null) {
+            return;
+        }
+
         NodeWithRequirements node;
-        Set<String> nodesToRemove = new HashSet<>(); // Track the nodes that should be removed from the map, so we don't have to keep checking requirements.
         for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
             node = mapOfNodeNameToRequirementsObject.get(nodeName);
-            currentNodeMinRequirements = node.updateRequirements(newState);
-            if(currentNodeMinRequirements == 0) {
-                // Node is now accessible
-//                handleNodeAccess(nodeName, node.getType());
-//                    if(!NodeType.BOSS.equals(node.getType())) {
-                nodesToRemove.add(nodeName);
-//                    }
+            for(List<String> requirementSet : node.getAllRequirements()) {
+                writer.write(nodeName + " => " + requirementSet);
+                writer.newLine();
             }
-            else if(currentNodeMinRequirements < minRequirementsToNextItemLocation) {
-                minRequirementsToNextItemLocation = currentNodeMinRequirements;
-            }
+        }
+        writer.flush();
+        writer.close();
+
+        writer = FileUtils.getFileWriter(String.format("target/missing_item%s_%s.txt", startingSeed, attemptNumber));
+        if (writer == null) {
+            return;
         }
 
-        for(String nodeName : nodesToRemove) {
-            mapOfNodeNameToRequirementsObject.remove(nodeName);
+        List<String> inaccessibleNodes = new ArrayList<>(itemRandomizer.getAllItems());
+        inaccessibleNodes.removeAll(accessedNodes);
+        for(String inaccessibleNode : inaccessibleNodes) {
+            writer.write(inaccessibleNode);
+            writer.newLine();
         }
-        queuedUpdates.remove(newState);
+        writer.flush();
+        writer.close();
+
+
+        writer = FileUtils.getFileWriter(String.format("target/accessible%s_%s.txt", startingSeed, attemptNumber));
+        if (writer == null) {
+            return;
+        }
+
+        for(String item : accessedNodes) {
+            writer.write(item);
+            writer.newLine();
+        }
+        writer.flush();
+        writer.close();
     }
 
     public void setItemRandomizer(ItemRandomizer itemRandomizer) {
@@ -132,27 +170,5 @@ public class AccessChecker {
 
     public void setShopRandomizer(ShopRandomizer shopRandomizer) {
         this.shopRandomizer = shopRandomizer;
-    }
-
-    public void outputRequirements() throws IOException {
-        BufferedWriter writer = FileUtils.getFileWriter("requirements_test.txt");
-        if (writer == null) {
-            return;
-        }
-
-        for(String node : mapOfNodeNameToRequirementsObject.keySet()) {
-            writer.write(String.format("Requirements for %s:", node));
-            writer.newLine();
-            for(List<String> requirementSet : mapOfNodeNameToRequirementsObject.get(node).getAllRequirements()) {
-                writer.write(requirementSet.toString());
-                writer.newLine();
-            }
-        }
-
-        writer.newLine();
-//        writer.write("Initially accessible nodes: " + accessibleNodes.toString());
-//
-        writer.flush();
-        writer.close();
     }
 }

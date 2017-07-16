@@ -1,5 +1,7 @@
 package lmr.randomizer;
 
+import lmr.randomizer.node.AccessChecker;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.*;
@@ -9,16 +11,16 @@ import java.util.*;
  */
 public class ShopRandomizer {
     private static final String SHURIKEN_SHOP_NAME = "Shop 1 (Surface)";
-    private static final String MSX_SHOP_NAME = "Shop 2 (Surface)";
+    private static final String MSX_SHOP_NAME = "Shop 2 (Surface)"; // todo: shop transformation needs to be handled
     private static final String SHIELD_SHOP_NAME = "Shop 7 (Graveyard)";
-    private static final String FISH_SHOP_NAME = "Shop 12 (Spring)";
+    private static final String FISH_SHOP_NAME = "Shop 12 Alt (Spring)";
 
     private Map<String, String> mapOfShopInventoryItemToContents = new HashMap<>(); // The thing we're trying to build.
     private List<String> allShops;
     private List<String> unassignedShopLocations = new ArrayList<>(); // Shop locations which still need something placed.
     private List<String> unassignedSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
 
-    List<String> accessibleShopItemLocations = new ArrayList<>();
+    private AccessChecker accessChecker;
 
     private int totalUniqueShopItems; // Unique items that can be purchased in shops. In order to fill all chests, only a limited amount can be placed.
 
@@ -26,7 +28,7 @@ public class ShopRandomizer {
         this.totalUniqueShopItems = totalUniqueShopItems;
         this.allShops = FileUtils.getList("all/all_shops.txt");
         if(!allShops.contains(MSX_SHOP_NAME)) {
-            allShops.add(MSX_SHOP_NAME); // todo: better failsafe for this
+            allShops.add(MSX_SHOP_NAME);
         }
 
         for(String shop : allShops) {
@@ -45,33 +47,55 @@ public class ShopRandomizer {
         }
     }
 
-    /**
-     * @param shopName shop we've gained access to
-     * @return list of relevant things we can get from the shop
-     */
-    public List<String> addShopContents(String shopName) {
-        List<String> shopContents = new ArrayList<>();
-        String contents;
-        for (int i = 1; i <= 3; i++) {
-            contents = mapOfShopInventoryItemToContents.get(String.format("%s Item %d", shopName, i));
-            if(!"Weights".equals(contents) && !contents.contains("Ammo")) {
-                shopContents.add(contents);
-            }
-        }
-        return shopContents;
-    }
-
-    public void placeItem(String item, int locationIndex) {
-        String location = unassignedShopLocations.get(locationIndex);
-        mapOfShopInventoryItemToContents.put(location, item);
-        unassignedShopLocations.remove(location);
-    }
-
     public List<String> getUnassignedShopItemLocations() {
         return unassignedShopLocations;
     }
 
-    // Note: This also places some unique shop items that have special requirements.
+    public List<String> getShopItems(String shopName) {
+        List<String> shopItems = new ArrayList<>();
+        String shopItem;
+        for (int i = 1; i <= 3; i++) {
+            shopItem = mapOfShopInventoryItemToContents.get(String.format("%s Item %d", shopName, i));
+            if (shopItem != null && !"Weights".equals(shopItem) && !shopItem.contains("Ammo")) {
+                shopItems.add(shopItem);
+            }
+        }
+        return shopItems;
+    }
+
+    public boolean placeRequiredItem(String item, List<String> shopLocationOptions, int locationIndex) {
+        String location = shopLocationOptions.get(locationIndex);
+        if(accessChecker.validRequirements(item, location)) {
+            mapOfShopInventoryItemToContents.put(location, item);
+            shopLocationOptions.remove(location);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean placeItem(String item, int locationIndex) {
+        String location = unassignedShopLocations.get(locationIndex);
+        if(accessChecker.validRequirements(item, location)) {
+            mapOfShopInventoryItemToContents.put(location, item);
+            unassignedShopLocations.remove(location);
+            return true;
+        }
+        return false;
+    }
+
+    public List<String> getInitialUnassignedShopItemLocations() {
+        List<String> initialUnassigned = new ArrayList<>();
+        List<String> initialShops = FileUtils.getList("initial/initial_shops.txt");
+        for(String unassigned : unassignedShopLocations) {
+            for(String shopName : initialShops) {
+                if(unassigned.contains(shopName)) {
+                    initialUnassigned.add(unassigned);
+                }
+            }
+        }
+        return initialUnassigned;
+    }
+
     public void determineItemTypes(Random random, String firstSubweapon) {
         placeSurfaceWeights();
         if(firstSubweapon != null) {
@@ -98,8 +122,9 @@ public class ShopRandomizer {
         String location;
         List<Integer> shopItems;
         int shopItemIndex;
-        for(int i = 0; i < getWeightCount(random); i++) {
-            shop = shopsWithNoWeights.get(i);
+        int maxAdditionalWeights = getWeightCount(random);
+        for(int i = 0; i < maxAdditionalWeights; i++) {
+            shop = shopsWithNoWeights.get(random.nextInt(shopsWithNoWeights.size()));
             shopItems = Arrays.asList(1, 2, 3);
             while(!shopItems.isEmpty()) {
                 shopItemIndex = random.nextInt(shopItems.size());
@@ -119,7 +144,7 @@ public class ShopRandomizer {
         if(maxAdditionalWeights < 0) {
             maxAdditionalWeights = 0;
         }
-        return random.nextInt(maxAdditionalWeights + 1);
+        return random.nextInt(maxAdditionalWeights);
     }
 
     // todo: current logic could theoretically generate a shop where all 3 items are shurikens
@@ -141,8 +166,9 @@ public class ShopRandomizer {
         }
     }
 
-    public void outputLocations(long startingSeed) throws IOException {
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("shops%s.txt", startingSeed));
+    public void outputLocations(long startingSeed, int attemptNumber) throws IOException {
+//        BufferedWriter writer = FileUtils.getFileWriter(String.format("target/shops%s_%s.txt", startingSeed, attemptNumber));
+        BufferedWriter writer = FileUtils.getFileWriter(String.format("target/shops%s.txt", startingSeed, attemptNumber));
         if (writer == null) {
             return;
         }
@@ -165,5 +191,9 @@ public class ShopRandomizer {
 
         writer.flush();
         writer.close();
+    }
+
+    public void setAccessChecker(AccessChecker accessChecker) {
+        this.accessChecker = accessChecker;
     }
 }

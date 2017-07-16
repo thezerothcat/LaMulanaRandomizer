@@ -10,6 +10,19 @@ import java.util.List;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
+    private static final BufferedWriter LOG_WRITER;
+
+    static {
+        BufferedWriter temp = null;
+        try {
+            temp = getFileWriter("log.txt");
+        }
+        catch (Exception ex) {
+
+        }
+        LOG_WRITER = temp;
+    }
+
     public static BufferedWriter getFileWriter(String file) {
         try {
             return new BufferedWriter(new FileWriter(file));
@@ -51,6 +64,23 @@ public class FileUtils {
             }
         } catch (Exception ex) {
             return;
+        }
+    }
+
+    public static void log(String logText) {
+        try {
+            LOG_WRITER.write(logText);
+            LOG_WRITER.newLine();
+        } catch (Exception ex) {
+
+        }
+    }
+
+    public static void closeAll() {
+        try {
+            LOG_WRITER.close();
+        } catch (Exception ex) {
+
         }
     }
 }

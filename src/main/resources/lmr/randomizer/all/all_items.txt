@@ -59,9 +59,8 @@ Knife
 Lamp of Time
 lamulana.exe
 Life Seal
-Mantra: BIRTH
-Mantra: DEATH
 mantra.exe
+Magatama Jewel
 Map (Chamber of Birth)
 Map (Chamber of Extinction)
 Map (Dimensional Corridor)
@@ -80,7 +79,6 @@ Map (Tower of Ruin)
 Map (Tower of the Goddess)
 Map (Twin Labyrinths)
 Maternity Statue
-Medicine of the Mind (Yellow)
 mekuri.exe
 Mini Doll
 miracle.exe
