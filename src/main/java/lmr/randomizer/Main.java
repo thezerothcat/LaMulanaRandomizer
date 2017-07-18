@@ -1,8 +1,12 @@
 package lmr.randomizer;
 
 import lmr.randomizer.node.AccessChecker;
+import lmr.randomizer.rcd.RcdScript;
 
+import javax.script.*;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.*;
 
 /**
@@ -17,6 +21,18 @@ public class Main {
     private static int zeroRequirementAnkhJewels = 4; // Preserving vanilla number of ankh jewels to reduce risk of ankh jewel locks, at least for v1.
 
     public static void main(String[] args) {
+        generateItemPlacements(args);
+
+        try {
+            decodeRcd();
+        } catch (Exception ex) {
+            FileUtils.log("Rcd script processing failed: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+        FileUtils.closeAll();
+    }
+
+    private static void generateItemPlacements(String[] args) {
         long startingSeed = getSeed(args);
         Random random = new Random(startingSeed);
 
@@ -54,17 +70,16 @@ public class Main {
                 accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next());
             }
 
-            try {
-                outputLocations(startingSeed, itemRandomizer, shopRandomizer, attempt);
-
-                accessChecker.outputRemaining(startingSeed, attempt);
-            } catch (Exception ex) {
-                continue;
-                // No exception handling in v1
-            }
-
             if(accessChecker.isSuccess()) {
-                FileUtils.closeAll();
+                try {
+                    outputLocations(startingSeed, itemRandomizer, shopRandomizer, attempt);
+                    updateRcd(itemRandomizer, shopRandomizer);
+//                    accessChecker.outputRemaining(startingSeed, attempt);
+                } catch (Exception ex) {
+                    continue;
+                    // No exception handling in v1
+                }
+
                 return;
             }
             attempt++;
@@ -91,6 +106,11 @@ public class Main {
         itemRandomizer.setAccessChecker(accessChecker);
         shopRandomizer.setAccessChecker(accessChecker);
         return accessChecker;
+    }
+
+    private static void updateRcd(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer) {
+        RcdScript rcdScript = new RcdScript();
+
     }
 
     private static void outputLocations(long startingSeed, ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, int attempt) throws IOException {
