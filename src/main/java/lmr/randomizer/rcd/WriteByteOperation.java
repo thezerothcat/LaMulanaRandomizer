@@ -6,7 +6,7 @@ package lmr.randomizer.rcd;
 public class WriteByteOperation {
     private int index;
     private int value;
-    private WriteOp op;
+    private ByteOp op;
 
     public int getIndex() {
         return index;
@@ -24,11 +24,11 @@ public class WriteByteOperation {
         this.value = value;
     }
 
-    public WriteOp getOp() {
+    public ByteOp getOp() {
         return op;
     }
 
-    public void setOp(WriteOp op) {
+    public void setOp(ByteOp op) {
         this.op = op;
     }
 }

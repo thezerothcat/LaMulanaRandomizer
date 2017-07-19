@@ -14,6 +14,7 @@ public enum WriteOp {
     XOR_FLAG(7); // 6
 
     private int op;
+    private int output;
 
     WriteOp(int op) {
         this.op = op;
