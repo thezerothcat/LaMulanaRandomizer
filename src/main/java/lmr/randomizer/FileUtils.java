@@ -125,7 +125,7 @@ public class FileUtils {
         return ByteBuffer.wrap(getByteArraySlice(mainArray, startIndex, length)).order(ByteOrder.BIG_ENDIAN);
     }
 
-    private static int addZoneObject(Zone zone, byte[] rcdBytes, int rcdByteIndex, boolean hasPosition) {
+    private static int addObject(ObjectContainer objectContainer, byte[] rcdBytes, int rcdByteIndex, boolean hasPosition) {
         Object obj = new Object();
 
         obj.setId(getField(rcdBytes, rcdByteIndex, 2).getShort());
@@ -167,7 +167,7 @@ public class FileUtils {
             i += 2;
         }
 
-        zone.getObjects().add(obj);
+        objectContainer.getObjects().add(obj);
         return rcdByteIndex;
     }
 
@@ -201,9 +201,9 @@ public class FileUtils {
         return writeByteOperation;
     }
 
-    public static RcdScript getRcdScript() throws Exception {
+    public static List<Zone> getRcdScriptInfo() throws Exception {
         String laMulanaBaseDir = getLaMulanaBaseDir();
-        if(laMulanaBaseDir == null) {
+        if (laMulanaBaseDir == null) {
             return null; // todo: throw exception?
         }
         String mapPath = laMulanaBaseDir + "\\data\\mapdata";
@@ -213,11 +213,9 @@ public class FileUtils {
 
         List<Zone> zones = new ArrayList<>();
 
-        for(int z = 0; z < 26; z++) {
-            byte[] msdBytes = getBytes(mapPath + String.format("\\map%.2d.msd", z));
+        for (int zoneIndex = 0; zoneIndex < 26; zoneIndex++) {
             Zone zone = new Zone();
-            zones.add(zone);
-            zone.setIndex(z);
+            zone.setZoneIndex(zoneIndex);
 
             byte nameLength = getField(rcdBytes, rcdByteIndex, 1).get();
             rcdByteIndex += 1;
@@ -226,65 +224,125 @@ public class FileUtils {
 
 
             zone.setName(new String(getByteArraySlice(rcdBytes, rcdByteIndex, nameLength), "UTF-16BE"));
-            rcdByteIndex += nameLength;
-            for(int i = 0; i < objCount; i++) {
+            rcdByteIndex += (int) nameLength;
+            for (int i = 0; i < objCount; i++) {
 //                zone.objs = [readobj(rcd) for i in range(objcount)]
-                rcdByteIndex += addZoneObject(zone, rcdBytes, rcdByteIndex); // todo: = or +=
+                rcdByteIndex = addObject(zone, rcdBytes, rcdByteIndex, false);
             }
 
 
+            byte[] msdBytes = getBytes(mapPath + String.format("\\\\map%02d.msd", zoneIndex));
             int msdByteIndex = 0;
             while (true) {
-                short frames = getField(rcdBytes, rcdByteIndex, 2).getShort();
+                short frames = getField(msdBytes, msdByteIndex, 2).getShort();
                 msdByteIndex += 2;
-                if(frames == 0) {
+                if (frames == 0) {
                     break;
                 }
-                msdByteIndex += frames * 2;
+                msdByteIndex += frames * 2; // todo: this might be wrong (seek)
             }
+
+            byte rooms = msdBytes[msdByteIndex + 2];
+            msdByteIndex += 3;
+
+            for (int roomIndex = 0; roomIndex < rooms; roomIndex++) {
+                Room room = new Room();
+                room.setZoneIndex(zoneIndex);
+                room.setRoomIndex(roomIndex);
+                short roomObjCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
+
+                for (int roomObjectIndex = 0; roomObjectIndex < roomObjCount; roomObjectIndex++) {
+                    rcdByteIndex = addObject(room, rcdBytes, rcdByteIndex, false); // todo: = or +=
+                }
+
+                msdByteIndex += 1; // unwanted byte for use boss graphics
+
+                room.setNumberOfLayers(msdBytes[msdByteIndex]);
+                msdByteIndex += 1;
+
+                room.setPrimeLayerNumber(msdBytes[msdByteIndex]);
+                msdByteIndex += 1;
+
+                room.setHitMaskWidth(getField(msdBytes, msdByteIndex, 2).getShort());
+                msdByteIndex += 2;
+
+                room.setHitMaskHeight(getField(msdBytes, msdByteIndex, 2).getShort());
+                msdByteIndex += 2;
+
+                msdByteIndex += room.getHitMaskWidth() * room.getHitMaskHeight(); // todo: this might be wrong (seek)
+
+                for (int layerIndex = 0; layerIndex < room.getNumberOfLayers(); layerIndex++) {
+                    short layerWidth = getField(msdBytes, msdByteIndex, 2).getShort();
+                    msdByteIndex += 2;
+
+                    short layerHeight = getField(msdBytes, msdByteIndex, 2).getShort();
+                    msdByteIndex += 2;
+
+                    byte sublayers = msdBytes[msdByteIndex];
+                    msdByteIndex += 1;
+
+                    if (layerIndex == (int) room.getPrimeLayerNumber()) {
+                        room.setTileWidth(layerWidth);
+                        room.setTileHeight(layerHeight);
+
+                        room.setScreenWidth(room.getTileWidth());
+                        room.setScreenHeight(room.getTileHeight());
+                        room.setNumberOfScreens(room.getScreenWidth() + room.getScreenHeight());
+                    }
+
+                    msdByteIndex += sublayers * layerWidth * layerHeight * 2; // todo: this might be wrong (seek)
+                }
+
+                for (int screenIndex = 0; screenIndex < room.getNumberOfScreens(); screenIndex++) {
+                    Screen screen = new Screen();
+                    screen.setZoneIndex(zoneIndex);
+                    screen.setRoomIndex(roomIndex);
+                    screen.setScreenIndex(screenIndex);
+
+                    byte screenNameLength = rcdBytes[rcdByteIndex];
+                    rcdByteIndex += 1;
+
+                    short screenObjectCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
+                    rcdByteIndex += 2;
+
+                    byte noPositionScreenObjectCount = rcdBytes[rcdByteIndex];
+                    rcdByteIndex += 1;
+
+                    for (int noPositionScreenObjectIndex = 0; noPositionScreenObjectIndex < noPositionScreenObjectCount; noPositionScreenObjectIndex++) {
+                        rcdByteIndex = addObject(screen, rcdBytes, rcdByteIndex, false); // todo: = or +=
+                    }
+
+                    for (int screenObjectIndex = 0; screenObjectIndex < (screenObjectCount - noPositionScreenObjectCount); screenObjectIndex++) {
+                        rcdByteIndex = addObject(screen, rcdBytes, rcdByteIndex, true); // todo: = or +=
+                    }
+
+                    screen.setName(new String(getByteArraySlice(rcdBytes, rcdByteIndex, screenNameLength), "UTF-16BE"));
+                    rcdByteIndex += (int) screenNameLength;
+
+                    for (int exitIndex = 0; exitIndex < 4; exitIndex++) {
+                        ScreenExit screenExit = new ScreenExit();
+
+                        screenExit.setZoneIndex(rcdBytes[rcdByteIndex]);
+                        rcdByteIndex += 1;
+
+                        screenExit.setRoomIndex(rcdBytes[rcdByteIndex]);
+                        rcdByteIndex += 1;
+
+                        screenExit.setScreenIndex(rcdBytes[rcdByteIndex]);
+                        rcdByteIndex += 1;
+
+                        screen.getScreenExits().add(screenExit);
+                    }
+
+                    room.getScreens().add(screen);
+                }
+
+                zone.getRooms().add(room);
+            }
+            zones.add(zone);
         }
-
-        while True:
-        frames = unpack('>H', msd.read(2))[0]
-        if frames == 0:
-        break
-                msd.seek(frames * 2, 1)
-        rooms = unpack('>BBB', msd.read(3))[2]
-        for r in range(rooms):
-##            print("room: %d-%d" % (z,r), end='\t')
-        room = Room()
-        zone.rooms.append(room)
-        room.idx = z, r
-        objcount = unpack('>H', rcd.read(2))[0]
-##            print(objcount)
-        room.objs = [readobj(rcd) for i in range(objcount)]
-##            if r is 0 and z is 0:
-##                print(room.objs[0])
-        room.layers, room.pr_layer = unpack('>BBB', msd.read(3))[1:]
-        room.hit_w, room.hit_h = unpack('>2H', msd.read(4))
-        msd.seek(room.hit_w * room.hit_h, 1)
-
-        for l in range(room.layers):
-        w, h, sublayers = unpack('>2HB', msd.read(5))
-        if l == room.pr_layer:
-        room.tile_w, room.tile_h = w, h
-        room.screen_w = room.tile_w // 32
-        room.screen_h = room.tile_h // 24
-        room.numscreens = room.screen_w * room.screen_h
-        msd.seek(sublayers * w * h * 2, 1)
-        for s in range(room.numscreens):
-        screen = Screen()
-        room.screens.append(screen)
-        screen.idx = z, r, s
-        namelen, count_objs, count_nopos = unpack('>BHB', rcd.read(4))
-        if z is 0 and r is 0 and s is 0:
-        print(namelen, count_objs, count_nopos)
-        screen.objs = [readobj(rcd, False) for i in range(count_nopos)]
-        screen.objs += [readobj(rcd, True) for i in range(count_objs - count_nopos)]
-        screen.name = rcd.read(namelen).decode('utf_16_be')
-        screen.exits = [unpack('>bbb', rcd.read(3)) for i in range(4)]
-
-        rcd.close() #tsk    }
+        return zones;
+    }
 }
 
 

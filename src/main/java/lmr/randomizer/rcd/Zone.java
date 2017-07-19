@@ -6,9 +6,9 @@ import java.util.List;
 /**
  * Created by thezerothcat on 7/16/2017.
  */
-public class Zone {
+public class Zone implements ObjectContainer {
     private List<Room> rooms = new ArrayList<Room>();
-    private int index;
+    private int zoneIndex;
     private String name;
 
     private List<Object> objects = new ArrayList<>();
@@ -16,27 +16,12 @@ public class Zone {
     public Zone() {
     }
 
-//    @Override
-//    public String toString() {
-//        String returnVal = String.format("ZONE %02d \"%s\"", self.idx, self.name);
-//        if(self.objs) {
-//            ret += '\n' + '\n'.join(map(str, self.objs))
-//            ret += '\n' + '\n'.join(map(str, self.rooms))
-//        }
-//        return returnVal;
-//    }
-
-
-    public List<Room> getRooms() {
-        return rooms;
+    public int getZoneIndex() {
+        return zoneIndex;
     }
 
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
+    public void setZoneIndex(int index) {
+        this.zoneIndex = index;
     }
 
     public String getName() {
@@ -47,7 +32,25 @@ public class Zone {
         this.name = name;
     }
 
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
     public List<Object> getObjects() {
         return objects;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder returnVal = new StringBuilder(String.format("ZONE %02d \"%s\"", zoneIndex, name));
+        if(!objects.isEmpty()) {
+            for(Object obj : objects) {
+                returnVal.append('\n').append(obj.toString());
+            }
+            for(Room room : rooms) {
+                returnVal.append('\n').append(room.toString());
+            }
+        }
+        return returnVal.toString();
     }
 }

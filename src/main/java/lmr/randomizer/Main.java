@@ -1,9 +1,10 @@
 package lmr.randomizer;
 
 import lmr.randomizer.node.AccessChecker;
-import lmr.randomizer.rcd.RcdScript;
+import lmr.randomizer.rcd.Zone;
 
 import javax.script.*;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -21,10 +22,10 @@ public class Main {
     private static int zeroRequirementAnkhJewels = 4; // Preserving vanilla number of ankh jewels to reduce risk of ankh jewel locks, at least for v1.
 
     public static void main(String[] args) {
-        generateItemPlacements(args);
+//        generateItemPlacements(args);
 
         try {
-            decodeRcd();
+            writeRcd(FileUtils.getRcdScriptInfo());
         } catch (Exception ex) {
             FileUtils.log("Rcd script processing failed: " + ex.getMessage());
             ex.printStackTrace();
@@ -73,7 +74,7 @@ public class Main {
             if(accessChecker.isSuccess()) {
                 try {
                     outputLocations(startingSeed, itemRandomizer, shopRandomizer, attempt);
-                    updateRcd(itemRandomizer, shopRandomizer);
+//                    updateRcd(itemRandomizer, shopRandomizer);
 //                    accessChecker.outputRemaining(startingSeed, attempt);
                 } catch (Exception ex) {
                     continue;
@@ -108,14 +109,18 @@ public class Main {
         return accessChecker;
     }
 
-    private static void updateRcd(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer) {
-        RcdScript rcdScript = new RcdScript();
-
-    }
-
     private static void outputLocations(long startingSeed, ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, int attempt) throws IOException {
         itemRandomizer.outputLocations(startingSeed, attempt);
         shopRandomizer.outputLocations(startingSeed, attempt);
+    }
+
+    private static void writeRcd(List<Zone> rcdInfo) throws IOException {
+        try(BufferedWriter writer = FileUtils.getFileWriter("rcdtest.txt")) {
+            for(Zone zone : rcdInfo) {
+                writer.write(zone.toString());
+                writer.newLine();
+            }
+        }
     }
 
     private static long getSeed(String[] args) {
