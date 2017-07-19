@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Room implements ObjectContainer {
     private List<Screen> screens = new ArrayList<Screen>();
-    private List<Object> objects = new ArrayList<>();
+    private List<GameObject> objects = new ArrayList<>();
 
     private int zoneIndex;
     private int roomIndex;
@@ -24,8 +24,8 @@ public class Room implements ObjectContainer {
     private short tileWidth;
     private short tileHeight;
 
-    private short screenWidth;
-    private short screenHeight;
+    private int screenWidth;
+    private int screenHeight;
 
     public Room() {
     }
@@ -102,19 +102,19 @@ public class Room implements ObjectContainer {
         this.tileHeight = tileHeight;
     }
 
-    public short getScreenWidth() {
+    public int getScreenWidth() {
         return screenWidth;
     }
 
-    public void setScreenWidth(short screenWidth) {
+    public void setScreenWidth(int screenWidth) {
         this.screenWidth = screenWidth;
     }
 
-    public short getScreenHeight() {
+    public int getScreenHeight() {
         return screenHeight;
     }
 
-    public void setScreenHeight(short screenHeight) {
+    public void setScreenHeight(int screenHeight) {
         this.screenHeight = screenHeight;
     }
 
@@ -122,7 +122,7 @@ public class Room implements ObjectContainer {
         return screens;
     }
 
-    public List<Object> getObjects() {
+    public List<GameObject> getObjects() {
         return objects;
     }
 
@@ -130,7 +130,7 @@ public class Room implements ObjectContainer {
     public String toString() {
         StringBuilder returnVal = new StringBuilder(String.format("ROOM %02d-%02d", zoneIndex, roomIndex));
         if(!objects.isEmpty()) {
-            for(Object obj : objects) {
+            for(GameObject obj : objects) {
                 returnVal.append('\n').append(obj.toString());
             }
             for(Screen screen : screens) {

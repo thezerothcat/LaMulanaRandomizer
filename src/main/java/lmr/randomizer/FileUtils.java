@@ -2,7 +2,7 @@ package lmr.randomizer;
 
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.rcd.*;
-import lmr.randomizer.rcd.Object;
+import lmr.randomizer.rcd.GameObject;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -126,7 +126,7 @@ public class FileUtils {
     }
 
     private static int addObject(ObjectContainer objectContainer, byte[] rcdBytes, int rcdByteIndex, boolean hasPosition) {
-        Object obj = new Object();
+        GameObject obj = new GameObject();
 
         obj.setId(getField(rcdBytes, rcdByteIndex, 2).getShort());
         rcdByteIndex += 2;
@@ -137,7 +137,7 @@ public class FileUtils {
         int writeOperationCount = temp & 0xf;
         int testOperationCount = temp >> 4;
 
-        byte argc = rcdBytes[rcdByteIndex];
+        byte argCount = rcdBytes[rcdByteIndex];
         rcdByteIndex += 1;
 
         if(hasPosition) {
@@ -157,14 +157,12 @@ public class FileUtils {
         }
         for(int i = 0; i < writeOperationCount; i++) {
             obj.getWriteByteOperations().add(getWriteByteOperation(rcdBytes, rcdByteIndex));
-            // todo: update byte index
+            rcdByteIndex += 4;
         }
 
-        int i = 0;
-        while(i < argc) {
+        for(int argIndex = 0; argIndex < argCount; argIndex++) {
             obj.getArgs().add(getField(rcdBytes, rcdByteIndex, 2).getShort());
             rcdByteIndex += 2;
-            i += 2;
         }
 
         objectContainer.getObjects().add(obj);
@@ -219,14 +217,13 @@ public class FileUtils {
 
             byte nameLength = getField(rcdBytes, rcdByteIndex, 1).get();
             rcdByteIndex += 1;
-            short objCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
+            short zoneObjectCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
             rcdByteIndex += 2;
-
 
             zone.setName(new String(getByteArraySlice(rcdBytes, rcdByteIndex, nameLength), "UTF-16BE"));
             rcdByteIndex += (int) nameLength;
-            for (int i = 0; i < objCount; i++) {
-//                zone.objs = [readobj(rcd) for i in range(objcount)]
+
+            for (int i = 0; i < zoneObjectCount; i++) {
                 rcdByteIndex = addObject(zone, rcdBytes, rcdByteIndex, false);
             }
 
@@ -239,7 +236,7 @@ public class FileUtils {
                 if (frames == 0) {
                     break;
                 }
-                msdByteIndex += frames * 2; // todo: this might be wrong (seek)
+                msdByteIndex += frames * 2;
             }
 
             byte rooms = msdBytes[msdByteIndex + 2];
@@ -250,9 +247,10 @@ public class FileUtils {
                 room.setZoneIndex(zoneIndex);
                 room.setRoomIndex(roomIndex);
                 short roomObjCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
+                rcdByteIndex += 2;
 
                 for (int roomObjectIndex = 0; roomObjectIndex < roomObjCount; roomObjectIndex++) {
-                    rcdByteIndex = addObject(room, rcdBytes, rcdByteIndex, false); // todo: = or +=
+                    rcdByteIndex = addObject(room, rcdBytes, rcdByteIndex, false);
                 }
 
                 msdByteIndex += 1; // unwanted byte for use boss graphics
@@ -269,7 +267,7 @@ public class FileUtils {
                 room.setHitMaskHeight(getField(msdBytes, msdByteIndex, 2).getShort());
                 msdByteIndex += 2;
 
-                msdByteIndex += room.getHitMaskWidth() * room.getHitMaskHeight(); // todo: this might be wrong (seek)
+                msdByteIndex += room.getHitMaskWidth() * room.getHitMaskHeight();
 
                 for (int layerIndex = 0; layerIndex < room.getNumberOfLayers(); layerIndex++) {
                     short layerWidth = getField(msdBytes, msdByteIndex, 2).getShort();
@@ -285,12 +283,12 @@ public class FileUtils {
                         room.setTileWidth(layerWidth);
                         room.setTileHeight(layerHeight);
 
-                        room.setScreenWidth(room.getTileWidth());
-                        room.setScreenHeight(room.getTileHeight());
-                        room.setNumberOfScreens(room.getScreenWidth() + room.getScreenHeight());
+                        room.setScreenWidth((int)room.getTileWidth() / 32);
+                        room.setScreenHeight((int)room.getTileHeight() / 24);
+                        room.setNumberOfScreens(room.getScreenWidth() * room.getScreenHeight());
                     }
 
-                    msdByteIndex += sublayers * layerWidth * layerHeight * 2; // todo: this might be wrong (seek)
+                    msdByteIndex += sublayers * layerWidth * layerHeight * 2;
                 }
 
                 for (int screenIndex = 0; screenIndex < room.getNumberOfScreens(); screenIndex++) {
@@ -309,11 +307,11 @@ public class FileUtils {
                     rcdByteIndex += 1;
 
                     for (int noPositionScreenObjectIndex = 0; noPositionScreenObjectIndex < noPositionScreenObjectCount; noPositionScreenObjectIndex++) {
-                        rcdByteIndex = addObject(screen, rcdBytes, rcdByteIndex, false); // todo: = or +=
+                        rcdByteIndex = addObject(screen, rcdBytes, rcdByteIndex, false);
                     }
 
                     for (int screenObjectIndex = 0; screenObjectIndex < (screenObjectCount - noPositionScreenObjectCount); screenObjectIndex++) {
-                        rcdByteIndex = addObject(screen, rcdBytes, rcdByteIndex, true); // todo: = or +=
+                        rcdByteIndex = addObject(screen, rcdBytes, rcdByteIndex, true);
                     }
 
                     screen.setName(new String(getByteArraySlice(rcdBytes, rcdByteIndex, screenNameLength), "UTF-16BE"));

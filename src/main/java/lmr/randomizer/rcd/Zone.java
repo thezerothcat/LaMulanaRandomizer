@@ -11,7 +11,7 @@ public class Zone implements ObjectContainer {
     private int zoneIndex;
     private String name;
 
-    private List<Object> objects = new ArrayList<>();
+    private List<GameObject> objects = new ArrayList<>();
 
     public Zone() {
     }
@@ -36,7 +36,7 @@ public class Zone implements ObjectContainer {
         return rooms;
     }
 
-    public List<Object> getObjects() {
+    public List<GameObject> getObjects() {
         return objects;
     }
 
@@ -44,7 +44,7 @@ public class Zone implements ObjectContainer {
     public String toString() {
         StringBuilder returnVal = new StringBuilder(String.format("ZONE %02d \"%s\"", zoneIndex, name));
         if(!objects.isEmpty()) {
-            for(Object obj : objects) {
+            for(GameObject obj : objects) {
                 returnVal.append('\n').append(obj.toString());
             }
             for(Room room : rooms) {

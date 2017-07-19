@@ -12,7 +12,7 @@ public class Screen implements ObjectContainer{
     private int roomIndex;
     private int screenIndex;
 
-    private List<Object> objects = new ArrayList<>();
+    private List<GameObject> objects = new ArrayList<>();
     private List<ScreenExit> screenExits = new ArrayList<>(); //order is top, right, bottom, left
 
     public String getName() {
@@ -47,7 +47,7 @@ public class Screen implements ObjectContainer{
         this.screenIndex = screenIndex;
     }
 
-    public List<Object> getObjects() {
+    public List<GameObject> getObjects() {
         return objects;
     }
 
@@ -59,7 +59,7 @@ public class Screen implements ObjectContainer{
     public String toString() {
         StringBuilder returnVal = new StringBuilder(String.format("SCREEN %02d-%02d-%02d \"%s\"", zoneIndex, roomIndex, screenIndex, name));
         if(!objects.isEmpty()) {
-            for(Object obj : objects) {
+            for(GameObject obj : objects) {
                 returnVal.append('\n').append(obj.toString());
             }
         }
