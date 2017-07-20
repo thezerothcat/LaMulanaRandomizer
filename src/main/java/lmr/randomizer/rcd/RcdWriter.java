@@ -13,11 +13,11 @@ public final class RcdWriter {
     }
 
     public static void writeRcd(List<Zone> rcdInfo) throws IOException {
-        DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream("script.rcd"));
+        DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream("scriptcopy.rcd"));
         dataOutputStream.writeShort(0);
 
         for(Zone zone : rcdInfo) {
-            dataOutputStream.writeByte(zone.getName().length());
+            dataOutputStream.writeByte(zone.getName().length() * 2);
             dataOutputStream.writeShort(zone.getObjects().size());
 //            for(Character c : zone.getName().toCharArray()) {
 //                dataOutputStream.writeShort(c); // todo: will this work?
@@ -34,7 +34,7 @@ public final class RcdWriter {
                 }
 
                 for(Screen screen : room.getScreens()) {
-                    dataOutputStream.writeByte(screen.getName().length());
+                    dataOutputStream.writeByte(screen.getName().length() * 2);
                     dataOutputStream.writeShort(screen.getObjects().size());
                     dataOutputStream.writeByte(getNoPositionScreenObjectCount(screen.getObjects()));
                     for(GameObject obj : screen.getObjects()) {
