@@ -56,7 +56,7 @@ public final class RcdWriter {
         testUpdateCount &= 0x0f;
         testUpdateCount = testUpdateCount << 4;
         testUpdateCount |= obj.getWriteByteOperations().size();
-        System.out.println(testUpdateCount);
+//        System.out.println(testUpdateCount);
         dataOutputStream.writeShort(obj.getId());
         dataOutputStream.writeByte(testUpdateCount);
         dataOutputStream.writeByte(obj.getArgs().size());

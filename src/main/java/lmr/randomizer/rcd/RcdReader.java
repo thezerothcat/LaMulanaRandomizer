@@ -102,10 +102,10 @@ public final class RcdReader {
         TestByteOperation testByteOperation = new TestByteOperation();
 
         testByteOperation.setIndex(getField(rcdBytes, rcdByteIndex, 2).getShort());
-//        rcdByteIndex += 2;
+        rcdByteIndex += 2;
 
         testByteOperation.setValue(rcdBytes[rcdByteIndex]);
-//        rcdByteIndex += 1;
+        rcdByteIndex += 1;
 
         testByteOperation.setOp(ByteOp.getTestOp((int)rcdBytes[rcdByteIndex]));
 //        rcdByteIndex += 1;
@@ -117,10 +117,10 @@ public final class RcdReader {
         WriteByteOperation writeByteOperation = new WriteByteOperation();
 
         writeByteOperation.setIndex(getField(rcdBytes, rcdByteIndex, 2).getShort());
-//        rcdByteIndex += 2;
+        rcdByteIndex += 2;
 
         writeByteOperation.setValue(rcdBytes[rcdByteIndex]);
-//        rcdByteIndex += 1;
+        rcdByteIndex += 1;
 
         writeByteOperation.setOp(ByteOp.getWriteOp((int)rcdBytes[rcdByteIndex]));
 //        rcdByteIndex += 1;
