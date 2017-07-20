@@ -25,6 +25,10 @@ public enum TestOp {
         this.op = op;
     }
 
+    public int getOp() {
+        return op;
+    }
+
     public static TestOp get(int op) {
         for(TestOp value : TestOp.values()) {
             if(op == value.op) {

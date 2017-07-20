@@ -1,13 +1,12 @@
 package lmr.randomizer;
 
 import lmr.randomizer.node.AccessChecker;
+import lmr.randomizer.rcd.RcdReader;
+import lmr.randomizer.rcd.RcdWriter;
 import lmr.randomizer.rcd.Zone;
 
-import javax.script.*;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.*;
 
 /**
@@ -25,7 +24,7 @@ public class Main {
 //        generateItemPlacements(args);
 
         try {
-            writeRcd(FileUtils.getRcdScriptInfo());
+            RcdWriter.writeRcd(RcdReader.getRcdScriptInfo());
         } catch (Exception ex) {
             FileUtils.log("Rcd script processing failed: " + ex.getMessage());
             ex.printStackTrace();
@@ -112,15 +111,6 @@ public class Main {
     private static void outputLocations(long startingSeed, ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, int attempt) throws IOException {
         itemRandomizer.outputLocations(startingSeed, attempt);
         shopRandomizer.outputLocations(startingSeed, attempt);
-    }
-
-    private static void writeRcd(List<Zone> rcdInfo) throws IOException {
-        try(BufferedWriter writer = FileUtils.getFileWriter("rcdtest.txt")) {
-            for(Zone zone : rcdInfo) {
-                writer.write(zone.toString());
-                writer.newLine();
-            }
-        }
     }
 
     private static long getSeed(String[] args) {

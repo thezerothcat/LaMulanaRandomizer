@@ -5,8 +5,8 @@ package lmr.randomizer.rcd;
  */
 public class TestByteOperation {
     private int index;
-    private int value;
-    private TestOp op;
+    private byte value;
+    private ByteOp op;
 
     public int getIndex() {
         return index;
@@ -16,19 +16,19 @@ public class TestByteOperation {
         this.index = index;
     }
 
-    public int getValue() {
+    public byte getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(byte value) {
         this.value = value;
     }
 
-    public TestOp getOp() {
+    public ByteOp getOp() {
         return op;
     }
 
-    public void setOp(TestOp op) {
+    public void setOp(ByteOp op) {
         this.op = op;
     }
 }
