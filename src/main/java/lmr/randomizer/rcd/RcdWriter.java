@@ -19,6 +19,9 @@ public final class RcdWriter {
         for(Zone zone : rcdInfo) {
             dataOutputStream.writeByte(zone.getName().length());
             dataOutputStream.writeShort(zone.getObjects().size());
+//            for(Character c : zone.getName().toCharArray()) {
+//                dataOutputStream.writeShort(c); // todo: will this work?
+//            }
             dataOutputStream.writeChars(zone.getName()); // todo: will this work?
 
             for(GameObject obj : zone.getObjects()) {
@@ -34,9 +37,12 @@ public final class RcdWriter {
                     dataOutputStream.writeByte(screen.getName().length());
                     dataOutputStream.writeShort(screen.getObjects().size());
                     dataOutputStream.writeByte(getNoPositionScreenObjectCount(screen.getObjects()));
-                    for(GameObject obj : room.getObjects()) {
+                    for(GameObject obj : screen.getObjects()) {
                         writeObject(obj, dataOutputStream);
                     }
+//                    for(Character c : screen.getName().toCharArray()) {
+//                        dataOutputStream.writeShort(c);
+//                    }
                     dataOutputStream.writeChars(screen.getName()); // todo: will this work?
                     for(ScreenExit exit : screen.getScreenExits()) {
                         dataOutputStream.writeByte(exit.getZoneIndex());
