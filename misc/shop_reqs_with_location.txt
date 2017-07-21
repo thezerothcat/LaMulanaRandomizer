@@ -25,5 +25,5 @@ Shop 17 (Birth) => Location: Chamber of Birth [West], Location: Gate of Illusion
 Shop 18 (Lil Bro) => Location: Twin Labyrinths [Loop]
 Shop 19 (Big Bro) => Location: Twin Labyrinths [Loop]
 Shop 20 (Twin Labs) => Location: Twin Labyrinths [Lower], Feather
-Shop 20 (Unsolvable) => Location: Twin Labyrinths [Lower], Feather, Bomb
-Shop 21 (Endless) => Location: Endless Corridor [1F], Birth Seal
+Shop 21 (Unsolvable) => Location: Twin Labyrinths [Lower], Feather, Bomb
+Shop 22 (Endless) => Location: Endless Corridor [1F], Birth Seal

@@ -13,28 +13,22 @@ import java.util.*;
  * Created by thezerothcat on 7/9/2017.
  */
 public class Main {
-    // todo: actually use settings
-    private static boolean zeroRequirementGrail = true;
-    private static boolean zeroRequirementHandScannerAndReaderExe = true;
-    private static boolean guaranteeSubweapon = true; // Ensure at least one subweapon drop within initial item set.
-    private static int zeroRequirementSubweapons = 3; // Preserving vanilla initial subweapon ratio for the sake of fun and sanity, although this should eventually be configurable.
-    private static int zeroRequirementAnkhJewels = 4; // Preserving vanilla number of ankh jewels to reduce risk of ankh jewel locks, at least for v1.
-
     public static void main(String[] args) {
-//        generateItemPlacements(args);
+        generateItemPlacements(args);
 
-        try {
-            RcdWriter.writeRcd(RcdReader.getRcdScriptInfo());
-        } catch (Exception ex) {
-            FileUtils.log("Rcd script processing failed: " + ex.getMessage());
-            ex.printStackTrace();
-        }
+//        try {
+//            RcdWriter.writeRcd(RcdReader.getRcdScriptInfo());
+//        } catch (Exception ex) {
+//            FileUtils.log("Rcd script processing failed: " + ex.getMessage());
+//            ex.printStackTrace();
+//        }
         FileUtils.closeAll();
     }
 
     private static void generateItemPlacements(String[] args) {
         long startingSeed = getSeed(args);
         Random random = new Random(startingSeed);
+        List<String> noRequirementItems = getNoRequirementItems();
 
         int attempt = 1;
         while(true) {
@@ -44,24 +38,17 @@ public class Main {
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer);
 
             String initialSubweapon = null;
-            if(guaranteeSubweapon) {
+            if(Settings.guaranteeSubweapon) {
                 initialSubweapon = ItemRandomizer.ALL_SUBWEAPONS.get(random.nextInt(ItemRandomizer.ALL_SUBWEAPONS.size()));
             }
             shopRandomizer.determineItemTypes(random, initialSubweapon);
 
             // todo: make initial items based on settings
+            itemRandomizer.placeNonRandomizedItems();
             // Note: The line beginning with Feather isn't actually required, but since the entire
             // placement set gets rerolled every time there's a failure, it can take ages to find a
             // valid set of placements. This was an attempt to make things resolve faster.
-            itemRandomizer.placeRequiredItems(Arrays.asList("Holy Grail",
-                    "Hand Scanner", "reader.exe",
-                    "Ankh Jewel (Gate of Guidance)",
-                    "Ankh Jewel (Mausoleum of the Giants)",
-                    "Ankh Jewel (Temple of the Sun)",
-                    "Ankh Jewel (Spring in the Sky)",
-                    "Feather", "Hermes' Boots", "Grapple Claw", "Origin Seal", "Helmet",
-                    initialSubweapon),
-                    random);
+            itemRandomizer.placeRequiredItems(noRequirementItems, random);
 
             itemRandomizer.placeAllItems(random);
 
@@ -87,7 +74,14 @@ public class Main {
     }
 
     private static ShopRandomizer buildShopRandomizer(ItemRandomizer itemRandomizer) {
-        ShopRandomizer shopRandomizer = new ShopRandomizer(itemRandomizer.getTotalShopItems());
+        ShopRandomizer shopRandomizer;
+        if(Settings.randomizeShops) {
+            shopRandomizer = new ShopRandomizer(itemRandomizer.getTotalShopItems());
+        }
+        else {
+            shopRandomizer = new ShopNonRandomizer(itemRandomizer.getTotalShopItems());
+        }
+
         itemRandomizer.setShopRandomizer(shopRandomizer);
         return shopRandomizer;
     }
@@ -106,6 +100,26 @@ public class Main {
         itemRandomizer.setAccessChecker(accessChecker);
         shopRandomizer.setAccessChecker(accessChecker);
         return accessChecker;
+    }
+
+    private static List<String> getNoRequirementItems() {
+        List<String> noRequirementItems = new ArrayList<>();
+        noRequirementItems.add("Holy Grail");
+        if(Settings.randomizeShops) {
+            noRequirementItems.add("Hand Scanner");
+            noRequirementItems.add("reader.exe");
+            noRequirementItems.add("Hermes' Boots");
+            noRequirementItems.add("Helmet");
+        }
+        noRequirementItems.add("Ankh Jewel (Gate of Guidance)");
+        noRequirementItems.add("Ankh Jewel (Mausoleum of the Giants)");
+        noRequirementItems.add("Ankh Jewel (Temple of the Sun)");
+        noRequirementItems.add("Ankh Jewel (Spring in the Sky)");
+        noRequirementItems.add("Feather");
+        noRequirementItems.add("Grapple Claw");
+        noRequirementItems.add("Origin Seal");
+        noRequirementItems.removeAll(DataFromFile.getNonRandomizedItems());
+        return noRequirementItems;
     }
 
     private static void outputLocations(long startingSeed, ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, int attempt) throws IOException {

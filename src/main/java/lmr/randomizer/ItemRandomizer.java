@@ -25,12 +25,12 @@ public class ItemRandomizer {
     private AccessChecker accessChecker;
 
     public ItemRandomizer() {
-        allItems = FileUtils.getList("all/all_items.txt");
+        allItems = new ArrayList<>(DataFromFile.getAllItems());
         unplacedItems = new ArrayList<>(allItems);
 
-        nonShopItemLocations = FileUtils.getList("all/non_shop_items.txt");
+        nonShopItemLocations = new ArrayList<>(DataFromFile.getNonShopItemLocations());
         unassignedNonShopItemLocations = new ArrayList<>(nonShopItemLocations);
-        totalShopItems = allItems.size() - nonShopItemLocations.size();
+        totalShopItems = Settings.randomizeShops ? allItems.size() - nonShopItemLocations.size() : 0;
     }
 
     public int getTotalShopItems() {
@@ -45,8 +45,19 @@ public class ItemRandomizer {
         return mapOfItemLocationToItem.get(location);
     }
 
+    public void placeNonRandomizedItems() {
+        for(String item : DataFromFile.getNonRandomizedItems()) {
+            mapOfItemLocationToItem.put(item, item);
+            if(!unassignedNonShopItemLocations.contains(item)) {
+                FileUtils.log("Item not included in locations: " + item);
+            }
+            unassignedNonShopItemLocations.remove(item);
+            unplacedItems.remove(item);
+        }
+    }
+
     public void placeRequiredItems(List<String> items, Random random) {
-        List<String> initialUnassignedNonShopLocations = FileUtils.getList("initial/initial_chests.txt");
+        List<String> initialUnassignedNonShopLocations = new ArrayList<>(DataFromFile.getInitialNonShopItemLocations());
         List<String> initialUnassignedShopItemLocations = shopRandomizer.getInitialUnassignedShopItemLocations();
 
         // todo: properly randomize the order in which the list of initial items is placed
@@ -59,7 +70,7 @@ public class ItemRandomizer {
                     // todo: check for exceptions
                     String location = initialUnassignedNonShopLocations.get(locationIndex);
                     mapOfItemLocationToItem.put(location, item);
-                    if(accessChecker.validRequirements(item, location)) {
+                    if(accessChecker.validRequirements(item, location)) { // todo: beware infini-loops!
                         initialUnassignedNonShopLocations.remove(location);
                         unassignedNonShopItemLocations.remove(location);
                         unplacedItems.remove(item);
@@ -106,8 +117,10 @@ public class ItemRandomizer {
         }
 
         for (String location : mapOfItemLocationToItem.keySet()) {
-            writer.write(location + " => " + mapOfItemLocationToItem.get(location));
-            writer.newLine();
+            if(!location.equals(mapOfItemLocationToItem.get(location))) {
+                writer.write(location + " => " + mapOfItemLocationToItem.get(location));
+                writer.newLine();
+            }
         }
 
         writer.flush();

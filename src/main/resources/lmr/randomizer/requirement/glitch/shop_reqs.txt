@@ -1,4 +1,4 @@
 Shop 8 (Sun) => None
 Shop 11 (Moonlight) => Location: Temple of Moonlight [Lower], Hermes' Boots, Grapple Claw
 Shop 11 (Moonlight) => Location: Temple of Moonlight [Lower], Birth Seal
-Shop 20 (Unsolvable) => Hermes' Boots, Grapple Claw
+Shop 21 (Unsolvable) => Hermes' Boots, Grapple Claw

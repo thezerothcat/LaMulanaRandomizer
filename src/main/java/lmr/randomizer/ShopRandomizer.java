@@ -15,7 +15,7 @@ public class ShopRandomizer {
     private static final String SHIELD_SHOP_NAME = "Shop 7 (Graveyard)";
     private static final String FISH_SHOP_NAME = "Shop 12 Alt (Spring)";
 
-    private Map<String, String> mapOfShopInventoryItemToContents = new HashMap<>(); // The thing we're trying to build.
+    protected Map<String, String> mapOfShopInventoryItemToContents = new HashMap<>(); // The thing we're trying to build.
     private List<String> allShops;
     private List<String> unassignedShopLocations = new ArrayList<>(); // Shop locations which still need something placed.
     private List<String> unassignedSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
@@ -26,7 +26,8 @@ public class ShopRandomizer {
 
     public ShopRandomizer(int totalUniqueShopItems) {
         this.totalUniqueShopItems = totalUniqueShopItems;
-        this.allShops = FileUtils.getList("all/all_shops.txt");
+        allShops = new ArrayList<>(DataFromFile.getAllShops());
+
         if(!allShops.contains(MSX_SHOP_NAME)) {
             allShops.add(MSX_SHOP_NAME);
         }

@@ -97,7 +97,7 @@ randc.exe
 reader.exe
 Ring
 Rolling Shuriken
-Sacred Orb  (Gate of Guidance)
+Sacred Orb (Gate of Guidance)
 Sacred Orb (Chamber of Extinction)
 Sacred Orb (Dimensional Corridor)
 Sacred Orb (Mausoleum of the Giants)
