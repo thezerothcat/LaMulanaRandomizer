@@ -45,12 +45,12 @@ public class Main {
 
             // todo: make initial items based on settings
             itemRandomizer.placeNonRandomizedItems();
-            // Note: The line beginning with Feather isn't actually required, but since the entire
-            // placement set gets rerolled every time there's a failure, it can take ages to find a
-            // valid set of placements. This was an attempt to make things resolve faster.
-            itemRandomizer.placeRequiredItems(noRequirementItems, random);
-
-            itemRandomizer.placeAllItems(random);
+            if(!itemRandomizer.placeRequiredItems(noRequirementItems, random)) {
+                continue;
+            }
+            if(!itemRandomizer.placeAllItems(random)) {
+                continue;
+            }
 
             accessChecker.computeAccessibleNodes("None");
             while(!accessChecker.getQueuedUpdates().isEmpty()) {
@@ -118,9 +118,9 @@ public class Main {
         noRequirementItems.add("Ankh Jewel (Mausoleum of the Giants)");
         noRequirementItems.add("Ankh Jewel (Temple of the Sun)");
         noRequirementItems.add("Ankh Jewel (Spring in the Sky)");
-        noRequirementItems.add("Feather");
-        noRequirementItems.add("Grapple Claw");
-        noRequirementItems.add("Origin Seal");
+//        noRequirementItems.add("Feather");
+//        noRequirementItems.add("Grapple Claw");
+//        noRequirementItems.add("Origin Seal");
         noRequirementItems.removeAll(DataFromFile.getNonRandomizedItems());
         return noRequirementItems;
     }

@@ -73,6 +73,7 @@ public class FileUtils {
 
     private static byte[] getBytes(InputStream inputStream, long fileSize) throws IOException {
         byte[] allBytes = new byte[(int) fileSize];
+        inputStream.read(allBytes);
         inputStream.close();
         return allBytes;
     }

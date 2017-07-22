@@ -63,58 +63,103 @@ public class ItemRandomizer {
         }
     }
 
-    public void placeRequiredItems(List<String> items, Random random) {
+    public boolean placeRequiredItems(List<String> items, Random random) {
         List<String> initialUnassignedNonShopLocations = new ArrayList<>(DataFromFile.getInitialNonShopItemLocations());
         List<String> initialUnassignedShopItemLocations = shopRandomizer.getInitialUnassignedShopItemLocations();
 
-        // todo: properly randomize the order in which the list of initial items is placed
-        for(String item : items) {
-            while(true) {
-                int availableLocations = initialUnassignedNonShopLocations.size() + initialUnassignedShopItemLocations.size();
+        int size = items.size();
+        for(int i = 0; i < size; i++) {
+            String item = getRandomItem(items, random);
+            int availableLocations = initialUnassignedNonShopLocations.size() + initialUnassignedShopItemLocations.size();
+            List<Integer> availableLocationIndices = buildIndices(availableLocations);
 
-                int locationIndex = random.nextInt(availableLocations);
+            while(true) {
+                if(availableLocationIndices.size() == 0) {
+                    return false;
+                }
+                int locationIndex = availableLocationIndices.get(random.nextInt(availableLocationIndices.size()));
                 if(locationIndex < initialUnassignedNonShopLocations.size()) {
                     // todo: check for exceptions
                     String location = initialUnassignedNonShopLocations.get(locationIndex);
                     mapOfItemLocationToItem.put(location, item);
-                    if(accessChecker.validRequirements(item, location)) { // todo: beware infini-loops!
+                    if(accessChecker.validRequirements(item, location)) {
+                        items.remove(item);
                         initialUnassignedNonShopLocations.remove(location);
                         unassignedNonShopItemLocations.remove(location);
                         unplacedItems.remove(item);
                         break;
                     }
+                    else {
+                        availableLocationIndices.remove(locationIndex);
+                    }
                 }
-                else if(shopRandomizer.placeRequiredItem(item, initialUnassignedShopItemLocations, locationIndex - initialUnassignedNonShopLocations.size())) {
-                    unplacedItems.remove(item);
-                    break;
+                else {
+                    if(shopRandomizer.placeRequiredItem(item, initialUnassignedShopItemLocations, locationIndex - initialUnassignedNonShopLocations.size())) {
+                        items.remove(item);
+                        unplacedItems.remove(item);
+                        break;
+                    }
+                    else {
+                        availableLocationIndices.remove(locationIndex);
+                    }
                 }
             }
         }
+        return true;
     }
 
-    public void placeAllItems(Random random) {
+    private String getRandomItem(List<String> items, Random random) {
+        return items.get(random.nextInt(items.size()));
+    }
+
+    public boolean placeAllItems(Random random) {
         while(!unplacedItems.isEmpty()) {
             int availableLocations = unassignedNonShopItemLocations.size() + shopRandomizer.getUnassignedShopItemLocations().size();
-            placeItem(unplacedItems.get(random.nextInt(unplacedItems.size())), availableLocations, random);
+            if(!placeItem(unplacedItems.get(random.nextInt(unplacedItems.size())), availableLocations, random)) {
+                return false;
+            }
         }
+        return true;
     }
 
     private boolean placeItem(String item, int availableLocations, Random random) {
-        int locationIndex = random.nextInt(availableLocations);
-        if(locationIndex < unassignedNonShopItemLocations.size()) {
-            String location = unassignedNonShopItemLocations.get(locationIndex);
-            if (accessChecker.validRequirements(item, location)) {
-                mapOfItemLocationToItem.put(location, item);
-                unassignedNonShopItemLocations.remove(location);
-                unplacedItems.remove(item);
-                return true;
+        List<Integer> availableLocationIndices = buildIndices(availableLocations);
+
+        while(true) {
+            if(availableLocationIndices.size() == 0) {
+                return false;
+            }
+            int locationIndex = availableLocationIndices.get(random.nextInt(availableLocationIndices.size()));
+            if(locationIndex < unassignedNonShopItemLocations.size()) {
+                String location = unassignedNonShopItemLocations.get(locationIndex);
+                if (accessChecker.validRequirements(item, location)) {
+                    mapOfItemLocationToItem.put(location, item);
+                    unassignedNonShopItemLocations.remove(location);
+                    unplacedItems.remove(item);
+                    return true;
+                }
+                else {
+                    availableLocationIndices.remove(locationIndex);
+                }
+            }
+            else {
+                if(shopRandomizer.placeItem(item, locationIndex - unassignedNonShopItemLocations .size())) {
+                    unplacedItems.remove(item);
+                    return true;
+                }
+                else {
+                    availableLocationIndices.remove(locationIndex);
+                }
             }
         }
-        else if(shopRandomizer.placeItem(item, locationIndex - unassignedNonShopItemLocations .size())) {
-            unplacedItems.remove(item);
-            return true;
+    }
+
+    private List<Integer> buildIndices(int size) {
+        List<Integer> indices = new ArrayList<>(size);
+        for(int i = 0; i < size; i++) {
+            indices.add(i);
         }
-        return false;
+        return indices;
     }
 
     public void outputLocations(int attemptNumber) throws IOException {
