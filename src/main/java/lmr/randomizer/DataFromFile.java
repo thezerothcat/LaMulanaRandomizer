@@ -1,5 +1,7 @@
 package lmr.randomizer;
 
+import lmr.randomizer.update.GameObjectId;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +16,7 @@ public final class DataFromFile {
     private static List<String> nonRandomizedItems;
     private static List<String> nonShopItemLocations;
     private static List<String> initialNonShopItemLocations;
+    private static Map<String, GameObjectId> mapOfItemToUsefulIdentifyingRcdData;
 
     private DataFromFile() { }
 
@@ -74,5 +77,15 @@ public final class DataFromFile {
             }
         }
         return initialNonShopItemLocations;
+    }
+
+    public static Map<String, GameObjectId> getMapOfItemToUsefulIdentifyingRcdData() {
+        if(mapOfItemToUsefulIdentifyingRcdData == null) {
+            mapOfItemToUsefulIdentifyingRcdData = FileUtils.getRcdDataIdMap("rcd/chest_args.txt");
+            if(mapOfItemToUsefulIdentifyingRcdData == null) {
+                mapOfItemToUsefulIdentifyingRcdData = new HashMap<>(0);
+            }
+        }
+        return mapOfItemToUsefulIdentifyingRcdData;
     }
 }

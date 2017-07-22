@@ -1,4 +1,4 @@
-package lmr.randomizer;
+package lmr.randomizer.random;
 
 import java.io.IOException;
 import java.util.ArrayList;

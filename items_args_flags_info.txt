@@ -135,4 +135,4 @@ yagostr.exe => 99, 0e5
 bounce.exe => 112, 0f2
 # miracle.exe => 113, 0f3
 mirai.exe => 114, 0f4
-# lamulana.exe => 115, 0f5
+lamulana.exe => 115, 0f5

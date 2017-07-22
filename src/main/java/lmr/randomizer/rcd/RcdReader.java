@@ -1,5 +1,8 @@
 package lmr.randomizer.rcd;
 
+import lmr.randomizer.rcd.object.*;
+import lmr.randomizer.update.RcdObjectTracker;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -95,6 +98,9 @@ public final class RcdReader {
         }
 
         objectContainer.getObjects().add(obj);
+        if(obj.getId() == 0x2c) {
+            RcdObjectTracker.addChest(obj);
+        }
         return rcdByteIndex;
     }
 

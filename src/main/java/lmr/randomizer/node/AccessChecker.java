@@ -1,9 +1,8 @@
 package lmr.randomizer.node;
 
 import lmr.randomizer.FileUtils;
-import lmr.randomizer.ItemRandomizer;
-import lmr.randomizer.ShopRandomizer;
-import lmr.randomizer.node.NodeWithRequirements;
+import lmr.randomizer.random.ItemRandomizer;
+import lmr.randomizer.random.ShopRandomizer;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

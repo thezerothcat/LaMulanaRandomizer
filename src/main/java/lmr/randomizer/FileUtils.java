@@ -1,15 +1,13 @@
 package lmr.randomizer;
 
 import lmr.randomizer.node.AccessChecker;
-import lmr.randomizer.rcd.*;
-import lmr.randomizer.rcd.GameObject;
+import lmr.randomizer.update.GameObjectId;
 
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by thezerothcat on 7/10/2017.
@@ -68,6 +66,24 @@ public class FileUtils {
             }
         } catch (Exception ex) {
             return;
+        }
+    }
+
+
+    public static Map<String, GameObjectId> getRcdDataIdMap(String filename) {
+        try(BufferedReader reader = getFileReader(filename)) {
+            String line;
+            String[] lineParts;
+            String[] ids;
+            Map<String, GameObjectId> mapOfItemToUsefulIdentifyingRcdData = new HashMap<>();
+            while((line = reader.readLine()) != null) {
+                lineParts = line.trim().split(" => "); // delimiter
+                ids = lineParts[1].split(", ?");
+                mapOfItemToUsefulIdentifyingRcdData.put(lineParts[0], new GameObjectId(ids[0], ids[1]));
+            }
+            return mapOfItemToUsefulIdentifyingRcdData;
+        } catch (Exception ex) {
+            return null;
         }
     }
 

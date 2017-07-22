@@ -1,5 +1,7 @@
 package lmr.randomizer.rcd;
 
+import lmr.randomizer.rcd.object.*;
+
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,7 +15,7 @@ public final class RcdWriter {
     }
 
     public static void writeRcd(List<Zone> rcdInfo) throws IOException {
-        DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream("scriptcopy.rcd"));
+        DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream("script.rcd"));
         dataOutputStream.writeShort(0);
 
         for(Zone zone : rcdInfo) {

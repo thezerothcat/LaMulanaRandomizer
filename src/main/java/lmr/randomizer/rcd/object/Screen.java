@@ -1,4 +1,4 @@
-package lmr.randomizer.rcd;
+package lmr.randomizer.rcd.object;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by thezerothcat on 7/16/2017.
  */
-public class Screen implements ObjectContainer{
+public class Screen implements ObjectContainer {
     private String name;
     private int zoneIndex;
     private int roomIndex;

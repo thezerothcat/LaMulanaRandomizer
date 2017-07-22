@@ -1,4 +1,6 @@
-package lmr.randomizer.rcd;
+package lmr.randomizer.rcd.object;
+
+import lmr.randomizer.rcd.object.ByteOp;
 
 /**
  * Created by thezerothcat on 7/17/2017.

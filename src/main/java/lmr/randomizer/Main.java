@@ -1,11 +1,14 @@
 package lmr.randomizer;
 
 import lmr.randomizer.node.AccessChecker;
+import lmr.randomizer.random.ItemRandomizer;
+import lmr.randomizer.random.ShopNonRandomizer;
+import lmr.randomizer.random.ShopRandomizer;
 import lmr.randomizer.rcd.RcdReader;
 import lmr.randomizer.rcd.RcdWriter;
-import lmr.randomizer.rcd.Zone;
+import lmr.randomizer.rcd.object.Zone;
+import lmr.randomizer.update.RcdObjectTracker;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -14,18 +17,16 @@ import java.util.*;
  */
 public class Main {
     public static void main(String[] args) {
-        generateItemPlacements(args);
-
-//        try {
-//            RcdWriter.writeRcd(RcdReader.getRcdScriptInfo());
-//        } catch (Exception ex) {
-//            FileUtils.log("Rcd script processing failed: " + ex.getMessage());
-//            ex.printStackTrace();
-//        }
+        try {
+            doTheThing(args);
+        } catch (Exception ex) {
+            FileUtils.log("Rcd script processing failed: " + ex.getMessage());
+            ex.printStackTrace();
+        }
         FileUtils.closeAll();
     }
 
-    private static void generateItemPlacements(String[] args) {
+    private static void doTheThing(String[] args) {
         long startingSeed = getSeed(args);
         Random random = new Random(startingSeed);
         List<String> noRequirementItems = getNoRequirementItems();
@@ -60,10 +61,12 @@ public class Main {
             if(accessChecker.isSuccess()) {
                 try {
                     outputLocations(startingSeed, itemRandomizer, shopRandomizer, attempt);
+                    itemRandomizer.updateRcd();
+
 //                    updateRcd(itemRandomizer, shopRandomizer);
 //                    accessChecker.outputRemaining(startingSeed, attempt);
                 } catch (Exception ex) {
-                    continue;
+                    return;
                     // No exception handling in v1
                 }
 

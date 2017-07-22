@@ -1,4 +1,4 @@
-package lmr.randomizer.rcd;
+package lmr.randomizer.rcd.object;
 
 import java.util.ArrayList;
 import java.util.List;

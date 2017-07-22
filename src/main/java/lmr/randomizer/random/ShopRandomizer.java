@@ -1,5 +1,7 @@
-package lmr.randomizer;
+package lmr.randomizer.random;
 
+import lmr.randomizer.DataFromFile;
+import lmr.randomizer.FileUtils;
 import lmr.randomizer.node.AccessChecker;
 
 import java.io.BufferedWriter;
