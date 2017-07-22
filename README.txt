@@ -8,7 +8,10 @@ How to use:
 -----------------------------
 The jar can be run from anywhere, and will look for common Windows install paths for La-Mulana.
 
-When run, the jar will generate random item placements and output script.rcd (this should be copied to your La-Mulana directory; make sure to back up your existing one first), items<seed number>.txt (spoilers for which items are expected in which locations), and a log file that should be safe to ignore.
+When run, the jar will generate random item placements and output the following files into the current directory:
+* script.rcd (this should be copied to your La-Mulana directory; make sure to back up your existing one first)
+* items<seed number>.txt (spoilers for which items are expected in which locations)
+* a "log" file (should be safe to ignore/delete)
 
 You may provide additional command-line arguments for customization:
 * -g will enable glitched requirements to be used for access.
