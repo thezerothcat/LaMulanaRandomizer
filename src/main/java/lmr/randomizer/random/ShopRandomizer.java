@@ -2,6 +2,7 @@ package lmr.randomizer.random;
 
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
+import lmr.randomizer.Settings;
 import lmr.randomizer.node.AccessChecker;
 
 import java.io.BufferedWriter;
@@ -169,9 +170,9 @@ public class ShopRandomizer {
         }
     }
 
-    public void outputLocations(long startingSeed, int attemptNumber) throws IOException {
+    public void outputLocations(int attemptNumber) throws IOException {
 //        BufferedWriter writer = FileUtils.getFileWriter(String.format("target/shops%s_%s.txt", startingSeed, attemptNumber));
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("target/shops%s.txt", startingSeed, attemptNumber));
+        BufferedWriter writer = FileUtils.getFileWriter(String.format("target/shops%s.txt", Settings.startingSeed));
         if (writer == null) {
             return;
         }

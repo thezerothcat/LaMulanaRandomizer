@@ -1,12 +1,10 @@
 package lmr.randomizer.rcd;
 
+import lmr.randomizer.FileUtils;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.RcdObjectTracker;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -27,22 +25,6 @@ public final class RcdReader {
             }
         }
         return null;
-    }
-
-    private static byte[] getBytes(String file) {
-        try (InputStream inputStream = new FileInputStream(file))
-        {
-            long fileSize = new File(file).length();
-
-            byte[] allBytes = new byte[(int) fileSize];
-
-            inputStream.read(allBytes);
-            return allBytes;
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
     }
 
     private static byte[] getByteArraySlice(byte[] mainArray, int startIndex, int length) {
@@ -141,7 +123,7 @@ public final class RcdReader {
         }
         String mapPath = laMulanaBaseDir + "\\data\\mapdata";
 
-        byte[] rcdBytes = getBytes(mapPath + "\\script.rcd");
+        byte[] rcdBytes = FileUtils.getBytes("rcd/script.rcd", mapPath + "\\script.rcd");
         int rcdByteIndex = 2; // Seems we skip the first two bytes?
 
         List<Zone> zones = new ArrayList<>();
@@ -163,7 +145,7 @@ public final class RcdReader {
             }
 
 
-            byte[] msdBytes = getBytes(mapPath + String.format("\\\\map%02d.msd", zoneIndex));
+            byte[] msdBytes = FileUtils.getBytes(null, mapPath + String.format("\\\\map%02d.msd", zoneIndex));
             int msdByteIndex = 0;
             while (true) {
                 short frames = getField(msdBytes, msdByteIndex, 2).getShort();

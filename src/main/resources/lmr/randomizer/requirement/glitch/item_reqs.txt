@@ -3,7 +3,7 @@ Axe => None
 Bronze Mirror => Hermes' Boots, Grapple Claw
 Flail Whip => Location: Tower of the Goddess [Lower], Grapple Claw
 Mini Doll => Location: Gate of Illusion [Lower], Hand Scanner, Caltrops
-Philosopher's Ocarina: Hermes' Boots, Grapple Claw, Maternity Statue
+Philosopher's Ocarina => Hermes' Boots, Grapple Claw, Maternity Statue
 Serpent Staff => Book of the Dead, Hermes' Boots, Grapple Claw
 Bronze Mirror => Hermes' Boots, Grapple Claw
 Death Seal => Location: Shrine of the Mother [Seal], Hermes' Boots, Grapple Claw

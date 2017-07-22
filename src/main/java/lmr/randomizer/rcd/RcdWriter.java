@@ -21,10 +21,7 @@ public final class RcdWriter {
         for(Zone zone : rcdInfo) {
             dataOutputStream.writeByte(zone.getName().length() * 2);
             dataOutputStream.writeShort(zone.getObjects().size());
-//            for(Character c : zone.getName().toCharArray()) {
-//                dataOutputStream.writeShort(c); // todo: will this work?
-//            }
-            dataOutputStream.writeChars(zone.getName()); // todo: will this work?
+            dataOutputStream.writeChars(zone.getName());
 
             for(GameObject obj : zone.getObjects()) {
                 writeObject(obj, dataOutputStream);
@@ -42,10 +39,7 @@ public final class RcdWriter {
                     for(GameObject obj : screen.getObjects()) {
                         writeObject(obj, dataOutputStream);
                     }
-//                    for(Character c : screen.getName().toCharArray()) {
-//                        dataOutputStream.writeShort(c);
-//                    }
-                    dataOutputStream.writeChars(screen.getName()); // todo: will this work?
+                    dataOutputStream.writeChars(screen.getName());
                     for(ScreenExit exit : screen.getScreenExits()) {
                         dataOutputStream.writeByte(exit.getZoneIndex());
                         dataOutputStream.writeByte(exit.getRoomIndex());
@@ -64,7 +58,6 @@ public final class RcdWriter {
         testUpdateCount &= 0x0f;
         testUpdateCount = testUpdateCount << 4;
         testUpdateCount |= obj.getWriteByteOperations().size();
-//        System.out.println(testUpdateCount);
         dataOutputStream.writeShort(obj.getId());
         dataOutputStream.writeByte(testUpdateCount);
         dataOutputStream.writeByte(obj.getArgs().size());
@@ -103,5 +96,4 @@ public final class RcdWriter {
         }
         return objects.size();
     }
-
 }

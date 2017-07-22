@@ -17,23 +17,22 @@ import java.util.*;
  */
 public class Main {
     public static void main(String[] args) {
+        parseSettings(args);
         try {
-            doTheThing(args);
+            doTheThing();
         } catch (Exception ex) {
-            FileUtils.log("Rcd script processing failed: " + ex.getMessage());
+            FileUtils.log("Error: " + ex.getMessage());
             ex.printStackTrace();
         }
         FileUtils.closeAll();
     }
 
-    private static void doTheThing(String[] args) {
-        long startingSeed = getSeed(args);
-        Random random = new Random(startingSeed);
+    private static void doTheThing() {
+        Random random = new Random(Settings.startingSeed);
         List<String> noRequirementItems = getNoRequirementItems();
 
         int attempt = 1;
         while(true) {
-//        for(int attempt = 1; attempt <= 5; attempt++) {
             ItemRandomizer itemRandomizer = new ItemRandomizer();
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer);
@@ -60,11 +59,10 @@ public class Main {
 
             if(accessChecker.isSuccess()) {
                 try {
-                    outputLocations(startingSeed, itemRandomizer, shopRandomizer, attempt);
+                    outputLocations(itemRandomizer, shopRandomizer, attempt);
                     itemRandomizer.updateRcd();
 
-//                    updateRcd(itemRandomizer, shopRandomizer);
-//                    accessChecker.outputRemaining(startingSeed, attempt);
+//                    accessChecker.outputRemaining(Settings.startingSeed, attempt);
                 } catch (Exception ex) {
                     return;
                     // No exception handling in v1
@@ -95,9 +93,11 @@ public class Main {
         FileUtils.populateRequirements(accessChecker, "requirement/item_reqs.txt", null);
         FileUtils.populateRequirements(accessChecker, "requirement/event_reqs.txt", null);
         FileUtils.populateRequirements(accessChecker, "requirement/shop_reqs.txt", null);
-//        FileUtils.populateRequirements(accessChecker, "requirement/glitch/location_reqs.txt", "Location: ");
-//        FileUtils.populateRequirements(accessChecker, "requirement/glitch/item_reqs.txt", null);
-//        FileUtils.populateRequirements(accessChecker, "requirement/glitch/shop_reqs.txt", null);
+        if(Settings.allowGlitches) {
+            FileUtils.populateRequirements(accessChecker, "requirement/glitch/location_reqs.txt", "Location: ");
+            FileUtils.populateRequirements(accessChecker, "requirement/glitch/item_reqs.txt", null);
+            FileUtils.populateRequirements(accessChecker, "requirement/glitch/shop_reqs.txt", null);
+        }
         accessChecker.setItemRandomizer(itemRandomizer);
         accessChecker.setShopRandomizer(shopRandomizer);
         itemRandomizer.setAccessChecker(accessChecker);
@@ -125,16 +125,23 @@ public class Main {
         return noRequirementItems;
     }
 
-    private static void outputLocations(long startingSeed, ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, int attempt) throws IOException {
-        itemRandomizer.outputLocations(startingSeed, attempt);
-        shopRandomizer.outputLocations(startingSeed, attempt);
+    private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, int attempt) throws IOException {
+        itemRandomizer.outputLocations(attempt);
+        shopRandomizer.outputLocations(attempt);
     }
 
-    private static long getSeed(String[] args) {
-        try {
-            return Long.parseLong(args[0]);
-        } catch (Exception ex) {
-            return 0L;
+    private static void parseSettings(String[] args) {
+        for(String arg : args) {
+            if(arg.startsWith("-s")) {
+                try {
+                    Settings.startingSeed = Long.parseLong(arg.substring(2));
+                } catch (Exception ex) {
+                    Settings.startingSeed = 0L;
+                }
+            }
+            else if(arg.equals("-g")) {
+                Settings.allowGlitches = true;
+            }
         }
     }
 }

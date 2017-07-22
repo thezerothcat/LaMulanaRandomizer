@@ -54,7 +54,7 @@ public class ShopNonRandomizer extends ShopRandomizer {
 
 
     @Override
-    public void outputLocations(long startingSeed, int attemptNumber) throws IOException {
+    public void outputLocations( int attemptNumber) throws IOException {
         return; // Don't output anything since we didn't randomize anything
     }
 }

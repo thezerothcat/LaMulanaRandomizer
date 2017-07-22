@@ -30,16 +30,51 @@ public class FileUtils {
         try {
             return new BufferedWriter(new FileWriter(file));
         } catch (Exception ex) {
+            System.out.println("unable to get file writer for " + file);
+                ex.printStackTrace();
             return null;
         }
     }
 
     public static BufferedReader getFileReader(String file) {
         try {
-            return new BufferedReader(new FileReader(file));
-        } catch (Exception ex) {
-            return new BufferedReader(new InputStreamReader(FileUtils.class.getResourceAsStream(file))); // If we can't read the file directly, this might be a jar, and we can just pull from that.
+            return new BufferedReader(new FileReader("src/main/resources/lmr/randomizer/" + file));
+        } catch (IOException ex) {
+            try {
+                return new BufferedReader(new InputStreamReader(FileUtils.class.getResourceAsStream(file))); // If we can't read the file directly, this might be a jar, and we can just pull from that.
+            }
+            catch (Exception ex2) {
+                System.out.println("unable to get file reader for " + file);
+                ex.printStackTrace();
+                return null;
+            }
         }
+    }
+
+    public static byte[] getBytes(String providedPath, String installedPath) throws IOException {
+        try {
+            InputStream inputStream = new FileInputStream("src/main/resources/lmr/randomizer/" + providedPath);
+            long fileSize = new File("src/main/resources/lmr/randomizer/" + providedPath).length();
+            return getBytes(inputStream, fileSize);
+        }
+        catch (IOException ex) {
+            try {
+                InputStream inputStream = new FileInputStream(installedPath);
+                long fileSize = new File(installedPath).length();
+                return getBytes(inputStream, fileSize);
+            }
+            catch (Exception ex2) {
+                System.out.println("unable to get file reader for " + installedPath);
+                ex.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private static byte[] getBytes(InputStream inputStream, long fileSize) throws IOException {
+        byte[] allBytes = new byte[(int) fileSize];
+        inputStream.close();
+        return allBytes;
     }
 
     public static List<String> getList(String file) {

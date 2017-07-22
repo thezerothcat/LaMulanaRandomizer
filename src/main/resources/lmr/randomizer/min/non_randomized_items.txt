@@ -15,7 +15,6 @@ emusic.exe
 Eye of Truth
 Flail Whip
 Flare Gun
-Fruit of Eden
 Katana
 Key Sword
 Knife
@@ -27,10 +26,10 @@ Mini Doll
 Mulana Talisman
 Pepper
 Philosopher's Ocarina
-Plane Model
 Ring
 Rolling Shuriken
 Shuriken
 Silver Shield
 Talisman
 xmailer.exe
+yagostr.exe

@@ -6,6 +6,9 @@ package lmr.randomizer;
 public final class Settings {
     private Settings() { }
 
+    public static long startingSeed = 0L;
+
+    public static boolean allowGlitches = false;
     public static boolean randomizeShops = false;
     public static boolean guaranteeSubweapon = true; // Ensure at least one subweapon drop within initial item set. // todo: restore this; it's broken in cases where no subweapons are included in randomization
 
