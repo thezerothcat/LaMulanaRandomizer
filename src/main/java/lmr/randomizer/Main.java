@@ -106,21 +106,14 @@ public class Main {
     }
 
     private static List<String> getNoRequirementItems() {
-        List<String> noRequirementItems = new ArrayList<>();
-        noRequirementItems.add("Holy Grail");
+        List<String> noRequirementItems = new ArrayList<>(Settings.initiallyAvailableItems);
+
         if(Settings.randomizeShops) {
             noRequirementItems.add("Hand Scanner");
             noRequirementItems.add("reader.exe");
             noRequirementItems.add("Hermes' Boots");
             noRequirementItems.add("Helmet");
         }
-        noRequirementItems.add("Ankh Jewel (Gate of Guidance)");
-        noRequirementItems.add("Ankh Jewel (Mausoleum of the Giants)");
-        noRequirementItems.add("Ankh Jewel (Temple of the Sun)");
-        noRequirementItems.add("Ankh Jewel (Spring in the Sky)");
-//        noRequirementItems.add("Feather");
-//        noRequirementItems.add("Grapple Claw");
-//        noRequirementItems.add("Origin Seal");
         noRequirementItems.removeAll(DataFromFile.getNonRandomizedItems());
         return noRequirementItems;
     }
@@ -145,6 +138,22 @@ public class Main {
             else if (arg.startsWith("-dir")) {
                 Settings.laMulanaBaseDir = arg.substring(4);
             }
+            else if (arg.startsWith("-n")) {
+                addArgItem(Settings.nonRandomizedItems, arg.substring(2));
+            }
+            else if (arg.startsWith("-i")) {
+                addArgItem(Settings.initiallyAvailableItems, arg.substring(2));
+            }
         }
     }
+
+    private static void addArgItem(Set<String> nonRandomizedItems, String input) {
+        for(String item : DataFromFile.getAllItems()) {
+            if(item.replaceAll(" ", "").equalsIgnoreCase(input)) {
+                nonRandomizedItems.add(item);
+            }
+        }
+    }
+
+
 }

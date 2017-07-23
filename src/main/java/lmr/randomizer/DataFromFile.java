@@ -59,6 +59,11 @@ public final class DataFromFile {
     public static List<String> getNonRandomizedItems() {
         if(nonRandomizedItems == null) {
             nonRandomizedItems = FileUtils.getList("min/non_randomized_items.txt");
+            for(String item : Settings.nonRandomizedItems) {
+                if(!nonRandomizedItems.contains(item)) {
+                    nonRandomizedItems.add(item);
+                }
+            }
             if(nonRandomizedItems == null) {
                 nonRandomizedItems = new ArrayList<>(0);
             }
