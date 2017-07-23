@@ -192,7 +192,7 @@ public class ItemRandomizer {
         List<Zone> rcdInfo = RcdReader.getRcdScriptInfo();
         for(Map.Entry<String, String> locationAndItem : mapOfItemLocationToItem.entrySet()) {
             if(!locationAndItem.getKey().equals(locationAndItem.getValue())) {
-                RcdObjectTracker.writeChest(locationAndItem.getKey(), locationAndItem.getValue());
+                RcdObjectTracker.writeLocationContents(locationAndItem.getKey(), locationAndItem.getValue());
             }
         }
         RcdWriter.writeRcd(rcdInfo);

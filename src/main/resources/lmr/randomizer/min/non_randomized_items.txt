@@ -1,23 +1,11 @@
 Anchor
-Angel Shield
-Axe
 beolamu.exe
-Bomb
 Book of the Dead
-bunplus.com
-Caltrops
-Chain Whip
-Chakram
 deathv.exe
 Diary
-Earth Spear
 emusic.exe
 Eye of Truth
-Flail Whip
-Flare Gun
-Katana
 Key Sword
-Knife
 mantra.exe
 Map (Surface)
 Maternity Statue
@@ -27,9 +15,6 @@ Mulana Talisman
 Pepper
 Philosopher's Ocarina
 Ring
-Rolling Shuriken
-Shuriken
-Silver Shield
 Talisman
 xmailer.exe
 yagostr.exe

@@ -80,9 +80,7 @@ public final class RcdReader {
         }
 
         objectContainer.getObjects().add(obj);
-        if(obj.getId() == 0x2c) {
-            RcdObjectTracker.addChest(obj);
-        }
+        RcdObjectTracker.addObject(obj);
         return rcdByteIndex;
     }
 
