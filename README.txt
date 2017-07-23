@@ -17,6 +17,14 @@ You may provide additional command-line arguments for customization:
 * -g will enable glitched requirements to be used for access.
 * -s<number> (for example, -s2) will seed the random number generator with the provided number; if not provided, the default is 0
 * -dir<directory> can be used to specify the La-Mulana directory, if your directory isn't supported by default (example: -dirE:\Steam\steamapps\common\La-Mulana)
+* -n<item name without spaces> can be used to force items to remain in their original location; note that some items will do so regardless of configuration (or may be randomized into their original location by chance)
+* -ng and -ngrail are shortcuts for making the Holy Grail appear in its original location
+* -i<item name without spaces> can be used to force items to be randomized into initially-accessible locations; be careful not to add too many, since it's not checked - I believe it's possible to add up to 18 at this time, but I haven't verified)
+* -ig and -igrail are shortcuts for making the Holy Grail initially available
+* -igrapple is a shortcut for making the Grapple Claw initially available
+* -isw will guarantee you a random subweapon made available initially, provided there's at least one subweapon that hasn't been disabled from randomization
+
+Note that, in order to make Ankh Jewels, Maps, or Sacred Orbs initially available or non-randomized, you'll need to know which one you're putting in the chest (until a future update, at least). See all_items.txt for the names I'm using to reference these items.
 
 1.0:
 -----------------------------

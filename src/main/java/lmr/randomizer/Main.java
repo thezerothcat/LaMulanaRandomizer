@@ -4,10 +4,6 @@ import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.random.ItemRandomizer;
 import lmr.randomizer.random.ShopNonRandomizer;
 import lmr.randomizer.random.ShopRandomizer;
-import lmr.randomizer.rcd.RcdReader;
-import lmr.randomizer.rcd.RcdWriter;
-import lmr.randomizer.rcd.object.Zone;
-import lmr.randomizer.update.RcdObjectTracker;
 
 import java.io.IOException;
 import java.util.*;
@@ -29,7 +25,9 @@ public class Main {
 
     private static void doTheThing() {
         Random random = new Random(Settings.startingSeed);
-        List<String> noRequirementItems = getNoRequirementItems();
+        Set<String> initiallyAvailableItems = getInitiallyAvailableItems();
+        List<String> subweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
+        subweapons.removeAll(DataFromFile.getNonRandomizedItems());
 
         int attempt = 1;
         while(true) {
@@ -38,14 +36,16 @@ public class Main {
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer);
 
             String initialSubweapon = null;
-            if(Settings.guaranteeSubweapon) {
-                initialSubweapon = ItemRandomizer.ALL_SUBWEAPONS.get(random.nextInt(ItemRandomizer.ALL_SUBWEAPONS.size()));
+            if(Settings.guaranteeSubweapon && !subweapons.isEmpty()) {
+                initialSubweapon = subweapons.get(random.nextInt(subweapons.size())); // todo: if this isn't a thing that can be placed, problems.
             }
             shopRandomizer.determineItemTypes(random, initialSubweapon);
 
             // todo: make initial items based on settings
+            List<String> initiallyAvailableItemsTemp = new ArrayList<>(initiallyAvailableItems);
+            initiallyAvailableItemsTemp.add(initialSubweapon);
             itemRandomizer.placeNonRandomizedItems();
-            if(!itemRandomizer.placeRequiredItems(new ArrayList<>(noRequirementItems), random)) {
+            if(!itemRandomizer.placeRequiredItems(new ArrayList<>(initiallyAvailableItems), random)) {
                 continue;
             }
             if(!itemRandomizer.placeAllItems(random)) {
@@ -105,15 +105,14 @@ public class Main {
         return accessChecker;
     }
 
-    private static List<String> getNoRequirementItems() {
-        List<String> noRequirementItems = new ArrayList<>(Settings.initiallyAvailableItems);
-
-        if(Settings.randomizeShops) {
-            noRequirementItems.add("Hand Scanner");
-            noRequirementItems.add("reader.exe");
-            noRequirementItems.add("Hermes' Boots");
-            noRequirementItems.add("Helmet");
-        }
+    private static Set<String> getInitiallyAvailableItems() {
+        Set<String> noRequirementItems = new HashSet<>(Settings.initiallyAvailableItems);
+//        if(Settings.randomizeShops) {
+//            noRequirementItems.add("Hand Scanner");
+//            noRequirementItems.add("reader.exe");
+//            noRequirementItems.add("Hermes' Boots");
+//            noRequirementItems.add("Helmet");
+//        }
         noRequirementItems.removeAll(DataFromFile.getNonRandomizedItems());
         return noRequirementItems;
     }
@@ -138,8 +137,20 @@ public class Main {
             else if (arg.startsWith("-dir")) {
                 Settings.laMulanaBaseDir = arg.substring(4);
             }
+            else if(arg.equals("-ng") || arg.equals("-ngrail")) {
+                Settings.nonRandomizedItems.add("Holy Grail");
+            }
             else if (arg.startsWith("-n")) {
                 addArgItem(Settings.nonRandomizedItems, arg.substring(2));
+            }
+            else if(arg.equals("-isw")) {
+                Settings.guaranteeSubweapon = true;
+            }
+            else if(arg.equals("-ig") || arg.equals("-igrail")) {
+                Settings.initiallyAvailableItems.add("Holy Grail");
+            }
+            else if(arg.equals("-igrapple")) {
+                Settings.initiallyAvailableItems.add("Grapple Claw");
             }
             else if (arg.startsWith("-i")) {
                 addArgItem(Settings.initiallyAvailableItems, arg.substring(2));

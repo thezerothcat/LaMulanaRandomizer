@@ -12,13 +12,13 @@ public final class Settings {
 
     public static boolean allowGlitches = false;
     public static boolean randomizeShops = false;
-    public static boolean guaranteeSubweapon = true; // Ensure at least one subweapon drop within initial item set. // todo: restore this; it's broken in cases where no subweapons are included in randomization
+    public static boolean guaranteeSubweapon = false; // Ensure at least one subweapon drop within initial item set. // todo: restore this; it's broken in cases where no subweapons are included in randomization
 
     public static String laMulanaBaseDir = null;
 
     public static Set<String> nonRandomizedItems = new HashSet<>();
     public static Set<String> initiallyAvailableItems = new HashSet<>(Arrays.asList("Ankh Jewel (Gate of Guidance)", "Ankh Jewel (Mausoleum of the Giants)",
-            "Ankh Jewel (Temple of the Sun)", "Ankh Jewel (Spring in the Sky)", "Holy Grail"));
+            "Ankh Jewel (Temple of the Sun)", "Ankh Jewel (Spring in the Sky)"));
 
     //    public static boolean zeroRequirementGrail = true;
 //    public static boolean zeroRequirementHandScannerAndReaderExe = true;
