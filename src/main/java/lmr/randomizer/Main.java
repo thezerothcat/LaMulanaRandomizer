@@ -45,7 +45,7 @@ public class Main {
 
             // todo: make initial items based on settings
             itemRandomizer.placeNonRandomizedItems();
-            if(!itemRandomizer.placeRequiredItems(noRequirementItems, random)) {
+            if(!itemRandomizer.placeRequiredItems(new ArrayList<>(noRequirementItems), random)) {
                 continue;
             }
             if(!itemRandomizer.placeAllItems(random)) {
