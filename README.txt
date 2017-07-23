@@ -1,4 +1,4 @@
-La-Mulana Remake Randomizer v1.0.0!
+La-Mulana Remake Randomizer v1.0!
 
 Data to be randomized will be read in from files.
 
@@ -18,7 +18,7 @@ You may provide additional command-line arguments for customization:
 * -s<number> (for example, -s2) will seed the random number generator with the provided number; if not provided, the default is 0
 
 
-1.0.2:
+1.0:
 -----------------------------
 * Not all items can be randomized yet, but most blue chests and free-floating items are randomized.
 * Some items from chests will not be randomized; this is typically due to a known special case for that item which needs to be resolved before the item can safely be shuffled.
