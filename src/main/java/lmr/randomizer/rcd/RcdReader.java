@@ -1,6 +1,7 @@
 package lmr.randomizer.rcd;
 
 import lmr.randomizer.FileUtils;
+import lmr.randomizer.Settings;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.RcdObjectTracker;
 
@@ -19,7 +20,11 @@ public final class RcdReader {
     }
 
     private static String getLaMulanaBaseDir() {
-        for(String filename : Arrays.asList("C:\\Games\\La-Mulana Remake 1.3.3.1", "C:\\GOG Games\\La-Mulana", "C:\\GOG Games\\La-Mulana")) {
+        if(Settings.laMulanaBaseDir != null) {
+            return Settings.laMulanaBaseDir;
+        }
+        for(String filename : Arrays.asList("C:\\Games\\La-Mulana Remake 1.3.3.1", "C:\\GOG Games\\La-Mulana", "C:\\GOG Games\\La-Mulana",
+                "C:\\Steam\\steamapps\\common\\La-Mulana")) {
             if(new File(filename).exists()) {
                 return filename;
             }

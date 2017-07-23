@@ -16,7 +16,7 @@ When run, the jar will generate random item placements and output the following 
 You may provide additional command-line arguments for customization:
 * -g will enable glitched requirements to be used for access.
 * -s<number> (for example, -s2) will seed the random number generator with the provided number; if not provided, the default is 0
-
+* -dir<directory> can be used to specify the La-Mulana directory, if your directory isn't supported by default (example: -dirE:\Steam\steamapps\common\La-Mulana)
 
 1.0:
 -----------------------------

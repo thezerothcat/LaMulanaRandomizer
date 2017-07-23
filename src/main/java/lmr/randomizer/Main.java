@@ -142,6 +142,9 @@ public class Main {
             else if(arg.equals("-g")) {
                 Settings.allowGlitches = true;
             }
+            else if (arg.startsWith("-dir")) {
+                Settings.laMulanaBaseDir = arg.substring(4);
+            }
         }
     }
 }
