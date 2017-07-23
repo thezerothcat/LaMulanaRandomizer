@@ -17,5 +17,6 @@ Pepper
 Philosopher's Ocarina
 Ring
 Talisman
+Treasures
 xmailer.exe
 yagostr.exe
