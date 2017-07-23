@@ -18,9 +18,9 @@ You may provide additional command-line arguments for customization:
 * -s<number> (for example, -s2) will seed the random number generator with the provided number; if not provided, the default is 0
 
 
-1.0.0:
+1.0.2:
 -----------------------------
-* Currently, the only thing being randomized is items that can be collected from chests which contain items in the base game, but this is planned to change in future versions.
+* Not all items can be randomized yet, but most blue chests and free-floating items are randomized.
 * Some items from chests will not be randomized; this is typically due to a known special case for that item which needs to be resolved before the item can safely be shuffled.
 * Ankh Jewel locks are possible. To reduce the likelihood of encountering one, 4 ankh jewels will be available with no requirements (matching the non-randomized game)
 * There are a number of items made initially accessible to speed up resolution of random seeds. In future versions, this will be made customizable.
