@@ -8,7 +8,7 @@ import java.util.*;
 public final class Settings {
     private Settings() { }
 
-    public static long startingSeed = 0L;
+    public static long startingSeed = new Random().nextInt();
 
     public static boolean allowGlitches = false;
     public static boolean randomizeShops = false;

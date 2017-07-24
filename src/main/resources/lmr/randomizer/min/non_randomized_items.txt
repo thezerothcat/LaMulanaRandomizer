@@ -9,6 +9,7 @@ Eye of Truth
 Key Sword
 mantra.exe
 Map (Surface)
+Map (Shrine of the Mother)
 Maternity Statue
 mekuri.exe
 Mini Doll

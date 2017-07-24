@@ -89,9 +89,19 @@ public final class RcdObjectTracker {
                 flagTest.setIndex(itemNewContentsData.getWorldFlag());
             }
         }
-        for(WriteByteOperation flagUpdate : objectToModify.getWriteByteOperations()) {
+        int lastWorldFlagUpdateIndex = -1;
+        for(int i = 0; i < objectToModify.getWriteByteOperations().size(); i++) {
+            WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(i);
             if(flagUpdate.getIndex() == itemLocationData.getWorldFlag()) {
+                lastWorldFlagUpdateIndex = i;
                 flagUpdate.setIndex(itemNewContentsData.getWorldFlag());
+            }
+        }
+
+        if(lastWorldFlagUpdateIndex != -1) {
+            WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(lastWorldFlagUpdateIndex);
+            if(flagUpdate.getValue() != 2) {
+                flagUpdate.setValue(2);
             }
         }
     }
