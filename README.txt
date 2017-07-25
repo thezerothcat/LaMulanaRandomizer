@@ -1,8 +1,6 @@
-La-Mulana Remake Randomizer v1.0!
+WARNING: This is an alpha release! There are still a lot of missing features and possible bugs. Use at your own risk.
 
-Data to be randomized will be read in from files.
-
-Unless you're running this from IDE, make sure you have a clean copy of script.rcd in your La-Mulana directory.
+If you are using the jar, MAKE SURE you have a clean copy of script.rcd in your La-Mulana directory! Failure to do so often results in unwinnable seeds.
 
 How to use:
 -----------------------------

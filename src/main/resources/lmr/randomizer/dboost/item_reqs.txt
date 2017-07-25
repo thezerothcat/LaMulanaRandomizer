@@ -1,0 +1,10 @@
+Ankh Jewel (Tower of Ruin) => Location: Tower of Ruin [Lower], Caltrops
+Ankh Jewel (Tower of Ruin) => Location: Tower of Ruin [Lower], Bomb
+Ankh Jewel (Tower of Ruin) => Location: Tower of Ruin [Lower], Knife
+Ankh Jewel (Tower of Ruin) => Location: Tower of Ruin [Lower], Katana
+Ankh Jewel (Tower of Ruin) => Location: Tower of Ruin [Lower], Axe
+Ankh Jewel (Tower of Ruin) => Location: Tower of Ruin [Lower], Rolling Shuriken
+Ankh Jewel (Tower of Ruin) => Location: Tower of Ruin [Lower], Earth Spear
+Earth Spear => Location: Tower of Ruin [Lower]
+Knife => Flare Gun
+mirai.exe => Bomb

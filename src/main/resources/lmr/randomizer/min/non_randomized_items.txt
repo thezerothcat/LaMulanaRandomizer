@@ -9,6 +9,7 @@ Eye of Truth
 Key Sword
 mantra.exe
 Map (Surface)
+Map (Gate of Illusion)
 Map (Shrine of the Mother)
 Maternity Statue
 mekuri.exe
@@ -18,6 +19,7 @@ Pepper
 Philosopher's Ocarina
 Plane Model
 Ring
+Sacred Orb (Dimensional Corridor)
 Talisman
 Treasures
 xmailer.exe
