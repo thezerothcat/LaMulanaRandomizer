@@ -47,6 +47,21 @@ public final class RcdObjectTracker {
             }
             objects.add(gameObject);
         }
+        else if(gameObject.getId() == 0x12 || gameObject.getId() == 0x0e) {
+            for(TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if(flagTest.getIndex() == 335) {
+                    // deathv stuff
+                    GameObjectId gameObjectId = new GameObjectId((short)96, 335);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if(objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
+        }
     }
 
     public static void writeLocationContents(String chestLocation, String chestContents) {
@@ -64,6 +79,9 @@ public final class RcdObjectTracker {
             }
             else if(objectToModify.getId() == 0x2f) {
                 updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData);
+            }
+            else {
+                updateRelatedObject(objectToModify, itemLocationData, itemNewContentsData);
             }
         }
     }
@@ -102,6 +120,19 @@ public final class RcdObjectTracker {
             WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(lastWorldFlagUpdateIndex);
             if(flagUpdate.getValue() != 2) {
                 flagUpdate.setValue(2);
+            }
+        }
+    }
+
+    private static void updateRelatedObject(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
+        for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+            if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                flagTest.setIndex(itemNewContentsData.getWorldFlag());
+            }
+        }
+        for(WriteByteOperation flagUpdate : objectToModify.getWriteByteOperations()) {
+            if(flagUpdate.getIndex() == itemLocationData.getWorldFlag()) {
+                flagUpdate.setIndex(itemNewContentsData.getWorldFlag());
             }
         }
     }

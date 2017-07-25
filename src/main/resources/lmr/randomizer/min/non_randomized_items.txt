@@ -1,7 +1,6 @@
 Anchor
 beolamu.exe
 Book of the Dead
-deathv.exe
 Diary
 emusic.exe
 Eye of Truth
