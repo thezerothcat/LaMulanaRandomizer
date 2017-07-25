@@ -1,7 +1,6 @@
 Anchor
 beolamu.exe
 Book of the Dead
-bunplus.com
 deathv.exe
 Diary
 emusic.exe
@@ -18,7 +17,6 @@ Mulana Talisman
 Pepper
 Philosopher's Ocarina
 Plane Model
-Ring
 Sacred Orb (Dimensional Corridor)
 Talisman
 Treasures
