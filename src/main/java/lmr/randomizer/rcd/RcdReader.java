@@ -127,7 +127,7 @@ public final class RcdReader {
         }
         String mapPath = laMulanaBaseDir + "\\data\\mapdata";
 
-        byte[] rcdBytes = FileUtils.getBytes("rcd/script.rcd", mapPath + "\\script.rcd");
+        byte[] rcdBytes = FileUtils.getBytes(mapPath + "\\script.rcd", true);
         int rcdByteIndex = 2; // Seems we skip the first two bytes?
 
         List<Zone> zones = new ArrayList<>();
@@ -149,7 +149,7 @@ public final class RcdReader {
             }
 
 
-            byte[] msdBytes = FileUtils.getBytes(null, mapPath + String.format("\\\\map%02d.msd", zoneIndex));
+            byte[] msdBytes = FileUtils.getBytes(mapPath + String.format("\\\\map%02d.msd", zoneIndex), false);
             int msdByteIndex = 0;
             while (true) {
                 short frames = getField(msdBytes, msdByteIndex, 2).getShort();

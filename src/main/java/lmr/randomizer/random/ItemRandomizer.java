@@ -164,7 +164,7 @@ public class ItemRandomizer {
 
     public void outputLocations(int attemptNumber) throws IOException {
 //        BufferedWriter writer = FileUtils.getFileWriter(String.format("target/items%d_%d.txt", startingSeed, attemptNumber));
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("items%d.txt", Settings.startingSeed));
+        BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/items.txt", Settings.startingSeed));
         if (writer == null) {
             return;
         }

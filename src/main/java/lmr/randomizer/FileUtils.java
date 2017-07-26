@@ -51,24 +51,38 @@ public class FileUtils {
         }
     }
 
-    public static byte[] getBytes(String providedPath, String installedPath) throws IOException {
-        try {
-            InputStream inputStream = new FileInputStream("src/main/resources/lmr/randomizer/" + providedPath);
-            long fileSize = new File("src/main/resources/lmr/randomizer/" + providedPath).length();
-            return getBytes(inputStream, fileSize);
-        }
-        catch (IOException ex) {
+    public static byte[] getBytes(String path, boolean rcdFile) throws IOException {
+        if(rcdFile && Settings.rcdFileLocation != null) {
             try {
-                InputStream inputStream = new FileInputStream(installedPath);
-                long fileSize = new File(installedPath).length();
-                return getBytes(inputStream, fileSize);
+                return getBytesInner(Settings.rcdFileLocation);
             }
-            catch (Exception ex2) {
-                System.out.println("unable to get file reader for " + installedPath);
+            catch (IOException ex) {
+                try {
+                    return getBytesInner(path);
+                }
+                catch (Exception ex2) {
+                    System.out.println("unable to get file reader for " + path);
+                    ex.printStackTrace();
+                    return null;
+                }
+            }
+        }
+        else {
+            try {
+                return getBytesInner(path);
+            }
+            catch (Exception ex) {
+                System.out.println("unable to get file reader for " + path);
                 ex.printStackTrace();
                 return null;
             }
         }
+    }
+
+    private static byte[] getBytesInner(String path) throws IOException {
+        InputStream inputStream = new FileInputStream(path);
+        long fileSize = new File(path).length();
+        return getBytes(inputStream, fileSize);
     }
 
     private static byte[] getBytes(InputStream inputStream, long fileSize) throws IOException {

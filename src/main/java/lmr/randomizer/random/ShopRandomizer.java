@@ -172,7 +172,7 @@ public class ShopRandomizer {
 
     public void outputLocations(int attemptNumber) throws IOException {
 //        BufferedWriter writer = FileUtils.getFileWriter(String.format("target/shops%s_%s.txt", startingSeed, attemptNumber));
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("target/shops%s.txt", Settings.startingSeed));
+        BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/shops.txt", Settings.startingSeed));
         if (writer == null) {
             return;
         }
