@@ -14,6 +14,12 @@ To play the randomized game, copy the provided script.rcd for your seed into <La
 
 The command-line arguments from previous releases will not work with the jar, but may be added back in for a later release.
 
+
+1.1:
+-----------------------------
+Adds some basic UI and file validation for the randomizer jar, so it doesn't have to be run from command-line.
+
+
 1.0:
 -----------------------------
 * Not all items can be randomized yet, but most blue chests and free-floating items are randomized.
