@@ -167,8 +167,11 @@ public final class RcdObjectTracker {
             return;
         }
         for(GameObject objectToModify : objectsToModify) {
-            if(objectToModify.getId() == 0x2c || objectToModify.getId() == 0xb5) {
+            if(objectToModify.getId() == 0x2c) {
                 updateChestContents(objectToModify, itemLocationData, itemNewContentsData);
+            }
+            else if(objectToModify.getId() == 0xb5) {
+                updateInstantItemContents(objectToModify, itemLocationData, itemNewContentsData);
             }
             else if(objectToModify.getId() == 0x2f) {
                 updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData);
@@ -192,6 +195,21 @@ public final class RcdObjectTracker {
             }
         }
     }
+
+    private static void updateInstantItemContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
+        objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg()));
+        for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+            if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                flagTest.setIndex(itemNewContentsData.getWorldFlag());
+            }
+        }
+        for(WriteByteOperation flagUpdate : objectToModify.getWriteByteOperations()) {
+            if(flagUpdate.getIndex() == itemLocationData.getWorldFlag()) {
+                flagUpdate.setIndex(itemNewContentsData.getWorldFlag());
+            }
+        }
+    }
+
 
     private static void updateFloatingItemContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
         objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg());
