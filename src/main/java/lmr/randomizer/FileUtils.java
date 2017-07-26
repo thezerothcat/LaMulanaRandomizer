@@ -3,17 +3,17 @@ package lmr.randomizer;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.update.GameObjectId;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.MessageDigest;
+import java.util.*;
 
 /**
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
     private static final BufferedWriter LOG_WRITER;
+    private static final List<String> KNOWN_FILE_HASHES = new ArrayList<>();
 
     static {
         BufferedWriter temp = null;
@@ -24,6 +24,12 @@ public class FileUtils {
 
         }
         LOG_WRITER = temp;
+
+        KNOWN_FILE_HASHES.add("181C959BF2F2567279CC717C8AD03A20"); // 1.0.0.1
+        KNOWN_FILE_HASHES.add("89D8BF2DD6B8FA365A83DDBFD947CCFA"); // 1.1.1.1
+        KNOWN_FILE_HASHES.add("922C4FB1552843B73CF14ADCC923CF17"); // 1.3.3.1
+        // 1.5.5.x is unknown
+        KNOWN_FILE_HASHES.add("21869050145662F6DAAC6A1B3D54F3B9 "); // 1.6.6.x
     }
 
     public static BufferedWriter getFileWriter(String file) {
@@ -90,6 +96,17 @@ public class FileUtils {
         inputStream.read(allBytes);
         inputStream.close();
         return allBytes;
+    }
+
+    public static boolean hashFile(File file) {
+        try {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            byte[] fileBytes = getBytes(new FileInputStream(file), file.length());
+            return KNOWN_FILE_HASHES.contains(DatatypeConverter.printHexBinary(md5.digest(fileBytes)).toUpperCase());
+        }
+        catch (Exception ex) {
+            return false;
+        }
     }
 
     public static List<String> getList(String file) {

@@ -1,28 +1,18 @@
 WARNING: This is an alpha release! There are still a lot of missing features and possible bugs. Use at your own risk.
 
-If you are using the jar, MAKE SURE you have a clean copy of script.rcd in your La-Mulana directory! Failure to do so often results in unwinnable seeds.
+When using the UI jar for the first time, MAKE SURE you have a clean copy of script.rcd in your La-Mulana directory! Failure to do so often results in unwinnable seeds.
 
 How to use:
 -----------------------------
-The jar can be run from anywhere, and will look for common Windows install paths for La-Mulana.
+The jar can be run from anywhere, and will look for common Windows install paths for La-Mulana. If it doesn't find a correct install path, you can fill yours in.
 
-When run, the jar will generate random item placements and output the following files into the current directory:
-* script.rcd (this should be copied to your La-Mulana directory; make sure to back up your existing one first)
-* items<seed number>.txt (spoilers for which items are expected in which locations)
-* a "log" file (should be safe to ignore/delete)
+The jar will look for a file called script.rcd.bak in the current directory. If none is found, it will create a copy from your La-Mulana directory, so you'll want to make sure that's an unmodified copy for first run. If the script.rcd file is not found to be safe, the program will write a warning to the log file and exit.
 
-You may provide additional command-line arguments for customization:
-* -g will enable glitched requirements to be used for access.
-* -s<number> (for example, -s2) will seed the random number generator with the provided number; if not provided, the default is 0
-* -dir<directory> can be used to specify the La-Mulana directory, if your directory isn't supported by default (example: -dirE:\Steam\steamapps\common\La-Mulana)
-* -n<item name without spaces> can be used to force items to remain in their original location; note that some items will do so regardless of configuration (or may be randomized into their original location by chance)
-* -ng and -ngrail are shortcuts for making the Holy Grail appear in its original location
-* -i<item name without spaces> can be used to force items to be randomized into initially-accessible locations; be careful not to add too many, since it's not checked - I believe it's possible to add up to 18 at this time, but I haven't verified)
-* -ig and -igrail are shortcuts for making the Holy Grail initially available
-* -igrapple is a shortcut for making the Grapple Claw initially available
-* -isw will guarantee you a random subweapon made available initially, provided there's at least one subweapon that hasn't been disabled from randomization
+There are a few configurations available in the UI. Once things are configured to your liking, click on the Generate button and your configs will be used to create a subdirectory named according to your random seed. The directory will contain script.rcd which should be copied into your La-Mulana directory, and items.txt which contains spoilers for which items can be found in each location.
 
-Note that, in order to make Ankh Jewels, Maps, or Sacred Orbs initially available or non-randomized, you'll need to know which one you're putting in the chest (until a future update, at least). See all_items.txt for the names I'm using to reference these items.
+To play the randomized game, copy the provided script.rcd for your seed into <La-Mulana directory>/data/mapdata, replacing the script.rcd that's already present.
+
+The command-line arguments from previous releases will not work with the jar, but may be added back in for a later release.
 
 1.0:
 -----------------------------

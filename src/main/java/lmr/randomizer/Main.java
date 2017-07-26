@@ -79,21 +79,28 @@ public class Main {
             checkboxPanel.updateSettings();
             fieldPanel.rerollRandomSeed();
 
-            File directory = new File(Long.toString(Settings.startingSeed));
-            directory.mkdir();
-
             File rcdFile = new File("script.rcd.bak");
             if(!rcdFile.exists()) {
+                File existingRcd = new File(Settings.laMulanaBaseDir, "data/mapdata/script.rcd");
+                if(!FileUtils.hashFile(existingRcd)) {
+                    FileUtils.log("unable to back up script.rcd - checksum failed");
+                    System.exit(0);
+                }
+
                 try {
                     // Make script.rcd backup
-                    Files.copy(new File(Settings.laMulanaBaseDir, "data/mapdata/script.rcd").toPath(),
+                    Files.copy(existingRcd.toPath(),
                             new FileOutputStream(new File("script.rcd.bak")));
                 }
                 catch (Exception ex) {
                     FileUtils.log("unable to back up script.rcd");
+                    System.exit(0);
                 }
             }
             Settings.rcdFileLocation = "script.rcd.bak";
+            File directory = new File(Long.toString(Settings.startingSeed));
+            directory.mkdir();
+
 
 //            parseSettings(args);
             try {
@@ -172,9 +179,9 @@ public class Main {
             itemRandomization = new ButtonGroup();
             JRadioButton randomItem = new JRadioButton("Random");
             randomItem.setActionCommand("random");
+            randomItem.setSelected(true);
             JRadioButton initialItem = new JRadioButton("Initially Accessible");
             initialItem.setActionCommand("initial");
-            initialItem.setSelected(true);
             JRadioButton nonrandomItem = new JRadioButton("Original Location");
             nonrandomItem.setActionCommand("nonrandom");
             itemRandomization.add(randomItem);
@@ -193,11 +200,10 @@ public class Main {
 
     static class CheckboxPanel extends JPanel {
         Map<String, GameItemRadio> mapOfItemNameToItemConfigRadioGroupPanel;
-        private ButtonGroup grailRandomization;
 //        private JCheckBox earlyGrapple;
 //        private JCheckBox earlySubweapon;
 //
-//        private JCheckBox enableGlitches;
+        private JCheckBox enableGlitches;
 
         public CheckboxPanel() {
             super(new GridLayout(2, 0));
@@ -209,6 +215,12 @@ public class Main {
             for(GameItemRadio gameItemRadio : mapOfItemNameToItemConfigRadioGroupPanel.values()) {
                 add(gameItemRadio);
             }
+
+            JPanel glitchCheckboxPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            glitchCheckboxPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            enableGlitches = new JCheckBox("Enable glitched requirements");
+            glitchCheckboxPanel.add(enableGlitches);
+            add(glitchCheckboxPanel);
         }
 
         public void updateSettings() {
@@ -224,6 +236,8 @@ public class Main {
                     addArgItemUI(Settings.nonRandomizedItems, entry.getKey());
                 }
             }
+
+            Settings.allowGlitches = enableGlitches.isSelected();
         }
     }
 
