@@ -32,6 +32,7 @@ Tower of the Goddess [Lamp] => Location: Gate of Time, Katana
 Tower of the Goddess [Lamp] => Location: Gate of Time, Knife
 Tower of the Goddess [Lamp] => Location: Gate of Time, Rolling Shuriken
 Tower of the Goddess [Grail] => Location: Tower of the Goddess [Lower], Feather
+Tower of the Goddess [Grail] => Location: Gate of Illusion [Pot Room], Plane Model, Feather
 Inferno Cavern [Main] => None
 Inferno Cavern [Viy] => Location: Tower of Ruin [Lower], Earth Spear, Bronze Mirror, Event: Bahamut Defeated
 Inferno Cavern [Spikes] => Location: Chamber of Extinction [Magatama], Feather

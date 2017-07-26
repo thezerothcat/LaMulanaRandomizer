@@ -65,6 +65,7 @@ Sacred Orb (Twin Labyrinths) => 69, 0cd
 Sacred Orb (Shrine of the Mother) => 69, 0ce
 Sacred Orb (Tower of Ruin) => 69, 0cf
 Sacred Orb (Dimensional Corridor) => 69, 0d0
+Map (Surface) => 70, 0d1
 Map (Gate of Guidance) => 70, 0d2
 Map (Mausoleum of the Giants) => 70, 0d3
 Map (Temple of the Sun) => 70, 0d4

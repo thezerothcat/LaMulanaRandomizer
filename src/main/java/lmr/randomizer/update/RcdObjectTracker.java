@@ -45,6 +45,20 @@ public final class RcdObjectTracker {
                 objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
             }
             objects.add(gameObject);
+        } else if (gameObject.getId() == 0xb5) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == 209) {
+                    // Surface map item give
+                    GameObjectId gameObjectId = new GameObjectId((short) 70, 209);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
         } else if (gameObject.getId() == 0x12 || gameObject.getId() == 0x0e) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                 if (flagTest.getIndex() == 335) {
@@ -70,9 +84,23 @@ public final class RcdObjectTracker {
                     break;
                 }
             }
-        } else if (gameObject.getId() == 0x9b || gameObject.getId() == 0x11) {
+        } else if (gameObject.getId() == 0x9b) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                 if (flagTest.getIndex() == 218) {
+                    // Shrine of the Mother Map stuff
+                    GameObjectId gameObjectId = new GameObjectId((short) 70, 218);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
+        } else if (gameObject.getId() == 0x11) {
+            for (WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
+                if (flagUpdate.getIndex() == 218) {
                     // Shrine of the Mother Map stuff
                     GameObjectId gameObjectId = new GameObjectId((short) 70, 218);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
@@ -87,7 +115,7 @@ public final class RcdObjectTracker {
         } else if (gameObject.getId() == 0x71 || gameObject.getId() == 0x33) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                 if (flagTest.getIndex() == 180) {
-                    // Shrine of the Mother Map stuff
+                    // Plane Model stuff
                     GameObjectId gameObjectId = new GameObjectId((short) 51, 180);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
@@ -112,6 +140,20 @@ public final class RcdObjectTracker {
                     break;
                 }
             }
+        } else if (gameObject.getId() == 0x9e) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == 209) {
+                    // Surface map scan effect?
+                    GameObjectId gameObjectId = new GameObjectId((short) 70, 209);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
         }
     }
 
@@ -125,7 +167,7 @@ public final class RcdObjectTracker {
             return;
         }
         for(GameObject objectToModify : objectsToModify) {
-            if(objectToModify.getId() == 0x2c) {
+            if(objectToModify.getId() == 0x2c || objectToModify.getId() == 0xb5) {
                 updateChestContents(objectToModify, itemLocationData, itemNewContentsData);
             }
             else if(objectToModify.getId() == 0x2f) {
