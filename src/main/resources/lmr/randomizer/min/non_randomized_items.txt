@@ -15,9 +15,7 @@ Mini Doll
 Mulana Talisman
 Pepper
 Philosopher's Ocarina
-Plane Model
 Sacred Orb (Dimensional Corridor)
 Talisman
 Treasures
 xmailer.exe
-yagostr.exe

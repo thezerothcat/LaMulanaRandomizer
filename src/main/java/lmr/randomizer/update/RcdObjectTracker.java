@@ -20,20 +20,19 @@ public final class RcdObjectTracker {
     private RcdObjectTracker() { }
 
     public static void addObject(GameObject gameObject) {
-        if(gameObject.getId() == 0x2c) {
+        if (gameObject.getId() == 0x2c) {
             // Chest
-            short inventoryArg = (short)(gameObject.getArgs().get(0) - 11);
+            short inventoryArg = (short) (gameObject.getArgs().get(0) - 11);
             int worldFlag = gameObject.getWriteByteOperations().get(0).getIndex();
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-            if(objects == null) {
+            if (objects == null) {
                 mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
                 objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
             }
             objects.add(gameObject);
-        }
-        else if(gameObject.getId() == 0x2f) {
+        } else if (gameObject.getId() == 0x2f) {
             // Floating item
             short chestArg = gameObject.getArgs().get(1);
             int worldFlag = gameObject.getWriteByteOperations().get(0).getIndex();
@@ -41,19 +40,71 @@ public final class RcdObjectTracker {
 
             // todo: Talisman special case
             List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-            if(objects == null) {
+            if (objects == null) {
                 mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
                 objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
             }
             objects.add(gameObject);
-        }
-        else if(gameObject.getId() == 0x12 || gameObject.getId() == 0x0e) {
-            for(TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                if(flagTest.getIndex() == 335) {
+        } else if (gameObject.getId() == 0x12 || gameObject.getId() == 0x0e) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == 335) {
                     // deathv stuff
-                    GameObjectId gameObjectId = new GameObjectId((short)96, 335);
+                    GameObjectId gameObjectId = new GameObjectId((short) 96, 335);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                    if(objects == null) {
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+                else if (flagTest.getIndex() == 219) {
+                    // Gate of Illusion Map stuff
+                    GameObjectId gameObjectId = new GameObjectId((short) 70, 219);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
+        } else if (gameObject.getId() == 0x9b || gameObject.getId() == 0x11) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == 218) {
+                    // Shrine of the Mother Map stuff
+                    GameObjectId gameObjectId = new GameObjectId((short) 70, 218);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
+        } else if (gameObject.getId() == 0x71 || gameObject.getId() == 0x33) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == 180) {
+                    // Shrine of the Mother Map stuff
+                    GameObjectId gameObjectId = new GameObjectId((short) 51, 180);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
+        } else if (gameObject.getId() == 0x08) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == 229) {
+                    // yagostr dais
+                    GameObjectId gameObjectId = new GameObjectId((short) 88, 229);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
                         objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     }
