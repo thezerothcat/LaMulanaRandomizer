@@ -29,7 +29,7 @@ public class FileUtils {
         KNOWN_FILE_HASHES.add("89D8BF2DD6B8FA365A83DDBFD947CCFA"); // 1.1.1.1
         KNOWN_FILE_HASHES.add("922C4FB1552843B73CF14ADCC923CF17"); // 1.3.3.1
         // 1.5.5.x is unknown
-        KNOWN_FILE_HASHES.add("21869050145662F6DAAC6A1B3D54F3B9 "); // 1.6.6.x
+        KNOWN_FILE_HASHES.add("21869050145662F6DAAC6A1B3D54F3B9"); // 1.6.6.x
     }
 
     public static BufferedWriter getFileWriter(String file) {
@@ -165,6 +165,7 @@ public class FileUtils {
 
     public static void closeAll() {
         try {
+            LOG_WRITER.flush();
             LOG_WRITER.close();
         } catch (Exception ex) {
 

@@ -19,20 +19,6 @@ public final class RcdReader {
     private RcdReader() {
     }
 
-    private static String getLaMulanaBaseDir() {
-        if(Settings.laMulanaBaseDir != null) {
-            return Settings.laMulanaBaseDir;
-        }
-        for(String filename : Arrays.asList("C:\\Games\\La-Mulana Remake 1.3.3.1", "C:\\GOG Games\\La-Mulana", "C:\\GOG Games\\La-Mulana",
-                "C:\\Steam\\steamapps\\common\\La-Mulana", "C:\\Program Files (x86)\\Steam\\steamapps\\common\\La-Mulana",
-                        "C:\\Program Files\\Steam\\steamapps\\common\\La-Mulana")) {
-            if(new File(filename).exists()) {
-                return filename;
-            }
-        }
-        return null;
-    }
-
     private static byte[] getByteArraySlice(byte[] mainArray, int startIndex, int length) {
         byte[] slice = new byte[length];
         for(int i = 0; i < length; i++) {
@@ -121,11 +107,7 @@ public final class RcdReader {
     }
 
     public static List<Zone> getRcdScriptInfo() throws Exception {
-        String laMulanaBaseDir = getLaMulanaBaseDir();
-        if (laMulanaBaseDir == null) {
-            return null; // todo: throw exception?
-        }
-        String mapPath = laMulanaBaseDir + "\\data\\mapdata";
+        String mapPath = Settings.laMulanaBaseDir + "\\data\\mapdata";
 
         byte[] rcdBytes = FileUtils.getBytes(mapPath + "\\script.rcd", true);
         int rcdByteIndex = 2; // Seems we skip the first two bytes?

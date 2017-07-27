@@ -49,19 +49,22 @@ public class Main {
 
     static class RandomizerUI extends JFrame implements ActionListener {
         private FieldPanel fieldPanel;
+        private RadioPanel radioPanel;
         private CheckboxPanel checkboxPanel;
-
 
         public RandomizerUI() {
             setTitle("La-Mulana (Remake) Randomizer");
-            setMinimumSize(new Dimension(600, 500));
+            setMinimumSize(new Dimension(800, 600));
             setLocationRelativeTo(null);
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-            setLayout(new GridLayout(3, 1));
+            setLayout(new GridLayout(4, 0));
 
             fieldPanel = new FieldPanel();
             getContentPane().add(fieldPanel);
+
+            radioPanel = new RadioPanel();
+            add(radioPanel);
 
             checkboxPanel = new CheckboxPanel();
             add(checkboxPanel);
@@ -76,6 +79,7 @@ public class Main {
         @Override
         public void actionPerformed(ActionEvent e) {
             fieldPanel.updateSettings();
+            radioPanel.updateSettings();
             checkboxPanel.updateSettings();
             fieldPanel.rerollRandomSeed();
 
@@ -84,6 +88,7 @@ public class Main {
                 File existingRcd = new File(Settings.laMulanaBaseDir, "data/mapdata/script.rcd");
                 if(!FileUtils.hashFile(existingRcd)) {
                     FileUtils.log("unable to back up script.rcd - checksum failed");
+                    FileUtils.closeAll();
                     System.exit(0);
                 }
 
@@ -94,6 +99,7 @@ public class Main {
                 }
                 catch (Exception ex) {
                     FileUtils.log("unable to back up script.rcd");
+                    FileUtils.closeAll();
                     System.exit(0);
                 }
             }
@@ -119,18 +125,20 @@ public class Main {
 
         public FieldPanel() {
             super(new GridLayout(2, 0));
-            setPreferredSize(new Dimension(600, 100));
+            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
             JPanel firstFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            firstFieldPanel.setPreferredSize(new Dimension(600, 60));
+            firstFieldPanel.setPreferredSize(new Dimension(800, 60));
             firstFieldPanel.add(new JLabel("Seed number: ", JLabel.LEFT));
             seedNumber = new JTextField(Integer.toString(new Random().nextInt(Integer.MAX_VALUE)));
+            seedNumber.setSize(800, 80);
             firstFieldPanel.add(seedNumber);
 
             JPanel secondFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            secondFieldPanel.setPreferredSize(new Dimension(600, 60));
+            secondFieldPanel.setPreferredSize(new Dimension(800, 60));
             secondFieldPanel.add(new JLabel("La-Mulana install directory: ", JLabel.LEFT));
             laMulanaDirectory = new JTextField(getDefaultLaMulanaBaseDir());
+            laMulanaDirectory.setSize(800, 60);
             secondFieldPanel.add(laMulanaDirectory);
 
             add(firstFieldPanel);
@@ -142,9 +150,6 @@ public class Main {
         }
 
         private String getDefaultLaMulanaBaseDir() {
-            if(Settings.laMulanaBaseDir != null) {
-                return Settings.laMulanaBaseDir;
-            }
             for(String filename : Arrays.asList("C:\\Games\\La-Mulana Remake 1.3.3.1", "C:\\GOG Games\\La-Mulana", "C:\\GOG Games\\La-Mulana",
                     "C:\\Steam\\steamapps\\common\\La-Mulana", "C:\\Program Files (x86)\\Steam\\steamapps\\common\\La-Mulana",
                     "C:\\Program Files\\Steam\\steamapps\\common\\La-Mulana")) {
@@ -168,11 +173,10 @@ public class Main {
 
     static class GameItemRadio extends JPanel {
         private ButtonGroup itemRandomization;
+        private String itemName;
 
         public GameItemRadio(String item) {
             super(new GridLayout(0, 1));
-            setPreferredSize(new Dimension(200, 140));
-            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
             add(new JLabel(item + ": ", JLabel.LEFT));
 
@@ -191,53 +195,76 @@ public class Main {
             add(randomItem);
             add(initialItem);
             add(nonrandomItem);
+
+            this.itemName = item;
         }
 
         public String getActionCommand() {
             return itemRandomization.getSelection().getActionCommand();
         }
+
+        public String getItemName() {
+            return itemName;
+        }
     }
 
     static class CheckboxPanel extends JPanel {
-        Map<String, GameItemRadio> mapOfItemNameToItemConfigRadioGroupPanel;
-//        private JCheckBox earlyGrapple;
-//        private JCheckBox earlySubweapon;
-//
         private JCheckBox enableGlitches;
+        private JCheckBox initialSubweapon;
 
         public CheckboxPanel() {
-            super(new GridLayout(2, 0));
-            setPreferredSize(new Dimension(600, 200));
+            super(new GridLayout(1, 1));
+            setPreferredSize(new Dimension(800, 10));
+            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-            mapOfItemNameToItemConfigRadioGroupPanel = new HashMap<>();
-            mapOfItemNameToItemConfigRadioGroupPanel.put("Holy Grail", new GameItemRadio("Holy Grail"));
-            mapOfItemNameToItemConfigRadioGroupPanel.put("Grapple Claw", new GameItemRadio("Grapple Claw"));
-            for(GameItemRadio gameItemRadio : mapOfItemNameToItemConfigRadioGroupPanel.values()) {
-                add(gameItemRadio);
-            }
-
-            JPanel glitchCheckboxPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            glitchCheckboxPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
             enableGlitches = new JCheckBox("Enable glitched requirements");
-            glitchCheckboxPanel.add(enableGlitches);
-            add(glitchCheckboxPanel);
+            add(enableGlitches);
+
+            initialSubweapon = new JCheckBox("Guarantee initially accessible subweapon");
+            add(initialSubweapon);
+        }
+
+        public void updateSettings() {
+            Settings.allowGlitches = enableGlitches.isSelected();
+            Settings.guaranteeSubweapon = initialSubweapon.isSelected();
+        }
+    }
+
+    static class RadioPanel extends JPanel {
+        List<GameItemRadio> itemConfigRadioGroupPanels;
+
+        public RadioPanel() {
+            super(new GridLayout(2, 4, 0, 20));
+//            setPreferredSize(new Dimension(800, 400));
+            setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+
+            itemConfigRadioGroupPanels = new ArrayList<>();
+            itemConfigRadioGroupPanels.add(new GameItemRadio("Holy Grail"));
+            itemConfigRadioGroupPanels.add(new GameItemRadio("mirai.exe"));
+            itemConfigRadioGroupPanels.add(new GameItemRadio("Grapple Claw"));
+            itemConfigRadioGroupPanels.add(new GameItemRadio("Feather"));
+            itemConfigRadioGroupPanels.add(new GameItemRadio("Isis' Pendant"));
+            itemConfigRadioGroupPanels.add(new GameItemRadio("Bronze Mirror"));
+//            itemConfigRadioGroupPanels.add(new GameItemRadio("Flail Whip"));
+//            itemConfigRadioGroupPanels.add(new GameItemRadio("Fairy Clothes"));
+            for(GameItemRadio gameItemRadio : itemConfigRadioGroupPanels) {
+                add(gameItemRadio, LEFT_ALIGNMENT);
+            }
         }
 
         public void updateSettings() {
             Settings.initiallyAvailableItems = Settings.getDefaultInitiallyAvailableItems();
             Settings.nonRandomizedItems = new HashSet<>();
 
-            for(Map.Entry<String, GameItemRadio> entry : mapOfItemNameToItemConfigRadioGroupPanel.entrySet()) {
-                String actionCommand = entry.getValue().getActionCommand();
+            for(GameItemRadio itemRadio : itemConfigRadioGroupPanels) {
+                String actionCommand = itemRadio.getActionCommand();
                 if("initial".equals(actionCommand)) {
-                    addArgItemUI(Settings.initiallyAvailableItems, entry.getKey());
+                    addArgItemUI(Settings.initiallyAvailableItems, itemRadio.getItemName());
                 }
                 else if("nonrandom".equals(actionCommand)) {
-                    addArgItemUI(Settings.nonRandomizedItems, entry.getKey());
+                    addArgItemUI(Settings.nonRandomizedItems, itemRadio.getItemName());
                 }
             }
-
-            Settings.allowGlitches = enableGlitches.isSelected();
         }
     }
 
