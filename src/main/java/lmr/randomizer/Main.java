@@ -1,9 +1,15 @@
 package lmr.randomizer;
 
+import lmr.randomizer.dat.Block;
+import lmr.randomizer.dat.DatReader;
+import lmr.randomizer.dat.DatWriter;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.random.ItemRandomizer;
 import lmr.randomizer.random.ShopNonRandomizer;
 import lmr.randomizer.random.ShopRandomizer;
+import lmr.randomizer.rcd.RcdReader;
+import lmr.randomizer.rcd.RcdWriter;
+import lmr.randomizer.rcd.object.Zone;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,8 +28,11 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         if(false) {
-            parseSettings(args);
+            Settings.startingSeed = 0;
+//            parseSettings(args);
+            Settings.laMulanaBaseDir = "C:\\GOG Games\\La-Mulana";
             Settings.rcdFileLocation = "src/main/resources/lmr/randomizer/rcd/script.rcd.bak";
+            Settings.datFileLocation = "src/main/resources/lmr/randomizer/rcd/script_code.dat.bak";
             File directory = new File(Long.toString(Settings.startingSeed));
             directory.mkdir();
             try {
@@ -69,15 +78,24 @@ public class Main {
             checkboxPanel = new CheckboxPanel();
             add(checkboxPanel);
 
-            JPanel buttonPanel = new JPanel(new FlowLayout());
-            JButton generateButton = new JButton("Generate");
-            generateButton.addActionListener(this);
-            buttonPanel.add(generateButton);
-            getContentPane().add(buttonPanel);
+//            getContentPane().add(buttonPanel);
+            add(new ButtonPanel(this));
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            if("generate".equals(e.getActionCommand())) {
+                generateSeed();
+            }
+            else if("apply".equals(e.getActionCommand())) {
+                generateAndApply();
+            }
+            else if("restore".equals(e.getActionCommand())) {
+                restore();
+            }
+        }
+
+        private void generateSeed() {
             fieldPanel.updateSettings();
             radioPanel.updateSettings();
             checkboxPanel.updateSettings();
@@ -86,8 +104,8 @@ public class Main {
             File rcdFile = new File("script.rcd.bak");
             if(!rcdFile.exists()) {
                 File existingRcd = new File(Settings.laMulanaBaseDir, "data/mapdata/script.rcd");
-                if(!FileUtils.hashFile(existingRcd)) {
-                    FileUtils.log("unable to back up script.rcd - checksum failed");
+                if(!FileUtils.hashRcdFile(existingRcd)) {
+                    FileUtils.log("unable to back up script.rcd - file already modified");
                     FileUtils.closeAll();
                     System.exit(0);
                 }
@@ -98,12 +116,34 @@ public class Main {
                             new FileOutputStream(new File("script.rcd.bak")));
                 }
                 catch (Exception ex) {
-                    FileUtils.log("unable to back up script.rcd");
+                    FileUtils.log("unable to back up script.rcd: " + ex.getMessage());
                     FileUtils.closeAll();
                     System.exit(0);
                 }
             }
+            File datFile = new File("script_code.dat.bak");
+            if(!datFile.exists()) {
+                File existingDat = new File(Settings.laMulanaBaseDir, "data/language/en/script_code.dat");
+                if(!FileUtils.hashDatFile(existingDat)) {
+                    FileUtils.log("unable to back up script_code.dat - file already modified");
+                    FileUtils.closeAll();
+                    System.exit(0);
+                }
+
+                try {
+                    // Make script_code.dat backup
+                    Files.copy(existingDat.toPath(),
+                            new FileOutputStream(new File("script_code.dat.bak")));
+                }
+                catch (Exception ex) {
+                    FileUtils.log("unable to back up script_code.dat: " + ex.getMessage());
+                    FileUtils.closeAll();
+                    System.exit(0);
+                }
+            }
+
             Settings.rcdFileLocation = "script.rcd.bak";
+            Settings.datFileLocation = "script_code.dat.bak";
             File directory = new File(Long.toString(Settings.startingSeed));
             directory.mkdir();
 
@@ -116,6 +156,59 @@ public class Main {
                 ex.printStackTrace();
             }
             FileUtils.closeAll();
+        }
+
+        private void generateAndApply() {
+            generateSeed();
+
+            try {
+                Files.copy(new File(String.format("%s/script.rcd", Settings.startingSeed)).toPath(),
+                        new FileOutputStream(new File(Settings.laMulanaBaseDir + "\\data\\mapdata\\script.rcd")));
+                Files.copy(new File(String.format("%s/script_code.dat", Settings.startingSeed)).toPath(),
+                        new FileOutputStream(new File(Settings.laMulanaBaseDir + "\\data\\language\\en\\script_code.dat")));
+            }
+            catch (Exception ex) {
+                FileUtils.log("unable to copy files to La-Mulana install");
+                FileUtils.closeAll();
+                System.exit(0);
+            }
+        }
+
+        private void restore() {
+            generateSeed();
+
+            try {
+                Files.copy(new File("script.rcd.bak").toPath(),
+                        new FileOutputStream(new File(Settings.laMulanaBaseDir + "\\data\\mapdata\\script.rcd")));
+                Files.copy(new File(String.format("script_code.dat.bak", Settings.startingSeed)).toPath(),
+                        new FileOutputStream(new File(Settings.laMulanaBaseDir + "\\data\\language\\en\\script_code.dat")));
+            }
+            catch (Exception ex) {
+                FileUtils.log("unable to restore files to La-Mulana install");
+                FileUtils.closeAll();
+                System.exit(0);
+            }
+        }
+    }
+
+    static class ButtonPanel extends JPanel {
+        public ButtonPanel(RandomizerUI randomizerUI) {
+            super(new FlowLayout());
+
+//            JButton generateButton = new JButton("Generate");
+//            generateButton.addActionListener(randomizerUI);
+//            generateButton.setActionCommand("generate");
+//            add(generateButton);
+
+            JButton applyButton = new JButton("Apply");
+            applyButton.addActionListener(randomizerUI);
+            applyButton.setActionCommand("apply");
+            add(applyButton);
+
+            JButton restoreButton = new JButton("Restore");
+            restoreButton.addActionListener(randomizerUI);
+            restoreButton.setActionCommand("restore");
+            add(restoreButton);
         }
     }
 
@@ -305,8 +398,12 @@ public class Main {
 
             if(accessChecker.isSuccess()) {
                 try {
+                    List<Zone> rcdData = RcdReader.getRcdScriptInfo();
+                    List<Block> datInfo = DatReader.getDatScriptInfo();
                     outputLocations(itemRandomizer, shopRandomizer, attempt);
-                    itemRandomizer.updateRcd();
+                    itemRandomizer.updateFiles();
+                    RcdWriter.writeRcd(rcdData);
+                    DatWriter.writeDat(datInfo);
 
 //                    accessChecker.outputRemaining(Settings.startingSeed, attempt);
                 } catch (Exception ex) {

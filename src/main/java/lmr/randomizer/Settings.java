@@ -16,6 +16,7 @@ public final class Settings {
 
     public static String laMulanaBaseDir = null;
     public static String rcdFileLocation = null;
+    public static String datFileLocation = null;
 
     public static Set<String> nonRandomizedItems = new HashSet<>();
     public static Set<String> initiallyAvailableItems = getDefaultInitiallyAvailableItems();
@@ -25,8 +26,6 @@ public final class Settings {
                 "Ankh Jewel (Temple of the Sun)", "Ankh Jewel (Spring in the Sky)"));
     }
 
-    //    public static boolean zeroRequirementGrail = true;
 //    public static boolean zeroRequirementHandScannerAndReaderExe = true;
-//    public static int zeroRequirementSubweapons = 3; // Preserving vanilla initial subweapon ratio for the sake of fun and sanity, although this should eventually be configurable.
 //    public static int zeroRequirementAnkhJewels = 4; // Preserving vanilla number of ankh jewels to reduce risk of ankh jewel locks, at least for v1.
 }
