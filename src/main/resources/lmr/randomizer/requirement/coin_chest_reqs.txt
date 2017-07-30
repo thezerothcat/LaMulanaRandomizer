@@ -1,0 +1,30 @@
+Surface (Waterfall) => None
+Surface (Seal) => Life Seal
+Surface (Ruin Path) => Bomb, Location: Chamber of Extinction [Magatama], Feather
+Guidance (One) => None
+Guidance (Two) => None
+Guidance (Trap) => None
+Mausoleum => Shuriken
+Mausoleum => Chakram
+Sun (Pyramid) => Bomb
+Spring => ??? Scalesphere
+Spring => ??? Sacred Orb
+Inferno (Lava) => ??? Ice Cape
+Inferno (Spikes) => Location: Inferno Cavern [Spikes]
+Extinction ???
+Twin (Witches) => None
+Twin (Lower) => ??? None
+Twin (Escape) => Event: Mother Defeated
+Endless => Location: Endless Corridor [2F-4F]
+Shrine => Location: Shrine of the Mother [Main], Katana
+Illusion (Katana) => Location: Gate of Illusion [Middle], Katana
+Illusion (Spikes) => Location: Gate of Illusion [Lower]
+Graveyard => Feather
+Moonlight => ???
+Goddess ???
+Goddess (Fairy) => Location: Tower of the Goddess [Lower]
+Ruin ???
+Birth ???
+Birth ???
+Birth ???
+Dimensional ???

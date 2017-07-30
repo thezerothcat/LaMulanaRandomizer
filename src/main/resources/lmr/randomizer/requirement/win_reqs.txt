@@ -1,0 +1,31 @@
+Feather
+Event: Amphisbaena Defeated
+Event: Bahamut Defeated
+Event: Baphomet Defeated
+Event: Ellmac Defeated
+Event: Learn La-Mulanese
+Event: Palenque Defeated
+Event: Sakit Defeated
+Event: Tiamat Defeated
+Event: Viy Defeated
+Djed Pillar
+mantra.exe
+Location: Shrine of the Mother [Main]
+Holy Grail
+Vessel
+Origin Seal
+Birth Seal
+Life Seal
+Death Seal
+Gate of Illusion [Grail]
+Graveyard of the Giants [Grail]
+Temple of Moonlight [Upper]
+Tower of the Goddess [Grail]
+Tower of Ruin [Grail]
+Tower of Ruin [Spirits]
+Tower of Ruin [Medicine]
+Chamber of Birth [Grail]
+Twin Labyrinths [Lower]
+Twin Labyrinths [Upper]
+Key Sword
+

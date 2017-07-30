@@ -2,6 +2,10 @@ package lmr.randomizer.update;
 
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
+import lmr.randomizer.dat.Block;
+import lmr.randomizer.dat.BlockContents;
+import lmr.randomizer.dat.BlockFlagData;
+import lmr.randomizer.dat.BlockItemData;
 import lmr.randomizer.rcd.object.GameObject;
 import lmr.randomizer.rcd.object.TestByteOperation;
 import lmr.randomizer.rcd.object.WriteByteOperation;
@@ -14,10 +18,11 @@ import java.util.Map;
 /**
  * Created by thezerothcat on 7/21/2017.
  */
-public final class RcdObjectTracker {
+public final class GameDataTracker {
     private static Map<GameObjectId, List<GameObject>> mapOfChestIdentifyingInfoToGameObject = new HashMap<>();
+    private static Map<GameObjectId, List<Block>> mapOfChestIdentifyingInfoToBlock = new HashMap<>();
 
-    private RcdObjectTracker() { }
+    private GameDataTracker() { }
 
     public static void addObject(GameObject gameObject) {
         if (gameObject.getId() == 0x2c) {
@@ -154,6 +159,99 @@ public final class RcdObjectTracker {
                     break;
                 }
             }
+        } else if (gameObject.getId() == 0xa0 || gameObject.getId() == 0x93) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == 241) {
+                    // mekuri conversation
+                    GameObjectId gameObjectId = new GameObjectId((short) 100, 241);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
+        }
+    }
+
+    public static void addBlock(Block block) {
+        if(block.getBlockNumber() == 37) {
+            // mekuri.exe
+            short inventoryArg = (short) (100);
+            int worldFlag = 241;
+            GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
+
+            List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            if (blocks == null) {
+                mapOfChestIdentifyingInfoToBlock.put(gameObjectId, new ArrayList<>());
+                blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            }
+            blocks.add(block);
+        }
+        else if(block.getBlockNumber() == 249) {
+            // Mini Doll
+            short inventoryArg = (short) (22);
+            int worldFlag = 152;
+            GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
+
+            List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            if (blocks == null) {
+                mapOfChestIdentifyingInfoToBlock.put(gameObjectId, new ArrayList<>());
+                blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            }
+            blocks.add(block);
+        }
+        else if(block.getBlockNumber() == 397) {
+            // Book of the Dead
+            short inventoryArg = (short) (54);
+            int worldFlag = 183;
+            GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
+
+            List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            if (blocks == null) {
+                mapOfChestIdentifyingInfoToBlock.put(gameObjectId, new ArrayList<>());
+                blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            }
+            blocks.add(block);
+        }
+        else if(block.getBlockNumber() == 716) {
+            // Surface map
+            short inventoryArg = (short) (70);
+            int worldFlag = 209;
+            GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
+
+            List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            if (blocks == null) {
+                mapOfChestIdentifyingInfoToBlock.put(gameObjectId, new ArrayList<>());
+                blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            }
+            blocks.add(block);
+        }
+    }
+
+    public static void updateBlock(String chestLocation, String chestContents) {
+        Map<String, GameObjectId> nameToDataMap = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData();
+        GameObjectId itemNewContentsData = nameToDataMap.get(chestContents);
+        GameObjectId itemLocationData = nameToDataMap.get(chestLocation);
+        List<Block> blocksToModify = mapOfChestIdentifyingInfoToBlock.get(nameToDataMap.get(chestLocation));
+        for(Block block : blocksToModify) {
+            for(BlockContents blockContents : block.getBlockContents()) {
+                if(blockContents instanceof BlockFlagData) {
+                    BlockFlagData flagData = (BlockFlagData) blockContents;
+                    if(flagData.getWorldFlag() == itemLocationData.getWorldFlag()) {
+                        flagData.setWorldFlag((short)itemNewContentsData.getWorldFlag());
+                        flagData.setFlagValue((short)2);
+                    }
+                }
+                else if(blockContents instanceof BlockItemData) {
+                    BlockItemData itemData = (BlockItemData) blockContents;
+                    if(itemData.getItemData() == itemLocationData.getInventoryArg()) {
+                        itemData.setItemData(itemNewContentsData.getInventoryArg());
+                    }
+                }
+            }
         }
     }
 
@@ -203,9 +301,19 @@ public final class RcdObjectTracker {
                 flagTest.setIndex(itemNewContentsData.getWorldFlag());
             }
         }
-        for(WriteByteOperation flagUpdate : objectToModify.getWriteByteOperations()) {
+        int lastWorldFlagUpdateIndex = -1;
+        for(int i = 0; i < objectToModify.getWriteByteOperations().size(); i++) {
+            WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(i);
             if(flagUpdate.getIndex() == itemLocationData.getWorldFlag()) {
+                lastWorldFlagUpdateIndex = i;
                 flagUpdate.setIndex(itemNewContentsData.getWorldFlag());
+            }
+        }
+
+        if(lastWorldFlagUpdateIndex != -1) {
+            WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(lastWorldFlagUpdateIndex);
+            if(flagUpdate.getValue() != 2) {
+                flagUpdate.setValue(2);
             }
         }
     }

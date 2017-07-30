@@ -6,11 +6,9 @@ emusic.exe
 Eye of Truth
 Key Sword
 mantra.exe
-Map (Surface)
 Map (Gate of Illusion)
 Map (Shrine of the Mother)
 Maternity Statue
-mekuri.exe
 Mini Doll
 Mulana Talisman
 Pepper

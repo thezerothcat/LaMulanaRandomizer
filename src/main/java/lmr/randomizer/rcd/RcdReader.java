@@ -3,13 +3,11 @@ package lmr.randomizer.rcd;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
 import lmr.randomizer.rcd.object.*;
-import lmr.randomizer.update.RcdObjectTracker;
+import lmr.randomizer.update.GameDataTracker;
 
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -72,7 +70,7 @@ public final class RcdReader {
         }
 
         objectContainer.getObjects().add(obj);
-        RcdObjectTracker.addObject(obj);
+        GameDataTracker.addObject(obj);
         return rcdByteIndex;
     }
 

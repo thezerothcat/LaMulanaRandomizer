@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class FileUtils {
     private static final BufferedWriter LOG_WRITER;
-    private static final List<String> KNOWN_FILE_HASHES = new ArrayList<>();
+    private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
 
     static {
         BufferedWriter temp = null;
@@ -25,11 +25,11 @@ public class FileUtils {
         }
         LOG_WRITER = temp;
 
-        KNOWN_FILE_HASHES.add("181C959BF2F2567279CC717C8AD03A20"); // 1.0.0.1
-        KNOWN_FILE_HASHES.add("89D8BF2DD6B8FA365A83DDBFD947CCFA"); // 1.1.1.1
-        KNOWN_FILE_HASHES.add("922C4FB1552843B73CF14ADCC923CF17"); // 1.3.3.1
+        KNOWN_RCD_FILE_HASHES.add("181C959BF2F2567279CC717C8AD03A20"); // 1.0.0.1
+        KNOWN_RCD_FILE_HASHES.add("89D8BF2DD6B8FA365A83DDBFD947CCFA"); // 1.1.1.1
+        KNOWN_RCD_FILE_HASHES.add("922C4FB1552843B73CF14ADCC923CF17"); // 1.3.3.1
         // 1.5.5.x is unknown
-        KNOWN_FILE_HASHES.add("21869050145662F6DAAC6A1B3D54F3B9"); // 1.6.6.x
+        KNOWN_RCD_FILE_HASHES.add("21869050145662F6DAAC6A1B3D54F3B9"); // 1.6.6.x
     }
 
     public static BufferedWriter getFileWriter(String file) {
@@ -98,15 +98,19 @@ public class FileUtils {
         return allBytes;
     }
 
-    public static boolean hashFile(File file) {
+    public static boolean hashRcdFile(File file) {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             byte[] fileBytes = getBytes(new FileInputStream(file), file.length());
-            return KNOWN_FILE_HASHES.contains(DatatypeConverter.printHexBinary(md5.digest(fileBytes)).toUpperCase());
+            return KNOWN_RCD_FILE_HASHES.contains(DatatypeConverter.printHexBinary(md5.digest(fileBytes)).toUpperCase());
         }
         catch (Exception ex) {
             return false;
         }
+    }
+
+    public static boolean hashDatFile(File file) {
+        return true; // todo: implement this when I get file hash info
     }
 
     public static List<String> getList(String file) {

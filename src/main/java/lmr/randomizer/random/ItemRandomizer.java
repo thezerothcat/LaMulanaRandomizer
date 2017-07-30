@@ -3,11 +3,14 @@ package lmr.randomizer.random;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
+import lmr.randomizer.dat.Block;
+import lmr.randomizer.dat.DatReader;
+import lmr.randomizer.dat.DatWriter;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.rcd.RcdReader;
 import lmr.randomizer.rcd.RcdWriter;
 import lmr.randomizer.rcd.object.Zone;
-import lmr.randomizer.update.RcdObjectTracker;
+import lmr.randomizer.update.GameDataTracker;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -188,13 +191,16 @@ public class ItemRandomizer {
         this.accessChecker = accessChecker;
     }
 
-    public void updateRcd() throws Exception{
-        List<Zone> rcdInfo = RcdReader.getRcdScriptInfo();
+    public void updateFiles() throws Exception{
+        List<String> locationsRelatedToBlocks = Arrays.asList("Map (Surface)", "mekuri.exe"); // todo: not hardcode this, eventually
+
         for(Map.Entry<String, String> locationAndItem : mapOfItemLocationToItem.entrySet()) {
             if(!locationAndItem.getKey().equals(locationAndItem.getValue())) {
-                RcdObjectTracker.writeLocationContents(locationAndItem.getKey(), locationAndItem.getValue());
+                if(locationsRelatedToBlocks.contains(locationAndItem.getKey())) {
+                    GameDataTracker.updateBlock(locationAndItem.getKey(), locationAndItem.getValue());
+                }
+                GameDataTracker.writeLocationContents(locationAndItem.getKey(), locationAndItem.getValue());
             }
         }
-        RcdWriter.writeRcd(rcdInfo);
     }
 }

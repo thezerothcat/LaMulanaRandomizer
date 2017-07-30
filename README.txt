@@ -1,18 +1,23 @@
 WARNING: This is an alpha release! There are still a lot of missing features and possible bugs. Use at your own risk.
 
-When using the UI jar for the first time, MAKE SURE you have a clean copy of script.rcd in your La-Mulana directory! Failure to do so often results in unwinnable seeds.
+When using the UI jar for the first time, MAKE SURE you have clean, non-modified copies of script.rcd and script_code.dat in your La-Mulana directory! Failure to do so often results in unwinnable seeds.
 
 How to use:
 -----------------------------
 The jar can be run from anywhere, and will look for common Windows install paths for La-Mulana. If it doesn't find a correct install path, you can fill yours in.
 
-The jar will look for a file called script.rcd.bak in the current directory. If none is found, it will create a copy from your La-Mulana directory, so you'll want to make sure that's an unmodified copy for first run. If the script.rcd file is not found to be safe, the program will write a warning to the log file and exit.
+The jar will look for files called script.rcd.bak and script_code.dat.bak in the current directory. If files are not found, backup copies will be created from your La-Mulana directory, so you'll want to make sure those are unmodified the first time you run the jar. If the script.rcd file is found to be modified, the program will write a warning to the log file and exit.
 
-There are a few configurations available in the UI. Once things are configured to your liking, click on the Generate button and your configs will be used to create a subdirectory named according to your random seed. The directory will contain script.rcd which should be copied into your La-Mulana directory, and items.txt which contains spoilers for which items can be found in each location.
+There are a few configurations available in the UI. Once things are configured to your liking, click on the Apply button. At this point, a subdirectory will be created for the current seed number containing files for the randomized game as well as items.txt (spoiler log for the seed). The files will additionally be copied into your La-Mulana directory.
 
-To play the randomized game, copy the provided script.rcd for your seed into <La-Mulana directory>/data/mapdata, replacing the script.rcd that's already present.
+If you want to play the non-randomized game, there's a Restore button in the UI which should copy the backup files back into your La-Mulana directory.
 
 The command-line arguments from previous releases will not work with the jar, but may be added back in for a later release.
+
+
+1.2:
+-----------------------------
+Randomizer now modifies two files, and can copy them to your La-Mulana directory for you or restore them from backups.
 
 
 1.1:
@@ -30,7 +35,8 @@ Adds some basic UI and file validation for the randomizer jar, so it doesn't hav
 
 Plans for future releases:
 -----------------------------
-* Randomization of non-chest items, special-case items, which chests are coin chests vs item chests, etc.
-* Ability to configure items that should be available with no requirements.
-* Handling for ankh jewel locks.
 * Shop randomization (preserving the ratio of weights & ammo to "permanent" items, but not necessarily the ratio of weights to ammo)
+* Randomization of more types of items, special-case items, which chests are coin chests vs item chests, etc.
+* Handling for ankh jewel locks.
+* Non-100% seeds
+* Item requirements updates (better boss requirements, more glitch-enabled requirements, requirements involving damage boosting, etc.)
