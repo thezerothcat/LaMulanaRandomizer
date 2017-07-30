@@ -142,7 +142,7 @@ public final class DatReader {
         for(int blockIndex = 0; blockIndex < numberOfBlocks; blockIndex++) {
             int numberOfBytesInThisBlock = dataInputStream.readShort();
 
-            block = new Block(blockIndex, numberOfBytesInThisBlock);
+            block = new Block(blockIndex);
             addBlockContentsToBlock(block, dataInputStream, numberOfBytesInThisBlock / 2);
             datBlocks.add(block);
             GameDataTracker.addBlock(block);

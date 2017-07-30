@@ -16,6 +16,11 @@ public class BlockSceneData implements BlockContents {
     }
 
     @Override
+    public int getSize() {
+        return 4;
+    }
+
+    @Override
     public void writeBytes(DataOutputStream dataOutputStream) throws IOException {
         dataOutputStream.writeShort(data);
         dataOutputStream.writeShort(sceneData);

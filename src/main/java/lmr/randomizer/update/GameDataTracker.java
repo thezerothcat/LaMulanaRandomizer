@@ -159,10 +159,43 @@ public final class GameDataTracker {
                     break;
                 }
             }
-        } else if (gameObject.getId() == 0xa0 || gameObject.getId() == 0x93) {
+        } else if (gameObject.getId() == 0xa0) {
+            if(gameObject.getArgs().get(3) == 693 || gameObject.getArgs().get(3) == 915) {
+                // Mini Doll conversation
+                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                    if (flagTest.getIndex() == 554) {
+                        flagTest.setIndex(152); // Normally this goes off a flag related to proving yourself small, but we'd rather check if we have the Mini Doll for safer shuffling.
+
+                        GameObjectId gameObjectId = new GameObjectId((short) 22, 152);
+                        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        if (objects == null) {
+                            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+            }
+            else {
+                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                    if (flagTest.getIndex() == 241) {
+                        // mekuri conversation and tent-closing effect
+                        GameObjectId gameObjectId = new GameObjectId((short) 100, 241);
+                        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        if (objects == null) {
+                            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+            }
+        } else if (gameObject.getId() == 0x93) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                 if (flagTest.getIndex() == 241) {
-                    // mekuri conversation
+                    // mekuri conversation and tent-closing effect
                     GameObjectId gameObjectId = new GameObjectId((short) 100, 241);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {

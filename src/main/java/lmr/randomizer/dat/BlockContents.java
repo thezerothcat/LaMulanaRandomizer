@@ -8,4 +8,6 @@ import java.io.IOException;
  */
 public interface BlockContents {
     void writeBytes(DataOutputStream dataOutputStream) throws IOException;
+
+    int getSize();
 }

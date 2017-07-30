@@ -23,6 +23,11 @@ public class BlockListData implements BlockContents {
     }
 
     @Override
+    public int getSize() {
+        return data.size() * 2 + 4;
+    }
+
+    @Override
     public void writeBytes(DataOutputStream dataOutputStream) throws IOException {
         dataOutputStream.writeShort(idData);
         dataOutputStream.writeShort(listSize);

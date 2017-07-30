@@ -26,4 +26,9 @@ public class BlockColorsData implements BlockContents {
         dataOutputStream.writeShort(color2);
         dataOutputStream.writeShort(color3);
     }
+
+    @Override
+    public int getSize() {
+        return 8;
+    }
 }

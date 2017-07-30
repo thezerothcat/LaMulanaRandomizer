@@ -8,16 +8,18 @@ import java.util.List;
  */
 public class Block {
     private int blockNumber;
-    private int blockSize;
     private List<BlockContents> blockContents = new ArrayList<>();
 
-    public Block(int blockNumber, int blockSize) {
+    public Block(int blockNumber) {
         this.blockNumber = blockNumber;
-        this.blockSize = blockSize;
     }
 
     public int getBlockSize() {
-        return blockSize;
+        int size = 0;
+        for(BlockContents blockContent : blockContents) {
+            size += blockContent.getSize();
+        }
+        return size;
     }
 
     public int getBlockNumber() {

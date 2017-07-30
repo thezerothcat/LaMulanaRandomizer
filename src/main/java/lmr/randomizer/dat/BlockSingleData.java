@@ -14,6 +14,11 @@ public class BlockSingleData implements BlockContents {
     }
 
     @Override
+    public int getSize() {
+        return 2;
+    }
+
+    @Override
     public void writeBytes(DataOutputStream dataOutputStream) throws IOException {
         dataOutputStream.writeShort(data);
     }

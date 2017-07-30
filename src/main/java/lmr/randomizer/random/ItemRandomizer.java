@@ -192,7 +192,7 @@ public class ItemRandomizer {
     }
 
     public void updateFiles() throws Exception{
-        List<String> locationsRelatedToBlocks = Arrays.asList("Map (Surface)", "mekuri.exe"); // todo: not hardcode this, eventually
+        List<String> locationsRelatedToBlocks = Arrays.asList("Map (Surface)", "mekuri.exe", "Mini Doll"); // todo: not hardcode this, eventually
 
         for(Map.Entry<String, String> locationAndItem : mapOfItemLocationToItem.entrySet()) {
             if(!locationAndItem.getKey().equals(locationAndItem.getValue())) {

@@ -35,6 +35,11 @@ public class BlockFlagData implements BlockContents {
     }
 
     @Override
+    public int getSize() {
+        return 6;
+    }
+
+    @Override
     public void writeBytes(DataOutputStream dataOutputStream) throws IOException {
         dataOutputStream.writeShort(data);
         dataOutputStream.writeShort(worldFlag);
