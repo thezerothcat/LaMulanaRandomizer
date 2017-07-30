@@ -6,6 +6,7 @@ import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.BlockContents;
 import lmr.randomizer.dat.BlockFlagData;
 import lmr.randomizer.dat.BlockItemData;
+import lmr.randomizer.rcd.object.ByteOp;
 import lmr.randomizer.rcd.object.GameObject;
 import lmr.randomizer.rcd.object.TestByteOperation;
 import lmr.randomizer.rcd.object.WriteByteOperation;
@@ -204,6 +205,18 @@ public final class GameDataTracker {
                     }
                     objects.add(gameObject);
                     break;
+                }
+            }
+        } else if (gameObject.getId() == 0x0b) {
+            for (WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
+                if (flagUpdate.getIndex() == 554 && flagUpdate.getValue() == 3) {
+                    // Becoming small
+                    for(TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                        if (flagTest.getIndex() == 554 && ByteOp.FLAG_LTEQ.equals(flagTest.getOp()) && flagTest.getValue() == 2) {
+                            flagTest.setOp(ByteOp.FLAG_LTEQ);
+                            break;
+                        }
+                    }
                 }
             }
         }
