@@ -24,13 +24,13 @@ public class BlockListData implements BlockContents {
 
     @Override
     public int getSize() {
-        return data.size() * 2 + 4;
+        return data.size() * 2 + 4; // CMD, list length, then the list itself
     }
 
     @Override
     public void writeBytes(DataOutputStream dataOutputStream) throws IOException {
         dataOutputStream.writeShort(idData);
-        dataOutputStream.writeShort(listSize);
+        dataOutputStream.writeShort(listSize); // todo: this might need to change
         for(int i = 0; i < data.size(); i++) {
             dataOutputStream.writeShort(data.get(i));
         }

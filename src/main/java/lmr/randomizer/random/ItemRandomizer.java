@@ -3,13 +3,7 @@ package lmr.randomizer.random;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
-import lmr.randomizer.dat.Block;
-import lmr.randomizer.dat.DatReader;
-import lmr.randomizer.dat.DatWriter;
 import lmr.randomizer.node.AccessChecker;
-import lmr.randomizer.rcd.RcdReader;
-import lmr.randomizer.rcd.RcdWriter;
-import lmr.randomizer.rcd.object.Zone;
 import lmr.randomizer.update.GameDataTracker;
 
 import java.io.BufferedWriter;
@@ -35,7 +29,7 @@ public class ItemRandomizer {
     private AccessChecker accessChecker;
 
     public ItemRandomizer() {
-        allItems = new ArrayList<>(DataFromFile.getAllItems());
+        allItems = new ArrayList<>(DataFromFile.getAllNonShopItemsPlusAllRandomizedShopItems());
         unplacedItems = new ArrayList<>(allItems);
 
         nonShopItemLocations = new ArrayList<>(DataFromFile.getNonShopItemLocations());
@@ -55,6 +49,10 @@ public class ItemRandomizer {
         return mapOfItemLocationToItem.get(location);
     }
 
+    public void removeItemFromUnplacedItems(String originalShopItem) {
+        unplacedItems.remove(originalShopItem); // todo: this method may not actually be needed
+    }
+
     public void placeNonRandomizedItems() {
         for(String item : DataFromFile.getNonRandomizedItems()) {
             mapOfItemLocationToItem.put(item, item);
@@ -69,6 +67,7 @@ public class ItemRandomizer {
     public boolean placeRequiredItems(List<String> items, Random random) {
         List<String> initialUnassignedNonShopLocations = new ArrayList<>(DataFromFile.getInitialNonShopItemLocations());
         List<String> initialUnassignedShopItemLocations = shopRandomizer.getInitialUnassignedShopItemLocations();
+        int locationIndexIndex;
 
         int size = items.size();
         for(int i = 0; i < size; i++) {
@@ -80,12 +79,13 @@ public class ItemRandomizer {
                 if(availableLocationIndices.size() == 0) {
                     return false;
                 }
-                int locationIndex = availableLocationIndices.get(random.nextInt(availableLocationIndices.size()));
+                locationIndexIndex = random.nextInt(availableLocationIndices.size());
+                int locationIndex = availableLocationIndices.get(locationIndexIndex);
                 if(locationIndex < initialUnassignedNonShopLocations.size()) {
                     // todo: check for exceptions
                     String location = initialUnassignedNonShopLocations.get(locationIndex);
-                    mapOfItemLocationToItem.put(location, item);
                     if(accessChecker.validRequirements(item, location)) {
+                        mapOfItemLocationToItem.put(location, item);
                         items.remove(item);
                         initialUnassignedNonShopLocations.remove(location);
                         unassignedNonShopItemLocations.remove(location);
@@ -93,7 +93,7 @@ public class ItemRandomizer {
                         break;
                     }
                     else {
-                        availableLocationIndices.remove(locationIndex);
+                        availableLocationIndices.remove(locationIndexIndex);
                     }
                 }
                 else {
@@ -103,7 +103,7 @@ public class ItemRandomizer {
                         break;
                     }
                     else {
-                        availableLocationIndices.remove(locationIndex);
+                        availableLocationIndices.remove(locationIndexIndex);
                     }
                 }
             }
@@ -127,12 +127,14 @@ public class ItemRandomizer {
 
     private boolean placeItem(String item, int availableLocations, Random random) {
         List<Integer> availableLocationIndices = buildIndices(availableLocations);
+        int locationIndexIndex;
 
         while(true) {
             if(availableLocationIndices.size() == 0) {
                 return false;
             }
-            int locationIndex = availableLocationIndices.get(random.nextInt(availableLocationIndices.size()));
+            locationIndexIndex = random.nextInt(availableLocationIndices.size());
+            int locationIndex = availableLocationIndices.get(locationIndexIndex);
             if(locationIndex < unassignedNonShopItemLocations.size()) {
                 String location = unassignedNonShopItemLocations.get(locationIndex);
                 if (accessChecker.validRequirements(item, location)) {
@@ -142,7 +144,7 @@ public class ItemRandomizer {
                     return true;
                 }
                 else {
-                    availableLocationIndices.remove(locationIndex);
+                    availableLocationIndices.remove(locationIndexIndex);
                 }
             }
             else {
@@ -151,7 +153,7 @@ public class ItemRandomizer {
                     return true;
                 }
                 else {
-                    availableLocationIndices.remove(locationIndex);
+                    availableLocationIndices.remove(locationIndexIndex);
                 }
             }
         }

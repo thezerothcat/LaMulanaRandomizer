@@ -5,7 +5,8 @@ import lmr.randomizer.dat.DatReader;
 import lmr.randomizer.dat.DatWriter;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.random.ItemRandomizer;
-import lmr.randomizer.random.ShopNonRandomizer;
+import lmr.randomizer.random.CategorizedShopRandomizer;
+import lmr.randomizer.random.StaticShopRandomizer;
 import lmr.randomizer.random.ShopRandomizer;
 import lmr.randomizer.rcd.RcdReader;
 import lmr.randomizer.rcd.RcdWriter;
@@ -29,6 +30,7 @@ public class Main {
     public static void main(String[] args) {
         if(false) {
             Settings.startingSeed = 0;
+            Settings.nonRandomizedItems.add("Holy Grail");
 //            parseSettings(args);
             Settings.laMulanaBaseDir = "C:\\GOG Games\\La-Mulana";
             Settings.rcdFileLocation = "src/main/resources/lmr/randomizer/rcd/script.rcd.bak";
@@ -304,9 +306,10 @@ public class Main {
     static class CheckboxPanel extends JPanel {
         private JCheckBox enableGlitches;
         private JCheckBox initialSubweapon;
+        private JCheckBox randomizeShops;
 
         public CheckboxPanel() {
-            super(new GridLayout(1, 1));
+            super(new GridLayout(2, 2));
             setPreferredSize(new Dimension(800, 10));
             setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -315,11 +318,15 @@ public class Main {
 
             initialSubweapon = new JCheckBox("Guarantee initially accessible subweapon");
             add(initialSubweapon);
+
+            randomizeShops = new JCheckBox("Enable shop randomization");
+            add(randomizeShops);
         }
 
         public void updateSettings() {
             Settings.allowGlitches = enableGlitches.isSelected();
             Settings.guaranteeSubweapon = initialSubweapon.isSelected();
+            Settings.randomizeShops = randomizeShops.isSelected();
         }
     }
 
@@ -384,6 +391,7 @@ public class Main {
             List<String> initiallyAvailableItemsTemp = new ArrayList<>(initiallyAvailableItems);
             initiallyAvailableItemsTemp.add(initialSubweapon);
             itemRandomizer.placeNonRandomizedItems();
+            shopRandomizer.placeNonRandomizedItems();
             if(!itemRandomizer.placeRequiredItems(new ArrayList<>(initiallyAvailableItems), random)) {
                 continue;
             }
@@ -402,16 +410,22 @@ public class Main {
                     List<Block> datInfo = DatReader.getDatScriptInfo();
                     outputLocations(itemRandomizer, shopRandomizer, attempt);
                     itemRandomizer.updateFiles();
+                    shopRandomizer.updateFiles(datInfo);
                     RcdWriter.writeRcd(rcdData);
                     DatWriter.writeDat(datInfo);
 
-//                    accessChecker.outputRemaining(Settings.startingSeed, attempt);
+                    return;
                 } catch (Exception ex) {
                     return;
                     // No exception handling in v1
                 }
 
+            }
+            try {
+//                accessChecker.outputRemaining(Settings.startingSeed, attempt);
+            } catch (Exception ex) {
                 return;
+                // No exception handling in v1
             }
             attempt++;
         }
@@ -420,10 +434,11 @@ public class Main {
     private static ShopRandomizer buildShopRandomizer(ItemRandomizer itemRandomizer) {
         ShopRandomizer shopRandomizer;
         if(Settings.randomizeShops) {
-            shopRandomizer = new ShopRandomizer(itemRandomizer.getTotalShopItems());
+//            shopRandomizer = new ShopRandomizer(itemRandomizer.getTotalShopItems());
+            shopRandomizer = new CategorizedShopRandomizer();
         }
         else {
-            shopRandomizer = new ShopNonRandomizer(itemRandomizer.getTotalShopItems());
+            shopRandomizer = new StaticShopRandomizer(itemRandomizer.getTotalShopItems());
         }
 
         itemRandomizer.setShopRandomizer(shopRandomizer);
@@ -445,6 +460,7 @@ public class Main {
         accessChecker.setShopRandomizer(shopRandomizer);
         itemRandomizer.setAccessChecker(accessChecker);
         shopRandomizer.setAccessChecker(accessChecker);
+        shopRandomizer.setItemRandomizer(itemRandomizer);
         return accessChecker;
     }
 

@@ -1,5 +1,6 @@
 package lmr.randomizer.rcd;
 
+import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
 import lmr.randomizer.rcd.object.*;
@@ -69,9 +70,90 @@ public final class RcdReader {
             rcdByteIndex += 2;
         }
 
-        objectContainer.getObjects().add(obj);
-        GameDataTracker.addObject(obj);
+        boolean keepObject = true;
+        if (Settings.randomizeShops && obj.getId() == 0x0b) {
+            // Get rid of timer objects related to purchasing the pre-randomized item
+            for (WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
+                if(isRandomizedShopItem(flagUpdate.getIndex())) {
+                    for(TestByteOperation flagTest : obj.getTestByteOperations()) {
+                        if (flagTest.getIndex() == flagUpdate.getIndex() && flagTest.getValue() == 1) {
+                            keepObject = false;
+                        }
+                    }
+                }
+            }
+        }
+        else if (obj.getId() == 0x2c) {
+            if ((obj.getArgs().get(0) - 11) == DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Cog of the Soul").getInventoryArg()) {
+                // Add timer object for Cog of the Soul chest to prevent buggy behavior.
+                GameObject cogOfSoulChestTimer = new GameObject();
+                cogOfSoulChestTimer.setId((short) 0x0b);
+                cogOfSoulChestTimer.getArgs().add((short) 0);
+                cogOfSoulChestTimer.getArgs().add((short) 0);
+
+                TestByteOperation cogOfSoulTimerFlagTest = new TestByteOperation();
+                cogOfSoulTimerFlagTest.setIndex(570);
+                cogOfSoulTimerFlagTest.setValue((byte) 3);
+                cogOfSoulTimerFlagTest.setOp(ByteOp.FLAG_GTEQ);
+                cogOfSoulChestTimer.getTestByteOperations().add(cogOfSoulTimerFlagTest);
+
+                WriteByteOperation cogOfSoulTimerFlagUpdate = new WriteByteOperation();
+                cogOfSoulTimerFlagUpdate.setIndex(2999);
+                cogOfSoulTimerFlagUpdate.setValue((byte) 1);
+                cogOfSoulTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+                cogOfSoulChestTimer.getWriteByteOperations().add(cogOfSoulTimerFlagUpdate);
+
+                objectContainer.getObjects().add(cogOfSoulChestTimer);
+
+                // Modify Cog of the Soul chest to use the new flag instead of the old one.
+                for(WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
+                    if(flagUpdate.getIndex() == 570) {
+                        flagUpdate.setIndex(2999);
+                        flagUpdate.setValue((byte) 1);
+                    }
+                }
+            }
+        }
+        else if (obj.getId() == 0xa0) {
+            if(obj.getArgs().get(2) == 1) {
+                if(obj.getArgs().get(3) == 272) {
+                    Integer testFlagIndex = null;
+                    for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
+                        TestByteOperation flagTest = obj.getTestByteOperations().get(i);
+                        if (flagTest.getIndex() == 748) {
+                            // This is the flag that prevents you from getting the original version of the Graveyard shop once you've killed all the guardians.
+                            testFlagIndex = i;
+                        }
+                    }
+                    if(testFlagIndex != null) {
+                        obj.getTestByteOperations().remove(testFlagIndex);
+                    }
+                }
+                else if(obj.getArgs().get(3) == 273) {
+                    // Get rid of alternate Graveyard shop (with the Angel Shield)
+                    keepObject = false;
+                }
+            }
+        }
+
+        if(keepObject) {
+            objectContainer.getObjects().add(obj);
+            GameDataTracker.addObject(obj);
+        }
+        else {
+            FileUtils.log("Timer object excluded from rcd");
+        }
         return rcdByteIndex;
+    }
+
+    private static boolean isRandomizedShopItem(int worldFlag) {
+        for(String shopItem : DataFromFile.getRandomizedShopItems()) {
+            if(DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(shopItem).getWorldFlag() == worldFlag) {
+                FileUtils.log(String.format("Removing timer object for item %s with world flag %s", shopItem, worldFlag));
+                return true;
+            }
+        }
+        return false;
     }
 
     private static TestByteOperation getTestByteOperation(byte[] rcdBytes, int rcdByteIndex) {

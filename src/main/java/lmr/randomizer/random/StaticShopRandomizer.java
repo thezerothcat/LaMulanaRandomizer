@@ -8,8 +8,8 @@ import java.util.Random;
 /**
  * Created by thezerothcat on 7/20/2017.
  */
-public class ShopNonRandomizer extends ShopRandomizer {
-    public ShopNonRandomizer(int totalUniqueShopItems) {
+public class StaticShopRandomizer extends ShopRandomizer {
+    public StaticShopRandomizer(int totalUniqueShopItems) {
         super(totalUniqueShopItems);
         mapOfShopInventoryItemToContents.put("Shop 1 (Surface) Item 1", "Hand Scanner");
         mapOfShopInventoryItemToContents.put("Shop 2 (Surface) Item 1", "reader.exe");
@@ -54,7 +54,7 @@ public class ShopNonRandomizer extends ShopRandomizer {
 
 
     @Override
-    public void outputLocations( int attemptNumber) throws IOException {
+    public void outputLocations(int attemptNumber) throws IOException {
         return; // Don't output anything since we didn't randomize anything
     }
 }

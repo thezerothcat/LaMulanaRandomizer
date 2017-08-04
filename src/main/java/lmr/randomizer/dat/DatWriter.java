@@ -17,10 +17,7 @@ public final class DatWriter {
         dataOutputStream.writeShort(blockInfo.size());
 
         for(Block block : blockInfo) {
-            dataOutputStream.writeShort(block.getBlockSize());
-            for (BlockContents blockData : block.getBlockContents()) {
-                blockData.writeBytes(dataOutputStream);
-            }
+            block.write(dataOutputStream);
         }
         dataOutputStream.flush();
         dataOutputStream.close();

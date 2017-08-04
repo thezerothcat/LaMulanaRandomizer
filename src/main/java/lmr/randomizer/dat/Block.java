@@ -1,5 +1,7 @@
 package lmr.randomizer.dat;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,5 +30,12 @@ public class Block {
 
     public List<BlockContents> getBlockContents() {
         return blockContents;
+    }
+
+    public void write(DataOutputStream dataOutputStream) throws IOException {
+        dataOutputStream.writeShort(getBlockSize());
+        for (BlockContents blockData : getBlockContents()) {
+            blockData.writeBytes(dataOutputStream);
+        }
     }
 }

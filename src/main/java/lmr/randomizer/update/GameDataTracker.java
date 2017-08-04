@@ -6,10 +6,9 @@ import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.BlockContents;
 import lmr.randomizer.dat.BlockFlagData;
 import lmr.randomizer.dat.BlockItemData;
-import lmr.randomizer.rcd.object.ByteOp;
-import lmr.randomizer.rcd.object.GameObject;
-import lmr.randomizer.rcd.object.TestByteOperation;
-import lmr.randomizer.rcd.object.WriteByteOperation;
+import lmr.randomizer.dat.shop.BlockStringData;
+import lmr.randomizer.dat.shop.ShopBlock;
+import lmr.randomizer.rcd.object.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -299,6 +298,97 @@ public final class GameDataTracker {
                 }
             }
         }
+    }
+
+
+    public static void writeShopInventory(ShopBlock shopBlock, String shopItem1, String shopItem2, String shopItem3) {
+        shopBlock.getInventoryItemArgsList().getData().clear();
+        shopBlock.getInventoryItemArgsList().getData().add(getInventoryItemArg(shopItem1));
+        shopBlock.getInventoryItemArgsList().getData().add(getInventoryItemArg(shopItem2));
+        shopBlock.getInventoryItemArgsList().getData().add(getInventoryItemArg(shopItem3));
+
+        shopBlock.getFlagList().getData().clear();
+        shopBlock.getFlagList().getData().add(getFlag(shopItem1));
+        shopBlock.getFlagList().getData().add(getFlag(shopItem2));
+        shopBlock.getFlagList().getData().add(getFlag(shopItem3));
+
+        shopBlock.getExitFlagList().getData().clear();
+        shopBlock.getExitFlagList().getData().add(getFlag(shopItem1));
+        shopBlock.getExitFlagList().getData().add(getFlag(shopItem2));
+        shopBlock.getExitFlagList().getData().add(getFlag(shopItem3));
+
+        updateAskItemName(shopBlock.getString(3), shopItem1);
+        updateAskItemName(shopBlock.getString(4), shopItem2);
+        updateAskItemName(shopBlock.getString(5), shopItem3);
+
+        List<Short> bunemonData = shopBlock.getBunemonText().getData();
+        bunemonData.clear();
+        bunemonData.add((short)77);
+        bunemonData.add(getInventoryItemArg(shopItem1));
+        bunemonData.add((short)32);
+        bunemonData.add((short)262);
+        bunemonData.add((short)32);
+        bunemonData.add((short)77);
+        bunemonData.add(getInventoryItemArg(shopItem2));
+        bunemonData.add((short)32);
+        bunemonData.add((short)262);
+        bunemonData.add((short)32);
+        bunemonData.add((short)77);
+        bunemonData.add(getInventoryItemArg(shopItem3));
+    }
+
+    private static void updateAskItemName(BlockStringData blockStringData, String shopItem) {
+        if(blockStringData.getItemNameStartIndex() == null || blockStringData.getItemNameEndIndex() == null) {
+            return;
+        }
+
+        List<Short> newBlockData = new ArrayList<>(blockStringData.getData().subList(0, blockStringData.getItemNameStartIndex()));
+        newBlockData.add((short)77);
+        newBlockData.add(getInventoryItemArg(shopItem));
+        newBlockData.addAll(blockStringData.getData().subList(blockStringData.getItemNameEndIndex(), blockStringData.getData().size()));
+        blockStringData.getData().clear();
+        blockStringData.getData().addAll(newBlockData);
+    }
+
+    private static short getInventoryItemArg(String item) {
+        if("Weights".equals(item)) {
+            return 105;
+        }
+        if("Shuriken Ammo".equals(item)) {
+            return 107;
+        }
+        if("Rolling Shuriken Ammo".equals(item)) {
+            return 108;
+        }
+        if("Earth Spear Ammo".equals(item)) {
+            return 109;
+        }
+        if("Flare Gun Ammo".equals(item)) {
+            return 110;
+        }
+        if("Bomb Ammo".equals(item)) {
+            return 111;
+        }
+        if("Chakram Ammo".equals(item)) {
+            return 112;
+        }
+        if("Caltrops Ammo".equals(item)) {
+            return 113;
+        }
+        if("Pistol Ammo".equals(item)) {
+            return 114;
+        }
+        return DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(item).getInventoryArg();
+    }
+
+    private static short getFlag(String item) {
+        if("Weights".equals(item)) {
+            return 0;
+        }
+        if(item.endsWith("Ammo")) {
+            return 0;
+        }
+        return (short)DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(item).getWorldFlag();
     }
 
     public static void writeLocationContents(String chestLocation, String chestContents) {

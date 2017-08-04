@@ -13,7 +13,7 @@ Inferno (Lava) => ??? Ice Cape
 Inferno (Spikes) => Location: Inferno Cavern [Spikes]
 Extinction ???
 Twin (Witches) => None
-Twin (Lower) => ??? None
+Twin (Lower) => None
 Twin (Escape) => Event: Mother Defeated
 Endless => Location: Endless Corridor [2F-4F]
 Shrine => Location: Shrine of the Mother [Main], Katana
@@ -21,7 +21,13 @@ Illusion (Katana) => Location: Gate of Illusion [Middle], Katana
 Illusion (Spikes) => Location: Gate of Illusion [Lower]
 Graveyard => Feather
 Moonlight => ???
-Goddess ???
+Goddess (Shield) => Location: Tower of the Goddess [Grail], Axe
+Goddess (Shield) => Location: Tower of the Goddess [Grail], Katana
+Goddess (Shield) => Location: Tower of the Goddess [Grail], Knife
+Goddess (Shield) => Location: Tower of the Goddess [Grail], Caltrops
+Goddess (Shield) => Location: Tower of the Goddess [Grail], Rolling Shuriken
+Goddess (Shield) => Location: Tower of the Goddess [Grail], Bomb
+Goddess (Shield) => Location: Tower of the Goddess [Grail], Earth Spear
 Goddess (Fairy) => Location: Tower of the Goddess [Lower]
 Ruin ???
 Birth ???

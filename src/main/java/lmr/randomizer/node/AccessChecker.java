@@ -119,7 +119,7 @@ public class AccessChecker {
     }
 
     public void outputRemaining(long startingSeed, int attemptNumber) throws IOException {
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("target/inaccessible%s_%s.txt", startingSeed, attemptNumber));
+        BufferedWriter writer = FileUtils.getFileWriter(String.format("%s/inaccessible_%s.txt", startingSeed, attemptNumber));
         if (writer == null) {
             return;
         }

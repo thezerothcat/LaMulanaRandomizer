@@ -158,6 +158,44 @@ public class FileUtils {
         }
     }
 
+    public static Map<String, Integer> getShopBlockMap(String filename) {
+        try(BufferedReader reader = getFileReader(filename)) {
+            String line;
+            String[] lineParts;
+            Map<String, Integer> mapOfShopNameToShopBlock = new HashMap<>();
+            while((line = reader.readLine()) != null) {
+                lineParts = line.trim().split(" => "); // delimiter
+                mapOfShopNameToShopBlock.put(lineParts[0], Integer.parseInt(lineParts[1]));
+            }
+            return mapOfShopNameToShopBlock;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    public static Map<String, List<String>> getShopOriginalContentsMap(String filename) {
+        try(BufferedReader reader = getFileReader(filename)) {
+            String line;
+            String[] lineParts;
+            String[] items;
+            Map<String, List<String>> mapOfShopNameToOriginalShopContents = new HashMap<>();
+            List<String> shopContents;
+            while((line = reader.readLine()) != null) {
+                lineParts = line.trim().split(" => "); // delimiter
+                items = lineParts[1].split(", ?");
+                shopContents = new ArrayList<>(3);
+                shopContents.add(items[0]);
+                shopContents.add(items[1]);
+                shopContents.add(items[2]);
+                mapOfShopNameToOriginalShopContents.put(lineParts[0], shopContents);
+            }
+            return mapOfShopNameToOriginalShopContents;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+
     public static void log(String logText) {
         try {
             LOG_WRITER.write(logText);

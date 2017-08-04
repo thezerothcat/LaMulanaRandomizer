@@ -55,10 +55,24 @@ public class NodeWithRequirements {
      * @return true if the node can contain the item
      */
     public boolean canContainItem(String item) {
+        boolean badRequirementSet;
         for(List<String> requirementSet : listOfRequirementSets) {
-            if(!requirementSet.contains(item)) {
-                return true;
+            if(requirementSet.contains(item)) {
+                continue; // This requirement set doesn't work; try another one.
             }
+            if(item.equals("Ankh Jewel")) {
+                badRequirementSet = false;
+                for(String requirement : requirementSet) {
+                    if(requirement.startsWith("Event") && requirement.endsWith("Defeated")) {
+                        badRequirementSet = true;
+                        break;
+                    }
+                }
+                if(badRequirementSet) {
+                    continue; // Minimize Ankh Jewel lock.
+                }
+            }
+            return true;
         }
         return false;
     }

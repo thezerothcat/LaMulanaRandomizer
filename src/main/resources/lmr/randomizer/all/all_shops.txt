@@ -1,5 +1,6 @@
 Shop 1 (Surface)
 Shop 2 (Surface)
+Shop 2 Alt (Surface)
 Shop 3 (Surface)
 Shop 4 (Guidance)
 Shop 5 (Illusion)
