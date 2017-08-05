@@ -115,8 +115,8 @@ public final class RcdReader {
             }
         }
         else if (obj.getId() == 0xa0) {
-            if(obj.getArgs().get(2) == 1) {
-                if(obj.getArgs().get(3) == 272) {
+            if(obj.getArgs().get(3) == 1) {
+                if(obj.getArgs().get(4) == 272) {
                     Integer testFlagIndex = null;
                     for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
                         TestByteOperation flagTest = obj.getTestByteOperations().get(i);
@@ -126,10 +126,10 @@ public final class RcdReader {
                         }
                     }
                     if(testFlagIndex != null) {
-                        obj.getTestByteOperations().remove(testFlagIndex);
+                        obj.getTestByteOperations().remove((int)testFlagIndex);
                     }
                 }
-                else if(obj.getArgs().get(3) == 273) {
+                else if(obj.getArgs().get(4) == 273) {
                     // Get rid of alternate Graveyard shop (with the Angel Shield)
                     keepObject = false;
                 }
