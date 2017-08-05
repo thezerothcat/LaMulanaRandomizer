@@ -359,6 +359,20 @@ public final class DatReader {
             else {
                 block = new Block(blockIndex);
                 addBlockContentsToBlock(block, dataInputStream, numberOfBytesInThisBlock / 2);
+                if(blockIndex == 693) {
+                    // Remove Mini Doll's becoming small flag from conversation.
+                    Integer becomingSmallFlagIndex = null;
+                    BlockContents blockContents;
+                    for(int i = 0; i < block.getBlockContents().size(); i++) {
+                        blockContents = block.getBlockContents().get(i);
+                        if(blockContents instanceof BlockFlagData && ((BlockFlagData) blockContents).getWorldFlag() == 554) {
+                            becomingSmallFlagIndex = i;
+                        }
+                        if(becomingSmallFlagIndex != null) {
+                            block.getBlockContents().remove(becomingSmallFlagIndex);
+                        }
+                    }
+                }
             }
             datBlocks.add(block);
             GameDataTracker.addBlock(block);

@@ -276,11 +276,11 @@ public final class GameDataTracker {
         }
     }
 
-    public static void updateBlock(String chestLocation, String chestContents) {
+    public static void updateBlock(String itemLocation, String randomizedContents) {
         Map<String, GameObjectId> nameToDataMap = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData();
-        GameObjectId itemNewContentsData = nameToDataMap.get(chestContents);
-        GameObjectId itemLocationData = nameToDataMap.get(chestLocation);
-        List<Block> blocksToModify = mapOfChestIdentifyingInfoToBlock.get(nameToDataMap.get(chestLocation));
+        GameObjectId itemNewContentsData = nameToDataMap.get(randomizedContents);
+        GameObjectId itemLocationData = nameToDataMap.get(itemLocation);
+        List<Block> blocksToModify = mapOfChestIdentifyingInfoToBlock.get(nameToDataMap.get(itemLocation));
         for(Block block : blocksToModify) {
             for(BlockContents blockContents : block.getBlockContents()) {
                 if(blockContents instanceof BlockFlagData) {
