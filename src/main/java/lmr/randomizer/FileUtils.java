@@ -1,6 +1,7 @@
 package lmr.randomizer;
 
 import lmr.randomizer.node.AccessChecker;
+import lmr.randomizer.node.NodeWithRequirements;
 import lmr.randomizer.update.GameObjectId;
 
 import javax.xml.bind.DatatypeConverter;
@@ -127,19 +128,41 @@ public class FileUtils {
         return listContents;
     }
 
-    public static void populateRequirements(AccessChecker accessChecker, String file, String prefix) {
+    public static void populateRequirements(Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject, String file, String prefix) {
         try(BufferedReader reader = getFileReader(file)) {
             String line;
             String[] lineParts;
             while((line = reader.readLine()) != null) {
                 lineParts = line.trim().split(" => "); // delimiter
-                accessChecker.addNode(prefix == null ? lineParts[0] : (prefix + lineParts[0]), lineParts[1]);
+                addNode(mapOfNodeNameToRequirementsObject, prefix == null ? lineParts[0] : (prefix + lineParts[0]), lineParts[1]);
             }
         } catch (Exception ex) {
             return;
         }
     }
 
+    private static void addNode(Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject, String name, String requirementSet) {
+        NodeWithRequirements node = mapOfNodeNameToRequirementsObject.get(name);
+        if(node == null) {
+            node = new NodeWithRequirements(name);
+            mapOfNodeNameToRequirementsObject.put(name, node);
+        }
+        node.addRequirementSet(buildRequirementSet(requirementSet));
+    }
+
+    private static List<String> buildRequirementSet(String requirementSet) {
+        if(requirementSet == null || requirementSet.isEmpty() || "None".equalsIgnoreCase(requirementSet)) {
+            return new ArrayList<>();
+        }
+        if(!requirementSet.contains(",")) {
+            return Arrays.asList(requirementSet);
+        }
+        List<String> requirements = new ArrayList<>();
+        for(String requirement : requirementSet.split(", ?")) {
+            requirements.add(requirement);
+        }
+        return requirements;
+    }
 
     public static Map<String, GameObjectId> getRcdDataIdMap(String filename) {
         try(BufferedReader reader = getFileReader(filename)) {

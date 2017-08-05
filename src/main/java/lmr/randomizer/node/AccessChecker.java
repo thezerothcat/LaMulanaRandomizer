@@ -1,5 +1,6 @@
 package lmr.randomizer.node;
 
+import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.random.ItemRandomizer;
 import lmr.randomizer.random.ShopRandomizer;
@@ -21,6 +22,7 @@ public class AccessChecker {
     private ShopRandomizer shopRandomizer;
 
     public AccessChecker() {
+        mapOfNodeNameToRequirementsObject = new HashMap<>(DataFromFile.getMapOfNodeNameToRequirementsObject());
     }
 
     public Set<String> getQueuedUpdates() {
@@ -29,29 +31,6 @@ public class AccessChecker {
 
     public boolean isSuccess() {
         return mapOfNodeNameToRequirementsObject.isEmpty();
-    }
-
-    public void addNode(String name, String requirementSet) {
-        NodeWithRequirements node = mapOfNodeNameToRequirementsObject.get(name);
-        if(node == null) {
-            node = new NodeWithRequirements(name);
-            mapOfNodeNameToRequirementsObject.put(name, node);
-        }
-        node.addRequirementSet(buildRequirementSet(requirementSet));
-    }
-
-    private List<String> buildRequirementSet(String requirementSet) {
-        if(requirementSet == null || requirementSet.isEmpty() || "None".equalsIgnoreCase(requirementSet)) {
-            return new ArrayList<>();
-        }
-        if(!requirementSet.contains(",")) {
-            return Arrays.asList(requirementSet);
-        }
-        List<String> requirements = new ArrayList<>();
-        for(String requirement : requirementSet.split(", ?")) {
-            requirements.add(requirement);
-        }
-        return requirements;
     }
 
     public void computeAccessibleNodes(String newState) {

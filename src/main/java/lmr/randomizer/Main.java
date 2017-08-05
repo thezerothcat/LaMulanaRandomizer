@@ -164,10 +164,17 @@ public class Main {
             generateSeed();
 
             try {
+                FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.laMulanaBaseDir + "\\data\\mapdata\\script.rcd"));
                 Files.copy(new File(String.format("%s/script.rcd", Settings.startingSeed)).toPath(),
-                        new FileOutputStream(new File(Settings.laMulanaBaseDir + "\\data\\mapdata\\script.rcd")));
+                        fileOutputStream);
+                fileOutputStream.flush();
+                fileOutputStream.close();
+
+                fileOutputStream = new FileOutputStream(new File(Settings.laMulanaBaseDir + "\\data\\language\\en\\script_code.dat"));
                 Files.copy(new File(String.format("%s/script_code.dat", Settings.startingSeed)).toPath(),
-                        new FileOutputStream(new File(Settings.laMulanaBaseDir + "\\data\\language\\en\\script_code.dat")));
+                        fileOutputStream);
+                fileOutputStream.flush();
+                fileOutputStream.close();
             }
             catch (Exception ex) {
                 FileUtils.log("unable to copy files to La-Mulana install");
@@ -448,15 +455,6 @@ public class Main {
 
     private static AccessChecker buildAccessChecker(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer) {
         AccessChecker accessChecker = new AccessChecker();
-        FileUtils.populateRequirements(accessChecker, "requirement/location_reqs.txt", "Location: ");
-        FileUtils.populateRequirements(accessChecker, "requirement/item_reqs.txt", null);
-        FileUtils.populateRequirements(accessChecker, "requirement/event_reqs.txt", null);
-        FileUtils.populateRequirements(accessChecker, "requirement/shop_reqs.txt", null);
-        if(Settings.allowGlitches) {
-            FileUtils.populateRequirements(accessChecker, "requirement/glitch/location_reqs.txt", "Location: ");
-            FileUtils.populateRequirements(accessChecker, "requirement/glitch/item_reqs.txt", null);
-            FileUtils.populateRequirements(accessChecker, "requirement/glitch/shop_reqs.txt", null);
-        }
         accessChecker.setItemRandomizer(itemRandomizer);
         accessChecker.setShopRandomizer(shopRandomizer);
         itemRandomizer.setAccessChecker(accessChecker);

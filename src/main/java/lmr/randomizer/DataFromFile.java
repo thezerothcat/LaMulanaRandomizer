@@ -1,5 +1,6 @@
 package lmr.randomizer;
 
+import lmr.randomizer.node.NodeWithRequirements;
 import lmr.randomizer.update.GameObjectId;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public final class DataFromFile {
     private static Map<String, GameObjectId> mapOfItemToUsefulIdentifyingRcdData;
     private static Map<String, Integer> mapOfShopNameToShopBlock;
     private static Map<String, List<String>> mapOfShopNameToShopOriginalContents;
+    private static Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject;
     private static List<String> initialShops;
 
     private DataFromFile() { }
@@ -173,5 +175,21 @@ public final class DataFromFile {
             }
         }
         return mapOfShopNameToShopOriginalContents;
+    }
+
+    public static Map<String, NodeWithRequirements> getMapOfNodeNameToRequirementsObject() {
+        if(mapOfNodeNameToRequirementsObject == null) {
+            mapOfNodeNameToRequirementsObject = new HashMap<>();
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/location_reqs.txt", "Location: ");
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/item_reqs.txt", null);
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/event_reqs.txt", null);
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/shop_reqs.txt", null);
+            if(Settings.allowGlitches) {
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/location_reqs.txt", "Location: ");
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/item_reqs.txt", null);
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/shop_reqs.txt", null);
+            }
+        }
+        return mapOfNodeNameToRequirementsObject;
     }
 }
