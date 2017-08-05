@@ -1,5 +1,6 @@
 Shop 1 (Surface)
 Shop 2 (Surface)
 Shop 2 Alt (Surface)
+Shop 6 (Mausoleum)
 Shop 12 Alt (Spring)
 Shop 18 (Lil Bro)

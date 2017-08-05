@@ -15,6 +15,11 @@ If you want to play the non-randomized game, there's a Restore button in the UI 
 The command-line arguments from previous releases will not work with the jar, but may be added back in for a later release.
 
 
+1.3:
+-----------------------------
+Shop randomization exists! There's still more to be done here, but many shops (and their items) are now part of the randomization pool. Also fixed Cog of the Soul chest bug, prevented Ankh Jewels from spawning in some problematic chests, removed Graveyard of the Giants alternate shop, fixed a bug that could break the Mini Doll puzzle, and updated some item and shop requirements.
+
+
 1.2:
 -----------------------------
 Randomizer now modifies two files, and can copy them to your La-Mulana directory for you or restore them from backups.
@@ -35,8 +40,8 @@ Adds some basic UI and file validation for the randomizer jar, so it doesn't hav
 
 Plans for future releases:
 -----------------------------
-* Shop randomization (preserving the ratio of weights & ammo to "permanent" items, but not necessarily the ratio of weights to ammo)
-* Randomization of more types of items, special-case items, which chests are coin chests vs item chests, etc.
 * Handling for ankh jewel locks.
-* Non-100% seeds
+* Randomization of more types of items, special-case items, which chests are coin chests vs item chests, etc.
 * Item requirements updates (better boss requirements, more glitch-enabled requirements, requirements involving damage boosting, etc.)
+* Shop randomization expansion (randomizing ammo, shuffling items in the place of weights/ammo)
+* Non-100% seeds
