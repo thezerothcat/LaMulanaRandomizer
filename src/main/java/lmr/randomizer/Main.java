@@ -321,6 +321,7 @@ public class Main {
 
             randomizeShops = new JCheckBox("Enable shop randomization");
             add(randomizeShops);
+            randomizeShops.setSelected(true);
         }
 
         public void updateSettings() {
