@@ -307,6 +307,28 @@ public final class GameDataTracker {
         shopBlock.getInventoryItemArgsList().getData().add(getInventoryItemArg(shopItem2));
         shopBlock.getInventoryItemArgsList().getData().add(getInventoryItemArg(shopItem3));
 
+        List<Short> newCounts = new ArrayList<>();
+        if(!"Weights".equals(shopItem1) && !shopItem1.endsWith("Ammo")) {
+            newCounts.add(shopBlock.getInventoryCountList().getData().get(0));
+        }
+        else {
+            newCounts.add((short)1);
+        }
+        if(!"Weights".equals(shopItem2) && !shopItem2.endsWith("Ammo")) {
+            newCounts.add(shopBlock.getInventoryCountList().getData().get(1));
+        }
+        else {
+            newCounts.add((short)1);
+        }
+        if(!"Weights".equals(shopItem3) && !shopItem3.endsWith("Ammo")) {
+            newCounts.add(shopBlock.getInventoryCountList().getData().get(2));
+        }
+        else {
+            newCounts.add((short)1);
+        }
+        shopBlock.getInventoryCountList().getData().clear();
+        shopBlock.getInventoryCountList().getData().addAll(newCounts);
+
         shopBlock.getFlagList().getData().clear();
         shopBlock.getFlagList().getData().add(getFlag(shopItem1));
         shopBlock.getFlagList().getData().add(getFlag(shopItem2));
