@@ -25,6 +25,13 @@ public class NodeWithRequirements {
         }
     }
 
+    public NodeWithRequirements(NodeWithRequirements nodeWithRequirements) {
+        this.type = nodeWithRequirements.type;
+        for(List<String> requirementSet : nodeWithRequirements.getAllRequirements()) {
+            this.listOfRequirementSets.add(new ArrayList<>(requirementSet));
+        }
+    }
+
     public NodeType getType() {
         return type;
     }

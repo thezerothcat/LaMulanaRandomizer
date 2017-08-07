@@ -308,19 +308,19 @@ public final class GameDataTracker {
         shopBlock.getInventoryItemArgsList().getData().add(getInventoryItemArg(shopItem3));
 
         List<Short> newCounts = new ArrayList<>();
-        if(!"Weights".equals(shopItem1) && !shopItem1.endsWith("Ammo")) {
+        if("Weights".equals(shopItem1) || shopItem1.endsWith("Ammo")) {
             newCounts.add(shopBlock.getInventoryCountList().getData().get(0));
         }
         else {
             newCounts.add((short)1);
         }
-        if(!"Weights".equals(shopItem2) && !shopItem2.endsWith("Ammo")) {
+        if("Weights".equals(shopItem2) || shopItem2.endsWith("Ammo")) {
             newCounts.add(shopBlock.getInventoryCountList().getData().get(1));
         }
         else {
             newCounts.add((short)1);
         }
-        if(!"Weights".equals(shopItem3) && !shopItem3.endsWith("Ammo")) {
+        if("Weights".equals(shopItem3) || shopItem3.endsWith("Ammo")) {
             newCounts.add(shopBlock.getInventoryCountList().getData().get(2));
         }
         else {

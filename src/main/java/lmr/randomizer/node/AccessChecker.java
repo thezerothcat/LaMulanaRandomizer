@@ -22,7 +22,15 @@ public class AccessChecker {
     private ShopRandomizer shopRandomizer;
 
     public AccessChecker() {
-        mapOfNodeNameToRequirementsObject = new HashMap<>(DataFromFile.getMapOfNodeNameToRequirementsObject());
+        mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
+    }
+
+    private static Map<String, NodeWithRequirements> copyRequirementsMap(Map<String, NodeWithRequirements> mapToCopy) {
+        Map<String, NodeWithRequirements> copyMap = new HashMap<>();
+        for(Map.Entry<String, NodeWithRequirements> entry : mapToCopy.entrySet()) {
+            copyMap.put(entry.getKey(), new NodeWithRequirements(entry.getValue()));
+        }
+        return copyMap;
     }
 
     public Set<String> getQueuedUpdates() {
