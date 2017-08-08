@@ -22,8 +22,8 @@ public final class Settings {
     public static Set<String> initiallyAvailableItems = getDefaultInitiallyAvailableItems();
 
     public static Set<String> getDefaultInitiallyAvailableItems() {
-        return new HashSet<>(Arrays.asList("Ankh Jewel (Gate of Guidance)", "Ankh Jewel (Mausoleum of the Giants)",
-                "Ankh Jewel (Temple of the Sun)", "Ankh Jewel (Spring in the Sky)"));
+        return new HashSet<>();//Arrays.asList("Ankh Jewel (Gate of Guidance)", "Ankh Jewel (Mausoleum of the Giants)",
+//                "Ankh Jewel (Temple of the Sun)", "Ankh Jewel (Spring in the Sky)"));
     }
 
 //    public static boolean zeroRequirementHandScannerAndReaderExe = true;

@@ -28,8 +28,9 @@ import java.util.List;
  */
 public class Main {
     public static void main(String[] args) {
-        if(false) {
-            Settings.startingSeed = 0;
+        if(true) {
+            Settings.startingSeed = 401636804;
+            Settings.randomizeShops = true;
             Settings.nonRandomizedItems.add("Holy Grail");
 //            parseSettings(args);
             Settings.laMulanaBaseDir = "C:\\GOG Games\\La-Mulana";
@@ -395,7 +396,6 @@ public class Main {
             }
             shopRandomizer.determineItemTypes(random, initialSubweapon);
 
-            // todo: make initial items based on settings
             List<String> initiallyAvailableItemsTemp = new ArrayList<>(initiallyAvailableItems);
             initiallyAvailableItemsTemp.add(initialSubweapon);
             itemRandomizer.placeNonRandomizedItems();
@@ -407,9 +407,30 @@ public class Main {
                 continue;
             }
 
+
+            boolean ankhJewelLock = false;
             accessChecker.computeAccessibleNodes("None");
-            while(!accessChecker.getQueuedUpdates().isEmpty()) {
-                accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next());
+            if(accessChecker.updateForBosses(attempt)) {
+                while(!accessChecker.getQueuedUpdates().isEmpty()) {
+                    accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next());
+                    if (accessChecker.getQueuedUpdates().isEmpty()) {
+                        if (!accessChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
+                            ankhJewelLock = true;
+                            break;
+                        }
+                        if (!accessChecker.updateForBosses(attempt)) {
+                            ankhJewelLock = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                ankhJewelLock = true;
+            }
+            if(ankhJewelLock) {
+                FileUtils.log("Detected ankh jewel lock. Re-shuffling items.");
+                continue;
             }
 
             if(accessChecker.isSuccess()) {

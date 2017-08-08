@@ -175,10 +175,8 @@ public class ItemRandomizer {
         }
 
         for (String location : mapOfItemLocationToItem.keySet()) {
-            if(!location.equals(mapOfItemLocationToItem.get(location))) {
-                writer.write(location + " => " + mapOfItemLocationToItem.get(location));
-                writer.newLine();
-            }
+            writer.write(location + " => " + mapOfItemLocationToItem.get(location));
+            writer.newLine();
         }
 
         writer.flush();
