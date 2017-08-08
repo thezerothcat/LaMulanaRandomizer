@@ -189,7 +189,16 @@ public final class DataFromFile {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/item_reqs.txt", null);
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/shop_reqs.txt", null);
             }
+            if(!Settings.requireSoftwareComboForKeyFairy) {
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_software_combo_for_key_fairy_reqs.txt", null);
+            }
         }
         return mapOfNodeNameToRequirementsObject;
+    }
+
+    public static void clearRequirementsData() {
+        if(mapOfNodeNameToRequirementsObject != null) {
+            mapOfNodeNameToRequirementsObject = null;
+        }
     }
 }
