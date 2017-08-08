@@ -29,7 +29,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         if(true) {
-            Settings.startingSeed = 401636804;
+//            Settings.startingSeed = 1246445508;
             Settings.randomizeShops = true;
             Settings.nonRandomizedItems.add("Holy Grail");
 //            parseSettings(args);

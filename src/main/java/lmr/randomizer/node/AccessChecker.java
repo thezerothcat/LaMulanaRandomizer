@@ -15,7 +15,7 @@ import java.util.*;
 public class AccessChecker {
     private Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject = new HashMap<>();
 
-    private List<String> accessedNodes = new ArrayList<>();
+    private Set<String> accessedNodes = new HashSet<>();
     private Set<String> queuedUpdates = new HashSet<>();
     private Set<String> accessibleBossNodes = new HashSet<>();
 
@@ -40,7 +40,8 @@ public class AccessChecker {
         this.mapOfNodeNameToRequirementsObject = copyRequirementsMap(accessChecker.mapOfNodeNameToRequirementsObject);
         this.itemRandomizer = accessChecker.itemRandomizer;
         this.shopRandomizer = accessChecker.shopRandomizer;
-        this.accessedNodes = new ArrayList<>(accessChecker.accessedNodes);
+        this.accessedNodes = new HashSet<>(accessChecker.accessedNodes);
+        this.accessibleBossNodes = new HashSet<>(accessChecker.accessibleBossNodes);
         this.numberOfAccessibleAnkhJewels = accessChecker.numberOfAccessibleAnkhJewels;
     }
 
@@ -89,13 +90,39 @@ public class AccessChecker {
         queuedUpdates.remove(newState);
     }
 
-    public void markBossDefeated(String bossEventNodeName) {
+    public void markBossAccessed(String bossEventNodeName) {
         accessedNodes.add(bossEventNodeName);
+        accessibleBossNodes.remove(bossEventNodeName);
+        numberOfAccessibleAnkhJewels -= 1;
         NodeWithRequirements node;
         Set<String> nodesToRemove = new HashSet<>();
         for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
             node = mapOfNodeNameToRequirementsObject.get(nodeName);
             if(node.updateRequirements(bossEventNodeName)) {
+                handleNodeAccess(nodeName, node.getType());
+                nodesToRemove.add(nodeName);
+            }
+        }
+        for(String nodeToRemove : nodesToRemove) {
+            mapOfNodeNameToRequirementsObject.remove(nodeToRemove);
+        }
+    }
+
+    public void markBossDefeated(String bossEventNodeName) {
+        if(!accessibleBossNodes.contains(bossEventNodeName)) {
+            return;
+        }
+        markBossAccessed(bossEventNodeName);
+
+        String bossDefeatedNodeName = bossEventNodeName.replace("Accessible", "Defeated");
+        mapOfNodeNameToRequirementsObject.remove(bossDefeatedNodeName);
+
+        accessedNodes.add(bossDefeatedNodeName);
+        NodeWithRequirements node;
+        Set<String> nodesToRemove = new HashSet<>();
+        for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
+            node = mapOfNodeNameToRequirementsObject.get(nodeName);
+            if(node.updateRequirements(bossDefeatedNodeName)) {
                 handleNodeAccess(nodeName, node.getType());
                 nodesToRemove.add(nodeName);
             }
@@ -225,8 +252,13 @@ public class AccessChecker {
                 return false;
             }
         }
-        for(String accessibleBoss : accessibleBossNodes) {
-            markBossDefeated(accessibleBoss);
+        NodeWithRequirements bossNode;
+        List<String> copyAccessibleBossNodes = new ArrayList<>(accessibleBossNodes);
+        for(String accessibleBoss : copyAccessibleBossNodes) {
+            bossNode = mapOfNodeNameToRequirementsObject.get(accessibleBoss.replace("Accessible", "Defeated"));
+            if(bossNode != null && !accessedNodes.contains(accessibleBoss)) {
+                markBossAccessed(accessibleBoss);
+            }
         }
         return true;
     }
