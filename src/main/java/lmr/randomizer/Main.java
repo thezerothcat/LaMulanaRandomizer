@@ -384,8 +384,9 @@ public class Main {
         List<String> subweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
         subweapons.removeAll(DataFromFile.getNonRandomizedItems());
 
-        int attempt = 1;
+        int attempt = 0;
         while(true) {
+            ++attempt;
             ItemRandomizer itemRandomizer = new ItemRandomizer();
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer);
@@ -429,12 +430,13 @@ public class Main {
                 ankhJewelLock = true;
             }
             if(ankhJewelLock) {
-                FileUtils.log("Detected ankh jewel lock. Re-shuffling items.");
+                FileUtils.log(String.format("Detected ankh jewel lock on attempt %s. Re-shuffling items.", attempt));
                 continue;
             }
 
             if(accessChecker.isSuccess()) {
                 try {
+                    FileUtils.log(String.format("Successful attempt %s.", attempt));
                     List<Zone> rcdData = RcdReader.getRcdScriptInfo();
                     List<Block> datInfo = DatReader.getDatScriptInfo();
                     outputLocations(itemRandomizer, shopRandomizer, attempt);
