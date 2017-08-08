@@ -315,6 +315,7 @@ public class Main {
         private JCheckBox enableGlitches;
         private JCheckBox initialSubweapon;
         private JCheckBox randomizeShops;
+        private JCheckBox requireSoftwareComboForKeyFairy;
 
         public CheckboxPanel() {
             super(new GridLayout(2, 2));
@@ -330,12 +331,22 @@ public class Main {
             randomizeShops = new JCheckBox("Enable shop randomization");
             add(randomizeShops);
             randomizeShops.setSelected(true);
+
+            requireSoftwareComboForKeyFairy = new JCheckBox("Require software combo for key fairies");
+            add(requireSoftwareComboForKeyFairy);
+            requireSoftwareComboForKeyFairy.setSelected(true);
         }
 
         public void updateSettings() {
             Settings.allowGlitches = enableGlitches.isSelected();
             Settings.guaranteeSubweapon = initialSubweapon.isSelected();
+
+            if(Settings.randomizeShops != randomizeShops.isSelected()
+                    || Settings.requireSoftwareComboForKeyFairy != requireSoftwareComboForKeyFairy.isSelected()) {
+                DataFromFile.clearRequirementsData();
+            }
             Settings.randomizeShops = randomizeShops.isSelected();
+            Settings.requireSoftwareComboForKeyFairy = requireSoftwareComboForKeyFairy.isSelected();
         }
     }
 

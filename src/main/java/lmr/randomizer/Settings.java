@@ -13,6 +13,7 @@ public final class Settings {
     public static boolean allowGlitches = false;
     public static boolean randomizeShops = false;
     public static boolean guaranteeSubweapon = false; // Ensure at least one subweapon drop within initial item set. // todo: restore this; it's broken in cases where no subweapons are included in randomization
+    public static boolean requireSoftwareComboForKeyFairy = false;
 
     public static String laMulanaBaseDir = null;
     public static String rcdFileLocation = null;
