@@ -345,18 +345,15 @@ public final class GameDataTracker {
 
         List<Short> bunemonData = shopBlock.getBunemonText().getData();
         bunemonData.clear();
-        bunemonData.add((short)77);
-        bunemonData.add(getInventoryItemArg(shopItem1));
+        updateBunemonText(bunemonData, shopItem1);
         bunemonData.add((short)32);
         bunemonData.add((short)262);
         bunemonData.add((short)32);
-        bunemonData.add((short)77);
-        bunemonData.add(getInventoryItemArg(shopItem2));
+        updateBunemonText(bunemonData, shopItem2);
         bunemonData.add((short)32);
         bunemonData.add((short)262);
         bunemonData.add((short)32);
-        bunemonData.add((short)77);
-        bunemonData.add(getInventoryItemArg(shopItem3));
+        updateBunemonText(bunemonData, shopItem3);
     }
 
     private static void updateAskItemName(BlockStringData blockStringData, String shopItem) {
@@ -365,11 +362,34 @@ public final class GameDataTracker {
         }
 
         List<Short> newBlockData = new ArrayList<>(blockStringData.getData().subList(0, blockStringData.getItemNameStartIndex()));
+        if("Map (Shrine of the Mother)".equals(shopItem)) {
+            newBlockData.add((short)296);
+            newBlockData.add((short)315);
+            newBlockData.add((short)325);
+            newBlockData.add((short)316);
+            newBlockData.add((short)321);
+            newBlockData.add((short)312);
+            newBlockData.add((short)32);
+        }
         newBlockData.add((short)77);
         newBlockData.add(getInventoryItemArg(shopItem));
         newBlockData.addAll(blockStringData.getData().subList(blockStringData.getItemNameEndIndex(), blockStringData.getData().size()));
         blockStringData.getData().clear();
         blockStringData.getData().addAll(newBlockData);
+    }
+
+    private static void updateBunemonText(List<Short> bunemonData, String shopItem) {
+        if("Map (Shrine of the Mother)".equals(shopItem)) {
+            bunemonData.add((short)296);
+            bunemonData.add((short)315);
+            bunemonData.add((short)325);
+            bunemonData.add((short)316);
+            bunemonData.add((short)321);
+            bunemonData.add((short)312);
+            bunemonData.add((short)32);
+        }
+        bunemonData.add((short)77);
+        bunemonData.add(getInventoryItemArg(shopItem));
     }
 
     private static short getInventoryItemArg(String item) {
@@ -425,17 +445,54 @@ public final class GameDataTracker {
         for(GameObject objectToModify : objectsToModify) {
             if(objectToModify.getId() == 0x2c) {
                 updateChestContents(objectToModify, itemLocationData, itemNewContentsData);
+                if("Map (Shrine of the Mother)".equals(chestContents)) {
+                    addShrineMapSoundEffect(objectToModify.getObjectContainer());
+                }
             }
             else if(objectToModify.getId() == 0xb5) {
                 updateInstantItemContents(objectToModify, itemLocationData, itemNewContentsData);
+                if("Map (Shrine of the Mother)".equals(chestContents)) {
+                    addShrineMapSoundEffect(objectToModify.getObjectContainer());
+                }
             }
             else if(objectToModify.getId() == 0x2f) {
                 updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData);
+                if("Map (Shrine of the Mother)".equals(chestContents)) {
+                    addShrineMapSoundEffect(objectToModify.getObjectContainer());
+                }
             }
             else {
                 updateRelatedObject(objectToModify, itemLocationData, itemNewContentsData);
             }
         }
+    }
+
+    private static void addShrineMapSoundEffect(ObjectContainer objectContainer) {
+        GameObject shrineMapSoundEffect = new GameObject(objectContainer);
+        shrineMapSoundEffect.setId((short)0x9b);
+        shrineMapSoundEffect.getArgs().add((short)30);
+        shrineMapSoundEffect.getArgs().add((short)120);
+        shrineMapSoundEffect.getArgs().add((short)64);
+        shrineMapSoundEffect.getArgs().add((short)0);
+        shrineMapSoundEffect.getArgs().add((short)120);
+        shrineMapSoundEffect.getArgs().add((short)64);
+        shrineMapSoundEffect.getArgs().add((short)0);
+        shrineMapSoundEffect.getArgs().add((short)25);
+        shrineMapSoundEffect.getArgs().add((short)1);
+        shrineMapSoundEffect.getArgs().add((short)5);
+        shrineMapSoundEffect.getArgs().add((short)0);
+        shrineMapSoundEffect.getArgs().add((short)10);
+        shrineMapSoundEffect.getArgs().add((short)0);
+        shrineMapSoundEffect.getArgs().add((short)0);
+        shrineMapSoundEffect.getArgs().add((short)0);
+
+        TestByteOperation testFlag = new TestByteOperation();
+        testFlag.setIndex(218);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)2);
+        shrineMapSoundEffect.getTestByteOperations().add(testFlag);
+
+        objectContainer.getObjects().add(shrineMapSoundEffect);
     }
 
     private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData) {

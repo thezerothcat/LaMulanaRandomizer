@@ -16,6 +16,12 @@ public class GameObject {
     private List<WriteByteOperation> writeByteOperations = new ArrayList<>();
     private List<Short> args = new ArrayList<>();
 
+    private ObjectContainer objectContainer;
+
+    public GameObject(ObjectContainer objectContainer) {
+        this.objectContainer = objectContainer;
+    }
+
     public short getId() {
         return id;
     }
@@ -50,6 +56,10 @@ public class GameObject {
 
     public List<Short> getArgs() {
         return args;
+    }
+
+    public ObjectContainer getObjectContainer() {
+        return objectContainer;
     }
 
     @Override
