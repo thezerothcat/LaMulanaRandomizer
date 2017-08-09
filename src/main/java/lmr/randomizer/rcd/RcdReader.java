@@ -31,7 +31,7 @@ public final class RcdReader {
     }
 
     private static int addObject(ObjectContainer objectContainer, byte[] rcdBytes, int rcdByteIndex, boolean hasPosition) {
-        GameObject obj = new GameObject();
+        GameObject obj = new GameObject(objectContainer);
 
         obj.setId(getField(rcdBytes, rcdByteIndex, 2).getShort());
         rcdByteIndex += 2;
@@ -71,13 +71,37 @@ public final class RcdReader {
         }
 
         boolean keepObject = true;
-        if (Settings.randomizeShops && obj.getId() == 0x0b) {
-            // Get rid of timer objects related to purchasing the pre-randomized item
-            for (WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
-                if(isRandomizedShopItem(flagUpdate.getIndex())) {
-                    for(TestByteOperation flagTest : obj.getTestByteOperations()) {
-                        if (flagTest.getIndex() == flagUpdate.getIndex() && flagTest.getValue() == 1) {
-                            keepObject = false;
+        if (obj.getId() == 0x0b) {
+            if(Settings.randomizeShops) {
+                // Get rid of timer objects related to purchasing the pre-randomized item
+                for (WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
+                    if (isRandomizedShopItem(flagUpdate.getIndex())) {
+                        for (TestByteOperation flagTest : obj.getTestByteOperations()) {
+                            if (flagTest.getIndex() == flagUpdate.getIndex() && flagTest.getValue() == 1) {
+                                keepObject = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(!(objectContainer instanceof Zone)) {
+                for (int i = 0; i < obj.getWriteByteOperations().size(); i++) {
+                    WriteByteOperation updateFlag = obj.getWriteByteOperations().get(i);
+                    if (updateFlag.getIndex() == 852) {
+                        // Sacred orb flag for heal rate
+                        if(objectContainer instanceof Zone) {
+                            break;
+                        }
+                        else if(objectContainer instanceof Room) {
+                            ((Room) objectContainer).getZone().getObjects().add(obj);
+                            GameDataTracker.addObject(obj);
+                            return rcdByteIndex;
+                        }
+                        else if(objectContainer instanceof Screen) {
+                            ((Screen) objectContainer).getZone().getObjects().add(obj);
+                            GameDataTracker.addObject(obj);
+                            return rcdByteIndex;
                         }
                     }
                 }
@@ -86,7 +110,7 @@ public final class RcdReader {
         else if (obj.getId() == 0x2c) {
             if ((obj.getArgs().get(0) - 11) == DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Cog of the Soul").getInventoryArg()) {
                 // Add timer object for Cog of the Soul chest to prevent buggy behavior.
-                GameObject cogOfSoulChestTimer = new GameObject();
+                GameObject cogOfSoulChestTimer = new GameObject(objectContainer);
                 cogOfSoulChestTimer.setId((short) 0x0b);
                 cogOfSoulChestTimer.getArgs().add((short) 0);
                 cogOfSoulChestTimer.getArgs().add((short) 0);
@@ -227,6 +251,7 @@ public final class RcdReader {
 
             for (int roomIndex = 0; roomIndex < rooms; roomIndex++) {
                 Room room = new Room();
+                room.setZone(zone);
                 room.setZoneIndex(zoneIndex);
                 room.setRoomIndex(roomIndex);
                 short roomObjCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
@@ -276,6 +301,7 @@ public final class RcdReader {
 
                 for (int screenIndex = 0; screenIndex < room.getNumberOfScreens(); screenIndex++) {
                     Screen screen = new Screen();
+                    screen.setZone(zone);
                     screen.setZoneIndex(zoneIndex);
                     screen.setRoomIndex(roomIndex);
                     screen.setScreenIndex(screenIndex);

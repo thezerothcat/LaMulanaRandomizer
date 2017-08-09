@@ -10,6 +10,8 @@ public class Room implements ObjectContainer {
     private List<Screen> screens = new ArrayList<Screen>();
     private List<GameObject> objects = new ArrayList<>();
 
+    private Zone zone;
+
     private int zoneIndex;
     private int roomIndex;
 
@@ -44,6 +46,14 @@ public class Room implements ObjectContainer {
 
     public void setRoomIndex(int roomIndex) {
         this.roomIndex = roomIndex;
+    }
+
+    public Zone getZone() {
+        return zone;
+    }
+
+    public void setZone(Zone zone) {
+        this.zone = zone;
     }
 
     public byte getNumberOfLayers() {

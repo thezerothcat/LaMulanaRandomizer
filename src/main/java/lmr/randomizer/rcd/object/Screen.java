@@ -12,6 +12,8 @@ public class Screen implements ObjectContainer {
     private int roomIndex;
     private int screenIndex;
 
+    private Zone zone;
+
     private List<GameObject> objects = new ArrayList<>();
     private List<ScreenExit> screenExits = new ArrayList<>(); //order is top, right, bottom, left
 
@@ -21,6 +23,14 @@ public class Screen implements ObjectContainer {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Zone getZone() {
+        return zone;
+    }
+
+    public void setZone(Zone zone) {
+        this.zone = zone;
     }
 
     public int getZoneIndex() {
