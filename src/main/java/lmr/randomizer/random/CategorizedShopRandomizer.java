@@ -153,7 +153,7 @@ public class CategorizedShopRandomizer extends ShopRandomizer {
         writer.close();
     }
 
-    public void updateFiles(List<Block> blocks) {
+    public void updateFiles(List<Block> blocks, Random random) {
         String shopItem1;
         String shopItem2;
         String shopItem3;
@@ -163,7 +163,7 @@ public class CategorizedShopRandomizer extends ShopRandomizer {
             shopItem1 = mapOfShopInventoryItemToContents.get(String.format("%s Item 1", shopName));
             shopItem2 = mapOfShopInventoryItemToContents.get(String.format("%s Item 2", shopName));
             shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName));
-            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3);
+            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, null);
         }
     }
 }

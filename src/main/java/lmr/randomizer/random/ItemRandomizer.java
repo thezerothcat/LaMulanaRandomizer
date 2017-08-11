@@ -50,10 +50,22 @@ public class ItemRandomizer {
     }
 
     public void removeItemFromUnplacedItems(String originalShopItem) {
-        unplacedItems.remove(originalShopItem); // todo: this method may not actually be needed
+        unplacedItems.remove(originalShopItem);
     }
 
     public void placeNonRandomizedItems() {
+//        mapOfItemLocationToItem.put("Shell Horn", "Fruit of Eden");
+//        unassignedNonShopItemLocations.remove("Shell Horn");
+//        unplacedItems.remove("Fruit of Eden");
+//        mapOfItemLocationToItem.put("Shuriken", "Treasures");
+//        unassignedNonShopItemLocations.remove("Shuriken");
+//        unplacedItems.remove("Treasures");
+//        mapOfItemLocationToItem.put("Sacred Orb (Gate of Guidance)", "Pepper");
+//        unassignedNonShopItemLocations.remove("Sacred Orb (Gate of Guidance)");
+//        unplacedItems.remove("Pepper");
+//        mapOfItemLocationToItem.put("Map (Surface)", "mekuri.exe");
+//        unassignedNonShopItemLocations.remove("Map (Surface)");
+//        unplacedItems.remove("mekuri.exe");
         for(String item : DataFromFile.getNonRandomizedItems()) {
             mapOfItemLocationToItem.put(item, item);
             if(!unassignedNonShopItemLocations.contains(item)) {
@@ -192,7 +204,7 @@ public class ItemRandomizer {
     }
 
     public void updateFiles() throws Exception{
-        List<String> locationsRelatedToBlocks = Arrays.asList("Map (Surface)", "mekuri.exe", "Mini Doll"); // todo: not hardcode this, eventually
+        List<String> locationsRelatedToBlocks = Arrays.asList("Map (Surface)", "mekuri.exe", "Mini Doll", "Pepper", "Anchor"); // todo: not hardcode this, eventually
 
         for(Map.Entry<String, String> locationAndItem : mapOfItemLocationToItem.entrySet()) {
             if(!locationAndItem.getKey().equals(locationAndItem.getValue())) {

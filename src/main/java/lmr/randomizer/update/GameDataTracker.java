@@ -10,10 +10,7 @@ import lmr.randomizer.dat.shop.BlockStringData;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.rcd.object.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by thezerothcat on 7/21/2017.
@@ -103,6 +100,24 @@ public final class GameDataTracker {
                     break;
                 }
             }
+        } else if (gameObject.getId() == 0x9c) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == 552) {
+                    // Using Pepper to spawn Treasures chest
+                    flagTest.setIndex(259);
+                    flagTest.setOp(ByteOp.FLAG_LTEQ);
+                    flagTest.setValue((byte)1);
+
+                    GameObjectId gameObjectId = new GameObjectId((short) 71, 259);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
         } else if (gameObject.getId() == 0x11) {
             for (WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
                 if (flagUpdate.getIndex() == 218) {
@@ -160,7 +175,7 @@ public final class GameDataTracker {
                 }
             }
         } else if (gameObject.getId() == 0xa0) {
-            if(gameObject.getArgs().get(3) == 693 || gameObject.getArgs().get(3) == 915) {
+            if(gameObject.getArgs().get(4) == 693 || gameObject.getArgs().get(4) == 915) {
                 // Mini Doll conversation
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 554) {
@@ -177,10 +192,10 @@ public final class GameDataTracker {
                     }
                 }
             }
-            else {
+            else if(gameObject.getArgs().get(4) == 673) {
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 241) {
-                        // mekuri conversation and tent-closing effect
+                        // mekuri conversation
                         GameObjectId gameObjectId = new GameObjectId((short) 100, 241);
                         List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                         if (objects == null) {
@@ -192,10 +207,88 @@ public final class GameDataTracker {
                     }
                 }
             }
+            else if(gameObject.getArgs().get(4) == 689 || gameObject.getArgs().get(4) == 690) {
+                // Conversation to receive Pepper, or conversation after receiving Pepper if you don't have Treasures
+                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                    if (flagTest.getIndex() == 552) {
+                        // Swap out the Pepper/Treasures/Anchor combo flag with Pepper custom world flag
+                        flagTest.setIndex(2902);
+                        if(flagTest.getValue() > 0 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
+                            flagTest.setOp(ByteOp.FLAG_GTEQ);
+                        }
+
+                        GameObjectId gameObjectId = new GameObjectId((short) 30, 2902);
+                        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        if (objects == null) {
+                            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+            }
+            else if(gameObject.getArgs().get(4) == 691) {
+                // Conversation to give Treasures and receive Anchor
+                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                    if (flagTest.getIndex() == 552) {
+                        // Swap out the Pepper/Treasures/Anchor combo flag with Pepper custom world flag
+                        flagTest.setIndex(2912);
+                        if(flagTest.getValue() == 1 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
+                            flagTest.setOp(ByteOp.FLAG_LTEQ);
+                        }
+
+                        GameObjectId gameObjectId = new GameObjectId((short) 50, 2912);
+                        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        if (objects == null) {
+                            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+            }
+            else if(gameObject.getArgs().get(4) == 692) {
+                // Conversation after receiving both Pepper and Anchor
+                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                    if (flagTest.getIndex() == 552) {
+                        // Swap out the Pepper/Treasures/Anchor combo flag with Pepper custom world flag
+                        flagTest.setIndex(2912);
+                        if(flagTest.getValue() == 1 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
+                            flagTest.setOp(ByteOp.FLAG_LTEQ);
+                        }
+
+                        GameObjectId gameObjectId = new GameObjectId((short) 50, 2912);
+                        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        if (objects == null) {
+                            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                // Add a check for having Pepper (otherwise we could get this conversation before being given Pepper).
+                TestByteOperation pepperCheck = new TestByteOperation();
+                pepperCheck.setIndex(2902);
+                pepperCheck.setOp(ByteOp.FLAG_GTEQ);
+                pepperCheck.setValue((byte)2);
+                gameObject.getTestByteOperations().add(pepperCheck);
+
+                // This conversation needs to be linked to Pepper in addition to Anchor, so both flags will be replaced based on randomization.
+                GameObjectId gameObjectId = new GameObjectId((short) 30, 2902);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+            }
         } else if (gameObject.getId() == 0x93) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                 if (flagTest.getIndex() == 241) {
-                    // mekuri conversation and tent-closing effect
+                    // mekuri tent-closing effect
                     GameObjectId gameObjectId = new GameObjectId((short) 100, 241);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
@@ -226,6 +319,32 @@ public final class GameDataTracker {
             // mekuri.exe
             short inventoryArg = (short) (100);
             int worldFlag = 241;
+            GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
+
+            List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            if (blocks == null) {
+                mapOfChestIdentifyingInfoToBlock.put(gameObjectId, new ArrayList<>());
+                blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            }
+            blocks.add(block);
+        }
+        else if(block.getBlockNumber() == 245) {
+            // Conversation to receive Pepper
+            short inventoryArg = (short) (30);
+            int worldFlag = 2902;
+            GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
+
+            List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            if (blocks == null) {
+                mapOfChestIdentifyingInfoToBlock.put(gameObjectId, new ArrayList<>());
+                blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            }
+            blocks.add(block);
+        }
+        else if(block.getBlockNumber() == 247) {
+            // Conversation to give Treasures and receive Anchor
+            short inventoryArg = (short) (50);
+            int worldFlag = 2912;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
@@ -289,6 +408,13 @@ public final class GameDataTracker {
                         flagData.setWorldFlag((short)itemNewContentsData.getWorldFlag());
                         flagData.setFlagValue((short)2);
                     }
+                    else if(flagData.getWorldFlag() == 552) {
+                        // The flag for the Pepper/Treasures/Anchor sequence is being replaced with custom world flags,
+                        // but it won't show up in the block as a thing that matches the world flag, so special case!
+                        // Note: There is no case where we see a flag 552 and want to keep it.
+                        flagData.setWorldFlag((short)itemNewContentsData.getWorldFlag());
+                        flagData.setFlagValue((short)2);
+                    }
                 }
                 else if(blockContents instanceof BlockItemData) {
                     BlockItemData itemData = (BlockItemData) blockContents;
@@ -300,34 +426,49 @@ public final class GameDataTracker {
         }
     }
 
-
-    public static void writeShopInventory(ShopBlock shopBlock, String shopItem1, String shopItem2, String shopItem3) {
+    public static void writeShopInventory(ShopBlock shopBlock, String shopItem1, String shopItem2, String shopItem3, Random random) {
         shopBlock.getInventoryItemArgsList().getData().clear();
         shopBlock.getInventoryItemArgsList().getData().add(getInventoryItemArg(shopItem1));
         shopBlock.getInventoryItemArgsList().getData().add(getInventoryItemArg(shopItem2));
         shopBlock.getInventoryItemArgsList().getData().add(getInventoryItemArg(shopItem3));
 
-        List<Short> newCounts = new ArrayList<>();
-        if("Weights".equals(shopItem1) || shopItem1.endsWith("Ammo")) {
-            newCounts.add(shopBlock.getInventoryCountList().getData().get(0));
-        }
-        else {
-            newCounts.add((short)1);
-        }
-        if("Weights".equals(shopItem2) || shopItem2.endsWith("Ammo")) {
-            newCounts.add(shopBlock.getInventoryCountList().getData().get(1));
-        }
-        else {
-            newCounts.add((short)1);
-        }
-        if("Weights".equals(shopItem3) || shopItem3.endsWith("Ammo")) {
-            newCounts.add(shopBlock.getInventoryCountList().getData().get(2));
-        }
-        else {
-            newCounts.add((short)1);
-        }
-        shopBlock.getInventoryCountList().getData().clear();
-        shopBlock.getInventoryCountList().getData().addAll(newCounts);
+//        if(random == null) {
+            List<Short> newCounts = new ArrayList<>();
+            if("Weights".equals(shopItem1) || shopItem1.endsWith("Ammo")) {
+                newCounts.add(shopBlock.getInventoryCountList().getData().get(0));
+            }
+            else {
+                newCounts.add((short)1);
+            }
+            if("Weights".equals(shopItem2) || shopItem2.endsWith("Ammo")) {
+                newCounts.add(shopBlock.getInventoryCountList().getData().get(1));
+            }
+            else {
+                newCounts.add((short)1);
+            }
+            if("Weights".equals(shopItem3) || shopItem3.endsWith("Ammo")) {
+                newCounts.add(shopBlock.getInventoryCountList().getData().get(2));
+            }
+            else {
+                newCounts.add((short)1);
+            }
+            shopBlock.getInventoryCountList().getData().clear();
+            shopBlock.getInventoryCountList().getData().addAll(newCounts);
+//        }
+//        else {
+//            shopBlock.getInventoryCountList().getData().clear();
+//            shopBlock.getInventoryCountList().getData().add(getCount(shopItem1));
+//            shopBlock.getInventoryCountList().getData().add(getCount(shopItem2));
+//            shopBlock.getInventoryCountList().getData().add(getCount(shopItem3));
+//
+//            shopBlock.getInventoryPriceList().getData().clear();
+//            shopBlock.getInventoryPriceList().getData().add(getPrice(shopItem1, random));
+//            shopBlock.getInventoryPriceList().getData().add(getPrice(shopItem2, random));
+//            shopBlock.getInventoryPriceList().getData().add(getPrice(shopItem3, random));
+//            shopBlock.getInventoryPriceList().getData().add((short)1);
+//            shopBlock.getInventoryPriceList().getData().add((short)1);
+//            shopBlock.getInventoryPriceList().getData().add((short)1);
+//        }
 
         shopBlock.getFlagList().getData().clear();
         shopBlock.getFlagList().getData().add(getFlag(shopItem1));
@@ -431,6 +572,85 @@ public final class GameDataTracker {
             return 0;
         }
         return (short)DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(item).getWorldFlag();
+    }
+
+    private static short getCount(String item) {
+        if("Weights".equals(item)) {
+            return 5;
+        }
+        if("Shuriken Ammo".equals(item)) {
+            return 10;
+        }
+        if("Rolling Shuriken Ammo".equals(item)) {
+            return 10;
+        }
+        if("Earth Spear Ammo".equals(item)) {
+            return 10;
+        }
+        if("Flare Gun Ammo".equals(item)) {
+            return 10;
+        }
+        if("Bomb Ammo".equals(item)) {
+            return 10;
+        }
+        if("Chakram Ammo".equals(item)) {
+            return 2;
+        }
+        if("Caltrops Ammo".equals(item)) {
+            return 10;
+        }
+        if("Pistol Ammo".equals(item)) {
+            return 1; // It looks like 6 is the count given by the Moonlight shop
+        }
+        return 1;
+    }
+
+    private static short getPrice(String item, Random random) {
+        if("Weights".equals(item)) {
+            return 10; // Also 15 for 5 and 20 for 5
+        }
+        if("Shuriken Ammo".equals(item)) {
+            return 10; // Also 15 for 10
+        }
+        if("Rolling Shuriken Ammo".equals(item)) {
+            return 10;
+        }
+        if("Earth Spear Ammo".equals(item)) {
+            return 10; // Also 25 for 10
+        }
+        if("Flare Gun Ammo".equals(item)) {
+            return 40; // Also 45 for 10 and 50 for 10
+        }
+        if("Bomb Ammo".equals(item)) {
+            return 100; // Also 80 for 10 and 110 for 10
+        }
+        if("Chakram Ammo".equals(item)) {
+            return 50; // Also 55 for 2
+        }
+        if("Caltrops Ammo".equals(item)) {
+            return 30; // Also 40 for 10
+        }
+        if("Pistol Ammo".equals(item)) {
+            // It looks like 6 is the count given by the Moonlight shop
+            // Prices are 350 or 400?
+            return 1;
+        }
+        if(item.contains("Map")) {
+            return (short)50;
+        }
+        if(item.contains("Ankh Jewel")) {
+            return (short)(100 + 10 * random.nextInt(6));
+        }
+        if(item.contains("Sacred Orb")) {
+            return (short)(200 + 50 * random.nextInt(3));
+        }
+        if(item.equals("Hermes' Boots") || item.contains("Feather")) {
+            return (short)(30 + 10 * random.nextInt(6));
+        }
+        if(item.equals("torude.exe") || item.contains("mantra.exe") || item.equals("miracle.exe") || item.contains("mekuri.exe")) {
+            return (short)(100 + 10 * random.nextInt(6));
+        }
+        return (short)(10 + 10 * random.nextInt(25));
     }
 
     public static void writeLocationContents(String chestLocation, String chestContents) {

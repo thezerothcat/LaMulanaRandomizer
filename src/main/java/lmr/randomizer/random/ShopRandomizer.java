@@ -225,7 +225,7 @@ public class ShopRandomizer {
         this.accessChecker = accessChecker;
     }
 
-    public void updateFiles(List<Block> blocks) {
+    public void updateFiles(List<Block> blocks, Random random) {
 //        List<String> locationsRelatedToBlocks = Arrays.asList("Map (Surface)", "mekuri.exe", "Mini Doll"); // todo: not hardcode this, eventually
 //
 //        for(String shopName : allShops) {

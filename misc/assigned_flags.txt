@@ -3,7 +3,8 @@ Dragon Bone world flag: b55
 Pepper world flag: b56
 Book of the Dead world flag: b57
 Fake Silver Shield world flag: b58
-
+guild.exe replacement world flag: b59
+Anchor world flag: b60
 
 
 

@@ -30,6 +30,15 @@ public final class RcdReader {
         return ByteBuffer.wrap(getByteArraySlice(mainArray, startIndex, length)).order(ByteOrder.BIG_ENDIAN);
     }
 
+    /**
+     * Reads in an object from the rcd file, adds it to the given ObjectContainer (unless we don't want to keep it),
+     * and then notifies GameObjectManager of the object.
+     * @param objectContainer the container (zone, room, or screen) we're adding this object to
+     * @param rcdBytes all the bytes from the rcd file
+     * @param rcdByteIndex byte index when starting to read this object
+     * @param hasPosition whether or not this object includes position data
+     * @return new rcdByteIndex after building this object
+     */
     private static int addObject(ObjectContainer objectContainer, byte[] rcdBytes, int rcdByteIndex, boolean hasPosition) {
         GameObject obj = new GameObject(objectContainer);
 

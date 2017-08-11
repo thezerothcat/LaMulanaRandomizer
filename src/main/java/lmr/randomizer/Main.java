@@ -452,7 +452,7 @@ public class Main {
                     List<Block> datInfo = DatReader.getDatScriptInfo();
                     outputLocations(itemRandomizer, shopRandomizer, attempt);
                     itemRandomizer.updateFiles();
-                    shopRandomizer.updateFiles(datInfo);
+                    shopRandomizer.updateFiles(datInfo, random);
                     RcdWriter.writeRcd(rcdData);
                     DatWriter.writeDat(datInfo);
 

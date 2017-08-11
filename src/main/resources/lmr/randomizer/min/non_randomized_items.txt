@@ -1,4 +1,3 @@
-Anchor
 beolamu.exe
 Book of the Dead
 Diary
@@ -8,9 +7,7 @@ Key Sword
 mantra.exe
 Maternity Statue
 Mulana Talisman
-Pepper
 Philosopher's Ocarina
 Sacred Orb (Dimensional Corridor)
 Talisman
-Treasures
 xmailer.exe
