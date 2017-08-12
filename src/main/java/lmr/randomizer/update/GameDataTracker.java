@@ -48,18 +48,38 @@ public final class GameDataTracker {
             }
             objects.add(gameObject);
         } else if (gameObject.getId() == 0xb5) {
-            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                if (flagTest.getIndex() == 209) {
-                    // Surface map item give
-                    GameObjectId gameObjectId = new GameObjectId((short) 70, 209);
-                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                    if (objects == null) {
-                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                    }
-                    objects.add(gameObject);
-                    break;
+            short itemArg = gameObject.getArgs().get(0);
+            if(itemArg == 70) {
+                // Surface map item give
+                GameObjectId gameObjectId = new GameObjectId((short) 70, 209);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                 }
+                objects.add(gameObject);
+            }
+            else if(itemArg == 81) {
+                // Maternity Doll item give
+                GameObjectId gameObjectId = new GameObjectId((short) 81, 267);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+            }
+        } else if(gameObject.getId() == 0xc3) {
+            // Items given by torude.
+            short itemArg = gameObject.getArgs().get(3);
+            if(itemArg == 93 || itemArg == 94 || itemArg == 95) {
+                GameObjectId gameObjectId = new GameObjectId((short) itemArg, 234 - (itemArg - 95));
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
             }
         } else if (gameObject.getId() == 0x12 || gameObject.getId() == 0x0e) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
@@ -98,6 +118,16 @@ public final class GameDataTracker {
                     }
                     objects.add(gameObject);
                     break;
+                }
+                else if(flagTest.getIndex() == 267) {
+                    // Timer to play Shell Horn sound when being given Maternity Statue equivalent
+                    GameObjectId gameObjectId = new GameObjectId((short) 81, 267);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
                 }
             }
         } else if (gameObject.getId() == 0x9c) {
@@ -310,6 +340,16 @@ public final class GameDataTracker {
                         }
                     }
                 }
+                if(flagUpdate.getIndex() == 267 && flagUpdate.getValue() == 1) {
+                    // Timer to track wait time with Woman Statue and give Maternity Statue
+                    GameObjectId gameObjectId = new GameObjectId((short) 81, 267);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                }
             }
         }
     }
@@ -384,6 +424,19 @@ public final class GameDataTracker {
             // Surface map
             short inventoryArg = (short) (70);
             int worldFlag = 209;
+            GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
+
+            List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            if (blocks == null) {
+                mapOfChestIdentifyingInfoToBlock.put(gameObjectId, new ArrayList<>());
+                blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            }
+            blocks.add(block);
+        }
+        else if(block.getBlockNumber() == 1012) {
+            // Forbidden Treasure
+            short inventoryArg = (short) (74);
+            int worldFlag = 262;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
@@ -681,6 +734,12 @@ public final class GameDataTracker {
                     addShrineMapSoundEffect(objectToModify.getObjectContainer());
                 }
             }
+            else if(objectToModify.getId() == 0xc3) {
+                updateSnapshotsItemContents(objectToModify, itemLocationData, itemNewContentsData);
+                if("Map (Shrine of the Mother)".equals(chestContents)) {
+                    addShrineMapSoundEffect(objectToModify.getObjectContainer());
+                }
+            }
             else {
                 updateRelatedObject(objectToModify, itemLocationData, itemNewContentsData);
             }
@@ -712,7 +771,43 @@ public final class GameDataTracker {
         testFlag.setValue((byte)2);
         shrineMapSoundEffect.getTestByteOperations().add(testFlag);
 
+        testFlag = new TestByteOperation();
+        testFlag.setIndex(42);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)1);
+        shrineMapSoundEffect.getTestByteOperations().add(testFlag);
+
+        GameObject shrineMapSoundEffectRemovalTimer = new GameObject(objectContainer);
+        shrineMapSoundEffectRemovalTimer.setId((short) 0x0b);
+        shrineMapSoundEffectRemovalTimer.getArgs().add((short) 0);
+        shrineMapSoundEffectRemovalTimer.getArgs().add((short) 0);
+
+        TestByteOperation shrineMapSoundEffectRemovalTimerFlagTest = new TestByteOperation();
+        shrineMapSoundEffectRemovalTimerFlagTest.setIndex(2998);
+        shrineMapSoundEffectRemovalTimerFlagTest.setValue((byte) 0);
+        shrineMapSoundEffectRemovalTimerFlagTest.setOp(ByteOp.FLAG_EQUALS);
+        shrineMapSoundEffectRemovalTimer.getTestByteOperations().add(shrineMapSoundEffectRemovalTimerFlagTest);
+
+        shrineMapSoundEffectRemovalTimerFlagTest = new TestByteOperation();
+        shrineMapSoundEffectRemovalTimerFlagTest.setIndex(218);
+        shrineMapSoundEffectRemovalTimerFlagTest.setValue((byte) 2);
+        shrineMapSoundEffectRemovalTimerFlagTest.setOp(ByteOp.FLAG_EQUALS);
+        shrineMapSoundEffectRemovalTimer.getTestByteOperations().add(shrineMapSoundEffectRemovalTimerFlagTest);
+
+        WriteByteOperation shrineMapSoundEffectRemovalTimerFlagUpdate = new WriteByteOperation();
+        shrineMapSoundEffectRemovalTimerFlagUpdate.setIndex(2998);
+        shrineMapSoundEffectRemovalTimerFlagUpdate.setValue((byte) 1);
+        shrineMapSoundEffectRemovalTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        shrineMapSoundEffectRemovalTimer.getWriteByteOperations().add(shrineMapSoundEffectRemovalTimerFlagUpdate);
+
+        shrineMapSoundEffectRemovalTimerFlagUpdate = new WriteByteOperation();
+        shrineMapSoundEffectRemovalTimerFlagUpdate.setIndex(42);
+        shrineMapSoundEffectRemovalTimerFlagUpdate.setValue((byte) 1);
+        shrineMapSoundEffectRemovalTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        shrineMapSoundEffectRemovalTimer.getWriteByteOperations().add(shrineMapSoundEffectRemovalTimerFlagUpdate);
+
         objectContainer.getObjects().add(shrineMapSoundEffect);
+        objectContainer.getObjects().add(shrineMapSoundEffectRemovalTimer);
     }
 
     private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
@@ -753,6 +848,32 @@ public final class GameDataTracker {
         }
     }
 
+    private static void updateSnapshotsItemContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
+        objectToModify.getArgs().set(3, (short)(itemNewContentsData.getInventoryArg()));
+        for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+            if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                flagTest.setIndex(itemNewContentsData.getWorldFlag());
+            }
+            if(flagTest.getValue() == 1) {
+                flagTest.setValue((byte) 2);
+            }
+        }
+        int lastWorldFlagUpdateIndex = -1;
+        for(int i = 0; i < objectToModify.getWriteByteOperations().size(); i++) {
+            WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(i);
+            if(flagUpdate.getIndex() == itemLocationData.getWorldFlag()) {
+                lastWorldFlagUpdateIndex = i;
+                flagUpdate.setIndex(itemNewContentsData.getWorldFlag());
+            }
+        }
+
+        if(lastWorldFlagUpdateIndex != -1) {
+            WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(lastWorldFlagUpdateIndex);
+            if(flagUpdate.getValue() != 2) {
+                flagUpdate.setValue(2);
+            }
+        }
+    }
 
     private static void updateFloatingItemContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
         objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg());

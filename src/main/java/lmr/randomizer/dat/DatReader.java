@@ -344,7 +344,7 @@ public final class DatReader {
 
     public static List<Block> getDatScriptInfo() throws Exception {
 //        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(Settings.laMulanaBaseDir + "\\data\\language\\en\\script_code.dat"));
-        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(Settings.datFileLocation));
+        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(Settings.getDatFileLocation()));
 
         List<Block> datBlocks = new ArrayList<>();
         int numberOfBlocks = (int)dataInputStream.readShort();

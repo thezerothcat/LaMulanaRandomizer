@@ -7,5 +7,8 @@ guild.exe replacement world flag: b59
 Anchor world flag: b60
 
 
-
+Shrine map sound effect played flag: bb6
 Cog of Soul chest: bb7
+
+
+Screen flag 42: Shrine map sound effect

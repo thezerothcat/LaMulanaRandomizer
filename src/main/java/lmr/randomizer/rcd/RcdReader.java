@@ -81,7 +81,7 @@ public final class RcdReader {
 
         boolean keepObject = true;
         if (obj.getId() == 0x0b) {
-            if(Settings.randomizeShops) {
+            if(Settings.isRandomizeShops()) {
                 // Get rid of timer objects related to purchasing the pre-randomized item
                 for (WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
                     if (isRandomizedShopItem(flagUpdate.getIndex())) {
@@ -220,7 +220,7 @@ public final class RcdReader {
     }
 
     public static List<Zone> getRcdScriptInfo() throws Exception {
-        String mapPath = Settings.laMulanaBaseDir + "\\data\\mapdata";
+        String mapPath = Settings.getLaMulanaBaseDir() + "\\data\\mapdata";
 
         byte[] rcdBytes = FileUtils.getBytes(mapPath + "\\script.rcd", true);
         int rcdByteIndex = 2; // Seems we skip the first two bytes?

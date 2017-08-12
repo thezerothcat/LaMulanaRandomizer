@@ -51,7 +51,7 @@ public final class DataFromFile {
     public static List<String> getAllNonShopItemsPlusAllRandomizedShopItems() {
         if(allNonShopItemsPlusAllRandomizedShopItems == null) {
             allNonShopItemsPlusAllRandomizedShopItems = FileUtils.getList("all/non_shop_items.txt");
-            if(Settings.randomizeShops) {
+            if(Settings.isRandomizeShops()) {
                 for(String item : getRandomizedShopItems()) {
                     if(!allNonShopItemsPlusAllRandomizedShopItems.contains(item)) {
                         allNonShopItemsPlusAllRandomizedShopItems.add(item);
@@ -59,7 +59,7 @@ public final class DataFromFile {
                 }
             }
             if(allNonShopItemsPlusAllRandomizedShopItems == null) {
-                allNonShopItemsPlusAllRandomizedShopItems = new ArrayList<>(0);
+                allNonShopItemsPlusAllRandomizedShopItems = new ArrayList<>(0); // todo: NPE more likely
             }
         }
         return allNonShopItemsPlusAllRandomizedShopItems;
@@ -78,7 +78,7 @@ public final class DataFromFile {
     public static List<String> getNonRandomizedItems() {
         if(nonRandomizedItems == null) {
             nonRandomizedItems = FileUtils.getList("min/non_randomized_items.txt");
-            for(String item : Settings.nonRandomizedItems) {
+            for(String item : Settings.getNonRandomizedItems()) {
                 if(!nonRandomizedItems.contains(item)) {
                     nonRandomizedItems.add(item);
                 }
@@ -92,7 +92,7 @@ public final class DataFromFile {
 
     public static List<String> getNonRandomizedShops() {
         if(nonRandomizedShops == null) {
-            if(Settings.randomizeShops) {
+            if(Settings.isRandomizeShops()) {
                 nonRandomizedShops = FileUtils.getList("min/non_randomized_shops.txt");
             }
             if(nonRandomizedShops == null) {
@@ -147,7 +147,7 @@ public final class DataFromFile {
 
     public static List<String> getRandomizedShopItems() {
         if(randomizedShopItems == null) {
-            if(Settings.randomizeShops) {
+            if(Settings.isRandomizeShops()) {
                 randomizedShopItems = new ArrayList<>();
                 for(String shopName : getAllShops()) {
                     if(!getNonRandomizedShops().contains(shopName)) {
@@ -184,12 +184,12 @@ public final class DataFromFile {
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/item_reqs.txt", null);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/event_reqs.txt", null);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/shop_reqs.txt", null);
-            if(Settings.allowGlitches) {
+            if(Settings.isAllowGlitches()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/location_reqs.txt", "Location: ");
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/item_reqs.txt", null);
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/shop_reqs.txt", null);
             }
-            if(!Settings.requireSoftwareComboForKeyFairy) {
+            if(!Settings.isRequireSoftwareComboForKeyFairy()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_software_combo_for_key_fairy_reqs.txt", null);
             }
         }
