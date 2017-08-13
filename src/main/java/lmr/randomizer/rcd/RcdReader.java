@@ -131,7 +131,7 @@ public final class RcdReader {
                 cogOfSoulChestTimer.getTestByteOperations().add(cogOfSoulTimerFlagTest);
 
                 WriteByteOperation cogOfSoulTimerFlagUpdate = new WriteByteOperation();
-                cogOfSoulTimerFlagUpdate.setIndex(2999);
+                cogOfSoulTimerFlagUpdate.setIndex(2799);
                 cogOfSoulTimerFlagUpdate.setValue((byte) 1);
                 cogOfSoulTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
                 cogOfSoulChestTimer.getWriteByteOperations().add(cogOfSoulTimerFlagUpdate);
@@ -141,7 +141,7 @@ public final class RcdReader {
                 // Modify Cog of the Soul chest to use the new flag instead of the old one.
                 for(WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
                     if(flagUpdate.getIndex() == 570) {
-                        flagUpdate.setIndex(2999);
+                        flagUpdate.setIndex(2799);
                         flagUpdate.setValue((byte) 1);
                     }
                 }
@@ -166,6 +166,22 @@ public final class RcdReader {
                     // Get rid of alternate Graveyard shop (with the Angel Shield)
                     keepObject = false;
                 }
+            }
+            else if(obj.getArgs().get(4) == 913) {
+                // Xelpud conversation after he goes to do the Diary thing.
+                keepObject = false;
+            }
+            else if(obj.getArgs().get(4) == 484) {
+
+            }
+            else if(obj.getArgs().get(4) == 1080) {
+
+            }
+            else if(obj.getArgs().get(4) == 1081) {
+
+            }
+            else if(obj.getArgs().get(4) == 1019) {
+
             }
         }
 

@@ -242,12 +242,12 @@ public final class GameDataTracker {
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 552) {
                         // Swap out the Pepper/Treasures/Anchor combo flag with Pepper custom world flag
-                        flagTest.setIndex(2902);
+                        flagTest.setIndex(2702);
                         if(flagTest.getValue() > 0 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
                             flagTest.setOp(ByteOp.FLAG_GTEQ);
                         }
 
-                        GameObjectId gameObjectId = new GameObjectId((short) 30, 2902);
+                        GameObjectId gameObjectId = new GameObjectId((short) 30, 2702);
                         List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                         if (objects == null) {
                             mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -263,12 +263,12 @@ public final class GameDataTracker {
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 552) {
                         // Swap out the Pepper/Treasures/Anchor combo flag with Pepper custom world flag
-                        flagTest.setIndex(2912);
+                        flagTest.setIndex(2712);
                         if(flagTest.getValue() == 1 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
                             flagTest.setOp(ByteOp.FLAG_LTEQ);
                         }
 
-                        GameObjectId gameObjectId = new GameObjectId((short) 50, 2912);
+                        GameObjectId gameObjectId = new GameObjectId((short) 50, 2706);
                         List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                         if (objects == null) {
                             mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -284,12 +284,12 @@ public final class GameDataTracker {
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 552) {
                         // Swap out the Pepper/Treasures/Anchor combo flag with Pepper custom world flag
-                        flagTest.setIndex(2912);
+                        flagTest.setIndex(2706);
                         if(flagTest.getValue() == 1 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
                             flagTest.setOp(ByteOp.FLAG_LTEQ);
                         }
 
-                        GameObjectId gameObjectId = new GameObjectId((short) 50, 2912);
+                        GameObjectId gameObjectId = new GameObjectId((short) 50, 2706);
                         List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                         if (objects == null) {
                             mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -301,19 +301,22 @@ public final class GameDataTracker {
                 }
                 // Add a check for having Pepper (otherwise we could get this conversation before being given Pepper).
                 TestByteOperation pepperCheck = new TestByteOperation();
-                pepperCheck.setIndex(2902);
+                pepperCheck.setIndex(2702);
                 pepperCheck.setOp(ByteOp.FLAG_GTEQ);
                 pepperCheck.setValue((byte)2);
                 gameObject.getTestByteOperations().add(pepperCheck);
 
                 // This conversation needs to be linked to Pepper in addition to Anchor, so both flags will be replaced based on randomization.
-                GameObjectId gameObjectId = new GameObjectId((short) 30, 2902);
+                GameObjectId gameObjectId = new GameObjectId((short) 30, 2702);
                 List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                 if (objects == null) {
                     mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
                     objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                 }
                 objects.add(gameObject);
+            }
+            else if(gameObject.getArgs().get(4) == 692) {
+
             }
         } else if (gameObject.getId() == 0x93) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
@@ -371,7 +374,7 @@ public final class GameDataTracker {
         else if(block.getBlockNumber() == 245) {
             // Conversation to receive Pepper
             short inventoryArg = (short) (30);
-            int worldFlag = 2902;
+            int worldFlag = 2702;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
@@ -384,7 +387,7 @@ public final class GameDataTracker {
         else if(block.getBlockNumber() == 247) {
             // Conversation to give Treasures and receive Anchor
             short inventoryArg = (short) (50);
-            int worldFlag = 2912;
+            int worldFlag = 2706;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
@@ -398,6 +401,19 @@ public final class GameDataTracker {
             // Mini Doll
             short inventoryArg = (short) (22);
             int worldFlag = 152;
+            GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
+
+            List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            if (blocks == null) {
+                mapOfChestIdentifyingInfoToBlock.put(gameObjectId, new ArrayList<>());
+                blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            }
+            blocks.add(block);
+        }
+        else if(block.getBlockNumber() == 371) {
+            // Mulana Talisman
+            short inventoryArg = (short) (73);
+            int worldFlag = 261;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
@@ -783,7 +799,7 @@ public final class GameDataTracker {
         shrineMapSoundEffectRemovalTimer.getArgs().add((short) 0);
 
         TestByteOperation shrineMapSoundEffectRemovalTimerFlagTest = new TestByteOperation();
-        shrineMapSoundEffectRemovalTimerFlagTest.setIndex(2998);
+        shrineMapSoundEffectRemovalTimerFlagTest.setIndex(2798);
         shrineMapSoundEffectRemovalTimerFlagTest.setValue((byte) 0);
         shrineMapSoundEffectRemovalTimerFlagTest.setOp(ByteOp.FLAG_EQUALS);
         shrineMapSoundEffectRemovalTimer.getTestByteOperations().add(shrineMapSoundEffectRemovalTimerFlagTest);
@@ -795,7 +811,7 @@ public final class GameDataTracker {
         shrineMapSoundEffectRemovalTimer.getTestByteOperations().add(shrineMapSoundEffectRemovalTimerFlagTest);
 
         WriteByteOperation shrineMapSoundEffectRemovalTimerFlagUpdate = new WriteByteOperation();
-        shrineMapSoundEffectRemovalTimerFlagUpdate.setIndex(2998);
+        shrineMapSoundEffectRemovalTimerFlagUpdate.setIndex(2798);
         shrineMapSoundEffectRemovalTimerFlagUpdate.setValue((byte) 1);
         shrineMapSoundEffectRemovalTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
         shrineMapSoundEffectRemovalTimer.getWriteByteOperations().add(shrineMapSoundEffectRemovalTimerFlagUpdate);
