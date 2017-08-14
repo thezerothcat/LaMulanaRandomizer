@@ -34,7 +34,7 @@ public class ItemRandomizer {
 
         nonShopItemLocations = new ArrayList<>(DataFromFile.getNonShopItemLocations());
         unassignedNonShopItemLocations = new ArrayList<>(nonShopItemLocations);
-        totalShopItems = Settings.randomizeShops ? allItems.size() - nonShopItemLocations.size() : 0;
+        totalShopItems = Settings.isRandomizeShops() ? allItems.size() - nonShopItemLocations.size() : 0;
     }
 
     public int getTotalShopItems() {
@@ -50,10 +50,43 @@ public class ItemRandomizer {
     }
 
     public void removeItemFromUnplacedItems(String originalShopItem) {
-        unplacedItems.remove(originalShopItem); // todo: this method may not actually be needed
+        unplacedItems.remove(originalShopItem);
+    }
+
+    public void randomizeForbiddenTreasure(Random random) {
+        List<String> uselessMaps = Arrays.asList("Map (Surface)", "Map (Gate of Guidance)", "Map (Mausoleum of the Giants)", "Map (Temple of the Sun)",
+                "Map (Spring in the Sky)", "Map (Inferno Cavern)", "Map (Chamber of Extinction)", "Map (Twin Labyrinths)", "Map (Endless Corridor)", "Map (Gate of Illusion)", "Map (Graveyard of the Giants)",
+                "Map (Temple of Moonlight)", "Map (Tower of the Goddess)", "Map (Tower of Ruin)", "Map (Chamber of Birth)", "Map (Dimensional Corridor)");
+
+        String uselessMap = uselessMaps.get(random.nextInt(uselessMaps.size()));
+        String uselessMapLocation = null;
+        for(Map.Entry<String, String> itemLocationAndContents : mapOfItemLocationToItem.entrySet()) {
+            if(uselessMap.equals(itemLocationAndContents.getValue())) {
+                uselessMapLocation = itemLocationAndContents.getKey();
+            }
+        }
+        if(uselessMapLocation == null) {
+            shopRandomizer.randomizeForbiddenTreasure(uselessMap, true);
+        }
+        else {
+            mapOfItemLocationToItem.put(uselessMapLocation, "Forbidden Treasure");
+            shopRandomizer.randomizeForbiddenTreasure(uselessMap, false);
+        }
     }
 
     public void placeNonRandomizedItems() {
+//        mapOfItemLocationToItem.put("mekuri.exe", "Map (Shrine of the Mother)");
+//        unassignedNonShopItemLocations.remove("mekuri.exe");
+//        unplacedItems.remove("Map (Shrine of the Mother)");
+//        mapOfItemLocationToItem.put("Shuriken", "Treasures");
+//        unassignedNonShopItemLocations.remove("Shuriken");
+//        unplacedItems.remove("Treasures");
+//        mapOfItemLocationToItem.put("Sacred Orb (Gate of Guidance)", "Pepper");
+//        unassignedNonShopItemLocations.remove("Sacred Orb (Gate of Guidance)");
+//        unplacedItems.remove("Pepper");
+//        mapOfItemLocationToItem.put("Map (Surface)", "Map (Shrine of the Mother)");
+//        unassignedNonShopItemLocations.remove("Map (Surface)");
+//        unplacedItems.remove("Map (Shrine of the Mother)");
         for(String item : DataFromFile.getNonRandomizedItems()) {
             mapOfItemLocationToItem.put(item, item);
             if(!unassignedNonShopItemLocations.contains(item)) {
@@ -169,16 +202,14 @@ public class ItemRandomizer {
 
     public void outputLocations(int attemptNumber) throws IOException {
 //        BufferedWriter writer = FileUtils.getFileWriter(String.format("target/items%d_%d.txt", startingSeed, attemptNumber));
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/items.txt", Settings.startingSeed));
+        BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/items.txt", Settings.getStartingSeed()));
         if (writer == null) {
             return;
         }
 
         for (String location : mapOfItemLocationToItem.keySet()) {
-            if(!location.equals(mapOfItemLocationToItem.get(location))) {
-                writer.write(location + " => " + mapOfItemLocationToItem.get(location));
-                writer.newLine();
-            }
+            writer.write(location + " => " + mapOfItemLocationToItem.get(location));
+            writer.newLine();
         }
 
         writer.flush();
@@ -194,7 +225,7 @@ public class ItemRandomizer {
     }
 
     public void updateFiles() throws Exception{
-        List<String> locationsRelatedToBlocks = Arrays.asList("Map (Surface)", "mekuri.exe", "Mini Doll"); // todo: not hardcode this, eventually
+        List<String> locationsRelatedToBlocks = Arrays.asList("Map (Surface)", "mekuri.exe", "Mini Doll", "Pepper", "Anchor"); // todo: not hardcode this, eventually
 
         for(Map.Entry<String, String> locationAndItem : mapOfItemLocationToItem.entrySet()) {
             if(!locationAndItem.getKey().equals(locationAndItem.getValue())) {

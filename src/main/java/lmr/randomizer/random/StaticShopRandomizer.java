@@ -3,6 +3,7 @@ package lmr.randomizer.random;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -52,6 +53,11 @@ public class StaticShopRandomizer extends ShopRandomizer {
         return; // Don't randomize
     }
 
+    @Override
+    public void randomizeForbiddenTreasure(String uselessMap, boolean placeForbiddenTreasure) {
+        assert !placeForbiddenTreasure; // this should never happen
+        mapOfShopInventoryItemToContents.put("Shop 12 Alt (Spring) Item 2", uselessMap);
+    }
 
     @Override
     public void outputLocations(int attemptNumber) throws IOException {

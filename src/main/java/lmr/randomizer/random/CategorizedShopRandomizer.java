@@ -127,8 +127,22 @@ public class CategorizedShopRandomizer extends ShopRandomizer {
         // Do nothing, because we aren't randomizing weights in this randomizer.
     }
 
+    @Override
+    public void randomizeForbiddenTreasure(String uselessMap, boolean placeForbiddenTreasure) {
+        if(placeForbiddenTreasure) {
+            String uselessMapLocation = null;
+            for(Map.Entry<String, String> shopItemLocationAndContents : mapOfShopInventoryItemToContents.entrySet()) {
+                if(uselessMap.equals(shopItemLocationAndContents.getValue())) {
+                    uselessMapLocation = shopItemLocationAndContents.getKey();
+                }
+            }
+            mapOfShopInventoryItemToContents.put(uselessMapLocation, "Forbidden Treasure");
+        }
+        mapOfShopInventoryItemToContents.put("Shop 12 Alt (Spring) Item 2", uselessMap);
+    }
+
     public void outputLocations(int attemptNumber) throws IOException {
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/shops.txt", Settings.startingSeed));
+        BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/shops.txt", Settings.getStartingSeed()));
         if (writer == null) {
             return;
         }
@@ -153,7 +167,7 @@ public class CategorizedShopRandomizer extends ShopRandomizer {
         writer.close();
     }
 
-    public void updateFiles(List<Block> blocks) {
+    public void updateFiles(List<Block> blocks, Random random) {
         String shopItem1;
         String shopItem2;
         String shopItem3;
@@ -163,7 +177,7 @@ public class CategorizedShopRandomizer extends ShopRandomizer {
             shopItem1 = mapOfShopInventoryItemToContents.get(String.format("%s Item 1", shopName));
             shopItem2 = mapOfShopInventoryItemToContents.get(String.format("%s Item 2", shopName));
             shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName));
-            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3);
+            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, null);
         }
     }
 }

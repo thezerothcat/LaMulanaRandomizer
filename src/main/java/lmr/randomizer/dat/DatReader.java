@@ -2,6 +2,7 @@ package lmr.randomizer.dat;
 
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.Settings;
+import lmr.randomizer.dat.conversation.CheckBlock;
 import lmr.randomizer.dat.shop.BlockCmdSingle;
 import lmr.randomizer.dat.shop.BlockStringData;
 import lmr.randomizer.dat.shop.ShopBlock;
@@ -19,6 +20,7 @@ import java.util.List;
 public final class DatReader {
     private DatReader() {
     }
+
 
     private static ShopBlock buildShopBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         int dataIndex = 0;
@@ -105,6 +107,32 @@ public final class DatReader {
         }
         shopBlock.setBunemonText(blockStringData);
         return shopBlock;
+    }
+
+    private static Block buildCheckBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        int dataIndex = 0;
+        CheckBlock checkBlock = new CheckBlock(blockIndex);
+
+        while(dataIndex < numberOfShortsInThisBlock) {
+            short cmdShort = dataInputStream.readShort();
+            ++dataIndex;
+
+            short numberOfOpts = dataInputStream.readShort();
+            ++dataIndex;
+
+            BlockListData blockListData = new BlockListData(cmdShort, numberOfOpts);
+            for(int blockListDataIndex = 0; blockListDataIndex < numberOfOpts; blockListDataIndex++) {
+                blockListData.getData().add(dataInputStream.readShort());
+                ++dataIndex;
+            }
+            checkBlock.getFlagCheckReferences().add(blockListData);
+
+            if(dataIndex < numberOfShortsInThisBlock) {
+                dataInputStream.readShort(); // 0x000a
+                ++dataIndex;
+            }
+        }
+        return checkBlock;
     }
 
     private static int populateBlockStringData(BlockStringData blockStringData, DataInputStream dataInputStream) throws IOException{
@@ -344,7 +372,7 @@ public final class DatReader {
 
     public static List<Block> getDatScriptInfo() throws Exception {
 //        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(Settings.laMulanaBaseDir + "\\data\\language\\en\\script_code.dat"));
-        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(Settings.datFileLocation));
+        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(Settings.getDatFileLocation()));
 
         List<Block> datBlocks = new ArrayList<>();
         int numberOfBlocks = (int)dataInputStream.readShort();
@@ -355,6 +383,9 @@ public final class DatReader {
 
             if(DataFromFile.getMapOfShopNameToShopBlock().values().contains((Integer)blockIndex)) {
                 block = buildShopBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
+            else if(blockIndex == 480 || blockIndex == 482 || blockIndex == 486) {
+                block = buildCheckBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             else {
                 block = new Block(blockIndex);

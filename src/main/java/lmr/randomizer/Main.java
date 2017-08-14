@@ -29,13 +29,14 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         if(false) {
-            Settings.startingSeed = 0;
-            Settings.nonRandomizedItems.add("Holy Grail");
+//            Settings.startingSeed = 1246445508;
+            Settings.setRandomizeShops(true);
+            Settings.getNonRandomizedItems().add("Holy Grail");
 //            parseSettings(args);
-            Settings.laMulanaBaseDir = "C:\\GOG Games\\La-Mulana";
-            Settings.rcdFileLocation = "src/main/resources/lmr/randomizer/rcd/script.rcd.bak";
-            Settings.datFileLocation = "src/main/resources/lmr/randomizer/rcd/script_code.dat.bak";
-            File directory = new File(Long.toString(Settings.startingSeed));
+            Settings.setLaMulanaBaseDir("C:\\GOG Games\\La-Mulana");
+            Settings.setRcdFileLocation("src/main/resources/lmr/randomizer/rcd/script.rcd.bak");
+            Settings.setDatFileLocation("src/main/resources/lmr/randomizer/rcd/script_code.dat.bak");
+            File directory = new File(Long.toString(Settings.getStartingSeed()));
             directory.mkdir();
             try {
                 doTheThing();
@@ -46,6 +47,12 @@ public class Main {
             FileUtils.closeAll();
         }
         else {
+            try {
+                FileUtils.readSettings();
+            }
+            catch (Exception ex) {
+                FileUtils.log("Unable to read settings: " + ex.getMessage());
+            }
             SwingUtilities.invokeLater(new RandomizerRunnable());
         }
     }
@@ -101,11 +108,13 @@ public class Main {
             fieldPanel.updateSettings();
             radioPanel.updateSettings();
             checkboxPanel.updateSettings();
+            Settings.saveSettings();
+
             fieldPanel.rerollRandomSeed();
 
             File rcdFile = new File("script.rcd.bak");
             if(!rcdFile.exists()) {
-                File existingRcd = new File(Settings.laMulanaBaseDir, "data/mapdata/script.rcd");
+                File existingRcd = new File(Settings.getLaMulanaBaseDir(), "data/mapdata/script.rcd");
                 if(!FileUtils.hashRcdFile(existingRcd)) {
                     FileUtils.log("unable to back up script.rcd - file already modified");
                     FileUtils.closeAll();
@@ -125,7 +134,7 @@ public class Main {
             }
             File datFile = new File("script_code.dat.bak");
             if(!datFile.exists()) {
-                File existingDat = new File(Settings.laMulanaBaseDir, "data/language/en/script_code.dat");
+                File existingDat = new File(Settings.getLaMulanaBaseDir(), "data/language/en/script_code.dat");
                 if(!FileUtils.hashDatFile(existingDat)) {
                     FileUtils.log("unable to back up script_code.dat - file already modified");
                     FileUtils.closeAll();
@@ -144,13 +153,12 @@ public class Main {
                 }
             }
 
-            Settings.rcdFileLocation = "script.rcd.bak";
-            Settings.datFileLocation = "script_code.dat.bak";
-            File directory = new File(Long.toString(Settings.startingSeed));
+            Settings.setRcdFileLocation("script.rcd.bak");
+            Settings.setDatFileLocation("script_code.dat.bak");
+            File directory = new File(Long.toString(Settings.getStartingSeed()));
             directory.mkdir();
 
 
-//            parseSettings(args);
             try {
                 doTheThing();
             } catch (Exception ex) {
@@ -164,14 +172,14 @@ public class Main {
             generateSeed();
 
             try {
-                FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.laMulanaBaseDir + "\\data\\mapdata\\script.rcd"));
-                Files.copy(new File(String.format("%s/script.rcd", Settings.startingSeed)).toPath(),
+                FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\mapdata\\script.rcd"));
+                Files.copy(new File(String.format("%s/script.rcd", Settings.getStartingSeed())).toPath(),
                         fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
 
-                fileOutputStream = new FileOutputStream(new File(Settings.laMulanaBaseDir + "\\data\\language\\en\\script_code.dat"));
-                Files.copy(new File(String.format("%s/script_code.dat", Settings.startingSeed)).toPath(),
+                fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\language\\en\\script_code.dat"));
+                Files.copy(new File(String.format("%s/script_code.dat", Settings.getStartingSeed())).toPath(),
                         fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
@@ -188,9 +196,9 @@ public class Main {
 
             try {
                 Files.copy(new File("script.rcd.bak").toPath(),
-                        new FileOutputStream(new File(Settings.laMulanaBaseDir + "\\data\\mapdata\\script.rcd")));
-                Files.copy(new File(String.format("script_code.dat.bak", Settings.startingSeed)).toPath(),
-                        new FileOutputStream(new File(Settings.laMulanaBaseDir + "\\data\\language\\en\\script_code.dat")));
+                        new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\mapdata\\script.rcd")));
+                Files.copy(new File(String.format("script_code.dat.bak", Settings.getStartingSeed())).toPath(),
+                        new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\language\\en\\script_code.dat")));
             }
             catch (Exception ex) {
                 FileUtils.log("unable to restore files to La-Mulana install");
@@ -239,7 +247,7 @@ public class Main {
             JPanel secondFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             secondFieldPanel.setPreferredSize(new Dimension(800, 60));
             secondFieldPanel.add(new JLabel("La-Mulana install directory: ", JLabel.LEFT));
-            laMulanaDirectory = new JTextField(getDefaultLaMulanaBaseDir());
+            laMulanaDirectory = new JTextField(Settings.getLaMulanaBaseDir());
             laMulanaDirectory.setSize(800, 60);
             secondFieldPanel.add(laMulanaDirectory);
 
@@ -251,21 +259,10 @@ public class Main {
             seedNumber.setText(Integer.toString(new Random().nextInt(Integer.MAX_VALUE)));
         }
 
-        private String getDefaultLaMulanaBaseDir() {
-            for(String filename : Arrays.asList("C:\\Games\\La-Mulana Remake 1.3.3.1", "C:\\GOG Games\\La-Mulana", "C:\\GOG Games\\La-Mulana",
-                    "C:\\Steam\\steamapps\\common\\La-Mulana", "C:\\Program Files (x86)\\Steam\\steamapps\\common\\La-Mulana",
-                    "C:\\Program Files\\Steam\\steamapps\\common\\La-Mulana")) {
-                if(new File(filename).exists()) {
-                    return filename;
-                }
-            }
-            return null;
-        }
-
         public void updateSettings() {
             try {
-                Settings.startingSeed = Integer.parseInt(seedNumber.getText());
-                Settings.laMulanaBaseDir = laMulanaDirectory.getText();
+                Settings.setStartingSeed(Integer.parseInt(seedNumber.getText()));
+                Settings.setLaMulanaBaseDir(laMulanaDirectory.getText());
             }
             catch (Exception ex) {
                 FileUtils.log("unable to save edit for seedNumber");
@@ -284,12 +281,11 @@ public class Main {
 
             itemRandomization = new ButtonGroup();
             JRadioButton randomItem = new JRadioButton("Random");
-            randomItem.setActionCommand("random");
-            randomItem.setSelected(true);
+            randomItem.setActionCommand("RANDOM");
             JRadioButton initialItem = new JRadioButton("Initially Accessible");
-            initialItem.setActionCommand("initial");
+            initialItem.setActionCommand("INITIAL");
             JRadioButton nonrandomItem = new JRadioButton("Original Location");
-            nonrandomItem.setActionCommand("nonrandom");
+            nonrandomItem.setActionCommand("NONRANDOM");
             itemRandomization.add(randomItem);
             itemRandomization.add(initialItem);
             itemRandomization.add(nonrandomItem);
@@ -297,6 +293,16 @@ public class Main {
             add(randomItem);
             add(initialItem);
             add(nonrandomItem);
+
+            if(Settings.getInitiallyAvailableItems().contains(item)) {
+                initialItem.setSelected(true);
+            }
+            else if(Settings.getNonRandomizedItems().contains(item)) {
+                nonrandomItem.setSelected(true);
+            }
+            else {
+                randomItem.setSelected(true);
+            }
 
             this.itemName = item;
         }
@@ -315,37 +321,45 @@ public class Main {
         private JCheckBox initialSubweapon;
         private JCheckBox randomizeShops;
         private JCheckBox requireSoftwareComboForKeyFairy;
+        private JCheckBox randomizeForbiddenTreasure;
 
         public CheckboxPanel() {
-            super(new GridLayout(2, 2));
+            super(new GridLayout(3, 2));
             setPreferredSize(new Dimension(800, 10));
             setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
             enableGlitches = new JCheckBox("Enable glitched requirements");
             add(enableGlitches);
+            enableGlitches.setSelected(Settings.isAllowGlitches());
 
             initialSubweapon = new JCheckBox("Guarantee initially accessible subweapon");
             add(initialSubweapon);
+            initialSubweapon.setSelected(Settings.isGuaranteeSubweapon());
 
             randomizeShops = new JCheckBox("Enable shop randomization");
             add(randomizeShops);
-            randomizeShops.setSelected(true);
+            randomizeShops.setSelected(Settings.isRandomizeShops());
+
+            randomizeForbiddenTreasure = new JCheckBox("Include Forbidden Treasure in randomized items");
+            add(randomizeForbiddenTreasure);
+            randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
 
             requireSoftwareComboForKeyFairy = new JCheckBox("Require software combo for key fairies");
             add(requireSoftwareComboForKeyFairy);
-            requireSoftwareComboForKeyFairy.setSelected(true);
+            requireSoftwareComboForKeyFairy.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
         }
 
         public void updateSettings() {
-            Settings.allowGlitches = enableGlitches.isSelected();
-            Settings.guaranteeSubweapon = initialSubweapon.isSelected();
+            Settings.setAllowGlitches(enableGlitches.isSelected());
+            Settings.setGuaranteeSubweapon(initialSubweapon.isSelected());
 
-            if(Settings.randomizeShops != randomizeShops.isSelected()
-                    || Settings.requireSoftwareComboForKeyFairy != requireSoftwareComboForKeyFairy.isSelected()) {
+            if(Settings.isRandomizeShops() != randomizeShops.isSelected()
+                    || Settings.isRequireSoftwareComboForKeyFairy() != requireSoftwareComboForKeyFairy.isSelected()) {
                 DataFromFile.clearRequirementsData();
             }
-            Settings.randomizeShops = randomizeShops.isSelected();
-            Settings.requireSoftwareComboForKeyFairy = requireSoftwareComboForKeyFairy.isSelected();
+            Settings.setRandomizeShops(randomizeShops.isSelected());
+            Settings.setRequireSoftwareComboForKeyFairy(requireSoftwareComboForKeyFairy.isSelected());
+            Settings.setRandomizeForbiddenTreasure(randomizeForbiddenTreasure.isSelected());
         }
     }
 
@@ -372,41 +386,43 @@ public class Main {
         }
 
         public void updateSettings() {
-            Settings.initiallyAvailableItems = Settings.getDefaultInitiallyAvailableItems();
-            Settings.nonRandomizedItems = new HashSet<>();
+            Set<String> initiallyAvailableItems = new HashSet<>();
+            Set<String> nonRandomizedItems = new HashSet<>();
 
             for(GameItemRadio itemRadio : itemConfigRadioGroupPanels) {
                 String actionCommand = itemRadio.getActionCommand();
-                if("initial".equals(actionCommand)) {
-                    addArgItemUI(Settings.initiallyAvailableItems, itemRadio.getItemName());
+                if("INITIAL".equals(actionCommand)) {
+                    addArgItemUI(initiallyAvailableItems, itemRadio.getItemName());
                 }
-                else if("nonrandom".equals(actionCommand)) {
-                    addArgItemUI(Settings.nonRandomizedItems, itemRadio.getItemName());
+                else if("NONRANDOM".equals(actionCommand)) {
+                    addArgItemUI(nonRandomizedItems, itemRadio.getItemName());
                 }
             }
+            Settings.setInitiallyAvailableItems(initiallyAvailableItems);
+            Settings.setNonRandomizedItems(nonRandomizedItems);
         }
     }
 
 
     private static void doTheThing() {
-        Random random = new Random(Settings.startingSeed);
+        Random random = new Random(Settings.getStartingSeed());
         Set<String> initiallyAvailableItems = getInitiallyAvailableItems();
         List<String> subweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
         subweapons.removeAll(DataFromFile.getNonRandomizedItems());
 
-        int attempt = 1;
+        int attempt = 0;
         while(true) {
+            ++attempt;
             ItemRandomizer itemRandomizer = new ItemRandomizer();
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer);
 
             String initialSubweapon = null;
-            if(Settings.guaranteeSubweapon && !subweapons.isEmpty()) {
+            if(Settings.isGuaranteeSubweapon() && !subweapons.isEmpty()) {
                 initialSubweapon = subweapons.get(random.nextInt(subweapons.size())); // todo: if this isn't a thing that can be placed, problems.
             }
             shopRandomizer.determineItemTypes(random, initialSubweapon);
 
-            // todo: make initial items based on settings
             List<String> initiallyAvailableItemsTemp = new ArrayList<>(initiallyAvailableItems);
             initiallyAvailableItemsTemp.add(initialSubweapon);
             itemRandomizer.placeNonRandomizedItems();
@@ -418,23 +434,56 @@ public class Main {
                 continue;
             }
 
+            boolean ankhJewelLock = false;
             accessChecker.computeAccessibleNodes("None");
-            while(!accessChecker.getQueuedUpdates().isEmpty()) {
-                accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next());
+            if(accessChecker.updateForBosses(attempt)) {
+                while(!accessChecker.getQueuedUpdates().isEmpty()) {
+                    accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next());
+                    if (accessChecker.getQueuedUpdates().isEmpty()) {
+                        if (!accessChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
+                            ankhJewelLock = true;
+                            break;
+                        }
+                        if (!accessChecker.updateForBosses(attempt)) {
+                            ankhJewelLock = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                ankhJewelLock = true;
+            }
+            if(ankhJewelLock) {
+                FileUtils.log(String.format("Detected ankh jewel lock on attempt %s. Re-shuffling items.", attempt));
+                continue;
             }
 
             if(accessChecker.isSuccess()) {
                 try {
+                    FileUtils.log(String.format("Successful attempt %s.", attempt));
+
+                    if(Settings.isRandomizeForbiddenTreasure()) {
+                        itemRandomizer.randomizeForbiddenTreasure(random);
+                    }
+
                     List<Zone> rcdData = RcdReader.getRcdScriptInfo();
                     List<Block> datInfo = DatReader.getDatScriptInfo();
                     outputLocations(itemRandomizer, shopRandomizer, attempt);
                     itemRandomizer.updateFiles();
-                    shopRandomizer.updateFiles(datInfo);
+                    shopRandomizer.updateFiles(datInfo, random);
                     RcdWriter.writeRcd(rcdData);
                     DatWriter.writeDat(datInfo);
 
                     return;
                 } catch (Exception ex) {
+                    FileUtils.log(ex.getClass().getName() + ": " + ex.getMessage());
+                    FileUtils.log("File: " + ex.getStackTrace()[0].getFileName());
+                    FileUtils.log("Method: " + ex.getStackTrace()[0].getMethodName());
+                    FileUtils.log("Line: " + ex.getStackTrace()[0].getLineNumber());
+                    FileUtils.log("File: " + ex.getStackTrace()[1].getFileName());
+                    FileUtils.log("Method: " + ex.getStackTrace()[1].getMethodName());
+                    FileUtils.log("Line: " + ex.getStackTrace()[1].getLineNumber());
                     return;
                     // No exception handling in v1
                 }
@@ -443,6 +492,13 @@ public class Main {
             try {
 //                accessChecker.outputRemaining(Settings.startingSeed, attempt);
             } catch (Exception ex) {
+                FileUtils.log(ex.getClass().getName() + ": " + ex.getMessage());
+                FileUtils.log("File: " + ex.getStackTrace()[0].getFileName());
+                FileUtils.log("Method: " + ex.getStackTrace()[0].getMethodName());
+                FileUtils.log("Line: " + ex.getStackTrace()[0].getLineNumber());
+                FileUtils.log("File: " + ex.getStackTrace()[1].getFileName());
+                FileUtils.log("Method: " + ex.getStackTrace()[1].getMethodName());
+                FileUtils.log("Line: " + ex.getStackTrace()[1].getLineNumber());
                 return;
                 // No exception handling in v1
             }
@@ -452,7 +508,7 @@ public class Main {
 
     private static ShopRandomizer buildShopRandomizer(ItemRandomizer itemRandomizer) {
         ShopRandomizer shopRandomizer;
-        if(Settings.randomizeShops) {
+        if(Settings.isRandomizeShops()) {
 //            shopRandomizer = new ShopRandomizer(itemRandomizer.getTotalShopItems());
             shopRandomizer = new CategorizedShopRandomizer();
         }
@@ -475,7 +531,7 @@ public class Main {
     }
 
     private static Set<String> getInitiallyAvailableItems() {
-        Set<String> noRequirementItems = new HashSet<>(Settings.initiallyAvailableItems);
+        Set<String> noRequirementItems = new HashSet<>(Settings.getInitiallyAvailableItems());
 //        if(Settings.randomizeShops) {
 //            noRequirementItems.add("Hand Scanner");
 //            noRequirementItems.add("reader.exe");
@@ -489,50 +545,6 @@ public class Main {
     private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, int attempt) throws IOException {
         itemRandomizer.outputLocations(attempt);
         shopRandomizer.outputLocations(attempt);
-    }
-
-    private static void parseSettings(String[] args) {
-        for(String arg : args) {
-            if(arg.startsWith("-s")) {
-                try {
-                    Settings.startingSeed = Long.parseLong(arg.substring(2));
-                } catch (Exception ex) {
-                    Settings.startingSeed = 0L;
-                }
-            }
-            else if(arg.equals("-g")) {
-                Settings.allowGlitches = true;
-            }
-            else if (arg.startsWith("-dir")) {
-                Settings.laMulanaBaseDir = arg.substring(4);
-            }
-            else if(arg.equals("-ng") || arg.equals("-ngrail")) {
-                Settings.nonRandomizedItems.add("Holy Grail");
-            }
-            else if (arg.startsWith("-n")) {
-                addArgItem(Settings.nonRandomizedItems, arg.substring(2));
-            }
-            else if(arg.equals("-isw")) {
-                Settings.guaranteeSubweapon = true;
-            }
-            else if(arg.equals("-ig") || arg.equals("-igrail")) {
-                Settings.initiallyAvailableItems.add("Holy Grail");
-            }
-            else if(arg.equals("-igrapple")) {
-                Settings.initiallyAvailableItems.add("Grapple Claw");
-            }
-            else if (arg.startsWith("-i")) {
-                addArgItem(Settings.initiallyAvailableItems, arg.substring(2));
-            }
-        }
-    }
-
-    private static void addArgItem(Set<String> nonRandomizedItems, String input) {
-        for(String item : DataFromFile.getAllItems()) {
-            if(item.replaceAll(" ", "").equalsIgnoreCase(input)) {
-                nonRandomizedItems.add(item);
-            }
-        }
     }
 
     private static void addArgItemUI(Set<String> nonRandomizedItems, String input) {

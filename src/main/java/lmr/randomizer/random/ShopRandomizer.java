@@ -196,7 +196,7 @@ public class ShopRandomizer {
 
     public void outputLocations(int attemptNumber) throws IOException {
 //        BufferedWriter writer = FileUtils.getFileWriter(String.format("target/shops%s_%s.txt", startingSeed, attemptNumber));
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/shops.txt", Settings.startingSeed));
+        BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/shops.txt", Settings.getStartingSeed()));
         if (writer == null) {
             return;
         }
@@ -225,7 +225,7 @@ public class ShopRandomizer {
         this.accessChecker = accessChecker;
     }
 
-    public void updateFiles(List<Block> blocks) {
+    public void updateFiles(List<Block> blocks, Random random) {
 //        List<String> locationsRelatedToBlocks = Arrays.asList("Map (Surface)", "mekuri.exe", "Mini Doll"); // todo: not hardcode this, eventually
 //
 //        for(String shopName : allShops) {
@@ -240,5 +240,18 @@ public class ShopRandomizer {
 
     public void setItemRandomizer(ItemRandomizer itemRandomizer) {
         this.itemRandomizer = itemRandomizer;
+    }
+
+    public void randomizeForbiddenTreasure(String uselessMap, boolean placeForbiddenTreasure) {
+        if(placeForbiddenTreasure) {
+            String uselessMapLocation = null;
+            for(Map.Entry<String, String> shopItemLocationAndContents : mapOfShopInventoryItemToContents.entrySet()) {
+                if(uselessMap.equals(shopItemLocationAndContents.getValue())) {
+                    uselessMapLocation = shopItemLocationAndContents.getKey();
+                }
+            }
+            mapOfShopInventoryItemToContents.put(uselessMapLocation, "Forbidden Treasure");
+        }
+        mapOfShopInventoryItemToContents.put("Shop 12 Alt (Spring) Item 2", uselessMap);
     }
 }

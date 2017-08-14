@@ -1,10 +1,15 @@
-Buckler world flag: b54
-Dragon Bone world flag: b55
-Pepper world flag: b56
-Book of the Dead world flag: b57
-Fake Silver Shield world flag: b58
+Buckler world flag: a8c
+Dragon Bone world flag: a8d
+Pepper world flag: a8e
+Book of the Dead world flag: a8f
+Fake Silver Shield world flag: a90
+guild.exe replacement world flag: a91
+Anchor world flag: a92
 
 
+Xelpud Mulana Talisman convos: aed
+Shrine map sound effect played flag: aee
+Cog of Soul chest: aef
 
 
-Cog of Soul chest: bb7
+Screen flag 42: Shrine map sound effect

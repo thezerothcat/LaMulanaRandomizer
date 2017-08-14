@@ -30,6 +30,15 @@ public final class RcdReader {
         return ByteBuffer.wrap(getByteArraySlice(mainArray, startIndex, length)).order(ByteOrder.BIG_ENDIAN);
     }
 
+    /**
+     * Reads in an object from the rcd file, adds it to the given ObjectContainer (unless we don't want to keep it),
+     * and then notifies GameObjectManager of the object.
+     * @param objectContainer the container (zone, room, or screen) we're adding this object to
+     * @param rcdBytes all the bytes from the rcd file
+     * @param rcdByteIndex byte index when starting to read this object
+     * @param hasPosition whether or not this object includes position data
+     * @return new rcdByteIndex after building this object
+     */
     private static int addObject(ObjectContainer objectContainer, byte[] rcdBytes, int rcdByteIndex, boolean hasPosition) {
         GameObject obj = new GameObject(objectContainer);
 
@@ -72,7 +81,7 @@ public final class RcdReader {
 
         boolean keepObject = true;
         if (obj.getId() == 0x0b) {
-            if(Settings.randomizeShops) {
+            if(Settings.isRandomizeShops()) {
                 // Get rid of timer objects related to purchasing the pre-randomized item
                 for (WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
                     if (isRandomizedShopItem(flagUpdate.getIndex())) {
@@ -122,7 +131,7 @@ public final class RcdReader {
                 cogOfSoulChestTimer.getTestByteOperations().add(cogOfSoulTimerFlagTest);
 
                 WriteByteOperation cogOfSoulTimerFlagUpdate = new WriteByteOperation();
-                cogOfSoulTimerFlagUpdate.setIndex(2999);
+                cogOfSoulTimerFlagUpdate.setIndex(2799);
                 cogOfSoulTimerFlagUpdate.setValue((byte) 1);
                 cogOfSoulTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
                 cogOfSoulChestTimer.getWriteByteOperations().add(cogOfSoulTimerFlagUpdate);
@@ -132,7 +141,7 @@ public final class RcdReader {
                 // Modify Cog of the Soul chest to use the new flag instead of the old one.
                 for(WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
                     if(flagUpdate.getIndex() == 570) {
-                        flagUpdate.setIndex(2999);
+                        flagUpdate.setIndex(2799);
                         flagUpdate.setValue((byte) 1);
                     }
                 }
@@ -157,6 +166,18 @@ public final class RcdReader {
                     // Get rid of alternate Graveyard shop (with the Angel Shield)
                     keepObject = false;
                 }
+            }
+            else if(obj.getArgs().get(4) == 913) {
+                // Xelpud conversation after he goes to do the Diary thing.
+                keepObject = false;
+            }
+//            else if(obj.getArgs().get(4) == 1013) {
+//                // Mulbruk conversation in which she runs away from the Forbidden Treasure.
+//                keepObject = false;
+//            }
+            else if(obj.getArgs().get(4) == 1014) {
+                // Mulbruk conversation after she runs away from the Forbidden Treasure.
+                keepObject = false;
             }
         }
 
@@ -211,7 +232,7 @@ public final class RcdReader {
     }
 
     public static List<Zone> getRcdScriptInfo() throws Exception {
-        String mapPath = Settings.laMulanaBaseDir + "\\data\\mapdata";
+        String mapPath = Settings.getLaMulanaBaseDir() + "\\data\\mapdata";
 
         byte[] rcdBytes = FileUtils.getBytes(mapPath + "\\script.rcd", true);
         int rcdByteIndex = 2; // Seems we skip the first two bytes?

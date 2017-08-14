@@ -13,7 +13,7 @@ public final class DatWriter {
     }
 
     public static void writeDat(List<Block> blockInfo) throws IOException {
-        DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(String.format("%d/script_code.dat", Settings.startingSeed)));
+        DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(String.format("%d/script_code.dat", Settings.getStartingSeed())));
         dataOutputStream.writeShort(blockInfo.size());
 
         for(Block block : blockInfo) {

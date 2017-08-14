@@ -1,6 +1,5 @@
 package lmr.randomizer;
 
-import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.node.NodeWithRequirements;
 import lmr.randomizer.update.GameObjectId;
 
@@ -13,7 +12,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    private static final BufferedWriter LOG_WRITER;
+    private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
 
     static {
@@ -24,7 +23,7 @@ public class FileUtils {
         catch (Exception ex) {
 
         }
-        LOG_WRITER = temp;
+        logWriter = temp;
 
         KNOWN_RCD_FILE_HASHES.add("181C959BF2F2567279CC717C8AD03A20"); // 1.0.0.1
         KNOWN_RCD_FILE_HASHES.add("89D8BF2DD6B8FA365A83DDBFD947CCFA"); // 1.1.1.1
@@ -35,7 +34,7 @@ public class FileUtils {
 
     public static BufferedWriter getFileWriter(String file) {
         try {
-            return new BufferedWriter(new FileWriter(file));
+            return new BufferedWriter(new FileWriter(file, false));
         } catch (Exception ex) {
             System.out.println("unable to get file writer for " + file);
                 ex.printStackTrace();
@@ -59,9 +58,9 @@ public class FileUtils {
     }
 
     public static byte[] getBytes(String path, boolean rcdFile) throws IOException {
-        if(rcdFile && Settings.rcdFileLocation != null) {
+        if(rcdFile && Settings.getRcdFileLocation() != null) {
             try {
-                return getBytesInner(Settings.rcdFileLocation);
+                return getBytesInner(Settings.getRcdFileLocation());
             }
             catch (IOException ex) {
                 try {
@@ -218,11 +217,107 @@ public class FileUtils {
         }
     }
 
+    public static void readSettings() throws IOException {
+        if(!(new File("randomizer-config.txt").exists())) {
+            return;
+        }
+
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader("randomizer-config.txt"));
+        }
+        catch (Exception ex) {
+            return;
+        }
+
+        if(reader == null) {
+            return; // No config file saved yet.
+        }
+
+        String line = reader.readLine();
+        Settings.setAllowGlitches(Boolean.valueOf(line.split("=")[1]));
+
+        line = reader.readLine();
+        Settings.setRandomizeShops(Boolean.valueOf(line.split("=")[1]));
+
+        line = reader.readLine();
+        Settings.setGuaranteeSubweapon(Boolean.valueOf(line.split("=")[1]));
+
+        line = reader.readLine();
+        Settings.setRequireSoftwareComboForKeyFairy(Boolean.valueOf(line.split("=")[1]));
+
+        line = reader.readLine();
+        Settings.setRandomizeForbiddenTreasure(Boolean.valueOf(line.split("=")[1]));
+
+        line = reader.readLine();
+        Settings.setLaMulanaBaseDir(line.substring(line.indexOf("=") + 1));
+
+//        writer.write(String.format("rcdFileLocation=%s", Settings.getRcdFileLocation()));
+//        writer.newLine();
+//        writer.write(String.format("datFileLocation=%s", Settings.getDatFileLocation()));
+//        writer.newLine();
+
+        String[] itemAndRandomizationType;
+        while((line = reader.readLine()) != null) {
+            itemAndRandomizationType = line.replace("randomization.", "").split("=");
+            if("INITIAL".equals(itemAndRandomizationType[1])) {
+                Settings.getInitiallyAvailableItems().add(itemAndRandomizationType[0]);
+            }
+            if("NONRANDOM".equals(itemAndRandomizationType[1])) {
+                Settings.getNonRandomizedItems().add(itemAndRandomizationType[0]);
+            }
+        }
+    }
+
+    public static void saveSettings() throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("randomizer-config.txt"));
+        writer.write(String.format("allowGlitches=%s", Settings.isAllowGlitches()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeShops=%s", Settings.isRandomizeShops()));
+        writer.newLine();
+
+        writer.write(String.format("guaranteeSubweapon=%s", Settings.isGuaranteeSubweapon()));
+        writer.newLine();
+
+        writer.write(String.format("requireSoftwareComboForKeyFairy=%s", Settings.isRequireSoftwareComboForKeyFairy()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeForbiddenTreasure=%s", Settings.isRandomizeForbiddenTreasure()));
+        writer.newLine();
+
+        writer.write(String.format("laMulanaBaseDir=%s", Settings.getLaMulanaBaseDir()));
+        writer.newLine();
+
+//        writer.write(String.format("rcdFileLocation=%s", Settings.getRcdFileLocation()));
+//        writer.newLine();
+//        writer.write(String.format("datFileLocation=%s", Settings.getDatFileLocation()));
+//        writer.newLine();
+
+        for(String item : DataFromFile.getAllItems()) {
+            if(Settings.getInitiallyAvailableItems().contains(item)) {
+                writer.write(String.format("randomization.%s=%s", item, "INITIAL"));
+            }
+            else if(Settings.getNonRandomizedItems().contains(item)) {
+                writer.write(String.format("randomization.%s=%s", item, "NONRANDOM"));
+            }
+            else {
+                writer.write(String.format("randomization.%s=%s", item, "RANDOM"));
+            }
+            writer.newLine();
+        }
+        writer.flush();
+        writer.close();
+    }
 
     public static void log(String logText) {
         try {
-            LOG_WRITER.write(logText);
-            LOG_WRITER.newLine();
+            if(logWriter == null) {
+                logWriter = getFileWriter("log.txt");
+            }
+
+            logWriter.write(logText);
+            logWriter.newLine();
         } catch (Exception ex) {
 
         }
@@ -230,12 +325,11 @@ public class FileUtils {
 
     public static void closeAll() {
         try {
-            LOG_WRITER.flush();
-            LOG_WRITER.close();
+            logWriter.flush();
+            logWriter.close();
+            logWriter = null;
         } catch (Exception ex) {
 
         }
     }
 }
-
-
