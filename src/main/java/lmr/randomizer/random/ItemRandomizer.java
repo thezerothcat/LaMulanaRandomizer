@@ -75,9 +75,9 @@ public class ItemRandomizer {
     }
 
     public void placeNonRandomizedItems() {
-//        mapOfItemLocationToItem.put("Shell Horn", "Fruit of Eden");
-//        unassignedNonShopItemLocations.remove("Shell Horn");
-//        unplacedItems.remove("Fruit of Eden");
+//        mapOfItemLocationToItem.put("mekuri.exe", "Map (Shrine of the Mother)");
+//        unassignedNonShopItemLocations.remove("mekuri.exe");
+//        unplacedItems.remove("Map (Shrine of the Mother)");
 //        mapOfItemLocationToItem.put("Shuriken", "Treasures");
 //        unassignedNonShopItemLocations.remove("Shuriken");
 //        unplacedItems.remove("Treasures");

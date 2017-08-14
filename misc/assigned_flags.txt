@@ -7,6 +7,7 @@ guild.exe replacement world flag: a91
 Anchor world flag: a92
 
 
+Xelpud Mulana Talisman convos: aed
 Shrine map sound effect played flag: aee
 Cog of Soul chest: aef
 

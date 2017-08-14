@@ -171,17 +171,13 @@ public final class RcdReader {
                 // Xelpud conversation after he goes to do the Diary thing.
                 keepObject = false;
             }
-            else if(obj.getArgs().get(4) == 484) {
-
-            }
-            else if(obj.getArgs().get(4) == 1080) {
-
-            }
-            else if(obj.getArgs().get(4) == 1081) {
-
-            }
-            else if(obj.getArgs().get(4) == 1019) {
-
+//            else if(obj.getArgs().get(4) == 1013) {
+//                // Mulbruk conversation in which she runs away from the Forbidden Treasure.
+//                keepObject = false;
+//            }
+            else if(obj.getArgs().get(4) == 1014) {
+                // Mulbruk conversation after she runs away from the Forbidden Treasure.
+                keepObject = false;
             }
         }
 
