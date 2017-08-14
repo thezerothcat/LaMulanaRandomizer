@@ -15,6 +15,16 @@ If you want to play the non-randomized game, there's a Restore button in the UI 
 The command-line arguments from previous releases will not work with the jar, but may be added back in for a later release.
 
 
+1.5:
+-----------------------------
+Seed generation settings are now saved to file and automatically reused the next time you run the program. There are also some additional items/item types randomized, including a partial randomization of Forbidden Treasure/Bathing Suit by popular request, and a handful of bugfixes.
+
+
+1.4:
+-----------------------------
+Updates for ankh jewel logic. Several requirements fixes and a few new items randomized.
+
+
 1.3:
 -----------------------------
 Shop randomization exists! There's still more to be done here, but many shops (and their items) are now part of the randomization pool. Also fixed Cog of the Soul chest bug, prevented Ankh Jewels from spawning in some problematic chests, removed Graveyard of the Giants alternate shop, fixed a bug that could break the Mini Doll puzzle, and updated some item and shop requirements.
