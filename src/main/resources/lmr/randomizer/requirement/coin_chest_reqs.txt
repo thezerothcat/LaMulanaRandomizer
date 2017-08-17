@@ -30,7 +30,7 @@ Goddess (Shield) => Location: Tower of the Goddess [Grail], Bomb
 Goddess (Shield) => Location: Tower of the Goddess [Grail], Earth Spear
 Goddess (Fairy) => Location: Tower of the Goddess [Lower]
 Ruin ???
-Birth ???
-Birth ???
+Birth (Ninja) => Location: Chamber of Birth [East]
+Birth (Dance) => Location: Chamber of Birth [West], Serpent Staff, Chakram
 Birth ???
 Dimensional ???
