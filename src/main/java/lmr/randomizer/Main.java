@@ -11,6 +11,7 @@ import lmr.randomizer.random.ShopRandomizer;
 import lmr.randomizer.rcd.RcdReader;
 import lmr.randomizer.rcd.RcdWriter;
 import lmr.randomizer.rcd.object.Zone;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,24 +72,35 @@ public class Main {
         private CheckboxPanel checkboxPanel;
 
         public RandomizerUI() {
+            try {
+                JFrame.setDefaultLookAndFeelDecorated(true);
+                JDialog.setDefaultLookAndFeelDecorated(true);
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+                e.printStackTrace();
+            }
+
             setTitle("La-Mulana (Remake) Randomizer");
-            setMinimumSize(new Dimension(800, 600));
+            //setMinimumSize(new Dimension(600, 520));
             setLocationRelativeTo(null);
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-            setLayout(new GridLayout(4, 0));
+            //setLayout(new GridLayout(4, 0));
+            setLayout(new MigLayout("fill, aligny top", "[]",
+                    "[]"));
 
             fieldPanel = new FieldPanel();
-            getContentPane().add(fieldPanel);
+            add(fieldPanel, "growx, wrap");
 
             radioPanel = new RadioPanel();
-            add(radioPanel);
+            add(radioPanel, "growx, wrap, aligny");
 
             checkboxPanel = new CheckboxPanel();
-            add(checkboxPanel);
+            add(checkboxPanel, "growx, wrap");
 
 //            getContentPane().add(buttonPanel);
-            add(new ButtonPanel(this));
+            add(new ButtonPanel(this), "grow, aligny");
+            pack();
         }
 
         @Override
@@ -234,25 +246,21 @@ public class Main {
         private JTextField seedNumber;
 
         public FieldPanel() {
-            super(new GridLayout(2, 0));
-            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-            JPanel firstFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            firstFieldPanel.setPreferredSize(new Dimension(800, 60));
-            firstFieldPanel.add(new JLabel("Seed number: ", JLabel.LEFT));
+            //super(new GridLayout(2, 0));
+            super(new MigLayout("fillx", "[][sg fields, fill, grow 80]", "[]"));
+
+            //setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            setBorder(BorderFactory.createTitledBorder("Game Settings"));
+
             seedNumber = new JTextField(Integer.toString(new Random().nextInt(Integer.MAX_VALUE)));
-            seedNumber.setSize(800, 80);
-            firstFieldPanel.add(seedNumber);
+            add(new JLabel("Seed number"), "gap related");
+            add(seedNumber, "wrap rel");
 
-            JPanel secondFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            secondFieldPanel.setPreferredSize(new Dimension(800, 60));
-            secondFieldPanel.add(new JLabel("La-Mulana install directory: ", JLabel.LEFT));
             laMulanaDirectory = new JTextField(Settings.getLaMulanaBaseDir());
-            laMulanaDirectory.setSize(800, 60);
-            secondFieldPanel.add(laMulanaDirectory);
+            add(new JLabel("La-Mulana install directory "), "gap related");
+            add(laMulanaDirectory);
 
-            add(firstFieldPanel);
-            add(secondFieldPanel);
         }
 
         public void rerollRandomSeed() {
@@ -277,7 +285,7 @@ public class Main {
         public GameItemRadio(String item) {
             super(new GridLayout(0, 1));
 
-            add(new JLabel(item + ": ", JLabel.LEFT));
+            setBorder(BorderFactory.createTitledBorder(item));
 
             itemRandomization = new ButtonGroup();
             JRadioButton randomItem = new JRadioButton("Random");
@@ -286,6 +294,7 @@ public class Main {
             initialItem.setActionCommand("INITIAL");
             JRadioButton nonrandomItem = new JRadioButton("Original Location");
             nonrandomItem.setActionCommand("NONRANDOM");
+
             itemRandomization.add(randomItem);
             itemRandomization.add(initialItem);
             itemRandomization.add(nonrandomItem);
@@ -324,29 +333,32 @@ public class Main {
         private JCheckBox randomizeForbiddenTreasure;
 
         public CheckboxPanel() {
-            super(new GridLayout(3, 2));
-            setPreferredSize(new Dimension(800, 10));
-            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            //super(new GridLayout(3, 2));
+            super(new MigLayout("wrap 2", "[sizegroup checkboxes]", "[]2[]"));
+            //setPreferredSize(new Dimension(800, 10));
+            //setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            setBorder(BorderFactory.createTitledBorder("Advanced Settings"));
 
             enableGlitches = new JCheckBox("Enable glitched requirements");
-            add(enableGlitches);
             enableGlitches.setSelected(Settings.isAllowGlitches());
+            add(enableGlitches);
 
             initialSubweapon = new JCheckBox("Guarantee initially accessible subweapon");
-            add(initialSubweapon);
             initialSubweapon.setSelected(Settings.isGuaranteeSubweapon());
+            add(initialSubweapon);
 
             randomizeShops = new JCheckBox("Enable shop randomization");
-            add(randomizeShops);
             randomizeShops.setSelected(Settings.isRandomizeShops());
+            add(randomizeShops);
 
             randomizeForbiddenTreasure = new JCheckBox("Include Forbidden Treasure in randomized items");
-            add(randomizeForbiddenTreasure);
             randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
+            add(randomizeForbiddenTreasure);
 
             requireSoftwareComboForKeyFairy = new JCheckBox("Require software combo for key fairies");
-            add(requireSoftwareComboForKeyFairy);
             requireSoftwareComboForKeyFairy.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
+            add(requireSoftwareComboForKeyFairy);
         }
 
         public void updateSettings() {
@@ -367,9 +379,10 @@ public class Main {
         List<GameItemRadio> itemConfigRadioGroupPanels;
 
         public RadioPanel() {
-            super(new GridLayout(2, 4, 0, 20));
+            //super(new GridLayout(2, 4, 0, 20));
+            super(new MigLayout("wrap 4, gap rel, alignx center", "[]", "[]"));
 //            setPreferredSize(new Dimension(800, 400));
-            setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+            setBorder(BorderFactory.createTitledBorder("Item Settings"));
 
             itemConfigRadioGroupPanels = new ArrayList<>();
             itemConfigRadioGroupPanels.add(new GameItemRadio("Holy Grail"));
@@ -381,7 +394,7 @@ public class Main {
 //            itemConfigRadioGroupPanels.add(new GameItemRadio("Flail Whip"));
 //            itemConfigRadioGroupPanels.add(new GameItemRadio("Fairy Clothes"));
             for(GameItemRadio gameItemRadio : itemConfigRadioGroupPanels) {
-                add(gameItemRadio, LEFT_ALIGNMENT);
+                add(gameItemRadio);
             }
         }
 
