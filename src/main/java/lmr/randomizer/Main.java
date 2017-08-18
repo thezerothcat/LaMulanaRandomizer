@@ -81,25 +81,23 @@ public class Main {
             }
 
             setTitle("La-Mulana (Remake) Randomizer");
-            //setMinimumSize(new Dimension(600, 520));
-            setLocationRelativeTo(null);
+            //setLocationRelativeTo(null);
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
             //setLayout(new GridLayout(4, 0));
-            setLayout(new MigLayout("fill, aligny top", "[]",
-                    "[]"));
+            setLayout(new MigLayout("fill, aligny top", "[]", "[]"));
 
             fieldPanel = new FieldPanel();
             add(fieldPanel, "growx, wrap");
 
             radioPanel = new RadioPanel();
-            add(radioPanel, "growx, wrap, aligny");
+            add(radioPanel, "growx, wrap");
 
             checkboxPanel = new CheckboxPanel();
             add(checkboxPanel, "growx, wrap");
 
 //            getContentPane().add(buttonPanel);
-            add(new ButtonPanel(this), "grow, aligny");
+            add(new ButtonPanel(this), "grow");
             pack();
         }
 
