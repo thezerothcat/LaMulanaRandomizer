@@ -10,6 +10,15 @@
     <description>La-Mulana Remake Randomizer</description>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.miglayout/miglayout-swing -->
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout-swing</artifactId>
+            <version>5.0</version>
+        </dependency>
+    </dependencies>
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
