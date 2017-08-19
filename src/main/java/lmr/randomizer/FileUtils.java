@@ -118,7 +118,9 @@ public class FileUtils {
         try(BufferedReader reader = getFileReader(file)) {
             String line;
             while((line = reader.readLine()) != null) {
-                listContents.add(line.trim());
+                if(!line.isEmpty()) {
+                    listContents.add(line.trim());
+                }
             }
             reader.close();
         } catch (Exception ex) {
@@ -234,37 +236,41 @@ public class FileUtils {
             return; // No config file saved yet.
         }
 
-        String line = reader.readLine();
-        Settings.setAllowGlitches(Boolean.valueOf(line.split("=")[1]));
-
-        line = reader.readLine();
-        Settings.setRandomizeShops(Boolean.valueOf(line.split("=")[1]));
-
-        line = reader.readLine();
-        Settings.setGuaranteeSubweapon(Boolean.valueOf(line.split("=")[1]));
-
-        line = reader.readLine();
-        Settings.setRequireSoftwareComboForKeyFairy(Boolean.valueOf(line.split("=")[1]));
-
-        line = reader.readLine();
-        Settings.setRandomizeForbiddenTreasure(Boolean.valueOf(line.split("=")[1]));
-
-        line = reader.readLine();
-        Settings.setLaMulanaBaseDir(line.substring(line.indexOf("=") + 1));
-
-//        writer.write(String.format("rcdFileLocation=%s", Settings.getRcdFileLocation()));
-//        writer.newLine();
-//        writer.write(String.format("datFileLocation=%s", Settings.getDatFileLocation()));
-//        writer.newLine();
-
+        String line;
         String[] itemAndRandomizationType;
         while((line = reader.readLine()) != null) {
-            itemAndRandomizationType = line.replace("randomization.", "").split("=");
-            if("INITIAL".equals(itemAndRandomizationType[1])) {
-                Settings.getInitiallyAvailableItems().add(itemAndRandomizationType[0]);
+            if(line.startsWith("randomization.")) {
+                itemAndRandomizationType = line.replace("randomization.", "").split("=");
+                if("INITIAL".equals(itemAndRandomizationType[1])) {
+                    Settings.getInitiallyAvailableItems().add(itemAndRandomizationType[0]);
+                }
+                if("NONRANDOM".equals(itemAndRandomizationType[1])) {
+                    Settings.getNonRandomizedItems().add(itemAndRandomizationType[0]);
+                }
             }
-            if("NONRANDOM".equals(itemAndRandomizationType[1])) {
-                Settings.getNonRandomizedItems().add(itemAndRandomizationType[0]);
+            else if(line.startsWith("allowGlitches")) {
+                Settings.setAllowGlitches(Boolean.valueOf(line.split("=")[1]));
+            }
+            else if(line.startsWith("randomizeShops")) {
+                Settings.setRandomizeShops(Boolean.valueOf(line.split("=")[1]));
+            }
+            else if(line.startsWith("fullItemAccess")) {
+                Settings.setFullItemAccess(Boolean.valueOf(line.split("=")[1]));
+            }
+            else if(line.startsWith("guaranteeSubweapon")) {
+                Settings.setGuaranteeSubweapon(Boolean.valueOf(line.split("=")[1]));
+            }
+            else if(line.startsWith("requireSoftwareComboForKeyFairy")) {
+                Settings.setRequireSoftwareComboForKeyFairy(Boolean.valueOf(line.split("=")[1]));
+            }
+            else if(line.startsWith("randomizeForbiddenTreasure")) {
+                Settings.setRandomizeForbiddenTreasure(Boolean.valueOf(line.split("=")[1]));
+            }
+            else if(line.startsWith("laMulanaBaseDir")) {
+                Settings.setLaMulanaBaseDir(line.substring(line.indexOf("=") + 1));
+            }
+            else if(line.startsWith("bossDifficulty")) {
+                Settings.setBossDifficulty(line.split("=")[1]);
             }
         }
     }
@@ -275,6 +281,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("randomizeShops=%s", Settings.isRandomizeShops()));
+        writer.newLine();
+
+        writer.write(String.format("fullItemAccess=%s", Settings.isFullItemAccess()));
         writer.newLine();
 
         writer.write(String.format("guaranteeSubweapon=%s", Settings.isGuaranteeSubweapon()));
@@ -289,10 +298,8 @@ public class FileUtils {
         writer.write(String.format("laMulanaBaseDir=%s", Settings.getLaMulanaBaseDir()));
         writer.newLine();
 
-//        writer.write(String.format("rcdFileLocation=%s", Settings.getRcdFileLocation()));
-//        writer.newLine();
-//        writer.write(String.format("datFileLocation=%s", Settings.getDatFileLocation()));
-//        writer.newLine();
+        writer.write(String.format("bossDifficulty=%s", Settings.getBossDifficulty().name()));
+        writer.newLine();
 
         for(String item : DataFromFile.getAllItems()) {
             if(Settings.getInitiallyAvailableItems().contains(item)) {

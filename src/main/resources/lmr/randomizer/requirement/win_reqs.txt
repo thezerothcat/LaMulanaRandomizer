@@ -10,22 +10,32 @@ Event: Tiamat Defeated
 Event: Viy Defeated
 Djed Pillar
 mantra.exe
-Location: Shrine of the Mother [Main]
+Location: True Shrine of the Mother
 Holy Grail
 Vessel
 Origin Seal
 Birth Seal
 Life Seal
 Death Seal
+Gate of Illusion [Upper]
 Gate of Illusion [Grail]
+Graveyard of the Giants [West]
+Graveyard of the Giants [East]
 Graveyard of the Giants [Grail]
 Temple of Moonlight [Upper]
+Temple of Moonlight [Lower]
 Tower of the Goddess [Grail]
+Inferno Cavern [Spikes]
 Tower of Ruin [Grail]
 Tower of Ruin [Spirits]
 Tower of Ruin [Medicine]
+Chamber of Extinction [Magatama]
+Chamber of Birth [East]
 Chamber of Birth [Grail]
 Twin Labyrinths [Lower]
 Twin Labyrinths [Upper]
 Key Sword
-
+Philosopher's Ocarina
+Isis' Pendant
+Key of Eternity
+Lamp of Time

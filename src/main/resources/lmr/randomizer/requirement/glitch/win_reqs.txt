@@ -1,0 +1,39 @@
+Feather
+Event: Amphisbaena Defeated
+Event: Bahamut Defeated
+Event: Baphomet Defeated
+Event: Ellmac Defeated
+Event: Learn La-Mulanese
+Event: Palenque Defeated
+Event: Sakit Defeated
+Event: Tiamat Defeated
+Event: Viy Defeated
+Djed Pillar
+mantra.exe
+Location: True Shrine of the Mother
+Holy Grail
+Vessel
+Origin Seal
+Birth Seal
+Life Seal
+Death Seal
+Location: Gate of Illusion [Upper]
+Location: Gate of Illusion [Grail]
+Location: Graveyard of the Giants [West]
+Location: Graveyard of the Giants [East]
+Location: Graveyard of the Giants [Grail]
+Location: Temple of Moonlight [Upper]
+Location: Temple of Moonlight [Lower]
+Location: Tower of the Goddess [Grail]
+Location: Inferno Cavern [Spikes]
+Location: Tower of Ruin [Grail]
+Location: Tower of Ruin [Spirits]
+Location: Tower of Ruin [Medicine]
+Location: Chamber of Birth [Grail]
+Location: Twin Labyrinths [Lower]
+Location: Twin Labyrinths [Upper]
+Key Sword
+Philosopher's Ocarina
+Isis' Pendant
+Key of Eternity
+Lamp of Time

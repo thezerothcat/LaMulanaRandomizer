@@ -17,6 +17,10 @@ public final class GameDataTracker {
     private static Map<GameObjectId, List<GameObject>> mapOfChestIdentifyingInfoToGameObject = new HashMap<>();
     private static Map<GameObjectId, List<Block>> mapOfChestIdentifyingInfoToBlock = new HashMap<>();
 
+    private static ObjectContainer xelpudScreen;
+    private static ObjectContainer mulbrukScreen;
+    private static ObjectContainer littleBrotherShopScreen;
+
     private GameDataTracker() { }
 
     public static void addObject(GameObject gameObject) {
@@ -38,7 +42,18 @@ public final class GameDataTracker {
             int worldFlag = gameObject.getWriteByteOperations().get(0).getIndex();
             GameObjectId gameObjectId = new GameObjectId(chestArg, worldFlag);
 
-            // todo: Talisman special case
+            if(chestArg == 4) {
+                // Remove LAMULANA mantra check on the Key Sword floating item
+                Integer flagToRemoveIndex = null;
+                for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                    if (gameObject.getTestByteOperations().get(i).getIndex() == 292) {
+                        flagToRemoveIndex = i;
+                        break;
+                    }
+                }
+                gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
+            }
+
             List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
             if (objects == null) {
                 mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -213,7 +228,38 @@ public final class GameDataTracker {
                 }
             }
         } else if (gameObject.getId() == 0xa0) {
-            if(gameObject.getArgs().get(4) == 693 || gameObject.getArgs().get(4) == 915) {
+            if(gameObject.getArgs().get(4) == 34) {
+                // Shop before/after buying the MSX2
+                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                    if (flagTest.getIndex() == 742) {
+                        GameObjectId gameObjectId = new GameObjectId((short) 76, 742);
+                        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        if (objects == null) {
+                            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+            }
+            else if(gameObject.getArgs().get(4) == 185) {
+                // Little Brother's shop
+                littleBrotherShopScreen = gameObject.getObjectContainer();
+            }
+            else if(gameObject.getArgs().get(4) == 490) {
+                // MSX2 shop
+                GameObjectId gameObjectId = new GameObjectId((short) 76, 742);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+
+                addAltSurfaceShopItemTimer(gameObject.getObjectContainer());
+            }
+            else if(gameObject.getArgs().get(4) == 693 || gameObject.getArgs().get(4) == 915) {
                 // Mini Doll conversation
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 554) {
@@ -231,19 +277,14 @@ public final class GameDataTracker {
                 }
             }
             else if(gameObject.getArgs().get(4) == 673) {
-                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                    if (flagTest.getIndex() == 241) {
-                        // mekuri conversation
-                        GameObjectId gameObjectId = new GameObjectId((short) 100, 241);
-                        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                        if (objects == null) {
-                            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                        }
-                        objects.add(gameObject);
-                        break;
-                    }
+                // mekuri conversation
+                GameObjectId gameObjectId = new GameObjectId((short) 100, 241);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                 }
+                objects.add(gameObject);
             }
             else if(gameObject.getArgs().get(4) == 689 || gameObject.getArgs().get(4) == 690) {
                 // Conversation to receive Pepper, or conversation after receiving Pepper if you don't have Treasures
@@ -336,9 +377,36 @@ public final class GameDataTracker {
                 if(flagToRemoveIndex != null) {
                     gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
                 }
+
+                // Add Diary updated timer to Xelpud's screen. We're only doing this on one of his conversation objects
+                // in order to avoid duplicates, but which conversation object chosen is completely arbitrary.
+                // We're also saving a reference to Xelpud's screen in case we need to add timers for an object being
+                // randomized into one of his conversations.
+                if(gameObject.getArgs().get(4) == 484) {
+                    addDiaryFlagTimer(gameObject.getObjectContainer());
+                    xelpudScreen = gameObject.getObjectContainer();
+                }
             }
-            else if(gameObject.getArgs().get(4) == 485 || gameObject.getArgs().get(4) == 1082 || gameObject.getArgs().get(4) == 1083
-                    || gameObject.getArgs().get(4) == 719 || gameObject.getArgs().get(4) == 924) {
+            else if(gameObject.getArgs().get(4) == 485) {
+                // Remove the flags that prevent normal Mulbruk convos if you have Forbidden Treasure/Provocative Bathing Suit.
+                // Also remove score requirement on Mulbruk conversation.
+                Integer flagToRemoveIndex = null;
+                for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                    TestByteOperation flagTest = gameObject.getTestByteOperations().get(i);
+                    if (flagTest.getIndex() == 874) {
+                        flagToRemoveIndex = i;
+                        break;
+                    }
+                    else if(flagTest.getIndex() == 123 && flagTest.getValue() == 56) {
+                        flagTest.setValue((byte)0);
+                    }
+                }
+                if(flagToRemoveIndex != null) {
+                    gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
+                }
+                mulbrukScreen = gameObject.getObjectContainer();
+            }
+            else if(gameObject.getArgs().get(4) == 1082 || gameObject.getArgs().get(4) == 1083 || gameObject.getArgs().get(4) == 924) {
                 // Remove the flags that prevent normal Mulbruk convos if you have Forbidden Treasure/Provocative Bathing Suit
                 Integer flagToRemoveIndex = null;
                 for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
@@ -370,21 +438,48 @@ public final class GameDataTracker {
                 if (flagUpdate.getIndex() == 554 && flagUpdate.getValue() == 3) {
                     // Becoming small
                     for(TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                        if (flagTest.getIndex() == 554 && ByteOp.FLAG_LTEQ.equals(flagTest.getOp()) && flagTest.getValue() == 2) {
+                        if (flagTest.getIndex() == 554 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp()) && flagTest.getValue() == 2) {
                             flagTest.setOp(ByteOp.FLAG_LTEQ);
-                            break;
+                            return;
                         }
                     }
                 }
-                if(flagUpdate.getIndex() == 267 && flagUpdate.getValue() == 1) {
-                    // Timer to track wait time with Woman Statue and give Maternity Statue
-                    GameObjectId gameObjectId = new GameObjectId((short) 81, 267);
+            }
+            for(TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if(flagTest.getIndex() == 260) {
+                    // Timers related to Diary puzzle
+                    GameObjectId gameObjectId = new GameObjectId((short) 72, 260);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
                         objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     }
                     objects.add(gameObject);
+                    return;
+                }
+//                else if(flagTest.getIndex() == 267 && flagTest.getValue() == 1) {
+//                    // Timer to track wait time with Woman Statue and give Maternity Statue
+//                    GameObjectId gameObjectId = new GameObjectId((short) 81, 267);
+//                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+//                    if (objects == null) {
+//                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+//                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+//                    }
+//                    objects.add(gameObject);
+//                }
+            }
+        } else if (gameObject.getId() == 0xbb) {
+            for(TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if(flagTest.getIndex() == 260) {
+                    // Diary puzzle pillar
+                    GameObjectId gameObjectId = new GameObjectId((short) 72, 260);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    return;
                 }
             }
         }
@@ -443,36 +538,60 @@ public final class GameDataTracker {
             }
             blocks.add(block);
         }
-//        else if(block.getBlockNumber() == 371) {
-//            // Mulana Talisman
-//            short inventoryArg = (short) (73);
-//            int worldFlag = 261;
-//            GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
-//
-//            List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
-//            if (blocks == null) {
-//                mapOfChestIdentifyingInfoToBlock.put(gameObjectId, new ArrayList<>());
-//                blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
-//            }
-//            blocks.add(block);
-//
-//            Integer flagIndex = null;
-//            for(int i = 0; i < block.getBlockContents().size(); i++) {
-//                BlockContents blockContents = block.getBlockContents().get(i);
-//                if(blockContents instanceof BlockFlagData) {
-//                    BlockFlagData blockFlagData = (BlockFlagData) blockContents;
-//                    if(blockFlagData.getWorldFlag() == 261) {
-//                        blockFlagData.setWorldFlag((short)2797);
-//                        blockFlagData.setFlagValue((short)2);
-//                        flagIndex = i;
-//                    }
-//                }
-//            }
-//
-//            BlockFlagData blockFlagData = new BlockFlagData((short)0x0040, (short)261, (short)2);
-//
-//            block.getBlockContents().add(flagIndex, blockFlagData);
-//        }
+        else if(block.getBlockNumber() == 364) {
+            // xmailer.exe
+            short inventoryArg = (short) (86);
+            int worldFlag = 227;
+            GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
+
+            // Set value of world flag to 2 instead of 1
+            for(int i = 0; i < block.getBlockContents().size(); i++) {
+                BlockContents blockContents = block.getBlockContents().get(i);
+                if(blockContents instanceof BlockFlagData) {
+                    BlockFlagData blockFlagData = (BlockFlagData) blockContents;
+                    if(blockFlagData.getWorldFlag() == 227) {
+                        blockFlagData.setFlagValue((short)2);
+                    }
+                }
+            }
+
+            List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            if (blocks == null) {
+                mapOfChestIdentifyingInfoToBlock.put(gameObjectId, new ArrayList<>());
+                blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            }
+            blocks.add(block);
+        }
+        else if(block.getBlockNumber() == 371) {
+            // Mulana Talisman
+            short inventoryArg = (short) (73);
+            int worldFlag = 261;
+            GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
+
+            List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            if (blocks == null) {
+                mapOfChestIdentifyingInfoToBlock.put(gameObjectId, new ArrayList<>());
+                blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
+            }
+            blocks.add(block);
+
+            Integer flagIndex = null;
+            for(int i = 0; i < block.getBlockContents().size(); i++) {
+                BlockContents blockContents = block.getBlockContents().get(i);
+                if(blockContents instanceof BlockFlagData) {
+                    BlockFlagData blockFlagData = (BlockFlagData) blockContents;
+                    if(blockFlagData.getWorldFlag() == 261) {
+                        blockFlagData.setWorldFlag((short)2797);
+                        blockFlagData.setFlagValue((short)2);
+                        flagIndex = i;
+                    }
+                }
+            }
+
+            BlockFlagData blockFlagData = new BlockFlagData((short)0x0040, (short)261, (short)2);
+
+            block.getBlockContents().add(flagIndex, blockFlagData);
+        }
         else if(block.getBlockNumber() == 397) {
             // Book of the Dead
             short inventoryArg = (short) (54);
@@ -491,25 +610,25 @@ public final class GameDataTracker {
             CheckBlock checkBlock = (CheckBlock)block;
 
             Integer cmdToRemoveIndex1 = null;
-//            Integer cmdToRemoveIndex2 = null;
+            Integer cmdToRemoveIndex2 = null;
             for(int i = 0; i < checkBlock.getFlagCheckReferences().size(); i++) {
                 BlockListData blockListData = checkBlock.getFlagCheckReferences().get(i);
                 if(blockListData.getData().get(2) == 1049) {
                     cmdToRemoveIndex1 = i;
                 }
-//                else if(blockListData.getData().get(2) == 371) {
-//                    cmdToRemoveIndex2 = i;
-//                }
+                else if(blockListData.getData().get(2) == 371) {
+                    cmdToRemoveIndex2 = i;
+                }
             }
             checkBlock.getFlagCheckReferences().remove((int)cmdToRemoveIndex1);
-//            checkBlock.getFlagCheckReferences().remove((int)cmdToRemoveIndex2);
+            checkBlock.getFlagCheckReferences().remove((int)cmdToRemoveIndex2);
 
-//            BlockListData blockListData = new BlockListData((short)78, (short)4);
-//            blockListData.getData().add((short)2797);
-//            blockListData.getData().add((short)1);
-//            blockListData.getData().add((short)371);
-//            blockListData.getData().add((short)0); // Note: disabling repeat for Mulana Talisman in case it's an ankh jewel or something.
-//            checkBlock.getFlagCheckReferences().add(0, blockListData);
+            BlockListData blockListData = new BlockListData((short)78, (short)4);
+            blockListData.getData().add((short)2797);
+            blockListData.getData().add((short)1);
+            blockListData.getData().add((short)371);
+            blockListData.getData().add((short)0); // Note: disabling repeat for Mulana Talisman in case it's an ankh jewel or something.
+            checkBlock.getFlagCheckReferences().add(0, blockListData);
         }
         else if(block.getBlockNumber() == 482) {
             // Xelpud point check reference block
@@ -595,6 +714,10 @@ public final class GameDataTracker {
     }
 
     public static void writeShopInventory(ShopBlock shopBlock, String shopItem1, String shopItem2, String shopItem3, Random random) {
+        short shopItem1Flag = getFlag(shopItem1);
+        short shopItem2Flag = getFlag(shopItem2);
+        short shopItem3Flag = getFlag(shopItem3);
+
         shopBlock.getInventoryItemArgsList().getData().clear();
         shopBlock.getInventoryItemArgsList().getData().add(getInventoryItemArg(shopItem1));
         shopBlock.getInventoryItemArgsList().getData().add(getInventoryItemArg(shopItem2));
@@ -639,14 +762,28 @@ public final class GameDataTracker {
 //        }
 
         shopBlock.getFlagList().getData().clear();
-        shopBlock.getFlagList().getData().add(getFlag(shopItem1));
-        shopBlock.getFlagList().getData().add(getFlag(shopItem2));
-        shopBlock.getFlagList().getData().add(getFlag(shopItem3));
+        shopBlock.getFlagList().getData().add(shopItem1Flag);
+        shopBlock.getFlagList().getData().add(shopItem2Flag);
+        shopBlock.getFlagList().getData().add(shopItem3Flag);
 
-        shopBlock.getExitFlagList().getData().clear();
-        shopBlock.getExitFlagList().getData().add(getFlag(shopItem1));
-        shopBlock.getExitFlagList().getData().add(getFlag(shopItem2));
-        shopBlock.getExitFlagList().getData().add(getFlag(shopItem3));
+        if(shopBlock.getBlockNumber() == 185) {
+            // Little Brother's shop
+            if(!"Weights".equals(shopItem1) || !shopItem1.endsWith("Ammo")) {
+                addLittleBrotherShopTimer(shopItem1Flag);
+            }
+            if(!"Weights".equals(shopItem2) || !shopItem2.endsWith("Ammo")) {
+                addLittleBrotherShopTimer(shopItem2Flag);
+            }
+            if(!"Weights".equals(shopItem3) || !shopItem3.endsWith("Ammo")) {
+                addLittleBrotherShopTimer(shopItem3Flag);
+            }
+        }
+        else {
+            shopBlock.getExitFlagList().getData().clear();
+            shopBlock.getExitFlagList().getData().add(shopItem1Flag);
+            shopBlock.getExitFlagList().getData().add(shopItem2Flag);
+            shopBlock.getExitFlagList().getData().add(shopItem3Flag);
+        }
 
         updateAskItemName(shopBlock.getString(3), shopItem1);
         updateAskItemName(shopBlock.getString(4), shopItem2);
@@ -663,6 +800,32 @@ public final class GameDataTracker {
         bunemonData.add((short)262);
         bunemonData.add((short)32);
         updateBunemonText(bunemonData, shopItem3);
+
+        if(shopBlock.getBlockNumber() == 185) {
+            // Add timers to Little Brother's shop as needed
+        }
+    }
+
+    private static void addLittleBrotherShopTimer(short shopItemFlag) {
+        // Sets item world flags from 1 to 2, since one of the shop flags is taken up by checking the Big Brother shop trigger.
+        GameObject littleBrotherShopItemTimer = new GameObject(littleBrotherShopScreen);
+        littleBrotherShopItemTimer.setId((short) 0x0b);
+        littleBrotherShopItemTimer.getArgs().add((short) 0);
+        littleBrotherShopItemTimer.getArgs().add((short) 0);
+
+        TestByteOperation testFlag = new TestByteOperation();
+        testFlag.setIndex(shopItemFlag);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)1);
+        littleBrotherShopItemTimer.getTestByteOperations().add(testFlag);
+
+        WriteByteOperation updateFlag = new WriteByteOperation();
+        updateFlag.setIndex(shopItemFlag);
+        updateFlag.setValue((byte) 2);
+        updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+        littleBrotherShopItemTimer.getWriteByteOperations().add(updateFlag);
+
+        littleBrotherShopScreen.getObjects().add(littleBrotherShopItemTimer);
     }
 
     private static void updateAskItemName(BlockStringData blockStringData, String shopItem) {
@@ -827,7 +990,19 @@ public final class GameDataTracker {
         GameObjectId itemLocationData = nameToDataMap.get(chestLocation);
         List<GameObject> objectsToModify = mapOfChestIdentifyingInfoToGameObject.get(nameToDataMap.get(chestLocation));
         if(objectsToModify == null) {
-            FileUtils.log("Unable to find chest for " + chestLocation);
+            if("xmailer.exe".equals(chestLocation) || "Mulana Talisman".equals(chestLocation)) {
+                // Xelpud location, but no object with flags to update.
+                if("Map (Shrine of the Mother)".equals(chestContents)) {
+                    addShrineMapSoundEffect(xelpudScreen);
+                }
+            }
+            else if("Book of the Dead".equals(chestLocation)) {
+                // Mulbruk location, but no object with flags to update.
+                addShrineMapSoundEffect(mulbrukScreen);
+            }
+            else {
+                FileUtils.log("Unable to find objects related to " + chestLocation);
+            }
             return;
         }
         for(GameObject objectToModify : objectsToModify) {
@@ -836,47 +1011,36 @@ public final class GameDataTracker {
                 if("Map (Shrine of the Mother)".equals(chestContents)) {
                     addShrineMapSoundEffect(objectToModify.getObjectContainer());
                 }
-//                else if("Diary".equals(chestContents)) {
-//                    addDiaryFlagTimer(objectToModify.getObjectContainer());
-//                }
             }
             else if(objectToModify.getId() == 0xb5) {
                 updateInstantItemContents(objectToModify, itemLocationData, itemNewContentsData);
                 if("Map (Shrine of the Mother)".equals(chestContents)) {
                     addShrineMapSoundEffect(objectToModify.getObjectContainer());
                 }
-//                else if("Diary".equals(chestContents)) {
-//                    addDiaryFlagTimer(objectToModify.getObjectContainer());
-//                }
             }
             else if(objectToModify.getId() == 0x2f) {
                 updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData);
                 if("Map (Shrine of the Mother)".equals(chestContents)) {
                     addShrineMapSoundEffect(objectToModify.getObjectContainer());
                 }
-//                else if("Diary".equals(chestContents)) {
-//                    addDiaryFlagTimer(objectToModify.getObjectContainer());
-//                }
             }
             else if(objectToModify.getId() == 0xc3) {
                 updateSnapshotsItemContents(objectToModify, itemLocationData, itemNewContentsData);
                 if("Map (Shrine of the Mother)".equals(chestContents)) {
                     addShrineMapSoundEffect(objectToModify.getObjectContainer());
                 }
-//                else if("Diary".equals(chestContents)) {
-//                    addDiaryFlagTimer(objectToModify.getObjectContainer());
-//                }
             }
             else if(objectToModify.getId() == 0xa0) {
                 updateRelatedObject(objectToModify, itemLocationData, itemNewContentsData);
                 short blockRef = objectToModify.getArgs().get(4);
                 if(blockRef == 673 || blockRef == 689 || blockRef == 691 || blockRef == 693) {
-                    if("Map (Shrine of the Mother)".equals(chestContents)) {
+                    // 673 = mekuri.exe
+                    // 689 = Pepper
+                    // 691 = Anchor
+                    // 693 = Mini Doll
+                    if ("Map (Shrine of the Mother)".equals(chestContents)) {
                         addShrineMapSoundEffect(objectToModify.getObjectContainer());
                     }
-//                else if("Diary".equals(chestContents)) {
-//                    addDiaryFlagTimer(objectToModify.getObjectContainer());
-//                }
                 }
             }
             else {
@@ -949,40 +1113,63 @@ public final class GameDataTracker {
         objectContainer.getObjects().add(shrineMapSoundEffectRemovalTimer);
     }
 
-//    private static void addDiaryFlagTimer(ObjectContainer objectContainer) {
-//        GameObject diaryFlagTimer = new GameObject(objectContainer);
-//        diaryFlagTimer.setId((short) 0x0b);
-//        diaryFlagTimer.getArgs().add((short) 0);
-//        diaryFlagTimer.getArgs().add((short) 0);
-//
-//        TestByteOperation testFlag = new TestByteOperation();
-//        testFlag.setIndex(260);
-//        testFlag.setOp(ByteOp.FLAG_EQUALS);
-//        testFlag.setValue((byte)2);
-//        diaryFlagTimer.getTestByteOperations().add(testFlag);
-//
-//        testFlag = new TestByteOperation();
-//        testFlag.setIndex(2797);
-//        testFlag.setOp(ByteOp.FLAG_EQUALS);
-//        testFlag.setValue((byte)0);
-//        diaryFlagTimer.getTestByteOperations().add(testFlag);
-//
-//        WriteByteOperation updateFlag = new WriteByteOperation();
-//        updateFlag.setIndex(2797);
-//        updateFlag.setValue((byte) 1);
-//        updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-//        diaryFlagTimer.getWriteByteOperations().add(updateFlag);
-//
-//        objectContainer.getObjects().add(diaryFlagTimer);
-//
-//        GameObjectId gameObjectId = new GameObjectId((short) 72, 260);
-//        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-//        if (objects == null) {
-//            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-//            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-//        }
-//        objects.add(diaryFlagTimer);
-//    }
+    private static void addDiaryFlagTimer(ObjectContainer objectContainer) {
+        GameObject diaryFlagTimer = new GameObject(objectContainer);
+        diaryFlagTimer.setId((short) 0x0b);
+        diaryFlagTimer.getArgs().add((short) 0);
+        diaryFlagTimer.getArgs().add((short) 0);
+
+        TestByteOperation testFlag = new TestByteOperation();
+        testFlag.setIndex(260);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)2);
+        diaryFlagTimer.getTestByteOperations().add(testFlag);
+
+        testFlag = new TestByteOperation();
+        testFlag.setIndex(2797);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)0);
+        diaryFlagTimer.getTestByteOperations().add(testFlag);
+
+        WriteByteOperation updateFlag = new WriteByteOperation();
+        updateFlag.setIndex(2797);
+        updateFlag.setValue((byte) 1);
+        updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+        diaryFlagTimer.getWriteByteOperations().add(updateFlag);
+
+        objectContainer.getObjects().add(diaryFlagTimer);
+    }
+
+    private static void addAltSurfaceShopItemTimer(ObjectContainer objectContainer) {
+        // Handles the case where the shop item can be obtained somewhere else and you already have it.
+        // Without this timer, the shop could potentially be unable to transform back to its original state.
+        GameObject altSurfaceShopTimer = new GameObject(objectContainer);
+        altSurfaceShopTimer.setId((short) 0x0b);
+        altSurfaceShopTimer.getArgs().add((short) 0);
+        altSurfaceShopTimer.getArgs().add((short) 0);
+
+        TestByteOperation testFlag = new TestByteOperation();
+        testFlag.setIndex(742);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)1);
+        altSurfaceShopTimer.getTestByteOperations().add(testFlag);
+
+        WriteByteOperation updateFlag = new WriteByteOperation();
+        updateFlag.setIndex(742);
+        updateFlag.setValue((byte) 2);
+        updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+        altSurfaceShopTimer.getWriteByteOperations().add(updateFlag);
+
+        objectContainer.getObjects().add(altSurfaceShopTimer);
+
+        GameObjectId gameObjectId = new GameObjectId((short) 76, 742);
+        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+        if (objects == null) {
+            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+        }
+        objects.add(altSurfaceShopTimer);
+    }
 
     private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
         objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11));

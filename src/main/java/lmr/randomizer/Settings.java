@@ -15,6 +15,7 @@ public final class Settings {
     private boolean changed = false;
 
     private boolean allowGlitches;
+    private boolean fullItemAccess;
     private boolean randomizeShops;
     private boolean guaranteeSubweapon; // Ensure at least one subweapon drop within initial item set. // todo: restore this; it's broken in cases where no subweapons are included in randomization
     private boolean requireSoftwareComboForKeyFairy;
@@ -27,11 +28,15 @@ public final class Settings {
     private Set<String> nonRandomizedItems = new HashSet<>();
     private Set<String> initiallyAvailableItems = new HashSet<>();
 
+    private BossDifficulty bossDifficulty;
+
     private Settings() {
         startingSeed = new Random().nextInt(Integer.MAX_VALUE);
         laMulanaBaseDir = "Please enter your La-Mulana install directory";
         randomizeShops = true;
+        fullItemAccess = true;
         requireSoftwareComboForKeyFairy = true;
+        bossDifficulty = BossDifficulty.MEDIUM;
 
         for(String filename : Arrays.asList("C:\\Games\\La-Mulana Remake 1.3.3.1", "C:\\GOG Games\\La-Mulana", "C:\\GOG Games\\La-Mulana",
                 "C:\\Steam\\steamapps\\common\\La-Mulana", "C:\\Program Files (x86)\\Steam\\steamapps\\common\\La-Mulana",
@@ -84,6 +89,14 @@ public final class Settings {
 
     public static Set<String> getInitiallyAvailableItems() {
         return singleton.initiallyAvailableItems;
+    }
+
+    public static BossDifficulty getBossDifficulty() {
+        return singleton.bossDifficulty;
+    }
+
+    public static boolean isFullItemAccess() {
+        return singleton.fullItemAccess;
     }
 
     public static void setAllowGlitches(boolean allowGlitches) {
@@ -169,6 +182,20 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.datFileLocation = datFileLocation;
+    }
+
+    public static void setBossDifficulty(String bossDifficulty) {
+        if(!bossDifficulty.equals(singleton.bossDifficulty)) {
+            singleton.changed = true;
+        }
+        singleton.bossDifficulty = BossDifficulty.valueOf(bossDifficulty);
+    }
+
+    public static void setFullItemAccess(boolean fullItemAccess) {
+        if(fullItemAccess != singleton.fullItemAccess) {
+            singleton.changed = true;
+        }
+        singleton.fullItemAccess = fullItemAccess;
     }
 
     public static void saveSettings() {

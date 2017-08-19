@@ -1,17 +1,18 @@
 package lmr.randomizer.random;
 
+import lmr.randomizer.dat.Block;
+import lmr.randomizer.node.AccessChecker;
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by thezerothcat on 7/20/2017.
  */
-public class StaticShopRandomizer extends ShopRandomizer {
+public class StaticShopRandomizer implements ShopRandomizer {
+    private Map<String, String> mapOfShopInventoryItemToContents = new HashMap<>(); // The thing we're trying to build.
+
     public StaticShopRandomizer(int totalUniqueShopItems) {
-        super(totalUniqueShopItems);
         mapOfShopInventoryItemToContents.put("Shop 1 (Surface) Item 1", "Hand Scanner");
         mapOfShopInventoryItemToContents.put("Shop 2 (Surface) Item 1", "reader.exe");
         mapOfShopInventoryItemToContents.put("Shop 2 (Surface) Item 2", "yagomap.exe");
@@ -49,6 +50,26 @@ public class StaticShopRandomizer extends ShopRandomizer {
     }
 
     @Override
+    public void placeNonRandomizedItems() {
+        // Already done in the constructor
+    }
+
+    @Override
+    public List<String> getShopItems(String shopName) {
+        return null;
+    }
+
+    @Override
+    public boolean placeRequiredItem(String item, List<String> shopLocationOptions, int locationIndex) {
+        return false;
+    }
+
+    @Override
+    public boolean placeItem(String item, int locationIndex) {
+        return false;
+    }
+
+    @Override
     public void determineItemTypes(Random random, String firstSubweapon) {
         return; // Don't randomize
     }
@@ -60,7 +81,22 @@ public class StaticShopRandomizer extends ShopRandomizer {
     }
 
     @Override
+    public void setAccessChecker(AccessChecker accessChecker) {
+        // Do nothing
+    }
+
+    @Override
+    public void setItemRandomizer(ItemRandomizer itemRandomizer) {
+        // Do nothing
+    }
+
+    @Override
     public void outputLocations(int attemptNumber) throws IOException {
         return; // Don't output anything since we didn't randomize anything
+    }
+
+    @Override
+    public void updateFiles(List<Block> blocks, Random random) {
+        // Do nothing
     }
 }

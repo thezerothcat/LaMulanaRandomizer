@@ -116,6 +116,10 @@ public final class RcdReader {
                 }
             }
         }
+        else if(obj.getId() == 0x2f && obj.getArgs().get(1) == 7) {
+            // Remove empowered Key Sword
+            keepObject = false;
+        }
         else if (obj.getId() == 0x2c) {
             if ((obj.getArgs().get(0) - 11) == DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Cog of the Soul").getInventoryArg()) {
                 // Add timer object for Cog of the Soul chest to prevent buggy behavior.
@@ -167,14 +171,14 @@ public final class RcdReader {
                     keepObject = false;
                 }
             }
+            else if(obj.getArgs().get(4) == 719) {
+                // Low-score version of Mulbruk which could interfere with getting Book of the Dead.
+                keepObject = false;
+            }
             else if(obj.getArgs().get(4) == 913) {
                 // Xelpud conversation after he goes to do the Diary thing.
                 keepObject = false;
             }
-//            else if(obj.getArgs().get(4) == 1013) {
-//                // Mulbruk conversation in which she runs away from the Forbidden Treasure.
-//                keepObject = false;
-//            }
             else if(obj.getArgs().get(4) == 1014) {
                 // Mulbruk conversation after she runs away from the Forbidden Treasure.
                 keepObject = false;

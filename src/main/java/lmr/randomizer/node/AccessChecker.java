@@ -2,6 +2,7 @@ package lmr.randomizer.node;
 
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
+import lmr.randomizer.Settings;
 import lmr.randomizer.random.ItemRandomizer;
 import lmr.randomizer.random.ShopRandomizer;
 
@@ -23,6 +24,7 @@ public class AccessChecker {
     private ShopRandomizer shopRandomizer;
 
     private int numberOfAccessibleAnkhJewels;
+    private int numberOfAccessibleSacredOrbs;
 
     public AccessChecker() {
         mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
@@ -50,7 +52,18 @@ public class AccessChecker {
     }
 
     public boolean isSuccess() {
-        return mapOfNodeNameToRequirementsObject.isEmpty();
+        if(Settings.isFullItemAccess()) {
+            return mapOfNodeNameToRequirementsObject.isEmpty();
+        }
+        if(mapOfNodeNameToRequirementsObject.isEmpty()) {
+            return false;
+        }
+        for(String requiredItem : DataFromFile.getWinRequirements()) {
+            if(!accessedNodes.contains(requiredItem)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void computeAccessibleNodes(String newState) {
@@ -69,8 +82,10 @@ public class AccessChecker {
             stateToUpdate = "Ankh Jewel";
             numberOfAccessibleAnkhJewels += 1;
         }
-        if(stateToUpdate.contains("Sacred Orb")) {
+        if(stateToUpdate.contains("Sacred Orb (")) {
             stateToUpdate = "Sacred Orb";
+            numberOfAccessibleSacredOrbs += 1;
+            queuedUpdates.add("Sacred Orb: " + numberOfAccessibleSacredOrbs);
         }
 
         accessedNodes.add(newState);
@@ -191,7 +206,7 @@ public class AccessChecker {
         writer.flush();
         writer.close();
 
-        writer = FileUtils.getFileWriter(String.format("target/missing_item%s_%s.txt", startingSeed, attemptNumber));
+        writer = FileUtils.getFileWriter(String.format("%s/missing_item_%s.txt", startingSeed, attemptNumber));
         if (writer == null) {
             return;
         }
@@ -206,7 +221,7 @@ public class AccessChecker {
         writer.close();
 
 
-        writer = FileUtils.getFileWriter(String.format("target/accessible%s_%s.txt", startingSeed, attemptNumber));
+        writer = FileUtils.getFileWriter(String.format("%s/accessible_%s.txt", startingSeed, attemptNumber));
         if (writer == null) {
             return;
         }

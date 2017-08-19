@@ -25,6 +25,7 @@ public final class DataFromFile {
     private static Map<String, List<String>> mapOfShopNameToShopOriginalContents;
     private static Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject;
     private static List<String> initialShops;
+    private static List<String> winRequirements;
 
     private DataFromFile() { }
 
@@ -189,11 +190,25 @@ public final class DataFromFile {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/item_reqs.txt", null);
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/shop_reqs.txt", null);
             }
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject,
+                    String.format("requirement/bosses/%s_reqs.txt", Settings.getBossDifficulty().name().toLowerCase()), null);
             if(!Settings.isRequireSoftwareComboForKeyFairy()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_software_combo_for_key_fairy_reqs.txt", null);
             }
         }
         return mapOfNodeNameToRequirementsObject;
+    }
+
+    public static List<String> getWinRequirements() {
+        if(winRequirements == null && !Settings.isFullItemAccess()) {
+            if(Settings.isAllowGlitches()) {
+                winRequirements = FileUtils.getList("requirement/glitch/win_reqs.txt");
+            }
+            else {
+                winRequirements = FileUtils.getList("requirement/win_reqs.txt");
+            }
+        }
+        return winRequirements;
     }
 
     public static void clearRequirementsData() {

@@ -4,13 +4,11 @@ import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.DatReader;
 import lmr.randomizer.dat.DatWriter;
 import lmr.randomizer.node.AccessChecker;
-import lmr.randomizer.random.ItemRandomizer;
-import lmr.randomizer.random.CategorizedShopRandomizer;
-import lmr.randomizer.random.StaticShopRandomizer;
-import lmr.randomizer.random.ShopRandomizer;
+import lmr.randomizer.random.*;
 import lmr.randomizer.rcd.RcdReader;
 import lmr.randomizer.rcd.RcdWriter;
 import lmr.randomizer.rcd.object.Zone;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,26 +67,35 @@ public class Main {
         private FieldPanel fieldPanel;
         private RadioPanel radioPanel;
         private CheckboxPanel checkboxPanel;
+        private DifficultyPanel difficultyPanel;
 
         public RandomizerUI() {
+            try {
+                JFrame.setDefaultLookAndFeelDecorated(true);
+                JDialog.setDefaultLookAndFeelDecorated(true);
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+                e.printStackTrace();
+            }
             setTitle("La-Mulana (Remake) Randomizer");
-            setMinimumSize(new Dimension(800, 600));
-            setLocationRelativeTo(null);
+            setLayout(new MigLayout("fill, aligny top", "[]", "[]"));
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-            setLayout(new GridLayout(4, 0));
+            setResizable(true);
 
             fieldPanel = new FieldPanel();
-            getContentPane().add(fieldPanel);
+            add(fieldPanel, "growx, wrap");
 
             radioPanel = new RadioPanel();
-            add(radioPanel);
+            add(radioPanel, "growx, wrap");
 
             checkboxPanel = new CheckboxPanel();
-            add(checkboxPanel);
+            add(checkboxPanel, "growx, wrap");
 
-//            getContentPane().add(buttonPanel);
-            add(new ButtonPanel(this));
+            difficultyPanel = new DifficultyPanel();
+            add(difficultyPanel, "growx, wrap");
+
+            add(new ButtonPanel(this), "grow");
+            pack();
         }
 
         @Override
@@ -108,6 +115,7 @@ public class Main {
             fieldPanel.updateSettings();
             radioPanel.updateSettings();
             checkboxPanel.updateSettings();
+            difficultyPanel.updateSettings();
             Settings.saveSettings();
 
             fieldPanel.rerollRandomSeed();
@@ -234,25 +242,16 @@ public class Main {
         private JTextField seedNumber;
 
         public FieldPanel() {
-            super(new GridLayout(2, 0));
-            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            super(new MigLayout("fillx", "[][sg fields, fill, grow 80]", "[]"));
+            setBorder(BorderFactory.createTitledBorder("Game Settings"));
 
-            JPanel firstFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            firstFieldPanel.setPreferredSize(new Dimension(800, 60));
-            firstFieldPanel.add(new JLabel("Seed number: ", JLabel.LEFT));
             seedNumber = new JTextField(Integer.toString(new Random().nextInt(Integer.MAX_VALUE)));
-            seedNumber.setSize(800, 80);
-            firstFieldPanel.add(seedNumber);
+            add(new JLabel("Seed number"), "gap related");
+            add(seedNumber, "wrap rel");
 
-            JPanel secondFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            secondFieldPanel.setPreferredSize(new Dimension(800, 60));
-            secondFieldPanel.add(new JLabel("La-Mulana install directory: ", JLabel.LEFT));
             laMulanaDirectory = new JTextField(Settings.getLaMulanaBaseDir());
-            laMulanaDirectory.setSize(800, 60);
-            secondFieldPanel.add(laMulanaDirectory);
-
-            add(firstFieldPanel);
-            add(secondFieldPanel);
+            add(new JLabel("La-Mulana install directory "), "gap related");
+            add(laMulanaDirectory);
         }
 
         public void rerollRandomSeed() {
@@ -318,35 +317,39 @@ public class Main {
 
     static class CheckboxPanel extends JPanel {
         private JCheckBox enableGlitches;
-        private JCheckBox initialSubweapon;
+        private JCheckBox fullItemAccess;
         private JCheckBox randomizeShops;
-        private JCheckBox requireSoftwareComboForKeyFairy;
+        private JCheckBox initialSubweapon;
         private JCheckBox randomizeForbiddenTreasure;
+        private JCheckBox requireSoftwareComboForKeyFairy;
 
         public CheckboxPanel() {
-            super(new GridLayout(3, 2));
-            setPreferredSize(new Dimension(800, 10));
-            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            super(new MigLayout("wrap 2", "[sizegroup checkboxes]", "[]2[]"));
+            setBorder(BorderFactory.createTitledBorder("Advanced Settings"));
+
+            fullItemAccess = new JCheckBox("Require 100% item accessibility");
+            fullItemAccess.setSelected(Settings.isFullItemAccess());
+            add(fullItemAccess);
 
             enableGlitches = new JCheckBox("Enable glitched requirements");
-            add(enableGlitches);
             enableGlitches.setSelected(Settings.isAllowGlitches());
-
-            initialSubweapon = new JCheckBox("Guarantee initially accessible subweapon");
-            add(initialSubweapon);
-            initialSubweapon.setSelected(Settings.isGuaranteeSubweapon());
+            add(enableGlitches);
 
             randomizeShops = new JCheckBox("Enable shop randomization");
-            add(randomizeShops);
             randomizeShops.setSelected(Settings.isRandomizeShops());
+            add(randomizeShops);
 
-            randomizeForbiddenTreasure = new JCheckBox("Include Forbidden Treasure in randomized items");
-            add(randomizeForbiddenTreasure);
-            randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
+            initialSubweapon = new JCheckBox("Guarantee initially accessible subweapon");
+            initialSubweapon.setSelected(Settings.isGuaranteeSubweapon());
+            add(initialSubweapon);
 
             requireSoftwareComboForKeyFairy = new JCheckBox("Require software combo for key fairies");
-            add(requireSoftwareComboForKeyFairy);
             requireSoftwareComboForKeyFairy.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
+            add(requireSoftwareComboForKeyFairy);
+
+            randomizeForbiddenTreasure = new JCheckBox("Include Forbidden Treasure in randomized items");
+            randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
+            add(randomizeForbiddenTreasure);
         }
 
         public void updateSettings() {
@@ -357,6 +360,7 @@ public class Main {
                     || Settings.isRequireSoftwareComboForKeyFairy() != requireSoftwareComboForKeyFairy.isSelected()) {
                 DataFromFile.clearRequirementsData();
             }
+            Settings.setFullItemAccess(fullItemAccess.isSelected());
             Settings.setRandomizeShops(randomizeShops.isSelected());
             Settings.setRequireSoftwareComboForKeyFairy(requireSoftwareComboForKeyFairy.isSelected());
             Settings.setRandomizeForbiddenTreasure(randomizeForbiddenTreasure.isSelected());
@@ -367,17 +371,22 @@ public class Main {
         List<GameItemRadio> itemConfigRadioGroupPanels;
 
         public RadioPanel() {
-            super(new GridLayout(2, 4, 0, 20));
-//            setPreferredSize(new Dimension(800, 400));
-            setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+            super(new GridLayout(0, 4, 0, 20));
+            setBorder(BorderFactory.createTitledBorder("Item Settings"));
 
             itemConfigRadioGroupPanels = new ArrayList<>();
             itemConfigRadioGroupPanels.add(new GameItemRadio("Holy Grail"));
             itemConfigRadioGroupPanels.add(new GameItemRadio("mirai.exe"));
-            itemConfigRadioGroupPanels.add(new GameItemRadio("Grapple Claw"));
+            itemConfigRadioGroupPanels.add(new GameItemRadio("Hermes' Boots"));
             itemConfigRadioGroupPanels.add(new GameItemRadio("Feather"));
+
+            itemConfigRadioGroupPanels.add(new GameItemRadio("Hand Scanner"));
+            itemConfigRadioGroupPanels.add(new GameItemRadio("reader.exe"));
             itemConfigRadioGroupPanels.add(new GameItemRadio("Isis' Pendant"));
             itemConfigRadioGroupPanels.add(new GameItemRadio("Bronze Mirror"));
+
+            itemConfigRadioGroupPanels.add(new GameItemRadio("Grapple Claw"));
+            itemConfigRadioGroupPanels.add(new GameItemRadio("xmailer.exe"));
 //            itemConfigRadioGroupPanels.add(new GameItemRadio("Flail Whip"));
 //            itemConfigRadioGroupPanels.add(new GameItemRadio("Fairy Clothes"));
             for(GameItemRadio gameItemRadio : itemConfigRadioGroupPanels) {
@@ -403,6 +412,45 @@ public class Main {
         }
     }
 
+    static class DifficultyPanel extends JPanel {
+        private ButtonGroup difficultySetting;
+
+        public DifficultyPanel() {
+            super(new FlowLayout(FlowLayout.LEFT));
+            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            add(new JLabel("Boss Difficulty: ", JLabel.LEFT));
+
+            difficultySetting = new ButtonGroup();
+            JRadioButton easy = new JRadioButton("Easy");
+            easy.setActionCommand("EASY");
+            JRadioButton medium = new JRadioButton("Medium");
+            medium.setActionCommand("MEDIUM");
+            JRadioButton hard = new JRadioButton("Hard");
+            hard.setActionCommand("HARD");
+            difficultySetting.add(easy);
+            difficultySetting.add(medium);
+            difficultySetting.add(hard);
+
+            add(easy);
+            add(medium);
+            add(hard);
+
+            if(BossDifficulty.EASY.equals(Settings.getBossDifficulty())) {
+                easy.setSelected(true);
+            }
+            else if(BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty())) {
+                medium.setSelected(true);
+            }
+            else {
+                hard.setSelected(true);
+            }
+        }
+
+        public void updateSettings() {
+            Settings.setBossDifficulty(difficultySetting.getSelection().getActionCommand());
+        }
+    }
 
     private static void doTheThing() {
         Random random = new Random(Settings.getStartingSeed());
@@ -475,6 +523,8 @@ public class Main {
                     RcdWriter.writeRcd(rcdData);
                     DatWriter.writeDat(datInfo);
 
+//                    accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
+
                     return;
                 } catch (Exception ex) {
                     FileUtils.log(ex.getClass().getName() + ": " + ex.getMessage());
@@ -490,7 +540,7 @@ public class Main {
 
             }
             try {
-//                accessChecker.outputRemaining(Settings.startingSeed, attempt);
+//                accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
             } catch (Exception ex) {
                 FileUtils.log(ex.getClass().getName() + ": " + ex.getMessage());
                 FileUtils.log("File: " + ex.getStackTrace()[0].getFileName());
@@ -502,14 +552,12 @@ public class Main {
                 return;
                 // No exception handling in v1
             }
-            attempt++;
         }
     }
 
     private static ShopRandomizer buildShopRandomizer(ItemRandomizer itemRandomizer) {
         ShopRandomizer shopRandomizer;
         if(Settings.isRandomizeShops()) {
-//            shopRandomizer = new ShopRandomizer(itemRandomizer.getTotalShopItems());
             shopRandomizer = new CategorizedShopRandomizer();
         }
         else {

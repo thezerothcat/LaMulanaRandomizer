@@ -70,7 +70,10 @@ public class NodeWithRequirements {
             if(item.equals("Ankh Jewel")) {
                 badRequirementSet = false;
                 for(String requirement : requirementSet) {
-                    if(requirement.startsWith("Event") && requirement.endsWith("Defeated")) {
+                    if(requirement.contains("Amphisbaena Defeated") || requirement.contains("Sakit Defeated")
+                            || requirement.contains("Ellmac Defeated") || requirement.contains("Bahamut Defeated")
+                            || requirement.contains("Viy Defeated") || requirement.contains("Baphomet Defeated")
+                            || requirement.contains("Palenque Defeated") || requirement.contains("Tiamat Defeated")) {
                         badRequirementSet = true;
                         break;
                     }
