@@ -23,7 +23,6 @@ public class ItemRandomizer {
 
     private List<String> nonShopItemLocations;
     private List<String> unassignedNonShopItemLocations;
-    private int totalShopItems;
 
     private ShopRandomizer shopRandomizer;
     private AccessChecker accessChecker;
@@ -34,11 +33,10 @@ public class ItemRandomizer {
 
         nonShopItemLocations = new ArrayList<>(DataFromFile.getNonShopItemLocations());
         unassignedNonShopItemLocations = new ArrayList<>(nonShopItemLocations);
-        totalShopItems = Settings.isRandomizeShops() ? allItems.size() - nonShopItemLocations.size() : 0;
     }
 
     public int getTotalShopItems() {
-        return totalShopItems;
+        return unplacedItems.size() - unassignedNonShopItemLocations.size();
     }
 
     public List<String> getAllItems() {
@@ -75,18 +73,18 @@ public class ItemRandomizer {
     }
 
     public void placeNonRandomizedItems() {
-//        mapOfItemLocationToItem.put("mekuri.exe", "Map (Shrine of the Mother)");
-//        unassignedNonShopItemLocations.remove("mekuri.exe");
-//        unplacedItems.remove("Map (Shrine of the Mother)");
-//        mapOfItemLocationToItem.put("Shuriken", "Treasures");
-//        unassignedNonShopItemLocations.remove("Shuriken");
-//        unplacedItems.remove("Treasures");
-//        mapOfItemLocationToItem.put("Sacred Orb (Gate of Guidance)", "Pepper");
+//        mapOfItemLocationToItem.put("xmailer.exe", "Book of the Dead");
+//        unassignedNonShopItemLocations.remove("xmailer.exe");
+//        unplacedItems.remove("Book of the Dead");
+//        mapOfItemLocationToItem.put("deathv.exe", "Feather");
+//        unassignedNonShopItemLocations.remove("deathv.exe");
+//        unplacedItems.remove("Feather");
+//        mapOfItemLocationToItem.put("Serpent Staff", "Glove");
+//        unassignedNonShopItemLocations.remove("Serpent Staff");
+//        unplacedItems.remove("Glove");
+//        mapOfItemLocationToItem.put("Sacred Orb (Gate of Guidance)", "Flail Whip");
 //        unassignedNonShopItemLocations.remove("Sacred Orb (Gate of Guidance)");
-//        unplacedItems.remove("Pepper");
-//        mapOfItemLocationToItem.put("Map (Surface)", "Map (Shrine of the Mother)");
-//        unassignedNonShopItemLocations.remove("Map (Surface)");
-//        unplacedItems.remove("Map (Shrine of the Mother)");
+//        unplacedItems.remove("Flail Whip");
         for(String item : DataFromFile.getNonRandomizedItems()) {
             mapOfItemLocationToItem.put(item, item);
             if(!unassignedNonShopItemLocations.contains(item)) {
@@ -225,7 +223,7 @@ public class ItemRandomizer {
     }
 
     public void updateFiles() throws Exception{
-        List<String> locationsRelatedToBlocks = Arrays.asList("Map (Surface)", "mekuri.exe", "Mini Doll", "Pepper", "Anchor", "Mulana Talisman", "xmailer.exe"); // todo: not hardcode this, eventually
+        List<String> locationsRelatedToBlocks = Arrays.asList("Map (Surface)", "mekuri.exe", "Mini Doll", "Pepper", "Anchor", "Mulana Talisman", "xmailer.exe", "Book of the Dead"); // todo: not hardcode this, eventually
 
         for(Map.Entry<String, String> locationAndItem : mapOfItemLocationToItem.entrySet()) {
             if(!locationAndItem.getKey().equals(locationAndItem.getValue())) {

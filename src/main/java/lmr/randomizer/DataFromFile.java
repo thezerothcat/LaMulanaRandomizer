@@ -52,7 +52,7 @@ public final class DataFromFile {
     public static List<String> getAllNonShopItemsPlusAllRandomizedShopItems() {
         if(allNonShopItemsPlusAllRandomizedShopItems == null) {
             allNonShopItemsPlusAllRandomizedShopItems = FileUtils.getList("all/non_shop_items.txt");
-            if(Settings.isRandomizeShops()) {
+            if(!ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
                 for(String item : getRandomizedShopItems()) {
                     if(!allNonShopItemsPlusAllRandomizedShopItems.contains(item)) {
                         allNonShopItemsPlusAllRandomizedShopItems.add(item);
@@ -93,7 +93,7 @@ public final class DataFromFile {
 
     public static List<String> getNonRandomizedShops() {
         if(nonRandomizedShops == null) {
-            if(Settings.isRandomizeShops()) {
+            if(!ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
                 nonRandomizedShops = FileUtils.getList("min/non_randomized_shops.txt");
             }
             if(nonRandomizedShops == null) {
@@ -148,7 +148,7 @@ public final class DataFromFile {
 
     public static List<String> getRandomizedShopItems() {
         if(randomizedShopItems == null) {
-            if(Settings.isRandomizeShops()) {
+            if(!ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
                 randomizedShopItems = new ArrayList<>();
                 for(String shopName : getAllShops()) {
                     if(!getNonRandomizedShops().contains(shopName)) {
@@ -211,9 +211,32 @@ public final class DataFromFile {
         return winRequirements;
     }
 
-    public static void clearRequirementsData() {
-        if(mapOfNodeNameToRequirementsObject != null) {
-            mapOfNodeNameToRequirementsObject = null;
+    public static void clearAllData() {
+        if(Settings.isChanged()) {
+            if (allNonShopItemsPlusAllRandomizedShopItems != null) {
+                allNonShopItemsPlusAllRandomizedShopItems = null;
+            }
+            if (nonRandomizedItems != null) {
+                nonRandomizedItems = null;
+            }
+            if (randomizedShopItems != null) {
+                randomizedShopItems = null;
+            }
+            if (nonShopItemLocations != null) {
+                nonShopItemLocations = null;
+            }
+            if (initialNonShopItemLocations != null) {
+                initialNonShopItemLocations = null;
+            }
+            if (initialShops != null) {
+                initialShops = null;
+            }
+            if (winRequirements != null) {
+                winRequirements = null;
+            }
+            if(mapOfNodeNameToRequirementsObject != null) {
+                mapOfNodeNameToRequirementsObject = null;
+            }
         }
     }
 }

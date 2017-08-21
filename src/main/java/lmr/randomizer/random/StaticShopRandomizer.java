@@ -70,7 +70,7 @@ public class StaticShopRandomizer implements ShopRandomizer {
     }
 
     @Override
-    public void determineItemTypes(Random random, String firstSubweapon) {
+    public void determineItemTypes(Random random) {
         return; // Don't randomize
     }
 

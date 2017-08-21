@@ -15,6 +15,7 @@ Knife => None
 Life Seal => Location: Chamber of Extinction [Main], Hermes' Boots, Grapple Claw
 Philosopher's Ocarina => Maternity Statue, Hermes' Boots, Grapple Claw
 Ring => Location: Twin Labyrinths [Upper]
+Ring => Hermes' Boots, Grapple Claw
 Sacred Orb (Twin Labyrinths) => Lamp of Time
 Serpent Staff => Location: Temple of Moonlight [Lower], Hermes' Boots, Grapple Claw, Book of the Dead, Event: Anubis Defeated
 Woman Statue => Location: Chamber of Birth [Skanda], Hermes' Boots, Grapple Claw

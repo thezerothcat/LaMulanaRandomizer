@@ -16,8 +16,6 @@ public final class Settings {
 
     private boolean allowGlitches;
     private boolean fullItemAccess;
-    private boolean randomizeShops;
-    private boolean guaranteeSubweapon; // Ensure at least one subweapon drop within initial item set. // todo: restore this; it's broken in cases where no subweapons are included in randomization
     private boolean requireSoftwareComboForKeyFairy;
     private boolean randomizeForbiddenTreasure;
 
@@ -29,14 +27,19 @@ public final class Settings {
     private Set<String> initiallyAvailableItems = new HashSet<>();
 
     private BossDifficulty bossDifficulty;
+    private ShopRandomizationEnum shopRandomization;
 
     private Settings() {
         startingSeed = new Random().nextInt(Integer.MAX_VALUE);
         laMulanaBaseDir = "Please enter your La-Mulana install directory";
-        randomizeShops = true;
-        fullItemAccess = true;
+
+        allowGlitches = false;
+        fullItemAccess = false;
+        randomizeForbiddenTreasure = true;
         requireSoftwareComboForKeyFairy = true;
-        bossDifficulty = BossDifficulty.MEDIUM;
+
+        bossDifficulty = BossDifficulty.HARD;
+        shopRandomization = ShopRandomizationEnum.EVERYTHING;
 
         for(String filename : Arrays.asList("C:\\Games\\La-Mulana Remake 1.3.3.1", "C:\\GOG Games\\La-Mulana", "C:\\GOG Games\\La-Mulana",
                 "C:\\Steam\\steamapps\\common\\La-Mulana", "C:\\Program Files (x86)\\Steam\\steamapps\\common\\La-Mulana",
@@ -47,20 +50,16 @@ public final class Settings {
         }
     }
 
+    public static boolean isChanged() {
+        return singleton.changed;
+    }
+
     public static long getStartingSeed() {
         return singleton.startingSeed;
     }
 
     public static boolean isAllowGlitches() {
         return singleton.allowGlitches;
-    }
-
-    public static boolean isRandomizeShops() {
-        return singleton.randomizeShops;
-    }
-
-    public static boolean isGuaranteeSubweapon() {
-        return singleton.guaranteeSubweapon;
     }
 
     public static boolean isRequireSoftwareComboForKeyFairy() {
@@ -91,6 +90,10 @@ public final class Settings {
         return singleton.initiallyAvailableItems;
     }
 
+    public static ShopRandomizationEnum getShopRandomization() {
+        return singleton.shopRandomization;
+    }
+
     public static BossDifficulty getBossDifficulty() {
         return singleton.bossDifficulty;
     }
@@ -99,43 +102,29 @@ public final class Settings {
         return singleton.fullItemAccess;
     }
 
-    public static void setAllowGlitches(boolean allowGlitches) {
-        if(allowGlitches != singleton.allowGlitches) {
+    public static void setAllowGlitches(boolean allowGlitches, boolean update) {
+        if(update && allowGlitches != singleton.allowGlitches) {
             singleton.changed = true;
         }
         singleton.allowGlitches = allowGlitches;
     }
 
-    public static void setGuaranteeSubweapon(boolean guaranteeSubweapon) {
-        if(guaranteeSubweapon != singleton.guaranteeSubweapon) {
-            singleton.changed = true;
-        }
-        singleton.guaranteeSubweapon = guaranteeSubweapon;
-    }
-
-    public static void setRandomizeShops(boolean randomizeShops) {
-        if(randomizeShops != singleton.randomizeShops) {
-            singleton.changed = true;
-        }
-        singleton.randomizeShops = randomizeShops;
-    }
-
-    public static void setRequireSoftwareComboForKeyFairy(boolean requireSoftwareComboForKeyFairy) {
-        if(requireSoftwareComboForKeyFairy != singleton.requireSoftwareComboForKeyFairy) {
+    public static void setRequireSoftwareComboForKeyFairy(boolean requireSoftwareComboForKeyFairy, boolean update) {
+        if(update && requireSoftwareComboForKeyFairy != singleton.requireSoftwareComboForKeyFairy) {
             singleton.changed = true;
         }
         singleton.requireSoftwareComboForKeyFairy = requireSoftwareComboForKeyFairy;
     }
 
-    public static void setRandomizeForbiddenTreasure(boolean randomizeForbiddenTreasure) {
-        if(randomizeForbiddenTreasure != singleton.randomizeForbiddenTreasure) {
+    public static void setRandomizeForbiddenTreasure(boolean randomizeForbiddenTreasure, boolean update) {
+        if(update && randomizeForbiddenTreasure != singleton.randomizeForbiddenTreasure) {
             singleton.changed = true;
         }
         singleton.randomizeForbiddenTreasure = randomizeForbiddenTreasure;
     }
 
-    public static void setInitiallyAvailableItems(Set<String> initiallyAvailableItems) {
-        if(!singleton.changed) {
+    public static void setInitiallyAvailableItems(Set<String> initiallyAvailableItems, boolean update) {
+        if(update && !singleton.changed) {
             if(initiallyAvailableItems.containsAll(singleton.initiallyAvailableItems)) {
                 singleton.changed = !singleton.initiallyAvailableItems.containsAll(initiallyAvailableItems);
             }
@@ -146,8 +135,8 @@ public final class Settings {
         singleton.initiallyAvailableItems = initiallyAvailableItems;
     }
 
-    public static void setNonRandomizedItems(Set<String> nonRandomizedItems) {
-        if(!singleton.changed) {
+    public static void setNonRandomizedItems(Set<String> nonRandomizedItems, boolean update) {
+        if(update && !singleton.changed) {
             if(nonRandomizedItems.containsAll(singleton.nonRandomizedItems)) {
                 singleton.changed = !singleton.nonRandomizedItems.containsAll(nonRandomizedItems);
             }
@@ -163,36 +152,37 @@ public final class Settings {
         singleton.startingSeed = startingSeed;
     }
 
-    public static void setLaMulanaBaseDir(String laMulanaBaseDir) {
-        if(!laMulanaBaseDir.equals(singleton.laMulanaBaseDir)) {
+    public static void setLaMulanaBaseDir(String laMulanaBaseDir, boolean update) {
+        if(update && !laMulanaBaseDir.equals(singleton.laMulanaBaseDir)) {
             singleton.changed = true;
         }
         singleton.laMulanaBaseDir = laMulanaBaseDir;
     }
 
     public static void setRcdFileLocation(String rcdFileLocation) {
-        if(!rcdFileLocation.equals(singleton.rcdFileLocation)) {
-            singleton.changed = true;
-        }
         singleton.rcdFileLocation = rcdFileLocation;
     }
 
     public static void setDatFileLocation(String datFileLocation) {
-        if(!datFileLocation.equals(singleton.datFileLocation)) {
-            singleton.changed = true;
-        }
         singleton.datFileLocation = datFileLocation;
     }
 
-    public static void setBossDifficulty(String bossDifficulty) {
-        if(!bossDifficulty.equals(singleton.bossDifficulty)) {
+    public static void setShopRandomization(String shopRandomization, boolean update) {
+        if(update && !shopRandomization.equals(singleton.shopRandomization.toString())) {
+            singleton.changed = true;
+        }
+        singleton.shopRandomization = ShopRandomizationEnum.valueOf(shopRandomization);
+    }
+
+    public static void setBossDifficulty(String bossDifficulty, boolean update) {
+        if(update && !bossDifficulty.equals(singleton.bossDifficulty.toString())) {
             singleton.changed = true;
         }
         singleton.bossDifficulty = BossDifficulty.valueOf(bossDifficulty);
     }
 
-    public static void setFullItemAccess(boolean fullItemAccess) {
-        if(fullItemAccess != singleton.fullItemAccess) {
+    public static void setFullItemAccess(boolean fullItemAccess, boolean update) {
+        if(update && fullItemAccess != singleton.fullItemAccess) {
             singleton.changed = true;
         }
         singleton.fullItemAccess = fullItemAccess;
@@ -201,6 +191,7 @@ public final class Settings {
     public static void saveSettings() {
         if(singleton.changed) {
             try {
+                FileUtils.log("Updating setings");
                 FileUtils.saveSettings();
             }
             catch (IOException ex) {
@@ -208,6 +199,4 @@ public final class Settings {
             }
         }
     }
-
-//    public static boolean zeroRequirementHandScannerAndReaderExe = true;
 }

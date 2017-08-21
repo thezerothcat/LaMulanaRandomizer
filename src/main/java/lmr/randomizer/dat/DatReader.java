@@ -390,7 +390,7 @@ public final class DatReader {
             else {
                 block = new Block(blockIndex);
                 addBlockContentsToBlock(block, dataInputStream, numberOfBytesInThisBlock / 2);
-                if(blockIndex == 693) {
+                if(blockIndex == 249) {
                     // Remove Mini Doll's becoming small flag from conversation.
                     Integer becomingSmallFlagIndex = null;
                     BlockContents blockContents;
@@ -399,9 +399,9 @@ public final class DatReader {
                         if(blockContents instanceof BlockFlagData && ((BlockFlagData) blockContents).getWorldFlag() == 554) {
                             becomingSmallFlagIndex = i;
                         }
-                        if(becomingSmallFlagIndex != null) {
-                            block.getBlockContents().remove(becomingSmallFlagIndex);
-                        }
+                    }
+                    if(becomingSmallFlagIndex != null) {
+                        block.getBlockContents().remove((int)becomingSmallFlagIndex);
                     }
                 }
             }

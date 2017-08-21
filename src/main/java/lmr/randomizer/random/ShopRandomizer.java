@@ -23,7 +23,7 @@ public interface ShopRandomizer {
 
     List<String> getInitialUnassignedShopItemLocations();
 
-    void determineItemTypes(Random random, String firstSubweapon);
+    void determineItemTypes(Random random);
 
     void outputLocations(int attemptNumber) throws IOException;
 

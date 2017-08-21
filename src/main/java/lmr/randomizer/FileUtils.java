@@ -249,28 +249,25 @@ public class FileUtils {
                 }
             }
             else if(line.startsWith("allowGlitches")) {
-                Settings.setAllowGlitches(Boolean.valueOf(line.split("=")[1]));
+                Settings.setAllowGlitches(Boolean.valueOf(line.split("=")[1]), false);
             }
-            else if(line.startsWith("randomizeShops")) {
-                Settings.setRandomizeShops(Boolean.valueOf(line.split("=")[1]));
+            else if(line.startsWith("shopRandomization")) {
+                Settings.setShopRandomization(line.split("=")[1], false);
             }
             else if(line.startsWith("fullItemAccess")) {
-                Settings.setFullItemAccess(Boolean.valueOf(line.split("=")[1]));
-            }
-            else if(line.startsWith("guaranteeSubweapon")) {
-                Settings.setGuaranteeSubweapon(Boolean.valueOf(line.split("=")[1]));
+                Settings.setFullItemAccess(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("requireSoftwareComboForKeyFairy")) {
-                Settings.setRequireSoftwareComboForKeyFairy(Boolean.valueOf(line.split("=")[1]));
+                Settings.setRequireSoftwareComboForKeyFairy(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeForbiddenTreasure")) {
-                Settings.setRandomizeForbiddenTreasure(Boolean.valueOf(line.split("=")[1]));
+                Settings.setRandomizeForbiddenTreasure(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("laMulanaBaseDir")) {
-                Settings.setLaMulanaBaseDir(line.substring(line.indexOf("=") + 1));
+                Settings.setLaMulanaBaseDir(line.substring(line.indexOf("=") + 1), false);
             }
             else if(line.startsWith("bossDifficulty")) {
-                Settings.setBossDifficulty(line.split("=")[1]);
+                Settings.setBossDifficulty(line.split("=")[1], false);
             }
         }
     }
@@ -280,13 +277,10 @@ public class FileUtils {
         writer.write(String.format("allowGlitches=%s", Settings.isAllowGlitches()));
         writer.newLine();
 
-        writer.write(String.format("randomizeShops=%s", Settings.isRandomizeShops()));
+        writer.write(String.format("shopRandomization=%s", Settings.getShopRandomization().toString()));
         writer.newLine();
 
         writer.write(String.format("fullItemAccess=%s", Settings.isFullItemAccess()));
-        writer.newLine();
-
-        writer.write(String.format("guaranteeSubweapon=%s", Settings.isGuaranteeSubweapon()));
         writer.newLine();
 
         writer.write(String.format("requireSoftwareComboForKeyFairy=%s", Settings.isRequireSoftwareComboForKeyFairy()));

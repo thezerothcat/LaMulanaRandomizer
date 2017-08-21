@@ -7,7 +7,6 @@ import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.update.GameDataTracker;
-import lmr.randomizer.update.GameObjectId;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -18,7 +17,7 @@ import java.util.*;
  *
  * Currently only randomizes unique items. Should probably eventually randomize ammo options also.
  */
-public class CategorizedShopRandomizer implements ShopRandomizer {
+public class EverythingShopRandomizer implements ShopRandomizer {
     private static final String MSX_SHOP_NAME = "Shop 2 Alt (Surface)";
     private static final String NON_MSX_SHOP_NAME = "Shop 2 (Surface)";
     private static final String FISH_FAIRY_SHOP_NAME = "Shop 12 Alt (Spring)";
@@ -30,26 +29,16 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
     private List<String> unassignedShopItemLocations = new ArrayList<>(); // Shop locations which still need something placed.
     private List<String> randomizedShops;
 
-    public CategorizedShopRandomizer() {
+    public EverythingShopRandomizer() {
         randomizedShops = new ArrayList<>(DataFromFile.getAllShops());
         randomizedShops.removeAll(DataFromFile.getNonRandomizedShops());
 
-        List<String> originalShopContents;
-        String originalShopItem;
         for(String shop : DataFromFile.getAllShops()) {
             if(MSX_SHOP_NAME.equals(shop)) {
                 unassignedShopItemLocations.add(String.format("%s Item 1", shop));
-                continue;
             }
-            else if(FISH_FAIRY_SHOP_NAME.equals(shop)) {
-                unassignedShopItemLocations.add(String.format("%s Item 3", shop));
-                continue;
-            }
-
-            originalShopContents = DataFromFile.getMapOfShopNameToShopOriginalContents().get(shop);
-            for (int i = 0; i < 3; i++) {
-                originalShopItem = originalShopContents.get(i);
-                if(!originalShopItem.equals("Weights") && !originalShopItem.endsWith("Ammo")) {
+            else {
+                for (int i = 0; i < 3; i++) {
                     unassignedShopItemLocations.add(String.format("%s Item %d", shop, i + 1));
                 }
             }
@@ -65,25 +54,6 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         String originalShopItem;
         String shopItemLocation;
 
-        for(String shop : DataFromFile.getNonRandomizedShops()) {
-            originalShopContents = DataFromFile.getMapOfShopNameToShopOriginalContents().get(shop);
-            for (int i = 0; i < 3; i++) {
-                shopItemLocation = String.format("%s Item %d", shop, i + 1);
-                originalShopItem = originalShopContents.get(i);
-                mapOfShopInventoryItemToContents.put(shopItemLocation, originalShopItem);
-                unassignedShopItemLocations.remove(shopItemLocation);
-                if((MSX_SHOP_NAME.equals(shop) && "Mobile Super X2".equals(originalShopItem))) {
-                    itemRandomizer.removeItemFromUnplacedItems(originalShopItem);
-                }
-                else if(FISH_FAIRY_SHOP_NAME.equals(shop) && !"Shell Horn".equals(originalShopItem) && !"guild.exe".equals(originalShopItem)) {
-                    itemRandomizer.removeItemFromUnplacedItems(originalShopItem);
-                }
-                else if(!"Weights".equals(originalShopItem) && !originalShopItem.endsWith("Ammo")){
-                    itemRandomizer.removeItemFromUnplacedItems(originalShopItem);
-                }
-            }
-        }
-
         List<String> nonRandomizedItems = DataFromFile.getNonRandomizedItems();
         for(String shop : randomizedShops) {
             originalShopContents = DataFromFile.getMapOfShopNameToShopOriginalContents().get(shop);
@@ -91,8 +61,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                 shopItemLocation = String.format("%s Item %d", shop, i + 1);
                 originalShopItem = originalShopContents.get(i);
                 if(originalShopItem.equals("Weights") || originalShopItem.endsWith("Ammo")) {
-                    // todo: remove/change this once we randomize weights/ammo
-                    mapOfShopInventoryItemToContents.put(shopItemLocation, originalShopItem);
+                    continue;
                 }
                 else if(MSX_SHOP_NAME.equals(shop) && "Mobile Super X2".equals(originalShopItem) && nonRandomizedItems.contains(originalShopItem)) {
                     mapOfShopInventoryItemToContents.put(shopItemLocation, originalShopItem);
@@ -169,7 +138,108 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
     }
 
     public void determineItemTypes(Random random) {
-        // Item types remain the same with this mode of randomization.
+        assignWeights(random);
+        assignSubweaponAmmoLocations(random);
+    }
+
+    private void assignWeights(Random random) {
+        String surfaceWeightsLocation = placeSurfaceWeights(random);
+        String surfaceWeightsShop = surfaceWeightsLocation.substring(0, surfaceWeightsLocation.indexOf(")") + 1);
+
+        List<String> shopsWithNoWeights = new ArrayList<>(randomizedShops);
+        shopsWithNoWeights.remove(surfaceWeightsShop);
+        if(MSX_SHOP_NAME.equals(surfaceWeightsShop)) {
+            shopsWithNoWeights.remove(NON_MSX_SHOP_NAME);
+        }
+        else if(NON_MSX_SHOP_NAME.equals(surfaceWeightsShop)) {
+            shopsWithNoWeights.remove(MSX_SHOP_NAME);
+        }
+
+        String shop;
+        String location;
+        List<Integer> shopItemNumbers;
+        int shopItemNumberIndex;
+        int maxAdditionalWeights = getWeightCount(random);
+        int weightsPlaced = 0;
+        while(weightsPlaced < maxAdditionalWeights) {
+            location = null;
+            shop = shopsWithNoWeights.get(random.nextInt(shopsWithNoWeights.size()));
+            shopItemNumbers = new ArrayList<>(Arrays.asList(1, 2, 3));
+            while(!shopItemNumbers.isEmpty()) {
+                shopItemNumberIndex = random.nextInt(shopItemNumbers.size());
+                location = String.format("%s Item %d", shop, shopItemNumbers.get(shopItemNumberIndex));
+                if(location.equals(MSX_SHOP_NAME + " Item 1")) {
+                    // Don't put weights/ammo where MSX2 was.
+                    shopItemNumbers.remove(shopItemNumberIndex);
+                    continue;
+                }
+
+                if(unassignedShopItemLocations.contains(location)) {
+                    mapOfShopInventoryItemToContents.put(location, "Weights");
+                    unassignedShopItemLocations.remove(location);
+                    ++weightsPlaced;
+                    break;
+                }
+                shopItemNumbers.remove(shopItemNumberIndex);
+            }
+            if(location != null) {
+                shopsWithNoWeights.remove(shop);
+                if(MSX_SHOP_NAME.equals(shop) && (location.contains("Item 2") || location.contains("Item 3"))) {
+                    shopsWithNoWeights.remove(NON_MSX_SHOP_NAME);
+                }
+                else if(NON_MSX_SHOP_NAME.equals(shop) && (location.contains("Item 2") || location.contains("Item 3"))) {
+                    shopsWithNoWeights.remove(MSX_SHOP_NAME);
+                }
+            }
+        }
+    }
+
+    private String placeSurfaceWeights(Random random) {
+        List<String> surfaceShopLocations = new ArrayList<>();
+        for(String location : unassignedShopItemLocations) {
+            if(location.contains("Surface") && !location.equals(MSX_SHOP_NAME + " Item 1")) {
+                surfaceShopLocations.add(location);
+            }
+        }
+        String surfaceWeightsLocation = surfaceShopLocations.get(random.nextInt(surfaceShopLocations.size()));
+        mapOfShopInventoryItemToContents.put(surfaceWeightsLocation, "Weights");
+        unassignedShopItemLocations.remove(surfaceWeightsLocation);
+        return surfaceWeightsLocation;
+    }
+
+    private int getWeightCount(Random random) {
+        int maxAdditionalWeights = Math.min(randomizedShops.size() - 2,
+                unassignedShopItemLocations.size() - ItemRandomizer.ALL_SUBWEAPONS.size() - itemRandomizer.getTotalShopItems()); // Must have enough room for all shop items plus one of each ammo type plus one weight. The remaining ammo to weights ratio can be random.
+        if(maxAdditionalWeights < 0) {
+            maxAdditionalWeights = 0;
+        }
+        return random.nextInt(maxAdditionalWeights);
+    }
+
+    private void assignSubweaponAmmoLocations(Random random) {
+        List<String> unassignedSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
+        int totalSubweaponLocations = unassignedShopItemLocations.size() - itemRandomizer.getTotalShopItems();
+
+        String location;
+        String subweapon;
+        int shopLocationIndex;
+        for(int i = 0; i < totalSubweaponLocations; i++) {
+            shopLocationIndex = random.nextInt(unassignedShopItemLocations.size());
+            location = unassignedShopItemLocations.get(shopLocationIndex);
+            while(location.equals(MSX_SHOP_NAME + " Item 1")) {
+                shopLocationIndex = random.nextInt(unassignedShopItemLocations.size());
+                location = unassignedShopItemLocations.get(shopLocationIndex);
+            }
+
+            if(unassignedSubweapons.isEmpty()) {
+                subweapon = ItemRandomizer.ALL_SUBWEAPONS.get(random.nextInt(ItemRandomizer.ALL_SUBWEAPONS.size()));
+            }
+            else {
+                subweapon = unassignedSubweapons.get(random.nextInt(unassignedSubweapons.size()));
+            }
+            mapOfShopInventoryItemToContents.put(location, subweapon + " Ammo");
+            unassignedShopItemLocations.remove(location);
+        }
     }
 
     @Override
@@ -183,7 +253,6 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             }
             mapOfShopInventoryItemToContents.put(uselessMapLocation, "Forbidden Treasure");
         }
-        mapOfShopInventoryItemToContents.put("Shop 12 Alt (Spring) Item 2", uselessMap);
     }
 
     public void outputLocations(int attemptNumber) throws IOException {
@@ -227,17 +296,12 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
 
                 GameDataTracker.writeLocationContents("Mobile Super X2", shopItem1);
             }
-            else if(FISH_FAIRY_SHOP_NAME.equals(shopName)) {
-                shopItem1 = "Shell Horn";
-                shopItem2 = "guild.exe";
-                shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName));
-            }
             else {
                 shopItem1 = mapOfShopInventoryItemToContents.get(String.format("%s Item 1", shopName));
                 shopItem2 = mapOfShopInventoryItemToContents.get(String.format("%s Item 2", shopName));
                 shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName));
             }
-            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, null);
+            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, new ShopItemPriceCountRandomizer(random));
         }
     }
 

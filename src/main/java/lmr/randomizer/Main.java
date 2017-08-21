@@ -28,10 +28,9 @@ public class Main {
     public static void main(String[] args) {
         if(false) {
 //            Settings.startingSeed = 1246445508;
-            Settings.setRandomizeShops(true);
             Settings.getNonRandomizedItems().add("Holy Grail");
 //            parseSettings(args);
-            Settings.setLaMulanaBaseDir("C:\\GOG Games\\La-Mulana");
+            Settings.setLaMulanaBaseDir("C:\\GOG Games\\La-Mulana", true);
             Settings.setRcdFileLocation("src/main/resources/lmr/randomizer/rcd/script.rcd.bak");
             Settings.setDatFileLocation("src/main/resources/lmr/randomizer/rcd/script_code.dat.bak");
             File directory = new File(Long.toString(Settings.getStartingSeed()));
@@ -67,7 +66,8 @@ public class Main {
         private FieldPanel fieldPanel;
         private RadioPanel radioPanel;
         private CheckboxPanel checkboxPanel;
-        private DifficultyPanel difficultyPanel;
+        private ShopRandomizationRadio shopRandomization;
+//        private DifficultyPanel difficultyPanel;
 
         public RandomizerUI() {
             try {
@@ -88,11 +88,20 @@ public class Main {
             radioPanel = new RadioPanel();
             add(radioPanel, "growx, wrap");
 
-            checkboxPanel = new CheckboxPanel();
-            add(checkboxPanel, "growx, wrap");
+            JPanel advancedSettingsPanel = new JPanel(new MigLayout("fill, aligny top", "[]", "[]"));
+            advancedSettingsPanel.setBorder(BorderFactory.createTitledBorder("Advanced Settings"));
 
-            difficultyPanel = new DifficultyPanel();
-            add(difficultyPanel, "growx, wrap");
+
+            checkboxPanel = new CheckboxPanel();
+            advancedSettingsPanel.add(checkboxPanel, "wrap");
+
+            shopRandomization = new ShopRandomizationRadio();
+            advancedSettingsPanel.add(shopRandomization, "wrap");
+
+            add(advancedSettingsPanel, "growx, wrap");
+
+//            difficultyPanel = new DifficultyPanel();
+//            add(difficultyPanel, "growx, aligny, wrap");
 
             add(new ButtonPanel(this), "grow");
             pack();
@@ -115,8 +124,11 @@ public class Main {
             fieldPanel.updateSettings();
             radioPanel.updateSettings();
             checkboxPanel.updateSettings();
-            difficultyPanel.updateSettings();
+            shopRandomization.updateSettings();
+//            difficultyPanel.updateSettings();
             Settings.saveSettings();
+
+            DataFromFile.clearAllData();
 
             fieldPanel.rerollRandomSeed();
 
@@ -261,7 +273,7 @@ public class Main {
         public void updateSettings() {
             try {
                 Settings.setStartingSeed(Integer.parseInt(seedNumber.getText()));
-                Settings.setLaMulanaBaseDir(laMulanaDirectory.getText());
+                Settings.setLaMulanaBaseDir(laMulanaDirectory.getText(), true);
             }
             catch (Exception ex) {
                 FileUtils.log("unable to save edit for seedNumber");
@@ -318,14 +330,11 @@ public class Main {
     static class CheckboxPanel extends JPanel {
         private JCheckBox enableGlitches;
         private JCheckBox fullItemAccess;
-        private JCheckBox randomizeShops;
-        private JCheckBox initialSubweapon;
         private JCheckBox randomizeForbiddenTreasure;
         private JCheckBox requireSoftwareComboForKeyFairy;
 
         public CheckboxPanel() {
             super(new MigLayout("wrap 2", "[sizegroup checkboxes]", "[]2[]"));
-            setBorder(BorderFactory.createTitledBorder("Advanced Settings"));
 
             fullItemAccess = new JCheckBox("Require 100% item accessibility");
             fullItemAccess.setSelected(Settings.isFullItemAccess());
@@ -334,14 +343,6 @@ public class Main {
             enableGlitches = new JCheckBox("Enable glitched requirements");
             enableGlitches.setSelected(Settings.isAllowGlitches());
             add(enableGlitches);
-
-            randomizeShops = new JCheckBox("Enable shop randomization");
-            randomizeShops.setSelected(Settings.isRandomizeShops());
-            add(randomizeShops);
-
-            initialSubweapon = new JCheckBox("Guarantee initially accessible subweapon");
-            initialSubweapon.setSelected(Settings.isGuaranteeSubweapon());
-            add(initialSubweapon);
 
             requireSoftwareComboForKeyFairy = new JCheckBox("Require software combo for key fairies");
             requireSoftwareComboForKeyFairy.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
@@ -353,17 +354,10 @@ public class Main {
         }
 
         public void updateSettings() {
-            Settings.setAllowGlitches(enableGlitches.isSelected());
-            Settings.setGuaranteeSubweapon(initialSubweapon.isSelected());
-
-            if(Settings.isRandomizeShops() != randomizeShops.isSelected()
-                    || Settings.isRequireSoftwareComboForKeyFairy() != requireSoftwareComboForKeyFairy.isSelected()) {
-                DataFromFile.clearRequirementsData();
-            }
-            Settings.setFullItemAccess(fullItemAccess.isSelected());
-            Settings.setRandomizeShops(randomizeShops.isSelected());
-            Settings.setRequireSoftwareComboForKeyFairy(requireSoftwareComboForKeyFairy.isSelected());
-            Settings.setRandomizeForbiddenTreasure(randomizeForbiddenTreasure.isSelected());
+            Settings.setAllowGlitches(enableGlitches.isSelected(), true);
+            Settings.setFullItemAccess(fullItemAccess.isSelected(), true);
+            Settings.setRequireSoftwareComboForKeyFairy(requireSoftwareComboForKeyFairy.isSelected(), true);
+            Settings.setRandomizeForbiddenTreasure(randomizeForbiddenTreasure.isSelected(), true);
         }
     }
 
@@ -407,8 +401,50 @@ public class Main {
                     addArgItemUI(nonRandomizedItems, itemRadio.getItemName());
                 }
             }
-            Settings.setInitiallyAvailableItems(initiallyAvailableItems);
-            Settings.setNonRandomizedItems(nonRandomizedItems);
+            Settings.setInitiallyAvailableItems(initiallyAvailableItems, true);
+            Settings.setNonRandomizedItems(nonRandomizedItems, true);
+        }
+    }
+
+    static class ShopRandomizationRadio extends JPanel {
+        private ButtonGroup shopRandomization;
+
+        public ShopRandomizationRadio() {
+            super(new MigLayout("fillx"));
+
+            add(new JLabel("Shop Randomization: ", JLabel.LEFT));
+
+            shopRandomization = new ButtonGroup();
+
+            JRadioButton shopNoRandomization = new JRadioButton("None");
+            shopNoRandomization.setActionCommand("NONE");
+            shopRandomization.add(shopNoRandomization);
+
+            JRadioButton shopCategorizedRandomization = new JRadioButton("Unique items only");
+            shopCategorizedRandomization.setActionCommand("CATEGORIZED");
+            shopRandomization.add(shopCategorizedRandomization);
+
+            JRadioButton shopEverythingRandomization = new JRadioButton("All items");
+            shopEverythingRandomization.setActionCommand("EVERYTHING");
+            shopRandomization.add(shopEverythingRandomization);
+
+            add(shopNoRandomization);
+            add(shopCategorizedRandomization);
+            add(shopEverythingRandomization);
+
+            if(ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
+                shopNoRandomization.setSelected(true);
+            }
+            else if(ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())) {
+                shopCategorizedRandomization.setSelected(true);
+            }
+            else {
+                shopEverythingRandomization.setSelected(true);
+            }
+        }
+
+        public void updateSettings() {
+            Settings.setShopRandomization(shopRandomization.getSelection().getActionCommand(), true);
         }
     }
 
@@ -448,15 +484,13 @@ public class Main {
         }
 
         public void updateSettings() {
-            Settings.setBossDifficulty(difficultySetting.getSelection().getActionCommand());
+            Settings.setBossDifficulty(difficultySetting.getSelection().getActionCommand(), true);
         }
     }
 
     private static void doTheThing() {
         Random random = new Random(Settings.getStartingSeed());
         Set<String> initiallyAvailableItems = getInitiallyAvailableItems();
-        List<String> subweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
-        subweapons.removeAll(DataFromFile.getNonRandomizedItems());
 
         int attempt = 0;
         while(true) {
@@ -465,16 +499,9 @@ public class Main {
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer);
 
-            String initialSubweapon = null;
-            if(Settings.isGuaranteeSubweapon() && !subweapons.isEmpty()) {
-                initialSubweapon = subweapons.get(random.nextInt(subweapons.size())); // todo: if this isn't a thing that can be placed, problems.
-            }
-            shopRandomizer.determineItemTypes(random, initialSubweapon);
-
-            List<String> initiallyAvailableItemsTemp = new ArrayList<>(initiallyAvailableItems);
-            initiallyAvailableItemsTemp.add(initialSubweapon);
             itemRandomizer.placeNonRandomizedItems();
             shopRandomizer.placeNonRandomizedItems();
+            shopRandomizer.determineItemTypes(random);
             if(!itemRandomizer.placeRequiredItems(new ArrayList<>(initiallyAvailableItems), random)) {
                 continue;
             }
@@ -557,14 +584,18 @@ public class Main {
 
     private static ShopRandomizer buildShopRandomizer(ItemRandomizer itemRandomizer) {
         ShopRandomizer shopRandomizer;
-        if(Settings.isRandomizeShops()) {
+        if(ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
+            shopRandomizer = new StaticShopRandomizer(itemRandomizer.getTotalShopItems());
+        }
+        else if(ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())) {
             shopRandomizer = new CategorizedShopRandomizer();
         }
         else {
-            shopRandomizer = new StaticShopRandomizer(itemRandomizer.getTotalShopItems());
+            shopRandomizer = new EverythingShopRandomizer();
         }
 
         itemRandomizer.setShopRandomizer(shopRandomizer);
+        shopRandomizer.setItemRandomizer(itemRandomizer);
         return shopRandomizer;
     }
 
@@ -574,18 +605,11 @@ public class Main {
         accessChecker.setShopRandomizer(shopRandomizer);
         itemRandomizer.setAccessChecker(accessChecker);
         shopRandomizer.setAccessChecker(accessChecker);
-        shopRandomizer.setItemRandomizer(itemRandomizer);
         return accessChecker;
     }
 
     private static Set<String> getInitiallyAvailableItems() {
         Set<String> noRequirementItems = new HashSet<>(Settings.getInitiallyAvailableItems());
-//        if(Settings.randomizeShops) {
-//            noRequirementItems.add("Hand Scanner");
-//            noRequirementItems.add("reader.exe");
-//            noRequirementItems.add("Hermes' Boots");
-//            noRequirementItems.add("Helmet");
-//        }
         noRequirementItems.removeAll(DataFromFile.getNonRandomizedItems());
         return noRequirementItems;
     }

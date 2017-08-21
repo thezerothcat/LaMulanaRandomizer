@@ -3,6 +3,7 @@ package lmr.randomizer.rcd;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
+import lmr.randomizer.ShopRandomizationEnum;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.GameDataTracker;
 
@@ -81,7 +82,7 @@ public final class RcdReader {
 
         boolean keepObject = true;
         if (obj.getId() == 0x0b) {
-            if(Settings.isRandomizeShops()) {
+            if(!ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
                 // Get rid of timer objects related to purchasing the pre-randomized item
                 for (WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
                     if (isRandomizedShopItem(flagUpdate.getIndex())) {

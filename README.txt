@@ -15,7 +15,7 @@ If you want to play the non-randomized game, there's a Restore button in the UI 
 
 1.6:
 -----------------------------
-Added remaining shops, Diary, Mulana Talisman, Book of the Dead, Key Sword, xmailer.exe, and remaining shops to randomization. Added the ability to generate seeds where not all items are accessible. UI improvement work done by Goost.
+Added non-categorized shop randomization. Added remaining shops, Diary, Mulana Talisman, Book of the Dead, Key Sword, and xmailer.exe to randomization. Added the ability to generate seeds where not all items are accessible. UI improvement work done by Goost.
 
 
 1.5:
