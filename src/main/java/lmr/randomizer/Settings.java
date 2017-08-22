@@ -41,6 +41,9 @@ public final class Settings {
         bossDifficulty = BossDifficulty.HARD;
         shopRandomization = ShopRandomizationEnum.EVERYTHING;
 
+        nonRandomizedItems.add("Holy Grail");
+        nonRandomizedItems.add("Hermes' Boots");
+
         for(String filename : Arrays.asList("C:\\Games\\La-Mulana Remake 1.3.3.1", "C:\\GOG Games\\La-Mulana", "C:\\GOG Games\\La-Mulana",
                 "C:\\Steam\\steamapps\\common\\La-Mulana", "C:\\Program Files (x86)\\Steam\\steamapps\\common\\La-Mulana",
                 "C:\\Program Files\\Steam\\steamapps\\common\\La-Mulana")) {

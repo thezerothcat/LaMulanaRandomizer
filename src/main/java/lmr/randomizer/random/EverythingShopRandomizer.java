@@ -21,6 +21,7 @@ public class EverythingShopRandomizer implements ShopRandomizer {
     private static final String MSX_SHOP_NAME = "Shop 2 Alt (Surface)";
     private static final String NON_MSX_SHOP_NAME = "Shop 2 (Surface)";
     private static final String FISH_FAIRY_SHOP_NAME = "Shop 12 Alt (Spring)";
+    private static final String LITTLE_BROTHER_SHOP_NAME = "Shop 18 (Lil Bro)";
 
     private AccessChecker accessChecker;
     private ItemRandomizer itemRandomizer; // Not needed for this version of the randomizer?
@@ -143,10 +144,11 @@ public class EverythingShopRandomizer implements ShopRandomizer {
     }
 
     private void assignWeights(Random random) {
-        String surfaceWeightsLocation = placeSurfaceWeights(random);
+        String surfaceWeightsLocation = placeGuaranteedWeights(random);
         String surfaceWeightsShop = surfaceWeightsLocation.substring(0, surfaceWeightsLocation.indexOf(")") + 1);
 
         List<String> shopsWithNoWeights = new ArrayList<>(randomizedShops);
+        shopsWithNoWeights.remove(LITTLE_BROTHER_SHOP_NAME);
         shopsWithNoWeights.remove(surfaceWeightsShop);
         if(MSX_SHOP_NAME.equals(surfaceWeightsShop)) {
             shopsWithNoWeights.remove(NON_MSX_SHOP_NAME);
@@ -194,21 +196,33 @@ public class EverythingShopRandomizer implements ShopRandomizer {
         }
     }
 
-    private String placeSurfaceWeights(Random random) {
-        List<String> surfaceShopLocations = new ArrayList<>();
+    private String placeGuaranteedWeights(Random random) {
+        // Guarantee weight shop on the Surface
+        List<String> guaranteedWeightShopLocations = new ArrayList<>();
         for(String location : unassignedShopItemLocations) {
             if(location.contains("Surface") && !location.equals(MSX_SHOP_NAME + " Item 1")) {
-                surfaceShopLocations.add(location);
+                guaranteedWeightShopLocations.add(location);
             }
         }
-        String surfaceWeightsLocation = surfaceShopLocations.get(random.nextInt(surfaceShopLocations.size()));
+        String surfaceWeightsLocation = guaranteedWeightShopLocations.get(random.nextInt(guaranteedWeightShopLocations.size()));
         mapOfShopInventoryItemToContents.put(surfaceWeightsLocation, "Weights");
         unassignedShopItemLocations.remove(surfaceWeightsLocation);
+
+        // Guarantee weights at Little Brother's shop so there's a guaranteed way to unlock Big Brother's shop.
+        guaranteedWeightShopLocations.clear();
+        for(String location : unassignedShopItemLocations) {
+            if(location.contains(LITTLE_BROTHER_SHOP_NAME)) {
+                guaranteedWeightShopLocations.add(location);
+            }
+        }
+        String littleBrotherShopWeightsLocation = guaranteedWeightShopLocations.get(random.nextInt(guaranteedWeightShopLocations.size()));
+        mapOfShopInventoryItemToContents.put(littleBrotherShopWeightsLocation, "Weights");
+        unassignedShopItemLocations.remove(littleBrotherShopWeightsLocation);
         return surfaceWeightsLocation;
     }
 
     private int getWeightCount(Random random) {
-        int maxAdditionalWeights = Math.min(randomizedShops.size() - 2,
+        int maxAdditionalWeights = Math.min(randomizedShops.size() - 3,
                 unassignedShopItemLocations.size() - ItemRandomizer.ALL_SUBWEAPONS.size() - itemRandomizer.getTotalShopItems()); // Must have enough room for all shop items plus one of each ammo type plus one weight. The remaining ammo to weights ratio can be random.
         if(maxAdditionalWeights < 0) {
             maxAdditionalWeights = 0;
