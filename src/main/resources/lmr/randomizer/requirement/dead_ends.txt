@@ -1,0 +1,7 @@
+Event: Ellmac Defeated => Holy Grail
+Event: Ellmac Defeated => Twin Statue
+Event: Ellmac Defeated => Glitch: Raindrop
+Location: Tower of Ruin [Illusion] => Holy Grail
+Location: Tower of Ruin [Illusion] => Birth Seal
+Location: Tower of Ruin [Illusion] => Earth Spear, Bronze Mirror, Event: Bahamut Defeated
+Location: Tower of Ruin [Illusion] => Bronze Mirror, Event: Bahamut Defeated, Glitch: Raindrop

@@ -185,6 +185,12 @@ public final class RcdReader {
                 keepObject = false;
             }
         }
+        else if (obj.getId() == 0x00) {
+            // Pots - update to 1.3 position and then return (no need to add tracking)
+            objectContainer.getObjects().add(obj);
+            PotMover.updateLocation(obj);
+            return rcdByteIndex;
+        }
 
         if(keepObject) {
             objectContainer.getObjects().add(obj);
@@ -243,7 +249,7 @@ public final class RcdReader {
         int rcdByteIndex = 2; // Seems we skip the first two bytes?
 
         List<Zone> zones = new ArrayList<>();
-
+        PotMover.init();
         for (int zoneIndex = 0; zoneIndex < 26; zoneIndex++) {
             Zone zone = new Zone();
             zone.setZoneIndex(zoneIndex);
@@ -374,6 +380,7 @@ public final class RcdReader {
             }
             zones.add(zone);
         }
+        PotMover.addRemovedPots();
         return zones;
     }
 }

@@ -53,7 +53,15 @@ public class AccessChecker {
 
     public boolean isSuccess() {
         if(Settings.isFullItemAccess()) {
-            return mapOfNodeNameToRequirementsObject.isEmpty();
+            if(mapOfNodeNameToRequirementsObject.isEmpty()) {
+                return true;
+            }
+            for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
+                if(!nodeName.startsWith("Glitch:")) {
+                    return false;
+                }
+            }
+            return true;
         }
         if(mapOfNodeNameToRequirementsObject.isEmpty()) {
             return false;
@@ -154,9 +162,8 @@ public class AccessChecker {
                 queuedUpdates.add(item);
                 break;
             case MAP_LOCATION:
-                queuedUpdates.add(nodeName);
-                break;
             case EVENT:
+            case GLITCH:
                 queuedUpdates.add(nodeName);
                 break;
             case SHOP:

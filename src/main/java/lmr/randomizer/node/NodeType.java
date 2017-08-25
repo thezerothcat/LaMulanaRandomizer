@@ -7,5 +7,6 @@ public enum NodeType {
     ITEM_LOCATION,
     MAP_LOCATION,
     EVENT,
-    SHOP
+    SHOP,
+    GLITCH
 }

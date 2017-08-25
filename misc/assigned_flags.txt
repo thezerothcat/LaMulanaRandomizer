@@ -6,7 +6,6 @@ Fake Silver Shield world flag: a90
 guild.exe replacement world flag: a91
 Anchor world flag: a92
 
-
 Xelpud Talisman convos: aec
 Xelpud Mulana Talisman convos: aed
 Shrine map sound effect played flag: aee

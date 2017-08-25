@@ -66,6 +66,7 @@ public class Main {
         private FieldPanel fieldPanel;
         private RadioPanel radioPanel;
         private CheckboxPanel checkboxPanel;
+        private GlitchPanel glitchPanel;
         private ShopRandomizationRadio shopRandomization;
 //        private DifficultyPanel difficultyPanel;
 
@@ -88,17 +89,18 @@ public class Main {
             radioPanel = new RadioPanel();
             add(radioPanel, "growx, wrap");
 
-            JPanel advancedSettingsPanel = new JPanel(new MigLayout("fill, aligny top", "[]", "[]"));
+            JPanel advancedSettingsPanel = new JPanel(new MigLayout("fill, aligny top, wrap", "[]", "[]"));
             advancedSettingsPanel.setBorder(BorderFactory.createTitledBorder("Advanced Settings"));
-
 
             checkboxPanel = new CheckboxPanel();
             advancedSettingsPanel.add(checkboxPanel, "wrap");
 
             shopRandomization = new ShopRandomizationRadio();
             advancedSettingsPanel.add(shopRandomization, "wrap");
-
             add(advancedSettingsPanel, "growx, wrap");
+
+            glitchPanel = new GlitchPanel();
+            add(glitchPanel, "growx, wrap");
 
 //            difficultyPanel = new DifficultyPanel();
 //            add(difficultyPanel, "growx, aligny, wrap");
@@ -124,6 +126,7 @@ public class Main {
             fieldPanel.updateSettings();
             radioPanel.updateSettings();
             checkboxPanel.updateSettings();
+            glitchPanel.updateSettings();
             shopRandomization.updateSettings();
 //            difficultyPanel.updateSettings();
             Settings.saveSettings();
@@ -328,9 +331,9 @@ public class Main {
     }
 
     static class CheckboxPanel extends JPanel {
-        private JCheckBox enableGlitches;
         private JCheckBox fullItemAccess;
         private JCheckBox randomizeForbiddenTreasure;
+        private JCheckBox enableDamageBoostRequirements;
         private JCheckBox requireSoftwareComboForKeyFairy;
 
         public CheckboxPanel() {
@@ -340,9 +343,9 @@ public class Main {
             fullItemAccess.setSelected(Settings.isFullItemAccess());
             add(fullItemAccess);
 
-            enableGlitches = new JCheckBox("Enable glitched requirements");
-            enableGlitches.setSelected(Settings.isAllowGlitches());
-            add(enableGlitches);
+            enableDamageBoostRequirements = new JCheckBox("Allow damage-boosting requirements");
+            enableDamageBoostRequirements.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
+            add(enableDamageBoostRequirements);
 
             requireSoftwareComboForKeyFairy = new JCheckBox("Require software combo for key fairies");
             requireSoftwareComboForKeyFairy.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
@@ -354,10 +357,37 @@ public class Main {
         }
 
         public void updateSettings() {
-            Settings.setAllowGlitches(enableGlitches.isSelected(), true);
             Settings.setFullItemAccess(fullItemAccess.isSelected(), true);
             Settings.setRequireSoftwareComboForKeyFairy(requireSoftwareComboForKeyFairy.isSelected(), true);
             Settings.setRandomizeForbiddenTreasure(randomizeForbiddenTreasure.isSelected(), true);
+            Settings.setEnableDamageBoostRequirements(enableDamageBoostRequirements.isSelected(), true);
+        }
+    }
+
+    static class GlitchPanel extends JPanel {
+        private List<JCheckBox> glitchOptions = new ArrayList<>();
+
+        public GlitchPanel() {
+            super(new MigLayout("fillx, wrap 4", "[sizegroup checkboxes]", "[]4[]"));
+            setBorder(BorderFactory.createTitledBorder("Glitch Settings"));
+
+            for(String availableGlitch : DataFromFile.getAvailableGlitches()) {
+                JCheckBox glitchCheckbox = new JCheckBox(availableGlitch);
+                glitchCheckbox.setSelected(Settings.getEnabledGlitches().contains(availableGlitch));
+                glitchCheckbox.setActionCommand(availableGlitch);
+                glitchOptions.add(glitchCheckbox);
+                add(glitchCheckbox);
+            }
+        }
+
+        public void updateSettings() {
+            List<String> enabledGlitches = new ArrayList<>();
+            for(JCheckBox glitchOption : glitchOptions) {
+                if(glitchOption.isSelected()) {
+                    enabledGlitches.add(glitchOption.getActionCommand());
+                }
+            }
+            Settings.setEnabledGlitches(enabledGlitches, true);
         }
     }
 
@@ -511,6 +541,9 @@ public class Main {
 
             boolean ankhJewelLock = false;
             accessChecker.computeAccessibleNodes("None");
+            for(String enabledGlitch : Settings.getEnabledGlitches()) {
+                accessChecker.computeAccessibleNodes("Setting: " + enabledGlitch);
+            }
             if(accessChecker.updateForBosses(attempt)) {
                 while(!accessChecker.getQueuedUpdates().isEmpty()) {
                     accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next());
@@ -562,9 +595,7 @@ public class Main {
                     FileUtils.log("Method: " + ex.getStackTrace()[1].getMethodName());
                     FileUtils.log("Line: " + ex.getStackTrace()[1].getLineNumber());
                     return;
-                    // No exception handling in v1
                 }
-
             }
             try {
 //                accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);

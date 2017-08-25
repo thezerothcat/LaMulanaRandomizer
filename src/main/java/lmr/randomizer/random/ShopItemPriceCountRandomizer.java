@@ -149,7 +149,7 @@ public class ShopItemPriceCountRandomizer {
             return (short)(40 + 5 * random.nextInt(3));
         }
         if(itemName.equals("Hermes' Boots") || itemName.equals("Feather") || itemName.equals("Holy Grail")
-                || ("Grapple Claw".equals(itemName) && Settings.isAllowGlitches())) {
+                || ("Grapple Claw".equals(itemName) && Settings.getEnabledGlitches().contains("Raindrop"))) {
             // 30-80, in increments of 10
             return (short)(30 + 10 * random.nextInt(5));
         }

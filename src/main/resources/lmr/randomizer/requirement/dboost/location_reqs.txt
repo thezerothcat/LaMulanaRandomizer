@@ -1,1 +1,4 @@
-Graveyard of the Giants [East] => Location: Graveyard of the Giants [West], Bomb, Ring
+Location: Graveyard of the Giants [East] => Location: Graveyard of the Giants [West], Bomb, Ring
+Location: Tower of Ruin [Grail] => Location: Tower of Ruin [Lower], Event: Thunderbird Defeated
+Location: Inferno Cavern [Viy] => Location: Tower of Ruin [Lower], Glitch: Raindrop, Bronze Mirror, Event: Bahamut Defeated
+Location: Inferno Cavern [Viy] => Location: Tower of Ruin [Lower], Earth Spear, Bronze Mirror, Event: Bahamut Defeated

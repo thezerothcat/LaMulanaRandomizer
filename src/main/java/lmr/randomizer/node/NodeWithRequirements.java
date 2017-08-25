@@ -17,6 +17,9 @@ public class NodeWithRequirements {
         else if(name.startsWith("Location:")) {
             type = NodeType.MAP_LOCATION;
         }
+        else if(name.startsWith("Glitch:")) {
+            type = NodeType.GLITCH;
+        }
         else if(name.contains("Shop")) {
             type = NodeType.SHOP;
         }

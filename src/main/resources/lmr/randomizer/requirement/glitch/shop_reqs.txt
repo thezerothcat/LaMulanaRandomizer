@@ -1,5 +1,6 @@
-Shop 8 (Sun) => None
-Shop 11 (Moonlight) => Location: Temple of Moonlight [Lower], Hermes' Boots, Grapple Claw
-Shop 11 (Moonlight) => Location: Temple of Moonlight [Lower], Birth Seal
-Shop 21 (Unsolvable) => Hermes' Boots, Grapple Claw, Event: Zu Defeated,
-Shop 21 (Unsolvable) => Hermes' Boots, Grapple Claw, Lamp of Time
+Shop 8 (Sun) => Glitch: Cat Pause
+Shop 11 (Moonlight) => Location: Temple of Moonlight [Lower], Glitch: Raindrop, Glitch: Cat Pause
+Shop 11 (Moonlight) => Location: Temple of Moonlight [Lower], Glitch: Raindrop, Bomb
+Shop 11 (Moonlight) => Location: Temple of Moonlight [Lower], Birth Seal, Glitch: Cat Pause
+Shop 21 (Unsolvable) => Event: Zu Defeated, Glitch: Raindrop
+Shop 21 (Unsolvable) => Glitch: Lamp Glitch, Glitch: Raindrop

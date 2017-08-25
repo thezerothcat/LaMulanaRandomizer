@@ -1,2 +1,2 @@
 Moonlight => Chakram
-Goddess (Shield) => Location: Tower of the Goddess [Grail]
+Goddess (Shield) => Location: Tower of the Goddess [Grail], Glitch: Cat Pause

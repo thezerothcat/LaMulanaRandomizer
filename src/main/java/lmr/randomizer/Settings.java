@@ -14,10 +14,12 @@ public final class Settings {
 
     private boolean changed = false;
 
-    private boolean allowGlitches;
     private boolean fullItemAccess;
     private boolean requireSoftwareComboForKeyFairy;
+    private boolean enableDamageBoostRequirements;
     private boolean randomizeForbiddenTreasure;
+
+    private List<String> enabledGlitches = new ArrayList<>();
 
     private String laMulanaBaseDir = null;
     private String rcdFileLocation = null;
@@ -33,9 +35,9 @@ public final class Settings {
         startingSeed = new Random().nextInt(Integer.MAX_VALUE);
         laMulanaBaseDir = "Please enter your La-Mulana install directory";
 
-        allowGlitches = false;
         fullItemAccess = false;
         randomizeForbiddenTreasure = true;
+        enableDamageBoostRequirements = false;
         requireSoftwareComboForKeyFairy = true;
 
         bossDifficulty = BossDifficulty.HARD;
@@ -59,10 +61,6 @@ public final class Settings {
 
     public static long getStartingSeed() {
         return singleton.startingSeed;
-    }
-
-    public static boolean isAllowGlitches() {
-        return singleton.allowGlitches;
     }
 
     public static boolean isRequireSoftwareComboForKeyFairy() {
@@ -105,11 +103,12 @@ public final class Settings {
         return singleton.fullItemAccess;
     }
 
-    public static void setAllowGlitches(boolean allowGlitches, boolean update) {
-        if(update && allowGlitches != singleton.allowGlitches) {
-            singleton.changed = true;
-        }
-        singleton.allowGlitches = allowGlitches;
+    public static boolean isEnableDamageBoostRequirements() {
+        return singleton.enableDamageBoostRequirements;
+    }
+
+    public static List<String> getEnabledGlitches() {
+        return singleton.enabledGlitches;
     }
 
     public static void setRequireSoftwareComboForKeyFairy(boolean requireSoftwareComboForKeyFairy, boolean update) {
@@ -117,6 +116,13 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.requireSoftwareComboForKeyFairy = requireSoftwareComboForKeyFairy;
+    }
+
+    public static void setEnableDamageBoostRequirements(boolean enableDamageBoostRequirements, boolean update) {
+        if(update && enableDamageBoostRequirements != singleton.enableDamageBoostRequirements) {
+            singleton.changed = true;
+        }
+        singleton.enableDamageBoostRequirements = enableDamageBoostRequirements;
     }
 
     public static void setRandomizeForbiddenTreasure(boolean randomizeForbiddenTreasure, boolean update) {
@@ -149,6 +155,17 @@ public final class Settings {
         }
 
         singleton.nonRandomizedItems = nonRandomizedItems;
+    }
+
+    public static void setEnabledGlitches(List<String> enabledGlitches, boolean update) {
+        if(update && !singleton.changed) {
+            if (enabledGlitches.containsAll(singleton.enabledGlitches)) {
+                singleton.changed = !singleton.enabledGlitches.containsAll(enabledGlitches);
+            } else {
+                singleton.changed = true;
+            }
+        }
+        singleton.enabledGlitches = enabledGlitches;
     }
 
     public static void setStartingSeed(int startingSeed) {

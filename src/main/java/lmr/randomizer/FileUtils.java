@@ -129,13 +129,13 @@ public class FileUtils {
         return listContents;
     }
 
-    public static void populateRequirements(Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject, String file, String prefix) {
+    public static void populateRequirements(Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject, String file) {
         try(BufferedReader reader = getFileReader(file)) {
             String line;
             String[] lineParts;
             while((line = reader.readLine()) != null) {
                 lineParts = line.trim().split(" => "); // delimiter
-                addNode(mapOfNodeNameToRequirementsObject, prefix == null ? lineParts[0] : (prefix + lineParts[0]), lineParts[1]);
+                addNode(mapOfNodeNameToRequirementsObject, lineParts[0], lineParts[1]);
             }
         } catch (Exception ex) {
             return;
@@ -237,19 +237,23 @@ public class FileUtils {
         }
 
         String line;
-        String[] itemAndRandomizationType;
+        String[] settingAndValue;
+        List<String> enabledGlitches = new ArrayList<>();
         while((line = reader.readLine()) != null) {
             if(line.startsWith("randomization.")) {
-                itemAndRandomizationType = line.replace("randomization.", "").split("=");
-                if("INITIAL".equals(itemAndRandomizationType[1])) {
-                    Settings.getInitiallyAvailableItems().add(itemAndRandomizationType[0]);
+                settingAndValue = line.replace("randomization.", "").split("=");
+                if("INITIAL".equals(settingAndValue[1])) {
+                    Settings.getInitiallyAvailableItems().add(settingAndValue[0]);
                 }
-                if("NONRANDOM".equals(itemAndRandomizationType[1])) {
-                    Settings.getNonRandomizedItems().add(itemAndRandomizationType[0]);
+                if("NONRANDOM".equals(settingAndValue[1])) {
+                    Settings.getNonRandomizedItems().add(settingAndValue[0]);
                 }
             }
-            else if(line.startsWith("allowGlitches")) {
-                Settings.setAllowGlitches(Boolean.valueOf(line.split("=")[1]), false);
+            else if(line.startsWith("glitches.")) {
+                settingAndValue = line.replace("glitches.", "").split("=");
+                if(Boolean.valueOf(settingAndValue[1])) {
+                    enabledGlitches.add(settingAndValue[0]);
+                }
             }
             else if(line.startsWith("shopRandomization")) {
                 Settings.setShopRandomization(line.split("=")[1], false);
@@ -259,6 +263,9 @@ public class FileUtils {
             }
             else if(line.startsWith("requireSoftwareComboForKeyFairy")) {
                 Settings.setRequireSoftwareComboForKeyFairy(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("enableDamageBoostRequirements")) {
+                Settings.setEnableDamageBoostRequirements(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeForbiddenTreasure")) {
                 Settings.setRandomizeForbiddenTreasure(Boolean.valueOf(line.split("=")[1]), false);
@@ -270,13 +277,11 @@ public class FileUtils {
                 Settings.setBossDifficulty(line.split("=")[1], false);
             }
         }
+        Settings.setEnabledGlitches(enabledGlitches, false);
     }
 
     public static void saveSettings() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("randomizer-config.txt"));
-        writer.write(String.format("allowGlitches=%s", Settings.isAllowGlitches()));
-        writer.newLine();
-
         writer.write(String.format("shopRandomization=%s", Settings.getShopRandomization().toString()));
         writer.newLine();
 
@@ -284,6 +289,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("requireSoftwareComboForKeyFairy=%s", Settings.isRequireSoftwareComboForKeyFairy()));
+        writer.newLine();
+
+        writer.write(String.format("enableDamageBoostRequirements=%s", Settings.isEnableDamageBoostRequirements()));
         writer.newLine();
 
         writer.write(String.format("randomizeForbiddenTreasure=%s", Settings.isRandomizeForbiddenTreasure()));
@@ -307,6 +315,12 @@ public class FileUtils {
             }
             writer.newLine();
         }
+
+        for(String glitchOption : DataFromFile.getAvailableGlitches()) {
+            writer.write(String.format("glitches.%s=%s", glitchOption, Settings.getEnabledGlitches().contains(glitchOption)));
+            writer.newLine();
+        }
+
         writer.flush();
         writer.close();
     }

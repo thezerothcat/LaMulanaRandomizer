@@ -25,6 +25,7 @@ public final class DataFromFile {
     private static Map<String, List<String>> mapOfShopNameToShopOriginalContents;
     private static Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject;
     private static List<String> initialShops;
+    private static List<String> availableGlitches;
     private static List<String> winRequirements;
 
     private DataFromFile() { }
@@ -126,6 +127,16 @@ public final class DataFromFile {
         return initialNonShopItemLocations;
     }
 
+    public static List<String> getAvailableGlitches() {
+        if(availableGlitches == null) {
+            availableGlitches = FileUtils.getList("all/available_glitches.txt");
+            if(availableGlitches == null) {
+                availableGlitches = new ArrayList<>(0);
+            }
+        }
+        return availableGlitches;
+    }
+
     public static Map<String, GameObjectId> getMapOfItemToUsefulIdentifyingRcdData() {
         if(mapOfItemToUsefulIdentifyingRcdData == null) {
             mapOfItemToUsefulIdentifyingRcdData = FileUtils.getRcdDataIdMap("rcd/item_args.txt");
@@ -181,19 +192,21 @@ public final class DataFromFile {
     public static Map<String, NodeWithRequirements> getMapOfNodeNameToRequirementsObject() {
         if(mapOfNodeNameToRequirementsObject == null) {
             mapOfNodeNameToRequirementsObject = new HashMap<>();
-            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/location_reqs.txt", "Location: ");
-            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/item_reqs.txt", null);
-            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/event_reqs.txt", null);
-            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/shop_reqs.txt", null);
-            if(Settings.isAllowGlitches()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/location_reqs.txt", "Location: ");
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/item_reqs.txt", null);
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/shop_reqs.txt", null);
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/location_reqs.txt");
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/item_reqs.txt");
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/event_reqs.txt");
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/shop_reqs.txt");
+            if(!Settings.getEnabledGlitches().isEmpty()) {
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/location_reqs.txt");
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/item_reqs.txt");
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/shop_reqs.txt");
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/event_reqs.txt");
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/glitch_reqs.txt");
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject,
-                    String.format("requirement/bosses/%s_reqs.txt", Settings.getBossDifficulty().name().toLowerCase()), null);
+                    String.format("requirement/bosses/%s_reqs.txt", Settings.getBossDifficulty().name().toLowerCase()));
             if(!Settings.isRequireSoftwareComboForKeyFairy()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_software_combo_for_key_fairy_reqs.txt", null);
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_software_combo_for_key_fairy_reqs.txt");
             }
         }
         return mapOfNodeNameToRequirementsObject;
@@ -201,12 +214,7 @@ public final class DataFromFile {
 
     public static List<String> getWinRequirements() {
         if(winRequirements == null && !Settings.isFullItemAccess()) {
-            if(Settings.isAllowGlitches()) {
-                winRequirements = FileUtils.getList("requirement/glitch/win_reqs.txt");
-            }
-            else {
-                winRequirements = FileUtils.getList("requirement/win_reqs.txt");
-            }
+            winRequirements = FileUtils.getList("requirement/win_reqs.txt");
         }
         return winRequirements;
     }
