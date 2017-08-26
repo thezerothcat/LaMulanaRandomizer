@@ -4,7 +4,6 @@ Event: Ellmac Defeated => Glitch: Raindrop
 Event: Viy Defeated => Holy Grail
 Event: Viy Defeated => Ice Cape
 Event: Viy Defeated => Glitch: Raindrop
-# Escape Ruin via moonlight
 Location: Temple of Moonlight [Lower] => Holy Grail
 Location: Temple of Moonlight [Lower] => Caltrops
 Location: Temple of Moonlight [Lower] => Shuriken
@@ -27,7 +26,6 @@ Location: Tower of the Goddess [Lamp] => Plane Model, Feather, Glitch: Lamp Glit
 Location: Tower of the Goddess [Lamp] => Plane Model, Feather, Bomb
 # Location: Tower of the Goddess [Lamp] => Location: Chamber of Birth [Skanda], Event: Skanda Defeated, Plane Model, Feather, Bomb
 Location: Tower of the Goddess [Lamp] => Glitch: Raindrop
-# Location: Tower of the Goddess (when backdooring with Isis' Pendant or glitching in?)
 Location: Shrine of the Mother [Main] => Holy Grail
 Location: Shrine of the Mother [Main] => Feather
 Location: Shrine of the Mother [Main] => Glitch: Raindrop
@@ -35,3 +33,4 @@ Location: Shrine of the Mother [Main] => =Location: Chamber of Extinction [Main]
 Location: Chamber of Extinction [Main] => =Origin Seal
 Location: Chamber of Extinction [Main] => Feather
 Location: Chamber of Extinction [Main] => Glitch: Raindrop
+Location: Chamber of Extinction [Main] => Glitch: Lamp Glitch
