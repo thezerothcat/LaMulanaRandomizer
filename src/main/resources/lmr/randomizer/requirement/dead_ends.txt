@@ -1,7 +1,37 @@
 Event: Ellmac Defeated => Holy Grail
 Event: Ellmac Defeated => Twin Statue
 Event: Ellmac Defeated => Glitch: Raindrop
-Location: Tower of Ruin [Illusion] => Holy Grail
-Location: Tower of Ruin [Illusion] => Birth Seal
-Location: Tower of Ruin [Illusion] => Earth Spear, Bronze Mirror, Event: Bahamut Defeated
-Location: Tower of Ruin [Illusion] => Bronze Mirror, Event: Bahamut Defeated, Glitch: Raindrop
+Event: Viy Defeated => Holy Grail
+Event: Viy Defeated => Ice Cape
+Event: Viy Defeated => Glitch: Raindrop
+# Escape Ruin via moonlight
+Location: Temple of Moonlight [Lower] => Holy Grail
+Location: Temple of Moonlight [Lower] => Caltrops
+Location: Temple of Moonlight [Lower] => Shuriken
+Location: Temple of Moonlight [Lower] => Rolling Shuriken
+Location: Temple of Moonlight [Lower] => Chakram
+Location: Temple of Moonlight [Lower] => Pistol
+Location: Temple of Moonlight [Lower] => Bomb
+Location: Temple of Moonlight [Lower] => Event: Ellmac Defeated, Bronze Mirror
+Location: Temple of Moonlight [Lower] => Glitch: Raindrop
+Location: Tower of the Goddess [Lamp] => Holy Grail
+Location: Tower of the Goddess [Lamp] => Event: Viy Defeated, Bronze Mirror
+Location: Tower of the Goddess [Lamp] => Plane Model, Fruit of Eden, Ice Cape
+Location: Tower of the Goddess [Lamp] => Plane Model, Fruit of Eden, Sacred Orb: 3
+
+Location: Tower of the Goddess [Grail] => Location: Tower of the Goddess [Lower], Feather
+Location: Tower of the Goddess [Grail] => Location: Gate of Illusion [Pot Room], Plane Model, Feather
+
+Location: Tower of the Goddess [Lamp] => Plane Model, Feather, Fruit of Eden, Location: Gate of Illusion [Middle]
+Location: Tower of the Goddess [Lamp] => Plane Model, Feather, Glitch: Lamp Glitch
+Location: Tower of the Goddess [Lamp] => Plane Model, Feather, Bomb
+# Location: Tower of the Goddess [Lamp] => Location: Chamber of Birth [Skanda], Event: Skanda Defeated, Plane Model, Feather, Bomb
+Location: Tower of the Goddess [Lamp] => Glitch: Raindrop
+# Location: Tower of the Goddess (when backdooring with Isis' Pendant or glitching in?)
+Location: Shrine of the Mother [Main] => Holy Grail
+Location: Shrine of the Mother [Main] => Feather
+Location: Shrine of the Mother [Main] => Glitch: Raindrop
+Location: Shrine of the Mother [Main] => =Location: Chamber of Extinction [Main]
+Location: Chamber of Extinction [Main] => =Origin Seal
+Location: Chamber of Extinction [Main] => Feather
+Location: Chamber of Extinction [Main] => Glitch: Raindrop
