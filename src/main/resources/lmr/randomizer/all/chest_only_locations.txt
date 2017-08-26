@@ -1,0 +1,72 @@
+Ankh Jewel (Dimensional Corridor)
+Ankh Jewel (Gate of Guidance)
+Ankh Jewel (Mausoleum of the Giants)
+Ankh Jewel (Spring in the Sky)
+Ankh Jewel (Temple of the Sun)
+Ankh Jewel (Tower of Ruin)
+Ankh Jewel (Twin Labyrinths)
+Birth Seal
+bounce.exe
+Bronze Mirror
+Cog of the Soul
+Crucifix
+Crystal Skull
+Death Seal
+Diary
+Dimensional Key
+Djed Pillar
+Eye of Truth
+Fairy Clothes
+Feather
+Fruit of Eden
+Gauntlet
+Glove
+Grapple Claw
+Holy Grail
+Ice Cape
+Isis' Pendant
+Key of Eternity
+lamulana.exe
+Life Seal
+Magatama Jewel
+Map (Chamber of Birth)
+Map (Chamber of Extinction)
+Map (Dimensional Corridor)
+Map (Endless Corridor)
+Map (Gate of Guidance)
+Map (Gate of Illusion)
+Map (Graveyard of the Giants)
+Map (Inferno Cavern)
+Map (Mausoleum of the Giants)
+Map (Shrine of the Mother)
+Map (Spring in the Sky)
+Map (Temple of Moonlight)
+Map (Temple of the Sun)
+Map (Tower of Ruin)
+Map (Tower of the Goddess)
+Map (Twin Labyrinths)
+mirai.exe
+Mulana Talisman
+Origin Seal
+Perfume
+Plane Model
+Pochette Key
+Sacred Orb (Gate of Guidance)
+Sacred Orb (Chamber of Extinction)
+Sacred Orb (Dimensional Corridor)
+Sacred Orb (Mausoleum of the Giants)
+Sacred Orb (Shrine of the Mother)
+Sacred Orb (Spring in the Sky)
+Sacred Orb (Surface)
+Sacred Orb (Temple of the Sun)
+Sacred Orb (Tower of Ruin)
+Sacred Orb (Twin Labyrinths)
+Scalesphere
+Serpent Staff
+Shell Horn
+Spaulder
+Treasures
+Twin Statue
+Vessel
+Woman Statue
+yagostr.exe

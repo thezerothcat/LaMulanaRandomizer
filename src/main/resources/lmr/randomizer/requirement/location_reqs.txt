@@ -62,6 +62,7 @@ Location: Chamber of Birth [Grail] => Location: Chamber of Birth [West], Feather
 Location: Chamber of Birth [Skanda] => Location: Chamber of Birth [Grail], Hand Scanner, Chakram, Cog of the Soul, Serpent Staff
 Location: Chamber of Birth [East] => Location: Graveyard of the Giants [East]
 Location: Chamber of Birth [East] => Location: Chamber of Birth [West], Location: Gate of Illusion [Upper], Location: Gate of Illusion [Pot Room], Location: Gate of Illusion [Middle], Lamp of Time, Hand Scanner, reader.exe, Feather, Cog of the Soul, Chakram, Serpent Staff, Event: Skanda Defeated
+Location: Chamber of Birth [East] => Location: Chamber of Extinction [Teleport]
 Location: Twin Labyrinths [Loop] => None
 Location: Twin Labyrinths [Lower] => None
 Location: Twin Labyrinths [Upper] => Event: Ellmac Defeated, Twin Statue

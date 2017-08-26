@@ -1,0 +1,26 @@
+Coin: Surface (Seal)
+Coin: Surface (Ruin Path)
+Coin: Guidance (One)
+Coin: Guidance (Two)
+Coin: Guidance (Trap)
+Coin: Mausoleum => Shuriken
+Coin: Sun (Pyramid)
+Coin: Spring
+Coin: Inferno (Lava)
+Coin: Inferno (Spikes)
+Coin: Extinction
+Coin: Twin (Witches)
+Coin: Twin (Lower)
+Coin: Endless
+Coin: Shrine
+Coin: Illusion (Katana)
+Coin: Illusion (Spikes)
+Coin: Graveyard
+Coin: Moonlight
+Coin: Goddess (Shield)
+Coin: Goddess (Fairy)
+Coin: Ruin
+Coin: Birth (Ninja)
+Coin: Birth (Dance)
+Coin: Birth (Southeast)
+Coin: Dimensional
