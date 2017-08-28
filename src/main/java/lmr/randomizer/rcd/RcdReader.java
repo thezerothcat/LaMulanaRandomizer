@@ -245,7 +245,7 @@ public final class RcdReader {
     public static List<Zone> getRcdScriptInfo() throws Exception {
         String mapPath = Settings.getLaMulanaBaseDir() + "\\data\\mapdata";
 
-        byte[] rcdBytes = FileUtils.getBytes(mapPath + "\\script.rcd", true);
+        byte[] rcdBytes = FileUtils.getBytes("script.rcd.bak", true);
         int rcdByteIndex = 2; // Seems we skip the first two bytes?
 
         List<Zone> zones = new ArrayList<>();

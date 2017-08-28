@@ -22,8 +22,6 @@ public final class Settings {
     private List<String> enabledGlitches = new ArrayList<>();
 
     private String laMulanaBaseDir = null;
-    private String rcdFileLocation = null;
-    private String datFileLocation = null;
 
     private Set<String> nonRandomizedItems = new HashSet<>();
     private Set<String> initiallyAvailableItems = new HashSet<>();
@@ -73,14 +71,6 @@ public final class Settings {
 
     public static String getLaMulanaBaseDir() {
         return singleton.laMulanaBaseDir;
-    }
-
-    public static String getRcdFileLocation() {
-        return singleton.rcdFileLocation;
-    }
-
-    public static String getDatFileLocation() {
-        return singleton.datFileLocation;
     }
 
     public static Set<String> getNonRandomizedItems() {
@@ -177,14 +167,6 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.laMulanaBaseDir = laMulanaBaseDir;
-    }
-
-    public static void setRcdFileLocation(String rcdFileLocation) {
-        singleton.rcdFileLocation = rcdFileLocation;
-    }
-
-    public static void setDatFileLocation(String datFileLocation) {
-        singleton.datFileLocation = datFileLocation;
     }
 
     public static void setShopRandomization(String shopRandomization, boolean update) {

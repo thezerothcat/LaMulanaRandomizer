@@ -13,6 +13,11 @@ There are a few configurations available in the UI. Once things are configured t
 If you want to play the non-randomized game, there's a Restore button in the UI which should copy the backup files back into your La-Mulana directory.
 
 
+1.7:
+-----------------------------
+Moved steam version pots to the same locations as in 1.3 for consistency with glitch requirements. Added some glitch requirements and some damage-boost requirements.
+
+
 1.6:
 -----------------------------
 Added non-categorized shop randomization. Added remaining shops, Diary, Mulana Talisman, Book of the Dead, Key Sword, and xmailer.exe to randomization. Added the ability to generate seeds where not all items are accessible. UI improvement work done by Goost.
@@ -53,7 +58,7 @@ Adds some basic UI and file validation for the randomizer jar, so it doesn't hav
 
 Plans for future releases:
 -----------------------------
+* Coin chest randomization
 * Better handling for ankh jewel locks.
-* Randomization of more types of items, special-case items, which chests are coin chests vs item chests, etc.
-* Item requirements updates (better boss requirements, more glitch-enabled requirements, requirements involving damage boosting, etc.)
-* Shop randomization expansion (randomizing ammo, shuffling items in the place of weights/ammo)
+* Item requirements expansion (configurable boss requirements, more glitch-enabled requirements, requirements involving damage boosting, etc.)
+* Shop randomization expansion (randomizing ammo when shuffling items only)

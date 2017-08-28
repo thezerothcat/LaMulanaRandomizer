@@ -31,8 +31,6 @@ public class Main {
             Settings.getNonRandomizedItems().add("Holy Grail");
 //            parseSettings(args);
             Settings.setLaMulanaBaseDir("C:\\GOG Games\\La-Mulana", true);
-            Settings.setRcdFileLocation("src/main/resources/lmr/randomizer/rcd/script.rcd.bak");
-            Settings.setDatFileLocation("src/main/resources/lmr/randomizer/rcd/script_code.dat.bak");
             File directory = new File(Long.toString(Settings.getStartingSeed()));
             directory.mkdir();
             try {
@@ -176,8 +174,6 @@ public class Main {
                 }
             }
 
-            Settings.setRcdFileLocation("script.rcd.bak");
-            Settings.setDatFileLocation("script_code.dat.bak");
             File directory = new File(Long.toString(Settings.getStartingSeed()));
             directory.mkdir();
 

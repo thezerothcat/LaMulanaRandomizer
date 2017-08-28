@@ -203,6 +203,11 @@ public final class DataFromFile {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/event_reqs.txt");
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/glitch_reqs.txt");
             }
+            if(Settings.isEnableDamageBoostRequirements()) {
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/location_reqs.txt");
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/item_reqs.txt");
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/shop_reqs.txt");
+            }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject,
                     String.format("requirement/bosses/%s_reqs.txt", Settings.getBossDifficulty().name().toLowerCase()));
             if(!Settings.isRequireSoftwareComboForKeyFairy()) {

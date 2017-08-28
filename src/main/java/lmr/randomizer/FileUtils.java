@@ -58,30 +58,13 @@ public class FileUtils {
     }
 
     public static byte[] getBytes(String path, boolean rcdFile) throws IOException {
-        if(rcdFile && Settings.getRcdFileLocation() != null) {
-            try {
-                return getBytesInner(Settings.getRcdFileLocation());
-            }
-            catch (IOException ex) {
-                try {
-                    return getBytesInner(path);
-                }
-                catch (Exception ex2) {
-                    System.out.println("unable to get file reader for " + path);
-                    ex.printStackTrace();
-                    return null;
-                }
-            }
+        try {
+            return getBytesInner(path);
         }
-        else {
-            try {
-                return getBytesInner(path);
-            }
-            catch (Exception ex) {
-                System.out.println("unable to get file reader for " + path);
-                ex.printStackTrace();
-                return null;
-            }
+        catch (Exception ex) {
+            System.out.println("unable to get file reader for " + path);
+            ex.printStackTrace();
+            return null;
         }
     }
 
@@ -124,7 +107,8 @@ public class FileUtils {
             }
             reader.close();
         } catch (Exception ex) {
-            return null;
+            FileUtils.log("Unable to read file " + file + ", " + ex.getMessage());
+            return new ArrayList<>(0);
         }
         return listContents;
     }
@@ -138,6 +122,7 @@ public class FileUtils {
                 addNode(mapOfNodeNameToRequirementsObject, lineParts[0], lineParts[1]);
             }
         } catch (Exception ex) {
+            FileUtils.log("Unable to read file " + file + ", " + ex.getMessage());
             return;
         }
     }
@@ -178,6 +163,7 @@ public class FileUtils {
             }
             return mapOfItemToUsefulIdentifyingRcdData;
         } catch (Exception ex) {
+            FileUtils.log("Unable to read file " + filename + ", " + ex.getMessage());
             return null;
         }
     }
@@ -193,6 +179,7 @@ public class FileUtils {
             }
             return mapOfShopNameToShopBlock;
         } catch (Exception ex) {
+            FileUtils.log("Unable to read file " + filename + ", " + ex.getMessage());
             return null;
         }
     }
@@ -215,6 +202,7 @@ public class FileUtils {
             }
             return mapOfShopNameToOriginalShopContents;
         } catch (Exception ex) {
+            FileUtils.log("Unable to read file " + filename + ", " + ex.getMessage());
             return null;
         }
     }
@@ -229,6 +217,7 @@ public class FileUtils {
             reader = new BufferedReader(new FileReader("randomizer-config.txt"));
         }
         catch (Exception ex) {
+            FileUtils.log("Unable to read settings file" + ", " + ex.getMessage());
             return;
         }
 

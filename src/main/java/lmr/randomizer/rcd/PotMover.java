@@ -178,9 +178,9 @@ public class PotMover {
                 }
             }
             else if(containingScreen.getRoomIndex() == 1 && containingScreen.getScreenIndex() == 0) {
+                templeOfMoonlightRemovedPotScreen = containingScreen;
                 if(obj.getX() == 540) {
                     templeOfMoonlightRemovedPotPresent = true;
-                    templeOfMoonlightRemovedPotScreen = containingScreen;
                 }
             }
             else if(containingScreen.getRoomIndex() == 3 && containingScreen.getScreenIndex() == 0) {
@@ -228,12 +228,12 @@ public class PotMover {
                 }
             }
             else if(containingScreen.getRoomIndex() == 7 && containingScreen.getScreenIndex() == 2) {
+                towerOfTheGoddessRemovedPotScreen = containingScreen;
                 if(obj.getX() == 1460) {
                     obj.setX(1440);
                 }
                 else if(obj.getX() == 1500) {
                     towerOfTheGoddessRemovedPotPresent = true;
-                    towerOfTheGoddessRemovedPotScreen = containingScreen;
                 }
             }
         }
