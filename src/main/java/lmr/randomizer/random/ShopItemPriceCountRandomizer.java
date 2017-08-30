@@ -19,7 +19,7 @@ public class ShopItemPriceCountRandomizer {
             "Philosopher's Ocarina", "Fruit of Eden", "Twin Statue", "Dimensional Key", "yagomap.exe", "yagostr.exe", "torude.exe",
             "mantra.exe", "Djed Pillar", "Ice Cape", "Magatama Jewel", "Woman Statue", "Maternity Statue", "Cog of the Soul",
             "Origin Seal", "Birth Seal", "Life Seal", "Death Seal", "Crystal Skull", "Dragon Bone", "Mini Doll", "Treasures",
-            "Mulana Talisman", "Diary", "Pepper", "Serpent Staff", "Talisman", "Vessel");
+            "Mulana Talisman", "Diary", "Pepper", "Serpent Staff", "Talisman", "Vessel", "Key of Eternity");
     private List<String> PROGRESSION_ITEMS_WITH_UTILITY = Arrays.asList("Book of the Dead", "Isis' Pendant", "Lamp of Time",
             "Shuriken", "Caltrops", "Rolling Shuriken", "Bomb", "Flare Gun", "Chakram", "Earth Spear", "Pistol", "Angel Shield",
             "Knife", "Key Sword", "Axe", "Katana", "Ring", "Scalesphere", "Fake Silver Shield", "Silver Shield",
@@ -137,27 +137,44 @@ public class ShopItemPriceCountRandomizer {
             return (short)(80 + 10 * random.nextInt(5));
         }
         if("Flail Whip".equals(itemName)) {
-            // 150-250, in increments of 50
-            return (short)(150 + 50 * random.nextInt(3));
+            // 200-300, in increments of 25
+            int randomRoll = random.nextInt(5);
+            if(randomRoll < 3) {
+                return 250;
+            }
+            if(randomRoll == 3) {
+                return 275;
+            }
+            return 300;
         }
         if("Chain Whip".equals(itemName)) {
-            // 100-200, in increments of 50
-            return (short)(100 + 50 * random.nextInt(3));
+            // 150-200, in increments of 10
+            return (short)(150 + 10 * random.nextInt(6));
         }
         if("reader.exe".equals(itemName)) {
             // 40-50, in increments of 5
             return (short)(40 + 5 * random.nextInt(3));
         }
         if(itemName.equals("Hermes' Boots") || itemName.equals("Feather") || itemName.equals("Holy Grail")
-                || ("Grapple Claw".equals(itemName) && Settings.getEnabledGlitches().contains("Raindrop"))) {
-            // 30-80, in increments of 10
-            return (short)(30 + 10 * random.nextInt(5));
+                || ("Grapple Claw".equals(itemName) && Settings.getEnabledGlitches().contains("Raindrop"))
+                || PROGRESSION_ITEMS.contains(itemName)) {
+            // 30-80, in increments of 10, weighted towards the middle
+            int randomRoll = random.nextInt(8);
+            if(randomRoll < 2) {
+                return 30;
+            }
+            if(randomRoll == 2) {
+                return 50;
+            }
+            if(randomRoll == 3) {
+                return 60;
+            }
+            if(randomRoll == 4) {
+                return 70;
+            }
+            return 80;
         }
 
-        if(PROGRESSION_ITEMS.contains(itemName)) {
-            // 10-80, in increments of 10
-            return (short)(10 + 10 * random.nextInt(8));
-        }
         if(PROGRESSION_ITEMS_WITH_UTILITY.contains(itemName)) {
             // 50-150, in increments of 5
             return (short)(50 + 5 * random.nextInt(11));

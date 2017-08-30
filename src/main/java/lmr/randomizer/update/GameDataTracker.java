@@ -447,6 +447,17 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
+                else if(flagTest.getIndex() == 171) {
+                    // Crucifix puzzle lit torches
+                    GameObjectId gameObjectId = new GameObjectId((short) 42, 171);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
             }
         } else if (gameObject.getId() == 0x0b) {
             for (WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
@@ -624,22 +635,38 @@ public final class GameDataTracker {
             }
             blocks.add(block);
 
-            Integer flagIndex = null;
+            BlockFlagData blockFlagData;
+
+            // Handle Mulana Talisman conversation flag changes.
+            Integer flagIndexOfMulanaTalisman = null;
             for(int i = 0; i < block.getBlockContents().size(); i++) {
                 BlockContents blockContents = block.getBlockContents().get(i);
                 if(blockContents instanceof BlockFlagData) {
-                    BlockFlagData blockFlagData = (BlockFlagData) blockContents;
+                    blockFlagData = (BlockFlagData) blockContents;
                     if(blockFlagData.getWorldFlag() == 261) {
                         blockFlagData.setWorldFlag((short)2797);
                         blockFlagData.setFlagValue((short)2);
-                        flagIndex = i;
+                        flagIndexOfMulanaTalisman = i;
                     }
                 }
             }
+            blockFlagData = new BlockFlagData((short)0x0040, (short)261, (short)2);
+            block.getBlockContents().add(flagIndexOfMulanaTalisman, blockFlagData);
 
-            BlockFlagData blockFlagData = new BlockFlagData((short)0x0040, (short)261, (short)2);
-
-            block.getBlockContents().add(flagIndex, blockFlagData);
+            // Get rid of Diary puzzle flag.
+            Integer flagIndexToRemove = null;
+            for(int i = 0; i < block.getBlockContents().size(); i++) {
+                BlockContents blockContents = block.getBlockContents().get(i);
+                if(blockContents instanceof BlockFlagData) {
+                    blockFlagData = (BlockFlagData) blockContents;
+                    if(blockFlagData.getWorldFlag() == 530) {
+                        flagIndexToRemove = i;
+                    }
+                }
+            }
+            if(flagIndexToRemove != null) {
+                block.getBlockContents().remove((int)flagIndexToRemove);
+            }
         }
         else if(block.getBlockNumber() == 397) {
             // Book of the Dead
@@ -659,17 +686,21 @@ public final class GameDataTracker {
             CheckBlock checkBlock = (CheckBlock)block;
 
             Integer cmdToRemoveIndex1 = null;
-            Integer cmdToRemoveIndex2 = null;
             for(int i = 0; i < checkBlock.getFlagCheckReferences().size(); i++) {
                 BlockListData blockListData = checkBlock.getFlagCheckReferences().get(i);
                 if(blockListData.getData().get(2) == 1049) {
                     cmdToRemoveIndex1 = i;
                 }
-                else if(blockListData.getData().get(2) == 371) {
+            }
+            checkBlock.getFlagCheckReferences().remove((int)cmdToRemoveIndex1);
+
+            Integer cmdToRemoveIndex2 = null;
+            for(int i = 0; i < checkBlock.getFlagCheckReferences().size(); i++) {
+                BlockListData blockListData = checkBlock.getFlagCheckReferences().get(i);
+                if(blockListData.getData().get(2) == 371) {
                     cmdToRemoveIndex2 = i;
                 }
             }
-            checkBlock.getFlagCheckReferences().remove((int)cmdToRemoveIndex1);
             checkBlock.getFlagCheckReferences().remove((int)cmdToRemoveIndex2);
 
             BlockListData blockListData = new BlockListData((short)78, (short)4);
@@ -823,6 +854,11 @@ public final class GameDataTracker {
             itemPriceAndCount = priceCountRandomizer.getItemPriceAndCount(shopItem3);
             shopBlock.getInventoryPriceList().getData().add(itemPriceAndCount.getKey());
             shopBlock.getInventoryCountList().getData().add(itemPriceAndCount.getValue());
+
+//            shopBlock.getInventoryPriceList().getData().clear();
+//            shopBlock.getInventoryPriceList().getData().add((short)1);
+//            shopBlock.getInventoryPriceList().getData().add((short)1);
+//            shopBlock.getInventoryPriceList().getData().add((short)1);
         }
 
         shopBlock.getFlagList().getData().clear();

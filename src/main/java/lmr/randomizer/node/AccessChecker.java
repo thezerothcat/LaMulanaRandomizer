@@ -188,6 +188,15 @@ public class AccessChecker {
         else if(item.contains("Sacred Orb")) {
             item = "Sacred Orb";
         }
+        else if(item.contains("Map")) {
+            // Don't put maps in conversations or torude scans, because the item-give dialog won't behave normally.
+            if(DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(location) && !"Map (Surface)".equals(location)) {
+                return false;
+            }
+            if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
+                return false;
+            }
+        }
 
         return mapOfNodeNameToRequirementsObject.get(location).canContainItem(item);
     }

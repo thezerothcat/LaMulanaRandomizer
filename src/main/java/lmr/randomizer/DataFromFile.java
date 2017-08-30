@@ -3,15 +3,16 @@ package lmr.randomizer;
 import lmr.randomizer.node.NodeWithRequirements;
 import lmr.randomizer.update.GameObjectId;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by thezerothcat on 7/20/2017.
  */
 public final class DataFromFile {
+    // todo: not hardcode this, eventually
+    public static List<String> LOCATIONS_RELATED_TO_BLOCKS = Arrays.asList("Map (Surface)", "mekuri.exe",
+            "Mini Doll", "Pepper", "Anchor", "Mulana Talisman", "xmailer.exe", "Book of the Dead");
+
     private static List<String> allShops;
     private static List<String> allItems;
     private static List<String> allNonShopItemsPlusAllRandomizedShopItems;
