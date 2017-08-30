@@ -206,23 +206,23 @@ public class AccessChecker {
     }
 
     public void outputRemaining(long startingSeed, int attemptNumber) throws IOException {
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("%s/inaccessible_%s.txt", startingSeed, attemptNumber));
-        if (writer == null) {
-            return;
-        }
+//        BufferedWriter writer = FileUtils.getFileWriter(String.format("%s/inaccessible_%s.txt", startingSeed, attemptNumber));
+//        if (writer == null) {
+//            return;
+//        }
+//
+//        NodeWithRequirements node;
+//        for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
+//            node = mapOfNodeNameToRequirementsObject.get(nodeName);
+//            for(List<String> requirementSet : node.getAllRequirements()) {
+//                writer.write(nodeName + " => " + requirementSet);
+//                writer.newLine();
+//            }
+//        }
+//        writer.flush();
+//        writer.close();
 
-        NodeWithRequirements node;
-        for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
-            node = mapOfNodeNameToRequirementsObject.get(nodeName);
-            for(List<String> requirementSet : node.getAllRequirements()) {
-                writer.write(nodeName + " => " + requirementSet);
-                writer.newLine();
-            }
-        }
-        writer.flush();
-        writer.close();
-
-        writer = FileUtils.getFileWriter(String.format("%s/missing_item_%s.txt", startingSeed, attemptNumber));
+        BufferedWriter writer = FileUtils.getFileWriter(String.format("%s/excluded_items.txt", startingSeed));
         if (writer == null) {
             return;
         }
@@ -237,17 +237,17 @@ public class AccessChecker {
         writer.close();
 
 
-        writer = FileUtils.getFileWriter(String.format("%s/accessible_%s.txt", startingSeed, attemptNumber));
-        if (writer == null) {
-            return;
-        }
-
-        for(String item : accessedNodes) {
-            writer.write(item);
-            writer.newLine();
-        }
-        writer.flush();
-        writer.close();
+//        writer = FileUtils.getFileWriter(String.format("%s/accessible_%s.txt", startingSeed, attemptNumber));
+//        if (writer == null) {
+//            return;
+//        }
+//
+//        for(String item : accessedNodes) {
+//            writer.write(item);
+//            writer.newLine();
+//        }
+//        writer.flush();
+//        writer.close();
     }
 
     public void setItemRandomizer(ItemRandomizer itemRandomizer) {

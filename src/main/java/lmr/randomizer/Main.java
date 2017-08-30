@@ -335,7 +335,7 @@ public class Main {
         public CheckboxPanel() {
             super(new MigLayout("wrap 2", "[sizegroup checkboxes]", "[]2[]"));
 
-            fullItemAccess = new JCheckBox("Require 100% item accessibility");
+            fullItemAccess = new JCheckBox("All items must be accessible (100% seed)");
             fullItemAccess.setSelected(Settings.isFullItemAccess());
             add(fullItemAccess);
 
@@ -343,11 +343,11 @@ public class Main {
             enableDamageBoostRequirements.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
             add(enableDamageBoostRequirements);
 
-            requireSoftwareComboForKeyFairy = new JCheckBox("Require software combo for key fairies");
+            requireSoftwareComboForKeyFairy = new JCheckBox("Key Fairy chests/doors expect miracle + mekuri");
             requireSoftwareComboForKeyFairy.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
             add(requireSoftwareComboForKeyFairy);
 
-            randomizeForbiddenTreasure = new JCheckBox("Include Forbidden Treasure in randomized items");
+            randomizeForbiddenTreasure = new JCheckBox("Replace random non-Shrine map with Forbidden Treasure");
             randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
             add(randomizeForbiddenTreasure);
         }
@@ -579,7 +579,9 @@ public class Main {
                     RcdWriter.writeRcd(rcdData);
                     DatWriter.writeDat(datInfo);
 
-//                    accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
+                    if(!Settings.isFullItemAccess()) {
+                        accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
+                    }
 
                     return;
                 } catch (Exception ex) {
