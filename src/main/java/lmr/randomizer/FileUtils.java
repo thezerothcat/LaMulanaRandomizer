@@ -228,14 +228,16 @@ public class FileUtils {
         String line;
         String[] settingAndValue;
         List<String> enabledGlitches = new ArrayList<>();
+        Set<String> initiallyAvailableItems = new HashSet<>();
+        Set<String> nonRandomizedItems = new HashSet<>();
         while((line = reader.readLine()) != null) {
             if(line.startsWith("randomization.")) {
                 settingAndValue = line.replace("randomization.", "").split("=");
                 if("INITIAL".equals(settingAndValue[1])) {
-                    Settings.getInitiallyAvailableItems().add(settingAndValue[0]);
+                    initiallyAvailableItems.add(settingAndValue[0]);
                 }
                 if("NONRANDOM".equals(settingAndValue[1])) {
-                    Settings.getNonRandomizedItems().add(settingAndValue[0]);
+                    nonRandomizedItems.add(settingAndValue[0]);
                 }
             }
             else if(line.startsWith("glitches.")) {
@@ -267,6 +269,8 @@ public class FileUtils {
             }
         }
         Settings.setEnabledGlitches(enabledGlitches, false);
+        Settings.setInitiallyAvailableItems(initiallyAvailableItems, false);
+        Settings.setNonRandomizedItems(nonRandomizedItems, false);
     }
 
     public static void saveSettings() throws IOException {
