@@ -20,6 +20,7 @@ import java.util.*;
 public class EverythingShopRandomizer implements ShopRandomizer {
     private static final String MSX_SHOP_NAME = "Shop 2 Alt (Surface)";
     private static final String NON_MSX_SHOP_NAME = "Shop 2 (Surface)";
+    private static final String FISH_SHOP_NAME = "Shop 12 (Spring)";
     private static final String FISH_FAIRY_SHOP_NAME = "Shop 12 Alt (Spring)";
     private static final String LITTLE_BROTHER_SHOP_NAME = "Shop 18 (Lil Bro)";
 
@@ -249,7 +250,11 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 subweapon = ItemRandomizer.ALL_SUBWEAPONS.get(random.nextInt(ItemRandomizer.ALL_SUBWEAPONS.size()));
             }
             else {
-                subweapon = unassignedSubweapons.get(random.nextInt(unassignedSubweapons.size()));
+                int unassignedSubweaponIndex = random.nextInt(unassignedSubweapons.size());
+                subweapon = unassignedSubweapons.get(unassignedSubweaponIndex);
+                if(!location.startsWith(FISH_SHOP_NAME)) {
+                    unassignedSubweapons.remove(unassignedSubweaponIndex);
+                }
             }
             mapOfShopInventoryItemToContents.put(location, subweapon + " Ammo");
             unassignedShopItemLocations.remove(location);
