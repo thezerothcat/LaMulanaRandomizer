@@ -12,6 +12,7 @@ There are a few configurations available in the UI. Once things are configured t
 
 If you want to play the non-randomized game, there's a Restore button in the UI which should copy the backup files back into your La-Mulana directory.
 
+
 1.8:
 -----------------------------
 Added Dimensional Corridor Sacred Orb to randomization. Added boss difficulty, although only a couple of bosses have difficulty requirements right now. Added some anti-requirements (mostly around getting items in untransformed Shrine). Changed some randomization logic - full-random grail should be less of a softlock risk, although things are probably more restrictive than they need to be for some areas.
