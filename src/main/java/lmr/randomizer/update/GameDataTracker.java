@@ -228,6 +228,17 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
+                else if(flagTest.getIndex() == 144) {
+                    // Temple of the Sun Ankh Jewel trap dais
+                    GameObjectId gameObjectId = new GameObjectId((short) 19, 144);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
             }
         } else if (gameObject.getId() == 0x9e) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
@@ -515,6 +526,21 @@ public final class GameDataTracker {
                 if(flagTest.getIndex() == 260) {
                     // Diary puzzle pillar
                     GameObjectId gameObjectId = new GameObjectId((short) 72, 260);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    return;
+                }
+            }
+        }
+        else if(gameObject.getId() == 0x0a) {
+            for(WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
+                if(flagUpdate.getIndex() == 143) {
+                    // Mausoleum Ankh Jewel chest trap
+                    GameObjectId gameObjectId = new GameObjectId((short) 19, 143);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());

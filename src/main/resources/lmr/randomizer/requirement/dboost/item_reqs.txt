@@ -14,3 +14,4 @@ Knife => Flare Gun
 Mini Doll => Location: Gate of Illusion [Lower], Hand Scanner, Bomb
 Mini Doll => Location: Gate of Illusion [Lower], Hand Scanner, Caltrops
 mirai.exe => Bomb
+Sacred Orb (Dimensional Corridor) => Location: Dimensional Corridor, Feather, Death Seal, Event: Tiamat Angel Shield Children Defeated

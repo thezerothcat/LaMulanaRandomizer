@@ -232,4 +232,16 @@ public class ItemRandomizer {
             }
         }
     }
+
+    public String findNameOfNodeContainingItem(String itemToLookFor) {
+        if(!mapOfItemLocationToItem.containsValue(itemToLookFor)) {
+            return shopRandomizer.findNameOfShopNodeContainingItem(itemToLookFor);
+        }
+        for(Map.Entry<String, String> itemLocationAndContents : mapOfItemLocationToItem.entrySet()) {
+            if(itemLocationAndContents.getValue().equals(itemToLookFor)) {
+                return itemLocationAndContents.getKey();
+            }
+        }
+        return null;
+    }
 }

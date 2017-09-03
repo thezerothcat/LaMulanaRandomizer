@@ -127,6 +127,34 @@ public class FileUtils {
         }
     }
 
+    public static Map<String, List<String>> getAccessibleLocations(String file) {
+        Map<String, List<String>> accessibleLocations = new HashMap<>();
+        try(BufferedReader reader = getFileReader(file)) {
+            String line;
+            String[] lineParts;
+            while((line = reader.readLine()) != null) {
+                if(line.startsWith("#")) {
+                    continue;
+                }
+                lineParts = line.trim().split(" => "); // delimiter
+                String locationString = lineParts[1];
+                if(!locationString.contains(",")) {
+                    accessibleLocations.put(lineParts[0], Arrays.asList(locationString));
+                }
+
+                List<String> locations = new ArrayList<>();
+                for(String location : locationString.split(", ?")) {
+                    locations.add(location);
+                }
+                accessibleLocations.put(lineParts[0], locations);
+            }
+            return accessibleLocations;
+        } catch (Exception ex) {
+            FileUtils.log("Unable to read file " + file + ", " + ex.getMessage());
+            return new HashMap<>(0);
+        }
+    }
+
     private static void addNode(Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject, String name, String requirementSet) {
         NodeWithRequirements node = mapOfNodeNameToRequirementsObject.get(name);
         if(node == null) {

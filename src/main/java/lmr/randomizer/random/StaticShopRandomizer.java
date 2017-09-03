@@ -91,6 +91,16 @@ public class StaticShopRandomizer implements ShopRandomizer {
     }
 
     @Override
+    public String findNameOfShopNodeContainingItem(String itemToLookFor) {
+        for(Map.Entry<String, String> shopNameAndContents : mapOfShopInventoryItemToContents.entrySet()) {
+            if(shopNameAndContents.getValue().equals(itemToLookFor)) {
+                return shopNameAndContents.getKey().substring(0, shopNameAndContents.getKey().indexOf(")") + 1);
+            }
+        }
+        return null;
+    }
+
+    @Override
     public void outputLocations(int attemptNumber) throws IOException {
         return; // Don't output anything since we didn't randomize anything
     }

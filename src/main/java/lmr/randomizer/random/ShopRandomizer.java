@@ -34,4 +34,6 @@ public interface ShopRandomizer {
     void setAccessChecker(AccessChecker accessChecker);
 
     void setItemRandomizer(ItemRandomizer itemRandomizer);
+
+    String findNameOfShopNodeContainingItem(String itemToLookFor);
 }

@@ -1,0 +1,6 @@
+Exit: Chamber of Extinction [Ankh] => Shop 16 (Extinction)
+Exit: Temple of Moonlight [Lower] => Serpent Staff, Shop 11 (Moonlight)
+Exit: Graveyard of the Giants [East] => Bomb, Woman Statue, Perfume
+Exit: Tower of the Goddess [Lower] => Map (Tower of the Goddess)
+Exit: Chamber of Extinction [Main] => Sacred Orb (Chamber of Extinction), Life Seal
+Exit: Chamber of Birth [West] => Map (Chamber of Birth), Dimensional Key, Pochette Key

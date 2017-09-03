@@ -66,7 +66,7 @@ public class Main {
         private CheckboxPanel checkboxPanel;
         private GlitchPanel glitchPanel;
         private ShopRandomizationRadio shopRandomization;
-//        private DifficultyPanel difficultyPanel;
+        private DifficultyPanel difficultyPanel;
 
         public RandomizerUI() {
             try {
@@ -100,8 +100,8 @@ public class Main {
             glitchPanel = new GlitchPanel();
             add(glitchPanel, "growx, wrap");
 
-//            difficultyPanel = new DifficultyPanel();
-//            add(difficultyPanel, "growx, aligny, wrap");
+            difficultyPanel = new DifficultyPanel();
+            add(difficultyPanel, "growx, aligny, wrap");
 
             add(new ButtonPanel(this), "grow");
             pack();
@@ -126,7 +126,7 @@ public class Main {
             checkboxPanel.updateSettings();
             glitchPanel.updateSettings();
             shopRandomization.updateSettings();
-//            difficultyPanel.updateSettings();
+            difficultyPanel.updateSettings();
             Settings.saveSettings();
 
             DataFromFile.clearAllData();
@@ -484,22 +484,22 @@ public class Main {
             add(new JLabel("Boss Difficulty: ", JLabel.LEFT));
 
             difficultySetting = new ButtonGroup();
-            JRadioButton easy = new JRadioButton("Easy");
-            easy.setActionCommand("EASY");
-            JRadioButton medium = new JRadioButton("Medium");
+//            JRadioButton easy = new JRadioButton("Easy");
+//            easy.setActionCommand("EASY");
+            JRadioButton medium = new JRadioButton("Lower");
             medium.setActionCommand("MEDIUM");
-            JRadioButton hard = new JRadioButton("Hard");
+            JRadioButton hard = new JRadioButton("Higher");
             hard.setActionCommand("HARD");
-            difficultySetting.add(easy);
+//            difficultySetting.add(easy);
             difficultySetting.add(medium);
             difficultySetting.add(hard);
 
-            add(easy);
+//            add(easy);
             add(medium);
             add(hard);
 
             if(BossDifficulty.EASY.equals(Settings.getBossDifficulty())) {
-                easy.setSelected(true);
+                medium.setSelected(true); // todo: easy is not a setting yet
             }
             else if(BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty())) {
                 medium.setSelected(true);
@@ -536,6 +536,7 @@ public class Main {
             }
 
             boolean ankhJewelLock = false;
+            accessChecker.initExitRequirements();
             accessChecker.computeAccessibleNodes("None");
             for(String enabledGlitch : Settings.getEnabledGlitches()) {
                 accessChecker.computeAccessibleNodes("Setting: " + enabledGlitch);

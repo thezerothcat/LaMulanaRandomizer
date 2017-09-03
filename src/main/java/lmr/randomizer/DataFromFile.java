@@ -25,6 +25,8 @@ public final class DataFromFile {
     private static Map<String, Integer> mapOfShopNameToShopBlock;
     private static Map<String, List<String>> mapOfShopNameToShopOriginalContents;
     private static Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject;
+    private static Map<String, NodeWithRequirements> mapOfNodeNameToExitRequirementsObject;
+    private static Map<String, List<String>> mapOfExitRequirementNodeToAccessibleNodes;
     private static List<String> initialShops;
     private static List<String> availableGlitches;
     private static List<String> winRequirements;
@@ -190,6 +192,16 @@ public final class DataFromFile {
         return mapOfShopNameToShopOriginalContents;
     }
 
+    public static Map<String, List<String>> getMapOfExitRequirementNodeToAccessibleNodes() {
+        if(mapOfExitRequirementNodeToAccessibleNodes == null) {
+            mapOfExitRequirementNodeToAccessibleNodes = FileUtils.getAccessibleLocations("requirement/accessible_from_area.txt");
+            if(mapOfExitRequirementNodeToAccessibleNodes == null) {
+                mapOfExitRequirementNodeToAccessibleNodes = new HashMap<>(0);
+            }
+        }
+        return mapOfExitRequirementNodeToAccessibleNodes;
+    }
+
     public static Map<String, NodeWithRequirements> getMapOfNodeNameToRequirementsObject() {
         if(mapOfNodeNameToRequirementsObject == null) {
             mapOfNodeNameToRequirementsObject = new HashMap<>();
@@ -197,6 +209,7 @@ public final class DataFromFile {
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/item_reqs.txt");
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/event_reqs.txt");
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/shop_reqs.txt");
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dead_ends.txt"); // todo: remove this when dead ends are handled better
             if(!Settings.getEnabledGlitches().isEmpty()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/location_reqs.txt");
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/item_reqs.txt");
@@ -217,6 +230,15 @@ public final class DataFromFile {
         }
         return mapOfNodeNameToRequirementsObject;
     }
+
+    public static Map<String, NodeWithRequirements> getMapOfNodeNameToExitRequirementsObject() {
+        if (mapOfNodeNameToExitRequirementsObject == null) {
+            mapOfNodeNameToExitRequirementsObject = new HashMap<>();
+            FileUtils.populateRequirements(mapOfNodeNameToExitRequirementsObject, "requirement/dead_ends.txt");
+        }
+        return mapOfNodeNameToExitRequirementsObject;
+    }
+
 
     public static List<String> getWinRequirements() {
         if(winRequirements == null && !Settings.isFullItemAccess()) {

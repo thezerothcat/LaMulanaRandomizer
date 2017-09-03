@@ -14,10 +14,13 @@ import java.util.*;
  * Created by thezerothcat on 7/11/2017.
  */
 public class AccessChecker {
+    private static final List<String> NODES_TO_DELAY = Arrays.asList("Anchor");
+
     private Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject = new HashMap<>();
+    private static Map<String, NodeWithRequirements> mapOfNodeNameToExitRequirementsObject;
 
     private Set<String> accessedNodes = new HashSet<>();
-    private Set<String> queuedUpdates = new HashSet<>();
+    private List<String> queuedUpdates = new ArrayList<>();
     private Set<String> accessibleBossNodes = new HashSet<>();
 
     private ItemRandomizer itemRandomizer;
@@ -25,9 +28,11 @@ public class AccessChecker {
 
     private int numberOfAccessibleAnkhJewels;
     private int numberOfAccessibleSacredOrbs;
+    private int bossesDefeated;
 
     public AccessChecker() {
         mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
+//        mapOfNodeNameToExitRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToExitRequirementsObject());
     }
 
     private static Map<String, NodeWithRequirements> copyRequirementsMap(Map<String, NodeWithRequirements> mapToCopy) {
@@ -40,14 +45,16 @@ public class AccessChecker {
 
     public AccessChecker(AccessChecker accessChecker) {
         this.mapOfNodeNameToRequirementsObject = copyRequirementsMap(accessChecker.mapOfNodeNameToRequirementsObject);
+//        this.mapOfNodeNameToExitRequirementsObject = copyRequirementsMap(accessChecker.mapOfNodeNameToExitRequirementsObject);
         this.itemRandomizer = accessChecker.itemRandomizer;
         this.shopRandomizer = accessChecker.shopRandomizer;
         this.accessedNodes = new HashSet<>(accessChecker.accessedNodes);
         this.accessibleBossNodes = new HashSet<>(accessChecker.accessibleBossNodes);
+        this.bossesDefeated = accessChecker.bossesDefeated;
         this.numberOfAccessibleAnkhJewels = accessChecker.numberOfAccessibleAnkhJewels;
     }
 
-    public Set<String> getQueuedUpdates() {
+    public List<String> getQueuedUpdates() {
         return queuedUpdates;
     }
 
@@ -86,9 +93,24 @@ public class AccessChecker {
             return;
         }
 
+        if(NODES_TO_DELAY.contains(newState) && queuedUpdates.size() > 1) {
+            // Re-add this update to the end of the queue. // todo: might want a separate queue for these things
+            queuedUpdates.remove(newState);
+            queuedUpdates.add(newState);
+            return;
+        }
         if(stateToUpdate.contains("Ankh Jewel")) {
             stateToUpdate = "Ankh Jewel";
             numberOfAccessibleAnkhJewels += 1;
+        }
+        if(stateToUpdate.contains("Amphisbaena Defeated") || stateToUpdate.contains("Sakit Defeated")
+                || stateToUpdate.contains("Ellmac Defeated") || stateToUpdate.contains("Bahamut Defeated")
+                || stateToUpdate.contains("Viy Defeated") || stateToUpdate.contains("Baphomet Defeated")
+                || stateToUpdate.contains("Palenque Defeated") || stateToUpdate.contains("Tiamat Defeated")) {
+            bossesDefeated += 1;
+            if(bossesDefeated == 8 && !accessedNodes.contains("Event: All Bosses Defeated")) {
+                computeAccessibleNodes("Event: All Bosses Defeated");
+            }
         }
         if(stateToUpdate.contains("Sacred Orb (")) {
             stateToUpdate = "Sacred Orb";
@@ -137,6 +159,27 @@ public class AccessChecker {
         }
         markBossAccessed(bossEventNodeName);
 
+        bossesDefeated += 1;
+        if(bossesDefeated == 8) {
+            // Handle special event for all bosses defeated. This must happen before we mark the final boss as defeated
+            // to ensure that items in Shrine of the Mother are recognized as no longer available.
+            mapOfNodeNameToRequirementsObject.remove("Event: All Bosses Defeated");
+
+            accessedNodes.add("Event: All Bosses Defeated");
+            NodeWithRequirements node;
+            Set<String> nodesToRemove = new HashSet<>();
+            for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
+                node = mapOfNodeNameToRequirementsObject.get(nodeName);
+                if(node.updateRequirements("Event: All Bosses Defeated")) {
+                    handleNodeAccess(nodeName, node.getType());
+                    nodesToRemove.add(nodeName);
+                }
+            }
+            for(String nodeToRemove : nodesToRemove) {
+                mapOfNodeNameToRequirementsObject.remove(nodeToRemove);
+            }
+        }
+
         String bossDefeatedNodeName = bossEventNodeName.replace("Accessible", "Defeated");
         mapOfNodeNameToRequirementsObject.remove(bossDefeatedNodeName);
 
@@ -163,6 +206,7 @@ public class AccessChecker {
                 break;
             case MAP_LOCATION:
             case EVENT:
+            case EXIT:
             case GLITCH:
                 queuedUpdates.add(nodeName);
                 break;
@@ -203,6 +247,58 @@ public class AccessChecker {
 
     public boolean isEnoughAnkhJewelsToDefeatAllAccessibleBosses() {
         return numberOfAccessibleAnkhJewels >= accessibleBossNodes.size();
+    }
+
+    public void initExitRequirements() {
+//        for(String exitNodeName : mapOfNodeNameToExitRequirementsObject.keySet()) {
+//            NodeWithRequirements exitNode = new NodeWithRequirements(exitNodeName);
+//            for(List<String> requirementSet : mapOfNodeNameToExitRequirementsObject.get(exitNodeName).getAllRequirements()) {
+//                List<String> exitNodeRequirements = new ArrayList<>();
+//                List<String> nodesToExpand = new ArrayList<>();
+//                for(String requirement : requirementSet) {
+//                    if(requirement.equals(exitNodeName)) {
+//                        continue;
+//                    }
+//                    if(DataFromFile.getAllItems().contains(requirement)) {
+//                        String itemLocation = itemRandomizer.findNameOfNodeContainingItem(requirement);
+//                        if(DataFromFile.getMapOfExitRequirementNodeToAccessibleNodes().get(exitNodeName).contains(itemLocation)) {
+//                            nodesToExpand.add(itemLocation);
+//                        }
+//                    } else {
+//                        exitNodeRequirements.add(requirement);
+//                    }
+//                }
+//                List<List<String>> newExitRequirementSets = new ArrayList<>();
+//                for(String nodeName : nodesToExpand) {
+//                    if(newExitRequirementSets.isEmpty()) {
+//                        NodeWithRequirements node = mapOfNodeNameToRequirementsObject.get(nodeName);
+//                        for (List<String> nodeRequirementSet : node.getAllRequirements()) {
+//                            List<String> newList = new ArrayList<>(exitNodeRequirements);
+//                            for(String nodeReq : nodeRequirementSet) {
+//                                if(!nodeReq.equals(exitNodeName.replace("Exit:", "Location:"))) {
+//                                    newList.add(nodeReq);
+//                                }
+//                            }
+//                            newExitRequirementSets.add(newList);
+//                        }
+//                    }
+////                    else {
+////                        NodeWithRequirements node = mapOfNodeNameToRequirementsObject.get(nodeName);
+////                        for (List<String> nodeRequirementSet : node.getAllRequirements()) {
+////                            List<String> newList = new ArrayList<>(nodeRequirementSet);
+////                            newList.addAll(exitNodeRequirements);
+////                            for(List<String> existingRequirementSet : )
+////                            newExitRequirementSets.add(newList);
+////                        }
+////                    }
+//                }
+//
+//                for(List<String> newExitRequirementSet : newExitRequirementSets) {
+//                    exitNode.addRequirementSet(newExitRequirementSet);
+//                }
+//            }
+//            mapOfNodeNameToRequirementsObject.put(exitNodeName, exitNode);
+//        }
     }
 
     public void outputRemaining(long startingSeed, int attemptNumber) throws IOException {

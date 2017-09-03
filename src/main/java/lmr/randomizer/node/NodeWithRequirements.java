@@ -20,6 +20,9 @@ public class NodeWithRequirements {
         else if(name.startsWith("Glitch:")) {
             type = NodeType.GLITCH;
         }
+        else if(name.startsWith("Exit:")) {
+            type = NodeType.EXIT;
+        }
         else if(name.contains("Shop")) {
             type = NodeType.SHOP;
         }
@@ -51,8 +54,22 @@ public class NodeWithRequirements {
         List<String> requirementSet;
         for(int i = 0; i < listOfRequirementSets.size(); i++) {
             requirementSet = listOfRequirementSets.get(i);
+            if(requirementSet.contains("!" + newState)) {
+                requirementSet.add("INACCESSIBLE");
+                return false;
+            }
             requirementSet.remove(newState);
             if(requirementSet.isEmpty()) {
+                return true;
+            }
+            boolean onlyNotRequirements = true;
+            for(String requirement : requirementSet) {
+                if(!requirement.startsWith("!")) {
+                    onlyNotRequirements = false;
+                    break;
+                }
+            }
+            if(onlyNotRequirements) {
                 return true;
             }
         }

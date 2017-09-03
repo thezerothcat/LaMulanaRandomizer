@@ -8,5 +8,6 @@ public enum NodeType {
     MAP_LOCATION,
     EVENT,
     SHOP,
-    GLITCH
+    GLITCH,
+    EXIT
 }

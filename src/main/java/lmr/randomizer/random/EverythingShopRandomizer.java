@@ -274,6 +274,16 @@ public class EverythingShopRandomizer implements ShopRandomizer {
         }
     }
 
+    @Override
+    public String findNameOfShopNodeContainingItem(String itemToLookFor) {
+        for(Map.Entry<String, String> shopNameAndContents : mapOfShopInventoryItemToContents.entrySet()) {
+            if(shopNameAndContents.getValue().equals(itemToLookFor)) {
+                return shopNameAndContents.getKey().substring(0, shopNameAndContents.getKey().indexOf(")") + 1);
+            }
+        }
+        return null;
+    }
+
     public void outputLocations(int attemptNumber) throws IOException {
         BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/shops.txt", Settings.getStartingSeed()));
         if (writer == null) {

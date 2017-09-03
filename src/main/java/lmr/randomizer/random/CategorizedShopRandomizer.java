@@ -186,6 +186,16 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         mapOfShopInventoryItemToContents.put("Shop 12 Alt (Spring) Item 2", uselessMap);
     }
 
+    @Override
+    public String findNameOfShopNodeContainingItem(String itemToLookFor) {
+        for(Map.Entry<String, String> shopNameAndContents : mapOfShopInventoryItemToContents.entrySet()) {
+            if(shopNameAndContents.getValue().equals(itemToLookFor)) {
+                return shopNameAndContents.getKey().substring(0, shopNameAndContents.getKey().indexOf(")") + 1);
+            }
+        }
+        return null;
+    }
+
     public void outputLocations(int attemptNumber) throws IOException {
         BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/shops.txt", Settings.getStartingSeed()));
         if (writer == null) {
