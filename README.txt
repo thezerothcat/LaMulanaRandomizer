@@ -2,13 +2,14 @@ WARNING: This is an alpha release! There are still a lot of missing features and
 
 When using the UI jar for the first time, MAKE SURE you have clean, non-modified copies of script.rcd and script_code.dat in your La-Mulana directory! Failure to do so often results in unwinnable seeds.
 
+
 How to use:
 -----------------------------
 The jar can be run from anywhere, and will look for common Windows install paths for La-Mulana. If it doesn't find a correct install path, you can fill yours in.
 
 The jar will look for files called script.rcd.bak and script_code.dat.bak in the current directory. If files are not found, backup copies will be created from your La-Mulana directory, so you'll want to make sure those are unmodified the first time you run the jar. If the script.rcd file is found to be modified, the program will write a warning to the log file and exit.
 
-There are a few configurations available in the UI. Once things are configured to your liking, click on the Apply button. At this point, a subdirectory will be created for the current seed number containing files for the randomized game as well as items.txt (spoiler log for the seed). The files will additionally be copied into your La-Mulana directory.
+There are a few configurations available in the UI. Once things are configured to your liking, click on the Apply button. At this point, a subdirectory will be created for the current seed number containing files for the randomized game, which will automatically be copied into your La-Mulana directory. Additonal files will also be created: items.txt and shops.txt (spoiler logs for the seed), and excluded_items.txt (list of items considered out of reach, if allowing some items to remain inaccessible)
 
 If you want to play the non-randomized game, there's a Restore button in the UI which should copy the backup files back into your La-Mulana directory.
 
