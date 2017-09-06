@@ -183,14 +183,14 @@ public class Main {
             } catch (Exception ex) {
                 FileUtils.log("Error: " + ex.getMessage());
                 ex.printStackTrace();
+                throw ex;
             }
-            FileUtils.closeAll();
         }
 
         private void generateAndApply() {
-            generateSeed();
-
             try {
+                generateSeed();
+
                 FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\mapdata\\script.rcd"));
                 Files.copy(new File(String.format("%s/script.rcd", Settings.getStartingSeed())).toPath(),
                         fileOutputStream);
@@ -202,6 +202,8 @@ public class Main {
                         fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
+
+                FileUtils.closeAll();
             }
             catch (Exception ex) {
                 FileUtils.log("unable to copy files to La-Mulana install");
@@ -329,6 +331,7 @@ public class Main {
     static class CheckboxPanel extends JPanel {
         private JCheckBox fullItemAccess;
         private JCheckBox randomizeForbiddenTreasure;
+        private JCheckBox randomizeCoinChests;
         private JCheckBox enableDamageBoostRequirements;
         private JCheckBox requireSoftwareComboForKeyFairy;
 
@@ -350,12 +353,17 @@ public class Main {
             randomizeForbiddenTreasure = new JCheckBox("Replace random non-Shrine map with Forbidden Treasure");
             randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
             add(randomizeForbiddenTreasure);
+
+            randomizeCoinChests = new JCheckBox("Randomize coin chests");
+            randomizeCoinChests.setSelected(Settings.isRandomizeCoinChests());
+            add(randomizeCoinChests);
         }
 
         public void updateSettings() {
             Settings.setFullItemAccess(fullItemAccess.isSelected(), true);
             Settings.setRequireSoftwareComboForKeyFairy(requireSoftwareComboForKeyFairy.isSelected(), true);
             Settings.setRandomizeForbiddenTreasure(randomizeForbiddenTreasure.isSelected(), true);
+            Settings.setRandomizeCoinChests(randomizeCoinChests.isSelected(), true);
             Settings.setEnableDamageBoostRequirements(enableDamageBoostRequirements.isSelected(), true);
         }
     }
@@ -530,6 +538,11 @@ public class Main {
             shopRandomizer.determineItemTypes(random);
             if(!itemRandomizer.placeRequiredItems(new ArrayList<>(initiallyAvailableItems), random)) {
                 continue;
+            }
+            if(Settings.isRandomizeCoinChests()) {
+                if(!itemRandomizer.placeCoinChests(random)) {
+                    continue;
+                }
             }
             if(!itemRandomizer.placeAllItems(random)) {
                 continue;

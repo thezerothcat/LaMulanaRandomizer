@@ -18,6 +18,7 @@ public final class Settings {
     private boolean requireSoftwareComboForKeyFairy;
     private boolean enableDamageBoostRequirements;
     private boolean randomizeForbiddenTreasure;
+    private boolean randomizeCoinChests;
 
     private List<String> enabledGlitches = new ArrayList<>();
 
@@ -35,6 +36,7 @@ public final class Settings {
 
         fullItemAccess = true;
         randomizeForbiddenTreasure = true;
+        randomizeCoinChests = true;
         enableDamageBoostRequirements = false;
         requireSoftwareComboForKeyFairy = true;
 
@@ -67,6 +69,10 @@ public final class Settings {
 
     public static boolean isRandomizeForbiddenTreasure() {
         return singleton.randomizeForbiddenTreasure;
+    }
+
+    public static boolean isRandomizeCoinChests() {
+        return singleton.randomizeCoinChests;
     }
 
     public static String getLaMulanaBaseDir() {
@@ -120,6 +126,13 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.randomizeForbiddenTreasure = randomizeForbiddenTreasure;
+    }
+
+    public static void setRandomizeCoinChests(boolean randomizeCoinChests, boolean update) {
+        if(update && randomizeCoinChests != singleton.randomizeCoinChests) {
+            singleton.changed = true;
+        }
+        singleton.randomizeCoinChests = randomizeCoinChests;
     }
 
     public static void setInitiallyAvailableItems(Set<String> initiallyAvailableItems, boolean update) {

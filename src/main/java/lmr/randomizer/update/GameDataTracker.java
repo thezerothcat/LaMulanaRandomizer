@@ -27,9 +27,27 @@ public final class GameDataTracker {
 
     public static void addObject(GameObject gameObject) {
         if (gameObject.getId() == 0x2c) {
-            // Chest
-            short inventoryArg = (short) (gameObject.getArgs().get(0) - 11);
-            int worldFlag = gameObject.getWriteByteOperations().get(0).getIndex();
+            int worldFlag;
+            short inventoryArg;
+
+            if(gameObject.getArgs().get(0) == 1) {
+                // Coin chest
+                inventoryArg = gameObject.getArgs().get(1); // Use coin amount as item arg
+            }
+            else {
+                // Item chest
+                inventoryArg = (short)(gameObject.getArgs().get(0) - 11);
+            }
+
+            WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(0);
+            if(flagUpdate.getIndex() == 333) {
+                // Replace world flag for Life Seal coin chest, which is a bit special
+                worldFlag = 2707;
+            }
+            else {
+                worldFlag = gameObject.getWriteByteOperations().get(0).getIndex();
+            }
+
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
@@ -1054,7 +1072,7 @@ public final class GameDataTracker {
         }
         for(GameObject objectToModify : objectsToModify) {
             if(objectToModify.getId() == 0x2c) {
-                updateChestContents(objectToModify, itemLocationData, itemNewContentsData);
+                updateChestContents(objectToModify, itemLocationData, itemNewContentsData, !chestContents.startsWith("Coin:"));
                 if("Map (Shrine of the Mother)".equals(chestContents)) {
                     addShrineMapSoundEffect(objectToModify.getObjectContainer());
                 }
@@ -1245,17 +1263,69 @@ public final class GameDataTracker {
         objects.add(altSurfaceShopTimer);
     }
 
-    private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
-        objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11));
-        for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
-            if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
-                flagTest.setIndex(itemNewContentsData.getWorldFlag());
+    private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData, boolean itemChest) {
+        WriteByteOperation puzzleFlag = objectToModify.getWriteByteOperations().get(1);
+        objectToModify.getWriteByteOperations().clear();
+
+        if(itemChest) {
+            objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11)); // Item arg to indicate what the chest drops
+            objectToModify.getArgs().set(1, (short)1); // Real item, not fake
+            objectToModify.getArgs().set(2, (short)1); // Blue chest
+            for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+                if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                    flagTest.setIndex(itemNewContentsData.getWorldFlag());
+                }
             }
+
+            WriteByteOperation updateFlag = new WriteByteOperation();
+            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
+            updateFlag.setValue(2);
+            objectToModify.getWriteByteOperations().add(updateFlag);
+
+            objectToModify.getWriteByteOperations().add(puzzleFlag);
+
+            updateFlag = new WriteByteOperation();
+            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
+            updateFlag.setValue(1);
+            objectToModify.getWriteByteOperations().add(updateFlag);
+
+            updateFlag = new WriteByteOperation();
+            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
+            updateFlag.setValue(2);
+            objectToModify.getWriteByteOperations().add(updateFlag);
         }
-        for(WriteByteOperation flagUpdate : objectToModify.getWriteByteOperations()) {
-            if(flagUpdate.getIndex() == itemLocationData.getWorldFlag()) {
-                flagUpdate.setIndex(itemNewContentsData.getWorldFlag());
+        else {
+            objectToModify.getArgs().set(0, (short)1); // Coins
+            objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg()); // Re-purposing inventory arg to track coin amount
+            objectToModify.getArgs().set(2, (short)0); // Brown chest
+            for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+                if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                    flagTest.setIndex(itemNewContentsData.getWorldFlag());
+                }
             }
+
+            WriteByteOperation updateFlag = new WriteByteOperation();
+            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
+            updateFlag.setValue(2);
+            objectToModify.getWriteByteOperations().add(updateFlag);
+
+            objectToModify.getWriteByteOperations().add(puzzleFlag);
+
+            updateFlag = new WriteByteOperation();
+            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
+            updateFlag.setValue(2);
+            objectToModify.getWriteByteOperations().add(updateFlag);
+
+            updateFlag = new WriteByteOperation();
+            updateFlag.setOp(ByteOp.ADD_FLAG);
+            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
+            updateFlag.setValue(1);
+            objectToModify.getWriteByteOperations().add(updateFlag);
         }
     }
 

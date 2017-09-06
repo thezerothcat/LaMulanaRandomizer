@@ -289,6 +289,9 @@ public class FileUtils {
             else if(line.startsWith("randomizeForbiddenTreasure")) {
                 Settings.setRandomizeForbiddenTreasure(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("randomizeCoinChests")) {
+                Settings.setRandomizeCoinChests(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("laMulanaBaseDir")) {
                 Settings.setLaMulanaBaseDir(line.substring(line.indexOf("=") + 1), false);
             }
@@ -316,6 +319,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("randomizeForbiddenTreasure=%s", Settings.isRandomizeForbiddenTreasure()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeCoinChests=%s", Settings.isRandomizeCoinChests()));
         writer.newLine();
 
         writer.write(String.format("laMulanaBaseDir=%s", Settings.getLaMulanaBaseDir()));

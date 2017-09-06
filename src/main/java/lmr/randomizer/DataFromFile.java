@@ -15,11 +15,13 @@ public final class DataFromFile {
 
     private static List<String> allShops;
     private static List<String> allItems;
+    private static List<String> allCoinChests;
     private static List<String> allNonShopItemsPlusAllRandomizedShopItems;
     private static List<String> nonRandomizedItems;
     private static List<String> nonRandomizedShops;
     private static List<String> randomizedShopItems;
     private static List<String> nonShopItemLocations;
+    private static List<String> nonRandomizedCoinChests;
     private static List<String> initialNonShopItemLocations;
     private static Map<String, GameObjectId> mapOfItemToUsefulIdentifyingRcdData;
     private static Map<String, Integer> mapOfShopNameToShopBlock;
@@ -30,6 +32,7 @@ public final class DataFromFile {
     private static List<String> initialShops;
     private static List<String> availableGlitches;
     private static List<String> winRequirements;
+    private static List<String> chestOnlyLocations;
 
     private DataFromFile() { }
 
@@ -53,9 +56,9 @@ public final class DataFromFile {
         return allItems;
     }
 
-    public static List<String> getAllNonShopItemsPlusAllRandomizedShopItems() {
+    public static List<String> getAllNonShopItemsPlusAllRandomizedShopItemsPlusAllRandomizedCoinChests() {
         if(allNonShopItemsPlusAllRandomizedShopItems == null) {
-            allNonShopItemsPlusAllRandomizedShopItems = FileUtils.getList("all/non_shop_items.txt");
+            allNonShopItemsPlusAllRandomizedShopItems = new ArrayList<>(getNonShopItemLocations());
             if(!ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
                 for(String item : getRandomizedShopItems()) {
                     if(!allNonShopItemsPlusAllRandomizedShopItems.contains(item)) {
@@ -73,6 +76,10 @@ public final class DataFromFile {
     public static List<String> getNonShopItemLocations() {
         if(nonShopItemLocations == null) {
             nonShopItemLocations = FileUtils.getList("all/non_shop_items.txt");
+            if(Settings.isRandomizeCoinChests()) {
+                nonShopItemLocations.addAll(getAllCoinChests());
+                nonShopItemLocations.removeAll(getNonRandomizedCoinChests());
+            }
             if(nonShopItemLocations == null) {
                 nonShopItemLocations = new ArrayList<>(0);
             }
@@ -105,6 +112,18 @@ public final class DataFromFile {
             }
         }
         return nonRandomizedShops;
+    }
+
+    public static List<String> getNonRandomizedCoinChests() {
+        if(nonRandomizedCoinChests == null && Settings.isRandomizeCoinChests()) {
+            if (Settings.isRandomizeCoinChests()) {
+                nonRandomizedCoinChests = FileUtils.getList("min/non_randomized_coin_chests.txt");
+            }
+            if (nonRandomizedCoinChests == null) {
+                nonRandomizedCoinChests = new ArrayList<>(0);
+            }
+        }
+        return nonRandomizedCoinChests;
     }
 
     public static List<String> getInitialShops() {
@@ -222,6 +241,9 @@ public final class DataFromFile {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/item_reqs.txt");
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/shop_reqs.txt");
             }
+            if(Settings.isRandomizeCoinChests()) {
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/coin_chest_reqs.txt");
+            }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject,
                     String.format("requirement/bosses/%s_reqs.txt", Settings.getBossDifficulty().name().toLowerCase()));
             if(!Settings.isRequireSoftwareComboForKeyFairy()) {
@@ -245,6 +267,20 @@ public final class DataFromFile {
             winRequirements = FileUtils.getList("requirement/win_reqs.txt");
         }
         return winRequirements;
+    }
+
+    public static List<String> getChestOnlyLocations() {
+        if(chestOnlyLocations == null ) {
+            chestOnlyLocations = FileUtils.getList("all/chest_only_locations.txt");
+        }
+        return chestOnlyLocations;
+    }
+
+    public static List<String> getAllCoinChests() {
+        if(allCoinChests == null ) {
+            allCoinChests = FileUtils.getList("all/coin_chests.txt");
+        }
+        return allCoinChests;
     }
 
     public static void clearAllData() {

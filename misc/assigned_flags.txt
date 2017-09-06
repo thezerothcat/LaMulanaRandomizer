@@ -5,6 +5,7 @@ Book of the Dead world flag: a8f
 Fake Silver Shield world flag: a90
 guild.exe replacement world flag: a91
 Anchor world flag: a92
+Surface coin chest world flag: a93
 
 Xelpud Talisman convos: aec
 Xelpud Mulana Talisman convos: aed

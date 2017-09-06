@@ -63,10 +63,16 @@ public class AccessChecker {
             if(mapOfNodeNameToRequirementsObject.isEmpty()) {
                 return true;
             }
+
             for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
-                if(!nodeName.startsWith("Glitch:")) {
-                    return false;
+                if(nodeName.startsWith("Glitch:")) {
+                    continue;
                 }
+                else if(NodeType.ITEM_LOCATION.equals(mapOfNodeNameToRequirementsObject.get(nodeName).getType())
+                    && itemRandomizer.getItem(nodeName).startsWith("Coin:")) {
+                    continue;
+                }
+                return false;
             }
             return true;
         }
@@ -202,7 +208,9 @@ public class AccessChecker {
         switch (nodeType) {
             case ITEM_LOCATION:
                 String item = itemRandomizer.getItem(nodeName);
-                queuedUpdates.add(item);
+                if(!item.startsWith("Coin:")) {
+                    queuedUpdates.add(item);
+                }
                 break;
             case MAP_LOCATION:
             case EVENT:

@@ -28,7 +28,7 @@ public class ItemRandomizer {
     private AccessChecker accessChecker;
 
     public ItemRandomizer() {
-        allItems = new ArrayList<>(DataFromFile.getAllNonShopItemsPlusAllRandomizedShopItems());
+        allItems = new ArrayList<>(DataFromFile.getAllNonShopItemsPlusAllRandomizedShopItemsPlusAllRandomizedCoinChests());
         unplacedItems = new ArrayList<>(allItems);
 
         nonShopItemLocations = new ArrayList<>(DataFromFile.getNonShopItemLocations());
@@ -76,12 +76,12 @@ public class ItemRandomizer {
 //        mapOfItemLocationToItem.put("xmailer.exe", "Book of the Dead");
 //        unassignedNonShopItemLocations.remove("xmailer.exe");
 //        unplacedItems.remove("Book of the Dead");
-//        mapOfItemLocationToItem.put("deathv.exe", "Feather");
-//        unassignedNonShopItemLocations.remove("deathv.exe");
-//        unplacedItems.remove("Feather");
-//        mapOfItemLocationToItem.put("Serpent Staff", "Glove");
-//        unassignedNonShopItemLocations.remove("Serpent Staff");
-//        unplacedItems.remove("Glove");
+//        mapOfItemLocationToItem.put("Coin: Surface (Waterfall)", "Shell Horn");
+//        unassignedNonShopItemLocations.remove("Coin: Surface (Waterfall)");
+//        unplacedItems.remove("Shell Horn");
+//        mapOfItemLocationToItem.put("Shell Horn", "Coin: Surface (Waterfall)");
+//        unassignedNonShopItemLocations.remove("Shell Horn");
+//        unplacedItems.remove("Coin: Surface (Waterfall)");
 //        mapOfItemLocationToItem.put("Sacred Orb (Gate of Guidance)", "Flail Whip");
 //        unassignedNonShopItemLocations.remove("Sacred Orb (Gate of Guidance)");
 //        unplacedItems.remove("Flail Whip");
@@ -92,6 +92,16 @@ public class ItemRandomizer {
             }
             unassignedNonShopItemLocations.remove(item);
             unplacedItems.remove(item);
+        }
+        if(Settings.isRandomizeCoinChests()) {
+            for(String coinChest : DataFromFile.getNonRandomizedCoinChests()) {
+                mapOfItemLocationToItem.put(coinChest, coinChest);
+                if(!unassignedNonShopItemLocations.contains(coinChest)) {
+                    FileUtils.log("Coin chest not included in locations: " + coinChest);
+                }
+                unassignedNonShopItemLocations.remove(coinChest);
+                unplacedItems.remove(coinChest);
+            }
         }
     }
 
@@ -142,6 +152,59 @@ public class ItemRandomizer {
         return true;
     }
 
+    public boolean placeCoinChests(Random random) {
+        List<String> coinChests = new ArrayList<>();
+        for(String coinChest : DataFromFile.getAllCoinChests()) {
+            if(unplacedItems.contains(coinChest)) {
+                coinChests.add(coinChest);
+            }
+        }
+        if(coinChests.isEmpty()) {
+            return true;
+        }
+
+        int locationIndexIndex;
+
+        List<String> possibleLocations = new ArrayList<>();
+        for(String itemChestLocation : DataFromFile.getChestOnlyLocations()) {
+            if(unassignedNonShopItemLocations.contains(itemChestLocation)) {
+                possibleLocations.add(itemChestLocation);
+            }
+        }
+        for(String coinChest : DataFromFile.getAllCoinChests()) {
+            if(unassignedNonShopItemLocations.contains(coinChest)) {
+                possibleLocations.add(coinChest);
+            }
+        }
+        int size = coinChests.size();
+        for(int i = 0; i < size; i++) {
+            String item = getRandomItem(coinChests, random);
+            int availableLocations = possibleLocations.size();
+            List<Integer> availableLocationIndices = buildIndices(availableLocations);
+
+            while(true) {
+                if(availableLocationIndices.isEmpty()) {
+                    return false;
+                }
+                locationIndexIndex = random.nextInt(availableLocationIndices.size());
+                int locationIndex = availableLocationIndices.get(locationIndexIndex);
+                String location = possibleLocations.get(locationIndex);
+                if(accessChecker.validRequirements(item, location)) {
+                    mapOfItemLocationToItem.put(location, item);
+                    coinChests.remove(item);
+                    possibleLocations.remove(location);
+                    unassignedNonShopItemLocations.remove(location);
+                    unplacedItems.remove(item);
+                    break;
+                }
+                else {
+                    availableLocationIndices.remove(locationIndexIndex);
+                }
+            }
+        }
+        return true;
+    }
+
     private String getRandomItem(List<String> items, Random random) {
         return items.get(random.nextInt(items.size()));
     }
@@ -149,7 +212,7 @@ public class ItemRandomizer {
     public boolean placeAllItems(Random random) {
         while(!unplacedItems.isEmpty()) {
             int availableLocations = unassignedNonShopItemLocations.size() + shopRandomizer.getUnassignedShopItemLocations().size();
-            if(!placeItem(unplacedItems.get(random.nextInt(unplacedItems.size())), availableLocations, random)) {
+            if(!placeItem(getRandomItem(unplacedItems, random), availableLocations, random)) {
                 return false;
             }
         }
