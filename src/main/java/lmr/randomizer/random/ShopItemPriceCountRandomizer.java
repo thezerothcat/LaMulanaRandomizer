@@ -19,7 +19,7 @@ public class ShopItemPriceCountRandomizer {
             "Philosopher's Ocarina", "Fruit of Eden", "Twin Statue", "Dimensional Key", "yagomap.exe", "yagostr.exe", "torude.exe",
             "mantra.exe", "Djed Pillar", "Ice Cape", "Magatama Jewel", "Woman Statue", "Maternity Statue", "Cog of the Soul",
             "Origin Seal", "Birth Seal", "Life Seal", "Death Seal", "Crystal Skull", "Dragon Bone", "Mini Doll", "Treasures",
-            "Mulana Talisman", "Diary", "Pepper", "Serpent Staff", "Talisman", "Vessel", "Key of Eternity");
+            "Mulana Talisman", "Diary", "Pepper", "Serpent Staff", "Talisman", "Vessel", "Key of Eternity", "Pochette Key");
     private List<String> PROGRESSION_ITEMS_WITH_UTILITY = Arrays.asList("Book of the Dead", "Isis' Pendant", "Lamp of Time",
             "Shuriken", "Caltrops", "Rolling Shuriken", "Bomb", "Flare Gun", "Chakram", "Earth Spear", "Pistol", "Angel Shield",
             "Knife", "Key Sword", "Axe", "Katana", "Ring", "Scalesphere", "Fake Silver Shield", "Silver Shield",
@@ -27,7 +27,7 @@ public class ShopItemPriceCountRandomizer {
     private List<String> LUXURY_ITEMS = Arrays.asList("Mobile Super X2", "Glove", "Crucifix", "Fairy Clothes", "Scriptures",
             "Bracelet", "Perfume", "Spaulder", "bounce.exe", "lamulana.exe", "Forbidden Treasure");
     private List<String> USELESS_ITEMS = Arrays.asList("Waterproof Case", "Heatproof Case", "Shell Horn", "xmailer.exe",
-            "bunemon.exe", "bunplus.exe", "guild.exe", "emusic.exe", "beolamu.exe", "Buckler");
+            "bunemon.exe", "bunplus.com", "guild.exe", "emusic.exe", "beolamu.exe", "Buckler");
 
     public ShopItemPriceCountRandomizer(Random random) {
         this.random = random;
