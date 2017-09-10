@@ -929,6 +929,14 @@ public final class GameDataTracker {
             shopBlock.getExitFlagList().getData().add(shopItem3Flag);
         }
 
+        if(shopBlock.getBlockNumber() == 490) {
+            // MSX2 shop
+            BlockStringData blockStringData = shopBlock.getString(6);
+            blockStringData.getData().clear();
+            blockStringData.getData().addAll(Arrays.asList((short)70, (short)8, (short)297, (short)315, (short)308, (short)321,
+                    (short)318, (short)326, (short)32, (short)320, (short)328, (short)310, (short)315, (short)264));
+        }
+
         updateAskItemName(shopBlock.getString(3), shopItem1);
         updateAskItemName(shopBlock.getString(4), shopItem2);
         updateAskItemName(shopBlock.getString(5), shopItem3);
