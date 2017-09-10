@@ -343,7 +343,7 @@ public class Main {
             add(fullItemAccess);
 
             enableDamageBoostRequirements = new JCheckBox("Allow damage-boosting requirements");
-            enableDamageBoostRequirements.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
+            enableDamageBoostRequirements.setSelected(Settings.isEnableDamageBoostRequirements());
             add(enableDamageBoostRequirements);
 
             requireSoftwareComboForKeyFairy = new JCheckBox("Key Fairy chests/doors expect miracle + mekuri");
