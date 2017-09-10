@@ -20,6 +20,7 @@ public class AccessChecker {
     private static Map<String, NodeWithRequirements> mapOfNodeNameToExitRequirementsObject;
 
     private Set<String> accessedNodes = new HashSet<>();
+
     private List<String> queuedUpdates = new ArrayList<>();
     private Set<String> accessibleBossNodes = new HashSet<>();
 
@@ -94,6 +95,12 @@ public class AccessChecker {
                 || stateToUpdate.contains("Viy Accessible") || stateToUpdate.contains("Baphomet Accessible")
                 || stateToUpdate.contains("Palenque Accessible") || stateToUpdate.contains("Tiamat Accessible")) {
             accessibleBossNodes.add(stateToUpdate);
+            mapOfNodeNameToRequirementsObject.remove(stateToUpdate);
+            queuedUpdates.remove(stateToUpdate);
+            return;
+        }
+        if(stateToUpdate.startsWith("Coin:")) {
+            accessedNodes.add(stateToUpdate);
             mapOfNodeNameToRequirementsObject.remove(stateToUpdate);
             queuedUpdates.remove(stateToUpdate);
             return;
@@ -208,7 +215,10 @@ public class AccessChecker {
         switch (nodeType) {
             case ITEM_LOCATION:
                 String item = itemRandomizer.getItem(nodeName);
-                if(!item.startsWith("Coin:")) {
+                if(item.startsWith("Coin:")) {
+                    queuedUpdates.add(item);
+                }
+                else {
                     queuedUpdates.add(item);
                 }
                 break;
