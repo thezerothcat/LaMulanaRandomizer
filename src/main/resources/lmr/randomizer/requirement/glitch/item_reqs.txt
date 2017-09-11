@@ -2,7 +2,6 @@ Ankh Jewel (Tower of Ruin) => Location: Tower of Ruin [Lower], Feather, Glitch: 
 Ankh Jewel (Tower of Ruin) => Location: Tower of Ruin [Lower], Feather, Glitch: Cat Pause
 Ankh Jewel (Tower of Ruin) => Location: Tower of Ruin [Grail], Glitch: Raindrop
 Ankh Jewel (Tower of Ruin) => Location: Tower of Ruin [Grail], Glitch: Cat Pause
-Axe => Glitch: Cat Pause
 Bronze Mirror => Glitch: Raindrop
 Philosopher's Ocarina => Maternity Statue, Glitch: Raindrop
 Book of the Dead => Location: Temple of Moonlight [Lower], Origin Seal, Glitch: Raindrop, Event: Amphisbaena Defeated

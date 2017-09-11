@@ -46,7 +46,6 @@ Map (Tower of Ruin)
 Map (Tower of the Goddess)
 Map (Twin Labyrinths)
 mirai.exe
-Mulana Talisman
 Origin Seal
 Perfume
 Plane Model
