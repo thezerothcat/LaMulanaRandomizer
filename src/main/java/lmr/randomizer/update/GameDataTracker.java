@@ -724,6 +724,22 @@ public final class GameDataTracker {
                 blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
             }
             blocks.add(block);
+
+            BlockFlagData blockFlagData;
+
+            // Handle Book of the Dead conversation flag changes.
+            Integer flagIndexOfConversationFlagUpdate = null;
+            for(int i = 0; i < block.getBlockContents().size(); i++) {
+                BlockContents blockContents = block.getBlockContents().get(i);
+                if(blockContents instanceof BlockFlagData) {
+                    blockFlagData = (BlockFlagData) blockContents;
+                    if(blockFlagData.getWorldFlag() == 810) {
+                        flagIndexOfConversationFlagUpdate = i;
+                    }
+                }
+            }
+            blockFlagData = new BlockFlagData((short)0x0040, (short)2703, (short)2);
+            block.getBlockContents().add(flagIndexOfConversationFlagUpdate, blockFlagData);
         }
         else if(block.getBlockNumber() == 480) {
             // Xelpud flag check reference block
