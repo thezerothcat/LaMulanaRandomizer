@@ -4,7 +4,6 @@ Event: Ellmac Accessible => Holy Grail
 Event: Ellmac Accessible => Twin Statue
 Event: Bahamut Accessible => Helmet, Origin Seal
 Event: Viy Accessible => Location: Inferno Cavern [Viy], Ice Cape
-Event: Viy Accessible => Location: Inferno Cavern [Viy], Holy Grail, Sacred Orb: 5
 Event: Palenque Accessible => Location: Chamber of Extinction [Ankh], Location: Chamber of Birth [East], Feather, Pochette Key, Location: Chamber of Extinction [Main], Exit: Chamber of Birth [East], Exit: Chamber of Extinction [Ankh]
 Event: Baphomet Accessible => Event: Peryton Defeated, Hermes' Boots
 Event: Baphomet Accessible => Event: Peryton Defeated, Feather

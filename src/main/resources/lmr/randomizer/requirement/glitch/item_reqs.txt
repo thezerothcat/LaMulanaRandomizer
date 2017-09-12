@@ -21,6 +21,7 @@ Katana => Location: Twin Labyrinths [Upper], Glitch: Cat Pause
 Key of Eternity => Location: Gate of Illusion [Grail], Location: Gate of Illusion [Ruin], Birth Seal, Glitch: Raindrop, Event: Chi You Defeated
 Knife => Glitch: Cat Pause
 Life Seal => Location: Chamber of Extinction [Main], Glitch: Raindrop
+Map (Chamber of Extinction) => Glitch: Raindrop, Flare Gun
 Mini Doll => Location: Gate of Illusion [Lower], Glitch: Raindrop, Anchor
 Mini Doll => Location: Gate of Illusion [Lower], Glitch: Raindrop, Bomb
 Mini Doll => Location: Gate of Illusion [Lower], Glitch: Raindrop, Caltrops

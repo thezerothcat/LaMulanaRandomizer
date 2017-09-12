@@ -144,8 +144,10 @@ public class Main {
 
                 try {
                     // Make script.rcd backup
-                    Files.copy(existingRcd.toPath(),
-                            new FileOutputStream(new File("script.rcd.bak")));
+                    FileOutputStream fileOutputStream = new FileOutputStream(new File("script.rcd.bak"));
+                    Files.copy(existingRcd.toPath(), fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
                 }
                 catch (Exception ex) {
                     FileUtils.log("unable to back up script.rcd: " + ex.getMessage());
@@ -192,14 +194,12 @@ public class Main {
                 generateSeed();
 
                 FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\mapdata\\script.rcd"));
-                Files.copy(new File(String.format("%s/script.rcd", Settings.getStartingSeed())).toPath(),
-                        fileOutputStream);
+                Files.copy(new File(String.format("%s/script.rcd", Settings.getStartingSeed())).toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
 
                 fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\language\\en\\script_code.dat"));
-                Files.copy(new File(String.format("%s/script_code.dat", Settings.getStartingSeed())).toPath(),
-                        fileOutputStream);
+                Files.copy(new File(String.format("%s/script_code.dat", Settings.getStartingSeed())).toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
 
@@ -216,10 +216,15 @@ public class Main {
             generateSeed();
 
             try {
-                Files.copy(new File("script.rcd.bak").toPath(),
-                        new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\mapdata\\script.rcd")));
-                Files.copy(new File(String.format("script_code.dat.bak", Settings.getStartingSeed())).toPath(),
-                        new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\language\\en\\script_code.dat")));
+                FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\mapdata\\script.rcd"));
+                Files.copy(new File("script.rcd.bak").toPath(), fileOutputStream);
+                fileOutputStream.flush();
+                fileOutputStream.close();
+
+                fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\language\\en\\script_code.dat"));
+                Files.copy(new File(String.format("script_code.dat.bak", Settings.getStartingSeed())).toPath(), fileOutputStream);
+                fileOutputStream.flush();
+                fileOutputStream.close();
             }
             catch (Exception ex) {
                 FileUtils.log("unable to restore files to La-Mulana install");
@@ -334,6 +339,8 @@ public class Main {
         private JCheckBox randomizeCoinChests;
         private JCheckBox enableDamageBoostRequirements;
         private JCheckBox requireSoftwareComboForKeyFairy;
+        private JCheckBox requireIceCapeForLava;
+        private JCheckBox requireFlaresForExtinction;
 
         public CheckboxPanel() {
             super(new MigLayout("wrap 2", "[sizegroup checkboxes]", "[]2[]"));
@@ -345,6 +352,14 @@ public class Main {
             enableDamageBoostRequirements = new JCheckBox("Allow damage-boosting requirements");
             enableDamageBoostRequirements.setSelected(Settings.isEnableDamageBoostRequirements());
             add(enableDamageBoostRequirements);
+
+            requireIceCapeForLava = new JCheckBox("Require Ice Cape for swimming through lava");
+            requireIceCapeForLava.setSelected(Settings.isRequireIceCapeForLava());
+            add(requireIceCapeForLava);
+
+            requireFlaresForExtinction = new JCheckBox("Require flares for Chamber of Extinction");
+            requireFlaresForExtinction.setSelected(Settings.isRequireFlaresForExtinction());
+            add(requireFlaresForExtinction);
 
             requireSoftwareComboForKeyFairy = new JCheckBox("Key Fairy chests/doors expect miracle + mekuri");
             requireSoftwareComboForKeyFairy.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
@@ -361,10 +376,12 @@ public class Main {
 
         public void updateSettings() {
             Settings.setFullItemAccess(fullItemAccess.isSelected(), true);
+            Settings.setEnableDamageBoostRequirements(enableDamageBoostRequirements.isSelected(), true);
+            Settings.setRequireIceCapeForLava(requireIceCapeForLava.isSelected(), true);
+            Settings.setRequireFlaresForExtinction(requireFlaresForExtinction.isSelected(), true);
             Settings.setRequireSoftwareComboForKeyFairy(requireSoftwareComboForKeyFairy.isSelected(), true);
             Settings.setRandomizeForbiddenTreasure(randomizeForbiddenTreasure.isSelected(), true);
             Settings.setRandomizeCoinChests(randomizeCoinChests.isSelected(), true);
-            Settings.setEnableDamageBoostRequirements(enableDamageBoostRequirements.isSelected(), true);
         }
     }
 
@@ -595,6 +612,15 @@ public class Main {
 
                     if(!Settings.isFullItemAccess()) {
                         accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
+                    }
+
+                    File settingsFile = new File("randomizer-config.txt");
+                    if(settingsFile.exists()) {
+                        FileOutputStream fileOutputStream = new FileOutputStream(
+                                new File(String.format("%s/randomizer-config.txt", Settings.getStartingSeed())));
+                        Files.copy(settingsFile.toPath(), fileOutputStream);
+                        fileOutputStream.flush();
+                        fileOutputStream.close();
                     }
 
                     return;

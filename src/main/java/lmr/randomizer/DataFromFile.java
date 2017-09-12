@@ -23,6 +23,7 @@ public final class DataFromFile {
     private static List<String> nonShopItemLocations;
     private static List<String> nonRandomizedCoinChests;
     private static List<String> initialNonShopItemLocations;
+    private static List<String> initialCoinChestLocations;
     private static Map<String, GameObjectId> mapOfItemToUsefulIdentifyingRcdData;
     private static Map<String, Integer> mapOfShopNameToShopBlock;
     private static Map<String, List<String>> mapOfShopNameToShopOriginalContents;
@@ -149,6 +150,19 @@ public final class DataFromFile {
         return initialNonShopItemLocations;
     }
 
+    public static List<String> getInitialCoinChestLocations() {
+        if(initialCoinChestLocations == null) {
+            initialCoinChestLocations = FileUtils.getList("initial/initial_coin_chests.txt");
+            if(initialCoinChestLocations == null) {
+                initialCoinChestLocations = new ArrayList<>(0);
+            }
+            else {
+                initialCoinChestLocations.removeAll(getNonRandomizedCoinChests());
+            }
+        }
+        return initialCoinChestLocations;
+    }
+
     public static List<String> getAvailableGlitches() {
         if(availableGlitches == null) {
             availableGlitches = FileUtils.getList("all/available_glitches.txt");
@@ -249,6 +263,12 @@ public final class DataFromFile {
             if(!Settings.isRequireSoftwareComboForKeyFairy()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_software_combo_for_key_fairy_reqs.txt");
             }
+            if(!Settings.isRequireIceCapeForLava()) {
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_ice_cape_for_lava_reqs.txt");
+            }
+            if(!Settings.isRequireFlaresForExtinction()) {
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_flares_for_extinction_reqs.txt");
+            }
         }
         return mapOfNodeNameToRequirementsObject;
     }
@@ -285,30 +305,16 @@ public final class DataFromFile {
 
     public static void clearAllData() {
         if(Settings.isChanged()) {
-            if (allNonShopItemsPlusAllRandomizedShopItems != null) {
-                allNonShopItemsPlusAllRandomizedShopItems = null;
-            }
-            if (nonRandomizedItems != null) {
-                nonRandomizedItems = null;
-            }
-            if (randomizedShopItems != null) {
-                randomizedShopItems = null;
-            }
-            if (nonShopItemLocations != null) {
-                nonShopItemLocations = null;
-            }
-            if (initialNonShopItemLocations != null) {
-                initialNonShopItemLocations = null;
-            }
-            if (initialShops != null) {
-                initialShops = null;
-            }
-            if (winRequirements != null) {
-                winRequirements = null;
-            }
-            if(mapOfNodeNameToRequirementsObject != null) {
-                mapOfNodeNameToRequirementsObject = null;
-            }
+            allNonShopItemsPlusAllRandomizedShopItems = null;
+            nonRandomizedItems = null;
+            nonRandomizedShops = null;
+            randomizedShopItems = null;
+            nonShopItemLocations = null;
+            nonRandomizedCoinChests = null;
+            mapOfNodeNameToRequirementsObject = null;
+            mapOfNodeNameToExitRequirementsObject = null;
+            winRequirements = null;
+            mapOfExitRequirementNodeToAccessibleNodes = null;
         }
     }
 }

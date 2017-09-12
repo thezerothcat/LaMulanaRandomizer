@@ -107,12 +107,20 @@ public class ItemRandomizer {
 
     public boolean placeRequiredItems(List<String> items, Random random) {
         List<String> initialUnassignedNonShopLocations = new ArrayList<>(DataFromFile.getInitialNonShopItemLocations());
+        if(Settings.isRandomizeCoinChests()) {
+            initialUnassignedNonShopLocations.addAll(DataFromFile.getInitialCoinChestLocations());
+        }
+        initialUnassignedNonShopLocations.removeAll(DataFromFile.getNonRandomizedItems());
+        initialUnassignedNonShopLocations.removeAll(DataFromFile.getNonRandomizedCoinChests());
         List<String> initialUnassignedShopItemLocations = shopRandomizer.getInitialUnassignedShopItemLocations();
         int locationIndexIndex;
 
-        int size = items.size();
+        List<String> itemsToPlace = new ArrayList<>(items);
+        itemsToPlace.removeAll(DataFromFile.getNonRandomizedItems());
+
+        int size = itemsToPlace.size();
         for(int i = 0; i < size; i++) {
-            String item = getRandomItem(items, random);
+            String item = getRandomItem(itemsToPlace, random);
             int availableLocations = initialUnassignedNonShopLocations.size() + initialUnassignedShopItemLocations.size();
             List<Integer> availableLocationIndices = buildIndices(availableLocations);
 
@@ -127,7 +135,7 @@ public class ItemRandomizer {
                     String location = initialUnassignedNonShopLocations.get(locationIndex);
                     if(accessChecker.validRequirements(item, location)) {
                         mapOfItemLocationToItem.put(location, item);
-                        items.remove(item);
+                        itemsToPlace.remove(item);
                         initialUnassignedNonShopLocations.remove(location);
                         unassignedNonShopItemLocations.remove(location);
                         unplacedItems.remove(item);
@@ -139,7 +147,7 @@ public class ItemRandomizer {
                 }
                 else {
                     if(shopRandomizer.placeRequiredItem(item, initialUnassignedShopItemLocations, locationIndex - initialUnassignedNonShopLocations.size())) {
-                        items.remove(item);
+                        itemsToPlace.remove(item);
                         unplacedItems.remove(item);
                         break;
                     }

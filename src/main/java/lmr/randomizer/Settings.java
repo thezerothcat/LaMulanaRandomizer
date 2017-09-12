@@ -16,6 +16,8 @@ public final class Settings {
 
     private boolean fullItemAccess;
     private boolean requireSoftwareComboForKeyFairy;
+    private boolean requireIceCapeForLava;
+    private boolean requireFlaresForExtinction;
     private boolean enableDamageBoostRequirements;
     private boolean randomizeForbiddenTreasure;
     private boolean randomizeCoinChests;
@@ -39,8 +41,10 @@ public final class Settings {
         randomizeCoinChests = true;
         enableDamageBoostRequirements = false;
         requireSoftwareComboForKeyFairy = true;
+        requireIceCapeForLava = true;
+        requireFlaresForExtinction = true;
 
-        bossDifficulty = BossDifficulty.HARD;
+        bossDifficulty = BossDifficulty.MEDIUM;
         shopRandomization = ShopRandomizationEnum.EVERYTHING;
 
         initiallyAvailableItems.add("Holy Grail");
@@ -65,6 +69,14 @@ public final class Settings {
 
     public static boolean isRequireSoftwareComboForKeyFairy() {
         return singleton.requireSoftwareComboForKeyFairy;
+    }
+
+    public static boolean isRequireIceCapeForLava() {
+        return singleton.requireIceCapeForLava;
+    }
+
+    public static boolean isRequireFlaresForExtinction() {
+        return singleton.requireFlaresForExtinction;
     }
 
     public static boolean isRandomizeForbiddenTreasure() {
@@ -112,6 +124,20 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.requireSoftwareComboForKeyFairy = requireSoftwareComboForKeyFairy;
+    }
+
+    public static void setRequireIceCapeForLava(boolean requireIceCapeForLava, boolean update) {
+        if(update && requireIceCapeForLava != singleton.requireIceCapeForLava) {
+            singleton.changed = true;
+        }
+        singleton.requireIceCapeForLava = requireIceCapeForLava;
+    }
+
+    public static void setRequireFlaresForExtinction(boolean requireFlaresForExtinction, boolean update) {
+        if(update && requireFlaresForExtinction != singleton.requireFlaresForExtinction) {
+            singleton.changed = true;
+        }
+        singleton.requireFlaresForExtinction = requireFlaresForExtinction;
     }
 
     public static void setEnableDamageBoostRequirements(boolean enableDamageBoostRequirements, boolean update) {

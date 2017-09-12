@@ -1,0 +1,6 @@
+Location: Tower of Ruin [Spirits] => Location: Tower of Ruin [Medicine], Sacred Orb: 3
+Event: Viy Accessible => Location: Inferno Cavern [Viy], Holy Grail, Sacred Orb: 5
+Coin: Inferno (Lava) => Holy Grail, Sacred Orb: 2
+Coin: Inferno (Lava) => Sacred Orb: 4
+Coin: Inferno (Lava) => Holy Grail, move.exe, randc.exe, Sacred Orb: 1
+Coin: Inferno (Lava) => move.exe, randc.exe, Sacred Orb: 3

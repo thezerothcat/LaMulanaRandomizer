@@ -1,0 +1,6 @@
+Coin: Surface (Waterfall)
+Coin: Guidance (One)
+Coin: Guidance (Two)
+Coin: Guidance (Trap)
+Coin: Spring
+Coin: Twin (Lower)
