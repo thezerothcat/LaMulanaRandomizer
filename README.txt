@@ -16,6 +16,11 @@ There are a few configurations available in the UI. Once things are configured t
 If you want to play the non-randomized game, there's a Restore button in the UI which should copy the backup files back into your La-Mulana directory.
 
 
+1.10:
+-----------------------------
+Some coin chests can now contain items configured to be initially accessible, as well as Big Brother's shop. Added a couple of minor config options and started backing up configuration settings for more reliable debugging.
+
+
 1.9:
 -----------------------------
 Coin chests can now be randomized in addition to item chests. You can tell whether you'll get coins or an item from a chest based on its color.
