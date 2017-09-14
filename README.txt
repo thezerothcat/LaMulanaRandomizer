@@ -77,6 +77,7 @@ Adds some basic UI and file validation for the randomizer jar, so it doesn't hav
 Plans for future releases:
 -----------------------------
 * Area transition randomiztion
+* Automatic hardmode activation (better support for hardmode seeds with random scanner/grail)
 * Better handling for ankh jewel locks.
 * Item requirements expansion (configurable boss requirements, more glitch-enabled requirements, requirements involving damage boosting, etc.)
 * Shop randomization expansion (randomizing ammo when shuffling items only)

@@ -49,4 +49,4 @@ Shop 18 (Lil Bro) => None
 Shop 19 (Big Bro) => None
 Shop 20 (Twin Labs) => Feather
 Shop 21 (Unsolvable) => Feather, Bomb
-Shop 22 (Endless) => Birth Seal
+Shop 22 (Endless) => Origin Seal

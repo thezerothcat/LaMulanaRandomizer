@@ -23,7 +23,7 @@ public class ShopItemPriceCountRandomizer {
     private List<String> PROGRESSION_ITEMS_WITH_UTILITY = Arrays.asList("Book of the Dead", "Isis' Pendant", "Lamp of Time",
             "Shuriken", "Caltrops", "Rolling Shuriken", "Bomb", "Flare Gun", "Chakram", "Earth Spear", "Pistol", "Angel Shield",
             "Knife", "Key Sword", "Axe", "Katana", "Ring", "Scalesphere", "Fake Silver Shield", "Silver Shield",
-            "Gauntlet", "deathv.exe", "move.exe", "randc.exe", "miracle.exe", "mekuri.exe");
+            "Gauntlet", "deathv.exe", "move.exe", "randc.exe", "miracle.exe", "mekuri.exe", "Grapple Claw");
     private List<String> LUXURY_ITEMS = Arrays.asList("Mobile Super X2", "Glove", "Crucifix", "Fairy Clothes", "Scriptures",
             "Bracelet", "Perfume", "Spaulder", "bounce.exe", "lamulana.exe", "Forbidden Treasure");
     private List<String> USELESS_ITEMS = Arrays.asList("Waterproof Case", "Heatproof Case", "Shell Horn", "xmailer.exe",
