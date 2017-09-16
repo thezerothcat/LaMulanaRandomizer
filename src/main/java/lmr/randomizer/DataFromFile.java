@@ -116,7 +116,7 @@ public final class DataFromFile {
     }
 
     public static List<String> getNonRandomizedCoinChests() {
-        if(nonRandomizedCoinChests == null && Settings.isRandomizeCoinChests()) {
+        if(nonRandomizedCoinChests == null) {
             if (Settings.isRandomizeCoinChests()) {
                 nonRandomizedCoinChests = FileUtils.getList("min/non_randomized_coin_chests.txt");
             }

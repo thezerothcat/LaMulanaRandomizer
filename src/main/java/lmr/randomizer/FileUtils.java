@@ -277,6 +277,9 @@ public class FileUtils {
             else if(line.startsWith("shopRandomization")) {
                 Settings.setShopRandomization(line.split("=")[1], false);
             }
+            else if(line.startsWith("automaticHardmode")) {
+                Settings.setFullItemAccess(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("fullItemAccess")) {
                 Settings.setFullItemAccess(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -310,6 +313,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("fullItemAccess=%s", Settings.isFullItemAccess()));
+        writer.newLine();
+
+        writer.write(String.format("automaticHardmode=%s", Settings.isAutomaticHardmode()));
         writer.newLine();
 
         writer.write(String.format("requireSoftwareComboForKeyFairy=%s", Settings.isRequireSoftwareComboForKeyFairy()));

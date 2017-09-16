@@ -277,7 +277,7 @@ public class ItemRandomizer {
         }
 
         for (String location : mapOfItemLocationToItem.keySet()) {
-            writer.write(location + " => " + mapOfItemLocationToItem.get(location));
+            writer.write(mapOfItemLocationToItem.get(location) + ": " + location + " location");
             writer.newLine();
         }
 

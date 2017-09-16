@@ -8,6 +8,7 @@ import lmr.randomizer.random.*;
 import lmr.randomizer.rcd.RcdReader;
 import lmr.randomizer.rcd.RcdWriter;
 import lmr.randomizer.rcd.object.Zone;
+import lmr.randomizer.update.GameDataTracker;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -63,7 +64,7 @@ public class Main {
     static class RandomizerUI extends JFrame implements ActionListener {
         private FieldPanel fieldPanel;
         private RadioPanel radioPanel;
-        private CheckboxPanel checkboxPanel;
+        private RandomizationPanel randomizationPanel;
         private GlitchPanel glitchPanel;
         private ShopRandomizationRadio shopRandomization;
         private DifficultyPanel difficultyPanel;
@@ -90,8 +91,8 @@ public class Main {
             JPanel advancedSettingsPanel = new JPanel(new MigLayout("fill, aligny top, wrap", "[]", "[]"));
             advancedSettingsPanel.setBorder(BorderFactory.createTitledBorder("Advanced Settings"));
 
-            checkboxPanel = new CheckboxPanel();
-            advancedSettingsPanel.add(checkboxPanel, "wrap");
+            randomizationPanel = new RandomizationPanel();
+            advancedSettingsPanel.add(randomizationPanel, "wrap");
 
             shopRandomization = new ShopRandomizationRadio();
             advancedSettingsPanel.add(shopRandomization, "wrap");
@@ -123,7 +124,7 @@ public class Main {
         private void generateSeed() {
             fieldPanel.updateSettings();
             radioPanel.updateSettings();
-            checkboxPanel.updateSettings();
+            randomizationPanel.updateSettings();
             glitchPanel.updateSettings();
             shopRandomization.updateSettings();
             difficultyPanel.updateSettings();
@@ -333,25 +334,20 @@ public class Main {
         }
     }
 
-    static class CheckboxPanel extends JPanel {
-        private JCheckBox fullItemAccess;
-        private JCheckBox randomizeForbiddenTreasure;
-        private JCheckBox randomizeCoinChests;
-        private JCheckBox enableDamageBoostRequirements;
+    static class RandomizationPanel extends JPanel {
         private JCheckBox requireSoftwareComboForKeyFairy;
         private JCheckBox requireIceCapeForLava;
         private JCheckBox requireFlaresForExtinction;
 
-        public CheckboxPanel() {
+        private JCheckBox randomizeCoinChests;
+        private JCheckBox randomizeForbiddenTreasure;
+
+        private JCheckBox automaticHardmode;
+        private JCheckBox fullItemAccess;
+        private JCheckBox enableDamageBoostRequirements;
+
+        public RandomizationPanel() {
             super(new MigLayout("wrap 2", "[sizegroup checkboxes]", "[]2[]"));
-
-            fullItemAccess = new JCheckBox("All items must be accessible (100% seed)");
-            fullItemAccess.setSelected(Settings.isFullItemAccess());
-            add(fullItemAccess);
-
-            enableDamageBoostRequirements = new JCheckBox("Allow damage-boosting requirements");
-            enableDamageBoostRequirements.setSelected(Settings.isEnableDamageBoostRequirements());
-            add(enableDamageBoostRequirements);
 
             requireIceCapeForLava = new JCheckBox("Require Ice Cape for swimming through lava");
             requireIceCapeForLava.setSelected(Settings.isRequireIceCapeForLava());
@@ -372,9 +368,22 @@ public class Main {
             randomizeCoinChests = new JCheckBox("Randomize coin chests");
             randomizeCoinChests.setSelected(Settings.isRandomizeCoinChests());
             add(randomizeCoinChests);
+
+            fullItemAccess = new JCheckBox("All items must be accessible (100% seed)");
+            fullItemAccess.setSelected(Settings.isFullItemAccess());
+            add(fullItemAccess);
+
+            enableDamageBoostRequirements = new JCheckBox("Allow damage-boosting requirements");
+            enableDamageBoostRequirements.setSelected(Settings.isEnableDamageBoostRequirements());
+            add(enableDamageBoostRequirements);
+
+            automaticHardmode = new JCheckBox("Hard Mode activates automatically at the start");
+            automaticHardmode.setSelected(Settings.isAutomaticHardmode());
+            add(automaticHardmode);
         }
 
         public void updateSettings() {
+            Settings.setAutomaticHardmode(automaticHardmode.isSelected(), true);
             Settings.setFullItemAccess(fullItemAccess.isSelected(), true);
             Settings.setEnableDamageBoostRequirements(enableDamageBoostRequirements.isSelected(), true);
             Settings.setRequireIceCapeForLava(requireIceCapeForLava.isSelected(), true);
@@ -607,6 +616,9 @@ public class Main {
                     outputLocations(itemRandomizer, shopRandomizer, attempt);
                     itemRandomizer.updateFiles();
                     shopRandomizer.updateFiles(datInfo, random);
+                    if(Settings.isAutomaticHardmode()) {
+                        GameDataTracker.addAutomaticHardmode();
+                    }
                     RcdWriter.writeRcd(rcdData);
                     DatWriter.writeDat(datInfo);
 

@@ -13,7 +13,27 @@ The jar will look for files called script.rcd.bak and script_code.dat.bak in the
 
 There are a few configurations available in the UI. Once things are configured to your liking, click on the Apply button. At this point, a subdirectory will be created for the current seed number containing files for the randomized game, which will automatically be copied into your La-Mulana directory. Additonal files will also be created: items.txt and shops.txt (spoiler logs for the seed), and excluded_items.txt (list of items considered out of reach, if allowing some items to remain inaccessible)
 
+Keep in mind that the randomizer may take some time to generate a seed (some settings may lead to faster/slower generation). You'll see it automatically update the seed number entry with a new number when it's finished.
+
 If you want to play the non-randomized game, there's a Restore button in the UI which should copy the backup files back into your La-Mulana directory.
+
+
+Things to know:
+-----------------------------
+* It's possible to purchase actual subweapons from shops. They look the same as ammo for the subweapon, but unlike ammo, there's a price tag attached.
+* The Shrine of the Mother map is the only required map. If you find this item in a shop, it will be called Shrine Map instead of just Map, and if you pick it up elsewhere, a shell horn sound will play (regardless of whether or not you've collected shell horn).
+* You are not expected to have the Scalesphere before doing Spring in the Sky (the non-randomized game had it at the top of the area).
+* The randomizer does not expect you to fail the Chain Whip, Flail Whip, or Angel Shield puzzles, so don't do it!
+* A door has been added to allow access to the old Spring in the Sky shop after transforming it.
+* If your Mulana Talisman is replaced by Talisman or Diary, you can get Mulana Talisman back at any time by saving and reloading your game.
+* Xelpud has conversations based on collecting Talisman and Diary, but you are no longer required to equip the item.
+* "Lower" boss difficulty adds health/weapon requirements to some of the bosses.
+* Initially accessible locations include 9 shops, 26 non-shop locations, and an additional 6 coin chests if coin chests are randomized.
+
+
+1.11:
+-----------------------------
+Added an option to start the game in hardmode. Added a backup door for the shop in Spring in the Sky, which will appear after it's transformed. Made a couple of other fixes for reported issues.
 
 
 1.10:

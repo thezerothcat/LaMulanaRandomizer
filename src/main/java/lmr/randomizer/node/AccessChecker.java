@@ -132,6 +132,7 @@ public class AccessChecker {
         }
 
         accessedNodes.add(newState);
+        accessedNodes.add(stateToUpdate);
 
         NodeWithRequirements node;
         Set<String> nodesToRemove = new HashSet<>();
@@ -215,12 +216,7 @@ public class AccessChecker {
         switch (nodeType) {
             case ITEM_LOCATION:
                 String item = itemRandomizer.getItem(nodeName);
-                if(item.startsWith("Coin:")) {
                     queuedUpdates.add(item);
-                }
-                else {
-                    queuedUpdates.add(item);
-                }
                 break;
             case MAP_LOCATION:
             case EVENT:

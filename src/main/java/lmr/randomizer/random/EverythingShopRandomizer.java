@@ -296,11 +296,11 @@ public class EverythingShopRandomizer implements ShopRandomizer {
             for (int i = 1; i <= 3; i++) {
                 location = String.format("%s Item %d", shop, i);
                 if(mapOfShopInventoryItemToContents.containsKey(location)) {
-                    writer.write(location + " => " + mapOfShopInventoryItemToContents.get(location));
+                    writer.write(location + " contains: " + mapOfShopInventoryItemToContents.get(location));
                     writer.newLine();
                 }
                 else {
-                    writer.write(location + " => (unchanged)");
+                    writer.write(location + " contains: (unchanged)");
                     writer.newLine();
                 }
             }

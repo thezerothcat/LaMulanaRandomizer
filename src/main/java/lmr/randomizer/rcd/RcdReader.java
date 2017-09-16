@@ -88,7 +88,8 @@ public final class RcdReader {
                     if (isRandomizedShopItem(flagUpdate.getIndex())) {
                         for (TestByteOperation flagTest : obj.getTestByteOperations()) {
                             if (flagTest.getIndex() == flagUpdate.getIndex() && flagTest.getValue() == 1) {
-                                keepObject = false;
+                                FileUtils.log("Timer object excluded from rcd");
+                                return rcdByteIndex;
                             }
                         }
                     }
@@ -113,6 +114,23 @@ public final class RcdReader {
                             GameDataTracker.addObject(obj);
                             return rcdByteIndex;
                         }
+                    }
+                    else if(updateFlag.getIndex() == 141) {
+                        // Get rid of Angel Shield shop timer on Graveyard alt shop screen (alt shop has been removed).
+                        keepObject = false;
+                        break;
+                    }
+                    else if(updateFlag.getIndex() == 157) {
+                        // Get rid of Dragon Bone shop timer. We're using a different flag for Dragon Bone
+                        // since the base game's flag was bugged and fixing it could have unexpected effects,
+                        // but it still doesn't hurt to get rid of this thing.
+                        keepObject = false;
+                        break;
+                    }
+                    else if(updateFlag.getIndex() == 261) {
+                        // Get rid of Mulana Talisman timer related to Xelpud conversation. We're using different flags for that.
+                        keepObject = false;
+                        break;
                     }
                 }
             }

@@ -1,5 +1,5 @@
 Buckler world flag: a8c
-Dragon Bone world flag: a8d
+Dragon Bone replacement world flag: a8d
 Pepper world flag: a8e
 Book of the Dead world flag: a8f
 Fake Silver Shield world flag: a90

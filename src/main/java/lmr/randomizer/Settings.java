@@ -15,6 +15,7 @@ public final class Settings {
     private boolean changed = false;
 
     private boolean fullItemAccess;
+    private boolean automaticHardmode;
     private boolean requireSoftwareComboForKeyFairy;
     private boolean requireIceCapeForLava;
     private boolean requireFlaresForExtinction;
@@ -36,13 +37,14 @@ public final class Settings {
         startingSeed = new Random().nextInt(Integer.MAX_VALUE);
         laMulanaBaseDir = "Please enter your La-Mulana install directory";
 
-        fullItemAccess = true;
-        randomizeForbiddenTreasure = true;
-        randomizeCoinChests = true;
-        enableDamageBoostRequirements = false;
         requireSoftwareComboForKeyFairy = true;
         requireIceCapeForLava = true;
         requireFlaresForExtinction = true;
+        randomizeForbiddenTreasure = true;
+        randomizeCoinChests = true;
+        fullItemAccess = true;
+        automaticHardmode = false;
+        enableDamageBoostRequirements = false;
 
         bossDifficulty = BossDifficulty.MEDIUM;
         shopRandomization = ShopRandomizationEnum.EVERYTHING;
@@ -109,6 +111,10 @@ public final class Settings {
 
     public static boolean isFullItemAccess() {
         return singleton.fullItemAccess;
+    }
+
+    public static boolean isAutomaticHardmode() {
+        return singleton.automaticHardmode;
     }
 
     public static boolean isEnableDamageBoostRequirements() {
@@ -227,6 +233,13 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.fullItemAccess = fullItemAccess;
+    }
+
+    public static void setAutomaticHardmode(boolean automaticHardmode, boolean update) {
+        if(update && automaticHardmode != singleton.automaticHardmode) {
+            singleton.changed = true;
+        }
+        singleton.automaticHardmode = automaticHardmode;
     }
 
     public static void saveSettings() {

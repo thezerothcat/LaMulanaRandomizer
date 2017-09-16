@@ -124,7 +124,45 @@ public final class GameDataTracker {
                 }
                 objects.add(gameObject);
             }
-        } else if (gameObject.getId() == 0x12 || gameObject.getId() == 0x0e) {
+        } else if (gameObject.getId() == 0x12) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == 335) {
+                    // deathv stuff
+                    GameObjectId gameObjectId = new GameObjectId((short) 96, 335);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+                else if (flagTest.getIndex() == 219) {
+                    // Gate of Illusion Map stuff
+                    GameObjectId gameObjectId = new GameObjectId((short) 70, 219);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
+        } else if (gameObject.getId() == 0x0e) {
+            // Temple of the Sun Map chest ladder stuff
+            ObjectContainer objectContainer = gameObject.getObjectContainer();
+            if(objectContainer instanceof Screen) {
+                Screen screen = (Screen)objectContainer;
+                if(screen.getZoneIndex() == 3 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                    TestByteOperation testByteOperation = new TestByteOperation();
+                    testByteOperation.setIndex(12);
+                    testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                    testByteOperation.setValue((byte)0);
+                    gameObject.getTestByteOperations().add(testByteOperation);
+                }
+            }
+
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                 if (flagTest.getIndex() == 335) {
                     // deathv stuff
@@ -217,6 +255,25 @@ public final class GameDataTracker {
                     }
                     objects.add(gameObject);
                     break;
+                }
+            }
+        }
+        else if (gameObject.getId() == 0x14) {
+            // Temple of the Sun Map chest ladder stuff
+            ObjectContainer objectContainer = gameObject.getObjectContainer();
+            if(objectContainer instanceof Screen) {
+                Screen screen = (Screen)objectContainer;
+                if(screen.getZoneIndex() == 3 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                    if(gameObject.getTestByteOperations().get(0).getIndex() == 387) {
+                        gameObject.getWriteByteOperations().remove(0);
+                    }
+                    else if(gameObject.getTestByteOperations().get(0).getIndex() == 392) {
+                        WriteByteOperation writeByteOperation = new WriteByteOperation();
+                        writeByteOperation.setIndex(387);
+                        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                        writeByteOperation.setValue(1);
+                        gameObject.getWriteByteOperations().add(writeByteOperation);
+                    }
                 }
             }
         } else if (gameObject.getId() == 0x71 || gameObject.getId() == 0x33) {
@@ -461,6 +518,77 @@ public final class GameDataTracker {
                 }
                 if(flagToRemoveIndex != null) {
                     gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
+                }
+            }
+            else if(gameObject.getArgs().get(4) == 132){
+                // Untransformed Gyonin fish shop
+                ObjectContainer objectContainer = gameObject.getObjectContainer();
+                if(objectContainer instanceof Screen) {
+                    GameObject backupFishShop = new GameObject(gameObject.getObjectContainer());
+                    for (int i = 0; i < gameObject.getArgs().size(); i++) {
+                        backupFishShop.getArgs().add(gameObject.getArgs().get(i));
+                    }
+                    TestByteOperation testByteOperation = new TestByteOperation();
+                    testByteOperation.setIndex(407);
+                    testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                    testByteOperation.setValue((byte) 3);
+                    backupFishShop.getTestByteOperations().add(testByteOperation);
+
+                    testByteOperation = new TestByteOperation();
+                    testByteOperation.setIndex(254);
+                    testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+                    testByteOperation.setValue((byte) 3);
+                    backupFishShop.getTestByteOperations().add(testByteOperation);
+
+                    backupFishShop.setId((short) 0xa0);
+                    backupFishShop.setX(180);
+                    backupFishShop.setY(1520);
+
+                    gameObject.getObjectContainer().getObjects().add(backupFishShop);
+
+                    GameObject backupFishNewDoorGraphic = new GameObject(gameObject.getObjectContainer());
+                    testByteOperation = new TestByteOperation();
+                    testByteOperation.setIndex(407);
+                    testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                    testByteOperation.setValue((byte) 3);
+                    backupFishNewDoorGraphic.getTestByteOperations().add(testByteOperation);
+
+                    testByteOperation = new TestByteOperation();
+                    testByteOperation.setIndex(254);
+                    testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+                    testByteOperation.setValue((byte) 3);
+                    backupFishNewDoorGraphic.getTestByteOperations().add(testByteOperation);
+
+                    backupFishNewDoorGraphic.getArgs().add((short)-1);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)260);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)40);
+                    backupFishNewDoorGraphic.getArgs().add((short)40);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)1);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)255);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+                    backupFishNewDoorGraphic.getArgs().add((short)0);
+
+                    backupFishNewDoorGraphic.setId((short) 0x93);
+                    backupFishNewDoorGraphic.setX(180);
+                    backupFishNewDoorGraphic.setY(1520);
+
+                    gameObject.getObjectContainer().getObjects().add(backupFishNewDoorGraphic);
                 }
             }
         } else if (gameObject.getId() == 0x93) {
@@ -1136,6 +1264,27 @@ public final class GameDataTracker {
                 updateRelatedObject(objectToModify, itemLocationData, itemNewContentsData);
             }
         }
+    }
+
+    public static void addAutomaticHardmode() {
+        GameObject automaticHardmodeTimer = new GameObject(xelpudScreen);
+        automaticHardmodeTimer.setId((short) 0x0b);
+        automaticHardmodeTimer.getArgs().add((short) 0);
+        automaticHardmodeTimer.getArgs().add((short) 0);
+
+        TestByteOperation automaticHardModeTimerFlagTest = new TestByteOperation();
+        automaticHardModeTimerFlagTest.setIndex(362);
+        automaticHardModeTimerFlagTest.setValue((byte) 2);
+        automaticHardModeTimerFlagTest.setOp(ByteOp.FLAG_NOT_EQUAL);
+        automaticHardmodeTimer.getTestByteOperations().add(automaticHardModeTimerFlagTest);
+
+        WriteByteOperation automaticHardModeTimerFlagUpdate = new WriteByteOperation();
+        automaticHardModeTimerFlagUpdate.setIndex(362);
+        automaticHardModeTimerFlagUpdate.setValue((byte) 2);
+        automaticHardModeTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        automaticHardmodeTimer.getWriteByteOperations().add(automaticHardModeTimerFlagUpdate);
+
+        xelpudScreen.getObjects().add(automaticHardmodeTimer);
     }
 
     private static void addShrineMapSoundEffect(ObjectContainer objectContainer) {
