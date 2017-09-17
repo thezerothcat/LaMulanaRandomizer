@@ -1,3 +1,8 @@
+Releases page:
+-----------------------------
+https://github.com/thezerothcat/LaMulanaRandomizer/releases
+
+
 Known issues:
 -----------------------------
 https://github.com/thezerothcat/LaMulanaRandomizer/issues
@@ -25,6 +30,7 @@ Things to know:
 * You are not expected to have the Scalesphere before doing Spring in the Sky (the non-randomized game had it at the top of the area).
 * The randomizer does not expect you to fail the Chain Whip, Flail Whip, or Angel Shield puzzles, so don't do it!
 * A door has been added to allow access to the old Spring in the Sky shop after transforming it.
+* A door has been added to the bottom of Endless Corridor to allow access to the original Shrine of the Mother after defeating all 8 guardians (still requires doing the puzzle to enter the Shrine).
 * If your Mulana Talisman is replaced by Talisman or Diary, you can get Mulana Talisman back at any time by saving and reloading your game.
 * Xelpud has conversations based on collecting Talisman and Diary, but you are no longer required to equip the item.
 * "Lower" boss difficulty adds health/weapon requirements to some of the bosses.

@@ -522,74 +522,7 @@ public final class GameDataTracker {
             }
             else if(gameObject.getArgs().get(4) == 132){
                 // Untransformed Gyonin fish shop
-                ObjectContainer objectContainer = gameObject.getObjectContainer();
-                if(objectContainer instanceof Screen) {
-                    GameObject backupFishShop = new GameObject(gameObject.getObjectContainer());
-                    for (int i = 0; i < gameObject.getArgs().size(); i++) {
-                        backupFishShop.getArgs().add(gameObject.getArgs().get(i));
-                    }
-                    TestByteOperation testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(407);
-                    testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                    testByteOperation.setValue((byte) 3);
-                    backupFishShop.getTestByteOperations().add(testByteOperation);
-
-                    testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(254);
-                    testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-                    testByteOperation.setValue((byte) 3);
-                    backupFishShop.getTestByteOperations().add(testByteOperation);
-
-                    backupFishShop.setId((short) 0xa0);
-                    backupFishShop.setX(180);
-                    backupFishShop.setY(1520);
-
-                    gameObject.getObjectContainer().getObjects().add(backupFishShop);
-
-                    GameObject backupFishNewDoorGraphic = new GameObject(gameObject.getObjectContainer());
-                    testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(407);
-                    testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                    testByteOperation.setValue((byte) 3);
-                    backupFishNewDoorGraphic.getTestByteOperations().add(testByteOperation);
-
-                    testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(254);
-                    testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-                    testByteOperation.setValue((byte) 3);
-                    backupFishNewDoorGraphic.getTestByteOperations().add(testByteOperation);
-
-                    backupFishNewDoorGraphic.getArgs().add((short)-1);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)260);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)40);
-                    backupFishNewDoorGraphic.getArgs().add((short)40);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)1);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)255);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-                    backupFishNewDoorGraphic.getArgs().add((short)0);
-
-                    backupFishNewDoorGraphic.setId((short) 0x93);
-                    backupFishNewDoorGraphic.setX(180);
-                    backupFishNewDoorGraphic.setY(1520);
-
-                    gameObject.getObjectContainer().getObjects().add(backupFishNewDoorGraphic);
-                }
+                addBackupGyoninFishShop(gameObject);
             }
         } else if (gameObject.getId() == 0x93) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
@@ -697,6 +630,160 @@ public final class GameDataTracker {
                 }
             }
         }
+        else if(gameObject.getId() == 0x4e) {
+            // Tai Sui, on the screen of Endless Corridor with the ladder down to Shrine of the Mother
+            for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                if(testByteOperation.getIndex() == 362 && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())) {
+                    // Must pick either hardmode or non-hardmode version, or we'll be adding the door twice.
+                    addBackupShrineDoor(gameObject.getObjectContainer());
+                }
+            }
+        }
+    }
+
+    private static void addBackupGyoninFishShop(GameObject gameObject) {
+        ObjectContainer objectContainer = gameObject.getObjectContainer();
+        if(objectContainer instanceof Screen) {
+            GameObject backupFishShop = new GameObject(gameObject.getObjectContainer());
+            for (int i = 0; i < gameObject.getArgs().size(); i++) {
+                backupFishShop.getArgs().add(gameObject.getArgs().get(i));
+            }
+            TestByteOperation testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(407);
+            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+            testByteOperation.setValue((byte) 3);
+            backupFishShop.getTestByteOperations().add(testByteOperation);
+
+            testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(254);
+            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+            testByteOperation.setValue((byte) 3);
+            backupFishShop.getTestByteOperations().add(testByteOperation);
+
+            backupFishShop.setId((short) 0xa0);
+            backupFishShop.setX(180);
+            backupFishShop.setY(1520);
+
+            gameObject.getObjectContainer().getObjects().add(backupFishShop);
+
+            GameObject backupFishNewDoorGraphic = new GameObject(gameObject.getObjectContainer());
+            testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(407);
+            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+            testByteOperation.setValue((byte) 3);
+            backupFishNewDoorGraphic.getTestByteOperations().add(testByteOperation);
+
+            testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(254);
+            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+            testByteOperation.setValue((byte) 3);
+            backupFishNewDoorGraphic.getTestByteOperations().add(testByteOperation);
+
+            backupFishNewDoorGraphic.getArgs().add((short)-1);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)260);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)40);
+            backupFishNewDoorGraphic.getArgs().add((short)40);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)1);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)255);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+
+            backupFishNewDoorGraphic.setId((short) 0x93);
+            backupFishNewDoorGraphic.setX(180);
+            backupFishNewDoorGraphic.setY(1520);
+
+            gameObject.getObjectContainer().getObjects().add(backupFishNewDoorGraphic);
+        }
+    }
+
+    private static void addBackupShrineDoor(ObjectContainer objectContainer) {
+        // Add actual door to old Shrine of the Mother
+        GameObject backupShrineDoor = new GameObject(objectContainer);
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(258);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte) 9);
+        backupShrineDoor.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(500);
+        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+        testByteOperation.setValue((byte) 1);
+        backupShrineDoor.getTestByteOperations().add(testByteOperation);
+
+        backupShrineDoor.setId((short) 0x98);
+        backupShrineDoor.setX(2430);
+        backupShrineDoor.setY(320);
+
+        backupShrineDoor.getArgs().add((short)0);
+        backupShrineDoor.getArgs().add((short)9);
+        backupShrineDoor.getArgs().add((short)0);
+        backupShrineDoor.getArgs().add((short)0);
+        backupShrineDoor.getArgs().add((short)420);
+        backupShrineDoor.getArgs().add((short)152);
+
+        objectContainer.getObjects().add(backupShrineDoor);
+
+        // Add graphics for door to old Shrine of the Mother
+        GameObject backupShrineDoorGraphic = new GameObject(objectContainer);
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(258);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte) 9);
+        backupShrineDoorGraphic.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(500);
+        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+        testByteOperation.setValue((byte) 1);
+        backupShrineDoorGraphic.getTestByteOperations().add(testByteOperation);
+
+        backupShrineDoorGraphic.getArgs().add((short)-1);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)540);
+        backupShrineDoorGraphic.getArgs().add((short)40);
+        backupShrineDoorGraphic.getArgs().add((short)80);
+        backupShrineDoorGraphic.getArgs().add((short)80);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)1);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)255);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+
+        backupShrineDoorGraphic.setId((short) 0x93);
+        backupShrineDoorGraphic.setX(2410);
+        backupShrineDoorGraphic.setY(280);
+
+        objectContainer.getObjects().add(backupShrineDoorGraphic);
     }
 
     public static void addBlock(Block block) {

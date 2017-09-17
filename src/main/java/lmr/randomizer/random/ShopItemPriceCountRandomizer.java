@@ -129,6 +129,9 @@ public class ShopItemPriceCountRandomizer {
             return (short)(100 + 50 * random.nextInt(3));
         }
         if("Hand Scanner".equals(itemName)) {
+            if(Settings.getNonRandomizedItems().contains("Hand Scanner")) {
+                return 10;
+            }
             // 5-15, in increments of 5
             return (short)(5 + 5 * random.nextInt(3));
         }
@@ -152,10 +155,33 @@ public class ShopItemPriceCountRandomizer {
             return (short)(150 + 10 * random.nextInt(6));
         }
         if("reader.exe".equals(itemName)) {
+            if(Settings.getNonRandomizedItems().contains("reader.exe")) {
+                return 50;
+            }
             // 40-50, in increments of 5
             return (short)(40 + 5 * random.nextInt(3));
         }
-        if(itemName.equals("Hermes' Boots") || itemName.equals("Feather") || itemName.equals("Holy Grail")
+        if(itemName.equals("Hermes' Boots")) {
+            if(Settings.getNonRandomizedItems().contains("Hermes' Boots")) {
+                return 60;
+            }
+            // 30-80, in increments of 10, weighted towards the middle
+            int randomRoll = random.nextInt(8);
+            if(randomRoll < 2) {
+                return 30;
+            }
+            if(randomRoll == 2) {
+                return 50;
+            }
+            if(randomRoll == 3) {
+                return 60;
+            }
+            if(randomRoll == 4) {
+                return 70;
+            }
+            return 80;
+        }
+        if(itemName.equals("Feather") || itemName.equals("Holy Grail")
                 || ("Grapple Claw".equals(itemName) && Settings.getEnabledGlitches().contains("Raindrop"))
                 || PROGRESSION_ITEMS.contains(itemName)) {
             // 30-80, in increments of 10, weighted towards the middle
