@@ -87,18 +87,12 @@ public class ItemRandomizer {
 //        unplacedItems.remove("Flail Whip");
         for(String item : DataFromFile.getNonRandomizedItems()) {
             mapOfItemLocationToItem.put(item, item);
-            if(!unassignedNonShopItemLocations.contains(item)) {
-                FileUtils.log("Item not included in locations: " + item);
-            }
             unassignedNonShopItemLocations.remove(item);
             unplacedItems.remove(item);
         }
         if(Settings.isRandomizeCoinChests()) {
             for(String coinChest : DataFromFile.getNonRandomizedCoinChests()) {
                 mapOfItemLocationToItem.put(coinChest, coinChest);
-                if(!unassignedNonShopItemLocations.contains(coinChest)) {
-                    FileUtils.log("Coin chest not included in locations: " + coinChest);
-                }
                 unassignedNonShopItemLocations.remove(coinChest);
                 unplacedItems.remove(coinChest);
             }

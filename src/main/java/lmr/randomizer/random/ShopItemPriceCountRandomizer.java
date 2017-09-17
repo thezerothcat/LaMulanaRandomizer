@@ -202,10 +202,18 @@ public class ShopItemPriceCountRandomizer {
         }
 
         if(PROGRESSION_ITEMS_WITH_UTILITY.contains(itemName)) {
+            if(Settings.isRandomizeCoinChests()) {
+                // 100-200, in increments of 5
+                return (short)(100 + 5 * random.nextInt(21));
+            }
             // 50-150, in increments of 5
             return (short)(50 + 5 * random.nextInt(11));
         }
         if(LUXURY_ITEMS.contains(itemName)) {
+            if(Settings.isRandomizeCoinChests()) {
+                // 200-350, in increments of 30
+                return (short)(200 + 30 * random.nextInt(6));
+            }
             // 150-300, in increments of 30
             return (short)(150 + 30 * random.nextInt(6));
         }
