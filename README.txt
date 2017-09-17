@@ -25,14 +25,14 @@ If you want to play the non-randomized game, there's a Restore button in the UI 
 
 Things to know:
 -----------------------------
-* It's possible to purchase actual subweapons from shops. They look the same as ammo for the subweapon, but unlike ammo, there's a price tag attached.
-* The Shrine of the Mother map is the only required map. If you find this item in a shop, it will be called Shrine Map instead of just Map, and if you pick it up elsewhere, a shell horn sound will play (regardless of whether or not you've collected shell horn).
-* You are not expected to have the Scalesphere before doing Spring in the Sky (the non-randomized game had it at the top of the area).
 * The randomizer does not expect you to fail the Chain Whip, Flail Whip, or Angel Shield puzzles, so don't do it!
 * A door has been added to allow access to the old Spring in the Sky shop after transforming it.
 * A door has been added to the bottom of Endless Corridor to allow access to the original Shrine of the Mother after defeating all 8 guardians (still requires doing the puzzle to enter the Shrine).
 * If your Mulana Talisman is replaced by Talisman or Diary, you can get Mulana Talisman back at any time by saving and reloading your game.
 * Xelpud has conversations based on collecting Talisman and Diary, but you are no longer required to equip the item.
+* The Shrine of the Mother map is the only required map. If you find this item in a shop, it will be called Shrine Map instead of just Map, and if you pick it up elsewhere, a shell horn sound will play (regardless of whether or not you've collected shell horn).
+* You are not expected to have the Scalesphere before doing Spring in the Sky (the non-randomized game had it at the top of the area).
+* It's possible to purchase actual subweapons from shops. They look the same as ammo for the subweapon, but are not sold out.
 * "Lower" boss difficulty adds health/weapon requirements to some of the bosses.
 * Initially accessible locations include 9 shops, 26 non-shop locations, and an additional 6 coin chests if coin chests are randomized.
 
@@ -103,7 +103,7 @@ Adds some basic UI and file validation for the randomizer jar, so it doesn't hav
 Plans for future releases:
 -----------------------------
 * Area transition randomiztion
-* Automatic hardmode activation (better support for hardmode seeds with random scanner/grail)
+* Ability to replace some items with empty chests (or possibly weights).
 * Better handling for ankh jewel locks.
 * Item requirements expansion (configurable boss requirements, more glitch-enabled requirements, requirements involving damage boosting, etc.)
 * Shop randomization expansion (randomizing ammo when shuffling items only)
