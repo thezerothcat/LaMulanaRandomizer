@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class Main {
     public static void main(String[] args) {
-        if(false) {
+        if (false) {
 //            Settings.startingSeed = 1246445508;
             Settings.getNonRandomizedItems().add("Holy Grail");
 //            parseSettings(args);
@@ -41,12 +41,10 @@ public class Main {
                 ex.printStackTrace();
             }
             FileUtils.closeAll();
-        }
-        else {
+        } else {
             try {
                 FileUtils.readSettings();
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 FileUtils.log("Unable to read settings: " + ex.getMessage());
             }
             SwingUtilities.invokeLater(new RandomizerRunnable());
@@ -113,13 +111,11 @@ public class Main {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if("generate".equals(e.getActionCommand())) {
+            if ("generate".equals(e.getActionCommand())) {
                 generateSeed();
-            }
-            else if("apply".equals(e.getActionCommand())) {
+            } else if ("apply".equals(e.getActionCommand())) {
                 generateAndApply();
-            }
-            else if("restore".equals(e.getActionCommand())) {
+            } else if ("restore".equals(e.getActionCommand())) {
                 restore();
             }
         }
@@ -140,9 +136,11 @@ public class Main {
             progressDialog.updateProgress(10, "Backing up game files");
 
             File rcdFile = new File("script.rcd.bak");
-            if(!rcdFile.exists()) {
+            if (!rcdFile.exists()) {
                 File existingRcd = new File(Settings.getLaMulanaBaseDir(), "data/mapdata/script.rcd");
-                if(!FileUtils.hashRcdFile(existingRcd)) {
+                if (!FileUtils.hashRcdFile(existingRcd)) {
+                    JOptionPane.showMessageDialog(this, "The data/mapdata/script.rcd file in the game directory is " +
+                                    "not original! Please restore it from a backup / clean install!", "Randomizer error", JOptionPane.ERROR_MESSAGE);
                     FileUtils.log("unable to back up script.rcd - file already modified");
                     FileUtils.closeAll();
                     System.exit(0);
@@ -154,18 +152,19 @@ public class Main {
                     Files.copy(existingRcd.toPath(), fileOutputStream);
                     fileOutputStream.flush();
                     fileOutputStream.close();
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     FileUtils.log("unable to back up script.rcd: " + ex.getMessage());
                     FileUtils.closeAll();
                     System.exit(0);
                 }
             }
             File datFile = new File("script_code.dat.bak");
-            if(!datFile.exists()) {
+            if (!datFile.exists()) {
                 File existingDat = new File(Settings.getLaMulanaBaseDir(), "data/language/en/script_code.dat");
-                if(!FileUtils.hashDatFile(existingDat)) {
+                if (!FileUtils.hashDatFile(existingDat)) {
                     FileUtils.log("unable to back up script_code.dat - file already modified");
+                    JOptionPane.showMessageDialog(this, "The data/language/en/script_code.dat file in the game directory is not original! Please restore it from a backup / clean install!",
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
                     FileUtils.closeAll();
                     System.exit(0);
                 }
@@ -174,8 +173,7 @@ public class Main {
                     // Make script_code.dat backup
                     Files.copy(existingDat.toPath(),
                             new FileOutputStream(new File("script_code.dat.bak")));
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     FileUtils.log("unable to back up script_code.dat: " + ex.getMessage());
                     FileUtils.closeAll();
                     System.exit(0);
@@ -189,7 +187,7 @@ public class Main {
 
 
             try {
-                SwingWorker<Void,Void> swingWorker = new SwingWorker<Void, Void>() {
+                SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
                     @Override
                     protected Void doInBackground() throws Exception {
                         doTheThing(progressDialog);
@@ -223,8 +221,7 @@ public class Main {
                 fileOutputStream.close();
 
                 FileUtils.closeAll();
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 FileUtils.log("unable to copy files to La-Mulana install");
                 FileUtils.closeAll();
                 System.exit(0);
@@ -232,8 +229,6 @@ public class Main {
         }
 
         private void restore() {
-            generateSeed();
-
             try {
                 FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\mapdata\\script.rcd"));
                 Files.copy(new File("script.rcd.bak").toPath(), fileOutputStream);
@@ -244,8 +239,7 @@ public class Main {
                 Files.copy(new File(String.format("script_code.dat.bak", Settings.getStartingSeed())).toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 FileUtils.log("unable to restore files to La-Mulana install");
                 FileUtils.closeAll();
                 System.exit(0);
@@ -299,8 +293,7 @@ public class Main {
             try {
                 Settings.setStartingSeed(Integer.parseInt(seedNumber.getText()));
                 Settings.setLaMulanaBaseDir(laMulanaDirectory.getText(), true);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 FileUtils.log("unable to save edit for seedNumber");
             }
         }
@@ -330,13 +323,11 @@ public class Main {
             add(initialItem);
             add(nonrandomItem);
 
-            if(Settings.getInitiallyAvailableItems().contains(item)) {
+            if (Settings.getInitiallyAvailableItems().contains(item)) {
                 initialItem.setSelected(true);
-            }
-            else if(Settings.getNonRandomizedItems().contains(item)) {
+            } else if (Settings.getNonRandomizedItems().contains(item)) {
                 nonrandomItem.setSelected(true);
-            }
-            else {
+            } else {
                 randomItem.setSelected(true);
             }
 
@@ -419,7 +410,7 @@ public class Main {
             super(new MigLayout("fillx, wrap 4", "[sizegroup checkboxes]", "[]4[]"));
             setBorder(BorderFactory.createTitledBorder("Glitch Settings"));
 
-            for(String availableGlitch : DataFromFile.getAvailableGlitches()) {
+            for (String availableGlitch : DataFromFile.getAvailableGlitches()) {
                 JCheckBox glitchCheckbox = new JCheckBox(availableGlitch);
                 glitchCheckbox.setSelected(Settings.getEnabledGlitches().contains(availableGlitch));
                 glitchCheckbox.setActionCommand(availableGlitch);
@@ -430,8 +421,8 @@ public class Main {
 
         public void updateSettings() {
             List<String> enabledGlitches = new ArrayList<>();
-            for(JCheckBox glitchOption : glitchOptions) {
-                if(glitchOption.isSelected()) {
+            for (JCheckBox glitchOption : glitchOptions) {
+                if (glitchOption.isSelected()) {
                     enabledGlitches.add(glitchOption.getActionCommand());
                 }
             }
@@ -461,7 +452,7 @@ public class Main {
             itemConfigRadioGroupPanels.add(new GameItemRadio("xmailer.exe"));
 //            itemConfigRadioGroupPanels.add(new GameItemRadio("Flail Whip"));
 //            itemConfigRadioGroupPanels.add(new GameItemRadio("Fairy Clothes"));
-            for(GameItemRadio gameItemRadio : itemConfigRadioGroupPanels) {
+            for (GameItemRadio gameItemRadio : itemConfigRadioGroupPanels) {
                 add(gameItemRadio, LEFT_ALIGNMENT);
             }
         }
@@ -470,12 +461,11 @@ public class Main {
             Set<String> initiallyAvailableItems = new HashSet<>();
             Set<String> nonRandomizedItems = new HashSet<>();
 
-            for(GameItemRadio itemRadio : itemConfigRadioGroupPanels) {
+            for (GameItemRadio itemRadio : itemConfigRadioGroupPanels) {
                 String actionCommand = itemRadio.getActionCommand();
-                if("INITIAL".equals(actionCommand)) {
+                if ("INITIAL".equals(actionCommand)) {
                     addArgItemUI(initiallyAvailableItems, itemRadio.getItemName());
-                }
-                else if("NONRANDOM".equals(actionCommand)) {
+                } else if ("NONRANDOM".equals(actionCommand)) {
                     addArgItemUI(nonRandomizedItems, itemRadio.getItemName());
                 }
             }
@@ -510,13 +500,11 @@ public class Main {
             add(shopCategorizedRandomization);
             add(shopEverythingRandomization);
 
-            if(ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
+            if (ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
                 shopNoRandomization.setSelected(true);
-            }
-            else if(ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())) {
+            } else if (ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())) {
                 shopCategorizedRandomization.setSelected(true);
-            }
-            else {
+            } else {
                 shopEverythingRandomization.setSelected(true);
             }
         }
@@ -550,13 +538,11 @@ public class Main {
             add(medium);
             add(hard);
 
-            if(BossDifficulty.EASY.equals(Settings.getBossDifficulty())) {
+            if (BossDifficulty.EASY.equals(Settings.getBossDifficulty())) {
                 medium.setSelected(true); // todo: easy is not a setting yet
-            }
-            else if(BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty())) {
+            } else if (BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty())) {
                 medium.setSelected(true);
-            }
-            else {
+            } else {
                 hard.setSelected(true);
             }
         }
@@ -577,7 +563,7 @@ public class Main {
             //setSize(400, 100);
             setLocationRelativeTo(owner);
 
-            progressBar = new JProgressBar(0,100);
+            progressBar = new JProgressBar(0, 100);
             statusText = new JLabel("Generating seed...");
 
             add(statusText, "growx, width 300!");
@@ -596,11 +582,11 @@ public class Main {
         Set<String> initiallyAvailableItems = getInitiallyAvailableItems();
 
         int attempt = 0;
-        while(true) {
+        while (true) {
             ++attempt;
 
             dialog.updateProgress(20, "Shuffling items for attempt #" + attempt);
-            dialog.setTitle("Progress after attempt #"+ attempt);
+            dialog.setTitle("Progress after attempt #" + attempt);
             dialog.progressBar.setIndeterminate(true);
 
             ItemRandomizer itemRandomizer = new ItemRandomizer();
@@ -610,26 +596,26 @@ public class Main {
             itemRandomizer.placeNonRandomizedItems();
             shopRandomizer.placeNonRandomizedItems();
             shopRandomizer.determineItemTypes(random);
-            if(!itemRandomizer.placeRequiredItems(new ArrayList<>(initiallyAvailableItems), random)) {
+            if (!itemRandomizer.placeRequiredItems(new ArrayList<>(initiallyAvailableItems), random)) {
                 continue;
             }
-            if(Settings.isRandomizeCoinChests()) {
-                if(!itemRandomizer.placeCoinChests(random)) {
+            if (Settings.isRandomizeCoinChests()) {
+                if (!itemRandomizer.placeCoinChests(random)) {
                     continue;
                 }
             }
-            if(!itemRandomizer.placeAllItems(random)) {
+            if (!itemRandomizer.placeAllItems(random)) {
                 continue;
             }
 
             boolean ankhJewelLock = false;
             accessChecker.initExitRequirements();
             accessChecker.computeAccessibleNodes("None");
-            for(String enabledGlitch : Settings.getEnabledGlitches()) {
+            for (String enabledGlitch : Settings.getEnabledGlitches()) {
                 accessChecker.computeAccessibleNodes("Setting: " + enabledGlitch);
             }
-            if(accessChecker.updateForBosses(attempt)) {
-                while(!accessChecker.getQueuedUpdates().isEmpty()) {
+            if (accessChecker.updateForBosses(attempt)) {
+                while (!accessChecker.getQueuedUpdates().isEmpty()) {
                     accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next());
                     if (accessChecker.getQueuedUpdates().isEmpty()) {
                         if (!accessChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
@@ -642,23 +628,22 @@ public class Main {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 ankhJewelLock = true;
             }
-            if(ankhJewelLock) {
+            if (ankhJewelLock) {
                 FileUtils.log(String.format("Detected ankh jewel lock on attempt %s. Re-shuffling items.", attempt));
                 continue;
             }
 
-            if(accessChecker.isSuccess()) {
+            if (accessChecker.isSuccess()) {
                 try {
                     dialog.progressBar.setIndeterminate(false);
-                    dialog.updateProgress(80, "Shuffling done after #"+attempt+" attempts");
+                    dialog.updateProgress(80, "Shuffling done after #" + attempt + " attempts");
 
                     FileUtils.log(String.format("Successful attempt %s.", attempt));
 
-                    if(Settings.isRandomizeForbiddenTreasure()) {
+                    if (Settings.isRandomizeForbiddenTreasure()) {
                         itemRandomizer.randomizeForbiddenTreasure(random);
                     }
 
@@ -669,7 +654,7 @@ public class Main {
                     outputLocations(itemRandomizer, shopRandomizer, attempt);
                     itemRandomizer.updateFiles();
                     shopRandomizer.updateFiles(datInfo, random);
-                    if(Settings.isAutomaticHardmode()) {
+                    if (Settings.isAutomaticHardmode()) {
                         GameDataTracker.addAutomaticHardmode();
                     }
                     RcdWriter.writeRcd(rcdData);
@@ -677,12 +662,12 @@ public class Main {
 
                     dialog.updateProgress(90, "Wrote files to game directory");
 
-                    if(!Settings.isFullItemAccess()) {
+                    if (!Settings.isFullItemAccess()) {
                         accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
                     }
 
                     File settingsFile = new File("randomizer-config.txt");
-                    if(settingsFile.exists()) {
+                    if (settingsFile.exists()) {
                         FileOutputStream fileOutputStream = new FileOutputStream(
                                 new File(String.format("%s/randomizer-config.txt", Settings.getStartingSeed())));
                         Files.copy(settingsFile.toPath(), fileOutputStream);
@@ -721,13 +706,11 @@ public class Main {
 
     private static ShopRandomizer buildShopRandomizer(ItemRandomizer itemRandomizer) {
         ShopRandomizer shopRandomizer;
-        if(ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
+        if (ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
             shopRandomizer = new StaticShopRandomizer(itemRandomizer.getTotalShopItems());
-        }
-        else if(ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())) {
+        } else if (ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())) {
             shopRandomizer = new CategorizedShopRandomizer();
-        }
-        else {
+        } else {
             shopRandomizer = new EverythingShopRandomizer();
         }
 
@@ -757,8 +740,8 @@ public class Main {
     }
 
     private static void addArgItemUI(Set<String> nonRandomizedItems, String input) {
-        for(String item : DataFromFile.getAllItems()) {
-            if(item.equals(input)) {
+        for (String item : DataFromFile.getAllItems()) {
+            if (item.equals(input)) {
                 nonRandomizedItems.add(item);
             }
         }
