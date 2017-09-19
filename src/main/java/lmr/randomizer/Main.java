@@ -35,7 +35,7 @@ public class Main {
             File directory = new File(Long.toString(Settings.getStartingSeed()));
             directory.mkdir();
             try {
-                doTheThing();
+                //doTheThing(progressDialog);
             } catch (Exception ex) {
                 FileUtils.log("Error: " + ex.getMessage());
                 ex.printStackTrace();
@@ -68,6 +68,7 @@ public class Main {
         private GlitchPanel glitchPanel;
         private ShopRandomizationRadio shopRandomization;
         private DifficultyPanel difficultyPanel;
+        private ProgressDialog progressDialog;
 
         public RandomizerUI() {
             try {
@@ -104,6 +105,8 @@ public class Main {
             difficultyPanel = new DifficultyPanel();
             add(difficultyPanel, "growx, aligny, wrap");
 
+            progressDialog = new ProgressDialog(this);
+
             add(new ButtonPanel(this), "grow");
             pack();
         }
@@ -133,6 +136,8 @@ public class Main {
             DataFromFile.clearAllData();
 
             fieldPanel.rerollRandomSeed();
+
+            progressDialog.updateProgress(10, "Backing up game files");
 
             File rcdFile = new File("script.rcd.bak");
             if(!rcdFile.exists()) {
@@ -177,21 +182,34 @@ public class Main {
                 }
             }
 
+            progressDialog.updateProgress(15, "Setting up output directory");
+
             File directory = new File(Long.toString(Settings.getStartingSeed()));
             directory.mkdir();
 
 
             try {
-                doTheThing();
+                SwingWorker<Void,Void> swingWorker = new SwingWorker<Void, Void>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        doTheThing(progressDialog);
+
+                        return null;
+                    }
+                };
+                swingWorker.execute();
+                progressDialog.setVisible(true);
             } catch (Exception ex) {
                 FileUtils.log("Error: " + ex.getMessage());
                 ex.printStackTrace();
                 throw ex;
             }
+
         }
 
         private void generateAndApply() {
             try {
+                progressDialog.updateProgress(0, "Setting up randomizer");
                 generateSeed();
 
                 FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\mapdata\\script.rcd"));
@@ -548,13 +566,43 @@ public class Main {
         }
     }
 
-    private static void doTheThing() {
+    static class ProgressDialog extends JDialog {
+        JProgressBar progressBar;
+        JLabel statusText;
+
+        public ProgressDialog(Frame owner) {
+            super(owner, "Progress", true);
+            setLayout(new MigLayout("wrap 1", "", "align center"));
+            setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            //setSize(400, 100);
+            setLocationRelativeTo(owner);
+
+            progressBar = new JProgressBar(0,100);
+            statusText = new JLabel("Generating seed...");
+
+            add(statusText, "growx, width 300!");
+            add(progressBar, "growx, height 1.5*pref");
+            pack();
+        }
+
+        public void updateProgress(int percentage, String progressText) {
+            statusText.setText(progressText);
+            progressBar.setValue(percentage);
+        }
+    }
+
+    private static void doTheThing(ProgressDialog dialog) {
         Random random = new Random(Settings.getStartingSeed());
         Set<String> initiallyAvailableItems = getInitiallyAvailableItems();
 
         int attempt = 0;
         while(true) {
             ++attempt;
+
+            dialog.updateProgress(20, "Shuffling items for attempt #" + attempt);
+            dialog.setTitle("Progress after attempt #"+ attempt);
+            dialog.progressBar.setIndeterminate(true);
+
             ItemRandomizer itemRandomizer = new ItemRandomizer();
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer);
@@ -605,11 +653,16 @@ public class Main {
 
             if(accessChecker.isSuccess()) {
                 try {
+                    dialog.progressBar.setIndeterminate(false);
+                    dialog.updateProgress(80, "Shuffling done after #"+attempt+" attempts");
+
                     FileUtils.log(String.format("Successful attempt %s.", attempt));
 
                     if(Settings.isRandomizeForbiddenTreasure()) {
                         itemRandomizer.randomizeForbiddenTreasure(random);
                     }
+
+                    dialog.updateProgress(85, "Writing files to game directory");
 
                     List<Zone> rcdData = RcdReader.getRcdScriptInfo();
                     List<Block> datInfo = DatReader.getDatScriptInfo();
@@ -621,6 +674,8 @@ public class Main {
                     }
                     RcdWriter.writeRcd(rcdData);
                     DatWriter.writeDat(datInfo);
+
+                    dialog.updateProgress(90, "Wrote files to game directory");
 
                     if(!Settings.isFullItemAccess()) {
                         accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
@@ -635,32 +690,33 @@ public class Main {
                         fileOutputStream.close();
                     }
 
+                    dialog.updateProgress(100, "Done!");
+
+                    SwingUtilities.invokeLater(() -> {
+                        try {
+                            Thread.sleep(2000);
+                            dialog.setVisible(false);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    });
+
                     return;
                 } catch (Exception ex) {
-                    FileUtils.log(ex.getClass().getName() + ": " + ex.getMessage());
-                    FileUtils.log("File: " + ex.getStackTrace()[0].getFileName());
-                    FileUtils.log("Method: " + ex.getStackTrace()[0].getMethodName());
-                    FileUtils.log("Line: " + ex.getStackTrace()[0].getLineNumber());
-                    FileUtils.log("File: " + ex.getStackTrace()[1].getFileName());
-                    FileUtils.log("Method: " + ex.getStackTrace()[1].getMethodName());
-                    FileUtils.log("Line: " + ex.getStackTrace()[1].getLineNumber());
+                    FileUtils.logException(ex);
                     return;
                 }
             }
+
             try {
 //                accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
             } catch (Exception ex) {
-                FileUtils.log(ex.getClass().getName() + ": " + ex.getMessage());
-                FileUtils.log("File: " + ex.getStackTrace()[0].getFileName());
-                FileUtils.log("Method: " + ex.getStackTrace()[0].getMethodName());
-                FileUtils.log("Line: " + ex.getStackTrace()[0].getLineNumber());
-                FileUtils.log("File: " + ex.getStackTrace()[1].getFileName());
-                FileUtils.log("Method: " + ex.getStackTrace()[1].getMethodName());
-                FileUtils.log("Line: " + ex.getStackTrace()[1].getLineNumber());
+                FileUtils.logException(ex);
                 return;
                 // No exception handling in v1
             }
         }
+
     }
 
     private static ShopRandomizer buildShopRandomizer(ItemRandomizer itemRandomizer) {
