@@ -358,6 +358,16 @@ public class FileUtils {
         writer.close();
     }
 
+    public static void logException(Exception ex) {
+        FileUtils.log(ex.getClass().getName() + ": " + ex.getMessage());
+        FileUtils.log("File: " + ex.getStackTrace()[0].getFileName());
+        FileUtils.log("Method: " + ex.getStackTrace()[0].getMethodName());
+        FileUtils.log("Line: " + ex.getStackTrace()[0].getLineNumber());
+        FileUtils.log("File: " + ex.getStackTrace()[1].getFileName());
+        FileUtils.log("Method: " + ex.getStackTrace()[1].getMethodName());
+        FileUtils.log("Line: " + ex.getStackTrace()[1].getLineNumber());
+    }
+
     public static void log(String logText) {
         try {
             if(logWriter == null) {
