@@ -37,6 +37,11 @@ Things to know:
 * Initially accessible locations include 9 shops, 26 non-shop locations, and an additional 6 coin chests if coin chests are randomized.
 
 
+1.12:
+-----------------------------
+Added in-game Japanese language support (randomizer UI still needs translation). Merged more UI improvements from Goost. Assorted minor requirement fixes.
+
+
 1.11:
 -----------------------------
 Added an option to start the game in hardmode. Added a backup door for the shop in Spring in the Sky, which will appear after it's transformed. Made a couple of other fixes for reported issues.
