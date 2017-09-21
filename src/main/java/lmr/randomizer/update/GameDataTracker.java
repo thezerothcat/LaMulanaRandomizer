@@ -3,6 +3,7 @@ package lmr.randomizer.update;
 import javafx.util.Pair;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
+import lmr.randomizer.Settings;
 import lmr.randomizer.dat.*;
 import lmr.randomizer.dat.conversation.CheckBlock;
 import lmr.randomizer.dat.shop.BlockStringData;
@@ -1218,13 +1219,22 @@ public final class GameDataTracker {
 
         List<Short> newBlockData = new ArrayList<>(blockStringData.getData().subList(0, blockStringData.getItemNameStartIndex()));
         if("Map (Shrine of the Mother)".equals(shopItem)) {
-            newBlockData.add((short)296);
-            newBlockData.add((short)315);
-            newBlockData.add((short)325);
-            newBlockData.add((short)316);
-            newBlockData.add((short)321);
-            newBlockData.add((short)312);
-            newBlockData.add((short)32);
+            if("jp".equals(Settings.getLanguage())) {
+                // 聖母の祠の
+                newBlockData.add((short)1027);
+                newBlockData.add((short)882);
+                newBlockData.add((short)386);
+                newBlockData.add((short)975);
+                newBlockData.add((short)386);
+            } else {
+                newBlockData.add((short)296);
+                newBlockData.add((short)315);
+                newBlockData.add((short)325);
+                newBlockData.add((short)316);
+                newBlockData.add((short)321);
+                newBlockData.add((short)312);
+                newBlockData.add((short)32);
+            }
         }
         newBlockData.add((short)77);
         newBlockData.add(getInventoryItemArg(shopItem));
@@ -1235,13 +1245,22 @@ public final class GameDataTracker {
 
     private static void updateBunemonText(List<Short> bunemonData, String shopItem) {
         if("Map (Shrine of the Mother)".equals(shopItem)) {
-            bunemonData.add((short)296);
-            bunemonData.add((short)315);
-            bunemonData.add((short)325);
-            bunemonData.add((short)316);
-            bunemonData.add((short)321);
-            bunemonData.add((short)312);
-            bunemonData.add((short)32);
+            if("jp".equals(Settings.getLanguage())) {
+                // 聖母の祠の
+                bunemonData.add((short)1027);
+                bunemonData.add((short)882);
+                bunemonData.add((short)386);
+                bunemonData.add((short)975);
+                bunemonData.add((short)386);
+            } else {
+                bunemonData.add((short)296);
+                bunemonData.add((short)315);
+                bunemonData.add((short)325);
+                bunemonData.add((short)316);
+                bunemonData.add((short)321);
+                bunemonData.add((short)312);
+                bunemonData.add((short)32);
+            }
         }
         bunemonData.add((short)77);
         bunemonData.add(getInventoryItemArg(shopItem));

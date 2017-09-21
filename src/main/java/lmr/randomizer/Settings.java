@@ -25,7 +25,8 @@ public final class Settings {
 
     private List<String> enabledGlitches = new ArrayList<>();
 
-    private String laMulanaBaseDir = null;
+    private String laMulanaBaseDir;
+    private String language;
 
     private Set<String> nonRandomizedItems = new HashSet<>();
     private Set<String> initiallyAvailableItems = new HashSet<>();
@@ -36,6 +37,7 @@ public final class Settings {
     private Settings() {
         startingSeed = new Random().nextInt(Integer.MAX_VALUE);
         laMulanaBaseDir = "Please enter your La-Mulana install directory";
+        language = "en";
 
         requireSoftwareComboForKeyFairy = true;
         requireIceCapeForLava = true;
@@ -92,6 +94,18 @@ public final class Settings {
     public static String getLaMulanaBaseDir() {
         return singleton.laMulanaBaseDir;
     }
+
+    public static String getLanguage() {
+        return singleton.language;
+    }
+
+    public static String getBackupDatFile() {
+        if("en".equals(singleton.language)) {
+            return "script_code.dat.bak";
+        }
+        return "script_code_" + singleton.language + ".dat.bak";
+    }
+
 
     public static Set<String> getNonRandomizedItems() {
         return singleton.nonRandomizedItems;
@@ -212,6 +226,13 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.laMulanaBaseDir = laMulanaBaseDir;
+    }
+
+    public static void setLanguage(String language, boolean update) {
+        if(update && !language.equals(singleton.language)) {
+            singleton.changed = true;
+        }
+        singleton.language = language;
     }
 
     public static void setShopRandomization(String shopRandomization, boolean update) {

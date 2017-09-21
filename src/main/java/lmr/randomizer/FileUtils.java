@@ -298,6 +298,9 @@ public class FileUtils {
             else if(line.startsWith("laMulanaBaseDir")) {
                 Settings.setLaMulanaBaseDir(line.substring(line.indexOf("=") + 1), false);
             }
+            else if(line.startsWith("language")) {
+                Settings.setLanguage(line.substring(line.indexOf("=") + 1), false);
+            }
             else if(line.startsWith("bossDifficulty")) {
                 Settings.setBossDifficulty(line.split("=")[1], false);
             }
@@ -333,6 +336,9 @@ public class FileUtils {
         writer.write(String.format("laMulanaBaseDir=%s", Settings.getLaMulanaBaseDir()));
         writer.newLine();
 
+        writer.write(String.format("language=%s", Settings.getLanguage()));
+        writer.newLine();
+
         writer.write(String.format("bossDifficulty=%s", Settings.getBossDifficulty().name()));
         writer.newLine();
 
@@ -356,6 +362,16 @@ public class FileUtils {
 
         writer.flush();
         writer.close();
+    }
+
+    public static void logException(Exception ex) {
+        FileUtils.log(ex.getClass().getName() + ": " + ex.getMessage());
+        FileUtils.log("File: " + ex.getStackTrace()[0].getFileName());
+        FileUtils.log("Method: " + ex.getStackTrace()[0].getMethodName());
+        FileUtils.log("Line: " + ex.getStackTrace()[0].getLineNumber());
+        FileUtils.log("File: " + ex.getStackTrace()[1].getFileName());
+        FileUtils.log("Method: " + ex.getStackTrace()[1].getMethodName());
+        FileUtils.log("Line: " + ex.getStackTrace()[1].getLineNumber());
     }
 
     public static void log(String logText) {

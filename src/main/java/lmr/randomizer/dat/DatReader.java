@@ -371,7 +371,7 @@ public final class DatReader {
     }
 
     public static List<Block> getDatScriptInfo() throws Exception {
-        DataInputStream dataInputStream = new DataInputStream(new FileInputStream("script_code.dat.bak"));
+        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(Settings.getBackupDatFile()));
 
         List<Block> datBlocks = new ArrayList<>();
         int numberOfBlocks = (int)dataInputStream.readShort();

@@ -1,6 +1,7 @@
 Fairy Clothes => Location: Gate of Illusion [Middle], Isis' Pendant, Axe
 Fairy Clothes => Location: Gate of Illusion [Middle], Isis' Pendant, Katana
 Fairy Clothes => Location: Gate of Illusion [Middle], Isis' Pendant, Knife
-Spaulder => Location: Tower of the Goddess [Grail], Isis' Pendant, Holy Grail, mirai.exe
+Spaulder => Location: Tower of the Goddess [Grail], Isis' Pendant, Feather, Hermes' Boots
+Spaulder => Location: Tower of the Goddess [Grail], Isis' Pendant, Holy Grail, mirai.exe, Hand Scanner, reader.exe
 Location: Gate of Time => Location: Chamber of Extinction [Main], Isis' Pendant
 Shop 12 Alt (Spring) => Helmet, Origin Seal, Isis' Pendant

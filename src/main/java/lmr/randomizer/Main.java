@@ -27,30 +27,13 @@ import java.util.List;
  */
 public class Main {
     public static void main(String[] args) {
-        if(false) {
-//            Settings.startingSeed = 1246445508;
-            Settings.getNonRandomizedItems().add("Holy Grail");
-//            parseSettings(args);
-            Settings.setLaMulanaBaseDir("C:\\GOG Games\\La-Mulana", true);
-            File directory = new File(Long.toString(Settings.getStartingSeed()));
-            directory.mkdir();
-            try {
-                doTheThing();
-            } catch (Exception ex) {
-                FileUtils.log("Error: " + ex.getMessage());
-                ex.printStackTrace();
-            }
-            FileUtils.closeAll();
+        try {
+            FileUtils.readSettings();
         }
-        else {
-            try {
-                FileUtils.readSettings();
-            }
-            catch (Exception ex) {
-                FileUtils.log("Unable to read settings: " + ex.getMessage());
-            }
-            SwingUtilities.invokeLater(new RandomizerRunnable());
+        catch (Exception ex) {
+            FileUtils.log("Unable to read settings: " + ex.getMessage());
         }
+        SwingUtilities.invokeLater(new RandomizerRunnable());
     }
 
     static class RandomizerRunnable implements Runnable {
@@ -68,6 +51,7 @@ public class Main {
         private GlitchPanel glitchPanel;
         private ShopRandomizationRadio shopRandomization;
         private DifficultyPanel difficultyPanel;
+        private ProgressDialog progressDialog;
 
         public RandomizerUI() {
             try {
@@ -104,6 +88,8 @@ public class Main {
             difficultyPanel = new DifficultyPanel();
             add(difficultyPanel, "growx, aligny, wrap");
 
+            progressDialog = new ProgressDialog(this);
+
             add(new ButtonPanel(this), "grow");
             pack();
         }
@@ -134,11 +120,15 @@ public class Main {
 
             fieldPanel.rerollRandomSeed();
 
+            progressDialog.updateProgress(10, "Backing up game files");
+
             File rcdFile = new File("script.rcd.bak");
             if(!rcdFile.exists()) {
                 File existingRcd = new File(Settings.getLaMulanaBaseDir(), "data/mapdata/script.rcd");
-                if(!FileUtils.hashRcdFile(existingRcd)) {
-                    FileUtils.log("unable to back up script.rcd - file already modified");
+                if (!FileUtils.hashRcdFile(existingRcd)) {
+                    JOptionPane.showMessageDialog(this,
+                            "The data/mapdata/script.rcd file in the game directory is not original! Please restore it from a backup / clean install!",
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
                     FileUtils.closeAll();
                     System.exit(0);
                 }
@@ -156,9 +146,10 @@ public class Main {
                     System.exit(0);
                 }
             }
-            File datFile = new File("script_code.dat.bak");
+            File datFile = new File(Settings.getBackupDatFile());
             if(!datFile.exists()) {
-                File existingDat = new File(Settings.getLaMulanaBaseDir(), "data/language/en/script_code.dat");
+                File existingDat = new File(String.format("%s/data/language/%s/script_code.dat",
+                        Settings.getLaMulanaBaseDir(), Settings.getLanguage()));
                 if(!FileUtils.hashDatFile(existingDat)) {
                     FileUtils.log("unable to back up script_code.dat - file already modified");
                     FileUtils.closeAll();
@@ -168,7 +159,7 @@ public class Main {
                 try {
                     // Make script_code.dat backup
                     Files.copy(existingDat.toPath(),
-                            new FileOutputStream(new File("script_code.dat.bak")));
+                            new FileOutputStream(new File(Settings.getBackupDatFile())));
                 }
                 catch (Exception ex) {
                     FileUtils.log("unable to back up script_code.dat: " + ex.getMessage());
@@ -177,12 +168,25 @@ public class Main {
                 }
             }
 
+            progressDialog.updateProgress(15, "Setting up output directory");
+
             File directory = new File(Long.toString(Settings.getStartingSeed()));
             directory.mkdir();
 
 
             try {
-                doTheThing();
+                Frame f = this;
+                SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        progressDialog.setLocationRelativeTo(f);
+                        doTheThing(progressDialog);
+
+                        return null;
+                    }
+                };
+                swingWorker.execute();
+                progressDialog.setVisible(true);
             } catch (Exception ex) {
                 FileUtils.log("Error: " + ex.getMessage());
                 ex.printStackTrace();
@@ -192,14 +196,16 @@ public class Main {
 
         private void generateAndApply() {
             try {
+                progressDialog.updateProgress(0, "Setting up randomizer");
                 generateSeed();
 
-                FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\mapdata\\script.rcd"));
+                FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/script.rcd"));
                 Files.copy(new File(String.format("%s/script.rcd", Settings.getStartingSeed())).toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
 
-                fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\language\\en\\script_code.dat"));
+                fileOutputStream = new FileOutputStream(new File(String.format("%s/data/language/%s/script_code.dat",
+                        Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
                 Files.copy(new File(String.format("%s/script_code.dat", Settings.getStartingSeed())).toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
@@ -217,13 +223,14 @@ public class Main {
             generateSeed();
 
             try {
-                FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\mapdata\\script.rcd"));
+                FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/script.rcd"));
                 Files.copy(new File("script.rcd.bak").toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
 
-                fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "\\data\\language\\en\\script_code.dat"));
-                Files.copy(new File(String.format("script_code.dat.bak", Settings.getStartingSeed())).toPath(), fileOutputStream);
+                fileOutputStream = new FileOutputStream(new File(String.format("%s/data/language/%s/script_code.dat",
+                        Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
+                Files.copy(new File(Settings.getBackupDatFile()).toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
             }
@@ -259,6 +266,7 @@ public class Main {
     static class FieldPanel extends JPanel {
         private JTextField laMulanaDirectory;
         private JTextField seedNumber;
+        private JComboBox language;
 
         public FieldPanel() {
             super(new MigLayout("fillx", "[][sg fields, fill, grow 80]", "[]"));
@@ -266,11 +274,15 @@ public class Main {
 
             seedNumber = new JTextField(Integer.toString(new Random().nextInt(Integer.MAX_VALUE)));
             add(new JLabel("Seed number"), "gap related");
-            add(seedNumber, "wrap rel");
+            add(seedNumber);
+
+            language = new JComboBox(new String[]{"English", "日本語"});
+            language.setSelectedIndex("en".equals(Settings.getLanguage()) ? 0 : 1);
+            add(language, "grow 50, wrap");
 
             laMulanaDirectory = new JTextField(Settings.getLaMulanaBaseDir());
             add(new JLabel("La-Mulana install directory "), "gap related");
-            add(laMulanaDirectory);
+            add(laMulanaDirectory, "span 2, grow 100");
         }
 
         public void rerollRandomSeed() {
@@ -281,6 +293,7 @@ public class Main {
             try {
                 Settings.setStartingSeed(Integer.parseInt(seedNumber.getText()));
                 Settings.setLaMulanaBaseDir(laMulanaDirectory.getText(), true);
+                Settings.setLanguage(language.getSelectedIndex() == 0 ? "en" : "jp", true);
             }
             catch (Exception ex) {
                 FileUtils.log("unable to save edit for seedNumber");
@@ -425,7 +438,7 @@ public class Main {
         List<GameItemRadio> itemConfigRadioGroupPanels;
 
         public RadioPanel() {
-            super(new GridLayout(0, 4, 0, 20));
+            super(new GridLayout(0, 5, 0, 15));
             setBorder(BorderFactory.createTitledBorder("Item Settings"));
 
             itemConfigRadioGroupPanels = new ArrayList<>();
@@ -433,16 +446,14 @@ public class Main {
             itemConfigRadioGroupPanels.add(new GameItemRadio("mirai.exe"));
             itemConfigRadioGroupPanels.add(new GameItemRadio("Hermes' Boots"));
             itemConfigRadioGroupPanels.add(new GameItemRadio("Feather"));
+            itemConfigRadioGroupPanels.add(new GameItemRadio("Grapple Claw"));
 
             itemConfigRadioGroupPanels.add(new GameItemRadio("Hand Scanner"));
             itemConfigRadioGroupPanels.add(new GameItemRadio("reader.exe"));
             itemConfigRadioGroupPanels.add(new GameItemRadio("Isis' Pendant"));
             itemConfigRadioGroupPanels.add(new GameItemRadio("Bronze Mirror"));
-
-            itemConfigRadioGroupPanels.add(new GameItemRadio("Grapple Claw"));
             itemConfigRadioGroupPanels.add(new GameItemRadio("xmailer.exe"));
-//            itemConfigRadioGroupPanels.add(new GameItemRadio("Flail Whip"));
-//            itemConfigRadioGroupPanels.add(new GameItemRadio("Fairy Clothes"));
+
             for(GameItemRadio gameItemRadio : itemConfigRadioGroupPanels) {
                 add(gameItemRadio, LEFT_ALIGNMENT);
             }
@@ -548,13 +559,41 @@ public class Main {
         }
     }
 
-    private static void doTheThing() {
+    static class ProgressDialog extends JDialog {
+        JProgressBar progressBar;
+        JLabel statusText;
+
+        public ProgressDialog(Frame owner) {
+            super(owner, "Progress", true);
+            setLayout(new MigLayout("wrap 1", "", "align center"));
+            setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            //setSize(400, 100);
+
+            progressBar = new JProgressBar(0,100);
+            statusText = new JLabel("Generating seed...");
+
+            add(statusText, "growx, width 300!");
+            add(progressBar, "growx, height 1.5*pref");
+            pack();
+        }
+
+        public void updateProgress(int percentage, String progressText) {
+             statusText.setText(progressText);
+             progressBar.setValue(percentage);
+        }
+    }
+
+    private static void doTheThing(ProgressDialog dialog) {
         Random random = new Random(Settings.getStartingSeed());
         Set<String> initiallyAvailableItems = getInitiallyAvailableItems();
 
         int attempt = 0;
         while(true) {
             ++attempt;
+            dialog.updateProgress(20, "Shuffling items for attempt #" + attempt);
+            dialog.setTitle("Progress after attempt #"+ attempt);
+            dialog.progressBar.setIndeterminate(true);
+
             ItemRandomizer itemRandomizer = new ItemRandomizer();
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer);
@@ -605,15 +644,27 @@ public class Main {
 
             if(accessChecker.isSuccess()) {
                 try {
+                    dialog.progressBar.setIndeterminate(false);
+                    dialog.updateProgress(80, "Shuffling done after #" + attempt + " attempts");
+
                     FileUtils.log(String.format("Successful attempt %s.", attempt));
 
                     if(Settings.isRandomizeForbiddenTreasure()) {
                         itemRandomizer.randomizeForbiddenTreasure(random);
                     }
 
+                    dialog.updateProgress(85, "Writing spoiler logs");
+                    outputLocations(itemRandomizer, shopRandomizer, attempt);
+                    if(!Settings.isFullItemAccess()) {
+                        accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
+                    }
+
+                    dialog.updateProgress(90, "Reading non-randomized game files");
+
                     List<Zone> rcdData = RcdReader.getRcdScriptInfo();
                     List<Block> datInfo = DatReader.getDatScriptInfo();
-                    outputLocations(itemRandomizer, shopRandomizer, attempt);
+
+                    dialog.updateProgress(95, "Writing files to game directory");
                     itemRandomizer.updateFiles();
                     shopRandomizer.updateFiles(datInfo, random);
                     if(Settings.isAutomaticHardmode()) {
@@ -621,10 +672,6 @@ public class Main {
                     }
                     RcdWriter.writeRcd(rcdData);
                     DatWriter.writeDat(datInfo);
-
-                    if(!Settings.isFullItemAccess()) {
-                        accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
-                    }
 
                     File settingsFile = new File("randomizer-config.txt");
                     if(settingsFile.exists()) {
@@ -635,30 +682,27 @@ public class Main {
                         fileOutputStream.close();
                     }
 
+                    dialog.updateProgress(100, "Done!");
+
+                    SwingUtilities.invokeLater(() -> {
+                        try {
+                            Thread.sleep(2000);
+                            dialog.setVisible(false);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    });
                     return;
                 } catch (Exception ex) {
-                    FileUtils.log(ex.getClass().getName() + ": " + ex.getMessage());
-                    FileUtils.log("File: " + ex.getStackTrace()[0].getFileName());
-                    FileUtils.log("Method: " + ex.getStackTrace()[0].getMethodName());
-                    FileUtils.log("Line: " + ex.getStackTrace()[0].getLineNumber());
-                    FileUtils.log("File: " + ex.getStackTrace()[1].getFileName());
-                    FileUtils.log("Method: " + ex.getStackTrace()[1].getMethodName());
-                    FileUtils.log("Line: " + ex.getStackTrace()[1].getLineNumber());
+                    FileUtils.logException(ex);
                     return;
                 }
             }
             try {
 //                accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
             } catch (Exception ex) {
-                FileUtils.log(ex.getClass().getName() + ": " + ex.getMessage());
-                FileUtils.log("File: " + ex.getStackTrace()[0].getFileName());
-                FileUtils.log("Method: " + ex.getStackTrace()[0].getMethodName());
-                FileUtils.log("Line: " + ex.getStackTrace()[0].getLineNumber());
-                FileUtils.log("File: " + ex.getStackTrace()[1].getFileName());
-                FileUtils.log("Method: " + ex.getStackTrace()[1].getMethodName());
-                FileUtils.log("Line: " + ex.getStackTrace()[1].getLineNumber());
+                FileUtils.logException(ex);
                 return;
-                // No exception handling in v1
             }
         }
     }
