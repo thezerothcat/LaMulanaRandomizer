@@ -68,6 +68,13 @@ public class Main {
 
             fieldPanel = new FieldPanel();
             add(fieldPanel, "growx, wrap");
+            fieldPanel.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    fieldPanel.updateLanguage();
+                    radioPanel.updateLanguage();
+                }
+            });
 
             radioPanel = new RadioPanel();
             add(radioPanel, "growx, wrap");
@@ -285,8 +292,16 @@ public class Main {
             add(laMulanaDirectory, "span 2, grow 100");
         }
 
+        public void addActionListener(ActionListener actionListener) {
+            language.addActionListener(actionListener);
+        }
+
         public void rerollRandomSeed() {
             seedNumber.setText(Integer.toString(new Random().nextInt(Integer.MAX_VALUE)));
+        }
+
+        public void updateLanguage() {
+            Settings.setLanguage(language.getSelectedIndex() == 0 ? "en" : "jp", true);
         }
 
         public void updateSettings() {
@@ -304,18 +319,22 @@ public class Main {
     static class GameItemRadio extends JPanel {
         private ButtonGroup itemRandomization;
         private String itemName;
+        private JLabel itemLabel;
+        private JRadioButton randomItem;
+        private JRadioButton nonrandomItem;
 
         public GameItemRadio(String item) {
             super(new GridLayout(0, 1));
 
-            add(new JLabel(item + ": ", JLabel.LEFT));
+            itemLabel = new JLabel(getText(item), JLabel.LEFT);
+            add(itemLabel);
 
             itemRandomization = new ButtonGroup();
-            JRadioButton randomItem = new JRadioButton("Random");
+            randomItem = new JRadioButton("en".equals(Settings.getLanguage()) ? "Random" : "ランダム");
             randomItem.setActionCommand("RANDOM");
             JRadioButton initialItem = new JRadioButton("Initially Accessible");
             initialItem.setActionCommand("INITIAL");
-            JRadioButton nonrandomItem = new JRadioButton("Original Location");
+            nonrandomItem = new JRadioButton("en".equals(Settings.getLanguage()) ? "Original Location" : "元の場所");
             nonrandomItem.setActionCommand("NONRANDOM");
             itemRandomization.add(randomItem);
             itemRandomization.add(initialItem);
@@ -345,6 +364,49 @@ public class Main {
         public String getItemName() {
             return itemName;
         }
+        public void updateText() {
+            itemLabel.setText(getText(itemName));
+            randomItem.setText("en".equals(Settings.getLanguage()) ? "Random" : "ランダム");
+            nonrandomItem.setText("en".equals(Settings.getLanguage()) ? "Original Location" : "元の場所");
+        }
+    }
+
+    static String getText(String itemName) {
+        if("en".equals(Settings.getLanguage())) {
+            return itemName + ":";
+        }
+
+        if("Holy Grail".equals(itemName)) {
+            return "聖杯";
+        }
+        if("mirai.exe".equals(itemName)) {
+            return "こちら未来開発宇宙支部";
+        }
+        if("Hermes' Boots".equals(itemName)) {
+            return "ヘルメスの靴";
+        }
+        if("Feather".equals(itemName)) {
+            return "羽";
+        }
+        if("Grapple Claw".equals(itemName)) {
+            return "かぎ爪";
+        }
+        if("Hand Scanner".equals(itemName)) {
+            return "ハンディスキャナ";
+        }
+        if("reader.exe".equals(itemName)) {
+            return "古文書リーダー";
+        }
+        if("Isis' Pendant".equals(itemName)) {
+            return "イシスのペンダント";
+        }
+        if("Bronze Mirror".equals(itemName)) {
+            return "銅鏡";
+        }
+        if("xmailer.exe".equals(itemName)) {
+            return "ｘｅｌｐｕｄ　ｍａｉｌｅｒ";
+        }
+        return "???";
     }
 
     static class RandomizationPanel extends JPanel {
@@ -456,6 +518,12 @@ public class Main {
 
             for(GameItemRadio gameItemRadio : itemConfigRadioGroupPanels) {
                 add(gameItemRadio, LEFT_ALIGNMENT);
+            }
+        }
+
+        public void updateLanguage() {
+            for(GameItemRadio gameItemRadio : itemConfigRadioGroupPanels) {
+                gameItemRadio.updateText();
             }
         }
 
