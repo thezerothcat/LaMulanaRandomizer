@@ -71,8 +71,10 @@ public class Main {
             fieldPanel.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    fieldPanel.updateLanguage();
-                    radioPanel.updateLanguage();
+                    fieldPanel.updateTranslations();
+                    radioPanel.updateTranslations();
+                    randomizationPanel.updateTranslations();
+                    shopRandomization.updateTranslations();
                 }
             });
 
@@ -300,7 +302,7 @@ public class Main {
             seedNumber.setText(Integer.toString(new Random().nextInt(Integer.MAX_VALUE)));
         }
 
-        public void updateLanguage() {
+        public void updateTranslations() {
             Settings.setLanguage(language.getSelectedIndex() == 0 ? "en" : "jp", true);
         }
 
@@ -330,11 +332,11 @@ public class Main {
             add(itemLabel);
 
             itemRandomization = new ButtonGroup();
-            randomItem = new JRadioButton("en".equals(Settings.getLanguage()) ? "Random" : "ランダム");
+            randomItem = new JRadioButton("jp".equals(Settings.getLanguage()) ? "ランダム" : "Random");
             randomItem.setActionCommand("RANDOM");
             JRadioButton initialItem = new JRadioButton("Initially Accessible");
             initialItem.setActionCommand("INITIAL");
-            nonrandomItem = new JRadioButton("en".equals(Settings.getLanguage()) ? "Original Location" : "元の場所");
+            nonrandomItem = new JRadioButton("jp".equals(Settings.getLanguage()) ? "元の場所" : "Original Location");
             nonrandomItem.setActionCommand("NONRANDOM");
             itemRandomization.add(randomItem);
             itemRandomization.add(initialItem);
@@ -366,13 +368,13 @@ public class Main {
         }
         public void updateText() {
             itemLabel.setText(getText(itemName));
-            randomItem.setText("en".equals(Settings.getLanguage()) ? "Random" : "ランダム");
-            nonrandomItem.setText("en".equals(Settings.getLanguage()) ? "Original Location" : "元の場所");
+            randomItem.setText("jp".equals(Settings.getLanguage()) ? "ランダム" : "Random");
+            nonrandomItem.setText("jp".equals(Settings.getLanguage()) ? "元の場所" : "Original Location");
         }
     }
 
     static String getText(String itemName) {
-        if("en".equals(Settings.getLanguage())) {
+        if(!"jp".equals(Settings.getLanguage())) {
             return itemName + ":";
         }
 
@@ -424,37 +426,62 @@ public class Main {
         public RandomizationPanel() {
             super(new MigLayout("wrap 2", "[sizegroup checkboxes]", "[]2[]"));
 
-            requireIceCapeForLava = new JCheckBox("Require Ice Cape for swimming through lava");
+            requireIceCapeForLava = new JCheckBox();
             requireIceCapeForLava.setSelected(Settings.isRequireIceCapeForLava());
             add(requireIceCapeForLava);
 
-            requireFlaresForExtinction = new JCheckBox("Require flares for Chamber of Extinction");
+            requireFlaresForExtinction = new JCheckBox();
             requireFlaresForExtinction.setSelected(Settings.isRequireFlaresForExtinction());
             add(requireFlaresForExtinction);
 
-            requireSoftwareComboForKeyFairy = new JCheckBox("Key Fairy chests/doors expect miracle + mekuri");
+            requireSoftwareComboForKeyFairy = new JCheckBox();
             requireSoftwareComboForKeyFairy.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
             add(requireSoftwareComboForKeyFairy);
 
-            randomizeForbiddenTreasure = new JCheckBox("Replace random non-Shrine map with Forbidden Treasure");
+            randomizeForbiddenTreasure = new JCheckBox();
             randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
             add(randomizeForbiddenTreasure);
 
-            randomizeCoinChests = new JCheckBox("Randomize coin chests");
+            randomizeCoinChests = new JCheckBox();
             randomizeCoinChests.setSelected(Settings.isRandomizeCoinChests());
             add(randomizeCoinChests);
 
-            fullItemAccess = new JCheckBox("All items must be accessible (100% seed)");
+            fullItemAccess = new JCheckBox();
             fullItemAccess.setSelected(Settings.isFullItemAccess());
             add(fullItemAccess);
 
-            enableDamageBoostRequirements = new JCheckBox("Allow damage-boosting requirements");
+            enableDamageBoostRequirements = new JCheckBox();
             enableDamageBoostRequirements.setSelected(Settings.isEnableDamageBoostRequirements());
             add(enableDamageBoostRequirements);
 
-            automaticHardmode = new JCheckBox("Hard Mode activates automatically at the start");
+            automaticHardmode = new JCheckBox();
             automaticHardmode.setSelected(Settings.isAutomaticHardmode());
             add(automaticHardmode);
+
+            updateTranslations();
+        }
+
+        public void updateTranslations() {
+            if("jp".equals(Settings.getLanguage())) {
+                requireIceCapeForLava.setText("Require 氷のマント for swimming through lava");
+                requireFlaresForExtinction.setText("Require 発弾筒 for 死滅の碑");
+                requireSoftwareComboForKeyFairy.setText("Key Fairy chests/doors expect ミラクルウィッチ and めくり番長");
+                randomizeForbiddenTreasure.setText("Replace random non-Shrine 地図 with あぶねぇ水着");
+                randomizeCoinChests.setText("Randomize coin chests");
+                fullItemAccess.setText("All items must be accessible (100% seed)");
+                enableDamageBoostRequirements.setText("Allow damage-boosting requirements");
+                automaticHardmode.setText("ＨＡＲＤモード activates automatically at the start"); // 開始
+            }
+            else {
+                requireIceCapeForLava.setText("Require Ice Cape for swimming through lava");
+                requireFlaresForExtinction.setText("Require Flare Gun for Chamber of Extinction");
+                requireSoftwareComboForKeyFairy.setText("Key Fairy chests/doors expect miracle + mekuri");
+                randomizeForbiddenTreasure.setText("Replace random non-Shrine map with Provocative Bathing Suit");
+                randomizeCoinChests.setText("Randomize coin chests");
+                fullItemAccess.setText("All items must be accessible (100% seed)");
+                enableDamageBoostRequirements.setText("Allow damage-boosting requirements");
+                automaticHardmode.setText("Hard Mode activates automatically at the start");
+            }
         }
 
         public void updateSettings() {
@@ -521,7 +548,7 @@ public class Main {
             }
         }
 
-        public void updateLanguage() {
+        public void updateTranslations() {
             for(GameItemRadio gameItemRadio : itemConfigRadioGroupPanels) {
                 gameItemRadio.updateText();
             }
@@ -547,11 +574,13 @@ public class Main {
 
     static class ShopRandomizationRadio extends JPanel {
         private ButtonGroup shopRandomization;
+        private JLabel shopRandomizationLabel;
 
         public ShopRandomizationRadio() {
             super(new MigLayout("fillx"));
 
-            add(new JLabel("Shop Randomization: ", JLabel.LEFT));
+            shopRandomizationLabel = new JLabel("jp".equals(Settings.getLanguage()) ? "店 Randomization:" : "Shop Randomization:", JLabel.LEFT);
+            add(shopRandomizationLabel);
 
             shopRandomization = new ButtonGroup();
 
@@ -584,6 +613,10 @@ public class Main {
 
         public void updateSettings() {
             Settings.setShopRandomization(shopRandomization.getSelection().getActionCommand(), true);
+        }
+
+        public void updateTranslations() {
+            shopRandomizationLabel.setText("jp".equals(Settings.getLanguage()) ? "店 Randomization:" : "Shop Randomization:");
         }
     }
 
