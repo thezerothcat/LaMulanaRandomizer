@@ -15,6 +15,10 @@ public class BlockCmdSingle implements BlockContents {
         this.data = data;
     }
 
+    public BlockCmdSingle(BlockCmdSingle objectToCopy) {
+        this.data = objectToCopy.data;
+    }
+
     @Override
     public int getSize() {
         return 8;

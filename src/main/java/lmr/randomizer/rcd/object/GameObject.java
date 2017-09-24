@@ -22,6 +22,32 @@ public class GameObject {
         this.objectContainer = objectContainer;
     }
 
+    public GameObject(GameObject objectToCopy) {
+        this.id = objectToCopy.id;
+        this.x = objectToCopy.x;
+        this.y = objectToCopy.y;
+
+        for(TestByteOperation testByteOperation : objectToCopy.testByteOperations) {
+            TestByteOperation newTestByteOperation = new TestByteOperation();
+            newTestByteOperation.setIndex(testByteOperation.getIndex());
+            newTestByteOperation.setOp(testByteOperation.getOp());
+            newTestByteOperation.setValue(testByteOperation.getValue());
+            testByteOperations.add(newTestByteOperation);
+        }
+
+        for(WriteByteOperation writeByteOperation : objectToCopy.writeByteOperations) {
+            WriteByteOperation newWriteByteOperation = new WriteByteOperation();
+            newWriteByteOperation.setIndex(writeByteOperation.getIndex());
+            newWriteByteOperation.setOp(writeByteOperation.getOp());
+            newWriteByteOperation.setValue(writeByteOperation.getValue());
+            writeByteOperations.add(newWriteByteOperation);
+        }
+
+        this.args = new ArrayList<>(objectToCopy.args);
+
+        this.objectContainer = objectToCopy.objectContainer;
+    }
+
     public short getId() {
         return id;
     }

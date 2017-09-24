@@ -2,8 +2,8 @@
 import os.path
 from struct import unpack
 
-if os.path.exists(r"C:\Games\La-Mulana Remake 1.3.3.1"):
-    lmpath = r"C:\Games\La-Mulana Remake 1.3.3.1"
+if os.path.exists(r"E:\Steam\steamapps\common\La-Mulana"):
+    lmpath = r"E:\Steam\steamapps\common\La-Mulana"
 elif os.path.exists(r"C:\GOG Games\La-Mulana"):
     lmpath = r"C:\GOG Games\La-Mulana"
     # let's support the default folder maybe

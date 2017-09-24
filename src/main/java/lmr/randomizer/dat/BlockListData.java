@@ -18,6 +18,12 @@ public class BlockListData implements BlockContents {
         this.listSize = listSize;
     }
 
+    public BlockListData(BlockListData objectToCopy) {
+        this.idData = objectToCopy.idData;
+        this.listSize = objectToCopy.listSize;
+        data = new ArrayList<>(objectToCopy.data);
+    }
+
     public List<Short> getData() {
         return data;
     }

@@ -21,7 +21,6 @@ public class ItemRandomizer {
     private List<String> allItems; // All possible items.
     private List<String> unplacedItems; // Items that haven't been placed yet.
 
-    private List<String> nonShopItemLocations;
     private List<String> unassignedNonShopItemLocations;
 
     private ShopRandomizer shopRandomizer;
@@ -31,8 +30,7 @@ public class ItemRandomizer {
         allItems = new ArrayList<>(DataFromFile.getAllNonShopItemsPlusAllRandomizedShopItemsPlusAllRandomizedCoinChests());
         unplacedItems = new ArrayList<>(allItems);
 
-        nonShopItemLocations = new ArrayList<>(DataFromFile.getNonShopItemLocations());
-        unassignedNonShopItemLocations = new ArrayList<>(nonShopItemLocations);
+        unassignedNonShopItemLocations = new ArrayList<>(DataFromFile.getNonShopItemLocations());
     }
 
     public int getTotalShopItems() {
@@ -67,7 +65,7 @@ public class ItemRandomizer {
             shopRandomizer.randomizeForbiddenTreasure(uselessMap, true);
         }
         else {
-            mapOfItemLocationToItem.put(uselessMapLocation, "Forbidden Treasure");
+            mapOfItemLocationToItem.put(uselessMapLocation, "Provocative Bathing Suit");
             shopRandomizer.randomizeForbiddenTreasure(uselessMap, false);
         }
     }
@@ -79,9 +77,9 @@ public class ItemRandomizer {
 //        mapOfItemLocationToItem.put("Coin: Surface (Waterfall)", "Shell Horn");
 //        unassignedNonShopItemLocations.remove("Coin: Surface (Waterfall)");
 //        unplacedItems.remove("Shell Horn");
-//        mapOfItemLocationToItem.put("Shell Horn", "Coin: Surface (Waterfall)");
-//        unassignedNonShopItemLocations.remove("Shell Horn");
-//        unplacedItems.remove("Coin: Surface (Waterfall)");
+        mapOfItemLocationToItem.put("Shell Horn", "Map (Gate of Guidance)");
+        unassignedNonShopItemLocations.remove("Shell Horn");
+        unplacedItems.remove("Map (Gate of Guidance)");
 //        mapOfItemLocationToItem.put("Sacred Orb (Gate of Guidance)", "Flail Whip");
 //        unassignedNonShopItemLocations.remove("Sacred Orb (Gate of Guidance)");
 //        unplacedItems.remove("Flail Whip");

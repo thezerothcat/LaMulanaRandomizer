@@ -30,6 +30,8 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
     private List<String> unassignedShopItemLocations = new ArrayList<>(); // Shop locations which still need something placed.
     private List<String> randomizedShops;
 
+    private List<String> shopsWithSacredOrbs;
+
     public CategorizedShopRandomizer() {
         randomizedShops = new ArrayList<>(DataFromFile.getAllShops());
         randomizedShops.removeAll(DataFromFile.getNonRandomizedShops());
@@ -54,6 +56,8 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                 }
             }
         }
+
+        shopsWithSacredOrbs = new ArrayList<>();
     }
 
     public List<String> getUnassignedShopItemLocations() {
@@ -127,7 +131,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         String shopItem;
         for (int i = 1; i <= 3; i++) {
             shopItem = mapOfShopInventoryItemToContents.get(String.format("%s Item %d", shopName, i));
-            if (shopItem != null && !"Weights".equals(shopItem) && !shopItem.contains("Ammo")) {
+            if (shopItem != null && !"Weights".equals(shopItem)) {
                 shopItems.add(shopItem);
             }
         }
@@ -150,9 +154,17 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         if(accessChecker.validRequirements(item, location)) {
             mapOfShopInventoryItemToContents.put(location, item);
             unassignedShopItemLocations.remove(location);
+            if(item.contains("Sacred Orb")) {
+                shopsWithSacredOrbs.add(location.substring(0, location.indexOf(")") + 1));
+            }
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean shopContainsSacredOrb(String shopName) {
+        return shopsWithSacredOrbs.contains(shopName);
     }
 
     public List<String> getInitialUnassignedShopItemLocations() {
@@ -181,7 +193,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                     uselessMapLocation = shopItemLocationAndContents.getKey();
                 }
             }
-            mapOfShopInventoryItemToContents.put(uselessMapLocation, "Forbidden Treasure");
+            mapOfShopInventoryItemToContents.put(uselessMapLocation, "Provocative Bathing Suit");
         }
         mapOfShopInventoryItemToContents.put("Shop 12 Alt (Spring) Item 2", uselessMap);
     }
@@ -247,7 +259,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                 shopItem2 = mapOfShopInventoryItemToContents.get(String.format("%s Item 2", shopName));
                 shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName));
             }
-            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, null);
+            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks, null);
         }
     }
 

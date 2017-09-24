@@ -53,6 +53,29 @@ public class ShopBlock extends Block {
         super(blockNumber);
     }
 
+    public ShopBlock(ShopBlock blockToCopy, int blockNumber) {
+        super(blockNumber);
+
+        inventoryItemArgsList = new BlockListData(blockToCopy.getInventoryItemArgsList());
+        inventoryCountList = new BlockListData(blockToCopy.getInventoryCountList());
+        inventoryPriceList = new BlockListData(blockToCopy.getInventoryPriceList());
+        flagList = new BlockListData(blockToCopy.getFlagList());
+
+        for(int i = 0; i < 18; i++) {
+            this.setString(new BlockStringData(blockToCopy.getString(i)), i);
+        }
+
+        background = new BlockCmdSingle(blockToCopy.getBackground());
+        sprite = new BlockCmdSingle(blockToCopy.getSprite());
+
+        exitFlagList = new BlockListData(blockToCopy.getExitFlagList());
+
+        music = new BlockCmdSingle(blockToCopy.getMusic());
+
+        bunemonLocation = new BlockStringData(blockToCopy.getBunemonLocation());
+        bunemonText = new BlockStringData(blockToCopy.getBunemonText());
+    }
+
     public BlockStringData getString(int index) {
         if(index == 0) {
             return yesPurchaseString;

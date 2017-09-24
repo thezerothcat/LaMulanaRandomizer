@@ -199,7 +199,7 @@ public final class RcdReader {
                 keepObject = false;
             }
             else if(obj.getArgs().get(4) == 1014) {
-                // Mulbruk conversation after she runs away from the Forbidden Treasure.
+                // Mulbruk conversation after she runs away from the Provocative Bathing Suit.
                 keepObject = false;
             }
         }

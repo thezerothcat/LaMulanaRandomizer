@@ -19,6 +19,7 @@ import java.util.*;
 public final class GameDataTracker {
     private static Map<GameObjectId, List<GameObject>> mapOfChestIdentifyingInfoToGameObject = new HashMap<>();
     private static Map<GameObjectId, List<Block>> mapOfChestIdentifyingInfoToBlock = new HashMap<>();
+    private static Map<Integer, List<GameObject>> mapOfShopBlockToShopObjects = new HashMap<>();
 
     private static ObjectContainer xelpudScreen;
     private static ObjectContainer mulbrukScreen;
@@ -34,6 +35,10 @@ public final class GameDataTracker {
             if(gameObject.getArgs().get(0) == 1) {
                 // Coin chest
                 inventoryArg = gameObject.getArgs().get(1); // Use coin amount as item arg
+            }
+            else if(gameObject.getArgs().get(0) == 7) {
+                // Bomb chest, will be replaced by a coin chest anyway.
+                inventoryArg = 30;
             }
             else {
                 // Item chest
@@ -331,7 +336,20 @@ public final class GameDataTracker {
                 }
             }
         } else if (gameObject.getId() == 0xa0) {
-            if(gameObject.getArgs().get(4) == 34) {
+            int blockNumber = gameObject.getArgs().get(4);
+            if(gameObject.getArgs().get(3) == 1) {
+                // Any shop
+                if(DataFromFile.getMapOfShopNameToShopBlock().values().contains(blockNumber)) {
+                    List<GameObject> objects = mapOfShopBlockToShopObjects.get(blockNumber);
+                    if (objects == null) {
+                        mapOfShopBlockToShopObjects.put(blockNumber, new ArrayList<>());
+                        objects = mapOfShopBlockToShopObjects.get(blockNumber);
+                    }
+                    objects.add(gameObject);
+                }
+            }
+
+            if(blockNumber == 34) {
                 // Shop before/after buying the MSX2
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 742) {
@@ -346,11 +364,11 @@ public final class GameDataTracker {
                     }
                 }
             }
-            else if(gameObject.getArgs().get(4) == 185) {
+            else if(blockNumber == 185) {
                 // Little Brother's shop
                 littleBrotherShopScreen = gameObject.getObjectContainer();
             }
-            else if(gameObject.getArgs().get(4) == 490) {
+            else if(blockNumber == 490) {
                 // MSX2 shop
                 GameObjectId gameObjectId = new GameObjectId((short) 76, 742);
                 List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
@@ -362,7 +380,7 @@ public final class GameDataTracker {
 
                 addAltSurfaceShopItemTimer(gameObject.getObjectContainer());
             }
-            else if(gameObject.getArgs().get(4) == 693 || gameObject.getArgs().get(4) == 915) {
+            else if(blockNumber == 693 || blockNumber == 915) {
                 // Mini Doll conversation
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 554) {
@@ -379,7 +397,7 @@ public final class GameDataTracker {
                     }
                 }
             }
-            else if(gameObject.getArgs().get(4) == 673) {
+            else if(blockNumber == 673) {
                 // mekuri conversation
                 GameObjectId gameObjectId = new GameObjectId((short) 100, 241);
                 List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
@@ -389,7 +407,7 @@ public final class GameDataTracker {
                 }
                 objects.add(gameObject);
             }
-            else if(gameObject.getArgs().get(4) == 689 || gameObject.getArgs().get(4) == 690) {
+            else if(blockNumber == 689 || blockNumber == 690) {
                 // Conversation to receive Pepper, or conversation after receiving Pepper if you don't have Treasures
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 552) {
@@ -410,7 +428,7 @@ public final class GameDataTracker {
                     }
                 }
             }
-            else if(gameObject.getArgs().get(4) == 691) {
+            else if(blockNumber == 691) {
                 // Conversation to give Treasures and receive Anchor
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 552) {
@@ -431,7 +449,7 @@ public final class GameDataTracker {
                     }
                 }
             }
-            else if(gameObject.getArgs().get(4) == 692) {
+            else if(blockNumber == 692) {
                 // Conversation after receiving both Pepper and Anchor
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 552) {
@@ -467,7 +485,7 @@ public final class GameDataTracker {
                 }
                 objects.add(gameObject);
             }
-            else if(gameObject.getArgs().get(4) == 484 || gameObject.getArgs().get(4) == 1019
+            else if(blockNumber == 484 || blockNumber == 1019
                     || gameObject.getArgs().get(4) == 1080 || gameObject.getArgs().get(4) == 1081) {
                 // Remove the flags that prevent normal Xelpud convos if he leaves for the Diary puzzle
                 Integer flagToRemoveIndex = null;
@@ -490,7 +508,7 @@ public final class GameDataTracker {
                     xelpudScreen = gameObject.getObjectContainer();
                 }
             }
-            else if(gameObject.getArgs().get(4) == 485) {
+            else if(blockNumber == 485) {
                 // Remove the flags that prevent normal Mulbruk convos if you have Forbidden Treasure/Provocative Bathing Suit.
                 // Also remove score requirement on Mulbruk conversation.
                 Integer flagToRemoveIndex = null;
@@ -508,7 +526,7 @@ public final class GameDataTracker {
                 }
                 mulbrukScreen = gameObject.getObjectContainer();
             }
-            else if(gameObject.getArgs().get(4) == 1082 || gameObject.getArgs().get(4) == 1083 || gameObject.getArgs().get(4) == 924) {
+            else if(blockNumber == 1082 || blockNumber == 1083 || blockNumber == 924) {
                 // Remove the flags that prevent normal Mulbruk convos if you have Forbidden Treasure/Provocative Bathing Suit
                 Integer flagToRemoveIndex = null;
                 for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
@@ -521,7 +539,7 @@ public final class GameDataTracker {
                     gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
                 }
             }
-            else if(gameObject.getArgs().get(4) == 132){
+            else if(blockNumber == 132){
                 // Untransformed Gyonin fish shop
                 addBackupGyoninFishShop(gameObject);
             }
@@ -642,12 +660,12 @@ public final class GameDataTracker {
         }
     }
 
-    private static void addBackupGyoninFishShop(GameObject gameObject) {
-        ObjectContainer objectContainer = gameObject.getObjectContainer();
+    private static void addBackupGyoninFishShop(GameObject untransformedGyoninFishShop) {
+        ObjectContainer objectContainer = untransformedGyoninFishShop.getObjectContainer();
         if(objectContainer instanceof Screen) {
-            GameObject backupFishShop = new GameObject(gameObject.getObjectContainer());
-            for (int i = 0; i < gameObject.getArgs().size(); i++) {
-                backupFishShop.getArgs().add(gameObject.getArgs().get(i));
+            GameObject backupFishShop = new GameObject(untransformedGyoninFishShop.getObjectContainer());
+            for (int i = 0; i < untransformedGyoninFishShop.getArgs().size(); i++) {
+                backupFishShop.getArgs().add(untransformedGyoninFishShop.getArgs().get(i));
             }
             TestByteOperation testByteOperation = new TestByteOperation();
             testByteOperation.setIndex(407);
@@ -665,9 +683,9 @@ public final class GameDataTracker {
             backupFishShop.setX(180);
             backupFishShop.setY(1520);
 
-            gameObject.getObjectContainer().getObjects().add(backupFishShop);
+            untransformedGyoninFishShop.getObjectContainer().getObjects().add(backupFishShop);
 
-            GameObject backupFishNewDoorGraphic = new GameObject(gameObject.getObjectContainer());
+            GameObject backupFishNewDoorGraphic = new GameObject(untransformedGyoninFishShop.getObjectContainer());
             testByteOperation = new TestByteOperation();
             testByteOperation.setIndex(407);
             testByteOperation.setOp(ByteOp.FLAG_EQUALS);
@@ -709,7 +727,16 @@ public final class GameDataTracker {
             backupFishNewDoorGraphic.setX(180);
             backupFishNewDoorGraphic.setY(1520);
 
-            gameObject.getObjectContainer().getObjects().add(backupFishNewDoorGraphic);
+            untransformedGyoninFishShop.getObjectContainer().getObjects().add(backupFishNewDoorGraphic);
+
+            int untransformedGyoninFishShopBlockNumber = (int)untransformedGyoninFishShop.getArgs().get(4);
+
+            List<GameObject> objects = mapOfShopBlockToShopObjects.get(untransformedGyoninFishShopBlockNumber);
+            if (objects == null) {
+                mapOfShopBlockToShopObjects.put(untransformedGyoninFishShopBlockNumber, new ArrayList<>());
+                objects = mapOfShopBlockToShopObjects.get(untransformedGyoninFishShopBlockNumber);
+            }
+            objects.add(backupFishShop);
         }
     }
 
@@ -1032,7 +1059,7 @@ public final class GameDataTracker {
             blocks.add(block);
         }
         else if(block.getBlockNumber() == 1012) {
-            // Forbidden Treasure
+            // Provocative Bathing Suit
             short inventoryArg = (short) (74);
             int worldFlag = 262;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
@@ -1077,10 +1104,88 @@ public final class GameDataTracker {
         }
     }
 
-    public static void writeShopInventory(ShopBlock shopBlock, String shopItem1, String shopItem2, String shopItem3, ShopItemPriceCountRandomizer priceCountRandomizer) {
+    public static void writeShopInventory(ShopBlock shopBlock, String shopItem1, String shopItem2, String shopItem3,
+                                          List<Block> blocks, ShopItemPriceCountRandomizer priceCountRandomizer) {
         short shopItem1Flag = getFlag(shopItem1);
         short shopItem2Flag = getFlag(shopItem2);
         short shopItem3Flag = getFlag(shopItem3);
+
+        // NOTE: only tolerates one sacred orb per shop
+        if(shopItem1.contains("Sacred Orb")) {
+            ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
+            blocks.add(noOrbShopBlock);
+            writeShopInventory(noOrbShopBlock, "Weights", shopItem2, shopItem3, blocks, priceCountRandomizer);
+
+            TestByteOperation testByteOperation;
+            for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
+                GameObject shopWithoutOrb = new GameObject(shopObject);
+                shopObject.getObjectContainer().getObjects().add(shopWithoutOrb);
+
+                testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(shopItem1Flag);
+                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                testByteOperation.setValue((byte)2);
+                shopWithoutOrb.getTestByteOperations().add(testByteOperation);
+
+                shopWithoutOrb.getArgs().set(4, (short)(blocks.size() - 1));
+
+                testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(shopItem1Flag);
+                testByteOperation.setOp(ByteOp.FLAG_LT);
+                testByteOperation.setValue((byte)2);
+                shopObject.getTestByteOperations().add(testByteOperation);
+            }
+        }
+        else if(shopItem2.contains("Sacred Orb")) {
+            ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
+            blocks.add(noOrbShopBlock);
+            writeShopInventory(noOrbShopBlock, shopItem1, "Weights", shopItem3, blocks, priceCountRandomizer);
+
+            TestByteOperation testByteOperation;
+            for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
+                GameObject shopWithoutOrb = new GameObject(shopObject);
+                shopObject.getObjectContainer().getObjects().add(shopWithoutOrb);
+
+                testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(shopItem2Flag);
+                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                testByteOperation.setValue((byte)2);
+                shopWithoutOrb.getTestByteOperations().add(testByteOperation);
+
+                shopWithoutOrb.getArgs().set(4, (short)(blocks.size() - 1));
+
+                testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(shopItem2Flag);
+                testByteOperation.setOp(ByteOp.FLAG_LT);
+                testByteOperation.setValue((byte)2);
+                shopObject.getTestByteOperations().add(testByteOperation);
+            }
+        }
+        else if(shopItem3.contains("Sacred Orb")) {
+            ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
+            blocks.add(noOrbShopBlock);
+            writeShopInventory(noOrbShopBlock, shopItem1, shopItem2, "Weights", blocks, priceCountRandomizer);
+
+            TestByteOperation testByteOperation;
+            for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
+                GameObject shopWithoutOrb = new GameObject(shopObject);
+                shopObject.getObjectContainer().getObjects().add(shopWithoutOrb);
+
+                testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(shopItem3Flag);
+                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                testByteOperation.setValue((byte)2);
+                shopWithoutOrb.getTestByteOperations().add(testByteOperation);
+
+                shopWithoutOrb.getArgs().set(4, (short)(blocks.size() - 1));
+
+                testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(shopItem3Flag);
+                testByteOperation.setOp(ByteOp.FLAG_LT);
+                testByteOperation.setValue((byte)2);
+                shopObject.getTestByteOperations().add(testByteOperation);
+            }
+        }
 
         shopBlock.getInventoryItemArgsList().getData().clear();
         shopBlock.getInventoryItemArgsList().getData().add(getInventoryItemArg(shopItem1));
@@ -1089,19 +1194,30 @@ public final class GameDataTracker {
 
         if(priceCountRandomizer == null) {
             List<Short> newCounts = new ArrayList<>();
-            if("Weights".equals(shopItem1) || shopItem1.endsWith("Ammo")) {
+            if("Weights".equals(shopItem1)) {
+                newCounts.add((short)5);
+            }
+            else if(shopItem1.endsWith("Ammo")) {
                 newCounts.add(shopBlock.getInventoryCountList().getData().get(0));
             }
             else {
                 newCounts.add((short)1);
             }
-            if("Weights".equals(shopItem2) || shopItem2.endsWith("Ammo")) {
+
+            if("Weights".equals(shopItem2)) {
+                newCounts.add((short)5);
+            }
+            else if(shopItem2.endsWith("Ammo")) {
                 newCounts.add(shopBlock.getInventoryCountList().getData().get(1));
             }
             else {
                 newCounts.add((short)1);
             }
-            if("Weights".equals(shopItem3) || shopItem3.endsWith("Ammo")) {
+
+            if("Weights".equals(shopItem3)) {
+                newCounts.add((short)5);
+            }
+            else if(shopItem3.endsWith("Ammo")) {
                 newCounts.add(shopBlock.getInventoryCountList().getData().get(2));
             }
             else {
@@ -1131,10 +1247,10 @@ public final class GameDataTracker {
             shopBlock.getInventoryPriceList().getData().add(itemPriceAndCount.getKey());
             shopBlock.getInventoryCountList().getData().add(itemPriceAndCount.getValue());
 
-//            shopBlock.getInventoryPriceList().getData().clear();
-//            shopBlock.getInventoryPriceList().getData().add((short)1);
-//            shopBlock.getInventoryPriceList().getData().add((short)1);
-//            shopBlock.getInventoryPriceList().getData().add((short)1);
+            shopBlock.getInventoryPriceList().getData().clear();
+            shopBlock.getInventoryPriceList().getData().add((short)1);
+            shopBlock.getInventoryPriceList().getData().add((short)1);
+            shopBlock.getInventoryPriceList().getData().add((short)1);
         }
 
         shopBlock.getFlagList().getData().clear();
@@ -1184,10 +1300,6 @@ public final class GameDataTracker {
         bunemonData.add((short)262);
         bunemonData.add((short)32);
         updateBunemonText(bunemonData, shopItem3);
-
-        if(shopBlock.getBlockNumber() == 185) {
-            // Add timers to Little Brother's shop as needed
-        }
     }
 
     private static void addLittleBrotherShopTimer(short shopItemFlag) {
@@ -1547,8 +1659,18 @@ public final class GameDataTracker {
         objectToModify.getWriteByteOperations().clear();
 
         if(itemChest) {
-            objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11)); // Item arg to indicate what the chest drops
-            objectToModify.getArgs().set(1, (short)1); // Real item, not fake
+//            if(itemNewContentsData.getInventoryArg() == 2) {
+//                objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11)); // Item arg to indicate what the chest drops
+//                objectToModify.getArgs().set(1, (short)1); // Real item, not fake
+//            }
+//            if(itemNewContentsData.getInventoryArg() == 70) {
+//                objectToModify.getArgs().set(0, (short)2); // Weights
+//                objectToModify.getArgs().set(1, (short)1);
+//            }
+//            else {
+                objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11)); // Item arg to indicate what the chest drops
+                objectToModify.getArgs().set(1, (short)1); // Real item, not fake
+//            }
             objectToModify.getArgs().set(2, (short)1); // Blue chest
             for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                 if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {

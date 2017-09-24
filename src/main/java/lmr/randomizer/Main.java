@@ -418,6 +418,7 @@ public class Main {
 
         private JCheckBox randomizeCoinChests;
         private JCheckBox randomizeForbiddenTreasure;
+//        private JCheckBox replaceMapsWithWeights;
 
         private JCheckBox automaticHardmode;
         private JCheckBox fullItemAccess;
@@ -445,6 +446,10 @@ public class Main {
             randomizeCoinChests = new JCheckBox();
             randomizeCoinChests.setSelected(Settings.isRandomizeCoinChests());
             add(randomizeCoinChests);
+
+//            replaceMapsWithWeights = new JCheckBox();
+//            replaceMapsWithWeights.setSelected(Settings.isReplaceMapsWithWeights());
+//            add(replaceMapsWithWeights);
 
             fullItemAccess = new JCheckBox();
             fullItemAccess.setSelected(Settings.isFullItemAccess());
@@ -500,7 +505,7 @@ public class Main {
         private List<JCheckBox> glitchOptions = new ArrayList<>();
 
         public GlitchPanel() {
-            super(new MigLayout("fillx, wrap 4", "[sizegroup checkboxes]", "[]4[]"));
+            super(new MigLayout("fillx, wrap 6", "[sizegroup checkboxes]", "[]4[]"));
             setBorder(BorderFactory.createTitledBorder("Glitch Settings"));
 
             for(String availableGlitch : DataFromFile.getAvailableGlitches()) {

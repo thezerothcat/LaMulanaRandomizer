@@ -21,6 +21,8 @@ public interface ShopRandomizer {
 
     boolean placeItem(String item, int locationIndex);
 
+    boolean shopContainsSacredOrb(String shopName);
+
     List<String> getInitialUnassignedShopItemLocations();
 
     void determineItemTypes(Random random);

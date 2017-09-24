@@ -1,2 +1,2 @@
-Coin: Moonlight => Chakram
+Coin: Moonlight => Chakram, Chakram Ammo
 Coin: Goddess (Shield) => Location: Tower of the Goddess [Grail], Glitch: Cat Pause

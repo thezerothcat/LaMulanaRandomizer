@@ -219,13 +219,59 @@ public class AccessChecker {
                     queuedUpdates.add(item);
                 break;
             case MAP_LOCATION:
+                if("Location: Temple of the Sun".equals(nodeName)) {
+                    if(!accessedNodes.contains("Flare Gun Ammo") && !queuedUpdates.contains("Flare Gun Ammo")) {
+                        queuedUpdates.add("Flare Gun Ammo");
+                    }
+                }
+                else if("Location: Gate of Guidance".equals(nodeName)) {
+                    if(!accessedNodes.contains("Shuriken Ammo") && !queuedUpdates.contains("Shuriken Ammo")) {
+                        queuedUpdates.add("Shuriken Ammo");
+                    }
+                }
+                else if("Location: Temple of the Sun".equals(nodeName)) {
+                    if(!accessedNodes.contains("Rolling Shuriken Ammo") && !queuedUpdates.contains("Rolling Shuriken Ammo")) {
+                        queuedUpdates.add("Rolling Shuriken Ammo");
+                    }
+                }
+                else if("Location: Chamber of Extinction [Main]".equals(nodeName)) {
+                    if(!accessedNodes.contains("Flare Gun Ammo") && !queuedUpdates.contains("Flare Gun Ammo")) {
+                        queuedUpdates.add("Flare Gun Ammo");
+                    }
+                    if(!accessedNodes.contains("Earth Spear Ammo") && !queuedUpdates.contains("Earth Spear Ammo")) {
+                        queuedUpdates.add("Earth Spear");
+                    }
+                }
+                else if("Location: Graveyard of the Giants [West]".equals(nodeName)
+                        || "Location: Graveyard of the Giants [East]".equals(nodeName)) {
+                    if(!accessedNodes.contains("Earth Spear Ammo") && !queuedUpdates.contains("Earth Spear Ammo")) {
+                        queuedUpdates.add("Earth Spear");
+                    }
+                }
+                else if("Location: Spring in the Sky".equals(nodeName)) {
+                    if(!accessedNodes.contains("Shuriken Ammo") && !queuedUpdates.contains("Shuriken Ammo")) {
+                        queuedUpdates.add("Shuriken Ammo");
+                    }
+                    if(!accessedNodes.contains("Caltrops Ammo") && !queuedUpdates.contains("Caltrops Ammo")) {
+                        queuedUpdates.add("Caltrops Ammo");
+                    }
+                }
+                else if("Location: Tower of the Goddess [Lower]".equals(nodeName)) {
+                    if(!accessedNodes.contains("Chakram Ammo") && !queuedUpdates.contains("Chakram Ammo")) {
+                        queuedUpdates.add("Chakram Ammo");
+                    }
+                }
             case EVENT:
             case EXIT:
             case GLITCH:
                 queuedUpdates.add(nodeName);
                 break;
             case SHOP:
-                queuedUpdates.addAll(shopRandomizer.getShopItems(nodeName));
+                for(String shopItem : shopRandomizer.getShopItems(nodeName)) {
+                    if(!accessedNodes.contains(shopItem) && !queuedUpdates.contains(shopItem)) {
+                        queuedUpdates.add(shopItem);
+                    }
+                }
                 break;
         }
     }
@@ -245,6 +291,9 @@ public class AccessChecker {
         }
         else if(item.contains("Sacred Orb")) {
             item = "Sacred Orb";
+            if(location.contains("Shop") && shopRandomizer.shopContainsSacredOrb(location)) {
+                return false;
+            }
         }
         else if(item.contains("Map")) {
             // Don't put maps in conversations or torude scans, because the item-give dialog won't behave normally.
@@ -337,15 +386,33 @@ public class AccessChecker {
             return;
         }
 
-        List<String> inaccessibleNodes = new ArrayList<>(itemRandomizer.getAllItems());
-        inaccessibleNodes.removeAll(accessedNodes);
-        for(String inaccessibleNode : inaccessibleNodes) {
-            writer.write(inaccessibleNode);
-            writer.newLine();
+        for(Map.Entry<String, NodeWithRequirements> inaccessibleNodeInfo : mapOfNodeNameToRequirementsObject.entrySet()) {
+            switch (inaccessibleNodeInfo.getValue().getType()) {
+                case ITEM_LOCATION:
+                    writer.write(itemRandomizer.getItem(inaccessibleNodeInfo.getKey()));
+                    writer.newLine();
+                    break;
+                case MAP_LOCATION:
+                    writer.write(inaccessibleNodeInfo.getKey());
+                    writer.newLine();
+                    break;
+                case EVENT:
+                    writer.write(inaccessibleNodeInfo.getKey());
+                    writer.newLine();
+                    break;
+                case SHOP:
+                    List<String> shopItems = shopRandomizer.getShopItems(inaccessibleNodeInfo.getKey());
+                    writer.write(inaccessibleNodeInfo.getKey() + ": " + shopItems);
+                    writer.newLine();
+                    break;
+                case GLITCH:
+                    break;
+                case EXIT:
+                    break;
+            }
         }
         writer.flush();
         writer.close();
-
 
 //        writer = FileUtils.getFileWriter(String.format("%s/accessible_%s.txt", startingSeed, attemptNumber));
 //        if (writer == null) {

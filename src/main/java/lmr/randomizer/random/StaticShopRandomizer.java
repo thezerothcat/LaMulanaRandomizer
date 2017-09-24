@@ -1,5 +1,6 @@
 package lmr.randomizer.random;
 
+import lmr.randomizer.DataFromFile;
 import lmr.randomizer.dat.Block;
 import lmr.randomizer.node.AccessChecker;
 
@@ -56,7 +57,9 @@ public class StaticShopRandomizer implements ShopRandomizer {
 
     @Override
     public List<String> getShopItems(String shopName) {
-        return null;
+        List<String> shopItems = new ArrayList<>(DataFromFile.getMapOfShopNameToShopOriginalContents().get(shopName));
+        shopItems.remove("Weights");
+        return shopItems;
     }
 
     @Override
@@ -66,6 +69,11 @@ public class StaticShopRandomizer implements ShopRandomizer {
 
     @Override
     public boolean placeItem(String item, int locationIndex) {
+        return false;
+    }
+
+    @Override
+    public boolean shopContainsSacredOrb(String shopName) {
         return false;
     }
 

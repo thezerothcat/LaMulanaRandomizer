@@ -37,6 +37,11 @@ Things to know:
 * Initially accessible locations include 9 shops, 26 non-shop locations, and an additional 6 coin chests if coin chests are randomized.
 
 
+1.13:
+-----------------------------
+When purchasing a Sacred Orb from a shop, that shop will now transform as soon as you leave (partial fix for orb shop bug). Illusion Bomb chest turned into a coin chest and randomized. Requirement changes, including better ammo handling. Revisited shop prices.
+
+
 1.12:
 -----------------------------
 Added in-game Japanese language support (randomizer UI still needs translation). Merged more UI improvements from Goost. Assorted minor requirement fixes.
@@ -74,7 +79,7 @@ Added non-categorized shop randomization. Added remaining shops, Diary, Mulana T
 
 1.5:
 -----------------------------
-Seed generation settings are now saved to file and automatically reused the next time you run the program. There are also some additional items/item types randomized, including a partial randomization of Forbidden Treasure/Bathing Suit by popular request, and a handful of bugfixes.
+Seed generation settings are now saved to file and automatically reused the next time you run the program. There are also some additional items/item types randomized, including a partial randomization of Forbidden Treasure/Provocative Bathing Suit by popular request, and a handful of bugfixes.
 
 
 1.4:
@@ -107,8 +112,9 @@ Adds some basic UI and file validation for the randomizer jar, so it doesn't hav
 
 Plans for future releases:
 -----------------------------
-* Area transition randomiztion
 * Ability to replace some items with empty chests (or possibly weights).
+* Setting(s) to speed up playthroughs (depending on what's possible, maybe shorter/skipped mantras, no xelpud revisit for shrine pillar, forcing coins/maps to the top of Gate of Time)
+* Area transition randomization
 * Better handling for ankh jewel locks.
 * Item requirements expansion (configurable boss requirements, more glitch-enabled requirements, requirements involving damage boosting, etc.)
 * Shop randomization expansion (randomizing ammo when shuffling items only)

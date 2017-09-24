@@ -164,7 +164,7 @@ public class PotMover {
         else if(containingScreen.getZoneIndex() == 11) {
             // Graveyard of the Giants
             if(containingScreen.getRoomIndex() == 3 && containingScreen.getScreenIndex() == 0) {
-                if(obj.getY() == 400) {
+                if(obj.getX() == 20 && obj.getY() == 400) {
                     obj.setY(320);
                 }
             }
