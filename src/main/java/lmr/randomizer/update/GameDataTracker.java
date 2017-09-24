@@ -1247,10 +1247,10 @@ public final class GameDataTracker {
             shopBlock.getInventoryPriceList().getData().add(itemPriceAndCount.getKey());
             shopBlock.getInventoryCountList().getData().add(itemPriceAndCount.getValue());
 
-            shopBlock.getInventoryPriceList().getData().clear();
-            shopBlock.getInventoryPriceList().getData().add((short)1);
-            shopBlock.getInventoryPriceList().getData().add((short)1);
-            shopBlock.getInventoryPriceList().getData().add((short)1);
+//            shopBlock.getInventoryPriceList().getData().clear();
+//            shopBlock.getInventoryPriceList().getData().add((short)1);
+//            shopBlock.getInventoryPriceList().getData().add((short)1);
+//            shopBlock.getInventoryPriceList().getData().add((short)1);
         }
 
         shopBlock.getFlagList().getData().clear();
@@ -1684,7 +1684,7 @@ public final class GameDataTracker {
             updateFlag.setValue(2);
             objectToModify.getWriteByteOperations().add(updateFlag);
 
-            objectToModify.getWriteByteOperations().add(puzzleFlag);
+                objectToModify.getWriteByteOperations().add(puzzleFlag);
 
             updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
