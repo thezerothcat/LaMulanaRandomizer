@@ -77,9 +77,9 @@ public class ItemRandomizer {
 //        mapOfItemLocationToItem.put("Coin: Surface (Waterfall)", "Shell Horn");
 //        unassignedNonShopItemLocations.remove("Coin: Surface (Waterfall)");
 //        unplacedItems.remove("Shell Horn");
-        mapOfItemLocationToItem.put("Shell Horn", "Map (Gate of Guidance)");
-        unassignedNonShopItemLocations.remove("Shell Horn");
-        unplacedItems.remove("Map (Gate of Guidance)");
+//        mapOfItemLocationToItem.put("Shell Horn", "Map (Gate of Guidance)");
+//        unassignedNonShopItemLocations.remove("Shell Horn");
+//        unplacedItems.remove("Map (Gate of Guidance)");
 //        mapOfItemLocationToItem.put("Sacred Orb (Gate of Guidance)", "Flail Whip");
 //        unassignedNonShopItemLocations.remove("Sacred Orb (Gate of Guidance)");
 //        unplacedItems.remove("Flail Whip");
