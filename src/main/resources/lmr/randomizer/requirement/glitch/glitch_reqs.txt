@@ -3,4 +3,4 @@ Glitch: Cat Pause => Setting: Cat Pause
 Glitch: Raindrop => Hermes' Boots, Grapple Claw, Setting: Raindrop
 Glitch: Ice Raindrop => Grapple Claw, Setting: Ice Raindrop
 Glitch: Pot Clip => Grapple Claw, Setting: Pot Clip
-Glitch: Pot Zip => Hermes' Boots, Setting: Pot Zip
+Glitch: Object Zip => Hermes' Boots, Setting: Object Zip
