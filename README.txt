@@ -1,45 +1,10 @@
-Releases page:
------------------------------
-https://github.com/thezerothcat/LaMulanaRandomizer/releases
-
-
-Known issues:
------------------------------
-https://github.com/thezerothcat/LaMulanaRandomizer/issues
-
-
-How to use:
------------------------------
-When using the UI jar for the first time, MAKE SURE you have clean, non-modified copies of script.rcd and script_code.dat in your La-Mulana directory! Failure to do so often results in unwinnable seeds.
-
-The jar can be run from anywhere, and will look for common Windows install paths for La-Mulana. If it doesn't find a correct install path, you can fill yours in.
-
-The jar will look for files called script.rcd.bak and script_code.dat.bak in the current directory. If files are not found, backup copies will be created from your La-Mulana directory, so you'll want to make sure those are unmodified the first time you run the jar. If the script.rcd file is found to be modified, the program will write a warning to the log file and exit.
-
-There are a few configurations available in the UI. Once things are configured to your liking, click on the Apply button. At this point, a subdirectory will be created for the current seed number containing files for the randomized game, which will automatically be copied into your La-Mulana directory. Additonal files will also be created: items.txt and shops.txt (spoiler logs for the seed), and excluded_items.txt (list of items considered out of reach, if allowing some items to remain inaccessible)
-
-Keep in mind that the randomizer may take some time to generate a seed (some settings may lead to faster/slower generation). You'll see it automatically update the seed number entry with a new number when it's finished.
-
-If you want to play the non-randomized game, there's a Restore button in the UI which should copy the backup files back into your La-Mulana directory.
-
-
-Things to know:
------------------------------
-* The randomizer does not expect you to fail the Chain Whip, Flail Whip, or Angel Shield puzzles, so don't do it!
-* A door has been added to allow access to the old Spring in the Sky shop after transforming it.
-* A door has been added to the bottom of Endless Corridor to allow access to the original Shrine of the Mother after defeating all 8 guardians (still requires doing the puzzle to enter the Shrine).
-* If your Mulana Talisman is replaced by Talisman or Diary, you can get Mulana Talisman back at any time by saving and reloading your game.
-* Xelpud has conversations based on collecting Talisman and Diary, but you are no longer required to equip the item.
-* The Shrine of the Mother map is the only required map. If you find this item in a shop, it will be called Shrine Map instead of just Map, and if you pick it up elsewhere, a shell horn sound will play (regardless of whether or not you've collected shell horn).
-* You are not expected to have the Scalesphere before doing Spring in the Sky (the non-randomized game had it at the top of the area).
-* It's possible to purchase actual subweapons from shops. They look the same as ammo for the subweapon, but are not sold out.
-* "Lower" boss difficulty adds health/weapon requirements to some of the bosses.
-* Initially accessible locations include 9 shops, 26 non-shop locations, and an additional 6 coin chests if coin chests are randomized.
+Please see the wiki page on github for information on how to use the randomizer, and other things you may need to know about it.
+https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
 1.13:
 -----------------------------
-When purchasing a Sacred Orb from a shop, that shop will now transform as soon as you leave (partial fix for orb shop bug). Illusion Bomb chest turned into a coin chest and randomized. Requirement changes, including better ammo handling. Revisited shop prices.
+Moved some info from the readme, as well as other useful randomizer info, onto github using the site's wiki feature. When purchasing a Sacred Orb from a shop, that shop will now transform as soon as you leave (partial fix for orb shop bug). Illusion Bomb chest turned into a coin chest and randomized. Requirement changes, including better ammo handling. Revisited shop prices.
 
 
 1.12:
@@ -108,13 +73,3 @@ Adds some basic UI and file validation for the randomizer jar, so it doesn't hav
 * Some items from chests will not be randomized; this is typically due to a known special case for that item which needs to be resolved before the item can safely be shuffled.
 * Ankh Jewel locks are possible. To reduce the likelihood of encountering one, 4 ankh jewels will be available with no requirements (matching the non-randomized game)
 * There are a number of items made initially accessible to speed up resolution of random seeds. In future versions, this will be made customizable.
-
-
-Plans for future releases:
------------------------------
-* Ability to replace some items with empty chests (or possibly weights).
-* Setting(s) to speed up playthroughs (depending on what's possible, maybe shorter/skipped mantras, no xelpud revisit for shrine pillar, forcing coins/maps to the top of Gate of Time)
-* Area transition randomization
-* Better handling for ankh jewel locks.
-* Item requirements expansion (configurable boss requirements, more glitch-enabled requirements, requirements involving damage boosting, etc.)
-* Shop randomization expansion (randomizing ammo when shuffling items only)
