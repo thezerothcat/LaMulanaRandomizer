@@ -131,7 +131,10 @@ public final class GameDataTracker {
                 objects.add(gameObject);
             }
         } else if (gameObject.getId() == 0x12) {
-            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+            Integer flagIndexToRemove = null;
+            TestByteOperation flagTest;
+            for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                flagTest = gameObject.getTestByteOperations().get(i);
                 if (flagTest.getIndex() == 335) {
                     // deathv stuff
                     GameObjectId gameObjectId = new GameObjectId((short) 96, 335);
@@ -154,6 +157,19 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
+                else if (flagTest.getIndex() == 501) {
+                    // Breakable ceiling to Isis' Pendant room
+                    flagIndexToRemove = i;
+                    break;
+                }
+                else if(flagTest.getIndex() == 296) {
+                    // Breakable snake statue in Inferno Cavern spike area
+                    flagTest.setIndex(2795);
+                    flagTest.setValue((byte)1);
+                }
+            }
+            if(flagIndexToRemove != null) {
+                gameObject.getTestByteOperations().remove((int)flagIndexToRemove);
             }
         } else if (gameObject.getId() == 0x0e) {
             // Temple of the Sun Map chest ladder stuff
@@ -407,6 +423,14 @@ public final class GameDataTracker {
                 }
                 objects.add(gameObject);
             }
+            else if(blockNumber == 677) {
+                // Giltoriyo mantra conversation
+                WriteByteOperation writeByteOperation = new WriteByteOperation();
+                writeByteOperation.setIndex(2795);
+                writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                writeByteOperation.setValue(1);
+                gameObject.getWriteByteOperations().add(writeByteOperation);
+            }
             else if(blockNumber == 689 || blockNumber == 690) {
                 // Conversation to receive Pepper, or conversation after receiving Pepper if you don't have Treasures
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
@@ -580,7 +604,8 @@ public final class GameDataTracker {
                     }
                 }
             }
-            for(TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+            for(int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                TestByteOperation flagTest = gameObject.getTestByteOperations().get(i);
                 if(flagTest.getIndex() == 260) {
                     // Timers related to Diary puzzle
                     GameObjectId gameObjectId = new GameObjectId((short) 72, 260);
@@ -607,6 +632,17 @@ public final class GameDataTracker {
                     // Mulbruk score check timer - if you don't have the right score, the timer won't set the flag to
                     // spawn the Mulbruk conversation object that would let you get Book of the Dead.
                     flagTest.setValue((byte)0);
+                }
+                else if (flagTest.getIndex() >= 292 && flagTest.getIndex() <= 299) {
+                    // Timers related to mantra tablets
+                    if(flagTest.getValue() == 1) {
+                        flagTest.setOp(ByteOp.FLAG_LTEQ);
+                        TestByteOperation testByteOperation = new TestByteOperation();
+                        testByteOperation.setIndex(2795);
+                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                        testByteOperation.setValue((byte)1);
+                        gameObject.getTestByteOperations().add(testByteOperation);
+                    }
                 }
 //                else if(flagTest.getIndex() == 267 && flagTest.getValue() == 1) {
 //                    // Timer to track wait time with Woman Statue and give Maternity Statue
@@ -658,6 +694,75 @@ public final class GameDataTracker {
                 }
             }
         }
+        else if(gameObject.getId() == 0xc2) {
+            // Mantra detectors
+            short mantraNumber = gameObject.getArgs().get(0);
+            if(mantraNumber > 1) {
+                // Don't mess with birth/death
+                WriteByteOperation writeByteOperation = new WriteByteOperation();
+                writeByteOperation.setIndex(2794);
+                writeByteOperation.setOp(ByteOp.ADD_FLAG);
+                writeByteOperation.setValue(1);
+                gameObject.getWriteByteOperations().add(writeByteOperation);
+                if(mantraNumber == 4) {
+                    // Separate breakable snake statue from reciting of MU
+                    Integer flagToRemoveIndex = null;
+                    for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 296) {
+                            flagToRemoveIndex = i;
+                            break;
+                        }
+                    }
+                    if(flagToRemoveIndex != null) {
+                        gameObject.getWriteByteOperations().remove((int)flagToRemoveIndex);
+                    }
+                }
+                if(mantraNumber == 9) {
+                    // Make sure LAMULANA doesn't update the flag that upgrades the Key Sword until we're ready.
+                    Integer flagToRemoveIndex = null;
+                    for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 292) {
+                            flagToRemoveIndex = i;
+                            break;
+                        }
+                    }
+                    if(flagToRemoveIndex != null) {
+                        gameObject.getWriteByteOperations().remove((int)flagToRemoveIndex);
+                    }
+                }
+
+                GameObject mantraCountTimer = new GameObject(gameObject.getObjectContainer());
+                mantraCountTimer.setId((short)0x0b);
+
+                TestByteOperation testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(2794);
+                testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+                testByteOperation.setValue((byte)5);
+                mantraCountTimer.getTestByteOperations().add(testByteOperation);
+
+                writeByteOperation = new WriteByteOperation();
+                writeByteOperation.setIndex(292);
+                writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                writeByteOperation.setValue(4);
+                mantraCountTimer.getWriteByteOperations().add(writeByteOperation);
+
+                gameObject.getObjectContainer().getObjects().add(mantraCountTimer);
+            }
+        }
+//        else if(gameObject.getId() == 0xc0) {
+//            // Mother ankh
+//            if(Settings.isAllowMantraSkip()) {
+//                addMantraDetector(gameObject.getObjectContainer());
+//            }
+//        }
+    }
+
+    private static void addMantraDetector(ObjectContainer objectContainer) {
+        GameObject mantraDetector = new GameObject(objectContainer);
+        mantraDetector.setId((short)0xc2);
+        mantraDetector.getArgs().add((short)2);
+
+
     }
 
     private static void addBackupGyoninFishShop(GameObject untransformedGyoninFishShop) {

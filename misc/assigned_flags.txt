@@ -7,6 +7,8 @@ guild.exe replacement world flag: a91
 Anchor world flag: a92
 Surface coin chest world flag: a93
 
+Mantra tablet counter flag: aea
+Mantras unlocked flag (Giltoriyo): aeb
 Xelpud Talisman convos: aec
 Xelpud Mulana Talisman convos: aed
 Shrine map sound effect played flag: aee
