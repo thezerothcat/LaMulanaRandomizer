@@ -22,22 +22,22 @@ public class ShopItemPriceCountRandomizer {
             "Waterproof Case", "Heatproof Case", "Map");
 
     // 80-120
-    private List<String> PRICE_TIER2 = Arrays.asList("Key of Eternity", "Life Seal", "Death Seal",
+    private List<String> PRICE_TIER2 = Arrays.asList("Key of Eternity", "Birth Seal", "Life Seal", "Death Seal",
             "Knife", "Key Sword", "Shuriken", "Rolling Shuriken", "Scalesphere", "Pepper", "Talisman", "Magatama Jewel",
             "yagostr.exe", "Mini Doll", "Treasures", "Anchor", "Grapple Claw", "Perfume", "Hand Scanner", "Hermes' Boots",
-            "bounce.exe", "Ankh Jewel");
+            "bounce.exe", "Ankh Jewel", "Woman Statue", "Maternity Statue", "Flare Gun", "Serpent Staff");
 
     // 140-160
-    private List<String> PRICE_TIER3 = Arrays.asList("Origin Seal", "Birth Seal", "Fruit of Eden", "Twin Statue",
-            "Woman Statue", "Maternity Statue", "Eye of Truth", "Diary", "Ice Cape", "Serpent Staff", "Dragon Bone",
-            "Caltrops", "Earth Spear", "Fake Silver Shield", "Silver Shield", "Flare Gun", "Pistol", "Mobile Super X2",
-            "Isis' Pendant", "Bracelet", "Crucifix", "miracle.exe", "torude.exe", "mirai.exe", "reader.exe", "Sacred Orb");
+    private List<String> PRICE_TIER3 = Arrays.asList("Feather", "Origin Seal", "Fruit of Eden", "Twin Statue",
+            "Eye of Truth", "Diary", "Ice Cape", "Dragon Bone", "Caltrops", "Earth Spear", "Pistol", "Katana",
+            "Fake Silver Shield", "Silver Shield", "Isis' Pendant", "Bracelet", "Crucifix", "miracle.exe", "torude.exe",
+            "mirai.exe", "mekuri.exe", "reader.exe", "capstar.exe", "Sacred Orb", "Mobile Super X2");
 
     // 180-220
-    private List<String> PRICE_TIER4 = Arrays.asList("Feather", "Plane Model", "Philosopher's Ocarina", "Dimensional Key",
+    private List<String> PRICE_TIER4 = Arrays.asList("Plane Model", "Philosopher's Ocarina", "Dimensional Key",
             "mantra.exe", "Djed Pillar", "Cog of the Soul", "Crystal Skull", "Mulana Talisman", "Vessel", "Pochette Key",
-            "Ring", "Chain Whip", "Axe", "Katana", "Chakram",  "Bomb", "Book of the Dead", "Angel Shield", "Lamp of Time",
-            "move.exe", "randc.exe", "mekuri.exe", "capstar.exe");
+            "Ring", "Chain Whip", "Axe", "Chakram",  "Bomb", "Book of the Dead", "Angel Shield", "Lamp of Time",
+            "move.exe", "randc.exe");
 
     // 250-350
     private List<String> PRICE_TIER5 = Arrays.asList("Fairy Clothes", "Scriptures", "Gauntlet", "deathv.exe",
@@ -100,12 +100,12 @@ public class ShopItemPriceCountRandomizer {
         if("Bomb Ammo".equals(itemName)) {
             int priceRoll = random.nextInt(5);
             if(priceRoll < 3) {
-                return 70;
-            }
-            if(priceRoll == 3) {
                 return 60;
             }
-            return 80;
+            if(priceRoll == 3) {
+                return 50;
+            }
+            return 70;
         }
         if("Chakram Ammo".equals(itemName)) {
             int priceRoll = random.nextInt(2);
@@ -159,7 +159,7 @@ public class ShopItemPriceCountRandomizer {
         else if(PRICE_TIER4.contains(itemName)) {
             return (short)(180 + 10 * random.nextInt(5));
         }
-        else if(PRICE_TIER4.contains(itemName)) {
+        else if(PRICE_TIER5.contains(itemName)) {
             return (short)(250 + 50 * random.nextInt(3));
         }
         return (short)(10 + 10 * random.nextInt(25) + 1);

@@ -239,13 +239,13 @@ public class AccessChecker {
                         queuedUpdates.add("Flare Gun Ammo");
                     }
                     if(!accessedNodes.contains("Earth Spear Ammo") && !queuedUpdates.contains("Earth Spear Ammo")) {
-                        queuedUpdates.add("Earth Spear");
+                        queuedUpdates.add("Earth Spear Ammo");
                     }
                 }
                 else if("Location: Graveyard of the Giants [West]".equals(nodeName)
                         || "Location: Graveyard of the Giants [East]".equals(nodeName)) {
                     if(!accessedNodes.contains("Earth Spear Ammo") && !queuedUpdates.contains("Earth Spear Ammo")) {
-                        queuedUpdates.add("Earth Spear");
+                        queuedUpdates.add("Earth Spear Ammo");
                     }
                 }
                 else if("Location: Spring in the Sky".equals(nodeName)) {
