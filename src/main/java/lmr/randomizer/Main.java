@@ -112,7 +112,25 @@ public class Main {
                 generateAndApply();
             }
             else if("restore".equals(e.getActionCommand())) {
-                restore();
+                try {
+                    this.progressDialog.updateProgress(0, "Restoring files");
+                    Frame f = this;
+                    SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
+                        @Override
+                        protected Void doInBackground() throws Exception {
+                            progressDialog.setLocationRelativeTo(f);
+                            restore();
+
+                            return null;
+                        }
+                    };
+                    swingWorker.execute();
+                    progressDialog.setVisible(true);
+                } catch (Exception ex) {
+                    FileUtils.log("Error: " + ex.getMessage());
+                    ex.printStackTrace();
+                    throw ex;
+                }
             }
         }
 
@@ -229,19 +247,31 @@ public class Main {
         }
 
         private void restore() {
-            generateSeed();
-
             try {
+                progressDialog.updateProgress(0, "Restoring script.rcd");
+
                 FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/script.rcd"));
                 Files.copy(new File("script.rcd.bak").toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
+
+                progressDialog.updateProgress(50, "Restoring script_code.dat");
 
                 fileOutputStream = new FileOutputStream(new File(String.format("%s/data/language/%s/script_code.dat",
                         Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
                 Files.copy(new File(Settings.getBackupDatFile()).toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
+                progressDialog.updateProgress(100, "Files restored!");
+
+                SwingUtilities.invokeLater(() -> {
+                    try {
+                        Thread.sleep(2000);
+                        progressDialog.setVisible(false);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
             catch (Exception ex) {
                 FileUtils.log("unable to restore files to La-Mulana install");
@@ -776,6 +806,9 @@ public class Main {
                     if(Settings.isAutomaticHardmode()) {
                         GameDataTracker.addAutomaticHardmode();
                     }
+//                    if(Settings.isRandomizeMantras()) {
+//                        GameDataTracker.randomizeMantras(random);
+//                    }
                     RcdWriter.writeRcd(rcdData);
                     DatWriter.writeDat(datInfo);
 
@@ -789,6 +822,7 @@ public class Main {
                     }
 
                     dialog.updateProgress(100, "Done!");
+                    GameDataTracker.clearAll();
 
                     SwingUtilities.invokeLater(() -> {
                         try {

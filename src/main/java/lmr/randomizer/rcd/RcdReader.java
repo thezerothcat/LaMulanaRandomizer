@@ -115,6 +115,16 @@ public final class RcdReader {
                             return rcdByteIndex;
                         }
                     }
+                    else if(updateFlag.getIndex() == 299) {
+                        // Timer for MARDUK mantra update
+                        if(objectContainer instanceof Screen) {
+                            int zoneIndex = ((Screen) objectContainer).getZoneIndex();
+                            if(zoneIndex == 4 || zoneIndex == 18) {
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
                     else if(updateFlag.getIndex() == 141) {
                         // Get rid of Angel Shield shop timer on Graveyard alt shop screen (alt shop has been removed).
                         keepObject = false;
@@ -214,9 +224,9 @@ public final class RcdReader {
             objectContainer.getObjects().add(obj);
             GameDataTracker.addObject(obj);
         }
-        else {
-            FileUtils.log("Timer object excluded from rcd");
-        }
+//        else {
+//            FileUtils.log("Object excluded from rcd");
+//        }
         return rcdByteIndex;
     }
 

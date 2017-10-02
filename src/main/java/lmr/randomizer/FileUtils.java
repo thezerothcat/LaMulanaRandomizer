@@ -278,13 +278,19 @@ public class FileUtils {
                 Settings.setShopRandomization(line.split("=")[1], false);
             }
             else if(line.startsWith("automaticHardmode")) {
-                Settings.setFullItemAccess(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setAutomaticHardmode(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("fullItemAccess")) {
                 Settings.setFullItemAccess(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("requireSoftwareComboForKeyFairy")) {
                 Settings.setRequireSoftwareComboForKeyFairy(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("requireIceCapeForLava")) {
+                Settings.setRequireIceCapeForLava(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("requireFlaresForExtinction")) {
+                Settings.setRequireFlaresForExtinction(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("enableDamageBoostRequirements")) {
                 Settings.setEnableDamageBoostRequirements(Boolean.valueOf(line.split("=")[1]), false);
@@ -322,6 +328,12 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("requireSoftwareComboForKeyFairy=%s", Settings.isRequireSoftwareComboForKeyFairy()));
+        writer.newLine();
+
+        writer.write(String.format("requireIceCapeForLava=%s", Settings.isRequireIceCapeForLava()));
+        writer.newLine();
+
+        writer.write(String.format("requireFlaresForExtinction=%s", Settings.isRequireFlaresForExtinction()));
         writer.newLine();
 
         writer.write(String.format("enableDamageBoostRequirements=%s", Settings.isEnableDamageBoostRequirements()));

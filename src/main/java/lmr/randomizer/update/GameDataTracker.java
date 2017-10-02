@@ -20,12 +20,20 @@ public final class GameDataTracker {
     private static Map<GameObjectId, List<GameObject>> mapOfChestIdentifyingInfoToGameObject = new HashMap<>();
     private static Map<GameObjectId, List<Block>> mapOfChestIdentifyingInfoToBlock = new HashMap<>();
     private static Map<Integer, List<GameObject>> mapOfShopBlockToShopObjects = new HashMap<>();
+    private static Map<String, List<GameObject>> mantraTablets = new HashMap<>();
 
     private static ObjectContainer xelpudScreen;
     private static ObjectContainer mulbrukScreen;
     private static ObjectContainer littleBrotherShopScreen;
 
     private GameDataTracker() { }
+
+    public static void clearAll() {
+        mapOfChestIdentifyingInfoToGameObject.clear();
+        mapOfChestIdentifyingInfoToBlock.clear();
+        mapOfShopBlockToShopObjects.clear();
+        mantraTablets.clear();
+    }
 
     public static void addObject(GameObject gameObject) {
         if (gameObject.getId() == 0x2c) {
@@ -208,6 +216,123 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
+                else if(flagTest.getIndex() == 299 && flagTest.getValue() == 2) {
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 8) {
+                        // MARDUK tablet effect
+                        List<GameObject> objects = mantraTablets.get("MARDUK");
+                        if (objects == null) {
+                            mantraTablets.put("MARDUK", new ArrayList<>());
+                            objects = mantraTablets.get("MARDUK");
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                else if(flagTest.getIndex() == 298 && flagTest.getValue() == 2) {
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 7) {
+                        // SABBAT tablet effect
+                        List<GameObject> objects = mantraTablets.get("SABBAT");
+                        if (objects == null) {
+                            mantraTablets.put("SABBAT", new ArrayList<>());
+                            objects = mantraTablets.get("SABBAT");
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                else if(flagTest.getIndex() == 297 && flagTest.getValue() == 2) {
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6) {
+                        // MU tablet effect
+                        List<GameObject> objects = mantraTablets.get("MU");
+                        if (objects == null) {
+                            mantraTablets.put("MU", new ArrayList<>());
+                            objects = mantraTablets.get("MU");
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                else if(flagTest.getIndex() == 296 && flagTest.getValue() == 2) {
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5) {
+                        // VIY tablet effect
+                        List<GameObject> objects = mantraTablets.get("VIY");
+                        if (objects == null) {
+                            mantraTablets.put("VIY", new ArrayList<>());
+                            objects = mantraTablets.get("VIY");
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                else if(flagTest.getIndex() == 295 && flagTest.getValue() == 2) {
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 13) {
+                        // BAHRUN tablet effect
+                        List<GameObject> objects = mantraTablets.get("BAHRUN");
+                        if (objects == null) {
+                            mantraTablets.put("BAHRUN", new ArrayList<>());
+                            objects = mantraTablets.get("BAHRUN");
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                else if(flagTest.getIndex() == 294 && flagTest.getValue() == 2) {
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3) {
+                        // WEDJET tablet effect
+                        List<GameObject> objects = mantraTablets.get("WEDJET");
+                        if (objects == null) {
+                            mantraTablets.put("WEDJET", new ArrayList<>());
+                            objects = mantraTablets.get("WEDJET");
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                else if(flagTest.getIndex() == 293 && flagTest.getValue() == 2) {
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 11) {
+                        // ABUTO tablet effect
+                        List<GameObject> objects = mantraTablets.get("ABUTO");
+                        if (objects == null) {
+                            mantraTablets.put("ABUTO", new ArrayList<>());
+                            objects = mantraTablets.get("ABUTO");
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                else if(flagTest.getIndex() == 292) {
+                    if(flagTest.getValue() == 2) {
+                        if (gameObject.getObjectContainer() instanceof Screen
+                                && ((Screen) gameObject.getObjectContainer()).getZoneIndex() == 0) {
+                            // LAMULANA tablet effect
+                            List<GameObject> objects = mantraTablets.get("LAMULANA");
+                            if (objects == null) {
+                                mantraTablets.put("LAMULANA", new ArrayList<>());
+                                objects = mantraTablets.get("LAMULANA");
+                            }
+                            objects.add(gameObject);
+                            break;
+                        }
+                    }
+                    else if (flagTest.getValue() == 3) {
+                        flagTest.setIndex(2794);
+                        flagTest.setOp(ByteOp.FLAG_LT);
+                        flagTest.setValue((byte)1);
+                        break;
+                    }
+                    else if (flagTest.getValue() == 4) {
+                        flagTest.setIndex(2794);
+                        flagTest.setValue((byte)1);
+                        break;
+                    }
+                }
             }
         } else if (gameObject.getId() == 0x9b) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
@@ -231,6 +356,12 @@ public final class GameDataTracker {
                         objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     }
                     objects.add(gameObject);
+                }
+                else if(flagTest.getIndex() == 292) {
+                    // This is based on the LAMULANA mantra being recited, but we have a new flag for that.
+                    flagTest.setIndex(2794);
+                    flagTest.setValue((byte)1);
+                    break;
                 }
             }
         } else if (gameObject.getId() == 0x9c) {
@@ -338,17 +469,101 @@ public final class GameDataTracker {
                 }
             }
         } else if (gameObject.getId() == 0x9e) {
-            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                if (flagTest.getIndex() == 209) {
-                    // Surface map scan effect?
-                    GameObjectId gameObjectId = new GameObjectId((short) 70, 209);
-                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                    if (objects == null) {
-                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+            int languageBlock = gameObject.getArgs().get(0);
+            if(languageBlock == 223) {
+                // Tablet for MARDUK mantra
+                List<GameObject> objects = mantraTablets.get("MARDUK");
+                if (objects == null) {
+                    mantraTablets.put("MARDUK", new ArrayList<>());
+                    objects = mantraTablets.get("MARDUK");
+                }
+                objects.add(gameObject);
+            }
+            else if(languageBlock == 200) {
+                // Tablet for SABBAT mantra
+                List<GameObject> objects = mantraTablets.get("SABBAT");
+                if (objects == null) {
+                    mantraTablets.put("SABBAT", new ArrayList<>());
+                    objects = mantraTablets.get("SABBAT");
+                }
+                objects.add(gameObject);
+            }
+            else if(languageBlock == 172) {
+                // Tablet for MU mantra
+                List<GameObject> objects = mantraTablets.get("MU");
+                if (objects == null) {
+                    mantraTablets.put("MU", new ArrayList<>());
+                    objects = mantraTablets.get("MU");
+                }
+                objects.add(gameObject);
+            }
+            else if(languageBlock == 153) {
+                // Tablet for VIY mantra
+                List<GameObject> objects = mantraTablets.get("VIY");
+                if (objects == null) {
+                    mantraTablets.put("VIY", new ArrayList<>());
+                    objects = mantraTablets.get("VIY");
+                }
+                objects.add(gameObject);
+            }
+            else if(languageBlock == 313) {
+                // Tablet for BAHRUN mantra
+                List<GameObject> objects = mantraTablets.get("BAHRUN");
+                if (objects == null) {
+                    mantraTablets.put("BAHRUN", new ArrayList<>());
+                    objects = mantraTablets.get("BAHRUN");
+                }
+                objects.add(gameObject);
+            }
+            else if(languageBlock == 115) {
+                // Tablet for WEDJET mantra
+                List<GameObject> objects = mantraTablets.get("WEDJET");
+                if (objects == null) {
+                    mantraTablets.put("WEDJET", new ArrayList<>());
+                    objects = mantraTablets.get("WEDJET");
+                }
+                objects.add(gameObject);
+            }
+            else if(languageBlock == 282) {
+                // Tablet for ABUTO mantra
+                List<GameObject> objects = mantraTablets.get("ABUTO");
+                if (objects == null) {
+                    mantraTablets.put("ABUTO", new ArrayList<>());
+                    objects = mantraTablets.get("ABUTO");
+                }
+                objects.add(gameObject);
+            }
+            else if(languageBlock == 72) {
+                // Tablet for LAMULANA mantra
+                List<GameObject> objects = mantraTablets.get("LAMULANA");
+                if (objects == null) {
+                    mantraTablets.put("LAMULANA", new ArrayList<>());
+                    objects = mantraTablets.get("LAMULANA");
+                }
+                objects.add(gameObject);
+            }
+            else if(languageBlock == 648) {
+                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                    if (flagTest.getIndex() == 292 && flagTest.getValue() == 4) {
+                        flagTest.setIndex(2794);
+                        flagTest.setValue((byte)1);
+                        break;
                     }
-                    objects.add(gameObject);
-                    break;
+                }
+            }
+            else {
+                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                    if (flagTest.getIndex() == 209) {
+                        // Surface map scan effect?
+                        GameObjectId gameObjectId = new GameObjectId((short) 70, 209);
+                        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        if (objects == null) {
+                            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
                 }
             }
         } else if (gameObject.getId() == 0xa0) {
@@ -425,11 +640,11 @@ public final class GameDataTracker {
             }
             else if(blockNumber == 677) {
                 // Giltoriyo mantra conversation
-                WriteByteOperation writeByteOperation = new WriteByteOperation();
-                writeByteOperation.setIndex(2795);
-                writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
-                writeByteOperation.setValue(1);
-                gameObject.getWriteByteOperations().add(writeByteOperation);
+                for (WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
+                    if(flagUpdate.getIndex() == 299) {
+                        flagUpdate.setIndex(2795);
+                    }
+                }
             }
             else if(blockNumber == 689 || blockNumber == 690) {
                 // Conversation to receive Pepper, or conversation after receiving Pepper if you don't have Treasures
@@ -591,6 +806,129 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
+                else if(flagTest.getIndex() == 299 && flagTest.getValue() == 2) {
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 8) {
+                        // MARDUK tablet effect
+                        List<GameObject> objects = mantraTablets.get("MARDUK");
+                        if (objects == null) {
+                            mantraTablets.put("MARDUK", new ArrayList<>());
+                            objects = mantraTablets.get("MARDUK");
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                else if(flagTest.getIndex() == 298 && flagTest.getValue() == 2) {
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 7) {
+                        // SABBAT tablet effect
+                        List<GameObject> objects = mantraTablets.get("SABBAT");
+                        if (objects == null) {
+                            mantraTablets.put("SABBAT", new ArrayList<>());
+                            objects = mantraTablets.get("SABBAT");
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                else if(flagTest.getIndex() == 297 && flagTest.getValue() == 2) {
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6) {
+                        // MU tablet effect
+                        List<GameObject> objects = mantraTablets.get("MU");
+                        if (objects == null) {
+                            mantraTablets.put("MU", new ArrayList<>());
+                            objects = mantraTablets.get("MU");
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                else if(flagTest.getIndex() == 296 && flagTest.getValue() == 2) {
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5) {
+                        // VIY tablet effect
+                        List<GameObject> objects = mantraTablets.get("VIY");
+                        if (objects == null) {
+                            mantraTablets.put("VIY", new ArrayList<>());
+                            objects = mantraTablets.get("VIY");
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                else if(flagTest.getIndex() == 295 && flagTest.getValue() == 2) {
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 13) {
+                        // BAHRUN tablet effect
+                        List<GameObject> objects = mantraTablets.get("BAHRUN");
+                        if (objects == null) {
+                            mantraTablets.put("BAHRUN", new ArrayList<>());
+                            objects = mantraTablets.get("BAHRUN");
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                else if(flagTest.getIndex() == 294 && flagTest.getValue() == 2) {
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3) {
+                        // WEDJET tablet effect
+                        List<GameObject> objects = mantraTablets.get("WEDJET");
+                        if (objects == null) {
+                            mantraTablets.put("WEDJET", new ArrayList<>());
+                            objects = mantraTablets.get("WEDJET");
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                else if(flagTest.getIndex() == 293 && flagTest.getValue() == 2) {
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 11) {
+                        // ABUTO tablet effect
+                        List<GameObject> objects = mantraTablets.get("ABUTO");
+                        if (objects == null) {
+                            mantraTablets.put("ABUTO", new ArrayList<>());
+                            objects = mantraTablets.get("ABUTO");
+                        }
+                        objects.add(gameObject);
+                        break;
+                    }
+                }
+                else if(flagTest.getIndex() == 292) {
+                    if(flagTest.getValue() == 2) {
+                        if(gameObject.getObjectContainer() instanceof Screen
+                                && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0) {
+                            // LAMULANA tablet effect
+                            List<GameObject> objects = mantraTablets.get("LAMULANA");
+                            if (objects == null) {
+                                mantraTablets.put("LAMULANA", new ArrayList<>());
+                                objects = mantraTablets.get("LAMULANA");
+                            }
+                            objects.add(gameObject);
+                            break;
+                        }
+                    }
+                    else if(flagTest.getValue() == 4) {
+                        flagTest.setIndex(2794);
+                        flagTest.setValue((byte)1);
+                    }
+                }
+//                else if(flagTest.getIndex() == 296) {
+//                    if(gameObject.getObjectContainer() instanceof Screen
+//                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 7) {
+//                        // SABBAT tablet effect
+//                        List<GameObject> objects = mantraTablets.get("SABBAT");
+//                        if (objects == null) {
+//                            mantraTablets.put("SABBAT", new ArrayList<>());
+//                            objects = mantraTablets.get("SABBAT");
+//                        }
+//                        objects.add(gameObject);
+//                        break;
+//                    }
+//                }
             }
         } else if (gameObject.getId() == 0x0b) {
             for (WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
@@ -633,15 +971,193 @@ public final class GameDataTracker {
                     // spawn the Mulbruk conversation object that would let you get Book of the Dead.
                     flagTest.setValue((byte)0);
                 }
-                else if (flagTest.getIndex() >= 292 && flagTest.getIndex() <= 299) {
-                    // Timers related to mantra tablets
-                    if(flagTest.getValue() == 1) {
+                else if (flagTest.getIndex() == 299) {
+                    // Timers related to MARDUK mantra. Some other timers have been removed in RcdReader.
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 8) {
                         flagTest.setOp(ByteOp.FLAG_LTEQ);
+
+                        // Add test for Giltoriyo conversation
                         TestByteOperation testByteOperation = new TestByteOperation();
                         testByteOperation.setIndex(2795);
                         testByteOperation.setOp(ByteOp.FLAG_EQUALS);
                         testByteOperation.setValue((byte)1);
+
                         gameObject.getTestByteOperations().add(testByteOperation);
+                        break;
+                    }
+
+                    List<GameObject> objects = mantraTablets.get("MARDUK");
+                    if (objects == null) {
+                        mantraTablets.put("MARDUK", new ArrayList<>());
+                        objects = mantraTablets.get("MARDUK");
+                    }
+                    objects.add(gameObject);
+                }
+                else if (flagTest.getIndex() == 298) {
+                    // Timers related to SABBAT mantra. Some other timers have been removed in RcdReader.
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 7) {
+                        flagTest.setOp(ByteOp.FLAG_LTEQ);
+
+                        // Add test for Giltoriyo conversation
+                        TestByteOperation testByteOperation = new TestByteOperation();
+                        testByteOperation.setIndex(2795);
+                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                        testByteOperation.setValue((byte)1);
+
+                        gameObject.getTestByteOperations().add(testByteOperation);
+                        break;
+                    }
+
+                    List<GameObject> objects = mantraTablets.get("SABBAT");
+                    if (objects == null) {
+                        mantraTablets.put("SABBAT", new ArrayList<>());
+                        objects = mantraTablets.get("SABBAT");
+                    }
+                    objects.add(gameObject);
+                }
+                else if (flagTest.getIndex() == 297) {
+                    // Timers related to MU mantra.
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6) {
+                        flagTest.setOp(ByteOp.FLAG_LTEQ);
+
+                        // Add test for Giltoriyo conversation
+                        TestByteOperation testByteOperation = new TestByteOperation();
+                        testByteOperation.setIndex(2795);
+                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                        testByteOperation.setValue((byte)1);
+
+                        gameObject.getTestByteOperations().add(testByteOperation);
+                        break;
+                    }
+
+                    List<GameObject> objects = mantraTablets.get("MU");
+                    if (objects == null) {
+                        mantraTablets.put("MU", new ArrayList<>());
+                        objects = mantraTablets.get("MU");
+                    }
+                    objects.add(gameObject);
+                }
+                else if (flagTest.getIndex() == 425) {
+                    // Timer related to VIY mantra/statue combo.
+//                    if(gameObject.getObjectContainer() instanceof Screen
+//                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5) {
+//                        // Add test for Giltoriyo conversation
+//                        TestByteOperation testByteOperation = new TestByteOperation();
+//                        testByteOperation.setIndex(2795);
+//                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+//                        testByteOperation.setValue((byte)1);
+//
+//                        gameObject.getTestByteOperations().add(testByteOperation);
+//                        break;
+//                    }
+
+                    // This needs to be randomized on account of the update flag.
+                    List<GameObject> objects = mantraTablets.get("VIY");
+                    if (objects == null) {
+                        mantraTablets.put("VIY", new ArrayList<>());
+                        objects = mantraTablets.get("VIY");
+                    }
+                    objects.add(gameObject);
+                }
+                else if (flagTest.getIndex() == 295) {
+                    // Timers related to BAHRUN mantra.
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 13) {
+                        flagTest.setOp(ByteOp.FLAG_LTEQ);
+
+                        // Add test for Giltoriyo conversation
+                        TestByteOperation testByteOperation = new TestByteOperation();
+                        testByteOperation.setIndex(2795);
+                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                        testByteOperation.setValue((byte)1);
+
+                        gameObject.getTestByteOperations().add(testByteOperation);
+                        break;
+                    }
+
+                    List<GameObject> objects = mantraTablets.get("BAHRUN");
+                    if (objects == null) {
+                        mantraTablets.put("BAHRUN", new ArrayList<>());
+                        objects = mantraTablets.get("BAHRUN");
+                    }
+                    objects.add(gameObject);
+                }
+                else if (flagTest.getIndex() == 294) {
+                    // Timers related to WEDJET mantra.
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3) {
+                        flagTest.setOp(ByteOp.FLAG_LTEQ);
+
+                        // Add test for Giltoriyo conversation
+                        TestByteOperation testByteOperation = new TestByteOperation();
+                        testByteOperation.setIndex(2795);
+                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                        testByteOperation.setValue((byte)1);
+
+                        gameObject.getTestByteOperations().add(testByteOperation);
+                        break;
+                    }
+
+                    List<GameObject> objects = mantraTablets.get("WEDJET");
+                    if (objects == null) {
+                        mantraTablets.put("WEDJET", new ArrayList<>());
+                        objects = mantraTablets.get("WEDJET");
+                    }
+                    objects.add(gameObject);
+                }
+                else if (flagTest.getIndex() == 293) {
+                    // Timers related to ABUTO mantra.
+                    if(gameObject.getObjectContainer() instanceof Screen
+                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 11) {
+                        flagTest.setOp(ByteOp.FLAG_LTEQ);
+
+                        // Add test for Giltoriyo conversation
+                        TestByteOperation testByteOperation = new TestByteOperation();
+                        testByteOperation.setIndex(2795);
+                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                        testByteOperation.setValue((byte)1);
+
+                        gameObject.getTestByteOperations().add(testByteOperation);
+                        break;
+                    }
+
+                    List<GameObject> objects = mantraTablets.get("ABUTO");
+                    if (objects == null) {
+                        mantraTablets.put("ABUTO", new ArrayList<>());
+                        objects = mantraTablets.get("ABUTO");
+                    }
+                    objects.add(gameObject);
+                }
+                else if (flagTest.getIndex() == 292) {
+                    // Timers related to LAMULANA mantra.
+                    if(flagTest.getValue() == 1) {
+                        if(gameObject.getObjectContainer() instanceof Screen
+                                && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0) {
+                            flagTest.setOp(ByteOp.FLAG_LTEQ);
+
+                            // Add test for Giltoriyo conversation
+                            TestByteOperation testByteOperation = new TestByteOperation();
+                            testByteOperation.setIndex(2795);
+                            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                            testByteOperation.setValue((byte)1);
+
+                            gameObject.getTestByteOperations().add(testByteOperation);
+
+                            List<GameObject> objects = mantraTablets.get("LAMULANA");
+                            if (objects == null) {
+                                mantraTablets.put("LAMULANA", new ArrayList<>());
+                                objects = mantraTablets.get("LAMULANA");
+                            }
+                            objects.add(gameObject);
+                            break;
+                        }
+                    }
+                    else if(flagTest.getValue() == 4) {
+                        flagTest.setIndex(2794);
+                        flagTest.setValue((byte)1);
                     }
                 }
 //                else if(flagTest.getIndex() == 267 && flagTest.getValue() == 1) {
@@ -699,13 +1215,34 @@ public final class GameDataTracker {
             short mantraNumber = gameObject.getArgs().get(0);
             if(mantraNumber > 1) {
                 // Don't mess with birth/death
-                WriteByteOperation writeByteOperation = new WriteByteOperation();
-                writeByteOperation.setIndex(2794);
-                writeByteOperation.setOp(ByteOp.ADD_FLAG);
-                writeByteOperation.setValue(1);
-                gameObject.getWriteByteOperations().add(writeByteOperation);
-                if(mantraNumber == 4) {
-                    // Separate breakable snake statue from reciting of MU
+                if(mantraNumber == 2) {
+                    // Reciting MARDUK won't un-recite SABBAT
+                    Integer flagToRemoveIndex = null;
+                    for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 298) {
+                            flagToRemoveIndex = i;
+                            break;
+                        }
+                    }
+                    if(flagToRemoveIndex != null) {
+                        gameObject.getWriteByteOperations().remove((int)flagToRemoveIndex);
+                    }
+                }
+                else if(mantraNumber == 3) {
+                    // Reciting SABBAT won't un-recite MU
+                    Integer flagToRemoveIndex = null;
+                    for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 297) {
+                            flagToRemoveIndex = i;
+                            break;
+                        }
+                    }
+                    if(flagToRemoveIndex != null) {
+                        gameObject.getWriteByteOperations().remove((int)flagToRemoveIndex);
+                    }
+                }
+                else if(mantraNumber == 4) {
+                    // Reciting MU won't un-recite VIY, and statue won't be dependent on it either.
                     Integer flagToRemoveIndex = null;
                     for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
                         if (gameObject.getWriteByteOperations().get(i).getIndex() == 296) {
@@ -717,8 +1254,47 @@ public final class GameDataTracker {
                         gameObject.getWriteByteOperations().remove((int)flagToRemoveIndex);
                     }
                 }
-                if(mantraNumber == 9) {
-                    // Make sure LAMULANA doesn't update the flag that upgrades the Key Sword until we're ready.
+                else if(mantraNumber == 5) {
+                    // Reciting VIY won't un-recite BAHRUN
+                    Integer flagToRemoveIndex = null;
+                    for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 295) {
+                            flagToRemoveIndex = i;
+                            break;
+                        }
+                    }
+                    if(flagToRemoveIndex != null) {
+                        gameObject.getWriteByteOperations().remove((int)flagToRemoveIndex);
+                    }
+                }
+                else if(mantraNumber == 6) {
+                    // Reciting BAHRUN won't un-recite WEDJET
+                    Integer flagToRemoveIndex = null;
+                    for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 294) {
+                            flagToRemoveIndex = i;
+                            break;
+                        }
+                    }
+                    if(flagToRemoveIndex != null) {
+                        gameObject.getWriteByteOperations().remove((int)flagToRemoveIndex);
+                    }
+                }
+                else if(mantraNumber == 7) {
+                    // Reciting WEDJET won't un-recite ABUTO
+                    Integer flagToRemoveIndex = null;
+                    for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 293) {
+                            flagToRemoveIndex = i;
+                            break;
+                        }
+                    }
+                    if(flagToRemoveIndex != null) {
+                        gameObject.getWriteByteOperations().remove((int)flagToRemoveIndex);
+                    }
+                }
+                else if(mantraNumber == 8) {
+                    // Reciting ABUTO won't un-recite LAMULANA
                     Integer flagToRemoveIndex = null;
                     for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
                         if (gameObject.getWriteByteOperations().get(i).getIndex() == 292) {
@@ -730,23 +1306,85 @@ public final class GameDataTracker {
                         gameObject.getWriteByteOperations().remove((int)flagToRemoveIndex);
                     }
                 }
+                else if(mantraNumber == 9) {
+                    // Reciting LAMULANA won't update the flag that upgrades the Key Sword until we're ready.
+                    for (WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
+                        if (writeByteOperation.getIndex() == 292) {
+                            writeByteOperation.setIndex(2794);
+                            writeByteOperation.setValue(1);
+                            break;
+                        }
+                    }
+                }
 
+                // Add mantra count timer
                 GameObject mantraCountTimer = new GameObject(gameObject.getObjectContainer());
                 mantraCountTimer.setId((short)0x0b);
+                mantraCountTimer.getArgs().add((short) 0);
+                mantraCountTimer.getArgs().add((short) 0);
+                mantraCountTimer.setX(-1);
+                mantraCountTimer.setY(-1);
 
                 TestByteOperation testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(2794);
-                testByteOperation.setOp(ByteOp.FLAG_GTEQ);
-                testByteOperation.setValue((byte)5);
+                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                if(mantraNumber == 9) {
+                    // We've swapped out this flag, so use the replaced one.
+                    testByteOperation.setIndex(2794);
+                    testByteOperation.setValue((byte)1);
+                }
+                else {
+                    // First index on mantra activation object is always the mantra recited flag.
+                    testByteOperation.setIndex(gameObject.getTestByteOperations().get(0).getIndex());
+                    testByteOperation.setValue((byte)4);
+                }
                 mantraCountTimer.getTestByteOperations().add(testByteOperation);
+
+                testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(2792 - (299 - gameObject.getTestByteOperations().get(0).getIndex()));
+                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                testByteOperation.setValue((byte)0);
+                mantraCountTimer.getTestByteOperations().add(testByteOperation);
+
+                WriteByteOperation writeByteOperation = new WriteByteOperation();
+                writeByteOperation.setIndex(2793);
+                writeByteOperation.setOp(ByteOp.ADD_FLAG);
+                writeByteOperation.setValue(1);
+                mantraCountTimer.getWriteByteOperations().add(writeByteOperation);
+
+                gameObject.getObjectContainer().getObjects().add(mantraCountTimer);
+
+                // Add LAMULANA mantra timer
+                GameObject mantraTimer = new GameObject(gameObject.getObjectContainer());
+                mantraTimer.setId((short)0x0b);
+                mantraTimer.getArgs().add((short) 0);
+                mantraTimer.getArgs().add((short) 0);
+                mantraTimer.setX(-1);
+                mantraTimer.setY(-1);
+
+                testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(2793);
+                testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+                if(Settings.getEnabledGlitches().contains("Lamp Glitch")) {
+                    testByteOperation.setValue((byte)5);
+                }
+                else {
+                    testByteOperation.setValue((byte)8);
+                }
+                mantraTimer.getTestByteOperations().add(testByteOperation);
+
+                testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(292);
+                testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+                testByteOperation.setValue((byte)4);
+                mantraTimer.getTestByteOperations().add(testByteOperation);
 
                 writeByteOperation = new WriteByteOperation();
                 writeByteOperation.setIndex(292);
                 writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
                 writeByteOperation.setValue(4);
-                mantraCountTimer.getWriteByteOperations().add(writeByteOperation);
+                mantraTimer.getWriteByteOperations().add(writeByteOperation);
 
-                gameObject.getObjectContainer().getObjects().add(mantraCountTimer);
+                gameObject.getObjectContainer().getObjects().add(mantraTimer);
             }
         }
 //        else if(gameObject.getId() == 0xc0) {
@@ -755,14 +1393,6 @@ public final class GameDataTracker {
 //                addMantraDetector(gameObject.getObjectContainer());
 //            }
 //        }
-    }
-
-    private static void addMantraDetector(ObjectContainer objectContainer) {
-        GameObject mantraDetector = new GameObject(objectContainer);
-        mantraDetector.setId((short)0xc2);
-        mantraDetector.getArgs().add((short)2);
-
-
     }
 
     private static void addBackupGyoninFishShop(GameObject untransformedGyoninFishShop) {
@@ -1413,6 +2043,8 @@ public final class GameDataTracker {
         littleBrotherShopItemTimer.setId((short) 0x0b);
         littleBrotherShopItemTimer.getArgs().add((short) 0);
         littleBrotherShopItemTimer.getArgs().add((short) 0);
+        littleBrotherShopItemTimer.setX(-1);
+        littleBrotherShopItemTimer.setY(-1);
 
         TestByteOperation testFlag = new TestByteOperation();
         testFlag.setIndex(shopItemFlag);
@@ -1426,7 +2058,7 @@ public final class GameDataTracker {
         updateFlag.setOp(ByteOp.ASSIGN_FLAG);
         littleBrotherShopItemTimer.getWriteByteOperations().add(updateFlag);
 
-        littleBrotherShopScreen.getObjects().add(littleBrotherShopItemTimer);
+        littleBrotherShopScreen.getObjects().add(0, littleBrotherShopItemTimer);
     }
 
     private static void updateAskItemName(BlockStringData blockStringData, String shopItem) {
@@ -1594,6 +2226,8 @@ public final class GameDataTracker {
         automaticHardmodeTimer.setId((short) 0x0b);
         automaticHardmodeTimer.getArgs().add((short) 0);
         automaticHardmodeTimer.getArgs().add((short) 0);
+        automaticHardmodeTimer.setX(-1);
+        automaticHardmodeTimer.setY(-1);
 
         TestByteOperation automaticHardModeTimerFlagTest = new TestByteOperation();
         automaticHardModeTimerFlagTest.setIndex(362);
@@ -1607,7 +2241,7 @@ public final class GameDataTracker {
         automaticHardModeTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
         automaticHardmodeTimer.getWriteByteOperations().add(automaticHardModeTimerFlagUpdate);
 
-        xelpudScreen.getObjects().add(automaticHardmodeTimer);
+        xelpudScreen.getObjects().add(0, automaticHardmodeTimer);
     }
 
     private static void addShrineMapSoundEffect(ObjectContainer objectContainer) {
@@ -1628,6 +2262,8 @@ public final class GameDataTracker {
         shrineMapSoundEffect.getArgs().add((short)0);
         shrineMapSoundEffect.getArgs().add((short)0);
         shrineMapSoundEffect.getArgs().add((short)0);
+        shrineMapSoundEffect.setX(-1);
+        shrineMapSoundEffect.setY(-1);
 
         TestByteOperation testFlag = new TestByteOperation();
         testFlag.setIndex(218);
@@ -1645,6 +2281,8 @@ public final class GameDataTracker {
         shrineMapSoundEffectRemovalTimer.setId((short) 0x0b);
         shrineMapSoundEffectRemovalTimer.getArgs().add((short) 0);
         shrineMapSoundEffectRemovalTimer.getArgs().add((short) 0);
+        shrineMapSoundEffectRemovalTimer.setX(-1);
+        shrineMapSoundEffectRemovalTimer.setY(-1);
 
         TestByteOperation shrineMapSoundEffectRemovalTimerFlagTest = new TestByteOperation();
         shrineMapSoundEffectRemovalTimerFlagTest.setIndex(2798);
@@ -1670,8 +2308,8 @@ public final class GameDataTracker {
         shrineMapSoundEffectRemovalTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
         shrineMapSoundEffectRemovalTimer.getWriteByteOperations().add(shrineMapSoundEffectRemovalTimerFlagUpdate);
 
-        objectContainer.getObjects().add(shrineMapSoundEffect);
-        objectContainer.getObjects().add(shrineMapSoundEffectRemovalTimer);
+        objectContainer.getObjects().add(0, shrineMapSoundEffect);
+        objectContainer.getObjects().add(0, shrineMapSoundEffectRemovalTimer);
     }
 
     private static void addDiaryTalismanConversationTimers(ObjectContainer objectContainer) {
@@ -1680,6 +2318,8 @@ public final class GameDataTracker {
         diaryFlagTimer.setId((short) 0x0b);
         diaryFlagTimer.getArgs().add((short) 0);
         diaryFlagTimer.getArgs().add((short) 0);
+        diaryFlagTimer.setX(-1);
+        diaryFlagTimer.setY(-1);
 
         TestByteOperation testFlag = new TestByteOperation();
         testFlag.setIndex(260);
@@ -1699,13 +2339,15 @@ public final class GameDataTracker {
         updateFlag.setOp(ByteOp.ASSIGN_FLAG);
         diaryFlagTimer.getWriteByteOperations().add(updateFlag);
 
-        objectContainer.getObjects().add(diaryFlagTimer);
+        objectContainer.getObjects().add(0, diaryFlagTimer);
 
         // Timer to trigger Xelpud Talisman conversation (allows Diary chest access) if you enter his screen with the Talisman.
         GameObject xelpudTalismanConversationTimer = new GameObject(objectContainer);
         xelpudTalismanConversationTimer.setId((short) 0x0b);
         xelpudTalismanConversationTimer.getArgs().add((short) 0);
         xelpudTalismanConversationTimer.getArgs().add((short) 0);
+        xelpudTalismanConversationTimer.setX(-1);
+        xelpudTalismanConversationTimer.setY(-1);
 
         testFlag = new TestByteOperation();
         testFlag.setIndex(164);
@@ -1725,7 +2367,7 @@ public final class GameDataTracker {
         updateFlag.setOp(ByteOp.ASSIGN_FLAG);
         xelpudTalismanConversationTimer.getWriteByteOperations().add(updateFlag);
 
-        objectContainer.getObjects().add(xelpudTalismanConversationTimer);
+        objectContainer.getObjects().add(0, xelpudTalismanConversationTimer);
     }
 
     private static void addAltSurfaceShopItemTimer(ObjectContainer objectContainer) {
@@ -1735,6 +2377,8 @@ public final class GameDataTracker {
         altSurfaceShopTimer.setId((short) 0x0b);
         altSurfaceShopTimer.getArgs().add((short) 0);
         altSurfaceShopTimer.getArgs().add((short) 0);
+        altSurfaceShopTimer.setX(-1);
+        altSurfaceShopTimer.setY(-1);
 
         TestByteOperation testFlag = new TestByteOperation();
         testFlag.setIndex(742);
@@ -1748,7 +2392,7 @@ public final class GameDataTracker {
         updateFlag.setOp(ByteOp.ASSIGN_FLAG);
         altSurfaceShopTimer.getWriteByteOperations().add(updateFlag);
 
-        objectContainer.getObjects().add(altSurfaceShopTimer);
+        objectContainer.getObjects().add(0, altSurfaceShopTimer);
 
         GameObjectId gameObjectId = new GameObjectId((short) 76, 742);
         List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
@@ -1915,6 +2559,31 @@ public final class GameDataTracker {
         for(WriteByteOperation flagUpdate : objectToModify.getWriteByteOperations()) {
             if(flagUpdate.getIndex() == itemLocationData.getWorldFlag()) {
                 flagUpdate.setIndex(itemNewContentsData.getWorldFlag());
+            }
+        }
+    }
+
+    public static void randomizeMantras(Random random) {
+        List<String> mantrasToAssign = new ArrayList<>(Arrays.asList("LAMULANA", "ABUTO", "WEDJET", "BAHRUN", "VIY", "MU", "SABBAT", "MARDUK"));
+        List<String> mantrasToReplace = new ArrayList<>(mantrasToAssign);
+
+        int index;
+        GameObjectId mantraInfo;
+        String mantraToReplace;
+        while(!mantrasToAssign.isEmpty()) {
+            index = random.nextInt(mantrasToAssign.size());
+            mantraInfo = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(mantrasToAssign.get(index));
+            mantrasToAssign.remove(index);
+
+            index = random.nextInt(mantrasToReplace.size());
+            mantraToReplace = mantrasToReplace.get(index);
+
+            for(GameObject objectToReplace : mantraTablets.get(mantraToReplace)) {
+                if(objectToReplace.getId() == 0x9e) {
+                    // Replace mantra tablet block
+                    objectToReplace.getArgs().set(0, mantraInfo.getInventoryArg());
+                }
+                updateRelatedObject(objectToReplace, DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(mantraToReplace), mantraInfo);
             }
         }
     }

@@ -219,48 +219,48 @@ public class AccessChecker {
                     queuedUpdates.add(item);
                 break;
             case MAP_LOCATION:
-                if("Location: Temple of the Sun".equals(nodeName)) {
-                    if(!accessedNodes.contains("Flare Gun Ammo") && !queuedUpdates.contains("Flare Gun Ammo")) {
-                        queuedUpdates.add("Flare Gun Ammo");
-                    }
-                }
-                else if("Location: Gate of Guidance".equals(nodeName)) {
-                    if(!accessedNodes.contains("Shuriken Ammo") && !queuedUpdates.contains("Shuriken Ammo")) {
-                        queuedUpdates.add("Shuriken Ammo");
-                    }
-                }
-                else if("Location: Temple of the Sun".equals(nodeName)) {
-                    if(!accessedNodes.contains("Rolling Shuriken Ammo") && !queuedUpdates.contains("Rolling Shuriken Ammo")) {
-                        queuedUpdates.add("Rolling Shuriken Ammo");
-                    }
-                }
-                else if("Location: Chamber of Extinction [Main]".equals(nodeName)) {
-                    if(!accessedNodes.contains("Flare Gun Ammo") && !queuedUpdates.contains("Flare Gun Ammo")) {
-                        queuedUpdates.add("Flare Gun Ammo");
-                    }
-                    if(!accessedNodes.contains("Earth Spear Ammo") && !queuedUpdates.contains("Earth Spear Ammo")) {
-                        queuedUpdates.add("Earth Spear Ammo");
-                    }
-                }
-                else if("Location: Graveyard of the Giants [West]".equals(nodeName)
-                        || "Location: Graveyard of the Giants [East]".equals(nodeName)) {
-                    if(!accessedNodes.contains("Earth Spear Ammo") && !queuedUpdates.contains("Earth Spear Ammo")) {
-                        queuedUpdates.add("Earth Spear Ammo");
-                    }
-                }
-                else if("Location: Spring in the Sky".equals(nodeName)) {
-                    if(!accessedNodes.contains("Shuriken Ammo") && !queuedUpdates.contains("Shuriken Ammo")) {
-                        queuedUpdates.add("Shuriken Ammo");
-                    }
-                    if(!accessedNodes.contains("Caltrops Ammo") && !queuedUpdates.contains("Caltrops Ammo")) {
-                        queuedUpdates.add("Caltrops Ammo");
-                    }
-                }
-                else if("Location: Tower of the Goddess [Lower]".equals(nodeName)) {
-                    if(!accessedNodes.contains("Chakram Ammo") && !queuedUpdates.contains("Chakram Ammo")) {
-                        queuedUpdates.add("Chakram Ammo");
-                    }
-                }
+//                if("Location: Temple of the Sun".equals(nodeName)) {
+//                    if(!accessedNodes.contains("Flare Gun Ammo") && !queuedUpdates.contains("Flare Gun Ammo")) {
+//                        queuedUpdates.add("Flare Gun Ammo");
+//                    }
+//                }
+//                else if("Location: Gate of Guidance".equals(nodeName)) {
+//                    if(!accessedNodes.contains("Shuriken Ammo") && !queuedUpdates.contains("Shuriken Ammo")) {
+//                        queuedUpdates.add("Shuriken Ammo");
+//                    }
+//                }
+//                else if("Location: Temple of the Sun".equals(nodeName)) {
+//                    if(!accessedNodes.contains("Rolling Shuriken Ammo") && !queuedUpdates.contains("Rolling Shuriken Ammo")) {
+//                        queuedUpdates.add("Rolling Shuriken Ammo");
+//                    }
+//                }
+//                else if("Location: Chamber of Extinction [Main]".equals(nodeName)) {
+//                    if(!accessedNodes.contains("Flare Gun Ammo") && !queuedUpdates.contains("Flare Gun Ammo")) {
+//                        queuedUpdates.add("Flare Gun Ammo");
+//                    }
+//                    if(!accessedNodes.contains("Earth Spear Ammo") && !queuedUpdates.contains("Earth Spear Ammo")) {
+//                        queuedUpdates.add("Earth Spear Ammo");
+//                    }
+//                }
+//                else if("Location: Graveyard of the Giants [West]".equals(nodeName)
+//                        || "Location: Graveyard of the Giants [East]".equals(nodeName)) {
+//                    if(!accessedNodes.contains("Earth Spear Ammo") && !queuedUpdates.contains("Earth Spear Ammo")) {
+//                        queuedUpdates.add("Earth Spear Ammo");
+//                    }
+//                }
+//                else if("Location: Spring in the Sky".equals(nodeName)) {
+//                    if(!accessedNodes.contains("Shuriken Ammo") && !queuedUpdates.contains("Shuriken Ammo")) {
+//                        queuedUpdates.add("Shuriken Ammo");
+//                    }
+//                    if(!accessedNodes.contains("Caltrops Ammo") && !queuedUpdates.contains("Caltrops Ammo")) {
+//                        queuedUpdates.add("Caltrops Ammo");
+//                    }
+//                }
+//                else if("Location: Tower of the Goddess [Lower]".equals(nodeName)) {
+//                    if(!accessedNodes.contains("Chakram Ammo") && !queuedUpdates.contains("Chakram Ammo")) {
+//                        queuedUpdates.add("Chakram Ammo");
+//                    }
+//                }
             case EVENT:
             case EXIT:
             case GLITCH:
@@ -288,10 +288,16 @@ public class AccessChecker {
 
         if(item.contains("Ankh Jewel")) {
             item = "Ankh Jewel";
+            if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
+                return false;
+            }
         }
         else if(item.contains("Sacred Orb")) {
             item = "Sacred Orb";
             if(location.contains("Shop") && shopRandomizer.shopContainsSacredOrb(location)) {
+                return false;
+            }
+            if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
                 return false;
             }
         }
@@ -402,6 +408,9 @@ public class AccessChecker {
                     break;
                 case SHOP:
                     List<String> shopItems = shopRandomizer.getShopItems(inaccessibleNodeInfo.getKey());
+                    while(shopItems.size() < 3) {
+                        shopItems.add("Weights");
+                    }
                     writer.write(inaccessibleNodeInfo.getKey() + ": " + shopItems);
                     writer.newLine();
                     break;

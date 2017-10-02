@@ -2,6 +2,10 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+1.14:
+-----------------------------
+Reduced some shop prices - 1.13 changes seemed a bit too excessive. Mantras can now be recited in any order. Isis' Pendant chest accessible without visiting the fairy queen. Fixes for some saved settings.
+
 1.13:
 -----------------------------
 Moved some info from the readme, as well as other useful randomizer info, onto github using the site's wiki feature. When purchasing a Sacred Orb from a shop, that shop will now transform as soon as you leave (partial fix for orb shop bug). Illusion Bomb chest turned into a coin chest and randomized. Requirement changes, including better ammo handling. Revisited shop prices.
