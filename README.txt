@@ -2,9 +2,15 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+1.15:
+-----------------------------
+Fixed a mantra-related bug causing the Key Sword to transform earlier than intended. Made Cog of the Soul tablet accessible without solving all the Illusion puzzles.
+
+
 1.14:
 -----------------------------
 Reduced some shop prices - 1.13 changes seemed a bit too excessive. Mantras can now be recited in any order. Isis' Pendant chest accessible without visiting the fairy queen. Fixes for some saved settings.
+
 
 1.13:
 -----------------------------

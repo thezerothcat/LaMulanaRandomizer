@@ -333,6 +333,13 @@ public final class GameDataTracker {
                         break;
                     }
                 }
+                else if(flagTest.getIndex() == 570) {
+                    if(flagTest.getValue() == 3 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
+                        flagTest.setOp(ByteOp.FLAG_LTEQ);
+                        gameObject.setX(gameObject.getX() - 60);
+                        break;
+                    }
+                }
             }
         } else if (gameObject.getId() == 0x9b) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
@@ -380,6 +387,13 @@ public final class GameDataTracker {
                     }
                     objects.add(gameObject);
                     break;
+                }
+                else if(flagTest.getIndex() == 570) {
+                    if(flagTest.getValue() == 3 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
+                        flagTest.setOp(ByteOp.FLAG_LTEQ);
+                        gameObject.setX(gameObject.getX() - 60);
+                        break;
+                    }
                 }
             }
         }
@@ -563,6 +577,13 @@ public final class GameDataTracker {
                         }
                         objects.add(gameObject);
                         break;
+                    }
+                    else if(flagTest.getIndex() == 570) {
+                        if(flagTest.getValue() == 3 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
+                            flagTest.setOp(ByteOp.FLAG_LTEQ);
+                            gameObject.setX(gameObject.getX() - 60);
+                            break;
+                        }
                     }
                 }
             }
@@ -916,19 +937,13 @@ public final class GameDataTracker {
                         flagTest.setValue((byte)1);
                     }
                 }
-//                else if(flagTest.getIndex() == 296) {
-//                    if(gameObject.getObjectContainer() instanceof Screen
-//                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 7) {
-//                        // SABBAT tablet effect
-//                        List<GameObject> objects = mantraTablets.get("SABBAT");
-//                        if (objects == null) {
-//                            mantraTablets.put("SABBAT", new ArrayList<>());
-//                            objects = mantraTablets.get("SABBAT");
-//                        }
-//                        objects.add(gameObject);
-//                        break;
-//                    }
-//                }
+                else if(flagTest.getIndex() == 570) {
+                    if(flagTest.getValue() == 3 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
+                        flagTest.setOp(ByteOp.FLAG_LTEQ);
+                        gameObject.setX(gameObject.getX() - 60);
+                        break;
+                    }
+                }
             }
         } else if (gameObject.getId() == 0x0b) {
             for (WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
@@ -1348,6 +1363,12 @@ public final class GameDataTracker {
                 WriteByteOperation writeByteOperation = new WriteByteOperation();
                 writeByteOperation.setIndex(2793);
                 writeByteOperation.setOp(ByteOp.ADD_FLAG);
+                writeByteOperation.setValue(1);
+                mantraCountTimer.getWriteByteOperations().add(writeByteOperation);
+
+                writeByteOperation = new WriteByteOperation();
+                writeByteOperation.setIndex(2792 - (299 - gameObject.getTestByteOperations().get(0).getIndex()));
+                writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
                 writeByteOperation.setValue(1);
                 mantraCountTimer.getWriteByteOperations().add(writeByteOperation);
 

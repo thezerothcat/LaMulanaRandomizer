@@ -56,7 +56,8 @@ public final class Settings {
 
         for(String filename : Arrays.asList("C:\\Games\\La-Mulana Remake 1.3.3.1", "C:\\GOG Games\\La-Mulana", "C:\\GOG Games\\La-Mulana",
                 "C:\\Steam\\steamapps\\common\\La-Mulana", "C:\\Program Files (x86)\\Steam\\steamapps\\common\\La-Mulana",
-                "C:\\Program Files\\Steam\\steamapps\\common\\La-Mulana")) {
+                "C:\\Program Files\\Steam\\steamapps\\common\\La-Mulana", "C:\\Program Files (x86)\\GOG Galaxy\\Games\\La Mulana",
+                "C:\\Program Files (x86)\\GOG.com\\La-Mulana")) {
             if(new File(filename).exists()) {
                 laMulanaBaseDir = filename;
             }
