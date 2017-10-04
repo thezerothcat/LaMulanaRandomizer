@@ -7,6 +7,7 @@ guild.exe replacement world flag: a91
 Anchor world flag: a92
 Surface coin chest world flag: a93
 
+Mantra count timers: ae1-ae8 (2785-2792)
 Mantra tablet counter flag: ae9
 LAMULANA recited flag: aea
 Mantras unlocked flag (Giltoriyo): aeb
