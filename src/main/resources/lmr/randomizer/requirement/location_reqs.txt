@@ -1,7 +1,7 @@
 Location: Surface => None
 Location: Gate of Guidance => None
 Location: Gate of Illusion [Lower] => Fruit of Eden
-Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Hand Scanner, Anchor
+Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Hand Scanner, Anchor, Fruit of Eden
 Location: Gate of Illusion [Grail] => Location: Gate of Illusion [Middle]
 Location: Gate of Illusion [Grail] => Location: Gate of Illusion [Upper]
 Location: Gate of Illusion [Ruin] => Location: Gate of Illusion [Grail]

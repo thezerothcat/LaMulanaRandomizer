@@ -1,3 +1,7 @@
 Location: Tower of Ruin [Grail] => Location: Tower of Ruin [Lower], Event: Thunderbird Defeated
 Location: Inferno Cavern [Viy] => Location: Tower of Ruin [Lower], Glitch: Raindrop, Bronze Mirror, Event: Bahamut Defeated
 Location: Inferno Cavern [Viy] => Location: Tower of Ruin [Lower], Earth Spear, Earth Spear Ammo, Bronze Mirror, Event: Bahamut Defeated
+Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Hand Scanner, Bomb, Fruit of Eden
+Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Hand Scanner, Caltrops, Fruit of Eden
+Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Glitch: Raindrop, Bomb, Fruit of Eden
+Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Glitch: Raindrop, Caltrops, Fruit of Eden
