@@ -51,6 +51,13 @@ public final class GameDataTracker {
             else {
                 // Item chest
                 inventoryArg = (short)(gameObject.getArgs().get(0) - 11);
+                if(inventoryArg == 24) {
+                    // Cog of the Soul chest
+                    TestByteOperation cogChestTest = gameObject.getTestByteOperations().get(0);
+                    cogChestTest.setIndex(2799);
+                    WriteByteOperation cogPuzzleFlag = gameObject.getWriteByteOperations().get(1);
+                    cogPuzzleFlag.setIndex(2799);
+                }
             }
 
             WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(0);
@@ -61,6 +68,7 @@ public final class GameDataTracker {
             else {
                 worldFlag = gameObject.getWriteByteOperations().get(0).getIndex();
             }
+
 
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
@@ -334,9 +342,20 @@ public final class GameDataTracker {
                     }
                 }
                 else if(flagTest.getIndex() == 570) {
-                    if(flagTest.getValue() == 3 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
-                        flagTest.setOp(ByteOp.FLAG_LTEQ);
-                        gameObject.setX(gameObject.getX() - 60);
+                    if(flagTest.getValue() == 3) {
+                        if(ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
+                            flagTest.setOp(ByteOp.FLAG_LTEQ);
+                            gameObject.setX(gameObject.getX() - 60);
+                            break;
+                        }
+                        if(ByteOp.FLAG_LTEQ.equals(flagTest.getOp())) {
+                            flagTest.setValue((byte)4);
+                            flagTest.setOp(ByteOp.FLAG_LT);
+                            break;
+                        }
+                    }
+                    else if(flagTest.getValue() != 4) {
+                        flagTest.setIndex(2799);
                         break;
                     }
                 }
@@ -389,9 +408,20 @@ public final class GameDataTracker {
                     break;
                 }
                 else if(flagTest.getIndex() == 570) {
-                    if(flagTest.getValue() == 3 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
-                        flagTest.setOp(ByteOp.FLAG_LTEQ);
-                        gameObject.setX(gameObject.getX() - 60);
+                    if(flagTest.getValue() == 3) {
+                        if(ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
+                            flagTest.setOp(ByteOp.FLAG_LTEQ);
+                            gameObject.setX(gameObject.getX() - 60);
+                            break;
+                        }
+                        if(ByteOp.FLAG_LTEQ.equals(flagTest.getOp())) {
+                            flagTest.setValue((byte)4);
+                            flagTest.setOp(ByteOp.FLAG_LT);
+                            break;
+                        }
+                    }
+                    else if(flagTest.getValue() != 4) {
+                        flagTest.setIndex(2799);
                         break;
                     }
                 }
@@ -579,13 +609,23 @@ public final class GameDataTracker {
                         break;
                     }
                     else if(flagTest.getIndex() == 570) {
-                        if(flagTest.getValue() == 3 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
-                            flagTest.setOp(ByteOp.FLAG_LTEQ);
-                            gameObject.setX(gameObject.getX() - 60);
+                        if(flagTest.getValue() == 3) {
+                            if(ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
+                                flagTest.setOp(ByteOp.FLAG_LTEQ);
+                                gameObject.setX(gameObject.getX() - 60);
+                                break;
+                            }
+                            if(ByteOp.FLAG_LTEQ.equals(flagTest.getOp())) {
+                                flagTest.setValue((byte)4);
+                                flagTest.setOp(ByteOp.FLAG_LT);
+                                break;
+                            }
+                        }
+                        else if(flagTest.getValue() != 4) {
+                            flagTest.setIndex(2799);
                             break;
                         }
-                    }
-                }
+                    }                }
             }
         } else if (gameObject.getId() == 0xa0) {
             int blockNumber = gameObject.getArgs().get(4);
@@ -786,6 +826,20 @@ public final class GameDataTracker {
                 }
                 mulbrukScreen = gameObject.getObjectContainer();
             }
+            else if(blockNumber == 694 || blockNumber == 695) {
+                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                    if (flagTest.getIndex() == 570) {
+                        // Swap out the original Cog of the Soul puzzle flag for the custom flag
+                        flagTest.setIndex(2799);
+                    }
+                }
+                for(WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
+                    if (flagUpdate.getIndex() == 570) {
+                        // Swap out the original Cog of the Soul puzzle flag for the custom flag
+                        flagUpdate.setIndex(2799);
+                    }
+                }
+            }
             else if(blockNumber == 1082 || blockNumber == 1083 || blockNumber == 924) {
                 // Remove the flags that prevent normal Mulbruk convos if you have Forbidden Treasure/Provocative Bathing Suit
                 Integer flagToRemoveIndex = null;
@@ -938,9 +992,20 @@ public final class GameDataTracker {
                     }
                 }
                 else if(flagTest.getIndex() == 570) {
-                    if(flagTest.getValue() == 3 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
-                        flagTest.setOp(ByteOp.FLAG_LTEQ);
-                        gameObject.setX(gameObject.getX() - 60);
+                    if(flagTest.getValue() == 3) {
+                        if(ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
+                            flagTest.setOp(ByteOp.FLAG_LTEQ);
+                            gameObject.setX(gameObject.getX() - 60);
+                            break;
+                        }
+                        if(ByteOp.FLAG_LTEQ.equals(flagTest.getOp())) {
+                            flagTest.setValue((byte)4);
+                            flagTest.setOp(ByteOp.FLAG_LT);
+                            break;
+                        }
+                    }
+                    else if(flagTest.getValue() != 4) {
+                        flagTest.setIndex(2799);
                         break;
                     }
                 }
@@ -1174,6 +1239,17 @@ public final class GameDataTracker {
                         flagTest.setIndex(2794);
                         flagTest.setValue((byte)1);
                     }
+                }
+                else if(flagTest.getIndex() == 570) {
+                    // Timer to update Cog of the Soul puzzle.
+                    flagTest.setIndex(2799);
+                    for(WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
+                        if(writeByteOperation.getIndex() == 570) {
+                            writeByteOperation.setIndex(2799);
+                            break;
+                        }
+                    }
+                    break;
                 }
 //                else if(flagTest.getIndex() == 267 && flagTest.getValue() == 1) {
 //                    // Timer to track wait time with Woman Statue and give Maternity Statue

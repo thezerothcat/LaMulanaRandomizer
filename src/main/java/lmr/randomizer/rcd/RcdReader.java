@@ -149,37 +149,6 @@ public final class RcdReader {
             // Remove empowered Key Sword
             keepObject = false;
         }
-        else if (obj.getId() == 0x2c) {
-            if ((obj.getArgs().get(0) - 11) == DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Cog of the Soul").getInventoryArg()) {
-                // Add timer object for Cog of the Soul chest to prevent buggy behavior.
-                GameObject cogOfSoulChestTimer = new GameObject(objectContainer);
-                cogOfSoulChestTimer.setId((short) 0x0b);
-                cogOfSoulChestTimer.getArgs().add((short) 0);
-                cogOfSoulChestTimer.getArgs().add((short) 0);
-
-                TestByteOperation cogOfSoulTimerFlagTest = new TestByteOperation();
-                cogOfSoulTimerFlagTest.setIndex(570);
-                cogOfSoulTimerFlagTest.setValue((byte) 3);
-                cogOfSoulTimerFlagTest.setOp(ByteOp.FLAG_GTEQ);
-                cogOfSoulChestTimer.getTestByteOperations().add(cogOfSoulTimerFlagTest);
-
-                WriteByteOperation cogOfSoulTimerFlagUpdate = new WriteByteOperation();
-                cogOfSoulTimerFlagUpdate.setIndex(2799);
-                cogOfSoulTimerFlagUpdate.setValue((byte) 1);
-                cogOfSoulTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
-                cogOfSoulChestTimer.getWriteByteOperations().add(cogOfSoulTimerFlagUpdate);
-
-                objectContainer.getObjects().add(cogOfSoulChestTimer);
-
-                // Modify Cog of the Soul chest to use the new flag instead of the old one.
-                for(WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
-                    if(flagUpdate.getIndex() == 570) {
-                        flagUpdate.setIndex(2799);
-                        flagUpdate.setValue((byte) 1);
-                    }
-                }
-            }
-        }
         else if (obj.getId() == 0xa0) {
             if(obj.getArgs().get(3) == 1) {
                 if(obj.getArgs().get(4) == 272) {

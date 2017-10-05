@@ -159,6 +159,9 @@ public class ShopItemPriceCountRandomizer {
         if("Hand Scanner".equals(itemName) && Settings.getNonRandomizedItems().contains("Hand Scanner")) {
             return 10;
         }
+        if("reader.exe".equals(itemName) && Settings.getNonRandomizedItems().contains("reader.exe")) {
+            return 50;
+        }
         if("Hermes' Boots".equals(itemName) && Settings.getNonRandomizedItems().contains("Hermes' Boots")) {
             return 60;
         }
