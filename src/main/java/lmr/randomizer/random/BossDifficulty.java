@@ -1,4 +1,4 @@
-package lmr.randomizer;
+package lmr.randomizer.random;
 
 /**
  * Created by thezerothcat on 8/15/2017.

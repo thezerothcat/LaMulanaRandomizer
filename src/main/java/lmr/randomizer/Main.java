@@ -29,9 +29,10 @@ public class Main {
     public static void main(String[] args) {
         try {
             FileUtils.readSettings();
+            Translations.initTranslations();
         }
         catch (Exception ex) {
-            FileUtils.log("Unable to read settings: " + ex.getMessage());
+            FileUtils.log("Unable to initialize: " + ex.getMessage()); // todo: should probably start the UI with an error
         }
         SwingUtilities.invokeLater(new RandomizerRunnable());
     }
@@ -45,13 +46,10 @@ public class Main {
     }
 
     static class RandomizerUI extends JFrame implements ActionListener {
-        private FieldPanel fieldPanel;
-        private RadioPanel radioPanel;
-        private RandomizationPanel randomizationPanel;
-        private GlitchPanel glitchPanel;
-        private ShopRandomizationRadio shopRandomization;
-        private DifficultyPanel difficultyPanel;
+        private MainPanel mainPanel;
         private ProgressDialog progressDialog;
+        private TabbedPanel tabbedPanel;
+        private ButtonPanel buttonPanel;
 
         public RandomizerUI() {
             try {
@@ -61,45 +59,33 @@ public class Main {
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
                 e.printStackTrace();
             }
-            setTitle("La-Mulana (Remake) Randomizer");
+            setTitle(Translations.getText("title"));
             setLayout(new MigLayout("fill, aligny top", "[]", "[]"));
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             setResizable(true);
 
-            fieldPanel = new FieldPanel();
-            add(fieldPanel, "growx, wrap");
-            fieldPanel.addActionListener(new ActionListener() {
+            mainPanel = new MainPanel();
+            add(mainPanel, "growx, wrap");
+
+            tabbedPanel = new TabbedPanel();
+            add(tabbedPanel, "growx, wrap");
+
+            mainPanel.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    fieldPanel.updateTranslations();
-                    radioPanel.updateTranslations();
-                    randomizationPanel.updateTranslations();
-                    shopRandomization.updateTranslations();
+                    mainPanel.updateTranslations();
+                    tabbedPanel.updateTranslations();
+                    buttonPanel.updateTranslations();
+                    progressDialog.updateTranslations();
+                    pack();
                 }
             });
 
-            radioPanel = new RadioPanel();
-            add(radioPanel, "growx, wrap");
-
-            JPanel advancedSettingsPanel = new JPanel(new MigLayout("fill, aligny top, wrap", "[]", "[]"));
-            advancedSettingsPanel.setBorder(BorderFactory.createTitledBorder("Advanced Settings"));
-
-            randomizationPanel = new RandomizationPanel();
-            advancedSettingsPanel.add(randomizationPanel, "wrap");
-
-            shopRandomization = new ShopRandomizationRadio();
-            advancedSettingsPanel.add(shopRandomization, "wrap");
-            add(advancedSettingsPanel, "growx, wrap");
-
-            glitchPanel = new GlitchPanel();
-            add(glitchPanel, "growx, wrap");
-
-            difficultyPanel = new DifficultyPanel();
-            add(difficultyPanel, "growx, aligny, wrap");
-
             progressDialog = new ProgressDialog(this);
+            progressDialog.updateProgress(0, Translations.getText("progress.generating"));
 
-            add(new ButtonPanel(this), "grow");
+            buttonPanel = new ButtonPanel(this);
+            add(buttonPanel, "grow");
             pack();
         }
 
@@ -113,7 +99,7 @@ public class Main {
             }
             else if("restore".equals(e.getActionCommand())) {
                 try {
-                    this.progressDialog.updateProgress(0, "Restoring files");
+                    this.progressDialog.updateProgress(0, Translations.getText("restore.start"));
                     Frame f = this;
                     SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
                         @Override
@@ -135,19 +121,17 @@ public class Main {
         }
 
         private void generateSeed() {
-            fieldPanel.updateSettings();
-            radioPanel.updateSettings();
-            randomizationPanel.updateSettings();
-            glitchPanel.updateSettings();
-            shopRandomization.updateSettings();
-            difficultyPanel.updateSettings();
+            progressDialog.updateProgress(0, Translations.getText("progress.generating"));
+
+            mainPanel.updateSettings();
+            tabbedPanel.updateSettings();
             Settings.saveSettings();
 
             DataFromFile.clearAllData();
 
-            fieldPanel.rerollRandomSeed();
+            mainPanel.rerollRandomSeed();
 
-            progressDialog.updateProgress(10, "Backing up game files");
+            progressDialog.updateProgress(10, Translations.getText("setup.backup"));
 
             File rcdFile = new File("script.rcd.bak");
             if(!rcdFile.exists()) {
@@ -195,7 +179,7 @@ public class Main {
                 }
             }
 
-            progressDialog.updateProgress(15, "Setting up output directory");
+            progressDialog.updateProgress(15, Translations.getText("setup.dir"));
 
             File directory = new File(Long.toString(Settings.getStartingSeed()));
             directory.mkdir();
@@ -223,7 +207,7 @@ public class Main {
 
         private void generateAndApply() {
             try {
-                progressDialog.updateProgress(0, "Setting up randomizer");
+                progressDialog.updateProgress(0, Translations.getText("setup.start"));
                 generateSeed();
 
                 FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/script.rcd"));
@@ -248,21 +232,21 @@ public class Main {
 
         private void restore() {
             try {
-                progressDialog.updateProgress(0, "Restoring script.rcd");
+                progressDialog.updateProgress(0, Translations.getText("restore.rcd"));
 
                 FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/script.rcd"));
                 Files.copy(new File("script.rcd.bak").toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
 
-                progressDialog.updateProgress(50, "Restoring script_code.dat");
+                progressDialog.updateProgress(50, Translations.getText("restore.dat"));
 
                 fileOutputStream = new FileOutputStream(new File(String.format("%s/data/language/%s/script_code.dat",
                         Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
                 Files.copy(new File(Settings.getBackupDatFile()).toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
-                progressDialog.updateProgress(100, "Files restored!");
+                progressDialog.updateProgress(100, Translations.getText("restore.done"));
 
                 SwingUtilities.invokeLater(() -> {
                     try {
@@ -281,38 +265,80 @@ public class Main {
         }
     }
 
+    static class TabbedPanel extends JTabbedPane {
+        private RandomizationPanel randomizationPanel;
+        private LogicPanel logicPanel;
+        private ChallengePanel challengePanel;
+        private DboostPanel dboostPanel;
+        private GlitchPanel glitchPanel;
+
+        public TabbedPanel() {
+            randomizationPanel = new RandomizationPanel();
+            addTab(Translations.getText("settings.randomization"), randomizationPanel);
+
+            logicPanel = new LogicPanel();
+            addTab(Translations.getText("settings.logic"), logicPanel);
+
+            challengePanel = new ChallengePanel();
+            addTab(Translations.getText("settings.challenge"), challengePanel);
+
+//            dboostPanel = new DboostPanel();
+//            addTab(Translations.getText("settings.dboost"), dboostPanel);
+
+            glitchPanel = new GlitchPanel();
+            addTab(Translations.getText("settings.glitches"), glitchPanel);
+        }
+
+        public void updateSettings() {
+            randomizationPanel.updateSettings();
+            glitchPanel.updateSettings();
+            logicPanel.updateSettings();
+            challengePanel.updateSettings();
+        }
+
+        public void updateTranslations() {
+            randomizationPanel.updateTranslations();
+//            glitchPanel.updateTranslations();
+            logicPanel.updateTranslations();
+            challengePanel.updateTranslations();
+        }
+    }
+
     static class ButtonPanel extends JPanel {
+        JButton applyButton;
+        JButton restoreButton;
+
         public ButtonPanel(RandomizerUI randomizerUI) {
             super(new FlowLayout());
 
-//            JButton generateButton = new JButton("Generate");
-//            generateButton.addActionListener(randomizerUI);
-//            generateButton.setActionCommand("generate");
-//            add(generateButton);
-
-            JButton applyButton = new JButton("Apply");
+            applyButton = new JButton(Translations.getText("button.apply"));
             applyButton.addActionListener(randomizerUI);
             applyButton.setActionCommand("apply");
             add(applyButton);
 
-            JButton restoreButton = new JButton("Restore");
+            restoreButton = new JButton(Translations.getText("button.restore"));
             restoreButton.addActionListener(randomizerUI);
             restoreButton.setActionCommand("restore");
             add(restoreButton);
         }
+
+        public void updateTranslations() {
+            applyButton.setText(Translations.getText("button.apply"));
+            restoreButton.setText(Translations.getText("button.restore"));
+        }
     }
 
-    static class FieldPanel extends JPanel {
+    static class MainPanel extends JPanel {
         private JTextField laMulanaDirectory;
         private JTextField seedNumber;
         private JComboBox language;
 
-        public FieldPanel() {
+        public MainPanel() {
             super(new MigLayout("fillx", "[][sg fields, fill, grow 80]", "[]"));
-            setBorder(BorderFactory.createTitledBorder("Game Settings"));
+            setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.main")));
 
             seedNumber = new JTextField(Integer.toString(new Random().nextInt(Integer.MAX_VALUE)));
-            add(new JLabel("Seed number"), "gap related");
+            add(new JLabel(Translations.getText("settings.seed")), "gap related");
             add(seedNumber);
 
             language = new JComboBox(new String[]{"English", "日本語"});
@@ -320,7 +346,7 @@ public class Main {
             add(language, "grow 50, wrap");
 
             laMulanaDirectory = new JTextField(Settings.getLaMulanaBaseDir());
-            add(new JLabel("La-Mulana install directory "), "gap related");
+            add(new JLabel(Translations.getText("settings.dir")), "gap related");
             add(laMulanaDirectory, "span 2, grow 100");
         }
 
@@ -334,6 +360,8 @@ public class Main {
 
         public void updateTranslations() {
             Settings.setLanguage(language.getSelectedIndex() == 0 ? "en" : "jp", true);
+            seedNumber.setText(Translations.getText("settings.seed"));
+            laMulanaDirectory.setText(Translations.getText("settings.dir"));
         }
 
         public void updateSettings() {
@@ -353,20 +381,21 @@ public class Main {
         private String itemName;
         private JLabel itemLabel;
         private JRadioButton randomItem;
+        private JRadioButton initialItem;
         private JRadioButton nonrandomItem;
 
         public GameItemRadio(String item) {
             super(new GridLayout(0, 1));
 
-            itemLabel = new JLabel(getText(item), JLabel.LEFT);
+            itemLabel = new JLabel(getItemText(item), JLabel.LEFT);
             add(itemLabel);
 
             itemRandomization = new ButtonGroup();
-            randomItem = new JRadioButton("jp".equals(Settings.getLanguage()) ? "ランダム" : "Random");
+            randomItem = new JRadioButton(Translations.getText("randomization.random"));
             randomItem.setActionCommand("RANDOM");
-            JRadioButton initialItem = new JRadioButton("Initially Accessible");
+            initialItem = new JRadioButton(Translations.getText("randomization.initial"));
             initialItem.setActionCommand("INITIAL");
-            nonrandomItem = new JRadioButton("jp".equals(Settings.getLanguage()) ? "元の場所" : "Original Location");
+            nonrandomItem = new JRadioButton(Translations.getText("randomization.nonrandom"));
             nonrandomItem.setActionCommand("NONRANDOM");
             itemRandomization.add(randomItem);
             itemRandomization.add(initialItem);
@@ -396,138 +425,191 @@ public class Main {
         public String getItemName() {
             return itemName;
         }
-        public void updateText() {
-            itemLabel.setText(getText(itemName));
-            randomItem.setText("jp".equals(Settings.getLanguage()) ? "ランダム" : "Random");
-            nonrandomItem.setText("jp".equals(Settings.getLanguage()) ? "元の場所" : "Original Location");
+
+        public void updateTranslations() {
+            itemLabel.setText(getItemText(itemName));
+            randomItem.setText(Translations.getText("randomization.random"));
+            initialItem.setText(Translations.getText("randomization.initial"));
+            nonrandomItem.setText(Translations.getText("randomization.nonrandom"));
         }
     }
 
-    static String getText(String itemName) {
-        if(!"jp".equals(Settings.getLanguage())) {
-            return itemName + ":";
-        }
-
-        if("Holy Grail".equals(itemName)) {
-            return "聖杯";
-        }
-        if("mirai.exe".equals(itemName)) {
-            return "こちら未来開発宇宙支部";
-        }
-        if("Hermes' Boots".equals(itemName)) {
-            return "ヘルメスの靴";
-        }
-        if("Feather".equals(itemName)) {
-            return "羽";
-        }
-        if("Grapple Claw".equals(itemName)) {
-            return "かぎ爪";
-        }
-        if("Hand Scanner".equals(itemName)) {
-            return "ハンディスキャナ";
-        }
-        if("reader.exe".equals(itemName)) {
-            return "古文書リーダー";
-        }
-        if("Isis' Pendant".equals(itemName)) {
-            return "イシスのペンダント";
-        }
-        if("Bronze Mirror".equals(itemName)) {
-            return "銅鏡";
-        }
-        if("xmailer.exe".equals(itemName)) {
-            return "ｘｅｌｐｕｄ　ｍａｉｌｅｒ";
-        }
-        return "???";
+    static String getItemText(String itemName) {
+        return Translations.getText("items." + itemName.replaceAll("[ ']", ""));
     }
 
-    static class RandomizationPanel extends JPanel {
+    static class LogicPanel extends JPanel {
         private JCheckBox requireSoftwareComboForKeyFairy;
         private JCheckBox requireIceCapeForLava;
         private JCheckBox requireFlaresForExtinction;
-
-        private JCheckBox randomizeCoinChests;
-        private JCheckBox randomizeForbiddenTreasure;
-//        private JCheckBox replaceMapsWithWeights;
-
-        private JCheckBox automaticHardmode;
-        private JCheckBox fullItemAccess;
         private JCheckBox enableDamageBoostRequirements;
 
-        public RandomizationPanel() {
-            super(new MigLayout("wrap 2", "[sizegroup checkboxes]", "[]2[]"));
+        public LogicPanel() {
+            super(new MigLayout("fillx, wrap"));
 
             requireIceCapeForLava = new JCheckBox();
             requireIceCapeForLava.setSelected(Settings.isRequireIceCapeForLava());
-            add(requireIceCapeForLava);
 
             requireFlaresForExtinction = new JCheckBox();
             requireFlaresForExtinction.setSelected(Settings.isRequireFlaresForExtinction());
-            add(requireFlaresForExtinction);
 
             requireSoftwareComboForKeyFairy = new JCheckBox();
             requireSoftwareComboForKeyFairy.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
-            add(requireSoftwareComboForKeyFairy);
-
-            randomizeForbiddenTreasure = new JCheckBox();
-            randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
-            add(randomizeForbiddenTreasure);
-
-            randomizeCoinChests = new JCheckBox();
-            randomizeCoinChests.setSelected(Settings.isRandomizeCoinChests());
-            add(randomizeCoinChests);
-
-//            replaceMapsWithWeights = new JCheckBox();
-//            replaceMapsWithWeights.setSelected(Settings.isReplaceMapsWithWeights());
-//            add(replaceMapsWithWeights);
-
-            fullItemAccess = new JCheckBox();
-            fullItemAccess.setSelected(Settings.isFullItemAccess());
-            add(fullItemAccess);
 
             enableDamageBoostRequirements = new JCheckBox();
             enableDamageBoostRequirements.setSelected(Settings.isEnableDamageBoostRequirements());
-            add(enableDamageBoostRequirements);
 
-            automaticHardmode = new JCheckBox();
-            automaticHardmode.setSelected(Settings.isAutomaticHardmode());
-            add(automaticHardmode);
+            CheckboxContainer checkboxContainer = new CheckboxContainer(2);
+            checkboxContainer.add(requireIceCapeForLava);
+            checkboxContainer.add(requireFlaresForExtinction);
+            checkboxContainer.add(requireSoftwareComboForKeyFairy);
+            checkboxContainer.add(enableDamageBoostRequirements);
+            add(checkboxContainer, "growx, wrap");
 
             updateTranslations();
         }
 
         public void updateTranslations() {
-            if("jp".equals(Settings.getLanguage())) {
-                requireIceCapeForLava.setText("Require 氷のマント for swimming through lava");
-                requireFlaresForExtinction.setText("Require 発弾筒 for 死滅の碑");
-                requireSoftwareComboForKeyFairy.setText("Key Fairy chests/doors expect ミラクルウィッチ and めくり番長");
-                randomizeForbiddenTreasure.setText("Replace random non-Shrine 地図 with あぶねぇ水着");
-                randomizeCoinChests.setText("Randomize coin chests");
-                fullItemAccess.setText("All items must be accessible (100% seed)");
-                enableDamageBoostRequirements.setText("Allow damage-boosting requirements");
-                automaticHardmode.setText("ＨＡＲＤモード activates automatically at the start"); // 開始
-            }
-            else {
-                requireIceCapeForLava.setText("Require Ice Cape for swimming through lava");
-                requireFlaresForExtinction.setText("Require Flare Gun for Chamber of Extinction");
-                requireSoftwareComboForKeyFairy.setText("Key Fairy chests/doors expect miracle + mekuri");
-                randomizeForbiddenTreasure.setText("Replace random non-Shrine map with Provocative Bathing Suit");
-                randomizeCoinChests.setText("Randomize coin chests");
-                fullItemAccess.setText("All items must be accessible (100% seed)");
-                enableDamageBoostRequirements.setText("Allow damage-boosting requirements");
-                automaticHardmode.setText("Hard Mode activates automatically at the start");
-            }
+            requireIceCapeForLava.setText(Translations.getText("logic.requireIceCapeForLava"));
+            requireFlaresForExtinction.setText(Translations.getText("logic.requireFlaresForExtinction"));
+            requireSoftwareComboForKeyFairy.setText(Translations.getText("logic.requireSoftwareComboForKeyFairy"));
+            enableDamageBoostRequirements.setText(Translations.getText("logic.enableDamageBoostRequirements"));
         }
 
         public void updateSettings() {
-            Settings.setAutomaticHardmode(automaticHardmode.isSelected(), true);
-            Settings.setFullItemAccess(fullItemAccess.isSelected(), true);
             Settings.setEnableDamageBoostRequirements(enableDamageBoostRequirements.isSelected(), true);
             Settings.setRequireIceCapeForLava(requireIceCapeForLava.isSelected(), true);
             Settings.setRequireFlaresForExtinction(requireFlaresForExtinction.isSelected(), true);
             Settings.setRequireSoftwareComboForKeyFairy(requireSoftwareComboForKeyFairy.isSelected(), true);
+        }
+    }
+
+    static class ChallengePanel extends JPanel {
+        private JCheckBox automaticHardmode;
+        private JCheckBox excludedItems;
+
+        private DifficultyPanel difficultyPanel;
+
+        public ChallengePanel() {
+            super(new MigLayout("fillx, wrap"));
+
+            excludedItems = new JCheckBox();
+            excludedItems.setSelected(!Settings.isFullItemAccess());
+
+            automaticHardmode = new JCheckBox();
+            automaticHardmode.setSelected(Settings.isAutomaticHardmode());
+
+            CheckboxContainer checkboxContainer = new CheckboxContainer(2);
+            checkboxContainer.add(excludedItems);
+            checkboxContainer.add(automaticHardmode);
+            add(checkboxContainer, "growx, wrap");
+
+            difficultyPanel = new DifficultyPanel();
+            add(difficultyPanel, "growx, aligny, wrap");
+
+            updateTranslations();
+        }
+
+        public void updateTranslations() {
+            excludedItems.setText(Translations.getText("challenge.excludedItems"));
+            automaticHardmode.setText(Translations.getText("challenge.automaticHardmode"));
+            difficultyPanel.updateTranslations();
+        }
+
+        public void updateSettings() {
+            Settings.setAutomaticHardmode(automaticHardmode.isSelected(), true);
+            Settings.setFullItemAccess(!excludedItems.isSelected(), true);
+            difficultyPanel.updateSettings();
+        }
+    }
+
+    static class RandomizationPanel extends JPanel {
+        private RadioPanel radioPanel;
+
+        private JCheckBox randomizeCoinChests;
+        private JCheckBox randomizeForbiddenTreasure;
+        private JCheckBox replaceMapsWithWeights;
+
+        private ShopRandomizationRadio shopRandomization;
+
+        public RandomizationPanel() {
+            super(new MigLayout("fillx, wrap"));
+
+            radioPanel = new RadioPanel();
+            add(radioPanel, "growx");
+
+            randomizeCoinChests = new JCheckBox();
+            randomizeCoinChests.setSelected(Settings.isRandomizeCoinChests());
+
+            randomizeForbiddenTreasure = new JCheckBox();
+            randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
+
+            replaceMapsWithWeights = new JCheckBox();
+            replaceMapsWithWeights.setSelected(Settings.isReplaceMapsWithWeights());
+
+            CheckboxContainer checkboxContainer = new CheckboxContainer(1);
+            checkboxContainer.add(randomizeCoinChests);
+            checkboxContainer.add(randomizeForbiddenTreasure);
+//            checkboxContainer.add(replaceMapsWithWeights);
+            add(checkboxContainer, "growx, wrap");
+
+            shopRandomization = new ShopRandomizationRadio();
+            add(shopRandomization, "growx, aligny, wrap");
+
+            updateTranslations();
+        }
+
+        public void updateTranslations() {
+            radioPanel.updateTranslations();
+            randomizeForbiddenTreasure.setText(Translations.getText("randomization.randomizeForbiddenTreasure"));
+            randomizeCoinChests.setText(Translations.getText("randomization.randomizeCoinChests"));
+            replaceMapsWithWeights.setText(Translations.getText("randomization.replaceMapsWithWeights"));
+            shopRandomization.updateTranslations();
+        }
+
+        public void updateSettings() {
+            radioPanel.updateSettings();
             Settings.setRandomizeForbiddenTreasure(randomizeForbiddenTreasure.isSelected(), true);
             Settings.setRandomizeCoinChests(randomizeCoinChests.isSelected(), true);
+            shopRandomization.updateSettings();
+        }
+    }
+
+    static class CheckboxContainer extends JPanel {
+        public CheckboxContainer(int checkboxesPerRow) {
+            super(new MigLayout(String.format("wrap %d", checkboxesPerRow),
+                    "[sizegroup checkboxes]",
+                    String.format("[]%d[]", checkboxesPerRow)));
+        }
+
+        public void add(JCheckBox jCheckBox) {
+            super.add(jCheckBox);
+        }
+    }
+
+    static class DboostPanel extends JPanel {
+        private JCheckBox itemBased;
+        private JCheckBox easyEnemyBased;
+
+        public DboostPanel() {
+            super(new MigLayout("fillx, wrap 2", "[sizegroup checkboxes]", "[]2[]"));
+
+            itemBased = new JCheckBox(Translations.getText("dboost.item"));
+            itemBased.setSelected(Settings.isEnableDamageBoostRequirements());
+            itemBased.setActionCommand("item");
+
+            easyEnemyBased = new JCheckBox(Translations.getText("dboost.enemy.easy"));
+            easyEnemyBased.setSelected(Settings.isEnableDamageBoostRequirements());
+            easyEnemyBased.setActionCommand("easyenemy");
+
+            CheckboxContainer checkboxContainer = new CheckboxContainer(2);
+            checkboxContainer.add(itemBased);
+            checkboxContainer.add(easyEnemyBased);
+            add(checkboxContainer, "growx, wrap");
+        }
+
+        public void updateSettings() {
+
         }
     }
 
@@ -535,8 +617,7 @@ public class Main {
         private List<JCheckBox> glitchOptions = new ArrayList<>();
 
         public GlitchPanel() {
-            super(new MigLayout("fillx, wrap 6", "[sizegroup checkboxes]", "[]4[]"));
-            setBorder(BorderFactory.createTitledBorder("Glitch Settings"));
+            super(new MigLayout("fillx, wrap 4", "[sizegroup checkboxes]", "[]4[]"));
 
             for(String availableGlitch : DataFromFile.getAvailableGlitches()) {
                 JCheckBox glitchCheckbox = new JCheckBox(availableGlitch);
@@ -563,7 +644,7 @@ public class Main {
 
         public RadioPanel() {
             super(new GridLayout(0, 5, 0, 15));
-            setBorder(BorderFactory.createTitledBorder("Item Settings"));
+            setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.randomization.items")));
 
             itemConfigRadioGroupPanels = new ArrayList<>();
             itemConfigRadioGroupPanels.add(new GameItemRadio("Holy Grail"));
@@ -585,7 +666,7 @@ public class Main {
 
         public void updateTranslations() {
             for(GameItemRadio gameItemRadio : itemConfigRadioGroupPanels) {
-                gameItemRadio.updateText();
+                gameItemRadio.updateTranslations();
             }
         }
 
@@ -612,9 +693,10 @@ public class Main {
         private JLabel shopRandomizationLabel;
 
         public ShopRandomizationRadio() {
-            super(new MigLayout("fillx"));
+//            super(new MigLayout("growx"));
+            super(new FlowLayout(FlowLayout.LEFT));
 
-            shopRandomizationLabel = new JLabel("jp".equals(Settings.getLanguage()) ? "店 Randomization:" : "Shop Randomization:", JLabel.LEFT);
+            shopRandomizationLabel = new JLabel(Translations.getText("randomization.randomizeShops"), JLabel.LEFT);
             add(shopRandomizationLabel);
 
             shopRandomization = new ButtonGroup();
@@ -651,25 +733,29 @@ public class Main {
         }
 
         public void updateTranslations() {
-            shopRandomizationLabel.setText("jp".equals(Settings.getLanguage()) ? "店 Randomization:" : "Shop Randomization:");
+            shopRandomizationLabel.setText(Translations.getText("randomization.randomizeShops"));
         }
     }
 
     static class DifficultyPanel extends JPanel {
         private ButtonGroup difficultySetting;
+        private JLabel label;
+        private JRadioButton medium;
+        private JRadioButton hard;
 
         public DifficultyPanel() {
             super(new FlowLayout(FlowLayout.LEFT));
             setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-            add(new JLabel("Boss Difficulty: ", JLabel.LEFT));
+            label = new JLabel(Translations.getText("logic.bossDifficulty"), JLabel.LEFT);
+            add(label);
 
             difficultySetting = new ButtonGroup();
 //            JRadioButton easy = new JRadioButton("Easy");
 //            easy.setActionCommand("EASY");
-            JRadioButton medium = new JRadioButton("Lower");
+            medium = new JRadioButton(Translations.getText("logic.bossDifficulty.lower"));
             medium.setActionCommand("MEDIUM");
-            JRadioButton hard = new JRadioButton("Higher");
+            hard = new JRadioButton(Translations.getText("logic.bossDifficulty.higher"));
             hard.setActionCommand("HARD");
 //            difficultySetting.add(easy);
             difficultySetting.add(medium);
@@ -693,6 +779,12 @@ public class Main {
         public void updateSettings() {
             Settings.setBossDifficulty(difficultySetting.getSelection().getActionCommand(), true);
         }
+
+        public void updateTranslations() {
+            label.setText(Translations.getText("logic.bossDifficulty"));
+            medium.setText(Translations.getText("logic.bossDifficulty.lower"));
+            hard.setText(Translations.getText("logic.bossDifficulty.higher"));
+        }
     }
 
     static class ProgressDialog extends JDialog {
@@ -700,22 +792,26 @@ public class Main {
         JLabel statusText;
 
         public ProgressDialog(Frame owner) {
-            super(owner, "Progress", true);
+            super(owner, Translations.getText("progress"), true);
             setLayout(new MigLayout("wrap 1", "", "align center"));
             setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
             //setSize(400, 100);
 
             progressBar = new JProgressBar(0,100);
-            statusText = new JLabel("Generating seed...");
+            statusText = new JLabel("");
 
             add(statusText, "growx, width 300!");
             add(progressBar, "growx, height 1.5*pref");
             pack();
         }
 
-        public void updateProgress(int percentage, String progressText) {
-             statusText.setText(progressText);
+        public void updateProgress(int percentage, String progressTextKey) {
+             statusText.setText(Translations.getText(progressTextKey));
              progressBar.setValue(percentage);
+        }
+
+        public void updateTranslations() {
+            setTitle(Translations.getText("progress"));
         }
     }
 
@@ -726,8 +822,8 @@ public class Main {
         int attempt = 0;
         while(true) {
             ++attempt;
-            dialog.updateProgress(20, "Shuffling items for attempt #" + attempt);
-            dialog.setTitle("Progress after attempt #"+ attempt);
+            dialog.updateProgress(20, String.format(Translations.getText("progress.shuffling"), attempt));
+            dialog.setTitle(String.format(Translations.getText("progress.shuffling.title"), attempt));
             dialog.progressBar.setIndeterminate(true);
 
             ItemRandomizer itemRandomizer = new ItemRandomizer();
@@ -781,7 +877,7 @@ public class Main {
             if(accessChecker.isSuccess()) {
                 try {
                     dialog.progressBar.setIndeterminate(false);
-                    dialog.updateProgress(80, "Shuffling done after #" + attempt + " attempts");
+                    dialog.updateProgress(80, String.format(Translations.getText("progress.shuffling.done"), attempt));
 
                     FileUtils.log(String.format("Successful attempt %s.", attempt));
 
@@ -789,18 +885,18 @@ public class Main {
                         itemRandomizer.randomizeForbiddenTreasure(random);
                     }
 
-                    dialog.updateProgress(85, "Writing spoiler logs");
+                    dialog.updateProgress(85, Translations.getText("progress.spoiler"));
                     outputLocations(itemRandomizer, shopRandomizer, attempt);
                     if(!Settings.isFullItemAccess()) {
                         accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
                     }
 
-                    dialog.updateProgress(90, "Reading non-randomized game files");
+                    dialog.updateProgress(90, Translations.getText("progress.read"));
 
                     List<Zone> rcdData = RcdReader.getRcdScriptInfo();
                     List<Block> datInfo = DatReader.getDatScriptInfo();
 
-                    dialog.updateProgress(95, "Writing files to game directory");
+                    dialog.updateProgress(95, Translations.getText("progress.write"));
                     itemRandomizer.updateFiles();
                     shopRandomizer.updateFiles(datInfo, random);
                     if(Settings.isAutomaticHardmode()) {
@@ -821,7 +917,7 @@ public class Main {
                         fileOutputStream.close();
                     }
 
-                    dialog.updateProgress(100, "Done!");
+                    dialog.updateProgress(100, Translations.getText("progress.done"));
                     GameDataTracker.clearAll();
 
                     SwingUtilities.invokeLater(() -> {

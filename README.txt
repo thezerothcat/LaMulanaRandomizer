@@ -2,6 +2,11 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+1.16:
+-----------------------------
+UI changes. Randomizer window is generally smaller, with tabs for a number of subsections. Translation handling refactored for easier adding/changing of messages.
+
+
 1.15:
 -----------------------------
 Fixed a mantra-related bug causing the Key Sword to transform earlier than intended. Made Cog of the Soul tablet accessible without solving all the Illusion puzzles.

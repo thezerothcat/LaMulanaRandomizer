@@ -27,7 +27,7 @@ public class FileUtils {
 
         KNOWN_RCD_FILE_HASHES.add("181C959BF2F2567279CC717C8AD03A20"); // 1.0.0.1
         KNOWN_RCD_FILE_HASHES.add("89D8BF2DD6B8FA365A83DDBFD947CCFA"); // 1.1.1.1
-        KNOWN_RCD_FILE_HASHES.add("922C4FB1552843B73CF14ADCC923CF17"); // 1.3.3.1
+        KNOWN_RCD_FILE_HASHES.add("922C4FB1552843B73CF14ADCC923CF17"); // 1.2.2.1 and 1.3.3.1
         // 1.5.5.x is unknown
         KNOWN_RCD_FILE_HASHES.add("21869050145662F6DAAC6A1B3D54F3B9"); // 1.6.6.x
     }
@@ -301,6 +301,9 @@ public class FileUtils {
             else if(line.startsWith("randomizeCoinChests")) {
                 Settings.setRandomizeCoinChests(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("replaceMapsWithWeights")) {
+                Settings.setReplaceMapsWithWeights(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("laMulanaBaseDir")) {
                 Settings.setLaMulanaBaseDir(line.substring(line.indexOf("=") + 1), false);
             }
@@ -343,6 +346,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("randomizeCoinChests=%s", Settings.isRandomizeCoinChests()));
+        writer.newLine();
+
+        writer.write(String.format("replaceMapsWithWeights=%s", Settings.isReplaceMapsWithWeights()));
         writer.newLine();
 
         writer.write(String.format("laMulanaBaseDir=%s", Settings.getLaMulanaBaseDir()));

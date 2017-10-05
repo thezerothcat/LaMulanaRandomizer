@@ -1,5 +1,8 @@
 package lmr.randomizer;
 
+import lmr.randomizer.random.BossDifficulty;
+import lmr.randomizer.random.ShopRandomizationEnum;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -22,6 +25,7 @@ public final class Settings {
     private boolean enableDamageBoostRequirements;
     private boolean randomizeForbiddenTreasure;
     private boolean randomizeCoinChests;
+    private boolean replaceMapsWithWeights;
 
     private List<String> enabledGlitches = new ArrayList<>();
 
@@ -44,6 +48,7 @@ public final class Settings {
         requireFlaresForExtinction = true;
         randomizeForbiddenTreasure = true;
         randomizeCoinChests = true;
+        replaceMapsWithWeights = true;
         fullItemAccess = true;
         automaticHardmode = false;
         enableDamageBoostRequirements = false;
@@ -90,6 +95,10 @@ public final class Settings {
 
     public static boolean isRandomizeCoinChests() {
         return singleton.randomizeCoinChests;
+    }
+
+    public static boolean isReplaceMapsWithWeights() {
+        return singleton.replaceMapsWithWeights;
     }
 
     public static String getLaMulanaBaseDir() {
@@ -180,6 +189,13 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.randomizeCoinChests = randomizeCoinChests;
+    }
+
+    public static void setReplaceMapsWithWeights(boolean replaceMapsWithWeights, boolean update) {
+        if(update && replaceMapsWithWeights != singleton.replaceMapsWithWeights) {
+            singleton.changed = true;
+        }
+        singleton.replaceMapsWithWeights = replaceMapsWithWeights;
     }
 
     public static void setInitiallyAvailableItems(Set<String> initiallyAvailableItems, boolean update) {

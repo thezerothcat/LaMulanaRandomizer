@@ -1,6 +1,7 @@
 package lmr.randomizer;
 
 import lmr.randomizer.node.NodeWithRequirements;
+import lmr.randomizer.random.ShopRandomizationEnum;
 import lmr.randomizer.update.GameObjectId;
 
 import java.util.*;
