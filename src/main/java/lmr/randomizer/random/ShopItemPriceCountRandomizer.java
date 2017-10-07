@@ -43,12 +43,12 @@ public class ShopItemPriceCountRandomizer {
 //    private List<String> PRICE_TIER5 = Arrays.asList("Fairy Clothes", "Scriptures", "Gauntlet", "deathv.exe",
 //            "Provocative Bathing Suit", "Spaulder", "Flail Whip", "lamulana.exe");
 
-    // 50-70
+    // 40-60
     private List<String> PRICE_TIER1 = Arrays.asList("yagomap.exe", "bunemon.exe", "Glove", "Shell Horn",
             "xmailer.exe", "bunplus.com", "guild.exe", "Buckler", "Helmet", "Bronze Mirror", "emusic.exe", "beolamu.exe",
             "Waterproof Case", "Heatproof Case", "Map");
 
-    // 80-120
+    // 70-110
     private List<String> PRICE_TIER2 = Arrays.asList("Key of Eternity", "Birth Seal", "Life Seal", "Death Seal",
             "Knife", "Key Sword", "Shuriken", "Rolling Shuriken", "Scalesphere", "Pepper", "Talisman", "Magatama Jewel",
             "yagostr.exe", "Mini Doll", "Treasures", "Anchor", "Grapple Claw", "Perfume", "Hand Scanner", "Hermes' Boots",
@@ -56,14 +56,14 @@ public class ShopItemPriceCountRandomizer {
             "mirai.exe", "mekuri.exe", "reader.exe", "capstar.exe", "Dragon Bone", "Diary", "Eye of Truth",
             "Cog of the Soul", "Dimensional Key", "Earth Spear", "Pochette Key");
 
-    // 140-160
+    // 130-150
     private List<String> PRICE_TIER3 = Arrays.asList("Feather", "Origin Seal", "Fruit of Eden", "Twin Statue",
             "Ice Cape", "Fake Silver Shield", "Silver Shield",
             "Isis' Pendant", "Bracelet", "Crucifix", "miracle.exe", "torude.exe", "Mobile Super X2", "Sacred Orb",
             "mantra.exe", "Djed Pillar", "Plane Model", "Philosopher's Ocarina", "Mulana Talisman", "Book of the Dead",
             "Caltrops", "Pistol", "Katana", "Chain Whip", "Chakram",  "Bomb", "Axe", "Crystal Skull");
 
-    // 180-220
+    // 170-210
     private List<String> PRICE_TIER4 = Arrays.asList(
             "Lamp of Time", "Vessel", "Ring", "Angel Shield",
             "move.exe", "randc.exe", "Fairy Clothes", "Scriptures", "Gauntlet", "deathv.exe",
@@ -177,16 +177,16 @@ public class ShopItemPriceCountRandomizer {
         }
 
         if(PRICE_TIER1.contains(itemName)) {
-            return (short)(50 + 5 * random.nextInt(5));
+            return (short)(40 + 5 * random.nextInt(5));
         }
         else if(PRICE_TIER2.contains(itemName)) {
-            return (short)(80 + 10 * random.nextInt(5));
+            return (short)(70 + 10 * random.nextInt(5));
         }
         else if(PRICE_TIER3.contains(itemName)) {
-            return (short)(140 + 5 * random.nextInt(5));
+            return (short)(130 + 5 * random.nextInt(5));
         }
         else if(PRICE_TIER4.contains(itemName)) {
-            return (short)(180 + 10 * random.nextInt(5));
+            return (short)(170 + 10 * random.nextInt(5));
         }
 //        else if(PRICE_TIER5.contains(itemName)) {
 //            return (short)(250 + 50 * random.nextInt(3));
