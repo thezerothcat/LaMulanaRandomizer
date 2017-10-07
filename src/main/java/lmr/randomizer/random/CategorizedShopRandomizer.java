@@ -259,7 +259,8 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                 shopItem2 = mapOfShopInventoryItemToContents.get(String.format("%s Item 2", shopName));
                 shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName));
             }
-            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks, null);
+            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks, null,
+                    "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName));
         }
     }
 

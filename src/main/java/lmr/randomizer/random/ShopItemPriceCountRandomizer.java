@@ -61,11 +61,11 @@ public class ShopItemPriceCountRandomizer {
             "Ice Cape", "Fake Silver Shield", "Silver Shield",
             "Isis' Pendant", "Bracelet", "Crucifix", "miracle.exe", "torude.exe", "Mobile Super X2", "Sacred Orb",
             "mantra.exe", "Djed Pillar", "Plane Model", "Philosopher's Ocarina", "Mulana Talisman", "Book of the Dead",
-            "Caltrops", "Pistol", "Katana", "Chain Whip", "Chakram",  "Bomb", "Axe", "Crystal Skull");
+            "Caltrops", "Pistol", "Katana", "Chain Whip", "Chakram",  "Bomb", "Axe", "Ring", "Crystal Skull");
 
     // 170-210
     private List<String> PRICE_TIER4 = Arrays.asList(
-            "Lamp of Time", "Vessel", "Ring", "Angel Shield",
+            "Lamp of Time", "Vessel", "Angel Shield",
             "move.exe", "randc.exe", "Fairy Clothes", "Scriptures", "Gauntlet", "deathv.exe",
             "Provocative Bathing Suit", "Spaulder", "Flail Whip", "lamulana.exe");
 
@@ -126,19 +126,19 @@ public class ShopItemPriceCountRandomizer {
         if("Bomb Ammo".equals(itemName)) {
             int priceRoll = random.nextInt(5);
             if(priceRoll < 3) {
-                return 60;
+                return 55;
             }
             if(priceRoll == 3) {
-                return 50;
+                return 60;
             }
-            return 70;
+            return 50;
         }
         if("Chakram Ammo".equals(itemName)) {
             int priceRoll = random.nextInt(2);
             if(priceRoll == 0) {
-                return 40;
+                return 45;
             }
-            return 45;
+            return 40;
         }
         if("Caltrops Ammo".equals(itemName)) {
             int priceRoll = random.nextInt(5);

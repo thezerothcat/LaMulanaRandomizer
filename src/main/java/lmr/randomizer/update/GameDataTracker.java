@@ -1937,7 +1937,8 @@ public final class GameDataTracker {
     }
 
     public static void writeShopInventory(ShopBlock shopBlock, String shopItem1, String shopItem2, String shopItem3,
-                                          List<Block> blocks, ShopItemPriceCountRandomizer priceCountRandomizer) {
+                                          List<Block> blocks, ShopItemPriceCountRandomizer priceCountRandomizer,
+                                          boolean littleBrotherShop, boolean msxShop) {
         short shopItem1Flag = getFlag(shopItem1);
         short shopItem2Flag = getFlag(shopItem2);
         short shopItem3Flag = getFlag(shopItem3);
@@ -1946,7 +1947,8 @@ public final class GameDataTracker {
         if(shopItem1.contains("Sacred Orb")) {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
-            writeShopInventory(noOrbShopBlock, "Weights", shopItem2, shopItem3, blocks, priceCountRandomizer);
+            writeShopInventory(noOrbShopBlock, "Weights", shopItem2, shopItem3, blocks, priceCountRandomizer,
+                    littleBrotherShop, msxShop);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -1971,7 +1973,8 @@ public final class GameDataTracker {
         else if(shopItem2.contains("Sacred Orb")) {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
-            writeShopInventory(noOrbShopBlock, shopItem1, "Weights", shopItem3, blocks, priceCountRandomizer);
+            writeShopInventory(noOrbShopBlock, shopItem1, "Weights", shopItem3, blocks, priceCountRandomizer,
+                    littleBrotherShop, msxShop);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -1996,7 +1999,8 @@ public final class GameDataTracker {
         else if(shopItem3.contains("Sacred Orb")) {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
-            writeShopInventory(noOrbShopBlock, shopItem1, shopItem2, "Weights", blocks, priceCountRandomizer);
+            writeShopInventory(noOrbShopBlock, shopItem1, shopItem2, "Weights", blocks, priceCountRandomizer,
+                    littleBrotherShop, msxShop);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -2090,7 +2094,7 @@ public final class GameDataTracker {
         shopBlock.getFlagList().getData().add(shopItem2Flag);
         shopBlock.getFlagList().getData().add(shopItem3Flag);
 
-        if(shopBlock.getBlockNumber() == 185) {
+        if(littleBrotherShop) {
             // Little Brother's shop
             if(!"Weights".equals(shopItem1) || !shopItem1.endsWith("Ammo")) {
                 addLittleBrotherShopTimer(shopItem1Flag);
@@ -2109,7 +2113,7 @@ public final class GameDataTracker {
             shopBlock.getExitFlagList().getData().add(shopItem3Flag);
         }
 
-        if(shopBlock.getBlockNumber() == 490) {
+        if(msxShop) {
             // MSX2 shop
             BlockStringData blockStringData = shopBlock.getString(6);
             blockStringData.getData().clear();
