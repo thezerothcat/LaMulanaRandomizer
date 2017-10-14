@@ -324,7 +324,7 @@ public class FileUtils {
         }
         Settings.setEnabledGlitches(enabledGlitches, false);
         Settings.setEnabledDamageBoosts(enabledDamageBoosts, false);
-        Settings.setInitiallyAvailableItems(initiallyAvailableItems, false);
+        Settings.setInitiallyAccessibleItems(initiallyAvailableItems, false);
         Settings.setNonRandomizedItems(nonRandomizedItems, false);
         Settings.setSurfaceItems(surfaceItems, false);
     }
@@ -368,7 +368,7 @@ public class FileUtils {
         writer.newLine();
 
         for(String item : DataFromFile.getAllItems()) {
-            if(Settings.getInitiallyAvailableItems().contains(item)) {
+            if(Settings.getInitiallyAccessibleItems().contains(item)) {
                 writer.write(String.format("randomization.%s=%s", item, "INITIAL"));
             }
             else if(Settings.getNonRandomizedItems().contains(item)) {

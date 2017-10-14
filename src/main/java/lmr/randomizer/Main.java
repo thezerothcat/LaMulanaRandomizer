@@ -428,7 +428,7 @@ public class Main {
                 nonrandomOrSurfaceItem = null;
             }
 
-            if(Settings.getInitiallyAvailableItems().contains(item)) {
+            if(Settings.getInitiallyAccessibleItems().contains(item)) {
                 initialItem.setSelected(true);
             }
             else if(Settings.getNonRandomizedItems().contains(item)
@@ -749,7 +749,7 @@ public class Main {
                     addArgItemUI(surfaceItems, itemRadio.getItemName());
                 }
             }
-            Settings.setInitiallyAvailableItems(initiallyAvailableItems, true);
+            Settings.setInitiallyAccessibleItems(initiallyAvailableItems, true);
             Settings.setNonRandomizedItems(nonRandomizedItems, true);
             Settings.setSurfaceItems(surfaceItems, true);
         }
@@ -1078,10 +1078,7 @@ public class Main {
 
     private static ShopRandomizer buildShopRandomizer(ItemRandomizer itemRandomizer) {
         ShopRandomizer shopRandomizer;
-        if(ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
-            shopRandomizer = new StaticShopRandomizer(itemRandomizer.getTotalShopItems());
-        }
-        else if(ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())) {
+        if(ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())) {
             shopRandomizer = new CategorizedShopRandomizer();
         }
         else {
@@ -1103,7 +1100,7 @@ public class Main {
     }
 
     private static Set<String> getInitiallyAvailableItems() {
-        Set<String> noRequirementItems = new HashSet<>(Settings.getInitiallyAvailableItems());
+        Set<String> noRequirementItems = new HashSet<>(Settings.getInitiallyAccessibleItems());
         noRequirementItems.removeAll(DataFromFile.getNonRandomizedItems());
         return noRequirementItems;
     }

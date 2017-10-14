@@ -130,7 +130,7 @@ public final class Settings {
         return singleton.surfaceItems;
     }
 
-    public static Set<String> getInitiallyAvailableItems() {
+    public static Set<String> getInitiallyAccessibleItems() {
         return singleton.initiallyAccessibleItems;
     }
 
@@ -200,16 +200,16 @@ public final class Settings {
         singleton.replaceMapsWithWeights = replaceMapsWithWeights;
     }
 
-    public static void setInitiallyAvailableItems(Set<String> initiallyAvailableItems, boolean update) {
+    public static void setInitiallyAccessibleItems(Set<String> initiallyAccessibleItems, boolean update) {
         if(update && !singleton.changed) {
-            if(initiallyAvailableItems.containsAll(singleton.initiallyAccessibleItems)) {
-                singleton.changed = !singleton.initiallyAccessibleItems.containsAll(initiallyAvailableItems);
+            if(initiallyAccessibleItems.containsAll(singleton.initiallyAccessibleItems)) {
+                singleton.changed = !singleton.initiallyAccessibleItems.containsAll(initiallyAccessibleItems);
             }
             else {
                 singleton.changed = true;
             }
         }
-        singleton.initiallyAccessibleItems = initiallyAvailableItems;
+        singleton.initiallyAccessibleItems = initiallyAccessibleItems;
     }
 
     public static void setNonRandomizedItems(Set<String> nonRandomizedItems, boolean update) {
