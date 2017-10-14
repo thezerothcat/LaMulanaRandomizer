@@ -17,6 +17,7 @@ public class StaticShopRandomizer implements ShopRandomizer {
         mapOfShopInventoryItemToContents.put("Shop 1 (Surface) Item 1", "Hand Scanner");
         mapOfShopInventoryItemToContents.put("Shop 2 (Surface) Item 1", "reader.exe");
         mapOfShopInventoryItemToContents.put("Shop 2 (Surface) Item 2", "yagomap.exe");
+        mapOfShopInventoryItemToContents.put("Shop 2 Alt (Surface) Item 1", "Mobile Super X2");
         mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 1", "Buckler");
         mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 2", "Waterproof Case");
         mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 3", "Pistol");
@@ -48,6 +49,26 @@ public class StaticShopRandomizer implements ShopRandomizer {
     @Override
     public List<String> getUnassignedShopItemLocations() {
         return new ArrayList<>(0);
+    }
+
+    public List<String> getPlacedShopItems() {
+        List<String> placedItems = new ArrayList<>();
+        for(Map.Entry<String, String> locationAndItem : mapOfShopInventoryItemToContents.entrySet()) {
+            if(locationAndItem.getKey().contains("Shop 12 Alt (Spring)")) {
+                if(locationAndItem.getKey().endsWith("3")) {
+                    placedItems.add(locationAndItem.getValue());
+                }
+            }
+            else if(locationAndItem.getKey().contains("Shop 2 Alt (Surface)")) {
+                if(locationAndItem.getKey().endsWith("1")) {
+                    placedItems.add(locationAndItem.getValue());
+                }
+            }
+            else {
+                placedItems.add(locationAndItem.getValue());
+            }
+        }
+        return placedItems;
     }
 
     @Override

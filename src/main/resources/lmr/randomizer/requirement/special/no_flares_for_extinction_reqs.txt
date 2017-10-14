@@ -2,5 +2,5 @@ Map (Chamber of Extinction) => Origin Seal
 Map (Chamber of Extinction) => Glitch: Raindrop
 Location: Chamber of Extinction [Main] => Glitch: Raindrop
 Location: Chamber of Extinction [Main] => Origin Seal
-Location: Chamber of Extinction [Main] => Location: Shrine of the Mother [Main], Feather, !Event: All Bosses Defeated
-Location: Chamber of Extinction [Main] => Location: Shrine of the Mother [Main], Map (Shrine of the Mother), yagomap.exe, yagostr.exe, Dragon Bone, Exit: Chamber of Extinction [Main], !Event: All Bosses Defeated
+Location: Chamber of Extinction [Main] => Location: Shrine of the Mother [Main], Exit: Chamber of Extinction [Main], !Event: All Bosses Defeated, Event: Remove Shrine Skulls
+Location: Chamber of Extinction [Main] => Location: Shrine of the Mother [Main], Exit: Chamber of Extinction [Main], !Event: All Bosses Defeated, Feather

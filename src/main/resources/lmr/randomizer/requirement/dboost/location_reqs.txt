@@ -1,7 +1,9 @@
-Location: Tower of Ruin [Grail] => Location: Tower of Ruin [Lower], Event: Thunderbird Defeated
-Location: Inferno Cavern [Viy] => Location: Tower of Ruin [Lower], Glitch: Raindrop, Bronze Mirror, Event: Bahamut Defeated
-Location: Inferno Cavern [Viy] => Location: Tower of Ruin [Lower], Earth Spear, Earth Spear Ammo, Bronze Mirror, Event: Bahamut Defeated
-Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Hand Scanner, Bomb, Fruit of Eden
-Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Hand Scanner, Caltrops, Fruit of Eden
-Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Glitch: Raindrop, Bomb, Fruit of Eden
-Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Glitch: Raindrop, Caltrops, Fruit of Eden
+Location: Tower of Ruin [Grail] => Location: Tower of Ruin [Lower], Event: Thunderbird Defeated, Boost: Enemy
+Location: Inferno Cavern [Viy] => Location: Tower of Ruin [Lower], Glitch: Raindrop, Bronze Mirror, Event: Bahamut Defeated, Boost: Environment
+Location: Inferno Cavern [Viy] => Location: Tower of Ruin [Lower], Earth Spear, Earth Spear Ammo, Bronze Mirror, Event: Bahamut Defeated, Boost: Environment
+Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Hand Scanner, Bomb, Fruit of Eden, Boost: Item
+Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Hand Scanner, Caltrops, Fruit of Eden, Boost: Item
+Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Glitch: Raindrop, Bomb, Fruit of Eden, Boost: Item
+Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Glitch: Raindrop, Caltrops, Fruit of Eden, Boost: Item
+Location: Dimensional Corridor => Location: Twin Labyrinths [Upper], Bomb, Bomb Ammo, Boost: Item
+Location: Tower of the Goddess [Grail] => Location: Graveyard of the Giants [East], Glitch: Raindrop, Glitch: Ladder, Boost: Environment

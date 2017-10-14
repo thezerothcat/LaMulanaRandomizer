@@ -129,8 +129,6 @@ public class Main {
 
             DataFromFile.clearAllData();
 
-            mainPanel.rerollRandomSeed();
-
             progressDialog.updateProgress(10, Translations.getText("setup.backup"));
 
             File rcdFile = new File("script.rcd.bak");
@@ -184,7 +182,6 @@ public class Main {
             File directory = new File(Long.toString(Settings.getStartingSeed()));
             directory.mkdir();
 
-
             try {
                 Frame f = this;
                 SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
@@ -192,7 +189,7 @@ public class Main {
                     protected Void doInBackground() throws Exception {
                         progressDialog.setLocationRelativeTo(f);
                         doTheThing(progressDialog);
-
+                        mainPanel.rerollRandomSeed();
                         return null;
                     }
                 };
@@ -282,8 +279,8 @@ public class Main {
             challengePanel = new ChallengePanel();
             addTab(Translations.getText("settings.challenge"), challengePanel);
 
-//            dboostPanel = new DboostPanel();
-//            addTab(Translations.getText("settings.dboost"), dboostPanel);
+            dboostPanel = new DboostPanel();
+            addTab(Translations.getText("settings.dboost"), dboostPanel);
 
             glitchPanel = new GlitchPanel();
             addTab(Translations.getText("settings.glitches"), glitchPanel);
@@ -291,6 +288,7 @@ public class Main {
 
         public void updateSettings() {
             randomizationPanel.updateSettings();
+            dboostPanel.updateSettings();
             glitchPanel.updateSettings();
             logicPanel.updateSettings();
             challengePanel.updateSettings();
@@ -298,9 +296,16 @@ public class Main {
 
         public void updateTranslations() {
             randomizationPanel.updateTranslations();
-//            glitchPanel.updateTranslations();
+            dboostPanel.updateTranslations();
+            glitchPanel.updateTranslations();
             logicPanel.updateTranslations();
             challengePanel.updateTranslations();
+
+            setTitleAt(0, Translations.getText("settings.randomization"));
+            setTitleAt(1, Translations.getText("settings.logic"));
+            setTitleAt(2, Translations.getText("settings.challenge"));
+            setTitleAt(3, Translations.getText("settings.dboost"));
+            setTitleAt(4, Translations.getText("settings.glitches"));
         }
     }
 
@@ -382,34 +387,53 @@ public class Main {
         private JLabel itemLabel;
         private JRadioButton randomItem;
         private JRadioButton initialItem;
-        private JRadioButton nonrandomItem;
+        private JRadioButton nonrandomOrSurfaceItem;
 
         public GameItemRadio(String item) {
-            super(new GridLayout(0, 1));
+            super(new MigLayout("gap rel 0, wrap"));
 
             itemLabel = new JLabel(getItemText(item), JLabel.LEFT);
+            itemLabel.setVerticalAlignment(JLabel.BOTTOM);
             add(itemLabel);
 
             itemRandomization = new ButtonGroup();
+
             randomItem = new JRadioButton(Translations.getText("randomization.random"));
             randomItem.setActionCommand("RANDOM");
+            itemRandomization.add(randomItem);
+
             initialItem = new JRadioButton(Translations.getText("randomization.initial"));
             initialItem.setActionCommand("INITIAL");
-            nonrandomItem = new JRadioButton(Translations.getText("randomization.nonrandom"));
-            nonrandomItem.setActionCommand("NONRANDOM");
-            itemRandomization.add(randomItem);
             itemRandomization.add(initialItem);
-            itemRandomization.add(nonrandomItem);
 
-            add(randomItem);
-            add(initialItem);
-            add(nonrandomItem);
+            CheckboxContainer checkboxContainer = new CheckboxContainer(1);
+            checkboxContainer.add(randomItem);
+            checkboxContainer.add(initialItem);
+            add(checkboxContainer);
+
+            if("Holy Grail".equals(item)) {
+                nonrandomOrSurfaceItem = new JRadioButton(Translations.getText("randomization.nonrandom"));
+                nonrandomOrSurfaceItem.setActionCommand("NONRANDOM");
+                itemRandomization.add(nonrandomOrSurfaceItem);
+                checkboxContainer.add(nonrandomOrSurfaceItem);
+            }
+            else if("Hand Scanner".equals(item) || "reader.exe".equals(item) || "Hermes' Boots".equals(item)
+                    || "Feather".equals(item) || "Grapple Claw".equals(item)) {
+                nonrandomOrSurfaceItem = new JRadioButton(Translations.getText("randomization.surface"));
+                nonrandomOrSurfaceItem.setActionCommand("V_EARLY");
+                itemRandomization.add(nonrandomOrSurfaceItem);
+                checkboxContainer.add(nonrandomOrSurfaceItem);
+            }
+            else {
+                nonrandomOrSurfaceItem = null;
+            }
 
             if(Settings.getInitiallyAvailableItems().contains(item)) {
                 initialItem.setSelected(true);
             }
-            else if(Settings.getNonRandomizedItems().contains(item)) {
-                nonrandomItem.setSelected(true);
+            else if(Settings.getNonRandomizedItems().contains(item)
+                || Settings.getSurfaceItems().contains(item)) {
+                nonrandomOrSurfaceItem.setSelected(true);
             }
             else {
                 randomItem.setSelected(true);
@@ -430,7 +454,14 @@ public class Main {
             itemLabel.setText(getItemText(itemName));
             randomItem.setText(Translations.getText("randomization.random"));
             initialItem.setText(Translations.getText("randomization.initial"));
-            nonrandomItem.setText(Translations.getText("randomization.nonrandom"));
+            if(nonrandomOrSurfaceItem != null) {
+                if("Holy Grail".equals(itemName)) {
+                    nonrandomOrSurfaceItem.setText(Translations.getText("randomization.nonrandom"));
+                }
+                else {
+                    nonrandomOrSurfaceItem.setText(Translations.getText("randomization.surface"));
+                }
+            }
         }
     }
 
@@ -438,11 +469,14 @@ public class Main {
         return Translations.getText("items." + itemName.replaceAll("[ ']", ""));
     }
 
+    static String getGlitchText(String glitchName) {
+        return Translations.getText("glitches." + glitchName.replaceAll("[ ']", ""));
+    }
+
     static class LogicPanel extends JPanel {
         private JCheckBox requireSoftwareComboForKeyFairy;
         private JCheckBox requireIceCapeForLava;
         private JCheckBox requireFlaresForExtinction;
-        private JCheckBox enableDamageBoostRequirements;
 
         public LogicPanel() {
             super(new MigLayout("fillx, wrap"));
@@ -456,14 +490,10 @@ public class Main {
             requireSoftwareComboForKeyFairy = new JCheckBox();
             requireSoftwareComboForKeyFairy.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
 
-            enableDamageBoostRequirements = new JCheckBox();
-            enableDamageBoostRequirements.setSelected(Settings.isEnableDamageBoostRequirements());
-
-            CheckboxContainer checkboxContainer = new CheckboxContainer(2);
+            CheckboxContainer checkboxContainer = new CheckboxContainer(1);
             checkboxContainer.add(requireIceCapeForLava);
             checkboxContainer.add(requireFlaresForExtinction);
             checkboxContainer.add(requireSoftwareComboForKeyFairy);
-            checkboxContainer.add(enableDamageBoostRequirements);
             add(checkboxContainer, "growx, wrap");
 
             updateTranslations();
@@ -473,11 +503,9 @@ public class Main {
             requireIceCapeForLava.setText(Translations.getText("logic.requireIceCapeForLava"));
             requireFlaresForExtinction.setText(Translations.getText("logic.requireFlaresForExtinction"));
             requireSoftwareComboForKeyFairy.setText(Translations.getText("logic.requireSoftwareComboForKeyFairy"));
-            enableDamageBoostRequirements.setText(Translations.getText("logic.enableDamageBoostRequirements"));
         }
 
         public void updateSettings() {
-            Settings.setEnableDamageBoostRequirements(enableDamageBoostRequirements.isSelected(), true);
             Settings.setRequireIceCapeForLava(requireIceCapeForLava.isSelected(), true);
             Settings.setRequireFlaresForExtinction(requireFlaresForExtinction.isSelected(), true);
             Settings.setRequireSoftwareComboForKeyFairy(requireSoftwareComboForKeyFairy.isSelected(), true);
@@ -499,7 +527,7 @@ public class Main {
             automaticHardmode = new JCheckBox();
             automaticHardmode.setSelected(Settings.isAutomaticHardmode());
 
-            CheckboxContainer checkboxContainer = new CheckboxContainer(2);
+            CheckboxContainer checkboxContainer = new CheckboxContainer(1);
             checkboxContainer.add(excludedItems);
             checkboxContainer.add(automaticHardmode);
             add(checkboxContainer, "growx, wrap");
@@ -531,12 +559,19 @@ public class Main {
         private JCheckBox replaceMapsWithWeights;
 
         private ShopRandomizationRadio shopRandomization;
+        private XmailerRandomizationRadio xmailerRandomization;
 
         public RandomizationPanel() {
             super(new MigLayout("fillx, wrap"));
 
             radioPanel = new RadioPanel();
             add(radioPanel, "growx");
+
+            xmailerRandomization = new XmailerRandomizationRadio();
+            add(xmailerRandomization, "gap rel 0, growx, wrap");
+
+            shopRandomization = new ShopRandomizationRadio();
+            add(shopRandomization, "gap rel 0, growx, wrap");
 
             randomizeCoinChests = new JCheckBox();
             randomizeCoinChests.setSelected(Settings.isRandomizeCoinChests());
@@ -553,9 +588,6 @@ public class Main {
 //            checkboxContainer.add(replaceMapsWithWeights);
             add(checkboxContainer, "growx, wrap");
 
-            shopRandomization = new ShopRandomizationRadio();
-            add(shopRandomization, "growx, aligny, wrap");
-
             updateTranslations();
         }
 
@@ -565,6 +597,7 @@ public class Main {
             randomizeCoinChests.setText(Translations.getText("randomization.randomizeCoinChests"));
             replaceMapsWithWeights.setText(Translations.getText("randomization.replaceMapsWithWeights"));
             shopRandomization.updateTranslations();
+            xmailerRandomization.updateTranslations();
         }
 
         public void updateSettings() {
@@ -572,6 +605,7 @@ public class Main {
             Settings.setRandomizeForbiddenTreasure(randomizeForbiddenTreasure.isSelected(), true);
             Settings.setRandomizeCoinChests(randomizeCoinChests.isSelected(), true);
             shopRandomization.updateSettings();
+            xmailerRandomization.updateSettings();
         }
     }
 
@@ -579,7 +613,7 @@ public class Main {
         public CheckboxContainer(int checkboxesPerRow) {
             super(new MigLayout(String.format("wrap %d", checkboxesPerRow),
                     "[sizegroup checkboxes]",
-                    String.format("[]%d[]", checkboxesPerRow)));
+                    String.format("[]%d[]0", checkboxesPerRow)));
         }
 
         public void add(JCheckBox jCheckBox) {
@@ -589,27 +623,47 @@ public class Main {
 
     static class DboostPanel extends JPanel {
         private JCheckBox itemBased;
-        private JCheckBox easyEnemyBased;
+        private JCheckBox enemyBased;
+        private JCheckBox environmentBased;
 
         public DboostPanel() {
-            super(new MigLayout("fillx, wrap 2", "[sizegroup checkboxes]", "[]2[]"));
+            super(new MigLayout("fillx"));
 
-            itemBased = new JCheckBox(Translations.getText("dboost.item"));
-            itemBased.setSelected(Settings.isEnableDamageBoostRequirements());
-            itemBased.setActionCommand("item");
+            itemBased = new JCheckBox();
+            itemBased.setSelected(Settings.getEnabledDamageBoosts().contains("Item"));
+            itemBased.setActionCommand("Item");
 
-            easyEnemyBased = new JCheckBox(Translations.getText("dboost.enemy.easy"));
-            easyEnemyBased.setSelected(Settings.isEnableDamageBoostRequirements());
-            easyEnemyBased.setActionCommand("easyenemy");
+            environmentBased = new JCheckBox();
+            environmentBased.setSelected(Settings.getEnabledDamageBoosts().contains("Environment"));
+            environmentBased.setActionCommand("Environment");
 
-            CheckboxContainer checkboxContainer = new CheckboxContainer(2);
+            enemyBased = new JCheckBox();
+            enemyBased.setSelected(Settings.getEnabledDamageBoosts().contains("Enemy"));
+            enemyBased.setActionCommand("Enemy");
+
+            CheckboxContainer checkboxContainer = new CheckboxContainer(1);
             checkboxContainer.add(itemBased);
-            checkboxContainer.add(easyEnemyBased);
+            checkboxContainer.add(environmentBased);
+            checkboxContainer.add(enemyBased);
             add(checkboxContainer, "growx, wrap");
+
+            updateTranslations();
         }
 
         public void updateSettings() {
+            List<String> enabledDamageBoosts = new ArrayList<>();
+            for(JCheckBox dboostOption : Arrays.asList(itemBased, environmentBased, enemyBased)) {
+                if(dboostOption.isSelected()) {
+                    enabledDamageBoosts.add(dboostOption.getActionCommand());
+                }
+            }
+            Settings.setEnabledDamageBoosts(enabledDamageBoosts, true);
+        }
 
+        public void updateTranslations() {
+            itemBased.setText(Translations.getText("dboost.Item"));
+            environmentBased.setText(Translations.getText("dboost.Environment"));
+            enemyBased.setText(Translations.getText("dboost.Enemy"));
         }
     }
 
@@ -620,12 +674,14 @@ public class Main {
             super(new MigLayout("fillx, wrap 4", "[sizegroup checkboxes]", "[]4[]"));
 
             for(String availableGlitch : DataFromFile.getAvailableGlitches()) {
-                JCheckBox glitchCheckbox = new JCheckBox(availableGlitch);
+                JCheckBox glitchCheckbox = new JCheckBox();
                 glitchCheckbox.setSelected(Settings.getEnabledGlitches().contains(availableGlitch));
                 glitchCheckbox.setActionCommand(availableGlitch);
                 glitchOptions.add(glitchCheckbox);
                 add(glitchCheckbox);
             }
+
+            updateTranslations();
         }
 
         public void updateSettings() {
@@ -637,30 +693,35 @@ public class Main {
             }
             Settings.setEnabledGlitches(enabledGlitches, true);
         }
+
+        public void updateTranslations() {
+            for(JCheckBox glitchOption : glitchOptions) {
+                glitchOption.setText(getGlitchText(glitchOption.getActionCommand()));
+            }
+        }
     }
 
     static class RadioPanel extends JPanel {
         List<GameItemRadio> itemConfigRadioGroupPanels;
 
         public RadioPanel() {
-            super(new GridLayout(0, 5, 0, 15));
+            super(new MigLayout("fillx, wrap 6"));
             setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.randomization.items")));
 
             itemConfigRadioGroupPanels = new ArrayList<>();
             itemConfigRadioGroupPanels.add(new GameItemRadio("Holy Grail"));
-            itemConfigRadioGroupPanels.add(new GameItemRadio("mirai.exe"));
-            itemConfigRadioGroupPanels.add(new GameItemRadio("Hermes' Boots"));
-            itemConfigRadioGroupPanels.add(new GameItemRadio("Feather"));
-            itemConfigRadioGroupPanels.add(new GameItemRadio("Grapple Claw"));
-
             itemConfigRadioGroupPanels.add(new GameItemRadio("Hand Scanner"));
             itemConfigRadioGroupPanels.add(new GameItemRadio("reader.exe"));
+            itemConfigRadioGroupPanels.add(new GameItemRadio("Hermes' Boots"));
+            itemConfigRadioGroupPanels.add(new GameItemRadio("Grapple Claw"));
+            itemConfigRadioGroupPanels.add(new GameItemRadio("Feather"));
+
             itemConfigRadioGroupPanels.add(new GameItemRadio("Isis' Pendant"));
             itemConfigRadioGroupPanels.add(new GameItemRadio("Bronze Mirror"));
-            itemConfigRadioGroupPanels.add(new GameItemRadio("xmailer.exe"));
+            itemConfigRadioGroupPanels.add(new GameItemRadio("mirai.exe"));
 
             for(GameItemRadio gameItemRadio : itemConfigRadioGroupPanels) {
-                add(gameItemRadio, LEFT_ALIGNMENT);
+                add(gameItemRadio);
             }
         }
 
@@ -668,11 +729,13 @@ public class Main {
             for(GameItemRadio gameItemRadio : itemConfigRadioGroupPanels) {
                 gameItemRadio.updateTranslations();
             }
+            setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.randomization.items")));
         }
 
         public void updateSettings() {
             Set<String> initiallyAvailableItems = new HashSet<>();
             Set<String> nonRandomizedItems = new HashSet<>();
+            Set<String> surfaceItems = new HashSet<>();
 
             for(GameItemRadio itemRadio : itemConfigRadioGroupPanels) {
                 String actionCommand = itemRadio.getActionCommand();
@@ -682,48 +745,44 @@ public class Main {
                 else if("NONRANDOM".equals(actionCommand)) {
                     addArgItemUI(nonRandomizedItems, itemRadio.getItemName());
                 }
+                else if("V_EARLY".equals(actionCommand)) {
+                    addArgItemUI(surfaceItems, itemRadio.getItemName());
+                }
             }
             Settings.setInitiallyAvailableItems(initiallyAvailableItems, true);
             Settings.setNonRandomizedItems(nonRandomizedItems, true);
+            Settings.setSurfaceItems(surfaceItems, true);
         }
     }
 
     static class ShopRandomizationRadio extends JPanel {
         private ButtonGroup shopRandomization;
         private JLabel shopRandomizationLabel;
+        private JRadioButton shopCategorizedRandomization;
+        private JRadioButton shopEverythingRandomization;
 
         public ShopRandomizationRadio() {
-//            super(new MigLayout("growx"));
-            super(new FlowLayout(FlowLayout.LEFT));
+            super(new MigLayout("gap rel 0"));
 
             shopRandomizationLabel = new JLabel(Translations.getText("randomization.randomizeShops"), JLabel.LEFT);
             add(shopRandomizationLabel);
 
             shopRandomization = new ButtonGroup();
 
-            JRadioButton shopNoRandomization = new JRadioButton("None");
-            shopNoRandomization.setActionCommand("NONE");
-            shopRandomization.add(shopNoRandomization);
-
-            JRadioButton shopCategorizedRandomization = new JRadioButton("Unique items only");
+            shopCategorizedRandomization = new JRadioButton(Translations.getText("randomization.randomizeShops.categorized"));
             shopCategorizedRandomization.setActionCommand("CATEGORIZED");
             shopRandomization.add(shopCategorizedRandomization);
 
-            JRadioButton shopEverythingRandomization = new JRadioButton("All items");
+            shopEverythingRandomization = new JRadioButton(Translations.getText("randomization.randomizeShops.everything"));
             shopEverythingRandomization.setActionCommand("EVERYTHING");
             shopRandomization.add(shopEverythingRandomization);
 
-            add(shopNoRandomization);
             add(shopCategorizedRandomization);
             add(shopEverythingRandomization);
 
-            if(ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
-                shopNoRandomization.setSelected(true);
-            }
-            else if(ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())) {
+            if (ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())) {
                 shopCategorizedRandomization.setSelected(true);
-            }
-            else {
+            } else {
                 shopEverythingRandomization.setSelected(true);
             }
         }
@@ -734,6 +793,68 @@ public class Main {
 
         public void updateTranslations() {
             shopRandomizationLabel.setText(Translations.getText("randomization.randomizeShops"));
+            shopCategorizedRandomization.setText(Translations.getText("randomization.randomizeShops.categorized"));
+            shopEverythingRandomization.setText(Translations.getText("randomization.randomizeShops.everything"));
+        }
+    }
+
+    static class XmailerRandomizationRadio extends JPanel {
+        private ButtonGroup xmailerItem;
+        private JLabel xmailerItemLabel;
+
+        private JRadioButton random;
+        private JRadioButton hermes;
+        private JRadioButton xmailer;
+
+        public XmailerRandomizationRadio() {
+            super(new MigLayout("gap rel 0"));
+
+            xmailerItemLabel = new JLabel(Translations.getText("randomization.xmailerItem"), JLabel.LEFT);
+            add(xmailerItemLabel);
+
+            xmailerItem = new ButtonGroup();
+
+            xmailer = new JRadioButton(Translations.getText("randomization.xmailerItem.xmailer"));
+            xmailer.setActionCommand("xmailer.exe");
+            xmailerItem.add(xmailer);
+
+            hermes = new JRadioButton(Translations.getText("randomization.xmailerItem.hermes"));
+            hermes.setActionCommand("Hermes' Boots");
+            xmailerItem.add(hermes);
+
+            random = new JRadioButton(Translations.getText("randomization.random"));
+            random.setActionCommand(null);
+            xmailerItem.add(random);
+
+            add(xmailer);
+            add(hermes);
+            add(random);
+
+            if("Hermes' Boots".equals(Settings.getXmailerItem())) {
+                hermes.setSelected(true);
+            }
+            else if("xmailer.exe".equals(Settings.getXmailerItem())) {
+                xmailer.setSelected(true);
+            }
+            else {
+                random.setSelected(true);
+            }
+        }
+
+        public void updateSettings() {
+            if(xmailerItem.getSelection().getActionCommand() == null) {
+                Settings.setXmailerItem(null, true);
+            }
+            else {
+                Settings.setXmailerItem(xmailerItem.getSelection().getActionCommand(), true);
+            }
+        }
+
+        public void updateTranslations() {
+            xmailerItemLabel.setText(Translations.getText("randomization.xmailerItem"));
+            xmailer.setText(Translations.getText("randomization.xmailerItem.xmailer"));
+            hermes.setText(Translations.getText("randomization.xmailerItem.hermes"));
+            random.setText(Translations.getText("randomization.random"));
         }
     }
 
@@ -816,8 +937,11 @@ public class Main {
     }
 
     private static void doTheThing(ProgressDialog dialog) {
+        FileUtils.log(String.format("Shuffling items for seed %s", Settings.getStartingSeed()));
+
         Random random = new Random(Settings.getStartingSeed());
-        Set<String> initiallyAvailableItems = getInitiallyAvailableItems();
+        Set<String> initiallyAccessibleItems = getInitiallyAvailableItems();
+        Set<String> surfaceItems = getSurfaceItems();
 
         int attempt = 0;
         while(true) {
@@ -832,8 +956,14 @@ public class Main {
 
             itemRandomizer.placeNonRandomizedItems();
             shopRandomizer.placeNonRandomizedItems();
+            if(ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
+                ((EverythingShopRandomizer)shopRandomizer).placeGuaranteedWeights(random);
+            }
+            if(!surfaceItems.isEmpty()) {
+                itemRandomizer.placeVeryEarlyItems(new ArrayList<>(surfaceItems), random);
+            }
             shopRandomizer.determineItemTypes(random);
-            if(!itemRandomizer.placeRequiredItems(new ArrayList<>(initiallyAvailableItems), random)) {
+            if(!itemRandomizer.placeRequiredItems(new ArrayList<>(initiallyAccessibleItems), random)) {
                 continue;
             }
             if(Settings.isRandomizeCoinChests()) {
@@ -850,6 +980,9 @@ public class Main {
             accessChecker.computeAccessibleNodes("None");
             for(String enabledGlitch : Settings.getEnabledGlitches()) {
                 accessChecker.computeAccessibleNodes("Setting: " + enabledGlitch);
+            }
+            for(String enabledDamageBoost : Settings.getEnabledDamageBoosts()) {
+                accessChecker.computeAccessibleNodes("Boost: " + enabledDamageBoost);
             }
             if(accessChecker.updateForBosses(attempt)) {
                 while(!accessChecker.getQueuedUpdates().isEmpty()) {
@@ -973,6 +1106,12 @@ public class Main {
         Set<String> noRequirementItems = new HashSet<>(Settings.getInitiallyAvailableItems());
         noRequirementItems.removeAll(DataFromFile.getNonRandomizedItems());
         return noRequirementItems;
+    }
+
+    private static Set<String> getSurfaceItems() {
+        Set<String> surfaceItems = new HashSet<>(Settings.getSurfaceItems());
+        surfaceItems.removeAll(DataFromFile.getNonRandomizedItems());
+        return surfaceItems;
     }
 
     private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, int attempt) throws IOException {

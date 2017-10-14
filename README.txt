@@ -2,6 +2,11 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+1.17:
+-----------------------------
+Some items can now be placed on the Surface instead of their non-random location. Removed the option to not randomize shops. Damage-boosting logic updates. Misc requirement fixes.
+
+
 1.16:
 -----------------------------
 UI changes. Randomizer window is generally smaller, with tabs for a number of subsections. Translation handling refactored for easier adding/changing of messages.

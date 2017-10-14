@@ -46,3 +46,4 @@ Coin: Birth (Ninja) => Location: Chamber of Birth [East]
 Coin: Birth (Dance) => Location: Chamber of Birth [West], Serpent Staff, Chakram, Chakram Ammo
 Coin: Birth (Southeast) => Location: Chamber of Birth [East], Exit: Chamber of Birth [East]
 Coin: Dimensional => Location: Dimensional Corridor, Feather
+Coin: Dimensional => Location: Dimensional Corridor, Boost: Item, Bomb, Bomb Ammo

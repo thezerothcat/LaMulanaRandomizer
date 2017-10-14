@@ -22,18 +22,21 @@ public final class Settings {
     private boolean requireSoftwareComboForKeyFairy;
     private boolean requireIceCapeForLava;
     private boolean requireFlaresForExtinction;
-    private boolean enableDamageBoostRequirements;
     private boolean randomizeForbiddenTreasure;
     private boolean randomizeCoinChests;
     private boolean replaceMapsWithWeights;
 
     private List<String> enabledGlitches = new ArrayList<>();
+    private List<String> enabledDamageBoosts = new ArrayList<>();
 
     private String laMulanaBaseDir;
     private String language;
 
     private Set<String> nonRandomizedItems = new HashSet<>();
-    private Set<String> initiallyAvailableItems = new HashSet<>();
+    private Set<String> initiallyAccessibleItems = new HashSet<>();
+    private Set<String> surfaceItems = new HashSet<>();
+
+    private String xmailerItem;
 
     private BossDifficulty bossDifficulty;
     private ShopRandomizationEnum shopRandomization;
@@ -51,13 +54,11 @@ public final class Settings {
         replaceMapsWithWeights = true;
         fullItemAccess = true;
         automaticHardmode = false;
-        enableDamageBoostRequirements = false;
 
         bossDifficulty = BossDifficulty.MEDIUM;
         shopRandomization = ShopRandomizationEnum.EVERYTHING;
 
-        initiallyAvailableItems.add("Holy Grail");
-        initiallyAvailableItems.add("Hermes' Boots");
+        xmailerItem = null;
 
         for(String filename : Arrays.asList("C:\\Games\\La-Mulana Remake 1.3.3.1", "C:\\GOG Games\\La-Mulana", "C:\\GOG Games\\La-Mulana",
                 "C:\\Steam\\steamapps\\common\\La-Mulana", "C:\\Program Files (x86)\\Steam\\steamapps\\common\\La-Mulana",
@@ -109,6 +110,10 @@ public final class Settings {
         return singleton.language;
     }
 
+    public static String getXmailerItem() {
+        return singleton.xmailerItem;
+    }
+
     public static String getBackupDatFile() {
         if("en".equals(singleton.language)) {
             return "script_code.dat.bak";
@@ -121,8 +126,12 @@ public final class Settings {
         return singleton.nonRandomizedItems;
     }
 
+    public static Set<String> getSurfaceItems() {
+        return singleton.surfaceItems;
+    }
+
     public static Set<String> getInitiallyAvailableItems() {
-        return singleton.initiallyAvailableItems;
+        return singleton.initiallyAccessibleItems;
     }
 
     public static ShopRandomizationEnum getShopRandomization() {
@@ -141,12 +150,12 @@ public final class Settings {
         return singleton.automaticHardmode;
     }
 
-    public static boolean isEnableDamageBoostRequirements() {
-        return singleton.enableDamageBoostRequirements;
-    }
-
     public static List<String> getEnabledGlitches() {
         return singleton.enabledGlitches;
+    }
+
+    public static List<String> getEnabledDamageBoosts() {
+        return singleton.enabledDamageBoosts;
     }
 
     public static void setRequireSoftwareComboForKeyFairy(boolean requireSoftwareComboForKeyFairy, boolean update) {
@@ -168,13 +177,6 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.requireFlaresForExtinction = requireFlaresForExtinction;
-    }
-
-    public static void setEnableDamageBoostRequirements(boolean enableDamageBoostRequirements, boolean update) {
-        if(update && enableDamageBoostRequirements != singleton.enableDamageBoostRequirements) {
-            singleton.changed = true;
-        }
-        singleton.enableDamageBoostRequirements = enableDamageBoostRequirements;
     }
 
     public static void setRandomizeForbiddenTreasure(boolean randomizeForbiddenTreasure, boolean update) {
@@ -200,14 +202,14 @@ public final class Settings {
 
     public static void setInitiallyAvailableItems(Set<String> initiallyAvailableItems, boolean update) {
         if(update && !singleton.changed) {
-            if(initiallyAvailableItems.containsAll(singleton.initiallyAvailableItems)) {
-                singleton.changed = !singleton.initiallyAvailableItems.containsAll(initiallyAvailableItems);
+            if(initiallyAvailableItems.containsAll(singleton.initiallyAccessibleItems)) {
+                singleton.changed = !singleton.initiallyAccessibleItems.containsAll(initiallyAvailableItems);
             }
             else {
                 singleton.changed = true;
             }
         }
-        singleton.initiallyAvailableItems = initiallyAvailableItems;
+        singleton.initiallyAccessibleItems = initiallyAvailableItems;
     }
 
     public static void setNonRandomizedItems(Set<String> nonRandomizedItems, boolean update) {
@@ -223,6 +225,29 @@ public final class Settings {
         singleton.nonRandomizedItems = nonRandomizedItems;
     }
 
+    public static void setSurfaceItems(Set<String> surfaceItems, boolean update) {
+        if(update && !singleton.changed) {
+            if(surfaceItems.containsAll(singleton.surfaceItems)) {
+                singleton.changed = !singleton.surfaceItems.containsAll(surfaceItems);
+            }
+            else {
+                singleton.changed = true;
+            }
+        }
+
+        singleton.surfaceItems = surfaceItems;
+    }
+
+    public static void setXmailerItem(String xmailerItem, boolean update) {
+        if(update) {
+            if(xmailerItem == null && singleton.xmailerItem != null
+                    || xmailerItem != null && xmailerItem.equals(singleton.xmailerItem)) {
+                singleton.changed = true;
+            }
+        }
+        singleton.xmailerItem = xmailerItem;
+    }
+
     public static void setEnabledGlitches(List<String> enabledGlitches, boolean update) {
         if(update && !singleton.changed) {
             if (enabledGlitches.containsAll(singleton.enabledGlitches)) {
@@ -232,6 +257,17 @@ public final class Settings {
             }
         }
         singleton.enabledGlitches = enabledGlitches;
+    }
+
+    public static void setEnabledDamageBoosts(List<String> enabledDamageBoosts, boolean update) {
+        if(update && !singleton.changed) {
+            if (enabledDamageBoosts.containsAll(singleton.enabledDamageBoosts)) {
+                singleton.changed = !singleton.enabledDamageBoosts.containsAll(enabledDamageBoosts);
+            } else {
+                singleton.changed = true;
+            }
+        }
+        singleton.enabledDamageBoosts = enabledDamageBoosts;
     }
 
     public static void setStartingSeed(int startingSeed) {
@@ -283,7 +319,6 @@ public final class Settings {
     public static void saveSettings() {
         if(singleton.changed) {
             try {
-                FileUtils.log("Updating setings");
                 FileUtils.saveSettings();
             }
             catch (IOException ex) {

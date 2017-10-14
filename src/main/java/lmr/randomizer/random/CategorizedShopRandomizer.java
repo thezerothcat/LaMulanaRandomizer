@@ -7,7 +7,6 @@ import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.update.GameDataTracker;
-import lmr.randomizer.update.GameObjectId;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -178,6 +177,26 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             }
         }
         return initialUnassigned;
+    }
+
+    public List<String> getPlacedShopItems() {
+        List<String> placedItems = new ArrayList<>();
+        for(Map.Entry<String, String> locationAndItem : mapOfShopInventoryItemToContents.entrySet()) {
+            if(locationAndItem.getKey().contains(FISH_FAIRY_SHOP_NAME)) {
+                if(locationAndItem.getKey().endsWith("3")) {
+                    placedItems.add(locationAndItem.getValue());
+                }
+            }
+            else if(locationAndItem.getKey().contains(MSX_SHOP_NAME)) {
+                if(locationAndItem.getKey().endsWith("1")) {
+                    placedItems.add(locationAndItem.getValue());
+                }
+            }
+            else {
+                placedItems.add(locationAndItem.getValue());
+            }
+        }
+        return placedItems;
     }
 
     public void determineItemTypes(Random random) {

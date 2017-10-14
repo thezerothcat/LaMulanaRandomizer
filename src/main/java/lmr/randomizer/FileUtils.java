@@ -256,22 +256,33 @@ public class FileUtils {
         String line;
         String[] settingAndValue;
         List<String> enabledGlitches = new ArrayList<>();
+        List<String> enabledDamageBoosts = new ArrayList<>();
         Set<String> initiallyAvailableItems = new HashSet<>();
         Set<String> nonRandomizedItems = new HashSet<>();
+        Set<String> surfaceItems = new HashSet<>();
         while((line = reader.readLine()) != null) {
             if(line.startsWith("randomization.")) {
                 settingAndValue = line.replace("randomization.", "").split("=");
                 if("INITIAL".equals(settingAndValue[1])) {
                     initiallyAvailableItems.add(settingAndValue[0]);
                 }
-                if("NONRANDOM".equals(settingAndValue[1])) {
+                else if("NONRANDOM".equals(settingAndValue[1])) {
                     nonRandomizedItems.add(settingAndValue[0]);
+                }
+                else if("V_EARLY".equals(settingAndValue[1])) {
+                    surfaceItems.add(settingAndValue[0]);
                 }
             }
             else if(line.startsWith("glitches.")) {
                 settingAndValue = line.replace("glitches.", "").split("=");
                 if(Boolean.valueOf(settingAndValue[1])) {
                     enabledGlitches.add(settingAndValue[0]);
+                }
+            }
+            else if(line.startsWith("dboost.")) {
+                settingAndValue = line.replace("dboost.", "").split("=");
+                if(Boolean.valueOf(settingAndValue[1])) {
+                    enabledDamageBoosts.add(settingAndValue[0]);
                 }
             }
             else if(line.startsWith("shopRandomization")) {
@@ -291,9 +302,6 @@ public class FileUtils {
             }
             else if(line.startsWith("requireFlaresForExtinction")) {
                 Settings.setRequireFlaresForExtinction(Boolean.valueOf(line.split("=")[1]), false);
-            }
-            else if(line.startsWith("enableDamageBoostRequirements")) {
-                Settings.setEnableDamageBoostRequirements(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeForbiddenTreasure")) {
                 Settings.setRandomizeForbiddenTreasure(Boolean.valueOf(line.split("=")[1]), false);
@@ -315,8 +323,10 @@ public class FileUtils {
             }
         }
         Settings.setEnabledGlitches(enabledGlitches, false);
+        Settings.setEnabledDamageBoosts(enabledDamageBoosts, false);
         Settings.setInitiallyAvailableItems(initiallyAvailableItems, false);
         Settings.setNonRandomizedItems(nonRandomizedItems, false);
+        Settings.setSurfaceItems(surfaceItems, false);
     }
 
     public static void saveSettings() throws IOException {
@@ -337,9 +347,6 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("requireFlaresForExtinction=%s", Settings.isRequireFlaresForExtinction()));
-        writer.newLine();
-
-        writer.write(String.format("enableDamageBoostRequirements=%s", Settings.isEnableDamageBoostRequirements()));
         writer.newLine();
 
         writer.write(String.format("randomizeForbiddenTreasure=%s", Settings.isRandomizeForbiddenTreasure()));
@@ -367,6 +374,9 @@ public class FileUtils {
             else if(Settings.getNonRandomizedItems().contains(item)) {
                 writer.write(String.format("randomization.%s=%s", item, "NONRANDOM"));
             }
+            else if(Settings.getSurfaceItems().contains(item)) {
+                writer.write(String.format("randomization.%s=%s", item, "V_EARLY"));
+            }
             else {
                 writer.write(String.format("randomization.%s=%s", item, "RANDOM"));
             }
@@ -375,6 +385,11 @@ public class FileUtils {
 
         for(String glitchOption : DataFromFile.getAvailableGlitches()) {
             writer.write(String.format("glitches.%s=%s", glitchOption, Settings.getEnabledGlitches().contains(glitchOption)));
+            writer.newLine();
+        }
+
+        for(String dboostOption : Arrays.asList("Enemy", "Item", "Environment")) {
+            writer.write(String.format("dboost.%s=%s", dboostOption, Settings.getEnabledDamageBoosts().contains(dboostOption)));
             writer.newLine();
         }
 

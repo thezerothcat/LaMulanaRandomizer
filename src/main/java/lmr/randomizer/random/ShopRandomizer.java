@@ -25,6 +25,8 @@ public interface ShopRandomizer {
 
     List<String> getInitialUnassignedShopItemLocations();
 
+    List<String> getPlacedShopItems();
+
     void determineItemTypes(Random random);
 
     void outputLocations(int attemptNumber) throws IOException;

@@ -116,6 +116,73 @@ public class ItemRandomizer {
                 unplacedItems.remove(coinChest);
             }
         }
+
+        if(Settings.getXmailerItem() != null) {
+            mapOfItemLocationToItem.put("xmailer.exe", Settings.getXmailerItem());
+            unassignedNonShopItemLocations.remove("xmailer.exe");
+            unplacedItems.remove(Settings.getXmailerItem());
+        }
+    }
+
+    public boolean placeVeryEarlyItems(List<String> items, Random random) {
+        List<String> initialUnassignedNonShopLocations = new ArrayList<>(Arrays.asList("xmailer.exe", "deathv.exe", "Shell Horn"));
+        initialUnassignedNonShopLocations.removeAll(mapOfItemLocationToItem.keySet());
+        if(Settings.getXmailerItem() != null) {
+            initialUnassignedNonShopLocations.remove("xmailer.exe");
+        }
+
+        List<String> initialUnassignedShopItemLocations = new ArrayList<>();
+        for(String location : shopRandomizer.getInitialUnassignedShopItemLocations()) {
+            if(location.contains("Surface")) {
+                initialUnassignedShopItemLocations.add(location);
+            }
+        }
+
+        List<String> itemsToPlace = new ArrayList<>(items);
+        itemsToPlace.removeAll(mapOfItemLocationToItem.values());
+        itemsToPlace.removeAll(shopRandomizer.getPlacedShopItems());
+
+        int locationIndexIndex;
+        int size = itemsToPlace.size();
+        for(int i = 0; i < size; i++) {
+            String item = getRandomItem(itemsToPlace, random);
+            int availableLocations = initialUnassignedNonShopLocations.size() + initialUnassignedShopItemLocations.size();
+            List<Integer> availableLocationIndices = buildIndices(availableLocations);
+
+            while(true) {
+                if(availableLocationIndices.size() == 0) {
+                    return false;
+                }
+                locationIndexIndex = random.nextInt(availableLocationIndices.size());
+                int locationIndex = availableLocationIndices.get(locationIndexIndex);
+                if(locationIndex < initialUnassignedNonShopLocations.size()) {
+                    // todo: check for exceptions
+                    String location = initialUnassignedNonShopLocations.get(locationIndex);
+                    if(accessChecker.validRequirements(item, location)) {
+                        mapOfItemLocationToItem.put(location, item);
+                        itemsToPlace.remove(item);
+                        initialUnassignedNonShopLocations.remove(location);
+                        unassignedNonShopItemLocations.remove(location);
+                        unplacedItems.remove(item);
+                        break;
+                    }
+                    else {
+                        availableLocationIndices.remove(locationIndexIndex);
+                    }
+                }
+                else {
+                    if(shopRandomizer.placeRequiredItem(item, initialUnassignedShopItemLocations, locationIndex - initialUnassignedNonShopLocations.size())) {
+                        itemsToPlace.remove(item);
+                        unplacedItems.remove(item);
+                        break;
+                    }
+                    else {
+                        availableLocationIndices.remove(locationIndexIndex);
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public boolean placeRequiredItems(List<String> items, Random random) {
@@ -123,13 +190,14 @@ public class ItemRandomizer {
         if(Settings.isRandomizeCoinChests()) {
             initialUnassignedNonShopLocations.addAll(DataFromFile.getInitialCoinChestLocations());
         }
-        initialUnassignedNonShopLocations.removeAll(DataFromFile.getNonRandomizedItems());
-        initialUnassignedNonShopLocations.removeAll(DataFromFile.getNonRandomizedCoinChests());
+        initialUnassignedNonShopLocations.removeAll(mapOfItemLocationToItem.keySet());
+
         List<String> initialUnassignedShopItemLocations = shopRandomizer.getInitialUnassignedShopItemLocations();
         int locationIndexIndex;
 
         List<String> itemsToPlace = new ArrayList<>(items);
-        itemsToPlace.removeAll(DataFromFile.getNonRandomizedItems());
+        itemsToPlace.removeAll(mapOfItemLocationToItem.values());
+        itemsToPlace.removeAll(shopRandomizer.getPlacedShopItems());
 
         int size = itemsToPlace.size();
         for(int i = 0; i < size; i++) {

@@ -73,6 +73,7 @@ public class AccessChecker {
                     && itemRandomizer.getItem(nodeName).startsWith("Coin:")) {
                     continue;
                 }
+                FileUtils.log("Inaccessible node detected: " + nodeName + " containing " + itemRandomizer.getItem(nodeName));
                 return false;
             }
             return true;
