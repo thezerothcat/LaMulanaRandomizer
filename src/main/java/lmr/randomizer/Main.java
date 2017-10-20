@@ -594,8 +594,8 @@ public class Main {
         private RadioPanel radioPanel;
 
         private JCheckBox randomizeCoinChests;
-        private JCheckBox randomizeForbiddenTreasure;
         private JCheckBox replaceMapsWithWeights;
+        private JCheckBox randomizeForbiddenTreasure;
 
         private ShopRandomizationRadio shopRandomization;
         private XmailerRandomizationRadio xmailerRandomization;
@@ -615,16 +615,16 @@ public class Main {
             randomizeCoinChests = new JCheckBox();
             randomizeCoinChests.setSelected(Settings.isRandomizeCoinChests());
 
-            randomizeForbiddenTreasure = new JCheckBox();
-            randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
-
             replaceMapsWithWeights = new JCheckBox();
             replaceMapsWithWeights.setSelected(Settings.isReplaceMapsWithWeights());
 
+            randomizeForbiddenTreasure = new JCheckBox();
+            randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
+
             CheckboxContainer checkboxContainer = new CheckboxContainer(1);
             checkboxContainer.add(randomizeCoinChests);
-            checkboxContainer.add(randomizeForbiddenTreasure);
             checkboxContainer.add(replaceMapsWithWeights);
+            checkboxContainer.add(randomizeForbiddenTreasure);
             add(checkboxContainer, "growx, wrap");
 
             updateTranslations();

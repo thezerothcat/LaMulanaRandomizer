@@ -6,6 +6,7 @@ Fake Silver Shield world flag: a90
 guild.exe replacement world flag: a91
 Anchor world flag: a92
 Surface coin chest world flag: a93
+Misc replaced chest world flags: a94+ (2708+)
 
 Mantra count timers: ae1-ae8 (2785-2792)
 Mantra tablet counter flag: ae9

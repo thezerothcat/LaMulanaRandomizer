@@ -26,13 +26,18 @@ public final class GameDataTracker {
     private static ObjectContainer mulbrukScreen;
     private static ObjectContainer littleBrotherShopScreen;
 
-    private GameDataTracker() { }
+    private static int nextReplacedItemFlag;
+
+    private GameDataTracker() {
+        nextReplacedItemFlag = 2708;
+    }
 
     public static void clearAll() {
         mapOfChestIdentifyingInfoToGameObject.clear();
         mapOfChestIdentifyingInfoToBlock.clear();
         mapOfShopBlockToShopObjects.clear();
         mantraTablets.clear();
+        nextReplacedItemFlag = 2708;
     }
 
     public static void addObject(GameObject gameObject) {
@@ -1943,6 +1948,15 @@ public final class GameDataTracker {
             }
             checkBlock.getFlagCheckReferences().remove((int)cmdToRemoveIndex2);
 
+//            Integer cmdToRemoveIndex3 = null;
+//            for(int i = 0; i < checkBlock.getFlagCheckReferences().size(); i++) {
+//                BlockListData blockListData = checkBlock.getFlagCheckReferences().get(i);
+//                if(blockListData.getData().get(0) == 258 && blockListData.getData().get(1) == 9 && blockListData.getData().get(2) == 373) {
+//                    cmdToRemoveIndex3 = i;
+//                }
+//            }
+//            checkBlock.getFlagCheckReferences().remove((int)cmdToRemoveIndex3);
+
             BlockListData blockListData = new BlockListData((short)78, (short)4);
             blockListData.getData().add((short)2797);
             blockListData.getData().add((short)1);
@@ -1966,9 +1980,9 @@ public final class GameDataTracker {
             for(int i = 0; i < checkBlock.getFlagCheckReferences().size(); i++) {
                 BlockListData blockListData = checkBlock.getFlagCheckReferences().get(i);
                 if(blockListData.getData().get(2) == 373) {
-                    cmdToRemoveIndex = i;
+                        cmdToRemoveIndex = i;
+                    }
                 }
-            }
             if(cmdToRemoveIndex != null) {
                 checkBlock.getFlagCheckReferences().remove((int)cmdToRemoveIndex);
             }
@@ -2232,15 +2246,15 @@ public final class GameDataTracker {
 
         List<Short> bunemonData = shopBlock.getBunemonText().getData();
         bunemonData.clear();
-        updateBunemonText(bunemonData, shopItem1);
+        updateBunemonText(bunemonData, shopItem1, shopBlock.getInventoryPriceList().getData().get(0));
         bunemonData.add((short)32);
         bunemonData.add((short)262);
         bunemonData.add((short)32);
-        updateBunemonText(bunemonData, shopItem2);
+        updateBunemonText(bunemonData, shopItem2, shopBlock.getInventoryPriceList().getData().get(1));
         bunemonData.add((short)32);
         bunemonData.add((short)262);
         bunemonData.add((short)32);
-        updateBunemonText(bunemonData, shopItem3);
+        updateBunemonText(bunemonData, shopItem3, shopBlock.getInventoryPriceList().getData().get(2));
     }
 
     private static void addLittleBrotherShopTimer(short shopItemFlag) {
@@ -2298,7 +2312,7 @@ public final class GameDataTracker {
         blockStringData.getData().addAll(newBlockData);
     }
 
-    private static void updateBunemonText(List<Short> bunemonData, String shopItem) {
+    private static void updateBunemonText(List<Short> bunemonData, String shopItem, Short itemPrice) {
         if("Map (Shrine of the Mother)".equals(shopItem)) {
             if("jp".equals(Settings.getLanguage())) {
                 // 聖母の祠の
@@ -2319,6 +2333,40 @@ public final class GameDataTracker {
         }
         bunemonData.add((short)77);
         bunemonData.add(getInventoryItemArg(shopItem));
+
+        bunemonData.add((short)32);
+        for(char c : Short.toString(itemPrice).toCharArray()) {
+            if(c == '0') {
+                bunemonData.add((short)266);
+            }
+            else if(c == '1') {
+                bunemonData.add((short)267);
+            }
+            else if(c == '2') {
+                bunemonData.add((short)268);
+            }
+            else if(c == '3') {
+                bunemonData.add((short)269);
+            }
+            else if(c == '4') {
+                bunemonData.add((short)270);
+            }
+            else if(c == '5') {
+                bunemonData.add((short)271);
+            }
+            else if(c == '6') {
+                bunemonData.add((short)272);
+            }
+            else if(c == '7') {
+                bunemonData.add((short)273);
+            }
+            else if(c == '8') {
+                bunemonData.add((short)274);
+            }
+            else if(c == '9') {
+                bunemonData.add((short)275);
+            }
+        }
     }
 
     private static short getInventoryItemArg(String item) {
@@ -2613,7 +2661,8 @@ public final class GameDataTracker {
 
         if(itemChest) {
             // Which item goes in the chest
-            if(Settings.isReplaceMapsWithWeights() && itemNewContentsData.getInventoryArg() == 70 && itemNewContentsData.getWorldFlag() != 218) {
+            boolean nonShrineMap = Settings.isReplaceMapsWithWeights() && itemNewContentsData.getInventoryArg() == 70 && itemNewContentsData.getWorldFlag() != 218;
+            if(nonShrineMap) {
                 objectToModify.getArgs().set(0, (short)2); // Weights
             }
             else {
@@ -2631,31 +2680,36 @@ public final class GameDataTracker {
                 objectToModify.getArgs().set(2, (short)1);
             }
 
+            int newChestWorldFlag = nonShrineMap ? nextReplacedItemFlag : itemNewContentsData.getWorldFlag();
             for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                 if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
-                    flagTest.setIndex(itemNewContentsData.getWorldFlag());
+                    flagTest.setIndex(newChestWorldFlag);
                 }
             }
 
             WriteByteOperation updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
+            updateFlag.setIndex(newChestWorldFlag);
             updateFlag.setValue(2);
             objectToModify.getWriteByteOperations().add(updateFlag);
 
-                objectToModify.getWriteByteOperations().add(puzzleFlag);
+            objectToModify.getWriteByteOperations().add(puzzleFlag);
 
             updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
+            updateFlag.setIndex(newChestWorldFlag);
             updateFlag.setValue(1);
             objectToModify.getWriteByteOperations().add(updateFlag);
 
             updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
+            updateFlag.setIndex(newChestWorldFlag);
             updateFlag.setValue(2);
             objectToModify.getWriteByteOperations().add(updateFlag);
+
+            if(nonShrineMap) {
+                nextReplacedItemFlag += 1;
+            }
         }
         else {
             objectToModify.getArgs().set(0, (short)1); // Coins

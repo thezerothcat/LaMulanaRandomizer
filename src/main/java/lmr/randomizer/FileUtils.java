@@ -288,6 +288,9 @@ public class FileUtils {
             else if(line.startsWith("shopRandomization")) {
                 Settings.setShopRandomization(line.split("=")[1], false);
             }
+            else if(line.startsWith("xmailerItem")) {
+                Settings.setXmailerItem(line.split("=")[1], false);
+            }
             else if(line.startsWith("automaticHardmode")) {
                 Settings.setAutomaticHardmode(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -338,6 +341,9 @@ public class FileUtils {
     public static void saveSettings() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("randomizer-config.txt"));
         writer.write(String.format("shopRandomization=%s", Settings.getShopRandomization().toString()));
+        writer.newLine();
+
+        writer.write(String.format("xmailerItem=%s", Settings.getXmailerItem().toString()));
         writer.newLine();
 
         writer.write(String.format("fullItemAccess=%s", Settings.isFullItemAccess()));

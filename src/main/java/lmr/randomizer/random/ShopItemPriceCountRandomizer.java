@@ -157,19 +157,19 @@ public class ShopItemPriceCountRandomizer {
         }
 
         if("Hand Scanner".equals(itemName) && Settings.getSurfaceItems().contains("Hand Scanner")) {
-            return 10;
+            return 5;
         }
         if("reader.exe".equals(itemName) && Settings.getSurfaceItems().contains("reader.exe")) {
-            return 10;
+            return 5;
         }
         if("Hermes' Boots".equals(itemName) && Settings.getSurfaceItems().contains("Hermes' Boots")) {
-            return 10;
+            return 5;
         }
         if("Feather".equals(itemName) && Settings.getSurfaceItems().contains("Feather")) {
-            return 10;
+            return 5;
         }
         if("Grapple Claw".equals(itemName) && Settings.getSurfaceItems().contains("Grapple Claw")) {
-            return 10;
+            return 5;
         }
 
         if(itemName.contains("Map")) {

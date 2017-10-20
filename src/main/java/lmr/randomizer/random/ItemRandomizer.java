@@ -71,39 +71,6 @@ public class ItemRandomizer {
     }
 
     public void placeNonRandomizedItems() {
-//        mapOfItemLocationToItem.put("xmailer.exe", "Book of the Dead");
-//        unassignedNonShopItemLocations.remove("xmailer.exe");
-//        unplacedItems.remove("Book of the Dead");
-//        mapOfItemLocationToItem.put("Coin: Surface (Waterfall)", "Shell Horn");
-//        unassignedNonShopItemLocations.remove("Coin: Surface (Waterfall)");
-//        unplacedItems.remove("Shell Horn");
-//        mapOfItemLocationToItem.put("Shell Horn", "Map (Gate of Guidance)");
-//        unassignedNonShopItemLocations.remove("Shell Horn");
-//        unplacedItems.remove("Map (Gate of Guidance)");
-//        mapOfItemLocationToItem.put("Sacred Orb (Gate of Guidance)", "Flail Whip");
-//        unassignedNonShopItemLocations.remove("Sacred Orb (Gate of Guidance)");
-//        unplacedItems.remove("Flail Whip");
-
-//        mapOfItemLocationToItem.put("Anchor", "Ankh Jewel (Gate of Guidance)");
-//        unassignedNonShopItemLocations.remove("Anchor");
-//        unplacedItems.remove("Ankh Jewel (Gate of Guidance)");
-//
-//        mapOfItemLocationToItem.put("Pepper", "Ankh Jewel (Temple of the Sun)");
-//        unassignedNonShopItemLocations.remove("Pepper");
-//        unplacedItems.remove("Ankh Jewel (Temple of the Sun)");
-//
-//        mapOfItemLocationToItem.put("Mini Doll", "Ankh Jewel (Mausoleum of the Giants)");
-//        unassignedNonShopItemLocations.remove("Mini Doll");
-//        unplacedItems.remove("Ankh Jewel (Mausoleum of the Giants)");
-//
-//        mapOfItemLocationToItem.put("Ankh Jewel (Temple of the Sun)", "Ankh Jewel (Spring in the Sky)");
-//        unassignedNonShopItemLocations.remove("Ankh Jewel (Temple of the Sun)");
-//        unplacedItems.remove("Ankh Jewel (Spring in the Sky)");
-//
-//        mapOfItemLocationToItem.put("Book of the Dead", "Ankh Jewel (Tower of Ruin)");
-//        unassignedNonShopItemLocations.remove("Book of the Dead");
-//        unplacedItems.remove("Ankh Jewel (Tower of Ruin)");
-
         for(String item : DataFromFile.getNonRandomizedItems()) {
             mapOfItemLocationToItem.put(item, item);
             unassignedNonShopItemLocations.remove(item);
@@ -122,6 +89,39 @@ public class ItemRandomizer {
             unassignedNonShopItemLocations.remove("xmailer.exe");
             unplacedItems.remove(Settings.getXmailerItem());
         }
+
+//        mapOfItemLocationToItem.put("xmailer.exe", "Book of the Dead");
+//        unassignedNonShopItemLocations.remove("xmailer.exe");
+//        unplacedItems.remove("Book of the Dead");
+//        mapOfItemLocationToItem.put("Shell Horn", "Map (Surface)");
+//        unassignedNonShopItemLocations.remove("Shell Horn");
+//        unplacedItems.remove("Map (Surface)");
+//        mapOfItemLocationToItem.put("Shell Horn", "Map (Gate of Guidance)");
+//        unassignedNonShopItemLocations.remove("Shell Horn");
+//        unplacedItems.remove("Map (Gate of Guidance)");
+//        mapOfItemLocationToItem.put("Sacred Orb (Gate of Guidance)", "Flail Whip");
+//        unassignedNonShopItemLocations.remove("Sacred Orb (Gate of Guidance)");
+//        unplacedItems.remove("Flail Whip");
+
+//        mapOfItemLocationToItem.put("deathv.exe", "Map (Gate of Guidance)");
+//        unassignedNonShopItemLocations.remove("deathv.exe");
+//        unplacedItems.remove("Map (Gate of Guidance)");
+//
+//        mapOfItemLocationToItem.put("Pepper", "Ankh Jewel (Temple of the Sun)");
+//        unassignedNonShopItemLocations.remove("Pepper");
+//        unplacedItems.remove("Ankh Jewel (Temple of the Sun)");
+//
+//        mapOfItemLocationToItem.put("Mini Doll", "Ankh Jewel (Mausoleum of the Giants)");
+//        unassignedNonShopItemLocations.remove("Mini Doll");
+//        unplacedItems.remove("Ankh Jewel (Mausoleum of the Giants)");
+//
+//        mapOfItemLocationToItem.put("Ankh Jewel (Temple of the Sun)", "Ankh Jewel (Spring in the Sky)");
+//        unassignedNonShopItemLocations.remove("Ankh Jewel (Temple of the Sun)");
+//        unplacedItems.remove("Ankh Jewel (Spring in the Sky)");
+//
+//        mapOfItemLocationToItem.put("Book of the Dead", "Ankh Jewel (Tower of Ruin)");
+//        unassignedNonShopItemLocations.remove("Book of the Dead");
+//        unplacedItems.remove("Ankh Jewel (Tower of Ruin)");
     }
 
     public boolean placeVeryEarlyItems(List<String> items, Random random) {
