@@ -268,6 +268,7 @@ public class Main {
         private ChallengePanel challengePanel;
         private DboostPanel dboostPanel;
         private GlitchPanel glitchPanel;
+        private SpeedPanel speedPanel;
 
         public TabbedPanel() {
             randomizationPanel = new RandomizationPanel();
@@ -284,6 +285,9 @@ public class Main {
 
             glitchPanel = new GlitchPanel();
             addTab(Translations.getText("settings.glitches"), glitchPanel);
+
+            speedPanel = new SpeedPanel();
+            addTab(Translations.getText("settings.speed"), speedPanel);
         }
 
         public void updateSettings() {
@@ -292,6 +296,7 @@ public class Main {
             glitchPanel.updateSettings();
             logicPanel.updateSettings();
             challengePanel.updateSettings();
+            speedPanel.updateSettings();
         }
 
         public void updateTranslations() {
@@ -300,12 +305,39 @@ public class Main {
             glitchPanel.updateTranslations();
             logicPanel.updateTranslations();
             challengePanel.updateTranslations();
+            speedPanel.updateTranslations();
 
             setTitleAt(0, Translations.getText("settings.randomization"));
             setTitleAt(1, Translations.getText("settings.logic"));
             setTitleAt(2, Translations.getText("settings.challenge"));
             setTitleAt(3, Translations.getText("settings.dboost"));
             setTitleAt(4, Translations.getText("settings.glitches"));
+            setTitleAt(5, Translations.getText("settings.speed"));
+        }
+    }
+
+    static class SpeedPanel extends JPanel {
+        private JCheckBox automaticGrailPoints;
+
+        public SpeedPanel() {
+            super(new MigLayout("fillx, wrap"));
+
+            automaticGrailPoints = new JCheckBox();
+            automaticGrailPoints.setSelected(Settings.isAutomaticGrailPoints());
+
+            CheckboxContainer checkboxContainer = new CheckboxContainer(1);
+            checkboxContainer.add(automaticGrailPoints);
+            add(checkboxContainer, "growx, wrap");
+
+            updateTranslations();
+        }
+
+        public void updateTranslations() {
+            automaticGrailPoints.setText(Translations.getText("speed.automaticGrailPoints"));
+        }
+
+        public void updateSettings() {
+            Settings.setAutomaticGrailPoints(automaticGrailPoints.isSelected(), true);
         }
     }
 
@@ -390,10 +422,10 @@ public class Main {
         private JRadioButton nonrandomOrSurfaceItem;
 
         public GameItemRadio(String item) {
-            super(new MigLayout("gap rel 0, wrap"));
+            super(new MigLayout("gap rel 0, wrap, aligny top", "sizegroup rowheight", ""));
 
             itemLabel = new JLabel(getItemText(item), JLabel.LEFT);
-            itemLabel.setVerticalAlignment(JLabel.BOTTOM);
+            itemLabel.setVerticalAlignment(JLabel.TOP);
             add(itemLabel);
 
             itemRandomization = new ButtonGroup();
@@ -418,7 +450,7 @@ public class Main {
                 checkboxContainer.add(nonrandomOrSurfaceItem);
             }
             else if("Hand Scanner".equals(item) || "reader.exe".equals(item) || "Hermes' Boots".equals(item)
-                    || "Feather".equals(item) || "Grapple Claw".equals(item)) {
+                    || "Feather".equals(item) || "Grapple Claw".equals(item) || "bunemon.exe".equals(item)) {
                 nonrandomOrSurfaceItem = new JRadioButton(Translations.getText("randomization.surface"));
                 nonrandomOrSurfaceItem.setActionCommand("V_EARLY");
                 itemRandomization.add(nonrandomOrSurfaceItem);
@@ -515,6 +547,7 @@ public class Main {
     static class ChallengePanel extends JPanel {
         private JCheckBox automaticHardmode;
         private JCheckBox excludedItems;
+        private JCheckBox coinChestGraphics;
 
         private DifficultyPanel difficultyPanel;
 
@@ -527,9 +560,13 @@ public class Main {
             automaticHardmode = new JCheckBox();
             automaticHardmode.setSelected(Settings.isAutomaticHardmode());
 
+            coinChestGraphics = new JCheckBox();
+            coinChestGraphics.setSelected(Settings.isCoinChestGraphics());
+
             CheckboxContainer checkboxContainer = new CheckboxContainer(1);
             checkboxContainer.add(excludedItems);
             checkboxContainer.add(automaticHardmode);
+            checkboxContainer.add(coinChestGraphics);
             add(checkboxContainer, "growx, wrap");
 
             difficultyPanel = new DifficultyPanel();
@@ -541,12 +578,14 @@ public class Main {
         public void updateTranslations() {
             excludedItems.setText(Translations.getText("challenge.excludedItems"));
             automaticHardmode.setText(Translations.getText("challenge.automaticHardmode"));
+            coinChestGraphics.setText(Translations.getText("challenge.coinChestGraphics"));
             difficultyPanel.updateTranslations();
         }
 
         public void updateSettings() {
             Settings.setAutomaticHardmode(automaticHardmode.isSelected(), true);
             Settings.setFullItemAccess(!excludedItems.isSelected(), true);
+            Settings.setCoinChestGraphics(coinChestGraphics.isSelected(), true);
             difficultyPanel.updateSettings();
         }
     }
@@ -585,7 +624,7 @@ public class Main {
             CheckboxContainer checkboxContainer = new CheckboxContainer(1);
             checkboxContainer.add(randomizeCoinChests);
             checkboxContainer.add(randomizeForbiddenTreasure);
-//            checkboxContainer.add(replaceMapsWithWeights);
+            checkboxContainer.add(replaceMapsWithWeights);
             add(checkboxContainer, "growx, wrap");
 
             updateTranslations();
@@ -705,7 +744,7 @@ public class Main {
         List<GameItemRadio> itemConfigRadioGroupPanels;
 
         public RadioPanel() {
-            super(new MigLayout("fillx, wrap 6"));
+            super(new MigLayout("fillx, wrap 6", "", "[fill]"));
             setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.randomization.items")));
 
             itemConfigRadioGroupPanels = new ArrayList<>();
@@ -719,6 +758,7 @@ public class Main {
             itemConfigRadioGroupPanels.add(new GameItemRadio("Isis' Pendant"));
             itemConfigRadioGroupPanels.add(new GameItemRadio("Bronze Mirror"));
             itemConfigRadioGroupPanels.add(new GameItemRadio("mirai.exe"));
+            itemConfigRadioGroupPanels.add(new GameItemRadio("bunemon.exe"));
 
             for(GameItemRadio gameItemRadio : itemConfigRadioGroupPanels) {
                 add(gameItemRadio);
@@ -804,6 +844,7 @@ public class Main {
 
         private JRadioButton random;
         private JRadioButton hermes;
+        private JRadioButton textTrax;
         private JRadioButton xmailer;
 
         public XmailerRandomizationRadio() {
@@ -822,12 +863,17 @@ public class Main {
             hermes.setActionCommand("Hermes' Boots");
             xmailerItem.add(hermes);
 
+            textTrax = new JRadioButton(Translations.getText("randomization.xmailerItem.textTrax"));
+            textTrax.setActionCommand("bunemon.exe");
+            xmailerItem.add(textTrax);
+
             random = new JRadioButton(Translations.getText("randomization.random"));
             random.setActionCommand(null);
             xmailerItem.add(random);
 
             add(xmailer);
             add(hermes);
+            add(textTrax);
             add(random);
 
             if("Hermes' Boots".equals(Settings.getXmailerItem())) {
@@ -835,6 +881,9 @@ public class Main {
             }
             else if("xmailer.exe".equals(Settings.getXmailerItem())) {
                 xmailer.setSelected(true);
+            }
+            else if("bunemon.exe".equals(Settings.getXmailerItem())) {
+                textTrax.setSelected(true);
             }
             else {
                 random.setSelected(true);
@@ -854,6 +903,7 @@ public class Main {
             xmailerItemLabel.setText(Translations.getText("randomization.xmailerItem"));
             xmailer.setText(Translations.getText("randomization.xmailerItem.xmailer"));
             hermes.setText(Translations.getText("randomization.xmailerItem.hermes"));
+            textTrax.setText(Translations.getText("randomization.xmailerItem.textTrax"));
             random.setText(Translations.getText("randomization.random"));
         }
     }

@@ -514,7 +514,32 @@ public final class GameDataTracker {
             }
         } else if (gameObject.getId() == 0x9e) {
             int languageBlock = gameObject.getArgs().get(0);
-            if(languageBlock == 223) {
+            if(Settings.isAutomaticGrailPoints()) {
+                if(languageBlock == 41 || languageBlock == 75 || languageBlock == 104 || languageBlock == 136
+                        || languageBlock == 149 || languageBlock == 170 || languageBlock == 188 || languageBlock == 221
+                        || languageBlock == 250 || languageBlock == 275 || languageBlock == 291 || languageBlock == 305
+                        || languageBlock == 323 || languageBlock == 339 || languageBlock == 206 || languageBlock == 358) {
+                    // Grail points for:
+                    // Gate of Guidance, Mausoleum of the Giants, Temple of the Sun, Spring in the Sky,
+                    // Inferno Cavern, Chamber of Extinction, Twin Labyrinths (Front), Endless Corridor,
+                    // Gate of Illusion, Graveyard of the Giants, Temple of Moonlight, Tower of the Goddess,
+                    // Tower of Ruin, Chamber of Birth, Twin Labyrinths (Back), Dimensional Corridor
+                    addGrailDetector(gameObject, getGrailFlag(languageBlock));
+                }
+                else if(languageBlock == 231) {
+                    if(gameObject.getObjectContainer() instanceof Screen) {
+                        if(((Screen)gameObject.getObjectContainer()).getZoneIndex() == 9) {
+                            // Shrine of the Mother (Front)
+                            addGrailDetector(gameObject, 108);
+                        }
+                        else {
+                            // Shrine of the Mother (Back)
+                            addGrailDetector(gameObject, 117);
+                        }
+                    }
+                }
+            }
+            else if(languageBlock == 223) {
                 // Tablet for MARDUK mantra
                 List<GameObject> objects = mantraTablets.get("MARDUK");
                 if (objects == null) {
@@ -1492,6 +1517,86 @@ public final class GameDataTracker {
 //        }
     }
 
+    private static void addGrailDetector(GameObject gameObject, int grailFlag) {
+        GameObject grailDetector = new GameObject(gameObject.getObjectContainer());
+        grailDetector.setId((short)0x14);
+        grailDetector.setX(gameObject.getX());
+        grailDetector.setY(gameObject.getY() - 20);
+
+        grailDetector.getArgs().add((short)0); // seconds wait
+        grailDetector.getArgs().add((short)0); // frames wait
+        grailDetector.getArgs().add((short)0); // continuous/total
+        grailDetector.getArgs().add((short)0); // interaction type 0 = any time except paused 1 = 2 = 3 = 4 = just be on the ground, ok. default: sleep
+        grailDetector.getArgs().add((short)2); // graphical tile width
+        grailDetector.getArgs().add((short)3); // graphical tile height
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(grailFlag);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        grailDetector.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(grailFlag);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(1);
+        grailDetector.getWriteByteOperations().add(writeByteOperation);
+
+        gameObject.getObjectContainer().getObjects().add(grailDetector);
+    }
+
+    private static int getGrailFlag(int languageBlock) {
+        if(languageBlock == 41) {
+            return 100;
+        }
+        else if(languageBlock == 75) {
+            return 101;
+        }
+        else if(languageBlock == 104) {
+            return 102;
+        }
+        else if(languageBlock == 136) {
+            return 103;
+        }
+        else if(languageBlock == 149) {
+            return 104;
+        }
+        else if(languageBlock == 170) {
+            return 105;
+        }
+        else if(languageBlock == 188) {
+            return 106;
+        }
+        else if(languageBlock == 221) {
+            return 107;
+        }
+        else if(languageBlock == 250) {
+            return 109;
+        }
+        else if(languageBlock == 275) {
+            return 110;
+        }
+        else if(languageBlock == 291) {
+            return 111;
+        }
+        else if(languageBlock == 305) {
+            return 112;
+        }
+        else if(languageBlock == 323) {
+            return 113;
+        }
+        else if(languageBlock == 339) {
+            return 114;
+        }
+        else if(languageBlock == 206) {
+            return 115;
+        }
+        else if(languageBlock == 358) {
+            return 116;
+        }
+        throw new RuntimeException();
+    }
+
     private static void addBackupGyoninFishShop(GameObject untransformedGyoninFishShop) {
         ObjectContainer objectContainer = untransformedGyoninFishShop.getObjectContainer();
         if(objectContainer instanceof Screen) {
@@ -1736,9 +1841,9 @@ public final class GameDataTracker {
                 }
             }
 
-            block.getBlockContents().add(blockContentIndex + 1,
+            block.getBlockContents().add(blockContentIndex,
                     new BlockFlagData((short)0x0040, (short)2796, (short)2));
-            block.getBlockContents().add(blockContentIndex + 1,
+            block.getBlockContents().add(blockContentIndex,
                     new BlockFlagData((short)0x0040, (short)807, (short)1));
         }
         else if(block.getBlockNumber() == 371) {
@@ -2447,8 +2552,6 @@ public final class GameDataTracker {
         xelpudTalismanConversationTimer.setId((short) 0x0b);
         xelpudTalismanConversationTimer.getArgs().add((short) 0);
         xelpudTalismanConversationTimer.getArgs().add((short) 0);
-        xelpudTalismanConversationTimer.setX(-1);
-        xelpudTalismanConversationTimer.setY(-1);
 
         testFlag = new TestByteOperation();
         testFlag.setIndex(164);
@@ -2468,7 +2571,7 @@ public final class GameDataTracker {
         updateFlag.setOp(ByteOp.ASSIGN_FLAG);
         xelpudTalismanConversationTimer.getWriteByteOperations().add(updateFlag);
 
-        objectContainer.getObjects().add(0, xelpudTalismanConversationTimer);
+        objectContainer.getObjects().add(xelpudTalismanConversationTimer);
     }
 
     private static void addAltSurfaceShopItemTimer(ObjectContainer objectContainer) {
@@ -2509,19 +2612,25 @@ public final class GameDataTracker {
         objectToModify.getWriteByteOperations().clear();
 
         if(itemChest) {
-//            if(itemNewContentsData.getInventoryArg() == 2) {
-//                objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11)); // Item arg to indicate what the chest drops
-//                objectToModify.getArgs().set(1, (short)1); // Real item, not fake
-//            }
-//            if(itemNewContentsData.getInventoryArg() == 70) {
-//                objectToModify.getArgs().set(0, (short)2); // Weights
-//                objectToModify.getArgs().set(1, (short)1);
-//            }
-//            else {
+            // Which item goes in the chest
+            if(Settings.isReplaceMapsWithWeights() && itemNewContentsData.getInventoryArg() == 70 && itemNewContentsData.getWorldFlag() != 218) {
+                objectToModify.getArgs().set(0, (short)2); // Weights
+            }
+            else {
                 objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11)); // Item arg to indicate what the chest drops
-                objectToModify.getArgs().set(1, (short)1); // Real item, not fake
-//            }
-            objectToModify.getArgs().set(2, (short)1); // Blue chest
+            }
+
+            // Real/fake item, or item quantity (depending on item)
+            objectToModify.getArgs().set(1, (short)1); // Real item, not fake (or 1 weight, because the game won't allow multiple)
+
+            // Chest graphics (0 = coin chest, 1 = blue chest)
+            if(Settings.isCoinChestGraphics()) {
+                objectToModify.getArgs().set(2, (short)0);
+            }
+            else {
+                objectToModify.getArgs().set(2, (short)1);
+            }
+
             for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                 if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
                     flagTest.setIndex(itemNewContentsData.getWorldFlag());

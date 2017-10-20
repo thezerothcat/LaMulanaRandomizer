@@ -19,12 +19,14 @@ public final class Settings {
 
     private boolean fullItemAccess;
     private boolean automaticHardmode;
+    private boolean coinChestGraphics;
     private boolean requireSoftwareComboForKeyFairy;
     private boolean requireIceCapeForLava;
     private boolean requireFlaresForExtinction;
     private boolean randomizeForbiddenTreasure;
     private boolean randomizeCoinChests;
     private boolean replaceMapsWithWeights;
+    private boolean automaticGrailPoints;
 
     private List<String> enabledGlitches = new ArrayList<>();
     private List<String> enabledDamageBoosts = new ArrayList<>();
@@ -54,6 +56,8 @@ public final class Settings {
         replaceMapsWithWeights = true;
         fullItemAccess = true;
         automaticHardmode = false;
+        coinChestGraphics = false;
+        automaticGrailPoints = false;
 
         bossDifficulty = BossDifficulty.MEDIUM;
         shopRandomization = ShopRandomizationEnum.EVERYTHING;
@@ -102,6 +106,10 @@ public final class Settings {
         return singleton.replaceMapsWithWeights;
     }
 
+    public static boolean isCoinChestGraphics() {
+        return singleton.coinChestGraphics;
+    }
+
     public static String getLaMulanaBaseDir() {
         return singleton.laMulanaBaseDir;
     }
@@ -148,6 +156,10 @@ public final class Settings {
 
     public static boolean isAutomaticHardmode() {
         return singleton.automaticHardmode;
+    }
+
+    public static boolean isAutomaticGrailPoints() {
+        return singleton.automaticGrailPoints;
     }
 
     public static List<String> getEnabledGlitches() {
@@ -314,6 +326,20 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.automaticHardmode = automaticHardmode;
+    }
+
+    public static void setAutomaticGrailPoints(boolean automaticGrailPoints, boolean update) {
+        if(update && automaticGrailPoints != singleton.automaticGrailPoints) {
+            singleton.changed = true;
+        }
+        singleton.automaticGrailPoints = automaticGrailPoints;
+    }
+
+    public static void setCoinChestGraphics(boolean coinChestGraphics, boolean update) {
+        if(update && coinChestGraphics != singleton.coinChestGraphics) {
+            singleton.changed = true;
+        }
+        singleton.coinChestGraphics = coinChestGraphics;
     }
 
     public static void saveSettings() {
