@@ -26,10 +26,9 @@ public final class GameDataTracker {
     private static ObjectContainer mulbrukScreen;
     private static ObjectContainer littleBrotherShopScreen;
 
-    private static int nextReplacedItemFlag;
+    private static int nextReplacedItemFlag = 2708;
 
     private GameDataTracker() {
-        nextReplacedItemFlag = 2708;
     }
 
     public static void clearAll() {
@@ -2034,8 +2033,13 @@ public final class GameDataTracker {
                 if(blockContents instanceof BlockFlagData) {
                     BlockFlagData flagData = (BlockFlagData) blockContents;
                     if(flagData.getWorldFlag() == itemLocationData.getWorldFlag()) {
+                        if(flagData.getWorldFlag() == 209) {
+                            flagData.setFlagValue((short)1);
+                        }
+                        else {
+                            flagData.setFlagValue((short)2);
+                        }
                         flagData.setWorldFlag((short)itemNewContentsData.getWorldFlag());
-                        flagData.setFlagValue((short)2);
                     }
                     else if(flagData.getWorldFlag() == 552) {
                         // The flag for the Pepper/Treasures/Anchor sequence is being replaced with custom world flags,
@@ -2698,7 +2702,12 @@ public final class GameDataTracker {
             updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
             updateFlag.setIndex(newChestWorldFlag);
-            updateFlag.setValue(1);
+            if(nonShrineMap) {
+                updateFlag.setValue(2);
+            }
+            else {
+                updateFlag.setValue(1);
+            }
             objectToModify.getWriteByteOperations().add(updateFlag);
 
             updateFlag = new WriteByteOperation();
@@ -2737,7 +2746,7 @@ public final class GameDataTracker {
 
             updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ADD_FLAG);
-            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
+            updateFlag.setIndex(119); // Coin chest tracking
             updateFlag.setValue(1);
             objectToModify.getWriteByteOperations().add(updateFlag);
         }

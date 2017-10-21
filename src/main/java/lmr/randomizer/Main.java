@@ -643,6 +643,7 @@ public class Main {
             radioPanel.updateSettings();
             Settings.setRandomizeForbiddenTreasure(randomizeForbiddenTreasure.isSelected(), true);
             Settings.setRandomizeCoinChests(randomizeCoinChests.isSelected(), true);
+            Settings.setReplaceMapsWithWeights(replaceMapsWithWeights.isSelected(), true);
             shopRandomization.updateSettings();
             xmailerRandomization.updateSettings();
         }

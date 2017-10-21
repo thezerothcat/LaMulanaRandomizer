@@ -249,10 +249,6 @@ public class FileUtils {
             return;
         }
 
-        if(reader == null) {
-            return; // No config file saved yet.
-        }
-
         String line;
         String[] settingAndValue;
         List<String> enabledGlitches = new ArrayList<>();
@@ -343,8 +339,10 @@ public class FileUtils {
         writer.write(String.format("shopRandomization=%s", Settings.getShopRandomization().toString()));
         writer.newLine();
 
-        writer.write(String.format("xmailerItem=%s", Settings.getXmailerItem().toString()));
-        writer.newLine();
+        if(Settings.getXmailerItem() != null) {
+            writer.write(String.format("xmailerItem=%s", Settings.getXmailerItem()));
+            writer.newLine();
+        }
 
         writer.write(String.format("fullItemAccess=%s", Settings.isFullItemAccess()));
         writer.newLine();
