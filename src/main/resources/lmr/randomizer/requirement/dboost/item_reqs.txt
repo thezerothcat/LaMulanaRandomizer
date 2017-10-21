@@ -12,6 +12,7 @@ Ankh Jewel (Tower of Ruin) => Location: Tower of Ruin [Lower], Boost: Enemy, Gli
 Chain Whip => Bomb, Bomb Ammo, Event: Pazuzu Defeated, Boost: Item
 Earth Spear => Location: Tower of Ruin [Lower], Boost: Enemy
 Isis' Pendant => Hand Scanner, reader.exe, Boost: Enemy
+Isis' Pendant => Hand Scanner, reader.exe, Boost: Environment
 Knife => Flare Gun, Flare Gun Ammo, Hermes' Boots, Boost: Enemy
 Map (Dimensional Corridor) => Location: Dimensional Corridor, Boost: Item, Bomb, Bomb Ammo
 Mini Doll => Location: Gate of Illusion [Lower], Hand Scanner, Bomb, Bomb Ammo, Boost: Item

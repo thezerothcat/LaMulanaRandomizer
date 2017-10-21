@@ -6,4 +6,3 @@ Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Hand 
 Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Glitch: Raindrop, Bomb, Fruit of Eden, Boost: Item
 Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Glitch: Raindrop, Caltrops, Fruit of Eden, Boost: Item
 Location: Dimensional Corridor => Location: Twin Labyrinths [Upper], Bomb, Bomb Ammo, Boost: Item
-Location: Tower of the Goddess [Grail] => Location: Graveyard of the Giants [East], Glitch: Raindrop, Glitch: Ladder, Boost: Environment
