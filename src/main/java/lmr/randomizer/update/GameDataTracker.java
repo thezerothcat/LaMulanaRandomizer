@@ -26,6 +26,8 @@ public final class GameDataTracker {
     private static ObjectContainer mulbrukScreen;
     private static ObjectContainer littleBrotherShopScreen;
 
+    private static Map<Integer, Integer> mapOfWorldFlagToAssignedReplacementFlag = new HashMap<>();
+
     private static int nextReplacedItemFlag = 2708;
 
     private GameDataTracker() {
@@ -36,6 +38,7 @@ public final class GameDataTracker {
         mapOfChestIdentifyingInfoToBlock.clear();
         mapOfShopBlockToShopObjects.clear();
         mantraTablets.clear();
+        mapOfWorldFlagToAssignedReplacementFlag.clear();
         nextReplacedItemFlag = 2708;
     }
 
@@ -2684,7 +2687,17 @@ public final class GameDataTracker {
                 objectToModify.getArgs().set(2, (short)1);
             }
 
-            int newChestWorldFlag = nonShrineMap ? nextReplacedItemFlag : itemNewContentsData.getWorldFlag();
+            Integer newChestWorldFlag;
+            if(nonShrineMap) {
+                newChestWorldFlag = mapOfWorldFlagToAssignedReplacementFlag.get(itemLocationData.getWorldFlag());
+                if(newChestWorldFlag == null) {
+                    newChestWorldFlag = nextReplacedItemFlag++;
+                    mapOfWorldFlagToAssignedReplacementFlag.put(itemLocationData.getWorldFlag(), newChestWorldFlag);
+                }
+            }
+            else {
+                newChestWorldFlag = itemNewContentsData.getWorldFlag();
+            }
             for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                 if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
                     flagTest.setIndex(newChestWorldFlag);
@@ -2715,10 +2728,6 @@ public final class GameDataTracker {
             updateFlag.setIndex(newChestWorldFlag);
             updateFlag.setValue(2);
             objectToModify.getWriteByteOperations().add(updateFlag);
-
-            if(nonShrineMap) {
-                nextReplacedItemFlag += 1;
-            }
         }
         else {
             objectToModify.getArgs().set(0, (short)1); // Coins
