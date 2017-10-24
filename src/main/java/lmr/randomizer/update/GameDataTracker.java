@@ -532,21 +532,25 @@ public final class GameDataTracker {
                     // Gate of Illusion, Graveyard of the Giants, Temple of Moonlight, Tower of the Goddess,
                     // Tower of Ruin, Chamber of Birth, Twin Labyrinths (Back), Dimensional Corridor
                     addGrailDetector(gameObject, getGrailFlag(languageBlock));
+                    return;
                 }
                 else if(languageBlock == 231) {
                     if(gameObject.getObjectContainer() instanceof Screen) {
                         if(((Screen)gameObject.getObjectContainer()).getZoneIndex() == 9) {
                             // Shrine of the Mother (Front)
                             addGrailDetector(gameObject, 108);
+                            return;
                         }
                         else {
                             // Shrine of the Mother (Back)
                             addGrailDetector(gameObject, 117);
+                            return;
                         }
                     }
                 }
             }
-            else if(languageBlock == 223) {
+
+            if(languageBlock == 223) {
                 // Tablet for MARDUK mantra
                 List<GameObject> objects = mantraTablets.get("MARDUK");
                 if (objects == null) {
