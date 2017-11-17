@@ -743,23 +743,24 @@ public final class GameDataTracker {
                     }
                 }
             }
-            else if(blockNumber == 689 || blockNumber == 690) {
-                // Conversation to receive Pepper, or conversation after receiving Pepper if you don't have Treasures
+            else if(blockNumber == 689) {
+                // Conversation to receive Pepper
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 552) {
-                        // Swap out the Pepper/Treasures/Anchor combo flag with Pepper custom world flag
-                        flagTest.setIndex(2702);
-                        if(flagTest.getValue() > 0 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
-                            flagTest.setOp(ByteOp.FLAG_GTEQ);
-                        }
-
-                        GameObjectId gameObjectId = new GameObjectId((short) 30, 2702);
-                        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                        if (objects == null) {
-                            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                        }
-                        objects.add(gameObject);
+                        flagTest.setIndex(2784);
+                        flagTest.setOp(ByteOp.FLAG_EQUALS);
+                        flagTest.setValue((byte)0);
+                        break;
+                    }
+                }
+            } else if(blockNumber == 690) {
+                // Conversation after receiving Pepper if you don't have Treasures
+                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                    if (flagTest.getIndex() == 552) {
+                        // Swap out the Pepper/Treasures/Anchor combo flag with Pepper received flag
+                        flagTest.setIndex(2784);
+                        flagTest.setOp(ByteOp.FLAG_GT);
+                        flagTest.setValue((byte)0);
                         break;
                     }
                 }
@@ -770,9 +771,8 @@ public final class GameDataTracker {
                     if (flagTest.getIndex() == 552) {
                         // Swap out the Pepper/Treasures/Anchor combo flag with Anchor custom world flag
                         flagTest.setIndex(2706);
-                        if(flagTest.getValue() == 1 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
-                            flagTest.setOp(ByteOp.FLAG_LTEQ);
-                        }
+                        flagTest.setOp(ByteOp.FLAG_LT);
+                        flagTest.setValue((byte)2);
 
                         GameObjectId gameObjectId = new GameObjectId((short) 50, 2706);
                         List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
@@ -791,9 +791,8 @@ public final class GameDataTracker {
                     if (flagTest.getIndex() == 552) {
                         // Swap out the Pepper/Treasures/Anchor combo flag with Anchor custom world flag
                         flagTest.setIndex(2706);
-                        if(flagTest.getValue() == 1 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
-                            flagTest.setOp(ByteOp.FLAG_LTEQ);
-                        }
+                        flagTest.setOp(ByteOp.FLAG_GTEQ);
+                        flagTest.setValue((byte)2);
 
                         GameObjectId gameObjectId = new GameObjectId((short) 50, 2706);
                         List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
@@ -805,21 +804,13 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                // Add a check for having Pepper (otherwise we could get this conversation before being given Pepper).
+                // Add a check for Pepper conversation (otherwise we could get this conversation before being given Pepper).
                 TestByteOperation pepperCheck = new TestByteOperation();
-                pepperCheck.setIndex(2702);
-                pepperCheck.setOp(ByteOp.FLAG_GTEQ);
-                pepperCheck.setValue((byte)2);
-                gameObject.getTestByteOperations().add(pepperCheck);
+                pepperCheck.setIndex(2784);
+                pepperCheck.setOp(ByteOp.FLAG_GT);
+                pepperCheck.setValue((byte)0);
 
-                // This conversation needs to be linked to Pepper in addition to Anchor, so both flags will be replaced based on randomization.
-                GameObjectId gameObjectId = new GameObjectId((short) 30, 2702);
-                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                if (objects == null) {
-                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                }
-                objects.add(gameObject);
+                gameObject.getTestByteOperations().add(pepperCheck);
             }
             else if(blockNumber == 484 || blockNumber == 1019
                     || gameObject.getArgs().get(4) == 1080 || gameObject.getArgs().get(4) == 1081) {
@@ -1466,6 +1457,7 @@ public final class GameDataTracker {
                 }
                 mantraCountTimer.getTestByteOperations().add(testByteOperation);
 
+                // Check to ensure that the timer hasn't already done its job (so each mantra recited can only increment the timer once)
                 testByteOperation = new TestByteOperation();
                 testByteOperation.setIndex(2792 - (299 - gameObject.getTestByteOperations().get(0).getIndex()));
                 testByteOperation.setOp(ByteOp.FLAG_EQUALS);
@@ -1781,6 +1773,21 @@ public final class GameDataTracker {
             short inventoryArg = (short) (30);
             int worldFlag = 2702;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
+
+            // Add custom conversation flag so we don't have to worry about order of operations for
+            Integer blockContentIndex = null;
+            for(int i = 0; i < block.getBlockContents().size(); i++) {
+                BlockContents blockContents = block.getBlockContents().get(i);
+                if(blockContents instanceof BlockFlagData) {
+                    BlockFlagData blockFlagData = (BlockFlagData) blockContents;
+                    if(blockFlagData.getWorldFlag() == 552) {
+                        blockContentIndex = i;
+                    }
+                }
+            }
+
+            block.getBlockContents().add(blockContentIndex,
+                    new BlockFlagData((short)0x0040, (short)2784, (short)1));
 
             List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
             if (blocks == null) {

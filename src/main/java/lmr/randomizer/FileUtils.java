@@ -12,6 +12,8 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
+    private static final String VERSION = "1.8.2";
+
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
 
@@ -336,6 +338,12 @@ public class FileUtils {
 
     public static void saveSettings() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("randomizer-config.txt"));
+        writer.write(String.format("version=%s", VERSION));
+        writer.newLine();
+
+        writer.write(String.format("seed=%s", Settings.getStartingSeed()));
+        writer.newLine();
+
         writer.write(String.format("shopRandomization=%s", Settings.getShopRandomization().toString()));
         writer.newLine();
 
