@@ -29,7 +29,7 @@ public final class Translations {
         return enTranslations.getProperty(key);
     }
 
-    private static String getJapaneseTranslation(String key) {
+    protected static String getJapaneseTranslation(String key) {
         if(jpTranslations == null) {
             jpTranslations = new Properties(enTranslations);
             try {
@@ -43,7 +43,7 @@ public final class Translations {
         return jpTranslations.getProperty(key);
     }
 
-    private static void loadTranslations(Properties toLoad, String langCode) throws IOException {
+    protected static void loadTranslations(Properties toLoad, String langCode) throws IOException {
         try {
             toLoad.load(new InputStreamReader(new FileInputStream(String.format(
                     "src/main/resources/lmr/randomizer/lang/lang_%s.properties", langCode)), "UTF-8"));
@@ -52,5 +52,13 @@ public final class Translations {
             toLoad.load(new InputStreamReader(FileUtils.class.getResourceAsStream(
                     String.format("lang/lang_%s.properties", langCode)), "UTF-8"));
         }
+    }
+
+    public static String getItemText(String itemName) {
+        return getText("items." + itemName.replaceAll("[ ']", ""));
+    }
+
+    public static String getGlitchText(String glitchName) {
+        return getText("glitches." + glitchName.replaceAll("[ ']", ""));
     }
 }
