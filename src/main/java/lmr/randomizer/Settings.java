@@ -3,6 +3,7 @@ package lmr.randomizer;
 import lmr.randomizer.random.BossDifficulty;
 import lmr.randomizer.random.ShopRandomizationEnum;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -494,11 +495,15 @@ public final class Settings {
         // Check version compatibility?
         if(!FileUtils.VERSION.equals(parts[0])) {
             // Show pop up that the version changed
-            return;
+            int version_mismatch = JOptionPane.showConfirmDialog(null, "These settings were generated with a different version of the randomizer. Do you  still want to try loading them?", "Version Mismatch", JOptionPane.YES_NO_OPTION);
+
+            if(version_mismatch != JOptionPane.OK_OPTION) {
+                return;
+            }
         }
 
         // Parse seed from string
-        long seed = Long.parseLong(parts[1], 16);
+        int seed = Integer.parseInt(parts[1], 16);
 
         // Parse boolean settings from string
         int booleanSettingsFlag = Integer.parseInt(parts[2], 16);
@@ -527,6 +532,7 @@ public final class Settings {
         String xmailerItem = singleton.possibleRandomizedItems.get(Integer.parseInt(parts[8],16));
         BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[9],16)];
 
+        setStartingSeed(seed);
         setEnabledGlitches((List<String>) glitches, true);
         setEnabledDamageBoosts((List<String>) dboosts, true);
         setNonRandomizedItems(nonRandoItems, true);
@@ -534,6 +540,8 @@ public final class Settings {
         setSurfaceItems(surfaceItems, true);
         setXmailerItem(xmailerItem, true);
         setBossDifficulty(bossDifficulty.toString(), true);
+
+        JOptionPane.showMessageDialog(null, "Settings successfully imported");
     }
 
 
