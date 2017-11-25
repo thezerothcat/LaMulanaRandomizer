@@ -434,19 +434,19 @@ public final class Settings {
         //seed
 
         //boolean fields + shoprandomization enum
-        BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer currSet) -> currSet << 1 | boolToInt(b);
+        BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
-        booleanSettings = processBooleanFlag.apply(singleton.fullItemAccess, booleanSettings);
-        booleanSettings = processBooleanFlag.apply(singleton.automaticHardmode, booleanSettings);
-        booleanSettings = processBooleanFlag.apply(singleton.coinChestGraphics, booleanSettings);
-        booleanSettings = processBooleanFlag.apply(singleton.requireSoftwareComboForKeyFairy, booleanSettings);
-        booleanSettings = processBooleanFlag.apply(singleton.requireIceCapeForLava, booleanSettings);
-        booleanSettings = processBooleanFlag.apply(singleton.requireFlaresForExtinction, booleanSettings);
-        booleanSettings = processBooleanFlag.apply(singleton.randomizeForbiddenTreasure, booleanSettings);
-        booleanSettings = processBooleanFlag.apply(singleton.randomizeCoinChests, booleanSettings);
-        booleanSettings = processBooleanFlag.apply(singleton.replaceMapsWithWeights, booleanSettings);
-        booleanSettings = processBooleanFlag.apply(singleton.automaticGrailPoints, booleanSettings);
+        booleanSettings |= processBooleanFlag.apply(singleton.fullItemAccess, 9);
+        booleanSettings |= processBooleanFlag.apply(singleton.automaticHardmode, 8);
+        booleanSettings |= processBooleanFlag.apply(singleton.coinChestGraphics, 7);
+        booleanSettings |= processBooleanFlag.apply(singleton.requireSoftwareComboForKeyFairy, 6);
+        booleanSettings |= processBooleanFlag.apply(singleton.requireIceCapeForLava, 5);
+        booleanSettings |= processBooleanFlag.apply(singleton.requireFlaresForExtinction, 4);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeForbiddenTreasure, 3);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeCoinChests, 2);
+        booleanSettings |= processBooleanFlag.apply(singleton.replaceMapsWithWeights, 1);
+        booleanSettings |= processBooleanFlag.apply(singleton.automaticGrailPoints, 0);
         booleanSettings = booleanSettings << 2 | singleton.shopRandomization.ordinal();
 
         //glitches
