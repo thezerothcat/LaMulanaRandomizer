@@ -429,7 +429,7 @@ public final class Settings {
     public static String generateShortString() {
         String result = FileUtils.VERSION;
 
-        String seperator = "|";
+        String separator = "|";
 
         //seed
 
@@ -476,15 +476,15 @@ public final class Settings {
 
         // combine the results of the settings in a string
         long startingSeed = getStartingSeed();
-        result += seperator + Long.toHexString(startingSeed);
-        result += seperator + Integer.toHexString(booleanSettings);
-        result += seperator + Integer.toHexString(glitches);
-        result += seperator + Integer.toHexString(dboosts);
-        result += seperator + Integer.toHexString(nonRandoItems);
-        result += seperator + Integer.toHexString(initItems);
-        result += seperator + Integer.toHexString(surfaceItems);
-        result += seperator + Integer.toHexString(xmailer);
-        result += seperator + Integer.toHexString(bossDifficulty);
+        result += separator + Long.toHexString(startingSeed);
+        result += separator + Integer.toHexString(booleanSettings);
+        result += separator + Integer.toHexString(glitches);
+        result += separator + Integer.toHexString(dboosts);
+        result += separator + Integer.toHexString(nonRandoItems);
+        result += separator + Integer.toHexString(initItems);
+        result += separator + Integer.toHexString(surfaceItems);
+        result += separator + Integer.toHexString(xmailer);
+        result += separator + Integer.toHexString(bossDifficulty);
 
         return result;
     }

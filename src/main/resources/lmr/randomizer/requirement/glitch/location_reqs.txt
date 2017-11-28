@@ -1,4 +1,3 @@
-Location: Gate of Illusion [Lower] => Location: Graveyard of the Giants [West], Feather, Glitch: Lamp Glitch
 Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Grail], Glitch: Lamp Glitch
 Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Glitch: Cat Pause, Fruit of Eden
 Location: Gate of Illusion [Upper] => Location: Gate of Illusion [Grail], Glitch: Raindrop
