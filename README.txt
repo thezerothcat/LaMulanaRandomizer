@@ -2,6 +2,11 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+1.19:
+-----------------------------
+Seed-sharing features added by Goost.
+
+
 1.18:
 -----------------------------
 TextTrax randomization is now configurable for those who want to record shops, and recorded shops now include prices. Added more new settings: one to make all chests use coin chest graphics, one to make all maps appearing in chests give you a weight instead of a map, and one to automatically unlock grail warps by walking in front of grail tablets.

@@ -376,12 +376,10 @@ public class ItemRandomizer {
 
     public void updateFiles() throws Exception{
         for(Map.Entry<String, String> locationAndItem : mapOfItemLocationToItem.entrySet()) {
-            if(!locationAndItem.getKey().equals(locationAndItem.getValue())) {
-                if(DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(locationAndItem.getKey())) {
-                    GameDataTracker.updateBlock(locationAndItem.getKey(), locationAndItem.getValue());
-                }
-                GameDataTracker.writeLocationContents(locationAndItem.getKey(), locationAndItem.getValue());
+            if(DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(locationAndItem.getKey())) {
+                GameDataTracker.updateBlock(locationAndItem.getKey(), locationAndItem.getValue());
             }
+            GameDataTracker.writeLocationContents(locationAndItem.getKey(), locationAndItem.getValue());
         }
     }
 
