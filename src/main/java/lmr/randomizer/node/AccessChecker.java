@@ -217,7 +217,9 @@ public class AccessChecker {
         switch (nodeType) {
             case ITEM_LOCATION:
                 String item = itemRandomizer.getItem(nodeName);
+                if(!Settings.getRemovedItems().contains(item)) {
                     queuedUpdates.add(item);
+                }
                 break;
             case MAP_LOCATION:
 //                if("Location: Temple of the Sun".equals(nodeName)) {
@@ -313,6 +315,20 @@ public class AccessChecker {
         }
         else if(item.equals("Chain Whip") || item.equals("Buckler") || item.contains("Silver Shield")) {
             if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
+                return false;
+            }
+        }
+        else if(Settings.getRemovedItems().contains(item)) {
+            if("Shop 2 Alt (Surface)".equals(location)) {
+                // Don't put removed item in transforming Surface shop.
+                return false;
+            }
+            if(DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(location) && !"Map (Surface)".equals(location)) {
+                // Don't put removed item from conversations or instant-item locations, for now.
+                return false;
+            }
+            if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
+                // Don't put removed item in torude scan spots, for now.
                 return false;
             }
         }

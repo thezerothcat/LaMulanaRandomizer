@@ -11,6 +11,7 @@ public class TabbedPanel extends JTabbedPane {
     private DboostPanel dboostPanel;
     private GlitchPanel glitchPanel;
     private SpeedPanel speedPanel;
+    private RemovedItemsPanel removedItemsPanel;
     private SettingsTransportPanel settingsTransportPanel;
     private MainPanel mainPanel;
 
@@ -35,8 +36,11 @@ public class TabbedPanel extends JTabbedPane {
         speedPanel = new SpeedPanel();
         addTab(Translations.getText("settings.speed"), speedPanel);
 
+        removedItemsPanel = new RemovedItemsPanel();
+        addTab(Translations.getText("settings.removal"), removedItemsPanel);
+
         settingsTransportPanel = new SettingsTransportPanel(this);
-        addTab("Share/Import settings", settingsTransportPanel);
+        addTab(Translations.getText("settings.share"), settingsTransportPanel);
     }
 
     public void reloadSettings() {
@@ -47,6 +51,7 @@ public class TabbedPanel extends JTabbedPane {
         logicPanel.reloadSettings();
         challengePanel.reloadSettings();
         speedPanel.reloadSettings();
+        removedItemsPanel.reloadSettings();
     }
 
     public void updateSettings() {
@@ -57,6 +62,7 @@ public class TabbedPanel extends JTabbedPane {
         logicPanel.updateSettings();
         challengePanel.updateSettings();
         speedPanel.updateSettings();
+        removedItemsPanel.updateSettings();
     }
 
     public void updateTranslations() {
@@ -66,6 +72,7 @@ public class TabbedPanel extends JTabbedPane {
         logicPanel.updateTranslations();
         challengePanel.updateTranslations();
         speedPanel.updateTranslations();
+        removedItemsPanel.updateTranslations();
 
         setTitleAt(0, Translations.getText("settings.randomization"));
         setTitleAt(1, Translations.getText("settings.logic"));
@@ -73,5 +80,7 @@ public class TabbedPanel extends JTabbedPane {
         setTitleAt(3, Translations.getText("settings.dboost"));
         setTitleAt(4, Translations.getText("settings.glitches"));
         setTitleAt(5, Translations.getText("settings.speed"));
+        setTitleAt(6, Translations.getText("settings.removal"));
+        setTitleAt(7, Translations.getText("settings.share"));
     }
 }

@@ -12,7 +12,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "1.19.1";
+    public static final String VERSION = "1.20.0";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -258,6 +258,7 @@ public class FileUtils {
         Set<String> initiallyAvailableItems = new HashSet<>();
         Set<String> nonRandomizedItems = new HashSet<>();
         Set<String> surfaceItems = new HashSet<>();
+        Set<String> removedItems = new HashSet<>();
         while((line = reader.readLine()) != null) {
             if(line.startsWith("randomization.")) {
                 settingAndValue = line.replace("randomization.", "").split("=");
@@ -269,6 +270,9 @@ public class FileUtils {
                 }
                 else if("V_EARLY".equals(settingAndValue[1])) {
                     surfaceItems.add(settingAndValue[0]);
+                }
+                else if("REMOVED".equals(settingAndValue[1])) {
+                    removedItems.add(settingAndValue[0]);
                 }
             }
             else if(line.startsWith("glitches.")) {
@@ -334,6 +338,7 @@ public class FileUtils {
         Settings.setInitiallyAccessibleItems(initiallyAvailableItems, false);
         Settings.setNonRandomizedItems(nonRandomizedItems, false);
         Settings.setSurfaceItems(surfaceItems, false);
+        Settings.setRemovedItems(removedItems, false);
     }
 
     public static void saveSettings() throws IOException {
@@ -392,7 +397,10 @@ public class FileUtils {
         writer.newLine();
 
         for(String item : DataFromFile.getAllItems()) {
-            if(Settings.getInitiallyAccessibleItems().contains(item)) {
+            if(Settings.getRemovedItems().contains(item)) {
+                writer.write(String.format("randomization.%s=%s", item, "REMOVED"));
+            }
+            else if(Settings.getInitiallyAccessibleItems().contains(item)) {
                 writer.write(String.format("randomization.%s=%s", item, "INITIAL"));
             }
             else if(Settings.getNonRandomizedItems().contains(item)) {

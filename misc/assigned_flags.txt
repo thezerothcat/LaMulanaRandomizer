@@ -6,9 +6,12 @@ Fake Silver Shield world flag: a90
 guild.exe replacement world flag: a91
 Anchor world flag: a92
 Surface coin chest world flag: a93
-Misc replaced chest world flags: a94+ (2708+)
+Misc replaced chest world flags: a94+ (2708-2736?)
 
-Pepper conversation flag: ae0
+Missing item world flags: ad2- (2740-2770?)
+Spaulder: 2770
+
+Pepper conversation flag: ae0 (2784)
 Mantra count timers: ae1-ae8 (2785-2792)
 Mantra tablet counter flag: ae9
 LAMULANA recited flag: aea
@@ -20,3 +23,4 @@ Cog of Soul chest: aef
 
 
 Screen flag 42: Shrine map sound effect
+Screen flag 43, 46, 47: Item sound screen flags (currently only spaulder at 43)

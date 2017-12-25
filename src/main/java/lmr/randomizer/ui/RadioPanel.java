@@ -81,7 +81,6 @@ public class RadioPanel extends JPanel {
             } else {
                 itemRadio.setSelected("RANDOM");
             }
-
         }
     }
 }

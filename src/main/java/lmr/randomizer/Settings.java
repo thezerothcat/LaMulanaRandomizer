@@ -46,6 +46,7 @@ public final class Settings {
     private Set<String> nonRandomizedItems = new HashSet<>();
     private Set<String> initiallyAccessibleItems = new HashSet<>();
     private Set<String> surfaceItems = new HashSet<>();
+    private Set<String> removedItems = new HashSet<>();
 
     private String xmailerItem;
 
@@ -160,6 +161,10 @@ public final class Settings {
 
     public static Set<String> getSurfaceItems() {
         return singleton.surfaceItems;
+    }
+
+    public static Set<String> getRemovedItems() {
+        return singleton.removedItems;
     }
 
     public static Set<String> getInitiallyAccessibleItems() {
@@ -284,8 +289,19 @@ public final class Settings {
                 singleton.changed = true;
             }
         }
-
         singleton.surfaceItems = surfaceItems;
+    }
+
+    public static void setRemovedItems(Set<String> removedItems, boolean update) {
+        if(update && !singleton.changed) {
+            if(removedItems.containsAll(singleton.removedItems)) {
+                singleton.changed = !singleton.removedItems.containsAll(removedItems);
+            }
+            else {
+                singleton.changed = true;
+            }
+        }
+        singleton.removedItems = removedItems;
     }
 
     public static void setXmailerItem(String xmailerItem, boolean update) {
