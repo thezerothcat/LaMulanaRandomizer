@@ -86,9 +86,6 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 }
             }
         }
-        mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 1", "Spaulder");
-        unassignedShopItemLocations.remove("Shop 3 (Surface) Item 1");
-        itemRandomizer.removeItemFromUnplacedItems("Spaulder");
 //        mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 1", "Sacred Orb (Gate of Guidance)");
 //        unassignedShopItemLocations.remove("Shop 3 (Surface) Item 1");
 //        itemRandomizer.removeItemFromUnplacedItems("Sacred Orb (Gate of Guidance)");
