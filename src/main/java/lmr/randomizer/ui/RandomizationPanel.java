@@ -10,7 +10,6 @@ public class RandomizationPanel extends JPanel {
     private RadioPanel radioPanel;
 
     private JCheckBox randomizeCoinChests;
-    private JCheckBox replaceMapsWithWeights;
     private JCheckBox randomizeForbiddenTreasure;
 
     private ShopRandomizationRadio shopRandomization;
@@ -31,15 +30,11 @@ public class RandomizationPanel extends JPanel {
         randomizeCoinChests = new JCheckBox();
         randomizeCoinChests.setSelected(Settings.isRandomizeCoinChests());
 
-        replaceMapsWithWeights = new JCheckBox();
-        replaceMapsWithWeights.setSelected(Settings.isReplaceMapsWithWeights());
-
         randomizeForbiddenTreasure = new JCheckBox();
         randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
 
         CheckboxContainer checkboxContainer = new CheckboxContainer(1);
         checkboxContainer.add(randomizeCoinChests);
-        checkboxContainer.add(replaceMapsWithWeights);
         checkboxContainer.add(randomizeForbiddenTreasure);
         add(checkboxContainer, "growx, wrap");
 
@@ -50,7 +45,6 @@ public class RandomizationPanel extends JPanel {
         radioPanel.updateTranslations();
         randomizeForbiddenTreasure.setText(Translations.getText("randomization.randomizeForbiddenTreasure"));
         randomizeCoinChests.setText(Translations.getText("randomization.randomizeCoinChests"));
-        replaceMapsWithWeights.setText(Translations.getText("randomization.replaceMapsWithWeights"));
         shopRandomization.updateTranslations();
         xmailerRandomization.updateTranslations();
     }
@@ -59,7 +53,6 @@ public class RandomizationPanel extends JPanel {
         radioPanel.updateSettings();
         Settings.setRandomizeForbiddenTreasure(randomizeForbiddenTreasure.isSelected(), true);
         Settings.setRandomizeCoinChests(randomizeCoinChests.isSelected(), true);
-        Settings.setReplaceMapsWithWeights(replaceMapsWithWeights.isSelected(), true);
         shopRandomization.updateSettings();
         xmailerRandomization.updateSettings();
     }
@@ -71,6 +64,5 @@ public class RandomizationPanel extends JPanel {
 
         randomizeForbiddenTreasure.setSelected(Settings.getRandomizeForbiddenTreasure());
         randomizeCoinChests.setSelected(Settings.getRandomizeCoinChests());
-        replaceMapsWithWeights.setSelected(Settings.getReplaceMapsWithWeights());
     }
 }

@@ -2,6 +2,11 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+1.20:
+-----------------------------
+Ability to remove Spaulder from the game.
+
+
 1.19:
 -----------------------------
 Seed-sharing features added by Goost.

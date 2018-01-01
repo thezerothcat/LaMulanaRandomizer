@@ -2674,11 +2674,6 @@ public final class GameDataTracker {
         objects.add(altSurfaceShopTimer);
     }
 
-    private static boolean isReplaceChestContents(String itemName) {
-        return Settings.getRemovedItems().contains(itemName)
-                || (Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") & !itemName.equals("Map (Shrine of the Mother)"));
-    }
-
     private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData, boolean itemChest) {
         WriteByteOperation puzzleFlag = objectToModify.getWriteByteOperations().get(1);
         objectToModify.getWriteByteOperations().clear();

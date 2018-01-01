@@ -138,7 +138,14 @@ public class Main {
             File rcdFile = new File("script.rcd.bak");
             if(!rcdFile.exists()) {
                 File existingRcd = new File(Settings.getLaMulanaBaseDir(), "data/mapdata/script.rcd");
-                if (!FileUtils.hashRcdFile(existingRcd)) {
+                if(!existingRcd.exists()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Unable to find file " + existingRcd.getAbsolutePath(),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    FileUtils.closeAll();
+                    System.exit(0);
+                }
+                else if (!FileUtils.hashRcdFile(existingRcd)) {
                     JOptionPane.showMessageDialog(this,
                             "The data/mapdata/script.rcd file in the game directory is not original! Please restore it from a backup / clean install!",
                             "Randomizer error", JOptionPane.ERROR_MESSAGE);

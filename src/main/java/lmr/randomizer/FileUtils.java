@@ -87,9 +87,15 @@ public class FileUtils {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             byte[] fileBytes = getBytes(new FileInputStream(file), file.length());
-            return KNOWN_RCD_FILE_HASHES.contains(DatatypeConverter.printHexBinary(md5.digest(fileBytes)).toUpperCase());
+            String md5Hash = DatatypeConverter.printHexBinary(md5.digest(fileBytes)).toUpperCase();
+            if(KNOWN_RCD_FILE_HASHES.contains(md5Hash)) {
+                return true;
+            }
+            FileUtils.log("MD5 hash " + md5Hash + " for file " + file.getAbsolutePath() + " does not match any known versions of La-Mulana. Is this a modified file?");
+            return false;
         }
         catch (Exception ex) {
+            FileUtils.log("Unable to read file " + file.getAbsolutePath() + ", " + ex.getMessage());
             return false;
         }
     }
