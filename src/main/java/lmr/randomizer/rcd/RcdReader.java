@@ -9,6 +9,7 @@ import lmr.randomizer.update.GameDataTracker;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -240,7 +241,11 @@ public final class RcdReader {
     }
 
     public static List<Zone> getRcdScriptInfo() throws Exception {
-        String mapPath = Settings.getLaMulanaBaseDir() + "\\data\\mapdata";
+    	// Might be a bit ugly because this only checks the filesystem the JVM is installed on.
+    	// However, the JVM might be installed in a different file system than the game.
+    	// Should not be a problem on modern systems, but still.
+        String sep = FileSystems.getDefault().getSeparator();
+        String mapPath = Settings.getLaMulanaBaseDir() + sep + "data" + sep + "mapdata";
 
         byte[] rcdBytes = FileUtils.getBytes("script.rcd.bak", true);
         int rcdByteIndex = 2; // Seems we skip the first two bytes?
@@ -264,7 +269,7 @@ public final class RcdReader {
             }
 
 
-            byte[] msdBytes = FileUtils.getBytes(mapPath + String.format("\\\\map%02d.msd", zoneIndex), false);
+            byte[] msdBytes = FileUtils.getBytes(mapPath + String.format("%s%smap%02d.msd", sep, sep, zoneIndex), false);
             int msdByteIndex = 0;
             while (true) {
                 short frames = getField(msdBytes, msdByteIndex, 2).getShort();
