@@ -91,7 +91,8 @@ public final class Settings {
             for (String menu_entry_file_path : Arrays.asList(
                     "/usr/share/applications/gog_com-La_Mulana_1.desktop",
                     "/usr/local/share/applications/gog_com-La_Mulana_1.desktop",
-                    System.getProperty("user.home") + "/.local/share/applications/gog_com-La_Mulana_1.desktop"
+                    System.getProperty("user.home") + "/.local/share/applications/gog_com-La_Mulana_1.desktop",
+                    System.getProperty("user.home") + "/Desktop/gog_com-La_Mulana_1.desktop"
                     /* other valid paths for the .desktop file to be located? */)) {
                 
                 File menu_entry_file = new File(menu_entry_file_path);
