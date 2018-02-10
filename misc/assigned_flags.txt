@@ -11,6 +11,8 @@ Misc replaced chest world flags: a94+ (2708-2736?)
 Missing item world flags: ad2- (2740-2770?)
 Spaulder: 2770
 
+New untrue Shrine grail: ade (2782)
+Reserved perma-zero for old untrue Shrine grail: adf (2783)
 Pepper conversation flag: ae0 (2784)
 Mantra count timers: ae1-ae8 (2785-2792)
 Mantra tablet counter flag: ae9

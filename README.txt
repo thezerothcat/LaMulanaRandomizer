@@ -1,6 +1,8 @@
 Please see the wiki page on github for information on how to use the randomizer, and other things you may need to know about it.
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
+Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
+
 
 1.20:
 -----------------------------

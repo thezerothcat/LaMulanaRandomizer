@@ -40,6 +40,8 @@ public final class Settings {
     private List<String> possibleRandomizedItems = Arrays.asList("Holy Grail", "Hand Scanner", "reader.exe", "Hermes'" +
             " Boots", "Grapple Claw", "Feather", "Isis' Pendant", "Bronze Mirror", "mirai.exe", "bunemon.exe" , "Random", "xmailer.exe");
 
+    private List<String> possibleRemovedItems = Arrays.asList("Spaulder");
+
     private String laMulanaBaseDir;
     private String language;
 
@@ -445,7 +447,7 @@ public final class Settings {
     public static String generateShortString() {
         String result = FileUtils.VERSION;
 
-        String separator = "|";
+        String separator = "-";
 
         //seed
 
@@ -480,6 +482,9 @@ public final class Settings {
         //surface items
         int surfaceItems = itemSetToInt(getSurfaceItems(), singleton.possibleRandomizedItems);
 
+        //removed items
+        int removedItems = itemSetToInt(getRemovedItems(), singleton.possibleRemovedItems);
+
         // xmailer item
         int xmailer = singleton.possibleRandomizedItems.indexOf(singleton.xmailerItem);
 
@@ -499,6 +504,7 @@ public final class Settings {
         result += separator + Integer.toHexString(nonRandoItems);
         result += separator + Integer.toHexString(initItems);
         result += separator + Integer.toHexString(surfaceItems);
+        result += separator + Integer.toHexString(removedItems);
         result += separator + Integer.toHexString(xmailer);
         result += separator + Integer.toHexString(bossDifficulty);
 
@@ -506,7 +512,7 @@ public final class Settings {
     }
 
     public static void importShortString(String text) {
-        String[] parts = text.split("\\|");
+        String[] parts = text.split("-");
 
         // Check version compatibility?
         if(!FileUtils.VERSION.equals(parts[0])) {
@@ -545,8 +551,9 @@ public final class Settings {
         Set<String> nonRandoItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[5],16), singleton.possibleRandomizedItems));
         Set<String> initItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[6],16), singleton.possibleRandomizedItems));
         Set<String> surfaceItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[7],16), singleton.possibleRandomizedItems));
-        String xmailerItem = singleton.possibleRandomizedItems.get(Integer.parseInt(parts[8],16));
-        BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[9],16)];
+        Set<String> removedItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[8],16), singleton.possibleRemovedItems));
+        String xmailerItem = singleton.possibleRandomizedItems.get(Integer.parseInt(parts[9],16));
+        BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[10],16)];
 
         setStartingSeed(seed);
         setEnabledGlitches((List<String>) glitches, true);
@@ -554,12 +561,10 @@ public final class Settings {
         setNonRandomizedItems(nonRandoItems, true);
         setInitiallyAccessibleItems(initItems, true);
         setSurfaceItems(surfaceItems, true);
+        setRemovedItems(removedItems, true);
         setXmailerItem(xmailerItem, true);
         setBossDifficulty(bossDifficulty.toString(), true);
 
         JOptionPane.showMessageDialog(null, "Settings successfully imported");
     }
-
-
-
 }

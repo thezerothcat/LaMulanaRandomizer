@@ -240,7 +240,7 @@ public final class RcdReader {
     }
 
     public static List<Zone> getRcdScriptInfo() throws Exception {
-        String mapPath = Settings.getLaMulanaBaseDir() + "\\data\\mapdata";
+        String mapPath = String.format("%s/data/mapdata", Settings.getLaMulanaBaseDir());
 
         byte[] rcdBytes = FileUtils.getBytes("script.rcd.bak", true);
         int rcdByteIndex = 2; // Seems we skip the first two bytes?
@@ -264,7 +264,7 @@ public final class RcdReader {
             }
 
 
-            byte[] msdBytes = FileUtils.getBytes(mapPath + String.format("\\\\map%02d.msd", zoneIndex), false);
+            byte[] msdBytes = FileUtils.getBytes(String.format("%s/map%02d.msd", mapPath, zoneIndex), false);
             int msdByteIndex = 0;
             while (true) {
                 short frames = getField(msdBytes, msdByteIndex, 2).getShort();
