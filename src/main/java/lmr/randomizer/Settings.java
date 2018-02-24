@@ -5,6 +5,7 @@ import lmr.randomizer.random.ShopRandomizationEnum;
 
 import javax.swing.*;
 import java.io.File;
+import java.nio.file.Files;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.BiFunction;
@@ -79,10 +80,47 @@ public final class Settings {
         for (String filename : Arrays.asList("C:\\Games\\La-Mulana Remake 1.3.3.1", "C:\\GOG Games\\La-Mulana", "C:\\GOG Games\\La-Mulana",
                 "C:\\Steam\\steamapps\\common\\La-Mulana", "C:\\Program Files (x86)\\Steam\\steamapps\\common\\La-Mulana",
                 "C:\\Program Files\\Steam\\steamapps\\common\\La-Mulana", "C:\\Program Files (x86)\\GOG Galaxy\\Games\\La Mulana",
-                "C:\\Program Files (x86)\\GOG.com\\La-Mulana")) {
+                "C:\\Program Files (x86)\\GOG.com\\La-Mulana"
+                /* Steam on Linux path? */)) {
             if (new File(filename).exists()) {
                 laMulanaBaseDir = filename;
             }
+        }
+        
+        try {
+            // Try to find the GOG game on Linux
+            // Also honor file system hierachy (local installs supersede global installs)
+            for (String menu_entry_file_path : Arrays.asList(
+                    "/usr/share/applications/gog_com-La_Mulana_1.desktop",
+                    "/usr/local/share/applications/gog_com-La_Mulana_1.desktop",
+                    System.getProperty("user.home") + "/.local/share/applications/gog_com-La_Mulana_1.desktop",
+                    System.getProperty("user.home") + "/Desktop/gog_com-La_Mulana_1.desktop"
+                    /* other valid paths for the .desktop file to be located? */)) {
+                
+                File menu_entry_file = new File(menu_entry_file_path);
+                if (!menu_entry_file.exists()) {
+                    continue; // Try next item if file doesn't exist
+                }
+                
+                List<String> menu_file_lines = Files.readAllLines(menu_entry_file.toPath());
+                menu_file_lines.removeIf(l -> !l.startsWith("Path="));
+                
+                if (menu_file_lines.size() != 1) {
+                    continue; // File is malformed, there should be exactly one "Path=..." line
+                }
+                
+                laMulanaBaseDir = menu_file_lines.get(0).substring(5);
+            }
+            
+            // The GOG version has some fluff around the *actual* game install, moving it into the
+            // "game" subdirectory. If it exists, then just use that, otherwise the rcdReader won't
+            // be able to find the necessary files!
+            File dir = new File(laMulanaBaseDir, "game");
+            if (dir.exists() && dir.isDirectory()) {
+                laMulanaBaseDir += "/game";
+            }
+        } catch (Exception e) {
+            // do nothing
         }
     }
 
