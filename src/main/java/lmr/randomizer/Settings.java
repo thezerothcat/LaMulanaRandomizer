@@ -14,13 +14,17 @@ import java.util.function.BiFunction;
  * Created by thezerothcat on 7/20/2017.
  */
 public final class Settings {
+    public static final List<String> POSSIBLE_REMOVED_ITEMS = Arrays.asList("Spaulder");
+    public static final int MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED = 40;
+
+    public static Set<String> currentRemovedItems;
+
     private static Settings singleton = new Settings();
 
     private long startingSeed;
 
     private boolean changed = false;
 
-    private boolean fullItemAccess;
     private boolean automaticHardmode;
     private boolean coinChestGraphics;
     private boolean requireSoftwareComboForKeyFairy;
@@ -38,10 +42,9 @@ public final class Settings {
             "Raindrop", "Ice Raindrop", "Pot Clip", "Object Zip");
     private List<String> possibleDboosts = Arrays.asList("Item", "Environment", "Enemy");
 
-    private List<String> possibleRandomizedItems = Arrays.asList("Holy Grail", "Hand Scanner", "reader.exe", "Hermes'" +
-            " Boots", "Grapple Claw", "Feather", "Isis' Pendant", "Bronze Mirror", "mirai.exe", "bunemon.exe" , "Random", "xmailer.exe");
-
-    private List<String> possibleRemovedItems = Arrays.asList("Spaulder");
+    private List<String> possibleRandomizedItems = Arrays.asList("Holy Grail", "Hand Scanner", "reader.exe",
+            "Hermes' Boots", "Grapple Claw", "Feather", "Isis' Pendant", "Bronze Mirror", "mirai.exe", "bunemon.exe",
+            "Random", "xmailer.exe");
 
     private String laMulanaBaseDir;
     private String language;
@@ -50,6 +53,9 @@ public final class Settings {
     private Set<String> initiallyAccessibleItems = new HashSet<>();
     private Set<String> surfaceItems = new HashSet<>();
     private Set<String> removedItems = new HashSet<>();
+
+    private int minRandomRemovedItems;
+    private int maxRandomRemovedItems;
 
     private String xmailerItem;
 
@@ -67,7 +73,6 @@ public final class Settings {
         randomizeForbiddenTreasure = true;
         randomizeCoinChests = true;
         replaceMapsWithWeights = true;
-        fullItemAccess = true;
         automaticHardmode = false;
         coinChestGraphics = false;
         automaticGrailPoints = false;
@@ -76,6 +81,9 @@ public final class Settings {
         shopRandomization = ShopRandomizationEnum.EVERYTHING;
 
         xmailerItem = null;
+
+        minRandomRemovedItems = 0;
+        maxRandomRemovedItems = 0;
 
         for (String filename : Arrays.asList("C:\\Games\\La-Mulana Remake 1.3.3.1", "C:\\GOG Games\\La-Mulana", "C:\\GOG Games\\La-Mulana",
                 "C:\\Steam\\steamapps\\common\\La-Mulana", "C:\\Program Files (x86)\\Steam\\steamapps\\common\\La-Mulana",
@@ -179,10 +187,6 @@ public final class Settings {
         return singleton.automaticHardmode;
     }
 
-    public static boolean getFullItemAccess() {
-        return singleton.fullItemAccess;
-    }
-
     public static String getBackupDatFile() {
         if("en".equals(singleton.language)) {
             return "script_code.dat.bak";
@@ -223,10 +227,6 @@ public final class Settings {
         return singleton.randomizeCoinChests;
     }
 
-    public static boolean isFullItemAccess() {
-        return singleton.fullItemAccess;
-    }
-
     public static boolean isAutomaticHardmode() {
         return singleton.automaticHardmode;
     }
@@ -243,6 +243,34 @@ public final class Settings {
         return singleton.enabledDamageBoosts;
     }
 
+    public static int getMinRandomRemovedItems() {
+        return singleton.minRandomRemovedItems;
+    }
+
+    public static void setMinRandomRemovedItems(int minRandomRemovedItems, boolean update) {
+        if(minRandomRemovedItems > MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED || minRandomRemovedItems < 0) {
+            return;
+        }
+        if(update && minRandomRemovedItems != singleton.minRandomRemovedItems) {
+            singleton.changed = true;
+        }
+        singleton.minRandomRemovedItems = minRandomRemovedItems;
+    }
+
+    public static int getMaxRandomRemovedItems() {
+        return singleton.maxRandomRemovedItems;
+    }
+
+    public static void setMaxRandomRemovedItems(int maxRandomRemovedItems, boolean update) {
+        if(maxRandomRemovedItems > MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED || maxRandomRemovedItems < 0) {
+            return;
+        }
+        if(update && maxRandomRemovedItems != singleton.maxRandomRemovedItems) {
+            singleton.changed = true;
+        }
+        singleton.maxRandomRemovedItems = maxRandomRemovedItems;
+    }
+
     public static boolean getRequireSoftwareComboForKeyFairy() { return singleton.requireSoftwareComboForKeyFairy; }
 
     public static void setRequireSoftwareComboForKeyFairy(boolean requireSoftwareComboForKeyFairy, boolean update) {
@@ -251,6 +279,7 @@ public final class Settings {
         }
         singleton.requireSoftwareComboForKeyFairy = requireSoftwareComboForKeyFairy;
     }
+
     public static boolean getRequireIceCapeForLava() { return singleton.requireIceCapeForLava; }
 
     public static void setRequireIceCapeForLava(boolean requireIceCapeForLava, boolean update) {
@@ -408,13 +437,6 @@ public final class Settings {
         singleton.bossDifficulty = BossDifficulty.valueOf(bossDifficulty);
     }
 
-    public static void setFullItemAccess(boolean fullItemAccess, boolean update) {
-        if(update && fullItemAccess != singleton.fullItemAccess) {
-            singleton.changed = true;
-        }
-        singleton.fullItemAccess = fullItemAccess;
-    }
-
     public static void setAutomaticHardmode(boolean automaticHardmode, boolean update) {
         if(update && automaticHardmode != singleton.automaticHardmode) {
             singleton.changed = true;
@@ -434,6 +456,14 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.coinChestGraphics = coinChestGraphics;
+    }
+
+    public static Set<String> getCurrentRemovedItems() {
+        return currentRemovedItems;
+    }
+
+    public static void setCurrentRemovedItems(Set<String> currentRemovedItems) {
+        Settings.currentRemovedItems = currentRemovedItems;
     }
 
     public static void saveSettings() {
@@ -493,7 +523,6 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
-        booleanSettings |= processBooleanFlag.apply(singleton.fullItemAccess, 9);
         booleanSettings |= processBooleanFlag.apply(singleton.automaticHardmode, 8);
         booleanSettings |= processBooleanFlag.apply(singleton.coinChestGraphics, 7);
         booleanSettings |= processBooleanFlag.apply(singleton.requireSoftwareComboForKeyFairy, 6);
@@ -521,7 +550,7 @@ public final class Settings {
         int surfaceItems = itemSetToInt(getSurfaceItems(), singleton.possibleRandomizedItems);
 
         //removed items
-        int removedItems = itemSetToInt(getRemovedItems(), singleton.possibleRemovedItems);
+        int removedItems = itemSetToInt(getRemovedItems(), POSSIBLE_REMOVED_ITEMS);
 
         // xmailer item
         int xmailer = singleton.possibleRandomizedItems.indexOf(singleton.xmailerItem);
@@ -545,6 +574,8 @@ public final class Settings {
         result += separator + Integer.toHexString(removedItems);
         result += separator + Integer.toHexString(xmailer);
         result += separator + Integer.toHexString(bossDifficulty);
+        result += separator + Integer.toHexString(singleton.minRandomRemovedItems);
+        result += separator + Integer.toHexString(singleton.maxRandomRemovedItems);
 
         return result;
     }
@@ -573,7 +604,6 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
-        singleton.fullItemAccess = getBoolFlagFromInt.apply(booleanSettingsFlag, 9);
         singleton.automaticHardmode = getBoolFlagFromInt.apply(booleanSettingsFlag, 8);
         singleton.coinChestGraphics = getBoolFlagFromInt.apply(booleanSettingsFlag, 7);
         singleton.requireSoftwareComboForKeyFairy = getBoolFlagFromInt.apply(booleanSettingsFlag, 6);
@@ -589,9 +619,11 @@ public final class Settings {
         Set<String> nonRandoItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[5],16), singleton.possibleRandomizedItems));
         Set<String> initItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[6],16), singleton.possibleRandomizedItems));
         Set<String> surfaceItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[7],16), singleton.possibleRandomizedItems));
-        Set<String> removedItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[8],16), singleton.possibleRemovedItems));
+        Set<String> removedItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[8],16), POSSIBLE_REMOVED_ITEMS));
         String xmailerItem = singleton.possibleRandomizedItems.get(Integer.parseInt(parts[9],16));
         BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[10],16)];
+        int minRandomRemovedItems = Integer.parseInt(parts[11],16);
+        int maxRandomRemovedItems = Integer.parseInt(parts[12],16);
 
         setStartingSeed(seed);
         setEnabledGlitches((List<String>) glitches, true);
@@ -602,6 +634,8 @@ public final class Settings {
         setRemovedItems(removedItems, true);
         setXmailerItem(xmailerItem, true);
         setBossDifficulty(bossDifficulty.toString(), true);
+        setMinRandomRemovedItems(minRandomRemovedItems, true);
+        setMaxRandomRemovedItems(maxRandomRemovedItems, true);
 
         JOptionPane.showMessageDialog(null, "Settings successfully imported");
     }
