@@ -12,7 +12,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "1.21.0";
+    public static final String VERSION = "1.22.0";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -302,9 +302,6 @@ public class FileUtils {
             else if(line.startsWith("automaticHardmode")) {
                 Settings.setAutomaticHardmode(Boolean.valueOf(line.split("=")[1]), false);
             }
-            else if(line.startsWith("fullItemAccess")) {
-                Settings.setFullItemAccess(Boolean.valueOf(line.split("=")[1]), false);
-            }
             else if(line.startsWith("requireSoftwareComboForKeyFairy")) {
                 Settings.setRequireSoftwareComboForKeyFairy(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -338,6 +335,12 @@ public class FileUtils {
             else if(line.startsWith("bossDifficulty")) {
                 Settings.setBossDifficulty(line.split("=")[1], false);
             }
+            else if(line.startsWith("minRandomRemovedItems")) {
+                Settings.setMinRandomRemovedItems(Integer.parseInt(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("maxRandomRemovedItems")) {
+                Settings.setMaxRandomRemovedItems(Integer.parseInt(line.split("=")[1]), false);
+            }
         }
         Settings.setEnabledGlitches(enabledGlitches, false);
         Settings.setEnabledDamageBoosts(enabledDamageBoosts, false);
@@ -362,9 +365,6 @@ public class FileUtils {
             writer.write(String.format("xmailerItem=%s", Settings.getXmailerItem()));
             writer.newLine();
         }
-
-        writer.write(String.format("fullItemAccess=%s", Settings.isFullItemAccess()));
-        writer.newLine();
 
         writer.write(String.format("automaticHardmode=%s", Settings.isAutomaticHardmode()));
         writer.newLine();
@@ -400,6 +400,12 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("bossDifficulty=%s", Settings.getBossDifficulty().name()));
+        writer.newLine();
+
+        writer.write(String.format("minRandomRemovedItems=%s", Settings.getMinRandomRemovedItems()));
+        writer.newLine();
+
+        writer.write(String.format("maxRandomRemovedItems=%s", Settings.getMaxRandomRemovedItems()));
         writer.newLine();
 
         for(String item : DataFromFile.getAllItems()) {

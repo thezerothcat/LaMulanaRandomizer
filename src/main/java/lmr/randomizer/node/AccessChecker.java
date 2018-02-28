@@ -60,7 +60,7 @@ public class AccessChecker {
     }
 
     public boolean isSuccess() {
-        if(Settings.isFullItemAccess()) {
+        if(Settings.getCurrentRemovedItems().isEmpty()) {
             if(mapOfNodeNameToRequirementsObject.isEmpty()) {
                 return true;
             }
@@ -77,9 +77,6 @@ public class AccessChecker {
                 return false;
             }
             return true;
-        }
-        if(mapOfNodeNameToRequirementsObject.isEmpty()) {
-            return false;
         }
         for(String requiredItem : DataFromFile.getWinRequirements()) {
             if(!accessedNodes.contains(requiredItem)) {
@@ -217,7 +214,7 @@ public class AccessChecker {
         switch (nodeType) {
             case ITEM_LOCATION:
                 String item = itemRandomizer.getItem(nodeName);
-                if(!Settings.getRemovedItems().contains(item)) {
+                if(!Settings.getCurrentRemovedItems().contains(item)) {
                     queuedUpdates.add(item);
                 }
                 break;
@@ -318,7 +315,7 @@ public class AccessChecker {
                 return false;
             }
         }
-        else if(Settings.getRemovedItems().contains(item)) {
+        else if(Settings.getCurrentRemovedItems().contains(item)) {
             if("Shop 2 Alt (Surface)".equals(location)) {
                 // Don't put removed item in transforming Surface shop.
                 return false;
@@ -390,72 +387,6 @@ public class AccessChecker {
 //            }
 //            mapOfNodeNameToRequirementsObject.put(exitNodeName, exitNode);
 //        }
-    }
-
-    public void outputRemaining(long startingSeed, int attemptNumber) throws IOException {
-//        BufferedWriter writer = FileUtils.getFileWriter(String.format("%s/inaccessible_%s.txt", startingSeed, attemptNumber));
-//        if (writer == null) {
-//            return;
-//        }
-//
-//        NodeWithRequirements node;
-//        for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
-//            node = mapOfNodeNameToRequirementsObject.get(nodeName);
-//            for(List<String> requirementSet : node.getAllRequirements()) {
-//                writer.write(nodeName + " => " + requirementSet);
-//                writer.newLine();
-//            }
-//        }
-//        writer.flush();
-//        writer.close();
-
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("%s/excluded_items.txt", startingSeed));
-        if (writer == null) {
-            return;
-        }
-
-        for(Map.Entry<String, NodeWithRequirements> inaccessibleNodeInfo : mapOfNodeNameToRequirementsObject.entrySet()) {
-            switch (inaccessibleNodeInfo.getValue().getType()) {
-                case ITEM_LOCATION:
-                    writer.write(itemRandomizer.getItem(inaccessibleNodeInfo.getKey()));
-                    writer.newLine();
-                    break;
-                case MAP_LOCATION:
-                    writer.write(inaccessibleNodeInfo.getKey());
-                    writer.newLine();
-                    break;
-                case EVENT:
-                    writer.write(inaccessibleNodeInfo.getKey());
-                    writer.newLine();
-                    break;
-                case SHOP:
-                    List<String> shopItems = shopRandomizer.getShopItems(inaccessibleNodeInfo.getKey());
-                    while(shopItems.size() < 3) {
-                        shopItems.add("Weights");
-                    }
-                    writer.write(inaccessibleNodeInfo.getKey() + ": " + shopItems);
-                    writer.newLine();
-                    break;
-                case GLITCH:
-                    break;
-                case EXIT:
-                    break;
-            }
-        }
-        writer.flush();
-        writer.close();
-
-//        writer = FileUtils.getFileWriter(String.format("%s/accessible_%s.txt", startingSeed, attemptNumber));
-//        if (writer == null) {
-//            return;
-//        }
-//
-//        for(String item : accessedNodes) {
-//            writer.write(item);
-//            writer.newLine();
-//        }
-//        writer.flush();
-//        writer.close();
     }
 
     public void setItemRandomizer(ItemRandomizer itemRandomizer) {

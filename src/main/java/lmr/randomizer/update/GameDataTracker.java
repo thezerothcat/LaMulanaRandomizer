@@ -28,7 +28,7 @@ public final class GameDataTracker {
 
     private static Map<Integer, Integer> mapOfWorldFlagToAssignedReplacementFlag = new HashMap<>();
 
-    private static int nextReplacedItemFlag = 2708;
+    private static int nextReplacedItemFlag = 2724;
 
     private GameDataTracker() {
     }
@@ -39,7 +39,7 @@ public final class GameDataTracker {
         mapOfShopBlockToShopObjects.clear();
         mantraTablets.clear();
         mapOfWorldFlagToAssignedReplacementFlag.clear();
-        nextReplacedItemFlag = 2708;
+        nextReplacedItemFlag = 2724;
     }
 
     public static void addObject(GameObject gameObject) {
@@ -2451,14 +2451,14 @@ public final class GameDataTracker {
         }
         for(GameObject objectToModify : objectsToModify) {
             if(objectToModify.getId() == 0x2c) {
-                updateChestContents(objectToModify, itemLocationData, itemNewContentsData, !chestContents.startsWith("Coin:"));
+                updateChestContents(objectToModify, itemLocationData, itemNewContentsData, chestContents);
                 if("Map (Shrine of the Mother)".equals(chestContents)) {
                     addShrineMapSoundEffect(objectToModify.getObjectContainer());
                 }
             }
             else if(objectToModify.getId() == 0x2f) {
                 // Note: Floating maps don't get removed.
-                updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData);
+                updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData, chestContents);
                 if("Map (Shrine of the Mother)".equals(chestContents)) {
                     addShrineMapSoundEffect(objectToModify.getObjectContainer());
                 }
@@ -2674,13 +2674,15 @@ public final class GameDataTracker {
         objects.add(altSurfaceShopTimer);
     }
 
-    private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData, boolean itemChest) {
+    private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData, String newChestContentsItemName) {
         WriteByteOperation puzzleFlag = objectToModify.getWriteByteOperations().get(1);
         objectToModify.getWriteByteOperations().clear();
 
+        boolean itemChest = !newChestContentsItemName.startsWith("Coin:");
+
         if(itemChest) {
             // Which item goes in the chest, and associated flag.
-            int newChestWorldFlag = getNewWorldFlag(itemLocationData, itemNewContentsData, true);
+            int newChestWorldFlag = getNewWorldFlag(itemLocationData, itemNewContentsData, true, newChestContentsItemName);
             if(itemNewContentsData.getWorldFlag() == newChestWorldFlag) {
                 objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11)); // Item arg to indicate what the chest drops
             }
@@ -2809,12 +2811,62 @@ public final class GameDataTracker {
         }
     }
 
-    private static int getNewWorldFlag(GameObjectId itemLocationData, GameObjectId itemNewContentsData, boolean replaceMaps) {
-        if(itemNewContentsData.getInventoryArg() == 62 && Settings.getRemovedItems().contains("Spaulder")) {
+    private static int getNewWorldFlag(GameObjectId itemLocationData, GameObjectId itemNewContentsData, boolean replaceMaps, String itemName) {
+        if(itemNewContentsData.getInventoryArg() == 62 && Settings.getCurrentRemovedItems().contains("Spaulder")) {
             // Spaulder
             return 2770;
         }
         if(replaceMaps && Settings.isReplaceMapsWithWeights() && itemNewContentsData.getInventoryArg() == 70 && itemNewContentsData.getWorldFlag() != 218) {
+            if(itemNewContentsData.getWorldFlag() == 209) {
+                return 2708; // Surface map
+            }
+            if(itemNewContentsData.getWorldFlag() == 210) {
+                return 2709; // Guidance map
+            }
+            if(itemNewContentsData.getWorldFlag() == 211) {
+                return 2710; // Mausoleum map
+            }
+            if(itemNewContentsData.getWorldFlag() == 212) {
+                return 2711; // Sun map
+            }
+            if(itemNewContentsData.getWorldFlag() == 213) {
+                return 2712; // Spring map
+            }
+            if(itemNewContentsData.getWorldFlag() == 214) {
+                return 2713; // Inferno map
+            }
+            if(itemNewContentsData.getWorldFlag() == 215) {
+                return 2714; // Extinction map
+            }
+            if(itemNewContentsData.getWorldFlag() == 216) {
+                return 2715; // Twin Labyrinths map
+            }
+            if(itemNewContentsData.getWorldFlag() == 217) {
+                return 2716; // Endless map
+            }
+            if(itemNewContentsData.getWorldFlag() == 219) {
+                return 2717; // Illusion map
+            }
+            if(itemNewContentsData.getWorldFlag() == 220) {
+                return 2718; // Graveyard map
+            }
+            if(itemNewContentsData.getWorldFlag() == 221) {
+                return 2719; // Moonlight map
+            }
+            if(itemNewContentsData.getWorldFlag() == 222) {
+                return 2720; // Goddess map
+            }
+            if(itemNewContentsData.getWorldFlag() == 223) {
+                return 2721; // Ruin map
+            }
+            if(itemNewContentsData.getWorldFlag() == 224) {
+                return 2722; // Birth map
+            }
+            if(itemNewContentsData.getWorldFlag() == 225) {
+                return 2723; // Dimensional map
+            }
+        }
+        if(Settings.getCurrentRemovedItems().contains(itemName)) {
             // Map
             Integer newChestWorldFlag = mapOfWorldFlagToAssignedReplacementFlag.get(itemLocationData.getWorldFlag());
             if (newChestWorldFlag == null) {
@@ -2826,8 +2878,8 @@ public final class GameDataTracker {
         return itemNewContentsData.getWorldFlag();
     }
 
-    private static void updateFloatingItemContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
-        int newWorldFlag = getNewWorldFlag(itemLocationData, itemNewContentsData, false);
+    private static void updateFloatingItemContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData, String newChestContentsItemName) {
+        int newWorldFlag = getNewWorldFlag(itemLocationData, itemNewContentsData, false, newChestContentsItemName);
 
         objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg());
         for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {

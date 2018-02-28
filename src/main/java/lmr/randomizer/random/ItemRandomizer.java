@@ -358,7 +358,11 @@ public class ItemRandomizer {
         }
 
         for (String location : mapOfItemLocationToItem.keySet()) {
-            writer.write(mapOfItemLocationToItem.get(location) + ": " + location + " location");
+            String itemName = mapOfItemLocationToItem.get(location);
+            if(Settings.getCurrentRemovedItems().contains(itemName)) {
+                itemName += " (Removed)";
+            }
+            writer.write(itemName + ": " + location + " location");
             writer.newLine();
         }
 

@@ -1,6 +1,7 @@
 package lmr.randomizer;
 
 import lmr.randomizer.node.NodeWithRequirements;
+import lmr.randomizer.random.BossDifficulty;
 import lmr.randomizer.random.ShopRandomizationEnum;
 import lmr.randomizer.update.GameObjectId;
 
@@ -21,6 +22,7 @@ public final class DataFromFile {
     private static List<String> nonRandomizedItems;
     private static List<String> nonRandomizedShops;
     private static List<String> randomizedShopItems;
+    private static List<String> randomRemovableItems;
     private static List<String> nonShopItemLocations;
     private static List<String> nonRandomizedCoinChests;
     private static List<String> initialNonShopItemLocations;
@@ -216,6 +218,63 @@ public final class DataFromFile {
         return randomizedShopItems;
     }
 
+    public static List<String> getRandomRemovableItems() {
+        if(randomRemovableItems == null) {
+            if(Settings.getMaxRandomRemovedItems() < 1) {
+                randomRemovableItems = new ArrayList<>(0);
+            }
+            else {
+                randomRemovableItems = new ArrayList<>();
+                boolean requireSerpentStaffAndChakrams = !Settings.getEnabledGlitches().contains("Cat Pause") && !Settings.getEnabledGlitches().contains("Object Zip") && !Settings.getEnabledGlitches().contains("Raindrop");
+                boolean requireBronzeMirror = !Settings.getEnabledGlitches().contains("Lamp Glitch") && !Settings.getEnabledGlitches().contains("Raindrop");
+                for(String itemName : getAllItems()) {
+                    if(itemName.startsWith("Ankh Jewel")) {
+                        continue; // Items removed by configuration are counted separately.
+                    }
+                    if(getWinRequirements().contains(itemName) || "Hand Scanner".equals(itemName)
+                            || "reader.exe".equals(itemName) || "mantra.exe".equals(itemName)
+                            || "Djed Pillar".equals(itemName) || "Dimensional Key".equals(itemName)
+                            || "Crystal Skull".equals(itemName) || "Pochette Key".equals(itemName)
+                            || "Philosopher's Ocarina".equals(itemName) || "Isis' Pendant".equals(itemName)) {
+                        continue; // Things that should never be removed.
+                    }
+                    if(Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
+                        continue; // Can't get Extinction grail without flares according to this logic.
+                    }
+                    if(requireBronzeMirror && "Bronze Mirror".equals(itemName)) {
+                        continue; // Can't get Extinction grail without flares according to this logic.
+                    }
+                    if(requireSerpentStaffAndChakrams && ("Chakram".equals(itemName) || "Serpent Staff".equals(itemName))) {
+                        continue; // Can't get Birth grail without these.
+                    }
+                    if(Settings.getRemovedItems().contains(itemName)) {
+                        continue; // Items removed by configuration are counted separately.
+                    }
+                    if(Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName)) {
+                        continue; // Don't count the maps that will already be replaced.
+                    }
+                    if(Settings.getNonRandomizedItems().contains(itemName)) {
+                        continue; // If the user wanted this item in its original location, they probably don't want it gone.
+                    }
+                    if(Settings.getSurfaceItems().contains(itemName)) {
+                        continue; // If the user wanted this item in a specific location, they probably don't want it gone.
+                    }
+                    if(Settings.getInitiallyAccessibleItems().contains(itemName)) {
+                        continue; // If the user wanted this item early, they probably don't want it gone.
+                    }
+                    if(BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty())) {
+                        if(itemName.startsWith("Sacred Orb")
+                                && !"Sacred Orb (Gate of Guidance)".equals(itemName) && !"Sacred Orb (Surface)".equals(itemName)) {
+                            continue;
+                        }
+                    }
+                    randomRemovableItems.add(itemName);
+                }
+            }
+        }
+        return randomRemovableItems;
+    }
+
     public static Map<String, List<String>> getMapOfShopNameToShopOriginalContents() {
         if(mapOfShopNameToShopOriginalContents == null) {
             mapOfShopNameToShopOriginalContents = FileUtils.getShopOriginalContentsMap("initial/non_randomized_shop_contents.txt");
@@ -284,7 +343,7 @@ public final class DataFromFile {
 
 
     public static List<String> getWinRequirements() {
-        if(winRequirements == null && !Settings.isFullItemAccess()) {
+        if(winRequirements == null && (Settings.getMinRandomRemovedItems() > 0 || Settings.getMaxRandomRemovedItems() > 0)) {
             winRequirements = FileUtils.getList("requirement/win_reqs.txt");
         }
         return winRequirements;
@@ -310,6 +369,7 @@ public final class DataFromFile {
             nonRandomizedItems = null;
             nonRandomizedShops = null;
             randomizedShopItems = null;
+            randomRemovableItems = null;
             nonShopItemLocations = null;
             nonRandomizedCoinChests = null;
             mapOfNodeNameToRequirementsObject = null;

@@ -19,6 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -283,7 +284,30 @@ public class Main {
         int attempt = 0;
         while(true) {
             ++attempt;
-            dialog.updateProgress(20, String.format(Translations.getText("progress.shuffling"), attempt));
+            if(Settings.getMaxRandomRemovedItems() > 0) {
+                dialog.updateProgress(20, Translations.getText("progress.shuffling.removing"));
+                while(true) {
+                    determineRemovedItems(random);
+                    if(BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty())) {
+                        // Some optimizations to save larger computations when boss requirements will definitely fail the seed.
+                        if(Settings.getCurrentRemovedItems().contains("Chain Whip") && Settings.getCurrentRemovedItems().contains("Flail Whip") && Settings.getCurrentRemovedItems().contains("Axe")) {
+                            // Rejected because none of the preferred weapons exists.
+                            continue;
+                        }
+                        if(Settings.getCurrentRemovedItems().contains("Silver Shield") && Settings.getCurrentRemovedItems().contains("Angel Shield")) {
+                            // Rejected because no permanent shield.
+                            continue;
+                        }
+                        if(Settings.getCurrentRemovedItems().contains("Rolling Shuriken") && Settings.getCurrentRemovedItems().contains("Chakram")
+                                && Settings.getCurrentRemovedItems().contains("Earth Spear") && Settings.getCurrentRemovedItems().contains("Pistol")) {
+                            // Rejected because none of the "good" ranged weapons for Palenque are in the seed.
+                            continue;
+                        }
+                    }
+                    break;
+                }
+            }
+            dialog.updateProgress(25, String.format(Translations.getText("progress.shuffling"), attempt));
             dialog.setTitle(String.format(Translations.getText("progress.shuffling.title"), attempt));
             dialog.progressBar.setIndeterminate(true);
 
@@ -357,9 +381,6 @@ public class Main {
 
                     dialog.updateProgress(85, Translations.getText("progress.spoiler"));
                     outputLocations(itemRandomizer, shopRandomizer, attempt);
-                    if(!Settings.isFullItemAccess()) {
-                        accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
-                    }
 
                     dialog.updateProgress(90, Translations.getText("progress.read"));
 
@@ -448,9 +469,45 @@ public class Main {
         return surfaceItems;
     }
 
+    private static void determineRemovedItems(Random random) {
+        Set<String> removedItems = new HashSet<>();
+        if(Settings.getMaxRandomRemovedItems() < 1) {
+            Settings.setCurrentRemovedItems(new HashSet<>(0));
+        }
+        int totalItemsRemoved = Settings.getMinRandomRemovedItems();
+        totalItemsRemoved += random.nextInt(Settings.getMaxRandomRemovedItems() - totalItemsRemoved + 1);
+
+        List<String> removableItems = DataFromFile.getRandomRemovableItems();
+
+        int chosenRemovedItems = 0;
+        while(chosenRemovedItems < totalItemsRemoved) {
+            int removedItemIndex = random.nextInt(removableItems.size());
+            String removedItem = removableItems.get(removedItemIndex);
+            if(!removedItems.contains(removedItem) && removableItems.contains(removedItem)) {
+                removedItems.add(removedItem);
+                ++chosenRemovedItems;
+            }
+        }
+
+        Settings.setCurrentRemovedItems(removedItems);
+    }
+
     private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, int attempt) throws IOException {
         itemRandomizer.outputLocations(attempt);
         shopRandomizer.outputLocations(attempt);
+        if (!Settings.getCurrentRemovedItems().isEmpty()) {
+            BufferedWriter writer = FileUtils.getFileWriter(String.format("%s/removed_items.txt", Settings.getStartingSeed()));
+            if (writer == null) {
+                return;
+            }
+
+            for(String removedItem : Settings.getCurrentRemovedItems()) {
+                writer.write(removedItem);
+                writer.newLine();
+            }
+            writer.flush();
+            writer.close();
+        }
     }
 
     public static void addArgItemUI(Set<String> nonRandomizedItems, String input) {

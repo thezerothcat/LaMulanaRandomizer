@@ -6,9 +6,8 @@ Fake Silver Shield world flag: a90
 guild.exe replacement world flag: a91
 Anchor world flag: a92
 Surface coin chest world flag: a93
-Misc replaced chest world flags: a94+ (2708-2736?)
-
-Missing item world flags: ad2- (2740-2770?)
+Misc replaced map world flags: a94-aa3 (2708-2723)
+Misc replaced random item world flags: aa4+ (2724+)
 Spaulder: 2770
 
 New untrue Shrine grail: ade (2782)

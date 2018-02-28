@@ -239,7 +239,11 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             for (int i = 1; i <= 3; i++) {
                 location = String.format("%s Item %d", shop, i);
                 if(mapOfShopInventoryItemToContents.containsKey(location)) {
-                    writer.write(location + " contains: " + mapOfShopInventoryItemToContents.get(location));
+                    String itemName = mapOfShopInventoryItemToContents.get(location);
+                    if(Settings.getCurrentRemovedItems().contains(itemName)) {
+                        itemName += " (Removed)";
+                    }
+                    writer.write(location + " contains: " + itemName);
                     writer.newLine();
                 }
                 else {
@@ -278,13 +282,13 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                 shopItem2 = mapOfShopInventoryItemToContents.get(String.format("%s Item 2", shopName));
                 shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName));
             }
-            if(Settings.getRemovedItems().contains(shopItem1)) {
+            if(Settings.getCurrentRemovedItems().contains(shopItem1)) {
                 shopItem1 = "Weights";
             }
-            if(Settings.getRemovedItems().contains(shopItem2)) {
+            if(Settings.getCurrentRemovedItems().contains(shopItem2)) {
                 shopItem2 = "Weights";
             }
-            if(Settings.getRemovedItems().contains(shopItem3)) {
+            if(Settings.getCurrentRemovedItems().contains(shopItem3)) {
                 shopItem3 = "Weights";
             }
             GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks, null,

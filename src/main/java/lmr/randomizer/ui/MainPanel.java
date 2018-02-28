@@ -41,6 +41,7 @@ public class MainPanel extends JPanel {
 
     public void updateTranslations() {
         Settings.setLanguage(language.getSelectedIndex() == 0 ? "en" : "jp", true);
+        setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.main")));
         seedNumber.setText(Translations.getText("settings.seed"));
         laMulanaDirectory.setText(Translations.getText("settings.dir"));
     }

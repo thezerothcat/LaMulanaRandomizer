@@ -6,11 +6,17 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.util.*;
+import java.util.List;
 
 public class RemovedItemsPanel extends JPanel {
     private static final List<String> SUPPORTED_REMOVED_ITEMS = Arrays.asList("Spaulder");
 
     private JCheckBox removeNonShrineMaps;
+    private JPanel randomRemovableItemsPanel;
+    private JSpinner minRandomRemovableItems;
+    private JSpinner maxRandomRemovableItems;
+    private JLabel minRandomRemovableItemsLabel;
+    private JLabel maxRandomRemovableItemsLabel;
     private List<RemoveItemToggle> removableItems;
 
     public RemovedItemsPanel() {
@@ -18,6 +24,13 @@ public class RemovedItemsPanel extends JPanel {
 
         removeNonShrineMaps = new JCheckBox();
         removeNonShrineMaps.setSelected(Settings.isReplaceMapsWithWeights());
+
+        minRandomRemovableItems = new JSpinner(new SpinnerNumberModel(Settings.getMinRandomRemovedItems(),
+                0, Settings.MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED, 1));
+        minRandomRemovableItemsLabel = new JLabel(Translations.getText("settings.removal.min"));
+        maxRandomRemovableItems = new JSpinner(new SpinnerNumberModel(Settings.getMaxRandomRemovedItems(),
+                0, Settings.MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED, 1));
+        maxRandomRemovableItemsLabel = new JLabel(Translations.getText("settings.removal.max"));
 
         CheckboxContainer checkboxContainer = new CheckboxContainer(1);
         checkboxContainer.add(removeNonShrineMaps);
@@ -27,16 +40,33 @@ public class RemovedItemsPanel extends JPanel {
             removableItems.add(new RemoveItemToggle(itemName, checkboxContainer));
         }
 
+        randomRemovableItemsPanel = new CheckboxContainer(2);
+        randomRemovableItemsPanel.setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.removal.randomCount")));
+
+        JPanel innerPanelMin = new JPanel();
+        innerPanelMin.add(minRandomRemovableItemsLabel, "gap related");
+        innerPanelMin.add(minRandomRemovableItems);
+        randomRemovableItemsPanel.add(innerPanelMin);
+
+        JPanel innerPanelMax = new JPanel();
+        innerPanelMax.add(maxRandomRemovableItemsLabel, "gap related");
+        innerPanelMax.add(maxRandomRemovableItems);
+        randomRemovableItemsPanel.add(innerPanelMax);
+
         add(checkboxContainer, "growx, wrap");
+        add(randomRemovableItemsPanel, "growx, wrap");
 
         updateTranslations();
     }
 
     public void updateTranslations() {
         removeNonShrineMaps.setText(Translations.getText("randomization.replaceMapsWithWeights"));
+        randomRemovableItemsPanel.setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.removal.randomCount")));
         for(RemoveItemToggle removeItemToggle : removableItems) {
             removeItemToggle.updateTranslations();
         }
+        minRandomRemovableItemsLabel.setText(Translations.getText("settings.removal.min"));
+        maxRandomRemovableItemsLabel.setText(Translations.getText("settings.removal.max"));
     }
 
     public void updateSettings() {
@@ -46,10 +76,14 @@ public class RemovedItemsPanel extends JPanel {
             removeItemToggle.updateRemovedItems(removedItems);
         }
         Settings.setRemovedItems(removedItems, true);
+        Settings.setMinRandomRemovedItems((int)minRandomRemovableItems.getValue(), true);
+        Settings.setMaxRandomRemovedItems((int)maxRandomRemovableItems.getValue(), true);
     }
 
     public void reloadSettings() {
         removeNonShrineMaps.setSelected(Settings.isReplaceMapsWithWeights());
+        minRandomRemovableItems.setValue(Settings.getMinRandomRemovedItems());
+        maxRandomRemovableItems.setValue(Settings.getMaxRandomRemovedItems());
         for(RemoveItemToggle removeItemToggle : removableItems) {
             removeItemToggle.reloadSettings();
         }

@@ -4,6 +4,16 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
 
+1.22:
+-----------------------------
+Ability to remove a random number of random items from the game to increase challenge. This replaces the old non-100% setting.
+
+
+1.21:
+-----------------------------
+Randomizer version and settings string can now be viewed in your inventory by checking the description of the MSX2.
+
+
 1.20:
 -----------------------------
 Ability to remove Spaulder from the game.
