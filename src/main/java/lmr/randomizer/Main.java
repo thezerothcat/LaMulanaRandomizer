@@ -470,7 +470,7 @@ public class Main {
     }
 
     private static void determineRemovedItems(Random random) {
-        Set<String> removedItems = new HashSet<>();
+        Set<String> removedItems = new HashSet<>(Settings.getRemovedItems());
         if(Settings.getMaxRandomRemovedItems() < 1) {
             Settings.setCurrentRemovedItems(new HashSet<>(0));
         }

@@ -5,6 +5,7 @@ import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.update.GameDataTracker;
+import lmr.randomizer.update.GameObjectId;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -26,11 +27,17 @@ public class ItemRandomizer {
     private ShopRandomizer shopRandomizer;
     private AccessChecker accessChecker;
 
+    private Map<Integer, Integer> mapOfWorldFlagToAssignedReplacementFlag;
+    private int nextReplacedItemFlag;
+
     public ItemRandomizer() {
         allItems = new ArrayList<>(DataFromFile.getAllNonShopItemsPlusAllRandomizedShopItemsPlusAllRandomizedCoinChests());
         unplacedItems = new ArrayList<>(allItems);
 
         unassignedNonShopItemLocations = new ArrayList<>(DataFromFile.getNonShopItemLocations());
+
+        mapOfWorldFlagToAssignedReplacementFlag = new HashMap<>();
+        nextReplacedItemFlag = 2724;
     }
 
     public int getTotalShopItems() {
@@ -379,13 +386,93 @@ public class ItemRandomizer {
     }
 
     public void updateFiles() throws Exception{
+        String itemLocation;
+        String newContents;
+        int newWorldFlag;
+        Map<String, GameObjectId> nameToDataMap = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData();
+        GameObjectId itemNewContentsData;
+        GameObjectId itemLocationData;
         for(Map.Entry<String, String> locationAndItem : mapOfItemLocationToItem.entrySet()) {
+            itemLocation = locationAndItem.getKey();
+            newContents = locationAndItem.getValue();
+            itemLocationData = nameToDataMap.get(itemLocation);
+            itemNewContentsData = nameToDataMap.get(newContents);
+            newWorldFlag = getNewWorldFlag(itemLocation, newContents, itemLocationData, itemNewContentsData);
             if(DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(locationAndItem.getKey())) {
-                GameDataTracker.updateBlock(locationAndItem.getKey(), locationAndItem.getValue());
+                GameDataTracker.updateBlock(itemLocationData, itemNewContentsData);
             }
-            GameDataTracker.writeLocationContents(locationAndItem.getKey(), locationAndItem.getValue());
+            GameDataTracker.writeLocationContents(itemLocation, newContents, itemLocationData, itemNewContentsData, newWorldFlag);
         }
     }
+
+    private int getNewWorldFlag(String itemLocation, String newContents, GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
+        if(itemNewContentsData.getInventoryArg() == 62 && Settings.getCurrentRemovedItems().contains("Spaulder")) {
+            // Spaulder
+            return 2770;
+        }
+        if(Settings.isReplaceMapsWithWeights()
+                && itemNewContentsData.getInventoryArg() == 70 && itemNewContentsData.getWorldFlag() != 218
+                && !DataFromFile.FLOATING_ITEM_LOCATIONS.contains(itemLocation)) {
+            if(itemNewContentsData.getWorldFlag() == 209) {
+                return 2708; // Surface map
+            }
+            if(itemNewContentsData.getWorldFlag() == 210) {
+                return 2709; // Guidance map
+            }
+            if(itemNewContentsData.getWorldFlag() == 211) {
+                return 2710; // Mausoleum map
+            }
+            if(itemNewContentsData.getWorldFlag() == 212) {
+                return 2711; // Sun map
+            }
+            if(itemNewContentsData.getWorldFlag() == 213) {
+                return 2712; // Spring map
+            }
+            if(itemNewContentsData.getWorldFlag() == 214) {
+                return 2713; // Inferno map
+            }
+            if(itemNewContentsData.getWorldFlag() == 215) {
+                return 2714; // Extinction map
+            }
+            if(itemNewContentsData.getWorldFlag() == 216) {
+                return 2715; // Twin Labyrinths map
+            }
+            if(itemNewContentsData.getWorldFlag() == 217) {
+                return 2716; // Endless map
+            }
+            if(itemNewContentsData.getWorldFlag() == 219) {
+                return 2717; // Illusion map
+            }
+            if(itemNewContentsData.getWorldFlag() == 220) {
+                return 2718; // Graveyard map
+            }
+            if(itemNewContentsData.getWorldFlag() == 221) {
+                return 2719; // Moonlight map
+            }
+            if(itemNewContentsData.getWorldFlag() == 222) {
+                return 2720; // Goddess map
+            }
+            if(itemNewContentsData.getWorldFlag() == 223) {
+                return 2721; // Ruin map
+            }
+            if(itemNewContentsData.getWorldFlag() == 224) {
+                return 2722; // Birth map
+            }
+            if(itemNewContentsData.getWorldFlag() == 225) {
+                return 2723; // Dimensional map
+            }
+        }
+        if(Settings.getCurrentRemovedItems().contains(newContents)) {
+            Integer newChestWorldFlag = mapOfWorldFlagToAssignedReplacementFlag.get(itemLocationData.getWorldFlag());
+            if (newChestWorldFlag == null) {
+                newChestWorldFlag = nextReplacedItemFlag++;
+                mapOfWorldFlagToAssignedReplacementFlag.put(itemLocationData.getWorldFlag(), newChestWorldFlag);
+            }
+            return newChestWorldFlag;
+        }
+        return itemNewContentsData.getWorldFlag();
+    }
+
 
     public String findNameOfNodeContainingItem(String itemToLookFor) {
         if(!mapOfItemLocationToItem.containsValue(itemToLookFor)) {

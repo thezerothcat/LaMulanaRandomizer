@@ -11,7 +11,10 @@ import java.util.*;
  * Created by thezerothcat on 7/20/2017.
  */
 public final class DataFromFile {
-    // todo: not hardcode this, eventually
+    public static final List<String> FLOATING_ITEM_LOCATIONS = Arrays.asList("deathv.exe", "Shuriken",
+            "Rolling Shuriken", "Knife", "Talisman", "Caltrops", "Chain Whip", "Flare Gun", "bunplus.com",
+            "Chakram", "Ring", "Katana", "Key Sword", "Silver Shield", "Bomb", "Axe", "Philosopher's Ocarina",
+            "Flail Whip", "Earth Spear", "Angel Shield");
     public static List<String> LOCATIONS_RELATED_TO_BLOCKS = Arrays.asList("Map (Surface)", "mekuri.exe",
             "Mini Doll", "Pepper", "Anchor", "Mulana Talisman", "xmailer.exe", "Book of the Dead");
 

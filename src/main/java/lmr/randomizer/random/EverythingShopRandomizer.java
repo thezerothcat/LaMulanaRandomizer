@@ -7,6 +7,7 @@ import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.update.GameDataTracker;
+import lmr.randomizer.update.GameObjectId;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -351,13 +352,18 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 shopItem2 = mapOfShopInventoryItemToContents.get(String.format("%s Item 2", NON_MSX_SHOP_NAME));
                 shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", NON_MSX_SHOP_NAME));
 
-                GameDataTracker.writeLocationContents("Mobile Super X2", shopItem1);
+                // No need to worry about flag replacement because MSX2 can't be a removed item.
+                Map<String, GameObjectId> nameToDataMap = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData();
+                GameObjectId itemNewContentsData = nameToDataMap.get(shopItem1);
+                GameDataTracker.writeLocationContents("Mobile Super X2", shopItem1,
+                        nameToDataMap.get("Mobile Super X2"), itemNewContentsData, itemNewContentsData.getWorldFlag());
             }
             else {
                 shopItem1 = mapOfShopInventoryItemToContents.get(String.format("%s Item 1", shopName));
                 shopItem2 = mapOfShopInventoryItemToContents.get(String.format("%s Item 2", shopName));
                 shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName));
             }
+
             if(Settings.getCurrentRemovedItems().contains(shopItem1)) {
                 shopItem1 = "Weights";
             }

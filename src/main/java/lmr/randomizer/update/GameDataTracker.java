@@ -26,10 +26,6 @@ public final class GameDataTracker {
     private static ObjectContainer mulbrukScreen;
     private static ObjectContainer littleBrotherShopScreen;
 
-    private static Map<Integer, Integer> mapOfWorldFlagToAssignedReplacementFlag = new HashMap<>();
-
-    private static int nextReplacedItemFlag = 2724;
-
     private GameDataTracker() {
     }
 
@@ -38,8 +34,6 @@ public final class GameDataTracker {
         mapOfChestIdentifyingInfoToBlock.clear();
         mapOfShopBlockToShopObjects.clear();
         mantraTablets.clear();
-        mapOfWorldFlagToAssignedReplacementFlag.clear();
-        nextReplacedItemFlag = 2724;
     }
 
     public static void addObject(GameObject gameObject) {
@@ -2037,17 +2031,15 @@ public final class GameDataTracker {
         }
     }
 
-    public static void updateBlock(String itemLocation, String randomizedContents) {
-        Map<String, GameObjectId> nameToDataMap = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData();
-        GameObjectId itemNewContentsData = nameToDataMap.get(randomizedContents);
-        GameObjectId itemLocationData = nameToDataMap.get(itemLocation);
-        List<Block> blocksToModify = mapOfChestIdentifyingInfoToBlock.get(nameToDataMap.get(itemLocation));
+    public static void updateBlock(GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
+        List<Block> blocksToModify = mapOfChestIdentifyingInfoToBlock.get(itemLocationData);
         for(Block block : blocksToModify) {
             for(BlockContents blockContents : block.getBlockContents()) {
                 if(blockContents instanceof BlockFlagData) {
                     BlockFlagData flagData = (BlockFlagData) blockContents;
                     if(flagData.getWorldFlag() == itemLocationData.getWorldFlag()) {
                         if(flagData.getWorldFlag() == 209) {
+                            // Surface map
                             flagData.setFlagValue((short)1);
                         }
                         else {
@@ -2428,11 +2420,9 @@ public final class GameDataTracker {
         return (short)DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(item).getWorldFlag();
     }
 
-    public static void writeLocationContents(String chestLocation, String chestContents) {
-        Map<String, GameObjectId> nameToDataMap = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData();
-        GameObjectId itemNewContentsData = nameToDataMap.get(chestContents);
-        GameObjectId itemLocationData = nameToDataMap.get(chestLocation);
-        List<GameObject> objectsToModify = mapOfChestIdentifyingInfoToGameObject.get(nameToDataMap.get(chestLocation));
+    public static void writeLocationContents(String chestLocation, String chestContents,
+                                             GameObjectId itemLocationData, GameObjectId itemNewContentsData, int newWorldFlag) {
+        List<GameObject> objectsToModify = mapOfChestIdentifyingInfoToGameObject.get(itemLocationData);
         if(objectsToModify == null) {
             if("xmailer.exe".equals(chestLocation) || "Mulana Talisman".equals(chestLocation)) {
                 // Xelpud location, but no object with flags to update.
@@ -2451,14 +2441,14 @@ public final class GameDataTracker {
         }
         for(GameObject objectToModify : objectsToModify) {
             if(objectToModify.getId() == 0x2c) {
-                updateChestContents(objectToModify, itemLocationData, itemNewContentsData, chestContents);
+                updateChestContents(objectToModify, itemLocationData, itemNewContentsData, chestContents, newWorldFlag);
                 if("Map (Shrine of the Mother)".equals(chestContents)) {
                     addShrineMapSoundEffect(objectToModify.getObjectContainer());
                 }
             }
             else if(objectToModify.getId() == 0x2f) {
                 // Note: Floating maps don't get removed.
-                updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData, chestContents);
+                updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData, newWorldFlag);
                 if("Map (Shrine of the Mother)".equals(chestContents)) {
                     addShrineMapSoundEffect(objectToModify.getObjectContainer());
                 }
@@ -2476,7 +2466,7 @@ public final class GameDataTracker {
                 }
             }
             else if(objectToModify.getId() == 0xa0) {
-                updateRelatedObject(objectToModify, itemLocationData, itemNewContentsData);
+                updateRelatedObject(objectToModify, itemLocationData, newWorldFlag);
                 short blockRef = objectToModify.getArgs().get(4);
                 if(blockRef == 673 || blockRef == 689 || blockRef == 691 || blockRef == 693) {
                     // 673 = mekuri.exe
@@ -2489,7 +2479,7 @@ public final class GameDataTracker {
                 }
             }
             else {
-                updateRelatedObject(objectToModify, itemLocationData, itemNewContentsData);
+                updateRelatedObject(objectToModify, itemLocationData, newWorldFlag);
             }
         }
     }
@@ -2674,7 +2664,7 @@ public final class GameDataTracker {
         objects.add(altSurfaceShopTimer);
     }
 
-    private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData, String newChestContentsItemName) {
+    private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData, String newChestContentsItemName, int newWorldFlag) {
         WriteByteOperation puzzleFlag = objectToModify.getWriteByteOperations().get(1);
         objectToModify.getWriteByteOperations().clear();
 
@@ -2682,8 +2672,7 @@ public final class GameDataTracker {
 
         if(itemChest) {
             // Which item goes in the chest, and associated flag.
-            int newChestWorldFlag = getNewWorldFlag(itemLocationData, itemNewContentsData, true, newChestContentsItemName);
-            if(itemNewContentsData.getWorldFlag() == newChestWorldFlag) {
+            if(itemNewContentsData.getWorldFlag() == newWorldFlag) {
                 objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11)); // Item arg to indicate what the chest drops
             }
             else {
@@ -2703,13 +2692,13 @@ public final class GameDataTracker {
 
             for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                 if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
-                    flagTest.setIndex(newChestWorldFlag);
+                    flagTest.setIndex(newWorldFlag);
                 }
             }
 
             WriteByteOperation updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(newChestWorldFlag);
+            updateFlag.setIndex(newWorldFlag);
             updateFlag.setValue(2);
             objectToModify.getWriteByteOperations().add(updateFlag);
 
@@ -2717,8 +2706,8 @@ public final class GameDataTracker {
 
             updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(newChestWorldFlag);
-            if(itemNewContentsData.getWorldFlag() == newChestWorldFlag) {
+            updateFlag.setIndex(newWorldFlag);
+            if(itemNewContentsData.getWorldFlag() == newWorldFlag) {
                 updateFlag.setValue(1);
             }
             else {
@@ -2728,7 +2717,7 @@ public final class GameDataTracker {
 
             updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(newChestWorldFlag);
+            updateFlag.setIndex(newWorldFlag);
             updateFlag.setValue(2);
             objectToModify.getWriteByteOperations().add(updateFlag);
         }
@@ -2811,76 +2800,7 @@ public final class GameDataTracker {
         }
     }
 
-    private static int getNewWorldFlag(GameObjectId itemLocationData, GameObjectId itemNewContentsData, boolean replaceMaps, String itemName) {
-        if(itemNewContentsData.getInventoryArg() == 62 && Settings.getCurrentRemovedItems().contains("Spaulder")) {
-            // Spaulder
-            return 2770;
-        }
-        if(replaceMaps && Settings.isReplaceMapsWithWeights() && itemNewContentsData.getInventoryArg() == 70 && itemNewContentsData.getWorldFlag() != 218) {
-            if(itemNewContentsData.getWorldFlag() == 209) {
-                return 2708; // Surface map
-            }
-            if(itemNewContentsData.getWorldFlag() == 210) {
-                return 2709; // Guidance map
-            }
-            if(itemNewContentsData.getWorldFlag() == 211) {
-                return 2710; // Mausoleum map
-            }
-            if(itemNewContentsData.getWorldFlag() == 212) {
-                return 2711; // Sun map
-            }
-            if(itemNewContentsData.getWorldFlag() == 213) {
-                return 2712; // Spring map
-            }
-            if(itemNewContentsData.getWorldFlag() == 214) {
-                return 2713; // Inferno map
-            }
-            if(itemNewContentsData.getWorldFlag() == 215) {
-                return 2714; // Extinction map
-            }
-            if(itemNewContentsData.getWorldFlag() == 216) {
-                return 2715; // Twin Labyrinths map
-            }
-            if(itemNewContentsData.getWorldFlag() == 217) {
-                return 2716; // Endless map
-            }
-            if(itemNewContentsData.getWorldFlag() == 219) {
-                return 2717; // Illusion map
-            }
-            if(itemNewContentsData.getWorldFlag() == 220) {
-                return 2718; // Graveyard map
-            }
-            if(itemNewContentsData.getWorldFlag() == 221) {
-                return 2719; // Moonlight map
-            }
-            if(itemNewContentsData.getWorldFlag() == 222) {
-                return 2720; // Goddess map
-            }
-            if(itemNewContentsData.getWorldFlag() == 223) {
-                return 2721; // Ruin map
-            }
-            if(itemNewContentsData.getWorldFlag() == 224) {
-                return 2722; // Birth map
-            }
-            if(itemNewContentsData.getWorldFlag() == 225) {
-                return 2723; // Dimensional map
-            }
-        }
-        if(Settings.getCurrentRemovedItems().contains(itemName)) {
-            // Map
-            Integer newChestWorldFlag = mapOfWorldFlagToAssignedReplacementFlag.get(itemLocationData.getWorldFlag());
-            if (newChestWorldFlag == null) {
-                newChestWorldFlag = nextReplacedItemFlag++;
-                mapOfWorldFlagToAssignedReplacementFlag.put(itemLocationData.getWorldFlag(), newChestWorldFlag);
-            }
-            return newChestWorldFlag;
-        }
-        return itemNewContentsData.getWorldFlag();
-    }
-
-    private static void updateFloatingItemContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData, String newChestContentsItemName) {
-        int newWorldFlag = getNewWorldFlag(itemLocationData, itemNewContentsData, false, newChestContentsItemName);
-
+    private static void updateFloatingItemContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData, int newWorldFlag) {
         objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg());
         for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
             if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
@@ -2953,16 +2873,7 @@ public final class GameDataTracker {
         objectContainer.getObjects().add(0, noItemSoundEffect);
     }
 
-    private static void updateRelatedObject(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
-        int newWorldFlag;
-        if(itemNewContentsData.getInventoryArg() == 62) {
-            // Spaulder
-            newWorldFlag = 2770;
-        }
-        else {
-            newWorldFlag = itemNewContentsData.getWorldFlag();
-        }
-
+    private static void updateRelatedObject(GameObject objectToModify, GameObjectId itemLocationData, int newWorldFlag) {
         for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
             if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
                 flagTest.setIndex(newWorldFlag);
@@ -2975,28 +2886,28 @@ public final class GameDataTracker {
         }
     }
 
-    public static void randomizeMantras(Random random) {
-        List<String> mantrasToAssign = new ArrayList<>(Arrays.asList("LAMULANA", "ABUTO", "WEDJET", "BAHRUN", "VIY", "MU", "SABBAT", "MARDUK"));
-        List<String> mantrasToReplace = new ArrayList<>(mantrasToAssign);
-
-        int index;
-        GameObjectId mantraInfo;
-        String mantraToReplace;
-        while(!mantrasToAssign.isEmpty()) {
-            index = random.nextInt(mantrasToAssign.size());
-            mantraInfo = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(mantrasToAssign.get(index));
-            mantrasToAssign.remove(index);
-
-            index = random.nextInt(mantrasToReplace.size());
-            mantraToReplace = mantrasToReplace.get(index);
-
-            for(GameObject objectToReplace : mantraTablets.get(mantraToReplace)) {
-                if(objectToReplace.getId() == 0x9e) {
-                    // Replace mantra tablet block
-                    objectToReplace.getArgs().set(0, mantraInfo.getInventoryArg());
-                }
-                updateRelatedObject(objectToReplace, DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(mantraToReplace), mantraInfo);
-            }
-        }
-    }
+//    public static void randomizeMantras(Random random) {
+//        List<String> mantrasToAssign = new ArrayList<>(Arrays.asList("LAMULANA", "ABUTO", "WEDJET", "BAHRUN", "VIY", "MU", "SABBAT", "MARDUK"));
+//        List<String> mantrasToReplace = new ArrayList<>(mantrasToAssign);
+//
+//        int index;
+//        GameObjectId mantraInfo;
+//        String mantraToReplace;
+//        while(!mantrasToAssign.isEmpty()) {
+//            index = random.nextInt(mantrasToAssign.size());
+//            mantraInfo = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(mantrasToAssign.get(index));
+//            mantrasToAssign.remove(index);
+//
+//            index = random.nextInt(mantrasToReplace.size());
+//            mantraToReplace = mantrasToReplace.get(index);
+//
+//            for(GameObject objectToReplace : mantraTablets.get(mantraToReplace)) {
+//                if(objectToReplace.getId() == 0x9e) {
+//                    // Replace mantra tablet block
+//                    objectToReplace.getArgs().set(0, mantraInfo.getInventoryArg());
+//                }
+//                updateRelatedObject(objectToReplace, DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(mantraToReplace), mantraInfo);
+//            }
+//        }
+//    }
 }
