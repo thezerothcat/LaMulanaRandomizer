@@ -364,13 +364,16 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName));
             }
 
-            if(Settings.getCurrentRemovedItems().contains(shopItem1)) {
+            if(Settings.getCurrentRemovedItems().contains(shopItem1)
+                    || (Settings.isReplaceMapsWithWeights() && shopItem1.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem1))) {
                 shopItem1 = "Weights";
             }
-            if(Settings.getCurrentRemovedItems().contains(shopItem2)) {
+            if(Settings.getCurrentRemovedItems().contains(shopItem2)
+                    || (Settings.isReplaceMapsWithWeights() && shopItem2.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem2))) {
                 shopItem2 = "Weights";
             }
-            if(Settings.getCurrentRemovedItems().contains(shopItem3)) {
+            if(Settings.getCurrentRemovedItems().contains(shopItem3)
+                    || (Settings.isReplaceMapsWithWeights() && shopItem3.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem3))) {
                 shopItem3 = "Weights";
             }
             GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks, new ShopItemPriceCountRandomizer(random),

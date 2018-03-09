@@ -25,3 +25,5 @@ Cog of Soul chest: aef
 
 Screen flag 42: Shrine map sound effect
 Screen flag 43, 46, 47: Item sound screen flags (currently only spaulder at 43)
+
+Flag 20c (524): Formerly used for Illusion pot/warp, removed in randomizer and now available

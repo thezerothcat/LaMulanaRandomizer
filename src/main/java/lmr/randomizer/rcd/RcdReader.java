@@ -183,10 +183,19 @@ public final class RcdReader {
             }
         }
         else if (obj.getId() == 0x00) {
-            // Pots - update to 1.3 position and then return (no need to add tracking)
-            objectContainer.getObjects().add(obj);
-            PotMover.updateLocation(obj);
+            if(obj.getTestByteOperations().isEmpty() || obj.getTestByteOperations().get(0).getIndex() != 524) {
+                // Pots - update to 1.3 position and then return (no need to add tracking).
+                // Note that there is a pot tied to a warp in Illusion which is removed by randomizer (the warp is always active)
+                objectContainer.getObjects().add(obj);
+                PotMover.updateLocation(obj);
+            }
             return rcdByteIndex;
+        }
+        else if (obj.getId() == 0x97) {
+            if(!obj.getTestByteOperations().isEmpty() && obj.getTestByteOperations().get(0).getIndex() == 524) {
+                // Remove broken pot flag check so the warp is just always active.
+                obj.getTestByteOperations().remove(0);
+            }
         }
 
         if(keepObject) {
