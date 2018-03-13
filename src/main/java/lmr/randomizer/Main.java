@@ -477,14 +477,15 @@ public class Main {
         int totalItemsRemoved = Settings.getMinRandomRemovedItems();
         totalItemsRemoved += random.nextInt(Settings.getMaxRandomRemovedItems() - totalItemsRemoved + 1);
 
-        List<String> removableItems = DataFromFile.getRandomRemovableItems();
+        List<String> removableItems = new ArrayList<>(DataFromFile.getRandomRemovableItems());
 
         int chosenRemovedItems = 0;
-        while(chosenRemovedItems < totalItemsRemoved) {
+        while(chosenRemovedItems < totalItemsRemoved && !removableItems.isEmpty()) {
             int removedItemIndex = random.nextInt(removableItems.size());
             String removedItem = removableItems.get(removedItemIndex);
-            if(!removedItems.contains(removedItem) && removableItems.contains(removedItem)) {
+            if(!removedItems.contains(removedItem)) {
                 removedItems.add(removedItem);
+                removableItems.remove(removedItem);
                 ++chosenRemovedItems;
             }
         }

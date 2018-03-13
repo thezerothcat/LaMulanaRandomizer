@@ -268,7 +268,8 @@ public class AccessChecker {
                 break;
             case SHOP:
                 for(String shopItem : shopRandomizer.getShopItems(nodeName)) {
-                    if(!accessedNodes.contains(shopItem) && !queuedUpdates.contains(shopItem)) {
+                    if(!accessedNodes.contains(shopItem) && !queuedUpdates.contains(shopItem)
+                            && !Settings.getCurrentRemovedItems().contains(shopItem)) {
                         queuedUpdates.add(shopItem);
                     }
                 }
