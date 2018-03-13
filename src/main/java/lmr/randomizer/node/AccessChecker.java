@@ -301,12 +301,17 @@ public class AccessChecker {
                 return false;
             }
         }
-        else if(item.contains("Map")) {
+        else if(item.startsWith("Map")) {
             // Don't put maps in conversations or torude scans, because the item-give dialog won't behave normally.
             if(DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(location) && !"Map (Surface)".equals(location)) {
                 return false;
             }
             if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
+                return false;
+            }
+            if(Settings.isReplaceMapsWithWeights()
+                    && !"Map (Shrine of the Mother)".equals(item) && "Shop 2 Alt (Surface)".equals(location)) {
+                // Don't put removed map in transforming Surface shop.
                 return false;
             }
         }

@@ -256,6 +256,9 @@ public final class DataFromFile {
                     if(Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName)) {
                         continue; // Don't count the maps that will already be replaced.
                     }
+                    if(itemName.equals(Settings.getXmailerItem())) {
+                        continue; // If the user wanted this item from Xelpud, they probably don't want it gone.
+                    }
                     if(Settings.getNonRandomizedItems().contains(itemName)) {
                         continue; // If the user wanted this item in its original location, they probably don't want it gone.
                     }

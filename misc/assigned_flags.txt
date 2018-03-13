@@ -5,13 +5,16 @@ Book of the Dead world flag: a8f
 Fake Silver Shield world flag: a90
 guild.exe replacement world flag: a91
 Anchor world flag: a92
-Surface coin chest world flag: a93
+Surface coin chest world flag: a93 (2707)
 Misc replaced map world flags: a94-aa3 (2708-2723)
 Misc replaced random item world flags: aa4+ (2724+)
-Spaulder: 2770
 
+Bit flags for floating items?: 2767-2780
+
+Removed Spaulder: 2781
 New untrue Shrine grail: ade (2782)
 Reserved perma-zero for old untrue Shrine grail: adf (2783)
+
 Pepper conversation flag: ae0 (2784)
 Mantra count timers: ae1-ae8 (2785-2792)
 Mantra tablet counter flag: ae9
