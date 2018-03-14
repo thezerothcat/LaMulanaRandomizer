@@ -229,7 +229,9 @@ public final class DataFromFile {
             else {
                 randomRemovableItems = new ArrayList<>();
                 boolean requireSerpentStaffAndChakrams = !Settings.getEnabledGlitches().contains("Cat Pause") && !Settings.getEnabledGlitches().contains("Object Zip") && !Settings.getEnabledGlitches().contains("Raindrop");
-                boolean requireBronzeMirror = !Settings.getEnabledGlitches().contains("Lamp Glitch") && !Settings.getEnabledGlitches().contains("Raindrop");
+                boolean requireFruitOfEden = !Settings.getEnabledGlitches().contains("Lamp Glitch");
+                boolean requirePlaneModelAndTwinStatue = !Settings.getEnabledGlitches().contains("Raindrop");
+                boolean requireEarthSpearAndBronzeMirror = !Settings.getEnabledGlitches().contains("Lamp Glitch") && !Settings.getEnabledGlitches().contains("Raindrop");
                 for(String itemName : getAllItems()) {
                     if(itemName.startsWith("Ankh Jewel")) {
                         continue; // Items removed by configuration are counted separately.
@@ -238,17 +240,27 @@ public final class DataFromFile {
                             || "reader.exe".equals(itemName) || "mantra.exe".equals(itemName)
                             || "Djed Pillar".equals(itemName) || "Dimensional Key".equals(itemName)
                             || "Crystal Skull".equals(itemName) || "Pochette Key".equals(itemName)
-                            || "Philosopher's Ocarina".equals(itemName) || "Isis' Pendant".equals(itemName)) {
+                            || "Philosopher's Ocarina".equals(itemName) || "Isis' Pendant".equals(itemName)
+                            || "Helmet".equals(itemName)) {
                         continue; // Things that should never be removed.
                     }
                     if(Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
                         continue; // Can't get Extinction grail without flares according to this logic.
                     }
-                    if(requireBronzeMirror && "Bronze Mirror".equals(itemName)) {
-                        continue; // Can't get Extinction grail without flares according to this logic.
+                    if(Settings.isRequireIceCapeForLava() && "Ice Cape".equals(itemName)) {
+                        continue; // Needed for Viy
+                    }
+                    if(requireFruitOfEden && "Fruit of Eden".equals(itemName)) {
+                        continue; // Can't get Illusion grail without this.
                     }
                     if(requireSerpentStaffAndChakrams && ("Chakram".equals(itemName) || "Serpent Staff".equals(itemName))) {
                         continue; // Can't get Birth grail without these.
+                    }
+                    if(requirePlaneModelAndTwinStatue && ("Plane Model".equals(itemName) || "Twin Statue".equals(itemName))) {
+                        continue; // Can't get to Birth grail area without Plane Model, Dimensional Corridor without Twin Statue.
+                    }
+                    if(requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
+                        continue; // Earth Spear needed for Viy access. Bronze Mirror for VIY mantra statue.
                     }
                     if(Settings.getRemovedItems().contains(itemName)) {
                         continue; // Items removed by configuration are counted separately.

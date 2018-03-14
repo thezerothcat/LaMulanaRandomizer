@@ -479,6 +479,11 @@ public class Main {
 
         List<String> removableItems = new ArrayList<>(DataFromFile.getRandomRemovableItems());
 
+        boolean objectZipEnabled = Settings.getEnabledGlitches().contains("Object Zip");
+        boolean catPauseEnabled = Settings.getEnabledGlitches().contains("Cat Pause");
+        boolean lampGlitchEnabled = Settings.getEnabledGlitches().contains("Lamp Glitch");
+        boolean requireKeyFairyCombo = Settings.isRequireSoftwareComboForKeyFairy();
+        boolean easierBosses = BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty());
         int chosenRemovedItems = 0;
         while(chosenRemovedItems < totalItemsRemoved && !removableItems.isEmpty()) {
             int removedItemIndex = random.nextInt(removableItems.size());
@@ -486,6 +491,73 @@ public class Main {
             if(!removedItems.contains(removedItem)) {
                 removedItems.add(removedItem);
                 removableItems.remove(removedItem);
+                if("Twin Statue".equals(removedItem)) {
+                    // Only possible if raindropping enabled
+                    removableItems.remove("Hermes' Boots");
+                    removableItems.remove("Grapple Claw");
+                }
+                else if("Chakram".equals(removedItem)) {
+                    // Must be able to raindrop unless alternative glitches are a thing.
+                    if(!catPauseEnabled) {
+                        removableItems.remove("Hermes' Boots");
+                        if(!objectZipEnabled) {
+                            removableItems.remove("Grapple Claw");
+                        }
+                    }
+                }
+                else if("Serpent Staff".equals(removedItem)) {
+                    // Must be able to raindrop unless alternative glitches are a thing.
+                    if(!catPauseEnabled) {
+                        removableItems.remove("Hermes' Boots");
+                        if(!objectZipEnabled) {
+                            removableItems.remove("Grapple Claw");
+                        }
+                    }
+                }
+                else if("Hermes' Boots".equals(removedItem)) {
+                    // Don't remove anything that outright requires raindropping.
+                    removableItems.remove("Twin Statue");
+                    removableItems.remove("Plane Model");
+                    if(!catPauseEnabled) {
+                        removableItems.remove("Chakram");
+                        removableItems.remove("Serpent Staff");
+                    }
+                    if(!lampGlitchEnabled) {
+                        removableItems.remove("Bronze Mirror");
+                    }
+                } else if("Grapple Claw".equals(removedItem)) {
+                    // Don't remove anything that outright requires raindropping.
+                    removableItems.remove("Twin Statue");
+                    removableItems.remove("Plane Model");
+                    if(!objectZipEnabled && !catPauseEnabled) {
+                        removableItems.remove("Chakram");
+                        removableItems.remove("Serpent Staff");
+                    }
+                    if(!lampGlitchEnabled) {
+                        removableItems.remove("Bronze Mirror");
+                    }
+                } else if("Plane Model".equals(removedItem)) {
+                    // Don't remove alternative means of getting into Chamber of Birth and the Medicine of the Mind area.
+                    removableItems.remove("Hermes' Boots");
+                    removableItems.remove("Grapple Claw");
+                    removableItems.remove("Bronze Mirror");
+                    if(requireKeyFairyCombo) {
+                        removableItems.remove("miracle.exe");
+                        removableItems.remove("mekuri.exe");
+                    }
+                } else if("Bronze Mirror".equals(removedItem)) {
+                    removableItems.remove("Plane Model");
+                    if(!lampGlitchEnabled) {
+                        removableItems.remove("Hermes' Boots");
+                        removableItems.remove("Grapple Claw");
+                    }
+                } else if(easierBosses) {
+                    if("Silver Shield".equals(removedItem)) {
+                        removableItems.remove("Angel Shield");
+                    } else if ("Angel Shield".equals(removedItem)) {
+                        removableItems.remove("Silver Shield");
+                    }
+                }
                 ++chosenRemovedItems;
             }
         }

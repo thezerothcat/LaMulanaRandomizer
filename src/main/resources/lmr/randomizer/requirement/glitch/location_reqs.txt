@@ -25,5 +25,5 @@ Location: Chamber of Birth [Skanda] => Location: Chamber of Birth [West], Glitch
 Location: Chamber of Birth [Skanda] => Location: Chamber of Birth [Grail], Glitch: Pot Clip, Serpent Staff, Chakram, Chakram Ammo
 Location: Chamber of Birth [East] => Location: Chamber of Birth [Skanda], Glitch: Raindrop
 Location: Twin Labyrinths [Upper] => Event: Ellmac Defeated, Glitch: Raindrop
-Location: Shrine of the Mother [Main] => Location: Endless Corridor [5F], Glitch: Raindrop, !Event: All Bosses Defeated
+Location: Shrine of the Mother [Main] => Location: Endless Corridor [5F], Glitch: Raindrop
 Location: Shrine of the Mother [Map] => Location: Shrine of the Mother [Seal], Glitch: Treasury Zip
