@@ -234,7 +234,7 @@ public final class DataFromFile {
                 boolean requireEarthSpearAndBronzeMirror = !Settings.getEnabledGlitches().contains("Lamp Glitch") && !Settings.getEnabledGlitches().contains("Raindrop");
                 for(String itemName : getAllItems()) {
                     if(itemName.startsWith("Ankh Jewel")) {
-                        continue; // Items removed by configuration are counted separately.
+                        continue; // Never remove an ankh jewel.
                     }
                     if(getWinRequirements().contains(itemName) || "Hand Scanner".equals(itemName)
                             || "reader.exe".equals(itemName) || "mantra.exe".equals(itemName)

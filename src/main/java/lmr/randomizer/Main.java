@@ -284,7 +284,10 @@ public class Main {
         int attempt = 0;
         while(true) {
             ++attempt;
-            if(Settings.getMaxRandomRemovedItems() > 0) {
+            if(Settings.getMaxRandomRemovedItems() < 1) {
+                Settings.setCurrentRemovedItems(new HashSet<>(0));
+            }
+            else {
                 dialog.updateProgress(20, Translations.getText("progress.shuffling.removing"));
                 while(true) {
                     determineRemovedItems(random);
@@ -471,9 +474,6 @@ public class Main {
 
     private static void determineRemovedItems(Random random) {
         Set<String> removedItems = new HashSet<>(Settings.getRemovedItems());
-        if(Settings.getMaxRandomRemovedItems() < 1) {
-            Settings.setCurrentRemovedItems(new HashSet<>(0));
-        }
         int totalItemsRemoved = Settings.getMinRandomRemovedItems();
         totalItemsRemoved += random.nextInt(Settings.getMaxRandomRemovedItems() - totalItemsRemoved + 1);
 
