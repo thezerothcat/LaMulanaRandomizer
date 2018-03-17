@@ -275,7 +275,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                 Map<String, GameObjectId> nameToDataMap = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData();
                 GameObjectId itemNewContentsData = nameToDataMap.get(shopItem1);
                 GameDataTracker.writeLocationContents("Mobile Super X2", shopItem1,
-                        nameToDataMap.get("Mobile Super X2"), itemNewContentsData, itemNewContentsData.getWorldFlag());
+                        nameToDataMap.get("Mobile Super X2"), itemNewContentsData, itemNewContentsData.getWorldFlag(), random);
             }
             else if(FISH_FAIRY_SHOP_NAME.equals(shopName)) {
                 shopItem1 = "Shell Horn";

@@ -9,8 +9,11 @@ Surface coin chest world flag: a93 (2707)
 Misc replaced map world flags: a94-aa3 (2708-2723)
 Misc replaced random item world flags: aa4+ (2724+)
 
-Bit flags for floating items?: 2767-2780
+Bit flags for floating items?: 2767-2778
 
+
+Sacred Orb trap flag: 2779
+Ankh jewel trap flag: 2780
 Removed Spaulder: 2781
 New untrue Shrine grail: ade (2782)
 Reserved perma-zero for old untrue Shrine grail: adf (2783)
@@ -27,6 +30,8 @@ Cog of Soul chest: aef
 
 
 Screen flag 42: Shrine map sound effect
-Screen flag 43, 46, 47: Item sound screen flags (currently only spaulder at 43)
+Screen flag 43: Item sound screen flag
+Screen flag 46: unused
+Screen flag 47: unused
 
 Flag 20c (524): Formerly used for Illusion pot/warp, removed in randomizer and now available

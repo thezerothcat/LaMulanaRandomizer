@@ -197,6 +197,70 @@ public final class RcdReader {
                 obj.getTestByteOperations().remove(0);
             }
         }
+        else if (obj.getId() == 0x14) {
+            if(Settings.isRandomizeTrapItems()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen) objectContainer;
+                    if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
+                        // Lemeza Detector part of Inferno Cavern fake Sacred Orb trap
+                        keepObject = false;
+                    } else if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 12 && screen.getScreenIndex() == 0) {
+                        // Lemeza Detector part of Twin Labs fake Ankh Jewel trap
+                        keepObject = false;
+                    }
+                }
+            }
+        }
+        else if (obj.getId() == 0x02) {
+            if(Settings.isRandomizeTrapItems()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen) objectContainer;
+                    if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 12 && screen.getScreenIndex() == 0) {
+                        // Bats for fake Ankh Jewel trap
+                        keepObject = false;
+                    }
+                }
+            }
+        }
+        else if (obj.getId() == 0x93) {
+            if(Settings.isRandomizeTrapItems()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
+                        // Graphical part of Inferno Cavern fake Sacred Orb trap
+                        obj.setId((short)0x2f);
+                        obj.getArgs().clear();
+                        obj.getArgs().add((short)0); // Interactable any time?
+                        obj.getArgs().add((short)69); // Sacred Orb item
+                        obj.getArgs().add((short)0); // Fake item
+                        obj.getTestByteOperations().get(0).setIndex(2779);
+
+                        WriteByteOperation writeByteOperation = new WriteByteOperation();
+                        writeByteOperation.setIndex(2779);
+                        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                        writeByteOperation.setValue((byte)1);
+                        obj.getWriteByteOperations().add(writeByteOperation);
+                    }
+                    else if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 12 && screen.getScreenIndex() == 0) {
+                        if(!obj.getTestByteOperations().isEmpty() && obj.getTestByteOperations().get(0).getIndex() == 53) {
+                            // Graphical part of Twin Labs fake Ankh Jewel trap
+                            obj.setId((short)0x2f);
+                            obj.getArgs().clear();
+                            obj.getArgs().add((short)0); // Interactable any time?
+                            obj.getArgs().add((short)19); // Ankh Jewel item
+                            obj.getArgs().add((short)0); // Fake item
+                            obj.getTestByteOperations().get(0).setIndex(2780);
+
+                            WriteByteOperation writeByteOperation = new WriteByteOperation();
+                            writeByteOperation.setIndex(2780);
+                            writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                            writeByteOperation.setValue((byte)1);
+                            obj.getWriteByteOperations().add(writeByteOperation);
+                        }
+                    }
+                }
+            }
+        }
 
         if(keepObject) {
             objectContainer.getObjects().add(obj);

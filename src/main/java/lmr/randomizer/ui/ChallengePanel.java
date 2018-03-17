@@ -45,8 +45,8 @@ public class ChallengePanel extends JPanel {
     }
 
     public void reloadSettings() {
-        automaticHardmode.setSelected(Settings.getAutomaticHardmode());
-        coinChestGraphics.setSelected(Settings.getCoinChestGraphics());
+        automaticHardmode.setSelected(Settings.isAutomaticHardmode());
+        coinChestGraphics.setSelected(Settings.isCoinChestGraphics());
         difficultyPanel.reloadSettings();
     }
 }

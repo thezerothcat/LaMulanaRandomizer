@@ -2421,7 +2421,8 @@ public final class GameDataTracker {
     }
 
     public static void writeLocationContents(String chestLocation, String chestContents,
-                                             GameObjectId itemLocationData, GameObjectId itemNewContentsData, int newWorldFlag) {
+                                             GameObjectId itemLocationData, GameObjectId itemNewContentsData,
+                                             int newWorldFlag, Random random) {
         List<GameObject> objectsToModify = mapOfChestIdentifyingInfoToGameObject.get(itemLocationData);
         if(objectsToModify == null) {
             if("xmailer.exe".equals(chestLocation) || "Mulana Talisman".equals(chestLocation)) {
@@ -2448,7 +2449,7 @@ public final class GameDataTracker {
             }
             else if(objectToModify.getId() == 0x2f) {
                 // Note: Floating maps don't get removed.
-                updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData, newWorldFlag);
+                updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData, newWorldFlag, random);
                 if("Map (Shrine of the Mother)".equals(chestContents)) {
                     addShrineMapSoundEffect(objectToModify.getObjectContainer());
                 }
@@ -2800,8 +2801,10 @@ public final class GameDataTracker {
         }
     }
 
-    private static void updateFloatingItemContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData, int newWorldFlag) {
+    private static void updateFloatingItemContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData,
+                                                   int newWorldFlag, Random random) {
         objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg());
+        objectToModify.getArgs().set(2, (short)1); // Real item until determined otherwise.
         for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
             if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
                 flagTest.setIndex(newWorldFlag);
@@ -2823,8 +2826,8 @@ public final class GameDataTracker {
             }
         }
 
-        // Add handling for removed items.
         if(itemNewContentsData.getWorldFlag() != newWorldFlag) {
+            // Add handling for removed items.
             objectToModify.getArgs().set(2, (short)0);
 
             WriteByteOperation updateFlag = new WriteByteOperation();
@@ -2835,6 +2838,51 @@ public final class GameDataTracker {
 
             addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag);
         }
+        else if(Settings.isRandomizeTrapItems() && (newWorldFlag == 2779 || newWorldFlag == 2780)) {
+            // Trap items
+            objectToModify.getArgs().set(1, getRandomItemGraphic(random));
+            objectToModify.getArgs().set(2, (short)0);
+
+            WriteByteOperation writeByteOperation;
+            if(objectToModify.getWriteByteOperations().size() > 1) {
+                writeByteOperation = objectToModify.getWriteByteOperations().get(1);
+            }
+            else {
+                writeByteOperation = new WriteByteOperation();
+            }
+            writeByteOperation.setIndex(43);
+            writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+            writeByteOperation.setValue((byte)1);
+
+            int xPos = objectToModify.getX();
+            int yPos = objectToModify.getY();
+            addBat(objectToModify.getObjectContainer(), xPos - 20, yPos);
+            addBat(objectToModify.getObjectContainer(), xPos + 20, yPos);
+            addBat(objectToModify.getObjectContainer(), xPos, yPos - 20);
+            addBat(objectToModify.getObjectContainer(), xPos, yPos + 20);
+
+            addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag);
+        }
+    }
+
+    private static void addBat(ObjectContainer objectContainer, int xPos, int yPos) {
+            GameObject bat = new GameObject(objectContainer);
+            bat.setId((short)0x02);
+            bat.setX(xPos);
+            bat.setY(yPos);
+            bat.getArgs().add((short)1);
+            bat.getArgs().add((short)1);
+            bat.getArgs().add((short)2);
+            bat.getArgs().add((short)0);
+            bat.getArgs().add((short)3);
+
+            TestByteOperation testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(43);
+            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+            testByteOperation.setValue((byte)1);
+            bat.getTestByteOperations().add(testByteOperation);
+
+            objectContainer.getObjects().add(bat);
     }
 
     private static void addNoItemSoundEffect(ObjectContainer objectContainer, Integer newWorldFlag) {
@@ -2884,6 +2932,18 @@ public final class GameDataTracker {
                 flagUpdate.setIndex(newWorldFlag);
             }
         }
+    }
+
+    private static short getRandomItemGraphic(Random random) {
+        int itemGraphicListSize = DataFromFile.RANDOM_ITEM_GRAPHICS.size();
+        if(Settings.isRandomizeForbiddenTreasure()) {
+            itemGraphicListSize += 1;
+        }
+        int itemArgIndex = random.nextInt(itemGraphicListSize);
+        if(itemArgIndex == DataFromFile.RANDOM_ITEM_GRAPHICS.size()) {
+            return (short)74;
+        }
+        return DataFromFile.RANDOM_ITEM_GRAPHICS.get(itemArgIndex).shortValue();
     }
 
 //    public static void randomizeMantras(Random random) {

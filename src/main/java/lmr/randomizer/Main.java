@@ -19,6 +19,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -195,6 +197,7 @@ public class Main {
             directory.mkdir();
 
             try {
+                progressDialog.setDefaultCloseOperation(HIDE_ON_CLOSE);
                 Frame f = this;
                 SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
                     @Override
@@ -335,6 +338,11 @@ public class Main {
                     continue;
                 }
             }
+            if(Settings.isRandomizeTrapItems()) {
+                if(!itemRandomizer.placeTrapItems(random)) {
+                    continue;
+                }
+            }
             if(!itemRandomizer.placeAllItems(random)) {
                 continue;
             }
@@ -391,7 +399,7 @@ public class Main {
                     List<Block> datInfo = DatReader.getDatScriptInfo();
 
                     dialog.updateProgress(95, Translations.getText("progress.write"));
-                    itemRandomizer.updateFiles();
+                    itemRandomizer.updateFiles(random);
                     shopRandomizer.updateFiles(datInfo, random);
                     if(Settings.isAutomaticHardmode()) {
                         GameDataTracker.addAutomaticHardmode();

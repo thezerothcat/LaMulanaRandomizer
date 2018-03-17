@@ -12,7 +12,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "1.24.0";
+    public static final String VERSION = "1.25.0";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -317,6 +317,9 @@ public class FileUtils {
             else if(line.startsWith("randomizeCoinChests")) {
                 Settings.setRandomizeCoinChests(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("randomizeTrapItems")) {
+                Settings.setRandomizeTrapItems(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("replaceMapsWithWeights")) {
                 Settings.setReplaceMapsWithWeights(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -382,6 +385,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("randomizeCoinChests=%s", Settings.isRandomizeCoinChests()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeTrapItems=%s", Settings.isRandomizeTrapItems()));
         writer.newLine();
 
         writer.write(String.format("replaceMapsWithWeights=%s", Settings.isReplaceMapsWithWeights()));

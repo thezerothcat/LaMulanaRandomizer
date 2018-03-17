@@ -31,6 +31,6 @@ public class SpeedPanel extends JPanel {
     }
 
     public void reloadSettings() {
-        automaticGrailPoints.setSelected(Settings.getAutomaticGrailPoints());
+        automaticGrailPoints.setSelected(Settings.isAutomaticGrailPoints());
     }
 }

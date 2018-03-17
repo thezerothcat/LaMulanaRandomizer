@@ -70,7 +70,7 @@ public class AccessChecker {
                     continue;
                 }
                 else if(NodeType.ITEM_LOCATION.equals(mapOfNodeNameToRequirementsObject.get(nodeName).getType())
-                    && itemRandomizer.getItem(nodeName).startsWith("Coin:")) {
+                    && (itemRandomizer.getItem(nodeName).startsWith("Coin:") || itemRandomizer.getItem(nodeName).startsWith("Trap:"))) {
                     continue;
                 }
                 FileUtils.log("Inaccessible node detected: " + nodeName + " containing " + itemRandomizer.getItem(nodeName));

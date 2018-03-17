@@ -197,6 +197,9 @@ public class ItemRandomizer {
         if(Settings.isRandomizeCoinChests()) {
             initialUnassignedNonShopLocations.addAll(DataFromFile.getInitialCoinChestLocations());
         }
+        if(Settings.isRandomizeTrapItems()) {
+            initialUnassignedNonShopLocations.addAll(DataFromFile.getInitialTrapItemLocations());
+        }
         initialUnassignedNonShopLocations.removeAll(mapOfItemLocationToItem.keySet());
 
         List<String> initialUnassignedShopItemLocations = shopRandomizer.getInitialUnassignedShopItemLocations();
@@ -301,6 +304,59 @@ public class ItemRandomizer {
         return true;
     }
 
+    public boolean placeTrapItems(Random random) {
+        List<String> trapItems = new ArrayList<>();
+        for(String trapItem : DataFromFile.getAllTrapItems()) {
+            if(unplacedItems.contains(trapItem)) {
+                trapItems.add(trapItem);
+            }
+        }
+        if(trapItems.isEmpty()) {
+            return true;
+        }
+
+        int locationIndexIndex;
+
+        List<String> possibleLocations = new ArrayList<>();
+        for(String floatingItemLocation : DataFromFile.FLOATING_ITEM_LOCATIONS) {
+            if(unassignedNonShopItemLocations.contains(floatingItemLocation)) {
+                possibleLocations.add(floatingItemLocation);
+            }
+        }
+        for(String trapItem : DataFromFile.getAllTrapItems()) {
+            if(unassignedNonShopItemLocations.contains(trapItem)) {
+                possibleLocations.add(trapItem);
+            }
+        }
+        int size = trapItems.size();
+        for(int i = 0; i < size; i++) {
+            String item = getRandomItem(trapItems, random);
+            int availableLocations = possibleLocations.size();
+            List<Integer> availableLocationIndices = buildIndices(availableLocations);
+
+            while(true) {
+                if(availableLocationIndices.isEmpty()) {
+                    return false;
+                }
+                locationIndexIndex = random.nextInt(availableLocationIndices.size());
+                int locationIndex = availableLocationIndices.get(locationIndexIndex);
+                String location = possibleLocations.get(locationIndex);
+                if(accessChecker.validRequirements(item, location)) {
+                    mapOfItemLocationToItem.put(location, item);
+                    trapItems.remove(item);
+                    possibleLocations.remove(location);
+                    unassignedNonShopItemLocations.remove(location);
+                    unplacedItems.remove(item);
+                    break;
+                }
+                else {
+                    availableLocationIndices.remove(locationIndexIndex);
+                }
+            }
+        }
+        return true;
+    }
+
     private String getRandomItem(List<String> items, Random random) {
         return items.get(random.nextInt(items.size()));
     }
@@ -385,7 +441,7 @@ public class ItemRandomizer {
         this.accessChecker = accessChecker;
     }
 
-    public void updateFiles() throws Exception{
+    public void updateFiles(Random random) throws Exception{
         String itemLocation;
         String newContents;
         int newWorldFlag;
@@ -401,7 +457,7 @@ public class ItemRandomizer {
             if(DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(locationAndItem.getKey())) {
                 GameDataTracker.updateBlock(itemLocationData, itemNewContentsData);
             }
-            GameDataTracker.writeLocationContents(itemLocation, newContents, itemLocationData, itemNewContentsData, newWorldFlag);
+            GameDataTracker.writeLocationContents(itemLocation, newContents, itemLocationData, itemNewContentsData, newWorldFlag, random);
         }
     }
 

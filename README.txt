@@ -3,6 +3,20 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
+1.25:
+-----------------------------
+Ability to randomize the fake Ankh Jewel and Sacred Orb with other floating items.
+
+
+1.22:
+-----------------------------
+More bugfixes.
+
+
+1.23:
+-----------------------------
+Bugfixes.
+
 
 1.22:
 -----------------------------
