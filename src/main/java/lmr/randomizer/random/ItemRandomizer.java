@@ -251,33 +251,18 @@ public class ItemRandomizer {
         return true;
     }
 
-    public boolean placeCoinChests(Random random) {
-        List<String> coinChests = new ArrayList<>();
-        for(String coinChest : DataFromFile.getAllCoinChests()) {
-            if(unplacedItems.contains(coinChest)) {
-                coinChests.add(coinChest);
-            }
-        }
-        if(coinChests.isEmpty()) {
+    public boolean placeChestOnlyItems(Random random) {
+        List<String> chestOnlyItems = getUnplacedChestOnlyItems();
+        if(chestOnlyItems.isEmpty()) {
             return true;
         }
 
         int locationIndexIndex;
 
-        List<String> possibleLocations = new ArrayList<>();
-        for(String itemChestLocation : DataFromFile.getChestOnlyLocations()) {
-            if(unassignedNonShopItemLocations.contains(itemChestLocation)) {
-                possibleLocations.add(itemChestLocation);
-            }
-        }
-        for(String coinChest : DataFromFile.getAllCoinChests()) {
-            if(unassignedNonShopItemLocations.contains(coinChest)) {
-                possibleLocations.add(coinChest);
-            }
-        }
-        int size = coinChests.size();
+        List<String> possibleLocations = getPossibleChestOnlyItemLocations();
+        int size = chestOnlyItems.size();
         for(int i = 0; i < size; i++) {
-            String item = getRandomItem(coinChests, random);
+            String item = getRandomItem(chestOnlyItems, random);
             int availableLocations = possibleLocations.size();
             List<Integer> availableLocationIndices = buildIndices(availableLocations);
 
@@ -290,7 +275,7 @@ public class ItemRandomizer {
                 String location = possibleLocations.get(locationIndex);
                 if(accessChecker.validRequirements(item, location)) {
                     mapOfItemLocationToItem.put(location, item);
-                    coinChests.remove(item);
+                    chestOnlyItems.remove(item);
                     possibleLocations.remove(location);
                     unassignedNonShopItemLocations.remove(location);
                     unplacedItems.remove(item);
@@ -304,57 +289,44 @@ public class ItemRandomizer {
         return true;
     }
 
-    public boolean placeTrapItems(Random random) {
-        List<String> trapItems = new ArrayList<>();
-        for(String trapItem : DataFromFile.getAllTrapItems()) {
-            if(unplacedItems.contains(trapItem)) {
-                trapItems.add(trapItem);
+    private List<String> getUnplacedChestOnlyItems() {
+        List<String> chestOnlyItems = new ArrayList<>();
+        if(Settings.isRandomizeCoinChests()) {
+            for(String coinChest : DataFromFile.getAllCoinChests()) {
+                if(unplacedItems.contains(coinChest)) {
+                    chestOnlyItems.add(coinChest);
+                }
             }
         }
-        if(trapItems.isEmpty()) {
-            return true;
+        if(Settings.isRandomizeTrapItems() && unplacedItems.contains(DataFromFile.EXPLODING_CHEST_NAME)) {
+            chestOnlyItems.add(DataFromFile.EXPLODING_CHEST_NAME);
         }
+        return chestOnlyItems;
+    }
 
-        int locationIndexIndex;
-
+    private List<String> getPossibleChestOnlyItemLocations() {
         List<String> possibleLocations = new ArrayList<>();
-        for(String floatingItemLocation : DataFromFile.FLOATING_ITEM_LOCATIONS) {
-            if(unassignedNonShopItemLocations.contains(floatingItemLocation)) {
-                possibleLocations.add(floatingItemLocation);
+        for(String itemChestLocation : DataFromFile.getChestOnlyLocations()) {
+            if(unassignedNonShopItemLocations.contains(itemChestLocation)) {
+                possibleLocations.add(itemChestLocation);
             }
         }
-        for(String trapItem : DataFromFile.getAllTrapItems()) {
-            if(unassignedNonShopItemLocations.contains(trapItem)) {
-                possibleLocations.add(trapItem);
-            }
-        }
-        int size = trapItems.size();
-        for(int i = 0; i < size; i++) {
-            String item = getRandomItem(trapItems, random);
-            int availableLocations = possibleLocations.size();
-            List<Integer> availableLocationIndices = buildIndices(availableLocations);
-
-            while(true) {
-                if(availableLocationIndices.isEmpty()) {
-                    return false;
-                }
-                locationIndexIndex = random.nextInt(availableLocationIndices.size());
-                int locationIndex = availableLocationIndices.get(locationIndexIndex);
-                String location = possibleLocations.get(locationIndex);
-                if(accessChecker.validRequirements(item, location)) {
-                    mapOfItemLocationToItem.put(location, item);
-                    trapItems.remove(item);
-                    possibleLocations.remove(location);
-                    unassignedNonShopItemLocations.remove(location);
-                    unplacedItems.remove(item);
-                    break;
-                }
-                else {
-                    availableLocationIndices.remove(locationIndexIndex);
+        if(Settings.isRandomizeCoinChests()) {
+            for(String coinChest : DataFromFile.getAllCoinChests()) {
+                if(unassignedNonShopItemLocations.contains(coinChest)) {
+                    possibleLocations.add(coinChest);
                 }
             }
         }
-        return true;
+        if(Settings.isRandomizeTrapItems()) {
+            if(unassignedNonShopItemLocations.contains(DataFromFile.EXPLODING_CHEST_NAME)) {
+                possibleLocations.add(DataFromFile.EXPLODING_CHEST_NAME);
+            }
+            if(unassignedNonShopItemLocations.contains(DataFromFile.GRAVEYARD_TRAP_CHEST_NAME)) {
+                possibleLocations.add(DataFromFile.GRAVEYARD_TRAP_CHEST_NAME);
+            }
+        }
+        return possibleLocations;
     }
 
     private String getRandomItem(List<String> items, Random random) {

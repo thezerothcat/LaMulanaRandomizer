@@ -316,6 +316,23 @@ public class AccessChecker {
                 return false;
             }
         }
+        else if(item.startsWith("Trap:")) {
+            // Shop, NPC, torude scan can't give traps.
+            if(location.contains("Shop")) {
+                return false;
+            }
+            if(DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(location)) {
+                return false;
+            }
+            if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
+                return false;
+            }
+            if(DataFromFile.getBannedTrapLocations().contains(location)) {
+                // Don't put a trap here, because we don't have handling for separate screen flags, and it'll
+                // look bad if opening one chest procs both traps.
+                return false;
+            }
+        }
         else if(item.equals("Chain Whip") || item.equals("Buckler") || item.contains("Silver Shield")) {
             if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
                 return false;

@@ -197,6 +197,14 @@ public final class RcdReader {
                 obj.getTestByteOperations().remove(0);
             }
         }
+        else if (obj.getId() == 0xb4) {
+            if(Settings.isRandomizeTrapItems()) {
+                if (!obj.getTestByteOperations().isEmpty() && obj.getTestByteOperations().get(0).getIndex() == 522) {
+                    // Exploding chest explosion object.
+                    keepObject = false;
+                }
+            }
+        }
         else if (obj.getId() == 0x14) {
             if(Settings.isRandomizeTrapItems()) {
                 if(objectContainer instanceof Screen) {

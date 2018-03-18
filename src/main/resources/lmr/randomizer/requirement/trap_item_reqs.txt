@@ -1,2 +1,4 @@
+Trap: Graveyard => Location: Graveyard of the Giants [West]
+Trap: Exploding => Location: Gate of Illusion [Lower], Hand Scanner
 Trap: Inferno Orb => None
 Trap: Twin Ankh => None

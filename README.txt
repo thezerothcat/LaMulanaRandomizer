@@ -5,10 +5,10 @@ Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8
 
 1.25:
 -----------------------------
-Ability to randomize the fake Ankh Jewel and Sacred Orb with other floating items.
+Ability to randomize the fake Ankh Jewel, fake Sacred Orb, exploding chest in Gate of Illusion, and empty chest in Graveyard of the Giants. The fake items and empty chest will spawn bats, and the exploding chest will explode. Removed items in chests may now randomly give 10 coins instead of a weight.
 
 
-1.22:
+1.24:
 -----------------------------
 More bugfixes.
 

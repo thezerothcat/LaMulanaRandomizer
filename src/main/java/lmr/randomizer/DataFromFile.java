@@ -17,15 +17,19 @@ public final class DataFromFile {
             "Flail Whip", "Earth Spear", "Angel Shield");
     public static List<String> LOCATIONS_RELATED_TO_BLOCKS = Arrays.asList("Map (Surface)", "mekuri.exe",
             "Mini Doll", "Pepper", "Anchor", "Mulana Talisman", "xmailer.exe", "Book of the Dead");
+    public static List<String> TRAP_ITEMS = Arrays.asList("Trap: Graveyard", "Trap: Exploding",
+            "Trap: Inferno Orb", "Trap: Twin Ankh");
     public static List<Integer> RANDOM_ITEM_GRAPHICS = Arrays.asList(1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16,
             17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 37, 38, 39, 40, 41, 42, 43, 44,
             45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 5, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71,
             72, 73, 75, 76, 81, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104);
 
+    public static String EXPLODING_CHEST_NAME = "Trap: Exploding";
+    public static String GRAVEYARD_TRAP_CHEST_NAME = "Trap: Graveyard";
+
     private static List<String> allShops;
     private static List<String> allItems;
     private static List<String> allCoinChests;
-    private static List<String> allTrapItems;
     private static List<String> allNonShopItemsPlusAllRandomizedShopItems;
     private static List<String> nonRandomizedItems;
     private static List<String> nonRandomizedShops;
@@ -35,7 +39,7 @@ public final class DataFromFile {
     private static List<String> nonRandomizedCoinChests;
     private static List<String> initialNonShopItemLocations;
     private static List<String> initialCoinChestLocations;
-    private static List<String> initialTrapItemLocations;
+    private static List<String> bannedTrapLocations;
     private static Map<String, GameObjectId> mapOfItemToUsefulIdentifyingRcdData;
     private static Map<String, Integer> mapOfShopNameToShopBlock;
     private static Map<String, List<String>> mapOfShopNameToShopOriginalContents;
@@ -94,7 +98,7 @@ public final class DataFromFile {
                 nonShopItemLocations.removeAll(getNonRandomizedCoinChests());
             }
             if(Settings.isRandomizeTrapItems()) {
-                nonShopItemLocations.addAll(getAllTrapItems());
+                nonShopItemLocations.addAll(DataFromFile.TRAP_ITEMS);
             }
             if(nonShopItemLocations == null) {
                 nonShopItemLocations = new ArrayList<>(0);
@@ -179,16 +183,21 @@ public final class DataFromFile {
     }
 
     public static List<String> getInitialTrapItemLocations() {
-        if(initialTrapItemLocations == null) {
-            initialTrapItemLocations = FileUtils.getList("initial/initial_coin_chests.txt");
-            if(initialTrapItemLocations == null) {
-                initialTrapItemLocations = new ArrayList<>(0);
-            }
-            else {
-                initialTrapItemLocations.removeAll(getNonRandomizedCoinChests());
-            }
+        return Arrays.asList("Trap: Inferno Orb", "Trap: Twin Ankh");
+    }
+
+    public static List<String> getBannedTrapLocations() {
+        return bannedTrapLocations == null ? new ArrayList<>(0) : bannedTrapLocations;
+    }
+
+    public static void setBannedTrapLocations(Random random) {
+        if(bannedTrapLocations == null) {
+            bannedTrapLocations = new ArrayList<>(0);
+            bannedTrapLocations.add(random.nextBoolean() ? "Coin: Guidance (One)" : "Coin: Guidance (Two)");
+            bannedTrapLocations.add(random.nextBoolean() ? "Coin: Illusion (Katana)" : "Fairy Clothes");
+            bannedTrapLocations.add(random.nextBoolean() ? "Map (Gate of Illusion)" : "Trap: Exploding");
+            bannedTrapLocations.add(random.nextBoolean() ? "Map (Chamber of Extinction)" : "Coin: Extinction");
         }
-        return initialTrapItemLocations;
     }
 
     public static List<String> getAvailableGlitches() {
@@ -406,13 +415,6 @@ public final class DataFromFile {
         return allCoinChests;
     }
 
-    public static List<String> getAllTrapItems() {
-        if(allTrapItems == null ) {
-            allTrapItems = FileUtils.getList("all/trap_items.txt");
-        }
-        return allTrapItems;
-    }
-
     public static void clearAllData() {
         if(Settings.isChanged()) {
             allNonShopItemsPlusAllRandomizedShopItems = null;
@@ -422,6 +424,7 @@ public final class DataFromFile {
             randomRemovableItems = null;
             nonShopItemLocations = null;
             nonRandomizedCoinChests = null;
+            bannedTrapLocations = null;
             mapOfNodeNameToRequirementsObject = null;
             mapOfNodeNameToExitRequirementsObject = null;
             winRequirements = null;

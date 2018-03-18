@@ -19,8 +19,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -197,7 +195,6 @@ public class Main {
             directory.mkdir();
 
             try {
-                progressDialog.setDefaultCloseOperation(HIDE_ON_CLOSE);
                 Frame f = this;
                 SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
                     @Override
@@ -313,6 +310,9 @@ public class Main {
                     break;
                 }
             }
+            if(Settings.isRandomizeTrapItems()) {
+                DataFromFile.setBannedTrapLocations(random);
+            }
             dialog.updateProgress(25, String.format(Translations.getText("progress.shuffling"), attempt));
             dialog.setTitle(String.format(Translations.getText("progress.shuffling.title"), attempt));
             dialog.progressBar.setIndeterminate(true);
@@ -333,13 +333,8 @@ public class Main {
             if(!itemRandomizer.placeRequiredItems(new ArrayList<>(initiallyAccessibleItems), random)) {
                 continue;
             }
-            if(Settings.isRandomizeCoinChests()) {
-                if(!itemRandomizer.placeCoinChests(random)) {
-                    continue;
-                }
-            }
-            if(Settings.isRandomizeTrapItems()) {
-                if(!itemRandomizer.placeTrapItems(random)) {
+            if(Settings.isRandomizeCoinChests() || Settings.isRandomizeTrapItems()) {
+                if(!itemRandomizer.placeChestOnlyItems(random)) {
                     continue;
                 }
             }

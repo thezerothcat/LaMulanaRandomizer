@@ -66,6 +66,42 @@ public final class GameDataTracker {
                 // Replace world flag for Life Seal coin chest, which is a bit special
                 worldFlag = 2707;
             }
+            else if(Settings.isRandomizeTrapItems() && flagUpdate.getIndex() == 60) {
+                // Replace world flag for Graveyard trap chest, and add a full set of update flags since it only has one.
+                inventoryArg = 0;
+                worldFlag = 2777;
+
+                gameObject.getWriteByteOperations().clear();
+
+                flagUpdate = new WriteByteOperation();
+                flagUpdate.setIndex(2777);
+                flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+                flagUpdate.setValue(2);
+                gameObject.getWriteByteOperations().add(flagUpdate);
+
+                flagUpdate = new WriteByteOperation();
+                flagUpdate.setIndex(2776);
+                flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+                flagUpdate.setValue(1);
+                gameObject.getWriteByteOperations().add(flagUpdate);
+
+                flagUpdate = new WriteByteOperation();
+                flagUpdate.setIndex(2777);
+                flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+                flagUpdate.setValue(2);
+                gameObject.getWriteByteOperations().add(flagUpdate);
+
+                flagUpdate = new WriteByteOperation();
+                flagUpdate.setIndex(2777);
+                flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+                flagUpdate.setValue(2);
+                gameObject.getWriteByteOperations().add(flagUpdate);
+            }
+            else if(Settings.isRandomizeTrapItems() && flagUpdate.getIndex() == 522) {
+                // Replace world flag for Illusion trap chest
+                inventoryArg = 0;
+                worldFlag = 2778;
+            }
             else {
                 worldFlag = gameObject.getWriteByteOperations().get(0).getIndex();
             }
@@ -504,6 +540,25 @@ public final class GameDataTracker {
                 else if(flagTest.getIndex() == 144) {
                     // Temple of the Sun Ankh Jewel trap dais
                     GameObjectId gameObjectId = new GameObjectId((short) 19, 144);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+                else if(Settings.isRandomizeTrapItems()) {
+                    if(gameObject.getObjectContainer() instanceof Screen) {
+                        Screen screen = (Screen) gameObject.getObjectContainer();
+                        if (screen.getZoneIndex() == 11 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 3) {
+                            // Graveyard trap chest dais
+                            gameObject.getTestByteOperations().get(0).setIndex(2776);
+                            gameObject.getWriteByteOperations().get(0).setIndex(2776);
+                            gameObject.getWriteByteOperations().remove(1);
+                        }
+                    }
+                    GameObjectId gameObjectId = new GameObjectId((short) 0, 2777);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -2442,7 +2497,7 @@ public final class GameDataTracker {
         }
         for(GameObject objectToModify : objectsToModify) {
             if(objectToModify.getId() == 0x2c) {
-                updateChestContents(objectToModify, itemLocationData, itemNewContentsData, chestContents, newWorldFlag);
+                updateChestContents(objectToModify, itemLocationData, itemNewContentsData, chestContents, newWorldFlag, random);
                 if("Map (Shrine of the Mother)".equals(chestContents)) {
                     addShrineMapSoundEffect(objectToModify.getObjectContainer());
                 }
@@ -2665,23 +2720,44 @@ public final class GameDataTracker {
         objects.add(altSurfaceShopTimer);
     }
 
-    private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData, String newChestContentsItemName, int newWorldFlag) {
+    private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData,
+                                            String newChestContentsItemName, int newWorldFlag, Random random) {
         WriteByteOperation puzzleFlag = objectToModify.getWriteByteOperations().get(1);
         objectToModify.getWriteByteOperations().clear();
 
-        boolean itemChest = !newChestContentsItemName.startsWith("Coin:");
-
-        if(itemChest) {
-            // Which item goes in the chest, and associated flag.
-            if(itemNewContentsData.getWorldFlag() == newWorldFlag) {
-                objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11)); // Item arg to indicate what the chest drops
+        if(newChestContentsItemName.startsWith("Coin:")) {
+            objectToModify.getArgs().set(0, (short)1); // Coins
+            objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg()); // Re-purposing inventory arg to track coin amount
+            objectToModify.getArgs().set(2, (short)0); // Brown chest
+            for (TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+                if (flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                    flagTest.setIndex(itemNewContentsData.getWorldFlag());
+                }
             }
-            else {
-                objectToModify.getArgs().set(0, (short)2); // Weights
-            }
 
-            // Real/fake item, or item quantity (depending on item)
-            objectToModify.getArgs().set(1, (short)1); // Real item, not fake (or 1 weight, because the game won't allow multiple)
+            WriteByteOperation updateFlag = new WriteByteOperation();
+            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
+            updateFlag.setValue(2);
+            objectToModify.getWriteByteOperations().add(updateFlag);
+
+            objectToModify.getWriteByteOperations().add(puzzleFlag);
+
+            updateFlag = new WriteByteOperation();
+            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
+            updateFlag.setValue(2);
+            objectToModify.getWriteByteOperations().add(updateFlag);
+
+            updateFlag = new WriteByteOperation();
+            updateFlag.setOp(ByteOp.ADD_FLAG);
+            updateFlag.setIndex(119); // Coin chest tracking
+            updateFlag.setValue(1);
+            objectToModify.getWriteByteOperations().add(updateFlag);
+        }
+        else if(newChestContentsItemName.startsWith("Trap:")) {
+            objectToModify.getArgs().set(0, (short)0); // Nothing
+            objectToModify.getArgs().set(1, (short)1); // Quantity is irrelevant
 
             // Chest graphics (0 = coin chest, 1 = blue chest)
             if(Settings.isCoinChestGraphics()) {
@@ -2689,6 +2765,75 @@ public final class GameDataTracker {
             }
             else {
                 objectToModify.getArgs().set(2, (short)1);
+            }
+
+            for (TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+                if (flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                    flagTest.setIndex(itemNewContentsData.getWorldFlag());
+                }
+            }
+
+            WriteByteOperation updateFlag = new WriteByteOperation();
+            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+            updateFlag.setIndex(newWorldFlag);
+            updateFlag.setValue(1);
+            objectToModify.getWriteByteOperations().add(updateFlag);
+
+            objectToModify.getWriteByteOperations().add(puzzleFlag);
+
+            updateFlag = new WriteByteOperation();
+            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+            updateFlag.setIndex(newWorldFlag == 2778 ? newWorldFlag : 46);
+            updateFlag.setValue(1);
+            objectToModify.getWriteByteOperations().add(updateFlag);
+
+            updateFlag = new WriteByteOperation();
+            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+            updateFlag.setIndex(newWorldFlag);
+            updateFlag.setValue(1);
+            objectToModify.getWriteByteOperations().add(updateFlag);
+
+            if(newWorldFlag == 2778) {
+                // Exploding trap chest
+                addExplosion(objectToModify.getObjectContainer(), objectToModify.getX(), objectToModify.getY(), newWorldFlag);
+            }
+            else {
+                int xPos = objectToModify.getX();
+                int yPos = objectToModify.getY();
+                addBat(objectToModify.getObjectContainer(), xPos - 20, yPos, 46);
+                addBat(objectToModify.getObjectContainer(), xPos + 20, yPos, 46);
+                addBat(objectToModify.getObjectContainer(), xPos, yPos - 20, 46);
+                addBat(objectToModify.getObjectContainer(), xPos, yPos + 20, 46);
+            }
+
+            addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, 46 );
+        }
+        else {
+            if(itemNewContentsData.getWorldFlag() == newWorldFlag) {
+                // Actual items
+                objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11)); // Item arg to indicate what the chest drops
+
+                objectToModify.getArgs().set(1, (short)1); // Real item, not fake (or 1 weight, because the game won't allow multiple)
+
+                if(Settings.isCoinChestGraphics()) {
+                    objectToModify.getArgs().set(2, (short)0);
+                }
+                else {
+                    objectToModify.getArgs().set(2, (short)1);
+                }
+            }
+            else {
+                // Removed items
+                if(random.nextBoolean()) {
+                    objectToModify.getArgs().set(0, (short)2); // Weights
+                    objectToModify.getArgs().set(1, (short)1); // The game won't allow multiple weights, so just give 1
+                }
+                else {
+                    objectToModify.getArgs().set(0, (short)1); // Coins
+                    objectToModify.getArgs().set(1, (short)10); // 10 coins, the equivalent of a pot
+                }
+
+                objectToModify.getArgs().set(2, (short)0); // Removed items use coin chest graphics.
             }
 
             for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
@@ -2720,36 +2865,6 @@ public final class GameDataTracker {
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
             updateFlag.setIndex(newWorldFlag);
             updateFlag.setValue(2);
-            objectToModify.getWriteByteOperations().add(updateFlag);
-        }
-        else {
-            objectToModify.getArgs().set(0, (short)1); // Coins
-            objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg()); // Re-purposing inventory arg to track coin amount
-            objectToModify.getArgs().set(2, (short)0); // Brown chest
-            for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
-                if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
-                    flagTest.setIndex(itemNewContentsData.getWorldFlag());
-                }
-            }
-
-            WriteByteOperation updateFlag = new WriteByteOperation();
-            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
-            updateFlag.setValue(2);
-            objectToModify.getWriteByteOperations().add(updateFlag);
-
-            objectToModify.getWriteByteOperations().add(puzzleFlag);
-
-            updateFlag = new WriteByteOperation();
-            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
-            updateFlag.setValue(2);
-            objectToModify.getWriteByteOperations().add(updateFlag);
-
-            updateFlag = new WriteByteOperation();
-            updateFlag.setOp(ByteOp.ADD_FLAG);
-            updateFlag.setIndex(119); // Coin chest tracking
-            updateFlag.setValue(1);
             objectToModify.getWriteByteOperations().add(updateFlag);
         }
     }
@@ -2836,9 +2951,9 @@ public final class GameDataTracker {
             updateFlag.setValue(1);
             objectToModify.getWriteByteOperations().add(updateFlag);
 
-            addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag);
+            addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, 43);
         }
-        else if(Settings.isRandomizeTrapItems() && (newWorldFlag == 2779 || newWorldFlag == 2780)) {
+        else if(Settings.isRandomizeTrapItems() && (newWorldFlag == 2777 || newWorldFlag == 2779 || newWorldFlag == 2780)) {
             // Trap items
             objectToModify.getArgs().set(1, getRandomItemGraphic(random));
             objectToModify.getArgs().set(2, (short)0);
@@ -2856,16 +2971,16 @@ public final class GameDataTracker {
 
             int xPos = objectToModify.getX();
             int yPos = objectToModify.getY();
-            addBat(objectToModify.getObjectContainer(), xPos - 20, yPos);
-            addBat(objectToModify.getObjectContainer(), xPos + 20, yPos);
-            addBat(objectToModify.getObjectContainer(), xPos, yPos - 20);
-            addBat(objectToModify.getObjectContainer(), xPos, yPos + 20);
+            addBat(objectToModify.getObjectContainer(), xPos - 20, yPos, 43);
+            addBat(objectToModify.getObjectContainer(), xPos + 20, yPos, 43);
+            addBat(objectToModify.getObjectContainer(), xPos, yPos - 20, 43);
+            addBat(objectToModify.getObjectContainer(), xPos, yPos + 20, 43);
 
-            addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag);
+            addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, 43);
         }
     }
 
-    private static void addBat(ObjectContainer objectContainer, int xPos, int yPos) {
+    private static void addBat(ObjectContainer objectContainer, int xPos, int yPos, int screenFlag) {
             GameObject bat = new GameObject(objectContainer);
             bat.setId((short)0x02);
             bat.setX(xPos);
@@ -2877,7 +2992,7 @@ public final class GameDataTracker {
             bat.getArgs().add((short)3);
 
             TestByteOperation testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(43);
+            testByteOperation.setIndex(screenFlag);
             testByteOperation.setOp(ByteOp.FLAG_EQUALS);
             testByteOperation.setValue((byte)1);
             bat.getTestByteOperations().add(testByteOperation);
@@ -2885,7 +3000,35 @@ public final class GameDataTracker {
             objectContainer.getObjects().add(bat);
     }
 
-    private static void addNoItemSoundEffect(ObjectContainer objectContainer, Integer newWorldFlag) {
+    private static void addExplosion(ObjectContainer objectContainer, int xPos, int yPos, int newWorldFlag) {
+        GameObject explosion = new GameObject(objectContainer);
+        explosion.setId((short)0xb4);
+        explosion.setX(xPos - 80);
+        explosion.setY(yPos - 80);
+        explosion.getArgs().add((short)200);
+        explosion.getArgs().add((short)1);
+        explosion.getArgs().add((short)6);
+        explosion.getArgs().add((short)6);
+        explosion.getArgs().add((short)1);
+        explosion.getArgs().add((short)60);
+        explosion.getArgs().add((short)85);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(newWorldFlag);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)1);
+        explosion.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(newWorldFlag);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(2);
+        explosion.getWriteByteOperations().add(writeByteOperation);
+
+        objectContainer.getObjects().add(explosion);
+    }
+
+    private static void addNoItemSoundEffect(ObjectContainer objectContainer, Integer newWorldFlag, Integer screenFlag) {
         GameObject noItemSoundEffect = new GameObject(objectContainer);
         noItemSoundEffect.setId((short)0x9b);
         noItemSoundEffect.getArgs().add((short)80);
@@ -2913,7 +3056,7 @@ public final class GameDataTracker {
         noItemSoundEffect.getTestByteOperations().add(testFlag);
 
         testFlag = new TestByteOperation();
-        testFlag.setIndex(43);
+        testFlag.setIndex(screenFlag);
         testFlag.setOp(ByteOp.FLAG_EQUALS);
         testFlag.setValue((byte)1);
         noItemSoundEffect.getTestByteOperations().add(testFlag);
