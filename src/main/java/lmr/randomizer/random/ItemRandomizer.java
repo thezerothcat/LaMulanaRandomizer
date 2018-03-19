@@ -434,7 +434,7 @@ public class ItemRandomizer {
     }
 
     private int getNewWorldFlag(String itemLocation, String newContents, GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
-        if(itemNewContentsData.getInventoryArg() == 62 && Settings.getCurrentRemovedItems().contains("Spaulder")) {
+        if(itemNewContentsData.getInventoryArg() == 62 && Settings.getRemovedItems().contains("Spaulder")) {
             // Spaulder
             return 2781;
         }

@@ -548,6 +548,20 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
+//                else if(flagTest.getIndex() == 433) {
+//                    // Chain Whip puzzle crusher
+//                    flagTest.setIndex(46);
+//
+//                    gameObject.getWriteByteOperations().get(0).setIndex(46);
+//                    break;
+//                }
+//                else if(flagTest.getIndex() == 434) {
+//                    // Chain Whip puzzle crusher
+//                    flagTest.setIndex(47);
+//
+//                    gameObject.getWriteByteOperations().get(0).setIndex(47);
+//                    break;
+//                }
                 else if(Settings.isRandomizeTrapItems()) {
                     if(gameObject.getObjectContainer() instanceof Screen) {
                         Screen screen = (Screen) gameObject.getObjectContainer();
@@ -556,16 +570,17 @@ public final class GameDataTracker {
                             gameObject.getTestByteOperations().get(0).setIndex(2776);
                             gameObject.getWriteByteOperations().get(0).setIndex(2776);
                             gameObject.getWriteByteOperations().remove(1);
+
+                            GameObjectId gameObjectId = new GameObjectId((short) 0, 2777);
+                            List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                            if (objects == null) {
+                                mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                                objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                            }
+                            objects.add(gameObject);
+                            break;
                         }
                     }
-                    GameObjectId gameObjectId = new GameObjectId((short) 0, 2777);
-                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                    if (objects == null) {
-                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                    }
-                    objects.add(gameObject);
-                    break;
                 }
             }
         } else if (gameObject.getId() == 0x9e) {
@@ -3051,8 +3066,8 @@ public final class GameDataTracker {
 
         TestByteOperation testFlag = new TestByteOperation();
         testFlag.setIndex(newWorldFlag);
-        testFlag.setOp(ByteOp.FLAG_EQUALS);
-        testFlag.setValue((byte)2);
+        testFlag.setOp(ByteOp.FLAG_GT);
+        testFlag.setValue((byte)0);
         noItemSoundEffect.getTestByteOperations().add(testFlag);
 
         testFlag = new TestByteOperation();
