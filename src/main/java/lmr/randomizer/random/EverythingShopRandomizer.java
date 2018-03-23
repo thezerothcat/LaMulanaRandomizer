@@ -322,7 +322,9 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 location = String.format("%s Item %d", shop, i);
                 if(mapOfShopInventoryItemToContents.containsKey(location)) {
                     String itemName = mapOfShopInventoryItemToContents.get(location);
-                    if(Settings.getCurrentRemovedItems().contains(itemName)) {
+                    if(Settings.getCurrentRemovedItems().contains(itemName)
+                            || Settings.getRemovedItems().contains(itemName)
+                            || (Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName))) {
                         itemName += " (Removed)";
                     }
                     writer.write(location + " contains: " + itemName);
@@ -365,14 +367,17 @@ public class EverythingShopRandomizer implements ShopRandomizer {
             }
 
             if(Settings.getCurrentRemovedItems().contains(shopItem1)
+                    || Settings.getRemovedItems().contains(shopItem1)
                     || (Settings.isReplaceMapsWithWeights() && shopItem1.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem1))) {
                 shopItem1 = "Weights";
             }
             if(Settings.getCurrentRemovedItems().contains(shopItem2)
+                    || Settings.getRemovedItems().contains(shopItem2)
                     || (Settings.isReplaceMapsWithWeights() && shopItem2.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem2))) {
                 shopItem2 = "Weights";
             }
             if(Settings.getCurrentRemovedItems().contains(shopItem3)
+                    || Settings.getRemovedItems().contains(shopItem3)
                     || (Settings.isReplaceMapsWithWeights() && shopItem3.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem3))) {
                 shopItem3 = "Weights";
             }
