@@ -9,5 +9,6 @@ public enum NodeType {
     EVENT,
     SHOP,
     GLITCH,
+    ATTACK,
     EXIT
 }

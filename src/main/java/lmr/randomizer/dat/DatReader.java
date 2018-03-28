@@ -19,11 +19,8 @@ import java.util.List;
  * Created by thezerothcat on 7/26/2017.
  */
 public final class DatReader {
-    private static final String CHAR_TO_SHORT_CONVERSION = "!\"&'(),-./0123456789:?ABCDEFGHIJKLMNOPQRSTUVWXYZ　]^_abcdefghijklmnopqrstuvwxyz…♪、。々「」ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろわをんァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロワヲンヴ・ー一三上下不与世丘両中丸主乗乙乱乳予争事二人今介仕他付代以仮仲件会伝位低住体何作使供侵係保信俺倍倒値偉側偶備傷像僧元兄先光兜入全公具典内再冒冥出刀分切列初別利刻則前剣創力加助効勇勉動化匹十半協博印危去参双反取受叡口古召可台史右司合同名向否周呪味呼命品唯唱問喜営器噴四回囲図国土在地坂型域基堂報場塊塔墓増壁壇壊士声売壷変外多夜夢大天太央失奇契奥女好妊妖妻始姿娘婦子字存孤学宇守官宙定宝実客室宮家密寝対封専導小少尾屋屏属山岩崖崩嵐左巨己布帯帰常年幸幻幾広床底店度座庫廊廟弁引弟弱張強弾当形影役彼待後心必忍忘応念怒思急性怨恐息恵悔悟悪悲情惑想意愚愛感慈態憶我戦戻所扉手扱投抜押拝拡拳拾持指振探撃撮操支攻放敗教散数敵敷文料斧断新方旅族日早昇明昔星映時晩普晶智暗曲書最月有服望未末本杉村杖束来杯板析果架柱査格械棺検椿楼楽槍様槽模樹橋機欠次欲歓止正武歩歯歳歴死殊残段殺殿母毒毛気水氷永求汝池決治法波泥注洞洪流海消涙涯深済減湖満源溶滅滝火灯灼炎無然熱爆爪父版牛物特犬状狂独獄獅獣玄玉王珠現球理瓶生産用男画界略番発登白百的盤目直盾看真眼着知石研破碑示礼社祈祖神祠祭禁福私秘秤移種穴究空突窟立竜章竪端笛符第筒答箱範精系約納純紫細紹終経結続緑練罠罪罰義羽習翻翼老考者耐聖聞肉肩胸能脱腕自至船色若苦英荷華落葉蔵薇薔薬蛇血行術衛表裁装裏補製複要見覚親解言記訳証試話詳認誕誘語誠説読誰調論謁謎謝識議護谷貝財貧貯買貸資賢贄贖赤走起超足跡路踊蹴身車軽輝辞込辿近返迷追送逃通速造連進遊過道達違遠適選遺還郎部配重野量金針鉄銀銃銅録鍵鎖鏡長門閉開間関闇闘防限険陽階隠雄雑難雨霊青静面革靴音順領頭題顔願類風飛食館馬駄験骨高魂魔魚鳥鳴黄黒泉居転清成仏拠維視宿浮熟飾冷得集安割栄偽屍伸巻緒捨固届叩越激彫蘇狭浅Ⅱ［］：！？～／０１２３４５６７８９ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＲＳＴＵＶＷＸＹａｂｄｅｇｈｉｌｍｏｐｒｓｔｕｘ辺薄島異温復称狙豊穣虫絶ＱＺｃｆｊｋｎｑｖｗｙｚ＋－旧了設更橫幅似確置整＞％香ü描園為渡象相聴比較掘酷艇原民雷絵南米平木秋田県湯環砂漠角運湿円背負構授輪圏隙草植快埋寺院妙該式判（）警告収首腰芸酒美組各演点勝観編丈夫姫救’，．霧節幽技師柄期瞬電購任販Á;û+→↓←↑⓪①②③④⑤⑥⑦⑧⑨<”挑朝痛魅鍛戒飲憂照磨射互降沈醜触煮疲素競際易堅豪屈潔削除替Ü♡*$街極";
-
     private DatReader() {
     }
-
 
     private static ShopBlock buildShopBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         int dataIndex = 0;
@@ -157,9 +154,9 @@ public final class DatReader {
         // Get the data for Mobile Super X, but throw it away in favor of custom replacement
         dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
         blockStringData = new BlockStringData();
-        blockStringData.getData().addAll(stringToData("Mobile　Super　X：" + versionString));
+        blockStringData.getData().addAll(FileUtils.stringToData("Mobile　Super　X：" + versionString));
         blockStringData.getData().add((short)0x0045);
-        blockStringData.getData().addAll(stringToData(settingsString));
+        blockStringData.getData().addAll(FileUtils.stringToData(settingsString));
         blockStringData.getData().add((short)0x000a);
         itemDescriptionBlock.getBlockContents().add(blockStringData);
 
@@ -174,9 +171,9 @@ public final class DatReader {
         // Get the data for Mobile Super X2, but throw it away in favor of custom replacement
         dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
         blockStringData = new BlockStringData();
-        blockStringData.getData().addAll(stringToData("Mobile　Super　X2：" + versionString));
+        blockStringData.getData().addAll(FileUtils.stringToData("Mobile　Super　X2：" + versionString));
         blockStringData.getData().add((short)0x0045);
-        blockStringData.getData().addAll(stringToData(settingsString));
+        blockStringData.getData().addAll(FileUtils.stringToData(settingsString));
         blockStringData.getData().add((short)0x000a);
         itemDescriptionBlock.getBlockContents().add(blockStringData);
 
@@ -186,23 +183,6 @@ public final class DatReader {
             itemDescriptionBlock.getBlockContents().add(new BlockSingleData(blockData));
         }
         return itemDescriptionBlock;
-    }
-
-    private static List<Short> stringToData(String stringToConvert) {
-        List<Short> dataString = new ArrayList<>(stringToConvert.length());
-        short data;
-        char charAtIndex;
-        for (int i = 0; i < stringToConvert.length(); i++) {
-            charAtIndex = stringToConvert.charAt(i);
-            if (charAtIndex == ' ') {
-                dataString.add((short)32);
-            }
-            else {
-                data = (short)(CHAR_TO_SHORT_CONVERSION.indexOf(charAtIndex) + 0x0100);
-                dataString.add(data);
-            }
-        }
-        return dataString;
     }
 
     private static Block buildGrailPointBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {

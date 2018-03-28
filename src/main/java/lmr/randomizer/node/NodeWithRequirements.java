@@ -26,6 +26,9 @@ public class NodeWithRequirements {
         else if(name.contains("Shop")) {
             type = NodeType.SHOP;
         }
+        else if(name.contains("Attack:")) {
+            type = NodeType.ATTACK;
+        }
         else {
             type = NodeType.ITEM_LOCATION;
         }

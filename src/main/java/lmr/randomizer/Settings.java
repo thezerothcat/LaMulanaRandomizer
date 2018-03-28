@@ -18,6 +18,7 @@ public final class Settings {
     public static final int MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED = 40;
 
     public static Set<String> currentRemovedItems;
+    public static String currentStartingWeapno;
 
     private static Settings singleton = new Settings();
 
@@ -33,6 +34,7 @@ public final class Settings {
     private boolean randomizeForbiddenTreasure;
     private boolean randomizeCoinChests;
     private boolean randomizeTrapItems;
+    private boolean randomizeMainWeapon;
     private boolean replaceMapsWithWeights;
     private boolean automaticGrailPoints;
 
@@ -48,6 +50,7 @@ public final class Settings {
             "Random", "xmailer.exe");
 
     private String laMulanaBaseDir;
+    private String laMulanaSaveDir;
     private String language;
 
     private Set<String> nonRandomizedItems = new HashSet<>();
@@ -71,10 +74,11 @@ public final class Settings {
         requireSoftwareComboForKeyFairy = true;
         requireIceCapeForLava = true;
         requireFlaresForExtinction = true;
-        randomizeForbiddenTreasure = true;
+        randomizeForbiddenTreasure = false;
         randomizeCoinChests = true;
         randomizeTrapItems = true;
-        replaceMapsWithWeights = true;
+        randomizeMainWeapon = false;
+        replaceMapsWithWeights = false;
         automaticHardmode = false;
         coinChestGraphics = false;
         automaticGrailPoints = false;
@@ -156,6 +160,17 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.laMulanaBaseDir = laMulanaBaseDir;
+    }
+
+    public static String getLaMulanaSaveDir() {
+        return singleton.laMulanaSaveDir;
+    }
+
+    public static void setLaMulanaSaveDir(String laMulanaSaveDir, boolean update) {
+        if(update && !laMulanaSaveDir.equals(singleton.laMulanaSaveDir)) {
+            singleton.changed = true;
+        }
+        singleton.laMulanaSaveDir = laMulanaSaveDir;
     }
 
     public static String getLanguage() {
@@ -243,6 +258,17 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.requireFlaresForExtinction = requireFlaresForExtinction;
+    }
+
+    public static boolean isRandomizeMainWeapon() {
+        return singleton.randomizeMainWeapon;
+    }
+
+    public static void setRandomizeMainWeapon(boolean randomizeMainWeapon, boolean update) {
+        if(update && randomizeMainWeapon != singleton.randomizeMainWeapon) {
+            singleton.changed = true;
+        }
+        singleton.randomizeMainWeapon = randomizeMainWeapon;
     }
 
     public static boolean isRandomizeForbiddenTreasure() {
@@ -449,6 +475,14 @@ public final class Settings {
 
     public static void setCurrentRemovedItems(Set<String> currentRemovedItems) {
         Settings.currentRemovedItems = currentRemovedItems;
+    }
+
+    public static String getCurrentStartingWeapon() {
+        return singleton.currentStartingWeapno == null ? "Whip" : singleton.currentStartingWeapno;
+    }
+
+    public static void setCurrentStartingWeapon(String currentStartingItem) {
+        singleton.currentStartingWeapno = currentStartingItem;
     }
 
     public static void saveSettings() {

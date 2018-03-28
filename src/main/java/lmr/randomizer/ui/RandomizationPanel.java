@@ -11,6 +11,7 @@ public class RandomizationPanel extends JPanel {
 
     private JCheckBox randomizeCoinChests;
     private JCheckBox randomizeTrapItems;
+    private JCheckBox randomizeMainWeapon;
     private JCheckBox randomizeForbiddenTreasure;
 
     private ShopRandomizationRadio shopRandomization;
@@ -34,13 +35,17 @@ public class RandomizationPanel extends JPanel {
         randomizeTrapItems = new JCheckBox();
         randomizeTrapItems.setSelected(Settings.isRandomizeTrapItems());
 
+        randomizeMainWeapon = new JCheckBox();
+        randomizeMainWeapon.setSelected(Settings.isRandomizeMainWeapon());
+
         randomizeForbiddenTreasure = new JCheckBox();
         randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
 
-        CheckboxContainer checkboxContainer = new CheckboxContainer(1);
+        CheckboxContainer checkboxContainer = new CheckboxContainer(2);
         checkboxContainer.add(randomizeCoinChests);
-        checkboxContainer.add(randomizeForbiddenTreasure);
+        checkboxContainer.add(randomizeMainWeapon);
         checkboxContainer.add(randomizeTrapItems);
+        checkboxContainer.add(randomizeForbiddenTreasure);
         add(checkboxContainer, "growx, wrap");
 
         updateTranslations();
@@ -51,6 +56,7 @@ public class RandomizationPanel extends JPanel {
         randomizeForbiddenTreasure.setText(Translations.getText("randomization.randomizeForbiddenTreasure"));
         randomizeCoinChests.setText(Translations.getText("randomization.randomizeCoinChests"));
         randomizeTrapItems.setText(Translations.getText("randomization.randomizeTrapItems"));
+        randomizeMainWeapon.setText(Translations.getText("randomization.randomizeMainWeapon"));
         shopRandomization.updateTranslations();
         xmailerRandomization.updateTranslations();
     }
@@ -60,6 +66,7 @@ public class RandomizationPanel extends JPanel {
         Settings.setRandomizeForbiddenTreasure(randomizeForbiddenTreasure.isSelected(), true);
         Settings.setRandomizeCoinChests(randomizeCoinChests.isSelected(), true);
         Settings.setRandomizeTrapItems(randomizeTrapItems.isSelected(), true);
+        Settings.setRandomizeMainWeapon(randomizeMainWeapon.isSelected(), true);
         shopRandomization.updateSettings();
         xmailerRandomization.updateSettings();
     }
@@ -72,5 +79,6 @@ public class RandomizationPanel extends JPanel {
         randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
         randomizeCoinChests.setSelected(Settings.isRandomizeCoinChests());
         randomizeTrapItems.setSelected(Settings.isRandomizeTrapItems());
+        randomizeMainWeapon.setSelected(Settings.isRandomizeMainWeapon());
     }
 }

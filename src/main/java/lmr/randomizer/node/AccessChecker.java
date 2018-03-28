@@ -69,6 +69,9 @@ public class AccessChecker {
                 if(nodeName.startsWith("Glitch:")) {
                     continue;
                 }
+                if(nodeName.startsWith("Attack:")) {
+                    continue;
+                }
                 else if(NodeType.ITEM_LOCATION.equals(mapOfNodeNameToRequirementsObject.get(nodeName).getType())
                     && (itemRandomizer.getItem(nodeName).startsWith("Coin:") || itemRandomizer.getItem(nodeName).startsWith("Trap:"))) {
                     continue;
@@ -127,6 +130,10 @@ public class AccessChecker {
             stateToUpdate = "Sacred Orb";
             numberOfAccessibleSacredOrbs += 1;
             queuedUpdates.add("Sacred Orb: " + numberOfAccessibleSacredOrbs);
+        }
+        if(Settings.isRandomizeMainWeapon()
+                && !"Whip".equals(Settings.getCurrentStartingWeapon()) && "Whip".equals(stateToUpdate)) {
+            stateToUpdate = "Chain Whip";
         }
 
         accessedNodes.add(newState);
@@ -261,6 +268,7 @@ public class AccessChecker {
 //                        queuedUpdates.add("Chakram Ammo");
 //                    }
 //                }
+            case ATTACK:
             case EVENT:
             case EXIT:
             case GLITCH:

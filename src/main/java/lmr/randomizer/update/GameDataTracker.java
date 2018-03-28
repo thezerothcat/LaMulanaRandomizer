@@ -490,6 +490,16 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
+                else if(flagUpdate.getIndex() == 433) {
+                    // Chain Whip puzzle crusher
+                    flagUpdate.setIndex(46);
+                    break;
+                }
+                else if(flagUpdate.getIndex() == 434) {
+                    // Chain Whip puzzle crusher
+                    flagUpdate.setIndex(47);
+                    break;
+                }
             }
         }
         else if (gameObject.getId() == 0x14) {
@@ -548,20 +558,20 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-//                else if(flagTest.getIndex() == 433) {
-//                    // Chain Whip puzzle crusher
-//                    flagTest.setIndex(46);
-//
-//                    gameObject.getWriteByteOperations().get(0).setIndex(46);
-//                    break;
-//                }
-//                else if(flagTest.getIndex() == 434) {
-//                    // Chain Whip puzzle crusher
-//                    flagTest.setIndex(47);
-//
-//                    gameObject.getWriteByteOperations().get(0).setIndex(47);
-//                    break;
-//                }
+                else if(flagTest.getIndex() == 433) {
+                    // Chain Whip puzzle crusher
+                    flagTest.setIndex(46);
+
+                    gameObject.getWriteByteOperations().get(0).setIndex(46);
+                    break;
+                }
+                else if(flagTest.getIndex() == 434) {
+                    // Chain Whip puzzle crusher
+                    flagTest.setIndex(47);
+
+                    gameObject.getWriteByteOperations().get(0).setIndex(47);
+                    break;
+                }
                 else if(Settings.isRandomizeTrapItems()) {
                     if(gameObject.getObjectContainer() instanceof Screen) {
                         Screen screen = (Screen) gameObject.getObjectContainer();
@@ -1892,13 +1902,18 @@ public final class GameDataTracker {
             int worldFlag = 227;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
-            // Set value of world flag to 2 instead of 1
-            for(int i = 0; i < block.getBlockContents().size(); i++) {
-                BlockContents blockContents = block.getBlockContents().get(i);
-                if(blockContents instanceof BlockFlagData) {
-                    BlockFlagData blockFlagData = (BlockFlagData) blockContents;
-                    if(blockFlagData.getWorldFlag() == 227) {
-                        blockFlagData.setFlagValue((short)2);
+            if(Settings.isRandomizeMainWeapon()) {
+                updateXmailerBlock(block.getBlockContents());
+            }
+            else {
+                // Set value of world flag to 2 instead of 1
+                for(int i = 0; i < block.getBlockContents().size(); i++) {
+                    BlockContents blockContents = block.getBlockContents().get(i);
+                    if(blockContents instanceof BlockFlagData) {
+                        BlockFlagData blockFlagData = (BlockFlagData) blockContents;
+                        if(blockFlagData.getWorldFlag() == 227) {
+                            blockFlagData.setFlagValue((short)2);
+                        }
                     }
                 }
             }
@@ -2099,6 +2114,25 @@ public final class GameDataTracker {
             }
             blocks.add(block);
         }
+    }
+
+    public static void updateXmailerBlock(List<BlockContents> xelpudBlockContents) {
+        xelpudBlockContents.clear();
+        xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)740, (short)1)); // 64
+        List<Short> stringCharacters = FileUtils.stringToData("Did you know that randomized starting weapon requires you to load the provided save file?");
+        for(Short shortCharacter : stringCharacters) {
+            xelpudBlockContents.add(new BlockSingleData(shortCharacter));
+        }
+        xelpudBlockContents.add(new BlockPoseData((short)0x0046, (short)25)); // 70
+        xelpudBlockContents.add(new BlockItemData((short)0x0042, (short)86)); // 66
+        xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)227, (short)2)); // 64
+        xelpudBlockContents.add(new BlockSingleData((short)0x0044)); // {CLS}
+        for(Short shortCharacter : stringCharacters) {
+            xelpudBlockContents.add(new BlockSingleData(shortCharacter));
+        }
+        xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)124, (short)1)); // 64
+        xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)740, (short)0)); // 64
+        xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)2900, (short)1)); // 64
     }
 
     public static void updateBlock(GameObjectId itemLocationData, GameObjectId itemNewContentsData) {

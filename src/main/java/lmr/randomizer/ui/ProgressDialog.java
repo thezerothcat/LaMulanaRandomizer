@@ -10,6 +10,8 @@ public class ProgressDialog extends JDialog {
     public JProgressBar progressBar;
     JLabel statusText;
 
+    private boolean safeClose;
+
     public ProgressDialog(Frame owner) {
         super(owner, Translations.getText("progress"), true);
         setLayout(new MigLayout("wrap 1", "", "align center"));
@@ -18,6 +20,7 @@ public class ProgressDialog extends JDialog {
 
         progressBar = new JProgressBar(0,100);
         statusText = new JLabel("");
+        safeClose = true;
 
         add(statusText, "growx, width 300!");
         add(progressBar, "growx, height 1.5*pref");
@@ -31,5 +34,13 @@ public class ProgressDialog extends JDialog {
 
     public void updateTranslations() {
         setTitle(Translations.getText("progress"));
+    }
+
+    public boolean isSafeClose() {
+        return safeClose;
+    }
+
+    public void setSafeClose(boolean safeClose) {
+        this.safeClose = safeClose;
     }
 }

@@ -3,6 +3,11 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
+1.26:
+-----------------------------
+Random starting weapons. This will replace the save in your first slot, and that save must be used to apply the random starting weapon. Two items in Temple of Moonlight have been removed from the initial chests pool to account for the fact that access to the Temple of Moonlight pyramid requires Whip or Axe. Also note that the regular Whip cannot be collected due to in-game limitations and will be replaced by the Chain Whip.
+
+
 1.25:
 -----------------------------
 Ability to randomize the fake Ankh Jewel, fake Sacred Orb, exploding chest in Gate of Illusion, and empty chest in Graveyard of the Giants. The fake items and empty chest will spawn bats, and the exploding chest will explode. Removed items in chests may now randomly give 10 coins instead of a weight.

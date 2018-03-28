@@ -9,6 +9,7 @@ import java.awt.*;
 public class ButtonPanel extends JPanel {
     JButton applyButton;
     JButton restoreButton;
+    JButton restoreSavesButton;
 
     public ButtonPanel(Main.RandomizerUI randomizerUI) {
         super(new FlowLayout());
@@ -21,13 +22,17 @@ public class ButtonPanel extends JPanel {
         restoreButton = new JButton(Translations.getText("button.restore"));
         restoreButton.addActionListener(randomizerUI);
         restoreButton.setActionCommand("restore");
-
-
         add(restoreButton);
+
+        restoreSavesButton = new JButton(Translations.getText("button.restoreSaves"));
+        restoreSavesButton.addActionListener(randomizerUI);
+        restoreSavesButton.setActionCommand("restoreSaves");
+        add(restoreSavesButton);
     }
 
     public void updateTranslations() {
         applyButton.setText(Translations.getText("button.apply"));
         restoreButton.setText(Translations.getText("button.restore"));
+        restoreSavesButton.setText(Translations.getText("button.restoreSaves"));
     }
 }

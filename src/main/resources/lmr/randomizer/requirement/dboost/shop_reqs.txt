@@ -1,8 +1,6 @@
 Shop 8 (Sun) => Boost: Enemy, Hermes' Boots
 Shop 8 (Sun) => Boost: Item, Bomb, Bomb Ammo, Hermes' Boots
-Shop 15 (Ruin) => Location: Tower of Ruin [Grail], Axe, Boost: Item, Bomb, Bomb Ammo
-Shop 15 (Ruin) => Location: Tower of Ruin [Grail], Knife, Boost: Item, Bomb, Bomb Ammo
-Shop 15 (Ruin) => Location: Tower of Ruin [Grail], Katana, Boost: Item, Bomb, Bomb Ammo
+Shop 15 (Ruin) => Location: Tower of Ruin [Grail], Attack: Below, Boost: Item, Bomb, Bomb Ammo
 Shop 15 (Ruin) => Location: Tower of Ruin [Grail], Earth Spear, Earth Spear Ammo, Boost: Item, Bomb, Bomb Ammo
 Shop 15 (Ruin) => Location: Tower of Ruin [Grail], Bomb, Bomb Ammo, Boost: Item
 Shop 15 (Ruin) => Location: Tower of Ruin [Grail], Rolling Shuriken, Rolling Shuriken Ammo, Boost: Item, Bomb, Bomb Ammo

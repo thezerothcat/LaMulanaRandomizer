@@ -17,12 +17,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.awt.event.*;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
@@ -46,6 +42,12 @@ public class Main {
         @Override
         public void run() {
             RandomizerUI randomizerUI = new RandomizerUI();
+            randomizerUI.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    FileUtils.closeAll();
+                }
+            });
             randomizerUI.setVisible(true);
         }
     }
@@ -87,6 +89,15 @@ public class Main {
             });
 
             progressDialog = new ProgressDialog(this);
+            JFrame mainWindow = this;
+            progressDialog.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    if(progressDialog.isSafeClose()) {
+                        mainWindow.dispatchEvent(new WindowEvent(mainWindow,WindowEvent.WINDOW_CLOSING));
+                    }
+                }
+            });
             progressDialog.updateProgress(0, Translations.getText("progress.generating"));
 
             buttonPanel = new ButtonPanel(this);
@@ -96,13 +107,36 @@ public class Main {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            mainPanel.updateSettings();
+            tabbedPanel.updateSettings();
             if("generate".equals(e.getActionCommand())) {
-                generateSeed();
+                try {
+                    generateSeed();
+                }
+                catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this,
+                            ex.getMessage(),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             else if("apply".equals(e.getActionCommand())) {
-                generateAndApply();
+                try {
+                    generateAndApply();
+                }
+                catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this,
+                            ex.getMessage(),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             else if("restore".equals(e.getActionCommand())) {
+                if(!validateInstallDir()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Unable to find La-Mulana install directory",
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 try {
                     this.progressDialog.updateProgress(0, Translations.getText("restore.start"));
                     Frame f = this;
@@ -119,17 +153,45 @@ public class Main {
                     progressDialog.setVisible(true);
                 } catch (Exception ex) {
                     FileUtils.log("Error: " + ex.getMessage());
-                    ex.printStackTrace();
-                    throw ex;
+                    FileUtils.logException(ex);
+                }
+            }
+            else if("restoreSaves".equals(e.getActionCommand())) {
+                if(!validateSaveDir()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Unable to find La-Mulana install directory",
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                try {
+                    this.progressDialog.updateProgress(0, Translations.getText("restore.start"));
+                    Frame f = this;
+                    SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
+                        @Override
+                        protected Void doInBackground() throws Exception {
+                            progressDialog.setLocationRelativeTo(f);
+                            restoreSaves();
+
+                            return null;
+                        }
+                    };
+                    swingWorker.execute();
+                    progressDialog.setVisible(true);
+                } catch (Exception ex) {
+                    FileUtils.log("Error: " + ex.getMessage());
+                    FileUtils.logException(ex);
                 }
             }
         }
 
-        private void generateSeed() {
+        private boolean generateSeed() {
+            if(!validateSettings()) {
+                return false;
+            }
+
             progressDialog.updateProgress(0, Translations.getText("progress.generating"));
 
-            mainPanel.updateSettings();
-            tabbedPanel.updateSettings();
             Settings.saveSettings();
 
             DataFromFile.clearAllData();
@@ -143,15 +205,13 @@ public class Main {
                     JOptionPane.showMessageDialog(this,
                             "Unable to find file " + existingRcd.getAbsolutePath(),
                             "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    FileUtils.closeAll();
-                    System.exit(0);
+                    return false;
                 }
                 else if (!FileUtils.hashRcdFile(existingRcd)) {
                     JOptionPane.showMessageDialog(this,
                             "The data/mapdata/script.rcd file in the game directory is not original! Please restore it from a backup / clean install!",
                             "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    FileUtils.closeAll();
-                    System.exit(0);
+                    return false;
                 }
 
                 try {
@@ -162,9 +222,9 @@ public class Main {
                     fileOutputStream.close();
                 }
                 catch (Exception ex) {
-                    FileUtils.log("unable to back up script.rcd: " + ex.getMessage());
-                    FileUtils.closeAll();
-                    System.exit(0);
+                    FileUtils.log("Unable to back up script.rcd: " + ex.getMessage());
+                    FileUtils.logException(ex);
+                    throw new RuntimeException("Unable to back up script.rcd. Please see logs for more information.");
                 }
             }
             File datFile = new File(Settings.getBackupDatFile());
@@ -172,9 +232,10 @@ public class Main {
                 File existingDat = new File(String.format("%s/data/language/%s/script_code.dat",
                         Settings.getLaMulanaBaseDir(), Settings.getLanguage()));
                 if(!FileUtils.hashDatFile(existingDat)) {
-                    FileUtils.log("unable to back up script_code.dat - file already modified");
-                    FileUtils.closeAll();
-                    System.exit(0);
+                    JOptionPane.showMessageDialog(this,
+                            "Unable to back up script_code.dat - file already modified",
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
                 }
 
                 try {
@@ -183,9 +244,12 @@ public class Main {
                             new FileOutputStream(new File(Settings.getBackupDatFile())));
                 }
                 catch (Exception ex) {
-                    FileUtils.log("unable to back up script_code.dat: " + ex.getMessage());
-                    FileUtils.closeAll();
-                    System.exit(0);
+                    JOptionPane.showMessageDialog(this,
+                            "Unable to back up script.rcd. Please see logs for more information.",
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    FileUtils.log("Unable to back up script_code.dat: " + ex.getMessage());
+                    FileUtils.logException(ex);
+                    throw new RuntimeException("Unable to back up script_code.dat");
                 }
             }
 
@@ -210,14 +274,17 @@ public class Main {
             } catch (Exception ex) {
                 FileUtils.log("Error: " + ex.getMessage());
                 ex.printStackTrace();
-                throw ex;
+                throw new RuntimeException("Unknown error. Please see logs for more information.");
             }
+            return true;
         }
 
         private void generateAndApply() {
             try {
                 progressDialog.updateProgress(0, Translations.getText("setup.start"));
-                generateSeed();
+                if(!generateSeed()) {
+                    return;
+                }
 
                 FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/script.rcd"));
                 Files.copy(new File(String.format("%s/script.rcd", Settings.getStartingSeed())).toPath(), fileOutputStream);
@@ -233,9 +300,9 @@ public class Main {
                 FileUtils.closeAll();
             }
             catch (Exception ex) {
-                FileUtils.log("unable to copy files to La-Mulana install");
-                FileUtils.closeAll();
-                System.exit(0);
+                FileUtils.log("Unable to copy files to La-Mulana install:" + ex.getMessage());
+                FileUtils.logException(ex);
+                throw new RuntimeException("Unable to back up script.rcd. Please see logs for more information.");
             }
         }
 
@@ -255,6 +322,7 @@ public class Main {
                 Files.copy(new File(Settings.getBackupDatFile()).toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
+
                 progressDialog.updateProgress(100, Translations.getText("restore.done"));
 
                 SwingUtilities.invokeLater(() -> {
@@ -267,10 +335,66 @@ public class Main {
                 });
             }
             catch (Exception ex) {
-                FileUtils.log("unable to restore files to La-Mulana install");
+                FileUtils.log("Unable to restore files to La-Mulana install: " + ex.getMessage());
+                FileUtils.logException(ex);
                 FileUtils.closeAll();
-                System.exit(0);
+                throw new RuntimeException("Unable to restore files to La-Mulana install. Please see logs for more information.");
             }
+        }
+
+        private void restoreSaves() {
+            try {
+                progressDialog.updateProgress(0, Translations.getText("restore.save"));
+
+                File backupSave = new File(String.format("%s/lm_00.sav.bak", Settings.getLaMulanaSaveDir()));
+                File existingSave = new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir()));
+                FileOutputStream fileOutputStream = new FileOutputStream(existingSave);
+                Files.copy(backupSave.toPath(), fileOutputStream);
+                fileOutputStream.flush();
+                fileOutputStream.close();
+
+                progressDialog.updateProgress(100, Translations.getText("restore.done"));
+
+                SwingUtilities.invokeLater(() -> {
+                    try {
+                        Thread.sleep(2000);
+                        progressDialog.setVisible(false);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+            catch (Exception ex) {
+                FileUtils.log("Unable to restore save file: " + ex.getMessage());
+                FileUtils.logException(ex);
+                throw new RuntimeException("Unable to restore save file. Please see logs for more information.");
+            }
+        }
+
+        private boolean validateSettings() {
+            if(!validateInstallDir()) {
+                JOptionPane.showMessageDialog(this,
+                        "Unable to find La-Mulana install directory",
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(Settings.isRandomizeMainWeapon() && !validateSaveDir()) {
+                JOptionPane.showMessageDialog(this,
+                        "Unable to find La-Mulana save directory",
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            return true;
+        }
+
+        private boolean validateInstallDir() {
+            return Settings.getLaMulanaBaseDir() != null && !Settings.getLaMulanaBaseDir().isEmpty()
+                    && new File(Settings.getLaMulanaBaseDir()).exists();
+        }
+
+        private boolean validateSaveDir() {
+            return Settings.getLaMulanaSaveDir() != null && !Settings.getLaMulanaSaveDir().isEmpty()
+                    && new File(Settings.getLaMulanaSaveDir()).exists();
         }
     }
 
@@ -310,7 +434,13 @@ public class Main {
                     break;
                 }
             }
+            if(Settings.isRandomizeMainWeapon()) {
+                determineMainWeapon(random);
+            }
             if(Settings.isRandomizeTrapItems()) {
+                // For flag space reasons, screens which contain more than one chest can have only one of those chests
+                // contain a trap item. We'll randomly pick one location from each set to be the valid one for having
+                // the trap item.
                 DataFromFile.setBannedTrapLocations(random);
             }
             dialog.updateProgress(25, String.format(Translations.getText("progress.shuffling"), attempt));
@@ -345,6 +475,7 @@ public class Main {
             boolean ankhJewelLock = false;
             accessChecker.initExitRequirements();
             accessChecker.computeAccessibleNodes("None");
+            accessChecker.computeAccessibleNodes(Settings.getCurrentStartingWeapon());
             for(String enabledGlitch : Settings.getEnabledGlitches()) {
                 accessChecker.computeAccessibleNodes("Setting: " + enabledGlitch);
             }
@@ -377,6 +508,7 @@ public class Main {
             if(accessChecker.isSuccess()) {
                 try {
                     dialog.progressBar.setIndeterminate(false);
+                    dialog.setSafeClose(false);
                     dialog.updateProgress(80, String.format(Translations.getText("progress.shuffling.done"), attempt));
 
                     FileUtils.log(String.format("Successful attempt %s.", attempt));
@@ -404,6 +536,10 @@ public class Main {
 //                    }
                     RcdWriter.writeRcd(rcdData);
                     DatWriter.writeDat(datInfo);
+                    if(Settings.isRandomizeMainWeapon()) {
+                        backupSaves();
+                        writeSaveFile();
+                    }
 
                     File settingsFile = new File("randomizer-config.txt");
                     if(settingsFile.exists()) {
@@ -414,12 +550,24 @@ public class Main {
                         fileOutputStream.close();
                     }
 
+                    if(Settings.isRandomizeMainWeapon()) {
+                        File saveFile = new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir()));
+                        if(saveFile.exists()) {
+                            FileOutputStream fileOutputStream = new FileOutputStream(
+                                    new File(String.format("%s/lm_00.sav", Settings.getStartingSeed())));
+                            Files.copy(saveFile.toPath(), fileOutputStream);
+                            fileOutputStream.flush();
+                            fileOutputStream.close();
+                        }
+                    }
+
                     dialog.updateProgress(100, Translations.getText("progress.done"));
                     GameDataTracker.clearAll();
 
                     SwingUtilities.invokeLater(() -> {
                         try {
                             Thread.sleep(2000);
+                            dialog.setSafeClose(true);
                             dialog.setVisible(false);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -438,6 +586,113 @@ public class Main {
                 return;
             }
         }
+    }
+
+    private static void backupSaves() {
+        try {
+            // Make lm_00.sav backup
+            File backupSave = new File(String.format("%s/lm_00.sav.bak", Settings.getLaMulanaSaveDir()));
+            if(!backupSave.exists()) {
+                File existingSave = new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir()));
+                if(existingSave.exists()) {
+                    Files.move(existingSave.toPath(), backupSave.toPath());
+                }
+            }
+        }
+        catch (Exception ex) {
+            FileUtils.log("Unable to back up save file: " + ex.getMessage());
+            FileUtils.logException(ex);
+            throw new RuntimeException("Unable to back up save file. Please see logs for more information.");
+        }
+    }
+
+    private static void writeSaveFile() throws IOException {
+        byte[] saveData = buildNewSave();
+        String startingWeapon = Settings.getCurrentStartingWeapon();
+        if(!"Whip".equals(startingWeapon)) {
+            saveData[4113] = (byte)-1; // word + 0x1011; remove whip
+            saveData[4114] = (byte)-1; // word + 0x1011; remove whip
+
+            if("Knife".equals(startingWeapon)) {
+                saveData[144] = (byte)2; // byte + 0x11; add knife flag
+                saveData[4119] = (byte)1; // word + 0x1011; add knife
+                saveData[4623] = (byte)3; // Held main weapon item number
+                saveData[4626] = (byte)1; // Held main weapon slot number
+            }
+            else if("Key Sword".equals(startingWeapon)) {
+                saveData[145] = (byte)2; // byte + 0x11; add key sword flag
+                saveData[4121] = (byte)1; // word + 0x1011; add key sword
+                saveData[4623] = (byte)4; // Held main weapon item number
+                saveData[4626] = (byte)2; // Held main weapon slot number
+            }
+            else if("Axe".equals(startingWeapon)) {
+                saveData[146] = (byte)2; // byte + 0x11; add axe flag
+                saveData[4123] = (byte)1; // word + 0x1011; add axe
+                saveData[4623] = (byte)5; // Held main weapon item number
+                saveData[4626] = (byte)3; // Held main weapon slot number
+            }
+            else if("Katana".equals(startingWeapon)) {
+                saveData[147] = (byte)2; // byte + 0x11; add katana flag
+                saveData[4125] = (byte)1; // word + 0x1011; add katana
+                saveData[4623] = (byte)6; // Held main weapon item number
+                saveData[4626] = (byte)4; // Held main weapon slot number
+            }
+        }
+
+        try {
+            DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(
+                    String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir())));
+            dataOutputStream.write(saveData);
+            dataOutputStream.flush();
+            dataOutputStream.close();
+        }
+        catch (Exception ex) {
+            FileUtils.log("Problem modifying save file for randomized main weapons: " + ex.getMessage());
+            FileUtils.logException(ex);
+            throw new RuntimeException("Problem modifying save file for randomized main weapons. Please see logs for more information.");
+        }
+    }
+
+    private static byte[] buildNewSave() {
+        byte[] saveData = new byte[16384];
+        Arrays.fill(saveData, (byte)0);
+        saveData[0] = (byte)1;
+        saveData[3] = (byte)0;
+        saveData[4] = (byte)0;
+        saveData[5] = (byte)1;
+        saveData[6] = (byte)2;
+        saveData[7] = (byte)1;
+        saveData[8] = (byte)1;
+        saveData[9] = (byte)224;
+        saveData[9] = (byte)24;
+        saveData[10] = (byte)0;
+        saveData[11] = (byte)72;
+        saveData[11] = (byte)-104;
+        saveData[12] = (byte)1;
+        saveData[13] = (byte)0;
+        saveData[14] = (byte)32;
+        saveData[841] = (byte)1;
+        saveData[859] = (byte)1;
+        saveData[4624] = (byte)-1;
+        saveData[4625] = (byte)-1;
+        saveData[4630] = (byte)46;
+
+        int index = 4633;
+        for(int i = 0; i < 46; i++) {
+            for(int j = 0; j < 6; j++) {
+                saveData[index++] = (byte) 0;
+            }
+            saveData[index++] = (byte) -1;
+            saveData[index++] = (byte) -1;
+        }
+        index += 13;
+        for(int i = 0; i < 20; i++) {
+            for(int j = 0; j < 13; j++) {
+                saveData[index++] = (byte) 0;
+            }
+            saveData[index++] = (byte) -1;
+        }
+        return saveData;
     }
 
     private static ShopRandomizer buildShopRandomizer(ItemRandomizer itemRandomizer) {
@@ -473,6 +728,25 @@ public class Main {
         Set<String> surfaceItems = new HashSet<>(Settings.getSurfaceItems());
         surfaceItems.removeAll(DataFromFile.getNonRandomizedItems());
         return surfaceItems;
+    }
+
+    private static void determineMainWeapon(Random random) {
+        int randomWeapon = random.nextInt(5);
+        if(randomWeapon == 0) {
+            Settings.setCurrentStartingWeapon("Whip");
+        }
+        else if(randomWeapon == 1) {
+            Settings.setCurrentStartingWeapon("Knife");
+        }
+        else if(randomWeapon == 2) {
+            Settings.setCurrentStartingWeapon("Key Sword");
+        }
+        else if(randomWeapon == 3) {
+            Settings.setCurrentStartingWeapon("Axe");
+        }
+        else if(randomWeapon == 4) {
+            Settings.setCurrentStartingWeapon("Katana");
+        }
     }
 
     private static void determineRemovedItems(Random random) {

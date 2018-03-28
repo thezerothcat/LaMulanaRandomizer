@@ -87,6 +87,11 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 }
             }
         }
+//        if(Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
+//            mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 1", "Whip");
+//            unassignedShopItemLocations.remove("Shop 3 (Surface) Item 1");
+//            itemRandomizer.removeItemFromUnplacedItems("Whip");
+//        }
 //        mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 1", "Sacred Orb (Gate of Guidance)");
 //        unassignedShopItemLocations.remove("Shop 3 (Surface) Item 1");
 //        itemRandomizer.removeItemFromUnplacedItems("Sacred Orb (Gate of Guidance)");

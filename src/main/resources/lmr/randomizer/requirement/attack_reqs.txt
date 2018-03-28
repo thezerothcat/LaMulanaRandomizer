@@ -1,0 +1,12 @@
+Attack: Above => Whip
+Attack: Above => Chain Whip
+Attack: Above => Flail Whip
+Attack: Above => Axe
+Attack: Below => Axe
+Attack: Below => Knife
+Attack: Below => Katana
+Attack: Far => Whip
+Attack: Far => Chain Whip
+Attack: Far => Flail Whip
+Attack: Far => Key Sword
+Attack: Far => Axe

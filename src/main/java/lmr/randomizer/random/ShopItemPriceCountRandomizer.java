@@ -58,14 +58,14 @@ public class ShopItemPriceCountRandomizer {
 
     // 130-150
     private List<String> PRICE_TIER3 = Arrays.asList("Feather", "Origin Seal", "Fruit of Eden", "Twin Statue",
-            "Ice Cape", "Fake Silver Shield", "Silver Shield",
+            "Ice Cape", "Fake Silver Shield", "Silver Shield", "Vessel", "Whip",
             "Isis' Pendant", "Bracelet", "Crucifix", "miracle.exe", "torude.exe", "Mobile Super X2", "Sacred Orb",
             "mantra.exe", "Djed Pillar", "Plane Model", "Philosopher's Ocarina", "Mulana Talisman", "Book of the Dead",
             "Caltrops", "Pistol", "Katana", "Chain Whip", "Chakram",  "Bomb", "Axe", "Ring", "Crystal Skull");
 
     // 170-210
     private List<String> PRICE_TIER4 = Arrays.asList(
-            "Lamp of Time", "Vessel", "Angel Shield",
+            "Lamp of Time", "Angel Shield",
             "move.exe", "randc.exe", "Fairy Clothes", "Scriptures", "Gauntlet", "deathv.exe",
             "Provocative Bathing Suit", "Spaulder", "Flail Whip", "lamulana.exe");
 

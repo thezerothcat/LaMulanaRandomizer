@@ -33,6 +33,10 @@ public class ItemRandomizer {
     public ItemRandomizer() {
         allItems = new ArrayList<>(DataFromFile.getAllNonShopItemsPlusAllRandomizedShopItemsPlusAllRandomizedCoinChests());
         unplacedItems = new ArrayList<>(allItems);
+        if(Settings.isRandomizeMainWeapon()) {
+            unplacedItems.add("Whip");
+            unplacedItems.remove(Settings.getCurrentStartingWeapon());
+        }
 
         unassignedNonShopItemLocations = new ArrayList<>(DataFromFile.getNonShopItemLocations());
 
@@ -42,10 +46,6 @@ public class ItemRandomizer {
 
     public int getTotalShopItems() {
         return unplacedItems.size() - unassignedNonShopItemLocations.size();
-    }
-
-    public List<String> getAllItems() {
-        return allItems;
     }
 
     public String getItem(String location) {
@@ -103,6 +103,9 @@ public class ItemRandomizer {
 //        mapOfItemLocationToItem.put("Shell Horn", "Map (Surface)");
 //        unassignedNonShopItemLocations.remove("Shell Horn");
 //        unplacedItems.remove("Map (Surface)");
+//        mapOfItemLocationToItem.put("Shell Horn", "Chain Whip");
+//        unassignedNonShopItemLocations.remove("Shell Horn");
+//        unplacedItems.remove("Chain Whip");
 //        mapOfItemLocationToItem.put("Shell Horn", "Map (Gate of Guidance)");
 //        unassignedNonShopItemLocations.remove("Shell Horn");
 //        unplacedItems.remove("Map (Gate of Guidance)");
@@ -392,17 +395,36 @@ public class ItemRandomizer {
             return;
         }
 
-        for (String location : mapOfItemLocationToItem.keySet()) {
-            String itemName = mapOfItemLocationToItem.get(location);
+        Map<String, String> mapOfItemToLocation = buildReverseMap(mapOfItemLocationToItem);
+        List<String> itemNames = new ArrayList<>(mapOfItemToLocation.keySet());
+        Collections.sort(itemNames);
+        for (String itemName : itemNames) {
+            String location = mapOfItemToLocation.get(itemName);
             if(Settings.getCurrentRemovedItems().contains(itemName)) {
                 itemName += " (Removed)";
             }
-            writer.write(itemName + ": " + location + " location");
+            if(location.isEmpty()) {
+                writer.write(itemName + ": starting weapon");
+            }
+            else {
+                writer.write(itemName + ": " + location + " location");
+            }
             writer.newLine();
         }
 
         writer.flush();
         writer.close();
+    }
+
+    private Map<String, String> buildReverseMap(Map<String, String> originalMap) {
+        Map<String, String> reverseMap = new HashMap<>();
+        for(String key : originalMap.keySet()) {
+            reverseMap.put(originalMap.get(key), key);
+        }
+        if(Settings.isRandomizeMainWeapon() && !reverseMap.containsKey(Settings.getCurrentStartingWeapon())) {
+            reverseMap.put(Settings.getCurrentStartingWeapon(), "");
+        }
+        return reverseMap;
     }
 
     public void setShopRandomizer(ShopRandomizer shopRandomizer) {

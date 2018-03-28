@@ -1,10 +1,11 @@
 Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Grail], Glitch: Lamp Glitch
-Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Glitch: Cat Pause, Fruit of Eden, Hand Scanner
-Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Fruit of Eden, Glitch: Raindrop
+Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Glitch: Cat Pause, Fruit of Eden, Hand Scanner, Attack: Far
+Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Fruit of Eden, Glitch: Raindrop, Attack: Far
 Location: Gate of Illusion [Upper] => Location: Gate of Illusion [Grail], Glitch: Raindrop
 Location: Gate of Illusion [Pot Room] => Location: Gate of Illusion [Grail], Feather, Glitch: Raindrop
 Location: Graveyard of the Giants [East] => Location: Graveyard of the Giants [West], Glitch: Ice Raindrop
 Location: Graveyard of the Giants [East] => Location: Tower of the Goddess [Grail], Glitch: Raindrop
+Location: Temple of Moonlight [Pyramid] => Location: Temple of Moonlight [Upper], Glitch: Raindrop
 Location: Temple of Moonlight [Lower] => Glitch: Raindrop
 Location: Tower of the Goddess [Grail] => Location: Graveyard of the Giants [East], Glitch: Raindrop
 Location: Inferno Cavern [Viy] => Glitch: Lamp Glitch

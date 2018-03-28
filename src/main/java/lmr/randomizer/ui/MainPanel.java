@@ -11,6 +11,7 @@ import java.util.Random;
 
 public class MainPanel extends JPanel {
     private JTextField laMulanaDirectory;
+    private JTextField laMulanaSaveDirectory;
     private JTextField seedNumber;
     private JComboBox language;
 
@@ -28,7 +29,11 @@ public class MainPanel extends JPanel {
 
         laMulanaDirectory = new JTextField(Settings.getLaMulanaBaseDir());
         add(new JLabel(Translations.getText("settings.dir")), "gap related");
-        add(laMulanaDirectory, "span 2, grow 100");
+        add(laMulanaDirectory, "span 2, grow 100, wrap");
+
+        laMulanaSaveDirectory = new JTextField(Settings.getLaMulanaSaveDir());
+        add(new JLabel(Translations.getText("settings.saveDir")), "gap related");
+        add(laMulanaSaveDirectory, "span 2, grow 100");
     }
 
     public void addActionListener(ActionListener actionListener) {
@@ -44,12 +49,14 @@ public class MainPanel extends JPanel {
         setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.main")));
         seedNumber.setText(Translations.getText("settings.seed"));
         laMulanaDirectory.setText(Translations.getText("settings.dir"));
+        laMulanaSaveDirectory.setText(Translations.getText("settings.saveDir"));
     }
 
     public void updateSettings() {
         try {
             Settings.setStartingSeed(Integer.parseInt(seedNumber.getText()));
             Settings.setLaMulanaBaseDir(laMulanaDirectory.getText(), true);
+            Settings.setLaMulanaSaveDir(laMulanaSaveDirectory.getText(), true);
             Settings.setLanguage(language.getSelectedIndex() == 0 ? "en" : "jp", true);
         }
         catch (Exception ex) {
