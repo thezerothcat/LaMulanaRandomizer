@@ -72,9 +72,11 @@ public class AccessChecker {
                 if(nodeName.startsWith("Attack:")) {
                     continue;
                 }
-                else if(NodeType.ITEM_LOCATION.equals(mapOfNodeNameToRequirementsObject.get(nodeName).getType())
-                    && (itemRandomizer.getItem(nodeName).startsWith("Coin:") || itemRandomizer.getItem(nodeName).startsWith("Trap:"))) {
-                    continue;
+                else if(NodeType.ITEM_LOCATION.equals(mapOfNodeNameToRequirementsObject.get(nodeName).getType())) {
+                    String item = itemRandomizer.getItem(nodeName);
+                    if(item.startsWith("Coin:") || item.startsWith("Trap:") || Settings.getStartingItems().contains(item)) {
+                        continue;
+                    }
                 }
                 FileUtils.log("Inaccessible node detected: " + nodeName + " containing " + itemRandomizer.getItem(nodeName));
                 return false;
@@ -347,7 +349,9 @@ public class AccessChecker {
             }
         }
 
-        if(Settings.getCurrentRemovedItems().contains(item)) {
+        if(Settings.getCurrentRemovedItems().contains(item)
+                || Settings.getRemovedItems().contains(item)
+                || Settings.getStartingItems().contains(item)) {
             if("Shop 2 Alt (Surface)".equals(location)) {
                 // Don't put removed item in transforming Surface shop.
                 return false;

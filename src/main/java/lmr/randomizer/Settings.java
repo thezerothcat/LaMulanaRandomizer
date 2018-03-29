@@ -18,7 +18,7 @@ public final class Settings {
     public static final int MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED = 40;
 
     public static Set<String> currentRemovedItems;
-    public static String currentStartingWeapno;
+    public static String currentStartingWeapon;
 
     private static Settings singleton = new Settings();
 
@@ -37,6 +37,8 @@ public final class Settings {
     private boolean randomizeMainWeapon;
     private boolean replaceMapsWithWeights;
     private boolean automaticGrailPoints;
+
+    private boolean quickStartItemsEnabled;
 
     private List<String> enabledGlitches = new ArrayList<>();
     private List<String> enabledDamageBoosts = new ArrayList<>();
@@ -82,6 +84,7 @@ public final class Settings {
         automaticHardmode = false;
         coinChestGraphics = false;
         automaticGrailPoints = false;
+        quickStartItemsEnabled = false;
 
         bossDifficulty = BossDifficulty.MEDIUM;
         shopRandomization = ShopRandomizationEnum.EVERYTHING;
@@ -346,6 +349,17 @@ public final class Settings {
         singleton.coinChestGraphics = coinChestGraphics;
     }
 
+    public static boolean isQuickStartItemsEnabled() {
+        return singleton.quickStartItemsEnabled;
+    }
+
+    public static void setQuickStartItemsEnabled(boolean quickStartItemsEnabled, boolean update) {
+        if(update && quickStartItemsEnabled != singleton.quickStartItemsEnabled) {
+            singleton.changed = true;
+        }
+        singleton.quickStartItemsEnabled = quickStartItemsEnabled;
+    }
+
     public static Set<String> getNonRandomizedItems() {
         return singleton.nonRandomizedItems;
     }
@@ -478,11 +492,18 @@ public final class Settings {
     }
 
     public static String getCurrentStartingWeapon() {
-        return singleton.currentStartingWeapno == null ? "Whip" : singleton.currentStartingWeapno;
+        return singleton.currentStartingWeapon == null ? "Whip" : singleton.currentStartingWeapon;
     }
 
     public static void setCurrentStartingWeapon(String currentStartingItem) {
-        singleton.currentStartingWeapno = currentStartingItem;
+        singleton.currentStartingWeapon = currentStartingItem;
+    }
+
+    public static List<String> getStartingItems() {
+        if(singleton.quickStartItemsEnabled) {
+            return Arrays.asList("Holy Grail", "Hermes' Boots");
+        }
+        return new ArrayList<>(0);
     }
 
     public static void saveSettings() {

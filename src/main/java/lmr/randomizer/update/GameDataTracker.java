@@ -2612,6 +2612,34 @@ public final class GameDataTracker {
         xelpudScreen.getObjects().add(0, automaticHardmodeTimer);
     }
 
+    public static void addStartingItems() {
+        for(String itemName : Settings.getStartingItems()) {
+            GameObjectId gameObjectId = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(itemName);
+
+            GameObject itemGive = new GameObject(xelpudScreen);
+            itemGive.setId((short) 0xb5);
+            itemGive.getArgs().add(gameObjectId.getInventoryArg());
+            itemGive.getArgs().add((short)2);
+            itemGive.getArgs().add((short)3);
+            itemGive.getArgs().add((short)39);
+            itemGive.setX(940);
+            itemGive.setY(160);
+
+            TestByteOperation itemGiveTest = new TestByteOperation();
+            itemGiveTest.setIndex(gameObjectId.getWorldFlag());
+            itemGiveTest.setValue((byte) 0);
+            itemGiveTest.setOp(ByteOp.FLAG_EQUALS);
+            itemGive.getTestByteOperations().add(itemGiveTest);
+
+            WriteByteOperation itemGiveUpdate = new WriteByteOperation();
+            itemGiveUpdate.setIndex(gameObjectId.getWorldFlag());
+            itemGiveUpdate.setValue((byte) 2);
+            itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
+            itemGive.getWriteByteOperations().add(itemGiveUpdate);
+            xelpudScreen.getObjects().add(itemGive);
+        }
+    }
+
     private static void addShrineMapSoundEffect(ObjectContainer objectContainer) {
         GameObject shrineMapSoundEffect = new GameObject(objectContainer);
         shrineMapSoundEffect.setId((short)0x9b);

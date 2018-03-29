@@ -350,6 +350,9 @@ public class FileUtils {
             else if(line.startsWith("automaticGrailPoints")) {
                 Settings.setAutomaticGrailPoints(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("quickStartItemsEnabled")) {
+                Settings.setQuickStartItemsEnabled(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("laMulanaBaseDir")) {
                 Settings.setLaMulanaBaseDir(line.substring(line.indexOf("=") + 1), false);
             }
@@ -424,6 +427,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("automaticGrailPoints=%s", Settings.isAutomaticGrailPoints()));
+        writer.newLine();
+
+        writer.write(String.format("quickStartItemsEnabled=%s", Settings.isQuickStartItemsEnabled()));
         writer.newLine();
 
         writer.write(String.format("laMulanaBaseDir=%s", Settings.getLaMulanaBaseDir()));

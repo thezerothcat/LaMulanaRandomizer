@@ -457,7 +457,9 @@ public class Main {
                 ((EverythingShopRandomizer)shopRandomizer).placeGuaranteedWeights(random);
             }
             if(!surfaceItems.isEmpty()) {
-                itemRandomizer.placeVeryEarlyItems(new ArrayList<>(surfaceItems), random);
+                if(!itemRandomizer.placeVeryEarlyItems(new ArrayList<>(surfaceItems), random)) {
+                    continue;
+                }
             }
             shopRandomizer.determineItemTypes(random);
             if(!itemRandomizer.placeRequiredItems(new ArrayList<>(initiallyAccessibleItems), random)) {
@@ -476,6 +478,9 @@ public class Main {
             accessChecker.initExitRequirements();
             accessChecker.computeAccessibleNodes("None");
             accessChecker.computeAccessibleNodes(Settings.getCurrentStartingWeapon());
+            for(String startingItem : Settings.getStartingItems()) {
+                accessChecker.computeAccessibleNodes(startingItem);
+            }
             for(String enabledGlitch : Settings.getEnabledGlitches()) {
                 accessChecker.computeAccessibleNodes("Setting: " + enabledGlitch);
             }
@@ -530,6 +535,9 @@ public class Main {
                     shopRandomizer.updateFiles(datInfo, random);
                     if(Settings.isAutomaticHardmode()) {
                         GameDataTracker.addAutomaticHardmode();
+                    }
+                    if(!Settings.getStartingItems().isEmpty()) {
+                        GameDataTracker.addStartingItems();
                     }
 //                    if(Settings.isRandomizeMantras()) {
 //                        GameDataTracker.randomizeMantras(random);
@@ -663,10 +671,8 @@ public class Main {
         saveData[6] = (byte)2;
         saveData[7] = (byte)1;
         saveData[8] = (byte)1;
-        saveData[9] = (byte)224;
         saveData[9] = (byte)24;
         saveData[10] = (byte)0;
-        saveData[11] = (byte)72;
         saveData[11] = (byte)-104;
         saveData[12] = (byte)1;
         saveData[13] = (byte)0;
@@ -755,6 +761,7 @@ public class Main {
         totalItemsRemoved += random.nextInt(Settings.getMaxRandomRemovedItems() - totalItemsRemoved + 1);
 
         List<String> removableItems = new ArrayList<>(DataFromFile.getRandomRemovableItems());
+        removableItems.removeAll(Settings.getStartingItems());
 
         boolean objectZipEnabled = Settings.getEnabledGlitches().contains("Object Zip");
         boolean catPauseEnabled = Settings.getEnabledGlitches().contains("Cat Pause");

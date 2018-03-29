@@ -79,9 +79,11 @@ public class ItemRandomizer {
 
     public void placeNonRandomizedItems() {
         for(String item : DataFromFile.getNonRandomizedItems()) {
-            mapOfItemLocationToItem.put(item, item);
-            unassignedNonShopItemLocations.remove(item);
-            unplacedItems.remove(item);
+            if(!Settings.getStartingItems().contains(item)) {
+                mapOfItemLocationToItem.put(item, item);
+                unassignedNonShopItemLocations.remove(item);
+                unplacedItems.remove(item);
+            }
         }
         if(Settings.isRandomizeCoinChests()) {
             for(String coinChest : DataFromFile.getNonRandomizedCoinChests()) {
@@ -92,9 +94,11 @@ public class ItemRandomizer {
         }
 
         if(Settings.getXmailerItem() != null) {
-            mapOfItemLocationToItem.put("xmailer.exe", Settings.getXmailerItem());
-            unassignedNonShopItemLocations.remove("xmailer.exe");
-            unplacedItems.remove(Settings.getXmailerItem());
+            if(!Settings.getStartingItems().contains(Settings.getXmailerItem())) {
+                mapOfItemLocationToItem.put("xmailer.exe", Settings.getXmailerItem());
+                unassignedNonShopItemLocations.remove("xmailer.exe");
+                unplacedItems.remove(Settings.getXmailerItem());
+            }
         }
 
 //        mapOfItemLocationToItem.put("xmailer.exe", "Book of the Dead");
@@ -137,7 +141,8 @@ public class ItemRandomizer {
     public boolean placeVeryEarlyItems(List<String> items, Random random) {
         List<String> initialUnassignedNonShopLocations = new ArrayList<>(Arrays.asList("xmailer.exe", "deathv.exe", "Shell Horn"));
         initialUnassignedNonShopLocations.removeAll(mapOfItemLocationToItem.keySet());
-        if(Settings.getXmailerItem() != null) {
+        if(Settings.getXmailerItem() != null
+                || Settings.getStartingItems().contains(Settings.getXmailerItem())) {
             initialUnassignedNonShopLocations.remove("xmailer.exe");
         }
 
@@ -151,6 +156,7 @@ public class ItemRandomizer {
         List<String> itemsToPlace = new ArrayList<>(items);
         itemsToPlace.removeAll(mapOfItemLocationToItem.values());
         itemsToPlace.removeAll(shopRandomizer.getPlacedShopItems());
+        items.removeAll(Settings.getStartingItems());
 
         int locationIndexIndex;
         int size = itemsToPlace.size();
@@ -211,6 +217,7 @@ public class ItemRandomizer {
         List<String> itemsToPlace = new ArrayList<>(items);
         itemsToPlace.removeAll(mapOfItemLocationToItem.values());
         itemsToPlace.removeAll(shopRandomizer.getPlacedShopItems());
+        items.removeAll(Settings.getStartingItems());
 
         int size = itemsToPlace.size();
         for(int i = 0; i < size; i++) {
@@ -398,17 +405,23 @@ public class ItemRandomizer {
         Map<String, String> mapOfItemToLocation = buildReverseMap(mapOfItemLocationToItem);
         List<String> itemNames = new ArrayList<>(mapOfItemToLocation.keySet());
         Collections.sort(itemNames);
+
+        writer.write(Settings.getCurrentStartingWeapon() + ": starting weapon");
+        writer.newLine();
+        for(String itemName : Settings.getStartingItems()) {
+            writer.write(itemName + ": starting item");
+            writer.newLine();
+        }
+        writer.newLine();
+
         for (String itemName : itemNames) {
             String location = mapOfItemToLocation.get(itemName);
-            if(Settings.getCurrentRemovedItems().contains(itemName)) {
+            if(Settings.getCurrentRemovedItems().contains(itemName)
+                    || Settings.getRemovedItems().contains(itemName)
+                    || Settings.getStartingItems().contains(itemName)) {
                 itemName += " (Removed)";
             }
-            if(location.isEmpty()) {
-                writer.write(itemName + ": starting weapon");
-            }
-            else {
-                writer.write(itemName + ": " + location + " location");
-            }
+            writer.write(itemName + ": " + location + " location");
             writer.newLine();
         }
 
@@ -420,9 +433,6 @@ public class ItemRandomizer {
         Map<String, String> reverseMap = new HashMap<>();
         for(String key : originalMap.keySet()) {
             reverseMap.put(originalMap.get(key), key);
-        }
-        if(Settings.isRandomizeMainWeapon() && !reverseMap.containsKey(Settings.getCurrentStartingWeapon())) {
-            reverseMap.put(Settings.getCurrentStartingWeapon(), "");
         }
         return reverseMap;
     }
@@ -512,7 +522,9 @@ public class ItemRandomizer {
                 return 2723; // Dimensional map
             }
         }
-        if(Settings.getCurrentRemovedItems().contains(newContents)) {
+        if(Settings.getCurrentRemovedItems().contains(newContents)
+                || Settings.getRemovedItems().contains(newContents)
+                || Settings.getStartingItems().contains(newContents)) {
             Integer newChestWorldFlag = mapOfWorldFlagToAssignedReplacementFlag.get(itemLocationData.getWorldFlag());
             if (newChestWorldFlag == null) {
                 newChestWorldFlag = nextReplacedItemFlag++;
