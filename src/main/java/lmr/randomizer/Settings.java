@@ -195,7 +195,7 @@ public final class Settings {
     }
 
     public static String getXmailerItem() {
-        return singleton.xmailerItem;
+        return "xmailer.exe";
     }
 
     public static void setXmailerItem(String xmailerItem, boolean update) {
@@ -378,7 +378,7 @@ public final class Settings {
     }
 
     public static Set<String> getSurfaceItems() {
-        return singleton.surfaceItems;
+        return new HashSet<>(0);
     }
 
     public static void setSurfaceItems(Set<String> surfaceItems, boolean update) {
@@ -468,7 +468,8 @@ public final class Settings {
     }
 
     public static Set<String> getRemovedItems() {
-        return singleton.removedItems;
+        return new HashSet<>(Arrays.asList("guild.exe", "beolamu.exe", "emusic.exe", "Scalesphere", "Crucifix", "Scriptures"));
+//        return singleton.removedItems;
     }
 
     public static void setRemovedItems(Set<String> removedItems, boolean update) {
@@ -501,9 +502,9 @@ public final class Settings {
 
     public static List<String> getStartingItems() {
         if(singleton.quickStartItemsEnabled) {
-            return Arrays.asList("Holy Grail", "Hermes' Boots");
+            return Arrays.asList("Spaulder");
         }
-        return new ArrayList<>(0);
+        return Arrays.asList("Spaulder");
     }
 
     public static void saveSettings() {

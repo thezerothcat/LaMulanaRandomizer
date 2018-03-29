@@ -64,10 +64,7 @@ public class ShopItemPriceCountRandomizer {
             "Caltrops", "Pistol", "Katana", "Chain Whip", "Chakram",  "Bomb", "Axe", "Ring", "Crystal Skull");
 
     // 170-210
-    private List<String> PRICE_TIER4 = Arrays.asList(
-            "Lamp of Time", "Angel Shield",
-            "move.exe", "randc.exe", "Fairy Clothes", "Scriptures", "Gauntlet", "deathv.exe",
-            "Provocative Bathing Suit", "Spaulder", "Flail Whip", "lamulana.exe");
+    private List<String> PRICE_TIER4 = Arrays.asList("Flail Whip");
 
     public ShopItemPriceCountRandomizer(Random random) {
         this.random = random;
@@ -87,89 +84,47 @@ public class ShopItemPriceCountRandomizer {
 
     public short getPrice(String itemName) {
         if("Weights".equals(itemName)) {
-            if(!normalPriceWeightsPlaced) {
-                normalPriceWeightsPlaced = true;
-                return 10;
-            }
-            int priceRoll = random.nextInt(20);
-            if(priceRoll == 0 || priceRoll == 1) {
-                return 15;
-            }
-            if(priceRoll == 2) {
-                return 20;
-            }
-            return 10;
+            return 1;
         }
         if("Shuriken Ammo".equals(itemName)) {
-            return 10;
+            return 1;
         }
         if("Rolling Shuriken Ammo".equals(itemName)) {
-            return 10;
+            return 1;
         }
         if("Earth Spear Ammo".equals(itemName)) {
-            int priceRoll = random.nextInt(5);
-            if(priceRoll < 3) {
-                return 20;
-            }
-            return 25;
+            return 1;
         }
         if("Flare Gun Ammo".equals(itemName)) {
-            int priceRoll = random.nextInt(4);
-            if(priceRoll < 2) {
-                return 35;
-            }
-            if(priceRoll == 2) {
-                return 40;
-            }
-            return 45;
+            return 1;
         }
         if("Bomb Ammo".equals(itemName)) {
-            int priceRoll = random.nextInt(5);
-            if(priceRoll < 3) {
-                return 55;
-            }
-            if(priceRoll == 3) {
-                return 60;
-            }
-            return 50;
+            return 11;
         }
         if("Chakram Ammo".equals(itemName)) {
-            int priceRoll = random.nextInt(2);
-            if(priceRoll == 0) {
-                return 45;
-            }
-            return 40;
+            return 1;
         }
         if("Caltrops Ammo".equals(itemName)) {
-            int priceRoll = random.nextInt(5);
-            if(priceRoll < 4) {
-                return 30;
-            }
-            return 35;
+            return 1;
         }
         if("Pistol Ammo".equals(itemName)) {
-            // It looks like 6 is the count given by the Moonlight shop
-            int priceRoll = random.nextInt(4);
-            if(priceRoll < 3) {
-                return 400;
-            }
-            return 350;
+            return 111;
         }
 
         if("Hand Scanner".equals(itemName) && Settings.getSurfaceItems().contains("Hand Scanner")) {
-            return 10;
+            return 11;
         }
         if("reader.exe".equals(itemName) && Settings.getSurfaceItems().contains("reader.exe")) {
-            return 10;
+            return 11;
         }
         if("Hermes' Boots".equals(itemName) && Settings.getSurfaceItems().contains("Hermes' Boots")) {
-            return 10;
+            return 11;
         }
         if("Feather".equals(itemName) && Settings.getSurfaceItems().contains("Feather")) {
-            return 10;
+            return 11;
         }
         if("Grapple Claw".equals(itemName) && Settings.getSurfaceItems().contains("Grapple Claw")) {
-            return 10;
+            return 11;
         }
         if("bunemon.exe".equals(itemName) && Settings.getSurfaceItems().contains("bunemon.exe")) {
             return 1;
@@ -186,47 +141,47 @@ public class ShopItemPriceCountRandomizer {
         }
 
         if(PRICE_TIER1.contains(itemName)) {
-            return (short)(40 + 5 * random.nextInt(5));
+            return 11;
         }
         else if(PRICE_TIER2.contains(itemName)) {
-            return (short)(70 + 10 * random.nextInt(5));
+            return 11;
         }
         else if(PRICE_TIER3.contains(itemName)) {
-            return (short)(130 + 5 * random.nextInt(5));
+            return 11;
         }
         else if(PRICE_TIER4.contains(itemName)) {
-            return (short)(170 + 10 * random.nextInt(5));
+            return (short)999;
         }
 //        else if(PRICE_TIER5.contains(itemName)) {
 //            return (short)(250 + 50 * random.nextInt(3));
 //        }
-        return (short)(10 + 10 * random.nextInt(25) + 1);
+        return (short)11;
     }
 
-    private static short getCount(String item) {
+    private short getCount(String item) {
         if("Weights".equals(item)) {
-            return 5;
+            return (short)(random.nextInt(10) + 1);
         }
         if("Shuriken Ammo".equals(item)) {
-            return 10;
+            return 11;
         }
         if("Rolling Shuriken Ammo".equals(item)) {
-            return 10;
+            return 11;
         }
         if("Earth Spear Ammo".equals(item)) {
-            return 10;
+            return 11;
         }
         if("Flare Gun Ammo".equals(item)) {
-            return 10;
+            return 11;
         }
         if("Bomb Ammo".equals(item)) {
-            return 10;
+            return 11;
         }
         if("Chakram Ammo".equals(item)) {
-            return 2;
+            return 4;
         }
         if("Caltrops Ammo".equals(item)) {
-            return 10;
+            return 11;
         }
         if("Pistol Ammo".equals(item)) {
             return 1; // It looks like 6 is the count given by the Moonlight shop

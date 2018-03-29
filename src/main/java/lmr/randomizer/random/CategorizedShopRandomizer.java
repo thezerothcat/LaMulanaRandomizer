@@ -118,6 +118,31 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                 }
             }
         }
+        mapOfShopInventoryItemToContents.put("Shop 1 (Surface) Item 1", "Hand Scanner");
+        unassignedShopItemLocations.remove("Shop 1 (Surface) Item 1");
+        itemRandomizer.removeItemFromUnplacedItems("Hand Scanner");
+
+        mapOfShopInventoryItemToContents.put("Shop 2 (Surface) Item 2", "reader.exe");
+        unassignedShopItemLocations.remove("Shop 2 (Surface) Item 2");
+        itemRandomizer.removeItemFromUnplacedItems("reader.exe");
+        mapOfShopInventoryItemToContents.put("Shop 2 (Surface) Item 3", "yagostr.exe");
+        unassignedShopItemLocations.remove("Shop 2 (Surface) Item 3");
+        itemRandomizer.removeItemFromUnplacedItems("yagostr.exe");
+
+        mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 1", "Buckler");
+        unassignedShopItemLocations.remove("Shop 3 (Surface) Item 1");
+        itemRandomizer.removeItemFromUnplacedItems("Buckler");
+        mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 2", "Waterproof Case");
+        unassignedShopItemLocations.remove("Shop 3 (Surface) Item 2");
+        itemRandomizer.removeItemFromUnplacedItems("Waterproof Case");
+        mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 3", "Pistol");
+        unassignedShopItemLocations.remove("Shop 3 (Surface) Item 3");
+        itemRandomizer.removeItemFromUnplacedItems("Pistol");
+
+        mapOfShopInventoryItemToContents.put("Shop 18 (Lil Bro) Item 1", "Flail Whip");
+        unassignedShopItemLocations.remove("Shop 18 (Lil Bro) Item 1");
+        itemRandomizer.removeItemFromUnplacedItems("Flail Whip");
+
 //        mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 1", "Sacred Orb (Gate of Guidance)");
 //        unassignedShopItemLocations.remove("Shop 3 (Surface) Item 1");
 //        itemRandomizer.removeItemFromUnplacedItems("Sacred Orb (Gate of Guidance)");
@@ -311,7 +336,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                     || (Settings.isReplaceMapsWithWeights() && shopItem3.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem3))) {
                 shopItem3 = "Weights";
             }
-            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks, null,
+            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks, new ShopItemPriceCountRandomizer(random),
                     "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName));
         }
     }

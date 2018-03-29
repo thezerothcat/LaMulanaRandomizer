@@ -453,9 +453,9 @@ public class Main {
 
             itemRandomizer.placeNonRandomizedItems();
             shopRandomizer.placeNonRandomizedItems();
-            if(ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
-                ((EverythingShopRandomizer)shopRandomizer).placeGuaranteedWeights(random);
-            }
+//            if(ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
+//                ((EverythingShopRandomizer)shopRandomizer).placeGuaranteedWeights(random);
+//            }
             if(!surfaceItems.isEmpty()) {
                 if(!itemRandomizer.placeVeryEarlyItems(new ArrayList<>(surfaceItems), random)) {
                     continue;

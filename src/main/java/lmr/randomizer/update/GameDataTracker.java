@@ -2622,7 +2622,12 @@ public final class GameDataTracker {
             itemGive.getArgs().add((short)2);
             itemGive.getArgs().add((short)3);
             itemGive.getArgs().add((short)39);
-            itemGive.setX(940);
+            if(Settings.isQuickStartItemsEnabled()) {
+                itemGive.setX(940);
+            }
+            else {
+                itemGive.setX(880);
+            }
             itemGive.setY(160);
 
             TestByteOperation itemGiveTest = new TestByteOperation();
@@ -2812,9 +2817,22 @@ public final class GameDataTracker {
                 }
             }
 
+            int worldFlag;
+            if("Coin: Surface (Waterfall)".equals(newChestContentsItemName)) {
+                worldFlag = 43;
+            }
+            else {
+               worldFlag = itemNewContentsData.getWorldFlag();
+            }
+
             WriteByteOperation updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
+            if("Coin: Surface (Waterfall)".equals(newChestContentsItemName)) {
+                updateFlag.setIndex(worldFlag);
+            }
+            else {
+                updateFlag.setIndex(worldFlag);
+            }
             updateFlag.setValue(2);
             objectToModify.getWriteByteOperations().add(updateFlag);
 
@@ -2822,7 +2840,7 @@ public final class GameDataTracker {
 
             updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(itemNewContentsData.getWorldFlag());
+            updateFlag.setIndex(worldFlag);
             updateFlag.setValue(2);
             objectToModify.getWriteByteOperations().add(updateFlag);
 
@@ -2898,51 +2916,90 @@ public final class GameDataTracker {
                 else {
                     objectToModify.getArgs().set(2, (short)1);
                 }
+
+                for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+                    if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                        flagTest.setIndex(newWorldFlag);
+                    }
+                }
+
+                WriteByteOperation updateFlag = new WriteByteOperation();
+                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                updateFlag.setIndex(newWorldFlag);
+                updateFlag.setValue(2);
+                objectToModify.getWriteByteOperations().add(updateFlag);
+
+                objectToModify.getWriteByteOperations().add(puzzleFlag);
+
+                updateFlag = new WriteByteOperation();
+                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                updateFlag.setIndex(newWorldFlag);
+                if(itemNewContentsData.getWorldFlag() == newWorldFlag) {
+                    updateFlag.setValue(1);
+                }
+                else {
+                    updateFlag.setValue(2);
+                }
+                objectToModify.getWriteByteOperations().add(updateFlag);
+
+                updateFlag = new WriteByteOperation();
+                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                updateFlag.setIndex(newWorldFlag);
+                updateFlag.setValue(2);
+                objectToModify.getWriteByteOperations().add(updateFlag);
             }
             else {
                 // Removed items
-                if(random.nextBoolean()) {
-                    objectToModify.getArgs().set(0, (short)2); // Weights
-                    objectToModify.getArgs().set(1, (short)1); // The game won't allow multiple weights, so just give 1
+                if(true) {
+//                if(random.nextBoolean()) {
+                    objectToModify.getArgs().set(0, getRandomItemGraphic(random)); // Random graphic
+
+                }
+                else if(random.nextBoolean()){
+                    objectToModify.getArgs().set(0, (short)73); // Spaulder
                 }
                 else {
-                    objectToModify.getArgs().set(0, (short)1); // Coins
-                    objectToModify.getArgs().set(1, (short)10); // 10 coins, the equivalent of a pot
+                    objectToModify.getArgs().set(0, (short)81); // Map
+                }
+                objectToModify.getArgs().set(1, (short)0); // Don't actually give the item, just make it look like that
+
+                objectToModify.getArgs().set(2, (short)1); // Removed items use item chest graphics.
+
+                for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+                    if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                        flagTest.setIndex(newWorldFlag);
+                    }
                 }
 
-                objectToModify.getArgs().set(2, (short)0); // Removed items use coin chest graphics.
-            }
-
-            for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
-                if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
-                    flagTest.setIndex(newWorldFlag);
-                }
-            }
-
-            WriteByteOperation updateFlag = new WriteByteOperation();
-            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(newWorldFlag);
-            updateFlag.setValue(2);
-            objectToModify.getWriteByteOperations().add(updateFlag);
-
-            objectToModify.getWriteByteOperations().add(puzzleFlag);
-
-            updateFlag = new WriteByteOperation();
-            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(newWorldFlag);
-            if(itemNewContentsData.getWorldFlag() == newWorldFlag) {
+                WriteByteOperation updateFlag = new WriteByteOperation();
+                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                updateFlag.setIndex(newWorldFlag);
                 updateFlag.setValue(1);
-            }
-            else {
-                updateFlag.setValue(2);
-            }
-            objectToModify.getWriteByteOperations().add(updateFlag);
+                objectToModify.getWriteByteOperations().add(updateFlag);
 
-            updateFlag = new WriteByteOperation();
-            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(newWorldFlag);
-            updateFlag.setValue(2);
-            objectToModify.getWriteByteOperations().add(updateFlag);
+                objectToModify.getWriteByteOperations().add(puzzleFlag);
+
+                updateFlag = new WriteByteOperation();
+                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                updateFlag.setIndex(newWorldFlag);
+                updateFlag.setValue(2);
+                objectToModify.getWriteByteOperations().add(updateFlag);
+
+                updateFlag = new WriteByteOperation();
+                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                updateFlag.setIndex(46);
+                updateFlag.setValue(1);
+                objectToModify.getWriteByteOperations().add(updateFlag);
+
+                int xPos = objectToModify.getX();
+                int yPos = objectToModify.getY();
+                addBat(objectToModify.getObjectContainer(), xPos - 20, yPos, 46);
+                addBat(objectToModify.getObjectContainer(), xPos + 20, yPos, 46);
+                addBat(objectToModify.getObjectContainer(), xPos, yPos - 20, 46);
+                addBat(objectToModify.getObjectContainer(), xPos, yPos + 20, 46);
+
+                addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, 46 );
+            }
         }
     }
 
@@ -3020,6 +3077,12 @@ public final class GameDataTracker {
 
         if(itemNewContentsData.getWorldFlag() != newWorldFlag) {
             // Add handling for removed items.
+            if(random.nextBoolean()) {
+                objectToModify.getArgs().set(1, (short)62);
+            }
+            else {
+                objectToModify.getArgs().set(1, (short)70);
+            }
             objectToModify.getArgs().set(2, (short)0);
 
             WriteByteOperation updateFlag = new WriteByteOperation();
@@ -3027,6 +3090,13 @@ public final class GameDataTracker {
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
             updateFlag.setValue(1);
             objectToModify.getWriteByteOperations().add(updateFlag);
+
+            int xPos = objectToModify.getX();
+            int yPos = objectToModify.getY();
+            addBat(objectToModify.getObjectContainer(), xPos - 20, yPos, 43);
+            addBat(objectToModify.getObjectContainer(), xPos + 20, yPos, 43);
+            addBat(objectToModify.getObjectContainer(), xPos, yPos - 20, 43);
+            addBat(objectToModify.getObjectContainer(), xPos, yPos + 20, 43);
 
             addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, 43);
         }
