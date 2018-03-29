@@ -1902,21 +1902,7 @@ public final class GameDataTracker {
             int worldFlag = 227;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
-            if(Settings.isRandomizeMainWeapon()) {
-                updateXmailerBlock(block.getBlockContents());
-            }
-            else {
-                // Set value of world flag to 2 instead of 1
-                for(int i = 0; i < block.getBlockContents().size(); i++) {
-                    BlockContents blockContents = block.getBlockContents().get(i);
-                    if(blockContents instanceof BlockFlagData) {
-                        BlockFlagData blockFlagData = (BlockFlagData) blockContents;
-                        if(blockFlagData.getWorldFlag() == 227) {
-                            blockFlagData.setFlagValue((short)2);
-                        }
-                    }
-                }
-            }
+            updateXmailerBlock(block.getBlockContents());
 
             List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
             if (blocks == null) {
@@ -2117,22 +2103,32 @@ public final class GameDataTracker {
     }
 
     public static void updateXmailerBlock(List<BlockContents> xelpudBlockContents) {
-        xelpudBlockContents.clear();
-        xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)740, (short)1)); // 64
-        List<Short> stringCharacters = FileUtils.stringToData("Did you know that randomized starting weapon requires you to load the provided save file?");
-        for(Short shortCharacter : stringCharacters) {
-            xelpudBlockContents.add(new BlockSingleData(shortCharacter));
+        if(Settings.isRandomizeMainWeapon()) {
+            xelpudBlockContents.clear();
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1)); // 64
+            List<Short> stringCharacters = FileUtils.stringToData("Did you know that randomized starting weapon requires you to load the provided save file?");
+            for (Short shortCharacter : stringCharacters) {
+                xelpudBlockContents.add(new BlockSingleData(shortCharacter));
+            }
+            xelpudBlockContents.add(new BlockPoseData((short) 0x0046, (short) 25)); // 70
+            xelpudBlockContents.add(new BlockItemData((short) 0x0042, (short) 86)); // 66
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 227, (short) 2)); // 64
+            xelpudBlockContents.add(new BlockSingleData((short) 0x0044)); // {CLS}
+            stringCharacters = FileUtils.stringToData("You've been April fooled! Keep in mind that some settings may not apply normally for this seed.");
+            for (Short shortCharacter : stringCharacters) {
+                xelpudBlockContents.add(new BlockSingleData(shortCharacter));
+            }
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 124, (short) 1)); // 64
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // 64
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 2900, (short) 1)); // 64
         }
-        xelpudBlockContents.add(new BlockPoseData((short)0x0046, (short)25)); // 70
-        xelpudBlockContents.add(new BlockItemData((short)0x0042, (short)86)); // 66
-        xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)227, (short)2)); // 64
-        xelpudBlockContents.add(new BlockSingleData((short)0x0044)); // {CLS}
-        for(Short shortCharacter : stringCharacters) {
-            xelpudBlockContents.add(new BlockSingleData(shortCharacter));
+        else {
+            xelpudBlockContents.add(new BlockSingleData((short) 0x0044)); // {CLS}
+            List<Short> stringCharacters = FileUtils.stringToData("You've been April fooled! Keep in mind that some settings may not apply normally for this seed.");
+            for (Short shortCharacter : stringCharacters) {
+                xelpudBlockContents.add(new BlockSingleData(shortCharacter));
+            }
         }
-        xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)124, (short)1)); // 64
-        xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)740, (short)0)); // 64
-        xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)2900, (short)1)); // 64
     }
 
     public static void updateBlock(GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
@@ -2809,7 +2805,15 @@ public final class GameDataTracker {
 
         if(newChestContentsItemName.startsWith("Coin:")) {
             objectToModify.getArgs().set(0, (short)1); // Coins
-            objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg()); // Re-purposing inventory arg to track coin amount
+            if("Coin: Surface (Waterfall)".equals(newChestContentsItemName)) {
+                objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg());
+            }
+            else if("Coin: Illusion (Spikes)".equals(newChestContentsItemName)) {
+                objectToModify.getArgs().set(1, (short)111);
+            }
+            else {
+                objectToModify.getArgs().set(1, (short)(random.nextInt(15) + 6));
+            }
             objectToModify.getArgs().set(2, (short)0); // Brown chest
             for (TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                 if (flagTest.getIndex() == itemLocationData.getWorldFlag()) {
@@ -2817,22 +2821,9 @@ public final class GameDataTracker {
                 }
             }
 
-            int worldFlag;
-            if("Coin: Surface (Waterfall)".equals(newChestContentsItemName)) {
-                worldFlag = 43;
-            }
-            else {
-               worldFlag = itemNewContentsData.getWorldFlag();
-            }
-
             WriteByteOperation updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            if("Coin: Surface (Waterfall)".equals(newChestContentsItemName)) {
-                updateFlag.setIndex(worldFlag);
-            }
-            else {
-                updateFlag.setIndex(worldFlag);
-            }
+            updateFlag.setIndex(47);
             updateFlag.setValue(2);
             objectToModify.getWriteByteOperations().add(updateFlag);
 
@@ -2840,7 +2831,7 @@ public final class GameDataTracker {
 
             updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(worldFlag);
+            updateFlag.setIndex(47);
             updateFlag.setValue(2);
             objectToModify.getWriteByteOperations().add(updateFlag);
 
