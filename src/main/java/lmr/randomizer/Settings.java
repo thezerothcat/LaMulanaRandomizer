@@ -468,7 +468,7 @@ public final class Settings {
     }
 
     public static Set<String> getRemovedItems() {
-        return new HashSet<>(Arrays.asList("guild.exe", "beolamu.exe", "emusic.exe", "Scalesphere", "Crucifix", "Scriptures"));
+        return new HashSet<>(Arrays.asList("mantra.exe", "Djed Pillar", "guild.exe", "beolamu.exe", "emusic.exe", "Scalesphere", "Crucifix", "Scriptures"));
 //        return singleton.removedItems;
     }
 
@@ -502,7 +502,7 @@ public final class Settings {
 
     public static List<String> getStartingItems() {
         if(singleton.quickStartItemsEnabled) {
-            return Arrays.asList("Spaulder");
+            return Arrays.asList("Holy Grail", "Hermes' Boots", "Spaulder");
         }
         return Arrays.asList("Spaulder");
     }

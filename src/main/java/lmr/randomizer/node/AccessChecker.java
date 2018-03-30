@@ -60,29 +60,6 @@ public class AccessChecker {
     }
 
     public boolean isSuccess() {
-        if(Settings.getCurrentRemovedItems().isEmpty()) {
-            if(mapOfNodeNameToRequirementsObject.isEmpty()) {
-                return true;
-            }
-
-            for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
-                if(nodeName.startsWith("Glitch:")) {
-                    continue;
-                }
-                if(nodeName.startsWith("Attack:")) {
-                    continue;
-                }
-                else if(NodeType.ITEM_LOCATION.equals(mapOfNodeNameToRequirementsObject.get(nodeName).getType())) {
-                    String item = itemRandomizer.getItem(nodeName);
-                    if(item.startsWith("Coin:") || item.startsWith("Trap:") || Settings.getStartingItems().contains(item)) {
-                        continue;
-                    }
-                }
-                FileUtils.log("Inaccessible node detected: " + nodeName + " containing " + itemRandomizer.getItem(nodeName));
-                return false;
-            }
-            return true;
-        }
         for(String requiredItem : DataFromFile.getWinRequirements()) {
             if(!accessedNodes.contains(requiredItem)) {
                 return false;

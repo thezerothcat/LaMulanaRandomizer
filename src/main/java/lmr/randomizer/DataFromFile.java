@@ -396,7 +396,7 @@ public final class DataFromFile {
 
 
     public static List<String> getWinRequirements() {
-        if(winRequirements == null && (Settings.getMinRandomRemovedItems() > 0 || Settings.getMaxRandomRemovedItems() > 0)) {
+        if(winRequirements == null) {
             winRequirements = FileUtils.getList("requirement/win_reqs.txt");
         }
         return winRequirements;

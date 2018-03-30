@@ -455,6 +455,9 @@ public class ItemRandomizer {
         for(Map.Entry<String, String> locationAndItem : mapOfItemLocationToItem.entrySet()) {
             itemLocation = locationAndItem.getKey();
             newContents = locationAndItem.getValue();
+            if("Vessel".equals(newContents)) {
+                newContents = "Medicine of the Mind";
+            }
             itemLocationData = nameToDataMap.get(itemLocation);
             itemNewContentsData = nameToDataMap.get(newContents);
             newWorldFlag = getNewWorldFlag(itemLocation, newContents, itemLocationData, itemNewContentsData);

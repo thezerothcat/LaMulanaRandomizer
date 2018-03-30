@@ -6,6 +6,7 @@ import lmr.randomizer.Settings;
 import lmr.randomizer.random.ShopRandomizationEnum;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.GameDataTracker;
+import lmr.randomizer.update.GameObjectId;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -266,6 +267,59 @@ public final class RcdReader {
                             obj.getWriteByteOperations().add(writeByteOperation);
                         }
                     }
+                }
+            }
+        }
+        else if (obj.getId() == 0x2e) {
+            if(objectContainer instanceof Screen) {
+                Screen screen = (Screen) objectContainer;
+                if (screen.getZoneIndex() == 17 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 0) {
+                    // Add LAMULANA mantra timer
+                    GameObject mantraTimer = new GameObject(obj.getObjectContainer());
+                    mantraTimer.setId((short)0x0b);
+                    mantraTimer.getArgs().add((short) 0);
+                    mantraTimer.getArgs().add((short) 0);
+                    mantraTimer.setX(-1);
+                    mantraTimer.setY(-1);
+
+                    TestByteOperation testByteOperation = new TestByteOperation();
+                    testByteOperation.setIndex(292);
+                    testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+                    testByteOperation.setValue((byte)4);
+                    mantraTimer.getTestByteOperations().add(testByteOperation);
+
+                    WriteByteOperation writeByteOperation = new WriteByteOperation();
+                    writeByteOperation.setIndex(292);
+                    writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                    writeByteOperation.setValue(4);
+                    mantraTimer.getWriteByteOperations().add(writeByteOperation);
+
+                    obj.getObjectContainer().getObjects().add(0, mantraTimer);
+
+                    // Spaulder if you approach Tiamat's ankh from the wrong side.
+                    GameObjectId gameObjectId = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+
+                    GameObject itemGive = new GameObject(screen);
+                    itemGive.setId((short) 0xb5);
+                    itemGive.getArgs().add(gameObjectId.getInventoryArg());
+                    itemGive.getArgs().add((short)2);
+                    itemGive.getArgs().add((short)3);
+                    itemGive.getArgs().add((short)39);
+                    itemGive.setX(obj.getX() + 60);
+                    itemGive.setY(obj.getY());
+
+                    TestByteOperation itemGiveTest = new TestByteOperation();
+                    itemGiveTest.setIndex(gameObjectId.getWorldFlag());
+                    itemGiveTest.setValue((byte) 0);
+                    itemGiveTest.setOp(ByteOp.FLAG_EQUALS);
+                    itemGive.getTestByteOperations().add(itemGiveTest);
+
+                    WriteByteOperation itemGiveUpdate = new WriteByteOperation();
+                    itemGiveUpdate.setIndex(gameObjectId.getWorldFlag());
+                    itemGiveUpdate.setValue((byte) 2);
+                    itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
+                    itemGive.getWriteByteOperations().add(itemGiveUpdate);
+                    screen.getObjects().add(itemGive);
                 }
             }
         }

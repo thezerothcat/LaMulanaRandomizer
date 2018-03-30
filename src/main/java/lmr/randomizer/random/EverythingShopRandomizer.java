@@ -388,8 +388,17 @@ public class EverythingShopRandomizer implements ShopRandomizer {
 
             if(MSX_SHOP_NAME.equals(shopName)) {
                 shopItem1 = mapOfShopInventoryItemToContents.get(String.format("%s Item 1", shopName));
+                if("Vessel".equals(shopItem1)) {
+                    shopItem1 = "Medicine of the Mind";
+                }
                 shopItem2 = mapOfShopInventoryItemToContents.get(String.format("%s Item 2", NON_MSX_SHOP_NAME));
+                if("Vessel".equals(shopItem1)) {
+                    shopItem2 = "Medicine of the Mind";
+                }
                 shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", NON_MSX_SHOP_NAME));
+                if("Vessel".equals(shopItem1)) {
+                    shopItem3 = "Medicine of the Mind";
+                }
 
                 // No need to worry about flag replacement because MSX2 can't be a removed item.
                 Map<String, GameObjectId> nameToDataMap = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData();
@@ -399,8 +408,17 @@ public class EverythingShopRandomizer implements ShopRandomizer {
             }
             else {
                 shopItem1 = mapOfShopInventoryItemToContents.get(String.format("%s Item 1", shopName));
+                if("Vessel".equals(shopItem1)) {
+                    shopItem1 = "Medicine of the Mind";
+                }
                 shopItem2 = mapOfShopInventoryItemToContents.get(String.format("%s Item 2", shopName));
+                if("Vessel".equals(shopItem1)) {
+                    shopItem2 = "Medicine of the Mind";
+                }
                 shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName));
+                if("Vessel".equals(shopItem1)) {
+                    shopItem3 = "Medicine of the Mind";
+                }
             }
 
             if(Settings.getCurrentRemovedItems().contains(shopItem1)

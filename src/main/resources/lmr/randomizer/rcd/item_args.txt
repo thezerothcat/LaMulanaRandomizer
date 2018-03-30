@@ -105,6 +105,7 @@ Mulana Talisman => 73, 105
 Provocative Bathing Suit => 74, 106
 Fake Silver Shield => 75, a90
 Mobile Super X2 => 76, 2e6
+Medicine of the Mind => 77, 108
 Maternity Statue => 81, 10b
 reader.exe => 85, 0e2
 xmailer.exe => 86, 0e3
