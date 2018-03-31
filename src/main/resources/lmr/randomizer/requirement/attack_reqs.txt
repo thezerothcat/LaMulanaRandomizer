@@ -3,7 +3,6 @@ Attack: Above => Chain Whip
 Attack: Above => Flail Whip
 Attack: Above => Axe
 Attack: S-Above => Caltrops, Caltrops Ammo
-Attack: S-Above => Bomb, Bomb Ammo
 Attack: S-Above => Flare Gun, Flare Gun Ammo
 Attack: Below => Axe
 Attack: Below => Knife
