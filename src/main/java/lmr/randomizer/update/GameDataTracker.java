@@ -59,6 +59,56 @@ public final class GameDataTracker {
                     WriteByteOperation cogPuzzleFlag = gameObject.getWriteByteOperations().get(1);
                     cogPuzzleFlag.setIndex(2799);
                 }
+                else if(inventoryArg == 69) {
+                    // Sacred Orb
+                    if(!gameObject.getWriteByteOperations().isEmpty() && gameObject.getWriteByteOperations().get(0).getIndex() == 199) {
+                        // Gate of Guidance orb
+                        GameObjectId gameObjectId = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("bunemon.exe");
+
+                        GameObject extraChest = new GameObject(gameObject.getObjectContainer());
+                        extraChest.setId((short) 0x2c);
+                        extraChest.getArgs().add((short)(gameObjectId.getInventoryArg() + 11));
+                        extraChest.getArgs().add((short)1);
+                        extraChest.getArgs().add((short)0);
+                        extraChest.getArgs().add((short)0);
+                        extraChest.getArgs().add((short)0);
+                        extraChest.getArgs().add((short)0);
+                        extraChest.setX(gameObject.getX());
+                        extraChest.setY(gameObject.getY());
+
+                        TestByteOperation itemGiveTest = new TestByteOperation();
+                        itemGiveTest.setIndex(199);
+                        itemGiveTest.setOp(ByteOp.FLAG_EQUALS);
+                        itemGiveTest.setValue((byte) 2);
+                        extraChest.getTestByteOperations().add(itemGiveTest);
+
+                        WriteByteOperation writeByteOperation = new WriteByteOperation();
+                        writeByteOperation.setIndex(gameObjectId.getWorldFlag());
+                        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                        writeByteOperation.setValue((byte) 2);
+                        extraChest.getWriteByteOperations().add(writeByteOperation);
+
+                        writeByteOperation = new WriteByteOperation();
+                        writeByteOperation.setIndex(199);
+                        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                        writeByteOperation.setValue((byte) 2);
+                        extraChest.getWriteByteOperations().add(writeByteOperation);
+
+                        writeByteOperation = new WriteByteOperation();
+                        writeByteOperation.setIndex(gameObjectId.getWorldFlag());
+                        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                        writeByteOperation.setValue((byte) 1);
+                        extraChest.getWriteByteOperations().add(writeByteOperation);
+
+                        writeByteOperation = new WriteByteOperation();
+                        writeByteOperation.setIndex(gameObjectId.getWorldFlag());
+                        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                        writeByteOperation.setValue((byte) 2);
+                        extraChest.getWriteByteOperations().add(writeByteOperation);
+
+                        gameObject.getObjectContainer().getObjects().add(extraChest);
+                    }
+                }
             }
 
             WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(0);
@@ -2807,14 +2857,69 @@ public final class GameDataTracker {
             objectToModify.getArgs().set(0, (short)1); // Coins
             if("Coin: Surface (Waterfall)".equals(newChestContentsItemName)) {
                 objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg());
+                objectToModify.getArgs().set(2, (short)0); // Coin chest
             }
             else if("Coin: Illusion (Spikes)".equals(newChestContentsItemName)) {
                 objectToModify.getArgs().set(1, (short)111);
+                objectToModify.getArgs().set(2, (short)(random.nextInt(2))); // Random chest color
+            }
+            else if(random.nextBoolean()){
+                if(random.nextBoolean()) {
+                    objectToModify.getArgs().set(0, getRandomItemGraphic(random)); // Random graphic
+
+                }
+                else if(random.nextBoolean()){
+                    objectToModify.getArgs().set(0, (short)73); // Spaulder
+                }
+                else {
+                    objectToModify.getArgs().set(0, (short)81); // Map
+                }
+                objectToModify.getArgs().set(1, (short)0); // Don't actually give the item, just make it look like that
+
+                objectToModify.getArgs().set(2, (short)(random.nextInt(2))); // Random chest color
+
+                for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+                    if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                        flagTest.setIndex(newWorldFlag);
+                    }
+                }
+
+                WriteByteOperation updateFlag = new WriteByteOperation();
+                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                updateFlag.setIndex(newWorldFlag);
+                updateFlag.setValue(1);
+                objectToModify.getWriteByteOperations().add(updateFlag);
+
+                objectToModify.getWriteByteOperations().add(puzzleFlag);
+
+                updateFlag = new WriteByteOperation();
+                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                updateFlag.setIndex(newWorldFlag);
+                updateFlag.setValue(2);
+                objectToModify.getWriteByteOperations().add(updateFlag);
+
+                updateFlag = new WriteByteOperation();
+                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                updateFlag.setIndex(46);
+                updateFlag.setValue(1);
+                objectToModify.getWriteByteOperations().add(updateFlag);
+
+                int xPos = objectToModify.getX();
+                int yPos = objectToModify.getY();
+                addBat(objectToModify.getObjectContainer(), xPos - 20, yPos, 46);
+                addBat(objectToModify.getObjectContainer(), xPos + 20, yPos, 46);
+                addBat(objectToModify.getObjectContainer(), xPos, yPos - 20, 46);
+                addBat(objectToModify.getObjectContainer(), xPos, yPos + 20, 46);
+
+                addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, 46 );
+                return;
             }
             else {
-                objectToModify.getArgs().set(1, (short)(random.nextInt(15) + 6));
+                objectToModify.getArgs().set(1, (short)(random.nextInt(111) + 1));
+                objectToModify.getArgs().set(2, (short)(random.nextInt(2))); // Random chest color
             }
-            objectToModify.getArgs().set(2, (short)0); // Brown chest
+
+            objectToModify.getArgs().set(2, (short)1); // Brown chest
             for (TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                 if (flagTest.getIndex() == itemLocationData.getWorldFlag()) {
                     flagTest.setIndex(itemNewContentsData.getWorldFlag());
@@ -2846,12 +2951,7 @@ public final class GameDataTracker {
             objectToModify.getArgs().set(1, (short)1); // Quantity is irrelevant
 
             // Chest graphics (0 = coin chest, 1 = blue chest)
-            if(Settings.isCoinChestGraphics()) {
-                objectToModify.getArgs().set(2, (short)0);
-            }
-            else {
-                objectToModify.getArgs().set(2, (short)1);
-            }
+            objectToModify.getArgs().set(2, (short)(random.nextInt(2))); // Random chest color
 
             for (TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                 if (flagTest.getIndex() == itemLocationData.getWorldFlag()) {
@@ -2901,11 +3001,11 @@ public final class GameDataTracker {
 
                 objectToModify.getArgs().set(1, (short)1); // Real item, not fake (or 1 weight, because the game won't allow multiple)
 
-                if(Settings.isCoinChestGraphics()) {
-                    objectToModify.getArgs().set(2, (short)0);
+                if("Shell Horn".equals(newChestContentsItemName) || "Sacred Orb (Gate of Guidance)".equals(newChestContentsItemName)) {
+                    objectToModify.getArgs().set(2, (short)1); // Blue chest
                 }
                 else {
-                    objectToModify.getArgs().set(2, (short)1);
+                    objectToModify.getArgs().set(2, (short) (random.nextInt(2))); // Random chest color
                 }
 
                 for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
@@ -2941,8 +3041,8 @@ public final class GameDataTracker {
             }
             else {
                 // Removed items
-                if(true) {
-//                if(random.nextBoolean()) {
+//                if(true) {
+                if(random.nextBoolean()) {
                     objectToModify.getArgs().set(0, getRandomItemGraphic(random)); // Random graphic
 
                 }

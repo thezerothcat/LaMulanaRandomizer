@@ -468,7 +468,7 @@ public final class Settings {
     }
 
     public static Set<String> getRemovedItems() {
-        return new HashSet<>(Arrays.asList("mantra.exe", "Djed Pillar", "guild.exe", "beolamu.exe", "emusic.exe", "Scalesphere", "Crucifix", "Scriptures"));
+        return new HashSet<>(Arrays.asList("bunemon.exe", "mantra.exe", "Djed Pillar", "guild.exe", "beolamu.exe", "emusic.exe", "Scalesphere", "Crucifix", "Scriptures"));
 //        return singleton.removedItems;
     }
 

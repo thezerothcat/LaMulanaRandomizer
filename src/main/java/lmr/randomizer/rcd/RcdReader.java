@@ -296,8 +296,8 @@ public final class RcdReader {
 
                     obj.getObjectContainer().getObjects().add(0, mantraTimer);
 
-                    // Spaulder if you approach Tiamat's ankh from the wrong side.
-                    GameObjectId gameObjectId = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                    // Anchor if you approach Tiamat's ankh from the wrong side.
+                    GameObjectId gameObjectId = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Anchor");
 
                     GameObject itemGive = new GameObject(screen);
                     itemGive.setId((short) 0xb5);
@@ -305,7 +305,7 @@ public final class RcdReader {
                     itemGive.getArgs().add((short)2);
                     itemGive.getArgs().add((short)3);
                     itemGive.getArgs().add((short)39);
-                    itemGive.setX(obj.getX() + 60);
+                    itemGive.setX(obj.getX() - 60);
                     itemGive.setY(obj.getY());
 
                     TestByteOperation itemGiveTest = new TestByteOperation();
