@@ -195,7 +195,7 @@ public final class Settings {
     }
 
     public static String getXmailerItem() {
-        return "xmailer.exe";
+        return singleton.xmailerItem;
     }
 
     public static void setXmailerItem(String xmailerItem, boolean update) {
@@ -468,7 +468,7 @@ public final class Settings {
     }
 
     public static Set<String> getRemovedItems() {
-        return new HashSet<>(Arrays.asList("bunemon.exe", "mantra.exe", "Djed Pillar", "guild.exe", "beolamu.exe", "emusic.exe", "Scalesphere", "Crucifix", "Scriptures"));
+        return new HashSet<>(Arrays.asList("mantra.exe", "xmailer.exe", "guild.exe", "beolamu.exe", "emusic.exe", "Scriptures"));
 //        return singleton.removedItems;
     }
 
@@ -502,7 +502,7 @@ public final class Settings {
 
     public static List<String> getStartingItems() {
         if(singleton.quickStartItemsEnabled) {
-            return Arrays.asList("Holy Grail", "Hermes' Boots", "Spaulder");
+            return Arrays.asList("Holy Grail", "Hermes' Boots", "mirai.exe", "Spaulder");
         }
         return Arrays.asList("Spaulder");
     }

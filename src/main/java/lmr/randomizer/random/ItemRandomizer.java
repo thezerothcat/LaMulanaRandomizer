@@ -458,6 +458,9 @@ public class ItemRandomizer {
             if("Vessel".equals(newContents)) {
                 newContents = "Medicine of the Mind";
             }
+            if("Djed Pillar".equals(newContents)) {
+                newContents = "Ankh Jewel (Extra)";
+            }
             itemLocationData = nameToDataMap.get(itemLocation);
             itemNewContentsData = nameToDataMap.get(newContents);
             newWorldFlag = getNewWorldFlag(itemLocation, newContents, itemLocationData, itemNewContentsData);

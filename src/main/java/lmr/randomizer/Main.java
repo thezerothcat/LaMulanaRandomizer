@@ -346,7 +346,7 @@ public class Main {
             try {
                 progressDialog.updateProgress(0, Translations.getText("restore.save"));
 
-                File backupSave = new File(String.format("%s/lm_00.sav.bak", Settings.getLaMulanaSaveDir()));
+                File backupSave = new File(String.format("%s/lm_00.sav.lmr.bak", Settings.getLaMulanaSaveDir()));
                 File existingSave = new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir()));
                 FileOutputStream fileOutputStream = new FileOutputStream(existingSave);
                 Files.copy(backupSave.toPath(), fileOutputStream);
@@ -599,12 +599,14 @@ public class Main {
     private static void backupSaves() {
         try {
             // Make lm_00.sav backup
-            File backupSave = new File(String.format("%s/lm_00.sav.bak", Settings.getLaMulanaSaveDir()));
-            if(!backupSave.exists()) {
-                File existingSave = new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir()));
-                if(existingSave.exists()) {
-                    Files.move(existingSave.toPath(), backupSave.toPath());
+            File existingSave = new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir()));
+            if(existingSave.exists()) {
+                File backupSave = new File(String.format("%s/lm_00.sav.lmr.bak", Settings.getLaMulanaSaveDir()));
+                if(!backupSave.exists()) {
+                    File firstBackupSave = new File(String.format("%s/lm_00.sav.lmr.orig.bak", Settings.getLaMulanaSaveDir()));
+                    Files.copy(existingSave.toPath(), firstBackupSave.toPath());
                 }
+                Files.copy(existingSave.toPath(), backupSave.toPath());
             }
         }
         catch (Exception ex) {

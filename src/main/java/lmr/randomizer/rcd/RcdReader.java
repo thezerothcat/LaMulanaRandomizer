@@ -296,32 +296,57 @@ public final class RcdReader {
 
                     obj.getObjectContainer().getObjects().add(0, mantraTimer);
 
-                    // Anchor if you approach Tiamat's ankh from the wrong side.
-                    GameObjectId gameObjectId = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Anchor");
-
-                    GameObject itemGive = new GameObject(screen);
-                    itemGive.setId((short) 0xb5);
-                    itemGive.getArgs().add(gameObjectId.getInventoryArg());
-                    itemGive.getArgs().add((short)2);
-                    itemGive.getArgs().add((short)3);
-                    itemGive.getArgs().add((short)39);
-                    itemGive.setX(obj.getX() - 60);
-                    itemGive.setY(obj.getY());
-
-                    TestByteOperation itemGiveTest = new TestByteOperation();
-                    itemGiveTest.setIndex(gameObjectId.getWorldFlag());
-                    itemGiveTest.setValue((byte) 0);
-                    itemGiveTest.setOp(ByteOp.FLAG_EQUALS);
-                    itemGive.getTestByteOperations().add(itemGiveTest);
-
-                    WriteByteOperation itemGiveUpdate = new WriteByteOperation();
-                    itemGiveUpdate.setIndex(gameObjectId.getWorldFlag());
-                    itemGiveUpdate.setValue((byte) 2);
-                    itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
-                    itemGive.getWriteByteOperations().add(itemGiveUpdate);
-                    screen.getObjects().add(itemGive);
+//                    // Anchor if you approach Tiamat's ankh from the wrong side.
+//                    GameObjectId gameObjectId = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Anchor");
+//
+//                    GameObject itemGive = new GameObject(screen);
+//                    itemGive.setId((short) 0xb5);
+//                    itemGive.getArgs().add(gameObjectId.getInventoryArg());
+//                    itemGive.getArgs().add((short)2);
+//                    itemGive.getArgs().add((short)3);
+//                    itemGive.getArgs().add((short)39);
+//                    itemGive.setX(obj.getX() - 60);
+//                    itemGive.setY(obj.getY());
+//
+//                    TestByteOperation itemGiveTest = new TestByteOperation();
+//                    itemGiveTest.setIndex(gameObjectId.getWorldFlag());
+//                    itemGiveTest.setValue((byte) 0);
+//                    itemGiveTest.setOp(ByteOp.FLAG_EQUALS);
+//                    itemGive.getTestByteOperations().add(itemGiveTest);
+//
+//                    WriteByteOperation itemGiveUpdate = new WriteByteOperation();
+//                    itemGiveUpdate.setIndex(gameObjectId.getWorldFlag());
+//                    itemGiveUpdate.setValue((byte) 2);
+//                    itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
+//                    itemGive.getWriteByteOperations().add(itemGiveUpdate);
+//                    screen.getObjects().add(itemGive);
                 }
             }
+        }
+        else if (obj.getId() == 0xa3) {
+            for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                if(testByteOperation.getIndex() == 254) {
+                    keepObject = false;
+                    break;
+                }
+            }
+        }
+        else if (obj.getId() == 0xc0) {
+            obj.setId((short)0x2e);
+            obj.getArgs().set(0, (short)8);
+            for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                if(testByteOperation.getIndex() == 254) {
+                    testByteOperation.setValue((byte) 2);
+                }
+            }
+
+            for(int i = 1; i <= 23; i++) {
+                obj.getArgs().set(i, (short) 1);
+            }
+//            obj.getWriteByteOperations().get(0).setValue(2);
+//            obj.getWriteByteOperations().get(1).setValue(1);
+//            obj.getWriteByteOperations().get(2).setValue(3);
+            obj.setY(obj.getY() + 60);
         }
 
         if(keepObject) {

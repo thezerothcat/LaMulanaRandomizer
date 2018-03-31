@@ -24,6 +24,7 @@ Ankh Jewel (Tower of Ruin) => 19, 092
 Ankh Jewel (Chamber of Birth) => 19, 093
 Ankh Jewel (Twin Labyrinths) => 19, 094
 Ankh Jewel (Dimensional Corridor) => 19, 095
+Ankh Jewel (Extra) => 19, ad6
 Hand Scanner => 20, 096
 Djed Pillar => 21, 097
 Mini Doll => 22, 098

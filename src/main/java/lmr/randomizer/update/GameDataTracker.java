@@ -89,9 +89,9 @@ public final class GameDataTracker {
                         extraChest.getWriteByteOperations().add(writeByteOperation);
 
                         writeByteOperation = new WriteByteOperation();
-                        writeByteOperation.setIndex(199);
+                        writeByteOperation.setIndex(gameObjectId.getWorldFlag());
                         writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
-                        writeByteOperation.setValue((byte) 2);
+                        writeByteOperation.setValue((byte) 0);
                         extraChest.getWriteByteOperations().add(writeByteOperation);
 
                         writeByteOperation = new WriteByteOperation();
@@ -107,6 +107,14 @@ public final class GameDataTracker {
                         extraChest.getWriteByteOperations().add(writeByteOperation);
 
                         gameObject.getObjectContainer().getObjects().add(extraChest);
+
+                        gameObjectId = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Sacred Orb (Gate of Guidance)");
+                        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        if (objects == null) {
+                            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        }
+                        objects.add(extraChest);
                     }
                 }
             }
@@ -2150,6 +2158,12 @@ public final class GameDataTracker {
             }
             blocks.add(block);
         }
+        else if(block.getBlockNumber() == 223 || block.getBlockNumber() == 200
+                || block.getBlockNumber() == 172 || block.getBlockNumber() == 153
+                || block.getBlockNumber() == 313 || block.getBlockNumber() == 115
+                || block.getBlockNumber() == 282 || block.getBlockNumber() == 72) {
+            updateMantraBlock(block.getBlockContents());
+        }
     }
 
     public static void updateXmailerBlock(List<BlockContents> xelpudBlockContents) {
@@ -2179,6 +2193,17 @@ public final class GameDataTracker {
                 xelpudBlockContents.add(new BlockSingleData(shortCharacter));
             }
         }
+    }
+
+    public static void updateMantraBlock(List<BlockContents> mantraBlockContents) {
+        mantraBlockContents.clear();
+        List<Short> stringCharacters = FileUtils.stringToData("Why are you reading this tablet? Djed Pillar and mantra.exe have been removed.");
+        for (Short shortCharacter : stringCharacters) {
+            mantraBlockContents.add(new BlockSingleData(shortCharacter));
+        }
+        BlockListData blockListData = new BlockListData((short)0x004e, (short)2);
+        blockListData.getData().add((short)0);
+        blockListData.getData().add((short)0);
     }
 
     public static void updateBlock(GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
@@ -2668,11 +2693,11 @@ public final class GameDataTracker {
             itemGive.getArgs().add((short)2);
             itemGive.getArgs().add((short)3);
             itemGive.getArgs().add((short)39);
-            if(Settings.isQuickStartItemsEnabled()) {
-                itemGive.setX(940);
+            if("Spaulder".equals(itemName)) {
+                itemGive.setX(880);
             }
             else {
-                itemGive.setX(880);
+                itemGive.setX(940);
             }
             itemGive.setY(160);
 
@@ -2863,7 +2888,7 @@ public final class GameDataTracker {
                 objectToModify.getArgs().set(1, (short)111);
                 objectToModify.getArgs().set(2, (short)(random.nextInt(2))); // Random chest color
             }
-            else if(random.nextBoolean()){
+            else if(Settings.isRandomizeTrapItems() && random.nextBoolean()){
                 if(random.nextBoolean()) {
                     objectToModify.getArgs().set(0, getRandomItemGraphic(random)); // Random graphic
 
@@ -3202,6 +3227,7 @@ public final class GameDataTracker {
             }
             else {
                 writeByteOperation = new WriteByteOperation();
+                objectToModify.getWriteByteOperations().add(writeByteOperation);
             }
             writeByteOperation.setIndex(43);
             writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
