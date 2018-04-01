@@ -2196,7 +2196,16 @@ public final class GameDataTracker {
     }
 
     public static void updateMantraBlock(List<BlockContents> mantraBlockContents) {
+        BlockMantraData blockMantraData = null;
+        for(BlockContents blockContents : mantraBlockContents) {
+            if(blockContents instanceof BlockMantraData) {
+                blockMantraData = (BlockMantraData)blockContents;
+            }
+        }
         mantraBlockContents.clear();
+        if(blockMantraData != null) {
+            mantraBlockContents.add(blockMantraData);
+        }
         List<Short> stringCharacters = FileUtils.stringToData("Why are you reading this tablet? Djed Pillar and mantra.exe have been removed.");
         for (Short shortCharacter : stringCharacters) {
             mantraBlockContents.add(new BlockSingleData(shortCharacter));
@@ -2889,16 +2898,8 @@ public final class GameDataTracker {
                 objectToModify.getArgs().set(2, (short)(random.nextInt(2))); // Random chest color
             }
             else if(Settings.isRandomizeTrapItems() && random.nextBoolean()){
-                if(random.nextBoolean()) {
-                    objectToModify.getArgs().set(0, getRandomItemGraphic(random)); // Random graphic
+                objectToModify.getArgs().set(0, getRandomItemGraphic(random)); // Random graphic
 
-                }
-                else if(random.nextBoolean()){
-                    objectToModify.getArgs().set(0, (short)73); // Spaulder
-                }
-                else {
-                    objectToModify.getArgs().set(0, (short)81); // Map
-                }
                 objectToModify.getArgs().set(1, (short)0); // Don't actually give the item, just make it look like that
 
                 objectToModify.getArgs().set(2, (short)(random.nextInt(2))); // Random chest color
@@ -3026,12 +3027,7 @@ public final class GameDataTracker {
 
                 objectToModify.getArgs().set(1, (short)1); // Real item, not fake (or 1 weight, because the game won't allow multiple)
 
-                if("Shell Horn".equals(newChestContentsItemName) || "Sacred Orb (Gate of Guidance)".equals(newChestContentsItemName)) {
-                    objectToModify.getArgs().set(2, (short)1); // Blue chest
-                }
-                else {
-                    objectToModify.getArgs().set(2, (short) (random.nextInt(2))); // Random chest color
-                }
+                objectToModify.getArgs().set(2, (short) (random.nextInt(2))); // Random chest color
 
                 for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                     if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
