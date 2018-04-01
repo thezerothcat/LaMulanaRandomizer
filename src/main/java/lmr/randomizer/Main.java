@@ -607,7 +607,9 @@ public class Main {
                     Files.copy(existingSave.toPath(), firstBackupSave.toPath());
                 }
                 File backupSave = new File(String.format("%s/lm_00.sav.lmr.bak", Settings.getLaMulanaSaveDir()));
-                Files.delete(backupSave.toPath());
+                if(backupSave.exists()) {
+                    Files.delete(backupSave.toPath());
+                }
                 Files.copy(existingSave.toPath(), backupSave.toPath());
             }
         }
