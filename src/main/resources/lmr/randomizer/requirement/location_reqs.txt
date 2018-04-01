@@ -20,6 +20,7 @@ Location: Graveyard of the Giants [East] => Location: Graveyard of the Giants [W
 Location: Graveyard of the Giants [East] => Location: Graveyard of the Giants [West], Bomb, Ring, Isis' Pendant, Holy Grail, Hand Scanner, reader.exe, mirai.exe
 Location: Temple of the Sun => None
 Location: Temple of Moonlight [Pyramid] => Attack: Above
+Location: Temple of Moonlight [Pyramid] => Attack: S-Above
 Location: Temple of Moonlight [Upper] => Location: Temple of Moonlight [Pyramid]
 Location: Temple of Moonlight [Upper] => Location: Temple of Moonlight [Lower], Shuriken, Shuriken Ammo
 Location: Temple of Moonlight [Upper] => Location: Temple of Moonlight [Lower], Rolling Shuriken, Rolling Shuriken Ammo

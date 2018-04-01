@@ -269,6 +269,28 @@ public final class RcdReader {
                 }
             }
         }
+//        else if (obj.getId() == 0xa3) {
+//            for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+//                if(testByteOperation.getIndex() == 254) {
+//                    keepObject = false;
+//                    break;
+//                }
+//            }
+//        }
+//        else if (obj.getId() == 0xc0) {
+//            obj.setId((short)0x2e);
+//            obj.getArgs().set(0, (short)8);
+//            for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+//                if(testByteOperation.getIndex() == 254) {
+//                    testByteOperation.setValue((byte) 2);
+//                }
+//            }
+//
+//            for(int i = 1; i <= 23; i++) {
+//                obj.getArgs().set(i, (short) 1);
+//            }
+//            obj.setY(obj.getY() + 60);
+//        }
 
         if(keepObject) {
             objectContainer.getObjects().add(obj);

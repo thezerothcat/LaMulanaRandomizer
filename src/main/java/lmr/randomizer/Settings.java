@@ -501,9 +501,19 @@ public final class Settings {
 
     public static List<String> getStartingItems() {
         if(singleton.quickStartItemsEnabled) {
-            return Arrays.asList("Holy Grail", "Hermes' Boots");
+            return Arrays.asList("Holy Grail", "Hermes' Boots", "mirai.exe");
         }
         return new ArrayList<>(0);
+    }
+
+    public static String getUpdatedContents(String originalContents) {
+//        if("Vessel".equals(newContents)) {
+//            newContents = "Medicine of the Mind";
+//        }
+//        if("Djed Pillar".equals(newContents)) {
+//            newContents = "Ankh Jewel (Extra)";
+//        }
+        return originalContents;
     }
 
     public static void saveSettings() {

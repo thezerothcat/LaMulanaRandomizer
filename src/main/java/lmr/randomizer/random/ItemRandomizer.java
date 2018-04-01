@@ -416,6 +416,7 @@ public class ItemRandomizer {
 
         for (String itemName : itemNames) {
             String location = mapOfItemToLocation.get(itemName);
+            itemName = Settings.getUpdatedContents(itemName);
             if(Settings.getCurrentRemovedItems().contains(itemName)
                     || Settings.getRemovedItems().contains(itemName)
                     || Settings.getStartingItems().contains(itemName)) {
@@ -454,7 +455,7 @@ public class ItemRandomizer {
         GameObjectId itemLocationData;
         for(Map.Entry<String, String> locationAndItem : mapOfItemLocationToItem.entrySet()) {
             itemLocation = locationAndItem.getKey();
-            newContents = locationAndItem.getValue();
+            newContents = Settings.getUpdatedContents(locationAndItem.getValue());
             itemLocationData = nameToDataMap.get(itemLocation);
             itemNewContentsData = nameToDataMap.get(newContents);
             newWorldFlag = getNewWorldFlag(itemLocation, newContents, itemLocationData, itemNewContentsData);
