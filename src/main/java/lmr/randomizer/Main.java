@@ -19,6 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
@@ -453,9 +454,9 @@ public class Main {
 
             itemRandomizer.placeNonRandomizedItems();
             shopRandomizer.placeNonRandomizedItems();
-//            if(ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
-//                ((EverythingShopRandomizer)shopRandomizer).placeGuaranteedWeights(random);
-//            }
+            if(ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
+                ((EverythingShopRandomizer)shopRandomizer).placeGuaranteedWeights(random);
+            }
             if(!surfaceItems.isEmpty()) {
                 if(!itemRandomizer.placeVeryEarlyItems(new ArrayList<>(surfaceItems), random)) {
                     continue;
@@ -601,11 +602,12 @@ public class Main {
             // Make lm_00.sav backup
             File existingSave = new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir()));
             if(existingSave.exists()) {
-                File backupSave = new File(String.format("%s/lm_00.sav.lmr.bak", Settings.getLaMulanaSaveDir()));
-                if(!backupSave.exists()) {
-                    File firstBackupSave = new File(String.format("%s/lm_00.sav.lmr.orig.bak", Settings.getLaMulanaSaveDir()));
+                File firstBackupSave = new File(String.format("%s/lm_00.sav.lmr.orig.bak", Settings.getLaMulanaSaveDir()));
+                if(!firstBackupSave.exists()) {
                     Files.copy(existingSave.toPath(), firstBackupSave.toPath());
                 }
+                File backupSave = new File(String.format("%s/lm_00.sav.lmr.bak", Settings.getLaMulanaSaveDir()));
+                Files.delete(backupSave.toPath());
                 Files.copy(existingSave.toPath(), backupSave.toPath());
             }
         }

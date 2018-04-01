@@ -507,6 +507,16 @@ public final class Settings {
         return Arrays.asList("Spaulder");
     }
 
+    public static String getUpdatedContents(String expectedContents) {
+        if("Vessel".equals(expectedContents)) {
+            return "Medicine of the Mind";
+        }
+        if("Djed Pillar".equals(expectedContents)) {
+            return "Ankh Jewel (Extra)";
+        }
+        return expectedContents;
+    }
+
     public static void saveSettings() {
         if(singleton.changed) {
             try {

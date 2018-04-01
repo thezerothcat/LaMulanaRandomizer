@@ -268,7 +268,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             for (int i = 1; i <= 3; i++) {
                 location = String.format("%s Item %d", shop, i);
                 if(mapOfShopInventoryItemToContents.containsKey(location)) {
-                    String itemName = mapOfShopInventoryItemToContents.get(location);
+                    String itemName = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(location));
                     if(Settings.getCurrentRemovedItems().contains(itemName)
                             || Settings.getRemovedItems().contains(itemName)
                             || Settings.getStartingItems().contains(itemName)
@@ -298,9 +298,9 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             shopBlock = (ShopBlock) blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get(shopName));
 
             if(MSX_SHOP_NAME.equals(shopName)) {
-                shopItem1 = mapOfShopInventoryItemToContents.get(String.format("%s Item 1", shopName));
-                shopItem2 = mapOfShopInventoryItemToContents.get(String.format("%s Item 2", NON_MSX_SHOP_NAME));
-                shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", NON_MSX_SHOP_NAME));
+                shopItem1 = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(String.format("%s Item 1", shopName)));
+                shopItem2 = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(String.format("%s Item 2", NON_MSX_SHOP_NAME)));
+                shopItem3 = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(String.format("%s Item 3", NON_MSX_SHOP_NAME)));
 
                 // No need to worry about flag replacement because MSX2 can't be a removed item.
                 Map<String, GameObjectId> nameToDataMap = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData();
@@ -311,12 +311,12 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             else if(FISH_FAIRY_SHOP_NAME.equals(shopName)) {
                 shopItem1 = "Shell Horn";
                 shopItem2 = "guild.exe";
-                shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName));
+                shopItem3 = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName)));
             }
             else {
-                shopItem1 = mapOfShopInventoryItemToContents.get(String.format("%s Item 1", shopName));
-                shopItem2 = mapOfShopInventoryItemToContents.get(String.format("%s Item 2", shopName));
-                shopItem3 = mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName));
+                shopItem1 = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(String.format("%s Item 1", shopName)));
+                shopItem2 = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(String.format("%s Item 2", shopName)));
+                shopItem3 = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName)));
             }
             if(Settings.getCurrentRemovedItems().contains(shopItem1)
                     || Settings.getRemovedItems().contains(shopItem1)
