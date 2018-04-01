@@ -3062,17 +3062,8 @@ public final class GameDataTracker {
             }
             else {
                 // Removed items
-//                if(true) {
-                if(random.nextBoolean()) {
-                    objectToModify.getArgs().set(0, getRandomItemGraphic(random)); // Random graphic
+                objectToModify.getArgs().set(0, getRandomItemGraphic(random)); // Random graphic
 
-                }
-                else if(random.nextBoolean()){
-                    objectToModify.getArgs().set(0, (short)73); // Spaulder
-                }
-                else {
-                    objectToModify.getArgs().set(0, (short)81); // Map
-                }
                 objectToModify.getArgs().set(1, (short)0); // Don't actually give the item, just make it look like that
 
                 objectToModify.getArgs().set(2, (short)1); // Removed items use item chest graphics.
