@@ -201,8 +201,9 @@ public class ItemRandomizer {
         return true;
     }
 
-    public boolean placeRequiredItems(List<String> items, Random random) {
+    public boolean placeNoRequirementItems(List<String> items, Random random) {
         List<String> initialUnassignedNonShopLocations = new ArrayList<>(DataFromFile.getInitialNonShopItemLocations());
+        initialUnassignedNonShopLocations.removeAll(Settings.getCurrentCursedChests());
         if(Settings.isRandomizeCoinChests()) {
             initialUnassignedNonShopLocations.addAll(DataFromFile.getInitialCoinChestLocations());
         }
@@ -417,12 +418,18 @@ public class ItemRandomizer {
         for (String itemName : itemNames) {
             String location = mapOfItemToLocation.get(itemName);
             itemName = Settings.getUpdatedContents(itemName);
+            if(Settings.getCurrentCursedChests().contains(location)) {
+                location += " location (Cursed)";
+            }
+            else {
+                location += " location";
+            }
             if(Settings.getCurrentRemovedItems().contains(itemName)
                     || Settings.getRemovedItems().contains(itemName)
                     || Settings.getStartingItems().contains(itemName)) {
                 itemName += " (Removed)";
             }
-            writer.write(itemName + ": " + location + " location");
+            writer.write(itemName + ": " + location);
             writer.newLine();
         }
 

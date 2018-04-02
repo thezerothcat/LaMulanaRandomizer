@@ -3,11 +3,18 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
-1.26:
+1.27:
 -----------------------------
 Random starting weapons. This will replace the save in your first slot, and that save must be used to apply the random starting weapon. Two items in Temple of Moonlight have been removed from the initial chests pool to account for the fact that access to the Temple of Moonlight pyramid requires Whip or Axe. Also note that the regular Whip cannot be collected due to in-game limitations and will be replaced by the Chain Whip.
 
-Also added the ability to receive Holy Grail and Hermes' Boots immediately at the start of the game for racing purposes. If these items are selected to be in a special location, they will instead be randomized normally and then treated as a removed item (replaced with a chest containing weights or coins).
+Added the ability to receive Holy Grail, Hermes' Boots, and mirai.exe/Future Development Company immediately at the start of the game for racing purposes. If these items are selected to be in a special location, they will instead be randomized normally and then treated as a removed item (replaced with a chest containing weights or coins).
+
+Added the ability to randomize which chests are cursed.
+
+
+1.26:
+-----------------------------
+The April Fools' Day build. Included random starting weapons and configurable starting items (see 1.27 for more details).
 
 
 1.25:

@@ -18,6 +18,7 @@ public final class Settings {
     public static final int MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED = 40;
 
     public static Set<String> currentRemovedItems;
+    public static List<String> currentCursedChests;
     public static String currentStartingWeapon;
 
     private static Settings singleton = new Settings();
@@ -35,6 +36,7 @@ public final class Settings {
     private boolean randomizeCoinChests;
     private boolean randomizeTrapItems;
     private boolean randomizeMainWeapon;
+    private boolean randomizeCursedChests;
     private boolean replaceMapsWithWeights;
     private boolean automaticGrailPoints;
 
@@ -80,6 +82,7 @@ public final class Settings {
         randomizeCoinChests = true;
         randomizeTrapItems = true;
         randomizeMainWeapon = false;
+        randomizeCursedChests = false;
         replaceMapsWithWeights = false;
         automaticHardmode = false;
         coinChestGraphics = false;
@@ -272,6 +275,17 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.randomizeMainWeapon = randomizeMainWeapon;
+    }
+
+    public static boolean isRandomizeCursedChests() {
+        return singleton.randomizeCursedChests;
+    }
+
+    public static void setRandomizeCursedChests(boolean randomizeCursedChests, boolean update) {
+        if(update && randomizeCursedChests != singleton.randomizeCursedChests) {
+            singleton.changed = true;
+        }
+        singleton.randomizeCursedChests = randomizeCursedChests;
     }
 
     public static boolean isRandomizeForbiddenTreasure() {
@@ -488,7 +502,7 @@ public final class Settings {
     }
 
     public static void setCurrentRemovedItems(Set<String> currentRemovedItems) {
-        Settings.currentRemovedItems = currentRemovedItems;
+        singleton.currentRemovedItems = currentRemovedItems;
     }
 
     public static String getCurrentStartingWeapon() {
@@ -497,6 +511,17 @@ public final class Settings {
 
     public static void setCurrentStartingWeapon(String currentStartingItem) {
         singleton.currentStartingWeapon = currentStartingItem;
+    }
+
+    public static List<String> getCurrentCursedChests() {
+        if(singleton.randomizeCursedChests) {
+            return singleton.currentCursedChests;
+        }
+        return Arrays.asList("Crystal Skull", "Djed Pillar", "Dimensional Key", "Magatama Jewel");
+    }
+
+    public static void setCurrentCursedChests(List<String> currentCursedChests) {
+        singleton.currentCursedChests = currentCursedChests;
     }
 
     public static List<String> getStartingItems() {

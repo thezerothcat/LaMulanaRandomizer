@@ -462,7 +462,8 @@ public class Main {
                 }
             }
             shopRandomizer.determineItemTypes(random);
-            if(!itemRandomizer.placeRequiredItems(new ArrayList<>(initiallyAccessibleItems), random)) {
+            accessChecker.determineCursedChests(random);
+            if(!itemRandomizer.placeNoRequirementItems(new ArrayList<>(initiallyAccessibleItems), random)) {
                 continue;
             }
             if(Settings.isRandomizeCoinChests() || Settings.isRandomizeTrapItems()) {

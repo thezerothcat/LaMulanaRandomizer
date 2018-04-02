@@ -36,6 +36,29 @@ public class AccessChecker {
 //        mapOfNodeNameToExitRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToExitRequirementsObject());
     }
 
+    public void determineCursedChests(Random random) {
+        if(Settings.isRandomizeCursedChests()) {
+            List<String> possibleChests = new ArrayList<>(DataFromFile.getChestOnlyLocations());
+            possibleChests.addAll(DataFromFile.getAllCoinChests());
+            possibleChests.removeAll(DataFromFile.getNonRandomizedItems());
+            if(!Settings.getSurfaceItems().isEmpty()) {
+                possibleChests.remove("Shell Horn");
+                possibleChests.remove("Coin: Surface (Waterfall)");
+            }
+            List<String> cursedChests = new ArrayList<>(4);
+            for(int i = 0; i < 4; i++) {
+                cursedChests.add(possibleChests.get(random.nextInt(possibleChests.size())));
+            }
+            Settings.setCurrentCursedChests(cursedChests);
+        }
+        for(String chestLocation : Settings.getCurrentCursedChests()) {
+            NodeWithRequirements chest = mapOfNodeNameToRequirementsObject.get(chestLocation);
+            for(List<String> requirementSet : chest.getAllRequirements()) {
+                requirementSet.add("Mulana Talisman");
+            }
+        }
+    }
+
     private static Map<String, NodeWithRequirements> copyRequirementsMap(Map<String, NodeWithRequirements> mapToCopy) {
         Map<String, NodeWithRequirements> copyMap = new HashMap<>();
         for(Map.Entry<String, NodeWithRequirements> entry : mapToCopy.entrySet()) {
@@ -364,6 +387,11 @@ public class AccessChecker {
                 // Don't put removed item in torude scan spots, for now.
                 return false;
             }
+        }
+
+        if(Settings.isRandomizeCursedChests() && Settings.getMaxRandomRemovedItems() == 0
+                && "Mulana Talisman".equals(item) && Settings.getCurrentCursedChests().contains(location)) {
+            return false;
         }
 
         return mapOfNodeNameToRequirementsObject.get(location).canContainItem(item);

@@ -12,7 +12,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "1.26.0";
+    public static final String VERSION = "1.27.0";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -338,6 +338,9 @@ public class FileUtils {
             else if(line.startsWith("randomizeMainWeapon")) {
                 Settings.setRandomizeMainWeapon(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("randomizeCursedChests")) {
+                Settings.setRandomizeCursedChests(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("randomizeForbiddenTreasure")) {
                 Settings.setRandomizeForbiddenTreasure(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -415,6 +418,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("randomizeMainWeapon=%s", Settings.isRandomizeMainWeapon()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeCursedChests=%s", Settings.isRandomizeCursedChests()));
         writer.newLine();
 
         writer.write(String.format("randomizeForbiddenTreasure=%s", Settings.isRandomizeForbiddenTreasure()));

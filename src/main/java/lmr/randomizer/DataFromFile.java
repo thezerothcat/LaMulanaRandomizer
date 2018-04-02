@@ -420,6 +420,7 @@ public final class DataFromFile {
             allNonShopItemsPlusAllRandomizedShopItems = null;
             nonRandomizedItems = null;
             nonRandomizedShops = null;
+            initialNonShopItemLocations = null;
             randomizedShopItems = null;
             randomRemovableItems = null;
             nonShopItemLocations = null;

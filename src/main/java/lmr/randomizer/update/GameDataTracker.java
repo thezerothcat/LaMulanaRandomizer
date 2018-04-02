@@ -2557,7 +2557,8 @@ public final class GameDataTracker {
         }
         for(GameObject objectToModify : objectsToModify) {
             if(objectToModify.getId() == 0x2c) {
-                updateChestContents(objectToModify, itemLocationData, itemNewContentsData, chestContents, newWorldFlag, random);
+                updateChestContents(objectToModify, itemLocationData, itemNewContentsData, chestContents, newWorldFlag,
+                        Settings.getCurrentCursedChests().contains(chestLocation), random);
                 if("Map (Shrine of the Mother)".equals(chestContents)) {
                     addShrineMapSoundEffect(objectToModify.getObjectContainer());
                 }
@@ -2809,7 +2810,7 @@ public final class GameDataTracker {
     }
 
     private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData,
-                                            String newChestContentsItemName, int newWorldFlag, Random random) {
+                                            String newChestContentsItemName, int newWorldFlag, boolean cursed, Random random) {
         WriteByteOperation puzzleFlag = objectToModify.getWriteByteOperations().get(1);
         objectToModify.getWriteByteOperations().clear();
 
@@ -2991,6 +2992,17 @@ public final class GameDataTracker {
                 updateFlag.setValue(2);
                 objectToModify.getWriteByteOperations().add(updateFlag);
             }
+        }
+
+        if(cursed) {
+            objectToModify.getArgs().set(3, (short)1);
+            objectToModify.getArgs().set(4, (short)1);
+            objectToModify.getArgs().set(5, (short)50);
+        }
+        else {
+            objectToModify.getArgs().set(3, (short)0);
+            objectToModify.getArgs().set(4, (short)1);
+            objectToModify.getArgs().set(5, (short)50);
         }
     }
 
