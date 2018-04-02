@@ -11,7 +11,21 @@ Misc replaced random item world flags: aa4+ (2724+)
 
 Bit flags for floating items?: 2767-2775
 
+{COL 000-050-150} = software
+{COL 150-000-100} = treasure
+37/mekuri:{FLAG 740:=1}   {ITEM 100}{FLAG 241:=2}  {FLAG 740:=0}
+245/pepper:{FLAG 740:=1}   {ITEM 30}{FLAG 552:=1}  {FLAG 740:=0}
+247/anchor:{FLAG 740:=1}   {ITEM 50}{FLAG 552:=2}  {FLAG 740:=0}
+249/mini doll:{FLAG 740:=1}   {FLAG 554:=2}  {ITEM 22}{FLAG 152:=2}  {FLAG 740:=0}
+364/xmailer:{FLAG 740:=1}   {ITEM 86}{FLAG 227:=1}  {FLAG 124:=1}{FLAG 740:=0}{FLAG 2900:=1}
+371/mulana talisman:{FLAG 740:=1}   {ITEM 73}{FLAG 261:=1}{FLAG 123:=150}  {FLAG 530:=3}{FLAG 124:=12}{FLAG 2905:=1}  {FLAG 740:=0}
+397/book of the dead:{FLAG 740:=1}   {FLAG 810:=2}{ITEM 54}{FLAG 740:=0}{FLAG 2805:=1}
+716/surface map:
+{FLAG 209:=1}I got a map and was looking at it as I walked.{BR}And then, I fell and sort of died.{BR}Heh heh--well, maybe it's not that funny...
+{CMD 0-0}
 
+Whip (regular) world flag: ad6
+Whip (regular) world flag: 2775
 Graveyard trap chest puzzle flag: 2776
 Graveyard trap chest flag: 2777
 Exploding trap chest flag: 2778
@@ -33,8 +47,8 @@ Cog of Soul chest: aef
 
 
 Screen flag 42: Shrine map sound effect
-Screen flag 43: Fake item and/or trap sound screen flag
-Screen flag 46: unused
-Screen flag 47: unused
+Screen flag 43: Fake item and/or trap screen flag for floating items
+Screen flag 46: Fake item and/or trap screen flag for chests; also doubles as screen flag for one of the crushers on chain whip puzzle
+Screen flag 47: screen flag for the other crusher on chain whip puzzle
 
 Flag 20c (524): Formerly used for Illusion pot/warp, removed in randomizer and now available
