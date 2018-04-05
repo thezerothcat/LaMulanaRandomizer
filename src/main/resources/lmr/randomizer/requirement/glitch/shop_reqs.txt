@@ -5,4 +5,4 @@ Shop 11 (Moonlight) => Location: Temple of Moonlight [Lower], Birth Seal, Glitch
 Shop 13 (Goddess) => Location: Tower of the Goddess [Lower], Feather, Glitch: Raindrop
 Shop 13 (Goddess) => Location: Tower of the Goddess [Lower], Event: Flooded Tower of the Goddess, Glitch: Raindrop
 Shop 21 (Unsolvable) => Event: Zu Defeated, Glitch: Raindrop
-Shop 21 (Unsolvable) => Glitch: Lamp Glitch, Glitch: Raindrop
+Shop 21 (Unsolvable) => Glitch: Raindrop

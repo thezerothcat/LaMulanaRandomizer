@@ -2845,9 +2845,6 @@ public final class GameDataTracker {
             objectToModify.getWriteByteOperations().add(updateFlag);
         }
         else if(newChestContentsItemName.startsWith("Trap:")) {
-            objectToModify.getArgs().set(0, (short)0); // Nothing
-            objectToModify.getArgs().set(1, (short)1); // Quantity is irrelevant
-
             // Chest graphics (0 = coin chest, 1 = blue chest)
             if(Settings.isCoinChestGraphics()) {
                 objectToModify.getArgs().set(2, (short)0);
@@ -2870,13 +2867,16 @@ public final class GameDataTracker {
 
             objectToModify.getWriteByteOperations().add(puzzleFlag);
 
-            updateFlag = new WriteByteOperation();
-            updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-            updateFlag.setIndex(newWorldFlag);
-            updateFlag.setValue(1);
-            objectToModify.getWriteByteOperations().add(updateFlag);
-
             if(newWorldFlag == 2778) {
+                objectToModify.getArgs().set(0, (short)0); // Nothing
+                objectToModify.getArgs().set(1, (short)1); // Quantity is irrelevant
+
+                updateFlag = new WriteByteOperation();
+                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                updateFlag.setIndex(newWorldFlag);
+                updateFlag.setValue(1);
+                objectToModify.getWriteByteOperations().add(updateFlag);
+
                 updateFlag = new WriteByteOperation();
                 updateFlag.setOp(ByteOp.ASSIGN_FLAG);
                 updateFlag.setIndex(newWorldFlag);
@@ -2887,6 +2887,18 @@ public final class GameDataTracker {
                 addExplosion(objectToModify.getObjectContainer(), objectToModify.getX(), objectToModify.getY(), newWorldFlag);
             }
             else {
+                objectToModify.getArgs().set(0, (short)0); // Nothing
+                objectToModify.getArgs().set(1, (short)1); // Quantity is irrelevant
+
+//                objectToModify.getArgs().set(0, getRandomItemGraphic(random)); // Nothing
+//                objectToModify.getArgs().set(1, (short)0); // Fake item
+
+                updateFlag = new WriteByteOperation();
+                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                updateFlag.setIndex(newWorldFlag);
+                updateFlag.setValue(1);
+                objectToModify.getWriteByteOperations().add(updateFlag);
+
                 updateFlag = new WriteByteOperation();
                 updateFlag.setOp(ByteOp.ASSIGN_FLAG);
                 updateFlag.setIndex(46);

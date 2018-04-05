@@ -7,6 +7,7 @@ Location: Graveyard of the Giants [East] => Location: Graveyard of the Giants [W
 Location: Graveyard of the Giants [East] => Location: Tower of the Goddess [Grail], Glitch: Raindrop
 Location: Temple of Moonlight [Pyramid] => Location: Temple of Moonlight [Upper], Glitch: Raindrop
 Location: Temple of Moonlight [Lower] => Glitch: Raindrop
+Location: Temple of Moonlight [Upper] => Location: Twin Labyrinths [Lower], Glitch: Raindrop
 Location: Tower of the Goddess [Grail] => Location: Graveyard of the Giants [East], Glitch: Raindrop
 Location: Inferno Cavern [Viy] => Glitch: Lamp Glitch
 Location: Inferno Cavern [Viy] => Location: Tower of Ruin [Lower], Glitch: Raindrop, Bronze Mirror, Event: Bahamut Defeated, Hermes' Boots

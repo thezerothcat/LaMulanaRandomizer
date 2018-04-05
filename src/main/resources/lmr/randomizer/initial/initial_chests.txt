@@ -1,6 +1,5 @@
 xmailer.exe
 deathv.exe
-mekuri.exe
 Shell Horn
 Sacred Orb (Gate of Guidance)
 Shuriken
