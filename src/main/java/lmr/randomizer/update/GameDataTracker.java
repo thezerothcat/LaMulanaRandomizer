@@ -2634,7 +2634,7 @@ public final class GameDataTracker {
             itemGive.getArgs().add((short)2);
             itemGive.getArgs().add((short)3);
             itemGive.getArgs().add((short)39);
-                itemGive.setX(940);
+            itemGive.setX(940);
             itemGive.setY(160);
 
             TestByteOperation itemGiveTest = new TestByteOperation();

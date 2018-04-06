@@ -403,7 +403,6 @@ public class Main {
 
         Random random = new Random(Settings.getStartingSeed());
         Set<String> initiallyAccessibleItems = getInitiallyAvailableItems();
-        Set<String> surfaceItems = getSurfaceItems();
 
         int attempt = 0;
         while(true) {
@@ -455,11 +454,6 @@ public class Main {
             shopRandomizer.placeNonRandomizedItems();
             if(ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
                 ((EverythingShopRandomizer)shopRandomizer).placeGuaranteedWeights(random);
-            }
-            if(!surfaceItems.isEmpty()) {
-                if(!itemRandomizer.placeVeryEarlyItems(new ArrayList<>(surfaceItems), random)) {
-                    continue;
-                }
             }
             shopRandomizer.determineItemTypes(random);
             accessChecker.determineCursedChests(random);
@@ -734,12 +728,6 @@ public class Main {
         return noRequirementItems;
     }
 
-    private static Set<String> getSurfaceItems() {
-        Set<String> surfaceItems = new HashSet<>(Settings.getSurfaceItems());
-        surfaceItems.removeAll(DataFromFile.getNonRandomizedItems());
-        return surfaceItems;
-    }
-
     private static void determineMainWeapon(Random random) {
         int randomWeapon = random.nextInt(5);
         if(randomWeapon == 0) {
@@ -765,7 +753,6 @@ public class Main {
         totalItemsRemoved += random.nextInt(Settings.getMaxRandomRemovedItems() - totalItemsRemoved + 1);
 
         List<String> removableItems = new ArrayList<>(DataFromFile.getRandomRemovableItems());
-        removableItems.removeAll(Settings.getStartingItems());
 
         boolean objectZipEnabled = Settings.getEnabledGlitches().contains("Object Zip");
         boolean catPauseEnabled = Settings.getEnabledGlitches().contains("Cat Pause");

@@ -14,7 +14,6 @@ import java.util.function.BiFunction;
  * Created by thezerothcat on 7/20/2017.
  */
 public final class Settings {
-    public static final List<String> POSSIBLE_REMOVED_ITEMS = Arrays.asList("Spaulder");
     public static final int MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED = 40;
 
     public static Set<String> currentRemovedItems;
@@ -40,7 +39,7 @@ public final class Settings {
     private boolean replaceMapsWithWeights;
     private boolean automaticGrailPoints;
 
-    private boolean quickStartItemsEnabled;
+    private boolean removeSpaulder;
 
     private List<String> enabledGlitches = new ArrayList<>();
     private List<String> enabledDamageBoosts = new ArrayList<>();
@@ -59,8 +58,7 @@ public final class Settings {
 
     private Set<String> nonRandomizedItems = new HashSet<>();
     private Set<String> initiallyAccessibleItems = new HashSet<>();
-    private Set<String> surfaceItems = new HashSet<>();
-    private Set<String> removedItems = new HashSet<>();
+    private Set<String> startingItems = new HashSet<>();
 
     private int minRandomRemovedItems;
     private int maxRandomRemovedItems;
@@ -83,11 +81,11 @@ public final class Settings {
         randomizeTrapItems = true;
         randomizeMainWeapon = false;
         randomizeCursedChests = false;
+        removeSpaulder = false;
         replaceMapsWithWeights = false;
         automaticHardmode = false;
         coinChestGraphics = false;
         automaticGrailPoints = false;
-        quickStartItemsEnabled = false;
 
         bossDifficulty = BossDifficulty.MEDIUM;
         shopRandomization = ShopRandomizationEnum.EVERYTHING;
@@ -363,17 +361,6 @@ public final class Settings {
         singleton.coinChestGraphics = coinChestGraphics;
     }
 
-    public static boolean isQuickStartItemsEnabled() {
-        return singleton.quickStartItemsEnabled;
-    }
-
-    public static void setQuickStartItemsEnabled(boolean quickStartItemsEnabled, boolean update) {
-        if(update && quickStartItemsEnabled != singleton.quickStartItemsEnabled) {
-            singleton.changed = true;
-        }
-        singleton.quickStartItemsEnabled = quickStartItemsEnabled;
-    }
-
     public static Set<String> getNonRandomizedItems() {
         return singleton.nonRandomizedItems;
     }
@@ -391,20 +378,20 @@ public final class Settings {
         singleton.nonRandomizedItems = nonRandomizedItems;
     }
 
-    public static Set<String> getSurfaceItems() {
-        return singleton.surfaceItems;
+    public static Set<String> getStartingItems() {
+        return singleton.startingItems;
     }
 
-    public static void setSurfaceItems(Set<String> surfaceItems, boolean update) {
+    public static void setStartingItems(Set<String> startingItems, boolean update) {
         if(update && !singleton.changed) {
-            if(surfaceItems.containsAll(singleton.surfaceItems)) {
-                singleton.changed = !singleton.surfaceItems.containsAll(surfaceItems);
+            if(startingItems.containsAll(singleton.startingItems)) {
+                singleton.changed = !singleton.startingItems.containsAll(startingItems);
             }
             else {
                 singleton.changed = true;
             }
         }
-        singleton.surfaceItems = surfaceItems;
+        singleton.startingItems = startingItems;
     }
 
     public static Set<String> getInitiallyAccessibleItems() {
@@ -481,20 +468,24 @@ public final class Settings {
         singleton.maxRandomRemovedItems = maxRandomRemovedItems;
     }
 
-    public static Set<String> getRemovedItems() {
-        return singleton.removedItems;
+    public static List<String> getRemovedItems() {
+        if(singleton.removeSpaulder) {
+            return Arrays.asList("Spaulder");
+        }
+        return new ArrayList<>(0);
     }
 
-    public static void setRemovedItems(Set<String> removedItems, boolean update) {
-        if(update && !singleton.changed) {
-            if(removedItems.containsAll(singleton.removedItems)) {
-                singleton.changed = !singleton.removedItems.containsAll(removedItems);
-            }
-            else {
-                singleton.changed = true;
-            }
+    public static void setRemovedItem(String itemName, boolean isRemoved, boolean update) {
+        if("Spaulder".equals(itemName)) {
+            setRemoveSpaulder(isRemoved, update);
         }
-        singleton.removedItems = removedItems;
+    }
+
+    public static void setRemoveSpaulder(boolean removeSpaulder, boolean update) {
+        if(update && removeSpaulder != singleton.removeSpaulder) {
+            singleton.changed = true;
+        }
+        singleton.removeSpaulder = removeSpaulder;
     }
 
     public static Set<String> getCurrentRemovedItems() {
@@ -522,13 +513,6 @@ public final class Settings {
 
     public static void setCurrentCursedChests(List<String> currentCursedChests) {
         singleton.currentCursedChests = currentCursedChests;
-    }
-
-    public static List<String> getStartingItems() {
-        if(singleton.quickStartItemsEnabled) {
-            return Arrays.asList("Holy Grail", "Hermes' Boots", "mirai.exe");
-        }
-        return new ArrayList<>(0);
     }
 
     public static String getUpdatedContents(String originalContents) {
@@ -598,14 +582,15 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
-        booleanSettings |= processBooleanFlag.apply(singleton.automaticHardmode, 9);
-        booleanSettings |= processBooleanFlag.apply(singleton.coinChestGraphics, 8);
-        booleanSettings |= processBooleanFlag.apply(singleton.requireSoftwareComboForKeyFairy, 7);
-        booleanSettings |= processBooleanFlag.apply(singleton.requireIceCapeForLava, 6);
-        booleanSettings |= processBooleanFlag.apply(singleton.requireFlaresForExtinction, 5);
-        booleanSettings |= processBooleanFlag.apply(singleton.randomizeForbiddenTreasure, 4);
-        booleanSettings |= processBooleanFlag.apply(singleton.randomizeCoinChests, 3);
-        booleanSettings |= processBooleanFlag.apply(singleton.randomizeTrapItems, 2);
+        booleanSettings |= processBooleanFlag.apply(singleton.automaticHardmode, 10);
+        booleanSettings |= processBooleanFlag.apply(singleton.coinChestGraphics, 9);
+        booleanSettings |= processBooleanFlag.apply(singleton.requireSoftwareComboForKeyFairy, 8);
+        booleanSettings |= processBooleanFlag.apply(singleton.requireIceCapeForLava, 7);
+        booleanSettings |= processBooleanFlag.apply(singleton.requireFlaresForExtinction, 6);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeForbiddenTreasure, 5);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeCoinChests, 4);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeTrapItems, 3);
+        booleanSettings |= processBooleanFlag.apply(singleton.removeSpaulder, 2);
         booleanSettings |= processBooleanFlag.apply(singleton.replaceMapsWithWeights, 1);
         booleanSettings |= processBooleanFlag.apply(singleton.automaticGrailPoints, 0);
         booleanSettings = booleanSettings << 2 | singleton.shopRandomization.ordinal();
@@ -616,17 +601,11 @@ public final class Settings {
         //dboosts
         int dboosts = itemSetToInt(getEnabledDamageBoosts(), singleton.possibleDboosts);
 
-        //nonrandomized items
-        int nonRandoItems = itemSetToInt(getNonRandomizedItems(), singleton.possibleRandomizedItems);
-
         //initially accessible items
         int initItems = itemSetToInt(getInitiallyAccessibleItems(), singleton.possibleRandomizedItems);
 
-        //surface items
-        int surfaceItems = itemSetToInt(getSurfaceItems(), singleton.possibleRandomizedItems);
-
-        //removed items
-        int removedItems = itemSetToInt(getRemovedItems(), POSSIBLE_REMOVED_ITEMS);
+        //starting items
+        int startingItems = itemSetToInt(getStartingItems(), singleton.possibleRandomizedItems);
 
         // xmailer item
         int xmailer = singleton.possibleRandomizedItems.indexOf(singleton.xmailerItem);
@@ -644,10 +623,8 @@ public final class Settings {
         result += separator + Integer.toHexString(booleanSettings);
         result += separator + Integer.toHexString(glitches);
         result += separator + Integer.toHexString(dboosts);
-        result += separator + Integer.toHexString(nonRandoItems);
         result += separator + Integer.toHexString(initItems);
-        result += separator + Integer.toHexString(surfaceItems);
-        result += separator + Integer.toHexString(removedItems);
+        result += separator + Integer.toHexString(startingItems);
         result += separator + Integer.toHexString(xmailer);
         result += separator + Integer.toHexString(bossDifficulty);
         result += separator + Integer.toHexString(singleton.minRandomRemovedItems);
@@ -680,35 +657,32 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
-        singleton.automaticHardmode = getBoolFlagFromInt.apply(booleanSettingsFlag, 9);
-        singleton.coinChestGraphics = getBoolFlagFromInt.apply(booleanSettingsFlag, 8);
-        singleton.requireSoftwareComboForKeyFairy = getBoolFlagFromInt.apply(booleanSettingsFlag, 7);
-        singleton.requireIceCapeForLava = getBoolFlagFromInt.apply(booleanSettingsFlag, 6);
-        singleton.requireFlaresForExtinction = getBoolFlagFromInt.apply(booleanSettingsFlag, 5);
-        singleton.randomizeForbiddenTreasure = getBoolFlagFromInt.apply(booleanSettingsFlag, 4);
-        singleton.randomizeCoinChests = getBoolFlagFromInt.apply(booleanSettingsFlag, 3);
-        singleton.randomizeTrapItems = getBoolFlagFromInt.apply(booleanSettingsFlag, 2);
+        singleton.automaticHardmode = getBoolFlagFromInt.apply(booleanSettingsFlag, 10);
+        singleton.coinChestGraphics = getBoolFlagFromInt.apply(booleanSettingsFlag, 9);
+        singleton.requireSoftwareComboForKeyFairy = getBoolFlagFromInt.apply(booleanSettingsFlag, 8);
+        singleton.requireIceCapeForLava = getBoolFlagFromInt.apply(booleanSettingsFlag, 7);
+        singleton.requireFlaresForExtinction = getBoolFlagFromInt.apply(booleanSettingsFlag, 6);
+        singleton.randomizeForbiddenTreasure = getBoolFlagFromInt.apply(booleanSettingsFlag, 5);
+        singleton.randomizeCoinChests = getBoolFlagFromInt.apply(booleanSettingsFlag, 4);
+        singleton.randomizeTrapItems = getBoolFlagFromInt.apply(booleanSettingsFlag, 3);
+        singleton.removeSpaulder = getBoolFlagFromInt.apply(booleanSettingsFlag, 2);
         singleton.replaceMapsWithWeights = getBoolFlagFromInt.apply(booleanSettingsFlag, 1);
         singleton.automaticGrailPoints = getBoolFlagFromInt.apply(booleanSettingsFlag, 0);
 
         Collection<String> glitches = intToItemSet(Integer.parseInt(parts[3],16), singleton.possibleGlitches);
         Collection<String> dboosts = intToItemSet(Integer.parseInt(parts[4],16), singleton.possibleDboosts);
-        Set<String> nonRandoItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[5],16), singleton.possibleRandomizedItems));
-        Set<String> initItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[6],16), singleton.possibleRandomizedItems));
-        Set<String> surfaceItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[7],16), singleton.possibleRandomizedItems));
-        Set<String> removedItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[8],16), POSSIBLE_REMOVED_ITEMS));
-        String xmailerItem = singleton.possibleRandomizedItems.get(Integer.parseInt(parts[9],16));
-        BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[10],16)];
-        int minRandomRemovedItems = Integer.parseInt(parts[11],16);
-        int maxRandomRemovedItems = Integer.parseInt(parts[12],16);
+        Set<String> initItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[5],16), singleton.possibleRandomizedItems));
+        Set<String> startingItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[6],16), singleton.possibleRandomizedItems));
+        String xmailerItem = singleton.possibleRandomizedItems.get(Integer.parseInt(parts[7],16));
+        BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[8],16)];
+        int minRandomRemovedItems = Integer.parseInt(parts[9],16);
+        int maxRandomRemovedItems = Integer.parseInt(parts[10],16);
 
         setStartingSeed(seed);
         setEnabledGlitches((List<String>) glitches, true);
         setEnabledDamageBoosts((List<String>) dboosts, true);
-        setNonRandomizedItems(nonRandoItems, true);
         setInitiallyAccessibleItems(initItems, true);
-        setSurfaceItems(surfaceItems, true);
-        setRemovedItems(removedItems, true);
+        setStartingItems(startingItems, true);
         setXmailerItem(xmailerItem, true);
         setBossDifficulty(bossDifficulty.toString(), true);
         setMinRandomRemovedItems(minRandomRemovedItems, true);

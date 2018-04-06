@@ -3,6 +3,11 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
+1.28:
+-----------------------------
+The option to start with Holy Grail, Hermes' Boots, and mirai.exe/Future Development Company has been replaced with individual toggles for configurable items. The new setting will replace the "Original Location" and "Surface" randomization options and now includes the items which had neither option. Item randomization settings have been renamed for clarification.
+
+
 1.27:
 -----------------------------
 Random starting weapons. This will replace the save in your first slot, and that save must be used to apply the random starting weapon. Two items in Temple of Moonlight have been removed from the initial chests pool to account for the fact that access to the Temple of Moonlight pyramid requires Whip or Axe. Also note that the regular Whip cannot be collected due to in-game limitations and will be replaced by the Chain Whip.

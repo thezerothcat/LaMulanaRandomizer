@@ -304,7 +304,7 @@ public final class DataFromFile {
                     if(Settings.getNonRandomizedItems().contains(itemName)) {
                         continue; // If the user wanted this item in its original location, they probably don't want it gone.
                     }
-                    if(Settings.getSurfaceItems().contains(itemName)) {
+                    if(Settings.getStartingItems().contains(itemName)) {
                         continue; // If the user wanted this item in a specific location, they probably don't want it gone.
                     }
                     if(Settings.getInitiallyAccessibleItems().contains(itemName)) {

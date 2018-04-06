@@ -71,11 +71,9 @@ public class RemovedItemsPanel extends JPanel {
 
     public void updateSettings() {
         Settings.setReplaceMapsWithWeights(removeNonShrineMaps.isSelected(), true);
-        Set<String> removedItems = new HashSet<>();
         for(RemoveItemToggle removeItemToggle : removableItems) {
-            removeItemToggle.updateRemovedItems(removedItems);
+            Settings.setRemovedItem(removeItemToggle.getItemName(), removeItemToggle.isRemovedItem(), true);
         }
-        Settings.setRemovedItems(removedItems, true);
         Settings.setMinRandomRemovedItems((int)minRandomRemovableItems.getValue(), true);
         Settings.setMaxRandomRemovedItems((int)maxRandomRemovableItems.getValue(), true);
     }
@@ -104,10 +102,12 @@ public class RemovedItemsPanel extends JPanel {
             checkbox.setText(Translations.getItemText(itemName));
         }
 
-        public void updateRemovedItems(Set<String> removedItems) {
-            if(checkbox.isSelected()) {
-                removedItems.add(itemName);
-            }
+        public String getItemName() {
+            return itemName;
+        }
+
+        public boolean isRemovedItem() {
+            return checkbox.isSelected();
         }
 
         public void reloadSettings() {

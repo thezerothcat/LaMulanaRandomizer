@@ -6,8 +6,6 @@ import lmr.randomizer.Settings;
 import lmr.randomizer.random.ItemRandomizer;
 import lmr.randomizer.random.ShopRandomizer;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -41,13 +39,12 @@ public class AccessChecker {
             List<String> possibleChests = new ArrayList<>(DataFromFile.getChestOnlyLocations());
             possibleChests.addAll(DataFromFile.getAllCoinChests());
             possibleChests.removeAll(DataFromFile.getNonRandomizedItems());
-            if(!Settings.getSurfaceItems().isEmpty()) {
-                possibleChests.remove("Shell Horn");
-                possibleChests.remove("Coin: Surface (Waterfall)");
-            }
             List<String> cursedChests = new ArrayList<>(4);
+            String cursedChest;
             for(int i = 0; i < 4; i++) {
-                cursedChests.add(possibleChests.get(random.nextInt(possibleChests.size())));
+                cursedChest = possibleChests.get(random.nextInt(possibleChests.size()));
+                cursedChests.add(cursedChest);
+                possibleChests.remove(cursedChest);
             }
             Settings.setCurrentCursedChests(cursedChests);
         }

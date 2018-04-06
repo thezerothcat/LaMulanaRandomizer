@@ -46,38 +46,32 @@ public class RadioPanel extends JPanel {
     public void updateSettings() {
         Set<String> initiallyAvailableItems = new HashSet<>();
         Set<String> nonRandomizedItems = new HashSet<>();
-        Set<String> surfaceItems = new HashSet<>();
+        Set<String> startingItems = new HashSet<>();
 
         for(GameItemRadio itemRadio : itemConfigRadioGroupPanels) {
             String actionCommand = itemRadio.getActionCommand();
             if("INITIAL".equals(actionCommand)) {
                 Main.addArgItemUI(initiallyAvailableItems, itemRadio.getItemName());
             }
-            else if("NONRANDOM".equals(actionCommand)) {
-                Main.addArgItemUI(nonRandomizedItems, itemRadio.getItemName());
-            }
-            else if("V_EARLY".equals(actionCommand)) {
-                Main.addArgItemUI(surfaceItems, itemRadio.getItemName());
+            else if("STARTING".equals(actionCommand)) {
+                Main.addArgItemUI(startingItems, itemRadio.getItemName());
             }
         }
         Settings.setInitiallyAccessibleItems(initiallyAvailableItems, true);
         Settings.setNonRandomizedItems(nonRandomizedItems, true);
-        Settings.setSurfaceItems(surfaceItems, true);
+        Settings.setStartingItems(startingItems, true);
     }
 
     public void reloadSettings() {
         Set<String> initiallyAvailableItems = Settings.getInitiallyAccessibleItems();
-        Set<String> nonRandomizedItems = Settings.getNonRandomizedItems();
-        Set<String> surfaceItems = Settings.getSurfaceItems();
+        Set<String> startingItems = Settings.getStartingItems();
 
         for(GameItemRadio itemRadio : itemConfigRadioGroupPanels) {
             String item = itemRadio.getItemName();
             if(initiallyAvailableItems.contains(item)) {
                 itemRadio.setSelected("INITIAL");
-            } else if(surfaceItems.contains(item)) {
-                itemRadio.setSelected("SURFACE");
-            } else if(nonRandomizedItems.contains(item)) {
-                itemRadio.setSelected("NONRANDOM");
+            } else if(startingItems.contains(item)) {
+                itemRadio.setSelected("STARTING");
             } else {
                 itemRadio.setSelected("RANDOM");
             }

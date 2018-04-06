@@ -12,7 +12,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "1.27.0";
+    public static final String VERSION = "1.28.0";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -280,23 +280,18 @@ public class FileUtils {
         List<String> enabledGlitches = new ArrayList<>();
         List<String> enabledDamageBoosts = new ArrayList<>();
         Set<String> initiallyAvailableItems = new HashSet<>();
-        Set<String> nonRandomizedItems = new HashSet<>();
-        Set<String> surfaceItems = new HashSet<>();
-        Set<String> removedItems = new HashSet<>();
+        Set<String> startingItems = new HashSet<>();
         while((line = reader.readLine()) != null) {
             if(line.startsWith("randomization.")) {
                 settingAndValue = line.replace("randomization.", "").split("=");
                 if("INITIAL".equals(settingAndValue[1])) {
                     initiallyAvailableItems.add(settingAndValue[0]);
                 }
-                else if("NONRANDOM".equals(settingAndValue[1])) {
-                    nonRandomizedItems.add(settingAndValue[0]);
-                }
-                else if("V_EARLY".equals(settingAndValue[1])) {
-                    surfaceItems.add(settingAndValue[0]);
+                else if("STARTING".equals(settingAndValue[1])) {
+                    startingItems.add(settingAndValue[0]);
                 }
                 else if("REMOVED".equals(settingAndValue[1])) {
-                    removedItems.add(settingAndValue[0]);
+                    Settings.setRemovedItem(settingAndValue[0], true, false);
                 }
             }
             else if(line.startsWith("glitches.")) {
@@ -354,7 +349,12 @@ public class FileUtils {
                 Settings.setAutomaticGrailPoints(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("quickStartItemsEnabled")) {
-                Settings.setQuickStartItemsEnabled(Boolean.valueOf(line.split("=")[1]), false);
+                // Upgrade legacy settings
+                if(Boolean.valueOf(line.split("=")[1])) {
+                    startingItems.add("Holy Grail");
+                    startingItems.add("Hermes' Boots");
+                    startingItems.add("mirai.exe");
+                }
             }
             else if(line.startsWith("laMulanaBaseDir")) {
                 Settings.setLaMulanaBaseDir(line.substring(line.indexOf("=") + 1), false);
@@ -378,9 +378,7 @@ public class FileUtils {
         Settings.setEnabledGlitches(enabledGlitches, false);
         Settings.setEnabledDamageBoosts(enabledDamageBoosts, false);
         Settings.setInitiallyAccessibleItems(initiallyAvailableItems, false);
-        Settings.setNonRandomizedItems(nonRandomizedItems, false);
-        Settings.setSurfaceItems(surfaceItems, false);
-        Settings.setRemovedItems(removedItems, false);
+        Settings.setStartingItems(startingItems, false);
     }
 
     public static void saveSettings() throws IOException {
@@ -435,9 +433,6 @@ public class FileUtils {
         writer.write(String.format("automaticGrailPoints=%s", Settings.isAutomaticGrailPoints()));
         writer.newLine();
 
-        writer.write(String.format("quickStartItemsEnabled=%s", Settings.isQuickStartItemsEnabled()));
-        writer.newLine();
-
         writer.write(String.format("laMulanaBaseDir=%s", Settings.getLaMulanaBaseDir()));
         writer.newLine();
 
@@ -463,11 +458,8 @@ public class FileUtils {
             else if(Settings.getInitiallyAccessibleItems().contains(item)) {
                 writer.write(String.format("randomization.%s=%s", item, "INITIAL"));
             }
-            else if(Settings.getNonRandomizedItems().contains(item)) {
-                writer.write(String.format("randomization.%s=%s", item, "NONRANDOM"));
-            }
-            else if(Settings.getSurfaceItems().contains(item)) {
-                writer.write(String.format("randomization.%s=%s", item, "V_EARLY"));
+            else if(Settings.getStartingItems().contains(item)) {
+                writer.write(String.format("randomization.%s=%s", item, "STARTING"));
             }
             else {
                 writer.write(String.format("randomization.%s=%s", item, "RANDOM"));
