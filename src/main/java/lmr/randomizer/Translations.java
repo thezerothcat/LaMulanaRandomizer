@@ -133,10 +133,9 @@ public final class Translations {
             translation = itemName;
         }
 
-        translation = String.format(
+        return String.format(
                 getText(cursedLocation ? "locations.LocationCursedFormat" : "locations.LocationFormat"),
                 translation);
-        return translation;
     }
 
     private static String getMapLocationText(String locationKey) {
