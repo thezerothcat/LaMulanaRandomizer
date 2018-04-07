@@ -92,10 +92,14 @@ public final class Translations {
             translation = getText("items." + itemName.replaceAll("[ ']", ""));
         }
 
+        if(translation == null) {
+            translation = itemName;
+        }
+
         if(removedItem) {
             translation = String.format(getText("items.RemovedFormat"), translation);
         }
-//        return translation == null ? itemName : translation;
+
         return translation;
     }
 
@@ -125,7 +129,9 @@ public final class Translations {
             translation = getText("items." + itemName.replaceAll("[ ']", ""));
         }
 
-//        return translation == null ? itemName : translation;
+        if(translation == null) {
+            translation = itemName;
+        }
 
         translation = String.format(
                 getText(cursedLocation ? "locations.LocationCursedFormat" : "locations.LocationFormat"),
