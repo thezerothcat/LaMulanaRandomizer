@@ -3,6 +3,7 @@ package lmr.randomizer.random;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
+import lmr.randomizer.Translations;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.GameObjectId;
@@ -340,32 +341,43 @@ public class ItemRandomizer {
             return;
         }
 
-        Map<String, String> mapOfItemToLocation = buildReverseMap(mapOfItemLocationToItem);
-        List<String> itemNames = new ArrayList<>(mapOfItemToLocation.keySet());
-        Collections.sort(itemNames);
+        Comparator<String> itemNameComparator = new Comparator<String>() {
+            @Override
+            public int compare(String itemName1, String itemName2) {
+                if(itemName1.startsWith("Coin:") && itemName2.startsWith("Coin:")) {
+                    int coinCount1 = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(itemName1).getInventoryArg();
+                    int coinCount2 = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(itemName2).getInventoryArg();
+                    return Integer.compare(coinCount1, coinCount2);
+                }
+                String translatedItem1 = Translations.getItemText(Settings.getUpdatedContents(itemName1), false);
+                String translatedItem2 = Translations.getItemText(Settings.getUpdatedContents(itemName2), false);
+                return translatedItem1.compareToIgnoreCase(translatedItem2);
+            }
+        };
 
-        writer.write(Settings.getCurrentStartingWeapon() + ": starting weapon");
+        writer.write(Translations.getItemText(Settings.getCurrentStartingWeapon(), false) + ": starting weapon");
         writer.newLine();
-        for(String itemName : Settings.getStartingItems()) {
-            writer.write(itemName + ": starting item");
+
+        List<String> sortedStartingItems = new ArrayList<>(Settings.getStartingItems());
+        Collections.sort(sortedStartingItems, itemNameComparator);
+
+        for(String itemName : sortedStartingItems) {
+            writer.write(Translations.getItemText(itemName, false) + ": starting item");
             writer.newLine();
         }
         writer.newLine();
 
+        Map<String, String> mapOfItemToLocation = buildReverseMap(mapOfItemLocationToItem);
+        List<String> itemNames = new ArrayList<>(mapOfItemToLocation.keySet());
+        Collections.sort(itemNames, itemNameComparator);
+
         for (String itemName : itemNames) {
-            String location = mapOfItemToLocation.get(itemName);
-            itemName = Settings.getUpdatedContents(itemName);
-            if(Settings.getCurrentCursedChests().contains(location)) {
-                location += " location (Cursed)";
-            }
-            else {
-                location += " location";
-            }
-            if(Settings.getCurrentRemovedItems().contains(itemName)
+            boolean isRemoved = Settings.getCurrentRemovedItems().contains(itemName)
                     || Settings.getRemovedItems().contains(itemName)
-                    || Settings.getStartingItems().contains(itemName)) {
-                itemName += " (Removed)";
-            }
+                    || Settings.getStartingItems().contains(itemName);
+            String location = mapOfItemToLocation.get(itemName);
+            itemName = Translations.getItemText(Settings.getUpdatedContents(itemName), isRemoved);
+            location = Translations.getLocationText(location, Settings.getCurrentCursedChests().contains(location));
             writer.write(itemName + ": " + location);
             writer.newLine();
         }
