@@ -102,22 +102,12 @@ public final class Translations {
     public static String getLocationText(String itemName, boolean cursedLocation) {
         String translation;
         if(itemName.startsWith("Coin:")) {
-            translation = String.format(getText("locations.CoinChestFormat"), getCoinChestLocation(itemName));
+            translation = String.format(getText("locations.CoinChestFormat"),
+                    getText("locations." + itemName.replaceAll("[ :()]", "")));
         }
-        else if(itemName.equals("Trap: Exploding")) {
-            translation = getText("items.ExplodingChest");
-        }
-        else if(itemName.equals("Trap: Graveyard")) {
+        else if(itemName.startsWith("Trap:")) {
             translation = String.format(getText("locations.TrapFormat"),
-                    getMapLocationText("Graveyard"));
-        }
-        else if(itemName.equals("Trap: Inferno Orb")) {
-            translation = String.format(getText("locations.TrapFormat"),
-                    getMapLocationText("Inferno"));
-        }
-        else if(itemName.equals("Trap: Twin Ankh")) {
-            translation = String.format(getText("locations.TrapFormat"),
-                    getMapLocationText("Twin"));
+                    getText("locations." + itemName.replaceAll("[ :]", "")));
         }
         else if(itemName.startsWith("Ankh Jewel (")) {
             translation = String.format(getText("items.AnkhJewelFormat"),
@@ -145,17 +135,5 @@ public final class Translations {
 
     private static String getMapLocationText(String locationKey) {
         return getText("locations." + locationKey.replaceAll("[ ']", ""));
-    }
-
-    private static String getCoinChestLocation(String itemName) {
-        String locationKey = itemName.contains("(")
-                ? itemName.substring(0, itemName.indexOf('('))
-                : itemName;
-        locationKey = locationKey.replace("Coin: ", "");
-        String locationName = getMapLocationText(locationKey);
-        if(itemName.contains("(")) {
-            locationName += " " + itemName.substring(itemName.indexOf('('), itemName.indexOf(')') + 1);
-        }
-        return locationName;
     }
 }
