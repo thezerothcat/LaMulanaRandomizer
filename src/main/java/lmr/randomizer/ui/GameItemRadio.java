@@ -17,7 +17,7 @@ public class GameItemRadio extends JPanel {
     public GameItemRadio(String item) {
         super(new MigLayout("gap rel 0, wrap, aligny top", "sizegroup rowheight", ""));
 
-        itemLabel = new JLabel(Translations.getItemText(item), JLabel.LEFT);
+        itemLabel = new JLabel(Translations.getItemText(item, false), JLabel.LEFT);
         itemLabel.setVerticalAlignment(JLabel.TOP);
         add(itemLabel);
 
@@ -63,7 +63,7 @@ public class GameItemRadio extends JPanel {
     }
 
     public void updateTranslations() {
-        itemLabel.setText(Translations.getItemText(itemName));
+        itemLabel.setText(Translations.getItemText(itemName, false));
         randomItem.setText(Translations.getText("randomization.random"));
         initialItem.setText(Translations.getText("randomization.initial"));
         startingItem.setText(Translations.getText("randomization.starting"));

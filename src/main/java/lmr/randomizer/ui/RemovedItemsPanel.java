@@ -99,7 +99,7 @@ public class RemovedItemsPanel extends JPanel {
         }
 
         public void updateTranslations() {
-            checkbox.setText(Translations.getItemText(itemName));
+            checkbox.setText(Translations.getItemText(itemName, false));
         }
 
         public String getItemName() {

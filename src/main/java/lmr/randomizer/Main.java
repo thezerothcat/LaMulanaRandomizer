@@ -850,7 +850,7 @@ public class Main {
             }
 
             for(String removedItem : Settings.getCurrentRemovedItems()) {
-                writer.write(removedItem);
+                writer.write(Translations.getItemText(removedItem, false));
                 writer.newLine();
             }
             writer.flush();

@@ -15,12 +15,17 @@ public class MainPanel extends JPanel {
     private JTextField seedNumber;
     private JComboBox language;
 
+    private JLabel seedNumberLabel;
+    private JLabel laMulanaDirectoryLabel;
+    private JLabel laMulanaSaveDirectoryLabel;
+
     public MainPanel() {
         super(new MigLayout("fillx", "[][sg fields, fill, grow 80]", "[]"));
         setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.main")));
 
         seedNumber = new JTextField(Integer.toString(new Random().nextInt(Integer.MAX_VALUE)));
-        add(new JLabel(Translations.getText("settings.seed")), "gap related");
+        seedNumberLabel = new JLabel(Translations.getText("settings.seed"));
+        add(seedNumberLabel, "gap related");
         add(seedNumber);
 
         language = new JComboBox(new String[]{"English", "日本語"});
@@ -28,11 +33,13 @@ public class MainPanel extends JPanel {
         add(language, "grow 50, wrap");
 
         laMulanaDirectory = new JTextField(Settings.getLaMulanaBaseDir());
-        add(new JLabel(Translations.getText("settings.dir")), "gap related");
+        laMulanaDirectoryLabel = new JLabel(Translations.getText("settings.dir"));
+        add(laMulanaDirectoryLabel, "gap related");
         add(laMulanaDirectory, "span 2, grow 100, wrap");
 
         laMulanaSaveDirectory = new JTextField(Settings.getLaMulanaSaveDir());
-        add(new JLabel(Translations.getText("settings.saveDir")), "gap related");
+        laMulanaSaveDirectoryLabel = new JLabel(Translations.getText("settings.saveDir"));
+        add(laMulanaSaveDirectoryLabel, "gap related");
         add(laMulanaSaveDirectory, "span 2, grow 100");
     }
 
@@ -47,9 +54,9 @@ public class MainPanel extends JPanel {
     public void updateTranslations() {
         Settings.setLanguage(language.getSelectedIndex() == 0 ? "en" : "jp", true);
         setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.main")));
-        seedNumber.setText(Translations.getText("settings.seed"));
-        laMulanaDirectory.setText(Translations.getText("settings.dir"));
-        laMulanaSaveDirectory.setText(Translations.getText("settings.saveDir"));
+        seedNumberLabel.setText(Translations.getText("settings.seed"));
+        laMulanaDirectoryLabel.setText(Translations.getText("settings.dir"));
+        laMulanaSaveDirectoryLabel.setText(Translations.getText("settings.saveDir"));
     }
 
     public void updateSettings() {

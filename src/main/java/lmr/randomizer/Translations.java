@@ -54,11 +54,108 @@ public final class Translations {
         }
     }
 
-    public static String getItemText(String itemName) {
-        return getText("items." + itemName.replaceAll("[ ']", ""));
-    }
-
     public static String getGlitchText(String glitchName) {
         return getText("glitches." + glitchName.replaceAll("[ ']", ""));
+    }
+
+    public static String getShopItemText(String shopName, int itemNumber) {
+        return String.format(getText("shops.ItemFormat"),
+                getText("shops." + shopName.replaceAll("[ )(]", "")),
+                itemNumber);
+    }
+
+    public static String getItemText(String itemName, boolean removedItem) {
+        String translation;
+        if(itemName.startsWith("Coin:")) {
+            translation = String.format(getText("items.CoinChestFormat"),
+                    DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(itemName).getInventoryArg());
+        }
+        else if(itemName.equals("Trap: Exploding")) {
+            translation = getText("items.ExplodingChest");
+        }
+        else if(itemName.startsWith("Trap:")) {
+            translation = getText("items.Trap");
+        }
+        else if(itemName.startsWith("Ankh Jewel (")) {
+            translation = String.format(getText("items.AnkhJewelFormat"),
+                    getMapLocationText(itemName.substring(itemName.indexOf('(') + 1, itemName.indexOf(')'))));
+        }
+        else if(itemName.startsWith("Sacred Orb (")) {
+            translation = String.format(getText("items.SacredOrbFormat"),
+                    getMapLocationText(itemName.substring(itemName.indexOf('(') + 1, itemName.indexOf(')'))));
+        }
+        else if(itemName.startsWith("Map (")) {
+            translation = String.format(getText("items.MapFormat"),
+                    getMapLocationText(itemName.substring(itemName.indexOf('(') + 1, itemName.indexOf(')'))));
+        }
+        else {
+            translation = getText("items." + itemName.replaceAll("[ ']", ""));
+        }
+
+        if(removedItem) {
+            translation = String.format(getText("items.RemovedFormat"), translation);
+        }
+//        return translation == null ? itemName : translation;
+        return translation;
+    }
+
+    public static String getLocationText(String itemName, boolean cursedLocation) {
+        String translation;
+        if(itemName.startsWith("Coin:")) {
+            translation = String.format(getText("locations.CoinChestFormat"), getCoinChestLocation(itemName));
+        }
+        else if(itemName.equals("Trap: Exploding")) {
+            translation = getText("items.ExplodingChest");
+        }
+        else if(itemName.equals("Trap: Graveyard")) {
+            translation = String.format(getText("locations.TrapFormat"),
+                    getMapLocationText("Graveyard"));
+        }
+        else if(itemName.equals("Trap: Inferno Orb")) {
+            translation = String.format(getText("locations.TrapFormat"),
+                    getMapLocationText("Inferno"));
+        }
+        else if(itemName.equals("Trap: Twin Ankh")) {
+            translation = String.format(getText("locations.TrapFormat"),
+                    getMapLocationText("Twin"));
+        }
+        else if(itemName.startsWith("Ankh Jewel (")) {
+            translation = String.format(getText("items.AnkhJewelFormat"),
+                    getMapLocationText(itemName.substring(itemName.indexOf('(') + 1, itemName.indexOf(')'))));
+        }
+        else if(itemName.startsWith("Sacred Orb (")) {
+            translation = String.format(getText("items.SacredOrbFormat"),
+                    getMapLocationText(itemName.substring(itemName.indexOf('(') + 1, itemName.indexOf(')'))));
+        }
+        else if(itemName.startsWith("Map (")) {
+            translation = String.format(getText("items.MapFormat"),
+                    getMapLocationText(itemName.substring(itemName.indexOf('(') + 1, itemName.indexOf(')'))));
+        }
+        else {
+            translation = getText("items." + itemName.replaceAll("[ ']", ""));
+        }
+
+//        return translation == null ? itemName : translation;
+
+        translation = String.format(
+                getText(cursedLocation ? "locations.LocationCursedFormat" : "locations.LocationFormat"),
+                translation);
+        return translation;
+    }
+
+    private static String getMapLocationText(String locationKey) {
+        return getText("locations." + locationKey.replaceAll("[ ']", ""));
+    }
+
+    private static String getCoinChestLocation(String itemName) {
+        String locationKey = itemName.contains("(")
+                ? itemName.substring(0, itemName.indexOf('('))
+                : itemName;
+        locationKey = locationKey.replace("Coin: ", "");
+        String locationName = getMapLocationText(locationKey);
+        if(itemName.contains("(")) {
+            locationName += " " + itemName.substring(itemName.indexOf('('), itemName.indexOf(')') + 1);
+        }
+        return locationName;
     }
 }

@@ -7,6 +7,8 @@ Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8
 -----------------------------
 The option to start with Holy Grail, Hermes' Boots, and mirai.exe/Future Development Company has been replaced with individual toggles for configurable items. The new setting will replace the "Original Location" and "Surface" randomization options and now includes the items which had neither option. Item randomization settings have been renamed for clarification.
 
+Spoiler logs may now be translated to Japanese based on language settings. Some English log files have been updated as well; coin chest and trap item naming has been updated, and shop names now reference the in-game NPCs.
+
 
 1.27:
 -----------------------------

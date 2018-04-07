@@ -3,6 +3,7 @@ package lmr.randomizer.random;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
+import lmr.randomizer.Translations;
 import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.AccessChecker;
@@ -244,17 +245,15 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                 location = String.format("%s Item %d", shop, i);
                 if(mapOfShopInventoryItemToContents.containsKey(location)) {
                     String itemName = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(location));
-                    if(Settings.getCurrentRemovedItems().contains(itemName)
+                    boolean removedItem = Settings.getCurrentRemovedItems().contains(itemName)
                             || Settings.getRemovedItems().contains(itemName)
                             || Settings.getStartingItems().contains(itemName)
-                            || (Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName))) {
-                        itemName += " (Removed)";
-                    }
-                    writer.write(location + " contains: " + itemName);
+                            || (Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName));
+                    writer.write(Translations.getShopItemText(shop, i) + ": " + Translations.getItemText(itemName, removedItem));
                     writer.newLine();
                 }
                 else {
-                    writer.write(location + " => (unchanged)");
+                    writer.write(Translations.getShopItemText(shop, i) + ": (unchanged)");
                     writer.newLine();
                 }
             }
