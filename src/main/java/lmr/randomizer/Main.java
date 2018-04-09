@@ -264,8 +264,19 @@ public class Main {
                     @Override
                     protected Void doInBackground() throws Exception {
                         progressDialog.setLocationRelativeTo(f);
-                        doTheThing(progressDialog);
-                        mainPanel.rerollRandomSeed();
+                        try {
+                            doTheThing(progressDialog);
+                            mainPanel.rerollRandomSeed();
+                        }
+                        catch (Exception ex) {
+                            FileUtils.logException(ex);
+                            JOptionPane.showMessageDialog(f,
+                                    "Unknown error. Please see logs for more information.",
+                                    "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                            SwingUtilities.invokeLater(() -> {
+                                progressDialog.setVisible(false);
+                            });
+                        }
                         return null;
                     }
                 };

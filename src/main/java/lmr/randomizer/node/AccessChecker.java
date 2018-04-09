@@ -37,7 +37,9 @@ public class AccessChecker {
     public void determineCursedChests(Random random) {
         if(Settings.isRandomizeCursedChests()) {
             List<String> possibleChests = new ArrayList<>(DataFromFile.getChestOnlyLocations());
-            possibleChests.addAll(DataFromFile.getAllCoinChests());
+            if(Settings.isRandomizeCoinChests()) {
+                possibleChests.addAll(DataFromFile.getAllCoinChests());
+            }
             possibleChests.removeAll(DataFromFile.getNonRandomizedItems());
             List<String> cursedChests = new ArrayList<>(4);
             String cursedChest;
@@ -242,7 +244,16 @@ public class AccessChecker {
     private void handleNodeAccess(String nodeName, NodeType nodeType) {
         switch (nodeType) {
             case ITEM_LOCATION:
+                if(nodeName.startsWith("Coin:") && !Settings.isRandomizeCoinChests()) {
+                    break;
+                }
+                if(nodeName.startsWith("Trap:") && !Settings.isRandomizeTrapItems()) {
+                    break;
+                }
                 String item = itemRandomizer.getItem(nodeName);
+                if(item == null) {
+                    throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
+                }
                 if(!Settings.getCurrentRemovedItems().contains(item)) {
                     queuedUpdates.add(item);
                 }
@@ -298,6 +309,9 @@ public class AccessChecker {
                 break;
             case SHOP:
                 for(String shopItem : shopRandomizer.getShopItems(nodeName)) {
+                    if(shopItem == null) {
+                        throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
+                    }
                     if(!accessedNodes.contains(shopItem) && !queuedUpdates.contains(shopItem)
                             && !Settings.getCurrentRemovedItems().contains(shopItem)) {
                         queuedUpdates.add(shopItem);
