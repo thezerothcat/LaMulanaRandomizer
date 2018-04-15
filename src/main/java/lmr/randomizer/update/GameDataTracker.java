@@ -927,6 +927,25 @@ public final class GameDataTracker {
                 }
                 mulbrukScreen = gameObject.getObjectContainer();
             }
+            else if(blockNumber == 685 || blockNumber == 686) {
+                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                    if (flagTest.getIndex() == 501) {
+                        // The first conversation with the Fairy Queen is removed. Subsequent conversations must
+                        // therefore not require the first one to have happened, so we'll make the conversation
+                        // check for flag value <= 1 instead of == 1
+                        flagTest.setOp(ByteOp.FLAG_LTEQ);
+                        break;
+                    }
+                }
+            }
+            else if(blockNumber == 990) {
+                // Mulbruk misc conversation priority below Book of the Dead
+                TestByteOperation testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(810);
+                testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+                testByteOperation.setValue((byte)1);
+                gameObject.getTestByteOperations().add(testByteOperation);
+            }
             else if(blockNumber == 694 || blockNumber == 695) {
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 570) {
@@ -2073,6 +2092,13 @@ public final class GameDataTracker {
                 blockListData.getData().remove((int)blockListData.getData().size() - 1); // Remove last object
                 blockListData.getData().add((short)0); // Disable conversation repeats to reduce annoyance factor
             }
+
+            List<BlockListData> flagChecks = new ArrayList<>(checkBlock.getFlagCheckReferences().size());
+            flagChecks.add(checkBlock.getFlagCheckReferences().get(3));
+            flagChecks.addAll(checkBlock.getFlagCheckReferences().subList(0, 3));
+            flagChecks.addAll(checkBlock.getFlagCheckReferences().subList(3, checkBlock.getFlagCheckReferences().size()));
+            checkBlock.getFlagCheckReferences().clear();
+            checkBlock.getFlagCheckReferences().addAll(flagChecks);
         }
         else if(block.getBlockNumber() == 716) {
             // Surface map

@@ -3,6 +3,7 @@ package lmr.randomizer.rcd;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
+import lmr.randomizer.dat.AddObject;
 import lmr.randomizer.random.ShopRandomizationEnum;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.GameDataTracker;
@@ -101,19 +102,8 @@ public final class RcdReader {
                     WriteByteOperation updateFlag = obj.getWriteByteOperations().get(i);
                     if (updateFlag.getIndex() == 852) {
                         // Sacred orb flag for heal rate
-                        if(objectContainer instanceof Zone) {
-                            break;
-                        }
-                        else if(objectContainer instanceof Room) {
-                            ((Room) objectContainer).getZone().getObjects().add(obj);
-                            GameDataTracker.addObject(obj);
-                            return rcdByteIndex;
-                        }
-                        else if(objectContainer instanceof Screen) {
-                            ((Screen) objectContainer).getZone().getObjects().add(obj);
-                            GameDataTracker.addObject(obj);
-                            return rcdByteIndex;
-                        }
+                        keepObject = false;
+                        break;
                     }
                     else if(updateFlag.getIndex() == 299) {
                         // Timer for MARDUK mantra update
@@ -171,6 +161,10 @@ public final class RcdReader {
             }
             else if(obj.getArgs().get(4) == 719) {
                 // Low-score version of Mulbruk which could interfere with getting Book of the Dead.
+                keepObject = false;
+            }
+            else if(obj.getArgs().get(4) == 684) {
+                // First Fairy Queen conversation, completely unneeded for randomizer.
                 keepObject = false;
             }
             else if(obj.getArgs().get(4) == 913) {
@@ -447,8 +441,29 @@ public final class RcdReader {
                     byte noPositionScreenObjectCount = rcdBytes[rcdByteIndex];
                     rcdByteIndex += 1;
 
+                    if(zoneIndex == 1 && roomIndex == 1 && screenIndex == 1) {
+                        AddObject.addSacredOrbCountTimers(screen);
+                    }
+                    else if(zoneIndex == 12 && roomIndex == 2 && screenIndex == 0) {
+                        AddObject.addMoonlightPassageTimer(screen);
+                    }
+                    else if((zoneIndex == 13 && roomIndex == 5 && screenIndex == 1)
+                        || (zoneIndex == 13 && roomIndex == 6 && screenIndex == 2)) {
+                        AddObject.addFlailWhipPuzzleTimer(screen);
+                    }
+                    else if(zoneIndex == 17 && roomIndex == 8 && screenIndex == 0) {
+                        AddObject.addAngelShieldPuzzleTimers(screen);
+                    }
+
                     for (int noPositionScreenObjectIndex = 0; noPositionScreenObjectIndex < noPositionScreenObjectCount; noPositionScreenObjectIndex++) {
                         rcdByteIndex = addObject(screen, rcdBytes, rcdByteIndex, false);
+                    }
+
+                    if(zoneIndex == 6 && roomIndex == 7 && screenIndex == 1) {
+                        AddObject.addExtinctionUntrueShrineBackupDoor(screen);
+                    }
+                    else if(zoneIndex == 9 && roomIndex == 8 && screenIndex == 1) {
+                        AddObject.addUntrueShrineExit(screen);
                     }
 
                     for (int screenObjectIndex = 0; screenObjectIndex < (screenObjectCount - noPositionScreenObjectCount); screenObjectIndex++) {
