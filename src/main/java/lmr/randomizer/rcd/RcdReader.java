@@ -213,6 +213,19 @@ public final class RcdReader {
                 }
             }
         }
+        else if(obj.getId() == 0x34) {
+            if(objectContainer instanceof Screen) {
+                Screen screen = (Screen) objectContainer;
+                if (screen.getZoneIndex() == 3 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
+                    // Seal to wake Mulbruk - set the awake flag so we can skip the conversation that normally sets this flag.
+                    WriteByteOperation flagUpdate = new WriteByteOperation();
+                    flagUpdate.setIndex(913);
+                    flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+                    flagUpdate.setValue(1);
+                    obj.getWriteByteOperations().add(flagUpdate);
+                }
+            }
+        }
         else if (obj.getId() == 0x02) {
             if(Settings.isRandomizeTrapItems()) {
                 if(objectContainer instanceof Screen) {

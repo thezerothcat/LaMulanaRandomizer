@@ -938,14 +938,14 @@ public final class GameDataTracker {
                     }
                 }
             }
-//            else if(blockNumber == 990) {
-//                // Mulbruk misc conversation priority below Book of the Dead
-//                TestByteOperation testByteOperation = new TestByteOperation();
-//                testByteOperation.setIndex(810);
-//                testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-//                testByteOperation.setValue((byte)1);
-//                gameObject.getTestByteOperations().add(testByteOperation);
-//            }
+            else if(blockNumber == 990) {
+                // Mulbruk misc conversation priority below Book of the Dead
+                TestByteOperation testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(810);
+                testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+                testByteOperation.setValue((byte)1);
+                gameObject.getTestByteOperations().add(testByteOperation);
+            }
             else if(blockNumber == 694 || blockNumber == 695) {
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 570) {
