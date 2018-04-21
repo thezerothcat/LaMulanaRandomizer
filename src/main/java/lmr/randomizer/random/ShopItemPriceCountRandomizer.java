@@ -109,29 +109,29 @@ public class ShopItemPriceCountRandomizer {
         if("Earth Spear Ammo".equals(itemName)) {
             int priceRoll = random.nextInt(5);
             if(priceRoll < 3) {
-                return 20;
+                return 15;
             }
-            return 25;
+            return 20;
         }
         if("Flare Gun Ammo".equals(itemName)) {
             int priceRoll = random.nextInt(4);
             if(priceRoll < 2) {
-                return 35;
+                return 30;
             }
             if(priceRoll == 2) {
-                return 40;
+                return 35;
             }
-            return 45;
+            return 40;
         }
         if("Bomb Ammo".equals(itemName)) {
             int priceRoll = random.nextInt(5);
-            if(priceRoll < 3) {
-                return 55;
+            if(priceRoll < 2) {
+                return 45;
             }
-            if(priceRoll == 3) {
-                return 60;
+            if(priceRoll == 2) {
+                return 50;
             }
-            return 50;
+            return 40;
         }
         if("Chakram Ammo".equals(itemName)) {
             int priceRoll = random.nextInt(2);
