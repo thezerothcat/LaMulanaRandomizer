@@ -582,6 +582,7 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeMainWeapon, 12);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeCursedChests, 11);
         booleanSettings |= processBooleanFlag.apply(singleton.automaticHardmode, 10);
         booleanSettings |= processBooleanFlag.apply(singleton.coinChestGraphics, 9);
@@ -658,6 +659,7 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.randomizeMainWeapon = getBoolFlagFromInt.apply(booleanSettingsFlag, 12);
         singleton.randomizeCursedChests = getBoolFlagFromInt.apply(booleanSettingsFlag, 11);
         singleton.automaticHardmode = getBoolFlagFromInt.apply(booleanSettingsFlag, 10);
         singleton.coinChestGraphics = getBoolFlagFromInt.apply(booleanSettingsFlag, 9);
