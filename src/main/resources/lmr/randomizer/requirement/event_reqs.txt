@@ -15,6 +15,7 @@ Event: Flooded Tower of the Goddess => Location: Tower of the Goddess [Lower], H
 Event: Flooded Tower of the Goddess => Location: Tower of the Goddess [Lower], Hand Scanner, reader.exe, Helmet, Origin Seal, move.exe, randc.exe
 Event: Learn La-Mulanese => Hand Scanner, reader.exe, Location: Tower of Ruin [Lower], Location: Shrine of the Mother [Seal], Event: Remove Shrine Skulls, Location: Chamber of Birth [East], Event: Thunderbird Defeated
 Event: Learn La-Mulanese => Hand Scanner, reader.exe, Location: Tower of Ruin [Lower], Location: Shrine of the Mother [Seal], Event: All Bosses Defeated, Location: Chamber of Birth [East], Event: Thunderbird Defeated
+Event: Learn La-Mulanese => Setting: La-Mulanese
 Event: Mudmen Awakened => Location: Gate of Illusion [Upper], Cog of the Soul, Feather
 Event: Remove Shrine Skulls => Location: Shrine of the Mother [Main], yagomap.exe, yagostr.exe, Map (Shrine of the Mother), Dragon Bone
 Event: Remove True Shrine Fairy Block => Location: True Shrine of the Mother, Isis' Pendant

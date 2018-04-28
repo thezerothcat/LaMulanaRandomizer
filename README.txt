@@ -3,6 +3,11 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
+1.29:
+-----------------------------
+A new option has been added to start the game already knowing ancient La-Mulanese, allowing the translation tablets to be skipped.
+
+
 1.28:
 -----------------------------
 The option to start with Holy Grail, Hermes' Boots, and mirai.exe/Future Development Company has been replaced with individual toggles for configurable items. The new setting will replace the "Original Location" and "Surface" randomization options and now includes the items which had neither option. Item randomization settings have been renamed for clarification.

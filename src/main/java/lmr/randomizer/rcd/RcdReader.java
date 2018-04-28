@@ -454,8 +454,17 @@ public final class RcdReader {
                     byte noPositionScreenObjectCount = rcdBytes[rcdByteIndex];
                     rcdByteIndex += 1;
 
+                    // Add known no-position objects
                     if(zoneIndex == 1 && roomIndex == 1 && screenIndex == 1) {
                         AddObject.addSacredOrbCountTimers(screen);
+                    }
+                    else if(zoneIndex == 1 && roomIndex == 2 && screenIndex == 1) {
+                        if (Settings.isAutomaticHardmode()) {
+                            AddObject.addAutomaticHardmode(screen);
+                        }
+                        if(Settings.isAutomaticTranslations()) {
+                            AddObject.addAutomaticTranslations(screen);
+                        }
                     }
                     else if(zoneIndex == 12 && roomIndex == 2 && screenIndex == 0) {
                         AddObject.addMoonlightPassageTimer(screen);
@@ -472,7 +481,13 @@ public final class RcdReader {
                         rcdByteIndex = addObject(screen, rcdBytes, rcdByteIndex, false);
                     }
 
-                    if(zoneIndex == 6 && roomIndex == 7 && screenIndex == 1) {
+                    // Add known position objects
+                    if(zoneIndex == 1 && roomIndex == 2 && screenIndex == 1) {
+                        if(!Settings.getStartingItems().isEmpty()) {
+                            AddObject.addStartingItems(screen);
+                        }
+                    }
+                    else if(zoneIndex == 6 && roomIndex == 7 && screenIndex == 1) {
                         AddObject.addExtinctionUntrueShrineBackupDoor(screen);
                     }
                     else if(zoneIndex == 9 && roomIndex == 8 && screenIndex == 1) {

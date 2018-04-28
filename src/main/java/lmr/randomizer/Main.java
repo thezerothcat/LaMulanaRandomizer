@@ -493,6 +493,9 @@ public class Main {
             for(String enabledDamageBoost : Settings.getEnabledDamageBoosts()) {
                 accessChecker.computeAccessibleNodes("Boost: " + enabledDamageBoost);
             }
+            if(Settings.isAutomaticTranslations()) {
+                accessChecker.computeAccessibleNodes("Setting: La-Mulanese");
+            }
             if(accessChecker.updateForBosses(attempt)) {
                 while(!accessChecker.getQueuedUpdates().isEmpty()) {
                     accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next());
@@ -539,12 +542,6 @@ public class Main {
                     dialog.updateProgress(95, Translations.getText("progress.write"));
                     itemRandomizer.updateFiles(random);
                     shopRandomizer.updateFiles(datInfo, random);
-                    if(Settings.isAutomaticHardmode()) {
-                        GameDataTracker.addAutomaticHardmode();
-                    }
-                    if(!Settings.getStartingItems().isEmpty()) {
-                        GameDataTracker.addStartingItems();
-                    }
 //                    if(Settings.isRandomizeMantras()) {
 //                        GameDataTracker.randomizeMantras(random);
 //                    }

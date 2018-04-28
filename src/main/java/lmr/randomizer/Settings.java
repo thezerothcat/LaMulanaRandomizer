@@ -38,6 +38,7 @@ public final class Settings {
     private boolean randomizeCursedChests;
     private boolean replaceMapsWithWeights;
     private boolean automaticGrailPoints;
+    private boolean automaticTranslations;
 
     private boolean removeSpaulder;
 
@@ -86,6 +87,7 @@ public final class Settings {
         automaticHardmode = false;
         coinChestGraphics = false;
         automaticGrailPoints = false;
+        automaticTranslations = false;
 
         bossDifficulty = BossDifficulty.MEDIUM;
         shopRandomization = ShopRandomizationEnum.EVERYTHING;
@@ -350,6 +352,17 @@ public final class Settings {
         singleton.automaticGrailPoints = automaticGrailPoints;
     }
 
+    public static boolean isAutomaticTranslations() {
+        return singleton.automaticTranslations;
+    }
+
+    public static void setAutomaticTranslations(boolean automaticTranslations, boolean update) {
+        if(update && automaticTranslations != singleton.automaticTranslations) {
+            singleton.changed = true;
+        }
+        singleton.automaticTranslations = automaticTranslations;
+    }
+
     public static boolean isCoinChestGraphics() {
         return singleton.coinChestGraphics;
     }
@@ -582,6 +595,7 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.automaticTranslations, 13);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeMainWeapon, 12);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeCursedChests, 11);
         booleanSettings |= processBooleanFlag.apply(singleton.automaticHardmode, 10);
@@ -659,6 +673,7 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.automaticTranslations = getBoolFlagFromInt.apply(booleanSettingsFlag, 13);
         singleton.randomizeMainWeapon = getBoolFlagFromInt.apply(booleanSettingsFlag, 12);
         singleton.randomizeCursedChests = getBoolFlagFromInt.apply(booleanSettingsFlag, 11);
         singleton.automaticHardmode = getBoolFlagFromInt.apply(booleanSettingsFlag, 10);

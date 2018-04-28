@@ -1,6 +1,9 @@
 package lmr.randomizer.dat;
 
+import lmr.randomizer.DataFromFile;
+import lmr.randomizer.Settings;
 import lmr.randomizer.rcd.object.*;
+import lmr.randomizer.update.GameObjectId;
 
 public final class AddObject {
     private AddObject() { }
@@ -275,5 +278,97 @@ public final class AddObject {
         backupShrineDoorGraphic.setY(40);
 
         screen.getObjects().add(backupShrineDoorGraphic);
+    }
+
+    /**
+     * Add a timer to automatically start hard mode.
+     * @param screen the screen to add the objects to
+     */
+    public static void addAutomaticHardmode(Screen screen) {
+        GameObject automaticHardmodeTimer = new GameObject(screen);
+        automaticHardmodeTimer.setId((short) 0x0b);
+        automaticHardmodeTimer.getArgs().add((short) 0);
+        automaticHardmodeTimer.getArgs().add((short) 0);
+        automaticHardmodeTimer.setX(-1);
+        automaticHardmodeTimer.setY(-1);
+
+        TestByteOperation automaticHardModeTimerFlagTest = new TestByteOperation();
+        automaticHardModeTimerFlagTest.setIndex(362);
+        automaticHardModeTimerFlagTest.setValue((byte) 2);
+        automaticHardModeTimerFlagTest.setOp(ByteOp.FLAG_NOT_EQUAL);
+        automaticHardmodeTimer.getTestByteOperations().add(automaticHardModeTimerFlagTest);
+
+        WriteByteOperation automaticHardModeTimerFlagUpdate = new WriteByteOperation();
+        automaticHardModeTimerFlagUpdate.setIndex(362);
+        automaticHardModeTimerFlagUpdate.setValue((byte) 2);
+        automaticHardModeTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        automaticHardmodeTimer.getWriteByteOperations().add(automaticHardModeTimerFlagUpdate);
+
+        screen.getObjects().add(0, automaticHardmodeTimer);
+    }
+
+    /**
+     * Add a timer to automatically learn ancient La-Mulanese.
+     * @param screen the screen to add the objects to
+     */
+    public static void addAutomaticTranslations(Screen screen) {
+        GameObject automaticTranslationTimer = new GameObject(screen);
+        automaticTranslationTimer.setId((short) 0x0b);
+        automaticTranslationTimer.getArgs().add((short) 0);
+        automaticTranslationTimer.getArgs().add((short) 0);
+        automaticTranslationTimer.setX(-1);
+        automaticTranslationTimer.setY(-1);
+
+        TestByteOperation automaticTranslationTimerFlagTest = new TestByteOperation();
+        automaticTranslationTimerFlagTest.setIndex(746);
+        automaticTranslationTimerFlagTest.setValue((byte) 0);
+        automaticTranslationTimerFlagTest.setOp(ByteOp.FLAG_EQUALS);
+        automaticTranslationTimer.getTestByteOperations().add(automaticTranslationTimerFlagTest);
+
+        WriteByteOperation automaticTranslationTimerFlagUpdate = new WriteByteOperation();
+        automaticTranslationTimerFlagUpdate.setIndex(741);
+        automaticTranslationTimerFlagUpdate.setValue((byte) 3);
+        automaticTranslationTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        automaticTranslationTimer.getWriteByteOperations().add(automaticTranslationTimerFlagUpdate);
+
+        automaticTranslationTimerFlagUpdate = new WriteByteOperation();
+        automaticTranslationTimerFlagUpdate.setIndex(746);
+        automaticTranslationTimerFlagUpdate.setValue((byte) 1);
+        automaticTranslationTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        automaticTranslationTimer.getWriteByteOperations().add(automaticTranslationTimerFlagUpdate);
+
+        screen.getObjects().add(0, automaticTranslationTimer);
+    }
+
+    /**
+     * Add instant item give to the starting location so items will be given at the start of the game.
+     * @param screen the screen to add the objects to
+     */
+    public static void addStartingItems(Screen screen) {
+        for(String itemName : Settings.getStartingItems()) {
+            GameObjectId gameObjectId = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(itemName);
+
+            GameObject itemGive = new GameObject(screen);
+            itemGive.setId((short) 0xb5);
+            itemGive.getArgs().add(gameObjectId.getInventoryArg());
+            itemGive.getArgs().add((short)2);
+            itemGive.getArgs().add((short)3);
+            itemGive.getArgs().add((short)39);
+            itemGive.setX(940);
+            itemGive.setY(160);
+
+            TestByteOperation itemGiveTest = new TestByteOperation();
+            itemGiveTest.setIndex(gameObjectId.getWorldFlag());
+            itemGiveTest.setValue((byte) 0);
+            itemGiveTest.setOp(ByteOp.FLAG_EQUALS);
+            itemGive.getTestByteOperations().add(itemGiveTest);
+
+            WriteByteOperation itemGiveUpdate = new WriteByteOperation();
+            itemGiveUpdate.setIndex(gameObjectId.getWorldFlag());
+            itemGiveUpdate.setValue((byte) 2);
+            itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
+            itemGive.getWriteByteOperations().add(itemGiveUpdate);
+            screen.getObjects().add(itemGive);
+        }
     }
 }
