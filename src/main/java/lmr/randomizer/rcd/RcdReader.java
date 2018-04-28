@@ -454,46 +454,12 @@ public final class RcdReader {
                     byte noPositionScreenObjectCount = rcdBytes[rcdByteIndex];
                     rcdByteIndex += 1;
 
-                    // Add known no-position objects
-                    if(zoneIndex == 1 && roomIndex == 1 && screenIndex == 1) {
-                        AddObject.addSacredOrbCountTimers(screen);
-                    }
-                    else if(zoneIndex == 1 && roomIndex == 2 && screenIndex == 1) {
-                        if (Settings.isAutomaticHardmode()) {
-                            AddObject.addAutomaticHardmode(screen);
-                        }
-                        if(Settings.isAutomaticTranslations()) {
-                            AddObject.addAutomaticTranslations(screen);
-                        }
-                    }
-                    else if(zoneIndex == 12 && roomIndex == 2 && screenIndex == 0) {
-                        AddObject.addMoonlightPassageTimer(screen);
-                    }
-                    else if((zoneIndex == 13 && roomIndex == 5 && screenIndex == 1)
-                        || (zoneIndex == 13 && roomIndex == 6 && screenIndex == 2)) {
-                        AddObject.addFlailWhipPuzzleTimer(screen);
-                    }
-                    else if(zoneIndex == 17 && roomIndex == 8 && screenIndex == 0) {
-                        AddObject.addAngelShieldPuzzleTimers(screen);
-                    }
-
+                    addCustomNoPositionObjects(screen, zoneIndex, roomIndex, screenIndex);
                     for (int noPositionScreenObjectIndex = 0; noPositionScreenObjectIndex < noPositionScreenObjectCount; noPositionScreenObjectIndex++) {
                         rcdByteIndex = addObject(screen, rcdBytes, rcdByteIndex, false);
                     }
 
-                    // Add known position objects
-                    if(zoneIndex == 1 && roomIndex == 2 && screenIndex == 1) {
-                        if(!Settings.getStartingItems().isEmpty()) {
-                            AddObject.addStartingItems(screen);
-                        }
-                    }
-                    else if(zoneIndex == 6 && roomIndex == 7 && screenIndex == 1) {
-                        AddObject.addExtinctionUntrueShrineBackupDoor(screen);
-                    }
-                    else if(zoneIndex == 9 && roomIndex == 8 && screenIndex == 1) {
-                        AddObject.addUntrueShrineExit(screen);
-                    }
-
+                    addCustomPositionObjects(screen, zoneIndex, roomIndex, screenIndex);
                     for (int screenObjectIndex = 0; screenObjectIndex < (screenObjectCount - noPositionScreenObjectCount); screenObjectIndex++) {
                         rcdByteIndex = addObject(screen, rcdBytes, rcdByteIndex, true);
                     }
@@ -525,5 +491,43 @@ public final class RcdReader {
         }
         PotMover.addRemovedPots();
         return zones;
+    }
+
+    private static void addCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
+        if(zoneIndex == 1 && roomIndex == 2 && screenIndex == 1) {
+            if(!Settings.getStartingItems().isEmpty()) {
+                AddObject.addStartingItems(screen);
+            }
+        }
+        else if(zoneIndex == 6 && roomIndex == 7 && screenIndex == 1) {
+            AddObject.addExtinctionUntrueShrineBackupDoor(screen);
+        }
+        else if(zoneIndex == 9 && roomIndex == 8 && screenIndex == 1) {
+            AddObject.addUntrueShrineExit(screen);
+        }
+    }
+
+    private static void addCustomNoPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
+        if(zoneIndex == 1 && roomIndex == 1 && screenIndex == 1) {
+            AddObject.addSacredOrbCountTimers(screen);
+        }
+        else if(zoneIndex == 1 && roomIndex == 2 && screenIndex == 1) {
+            if (Settings.isAutomaticHardmode()) {
+                AddObject.addAutomaticHardmode(screen);
+            }
+            if(Settings.isAutomaticTranslations()) {
+                AddObject.addAutomaticTranslations(screen);
+            }
+        }
+        else if(zoneIndex == 12 && roomIndex == 2 && screenIndex == 0) {
+            AddObject.addMoonlightPassageTimer(screen);
+        }
+        else if((zoneIndex == 13 && roomIndex == 5 && screenIndex == 1)
+            || (zoneIndex == 13 && roomIndex == 6 && screenIndex == 2)) {
+            AddObject.addFlailWhipPuzzleTimer(screen);
+        }
+        else if(zoneIndex == 17 && roomIndex == 8 && screenIndex == 0) {
+            AddObject.addAngelShieldPuzzleTimers(screen);
+        }
     }
 }
