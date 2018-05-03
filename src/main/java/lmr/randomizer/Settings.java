@@ -46,7 +46,7 @@ public final class Settings {
     private List<String> enabledDamageBoosts = new ArrayList<>();
 
     private List<String> possibleGlitches = Arrays.asList("Lamp Glitch", "Cat Pause",
-            "Raindrop", "Ice Raindrop", "Pot Clip", "Object Zip");
+            "Raindrop", "Ice Raindrop", "Pot Clip", "Object Zip", "Edge Neutral", "Natural Raindrop");
     private List<String> possibleDboosts = Arrays.asList("Item", "Environment", "Enemy");
 
     private List<String> possibleRandomizedItems = Arrays.asList("Holy Grail", "Hand Scanner", "reader.exe",
