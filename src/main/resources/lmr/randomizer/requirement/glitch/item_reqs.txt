@@ -39,6 +39,7 @@ Mini Doll => Location: Gate of Illusion [Lower], Glitch: Raindrop, Caltrops, Cal
 Pepper => Location: Gate of Illusion [Lower], Glitch: Raindrop
 Philosopher's Ocarina => Maternity Statue, Glitch: Raindrop
 Ring => Glitch: Raindrop
+Sacred Orb (Surface) => Glitch: Edge Neutral, Feather
 Sacred Orb (Twin Labyrinths) => Glitch: Lamp Glitch
 Sacred Orb (Twin Labyrinths) => Glitch: Raindrop
 Serpent Staff => Location: Temple of Moonlight [Lower], Glitch: Raindrop, Book of the Dead, Event: Anubis Defeated
