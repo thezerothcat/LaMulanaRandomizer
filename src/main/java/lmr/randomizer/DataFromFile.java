@@ -353,11 +353,7 @@ public final class DataFromFile {
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/attack_reqs.txt");
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dead_ends.txt"); // todo: remove this when dead ends are handled better
             if(!Settings.getEnabledGlitches().isEmpty()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/location_reqs.txt");
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/item_reqs.txt");
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/shop_reqs.txt");
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/event_reqs.txt");
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/glitch_reqs.txt");
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch_reqs.txt");
             }
             if(!Settings.getEnabledDamageBoosts().isEmpty()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/location_reqs.txt");

@@ -1,8 +1,0 @@
-Shop 8 (Sun) => Glitch: Cat Pause
-Shop 11 (Moonlight) => Location: Temple of Moonlight [Lower], Glitch: Raindrop, Glitch: Cat Pause
-Shop 11 (Moonlight) => Location: Temple of Moonlight [Lower], Glitch: Raindrop, Bomb, Bomb Ammo
-Shop 11 (Moonlight) => Location: Temple of Moonlight [Lower], Birth Seal, Glitch: Cat Pause, Exit: Temple of Moonlight [Lower]
-Shop 13 (Goddess) => Location: Tower of the Goddess [Lower], Feather, Glitch: Raindrop
-Shop 13 (Goddess) => Location: Tower of the Goddess [Lower], Event: Flooded Tower of the Goddess, Glitch: Raindrop
-Shop 21 (Unsolvable) => Event: Zu Defeated, Glitch: Raindrop
-Shop 21 (Unsolvable) => Glitch: Raindrop

@@ -1,6 +1,8 @@
 Coin: Surface (Waterfall) => None
 Coin: Surface (Seal) => Life Seal
 Coin: Surface (Ruin Path) => Bomb, Bomb Ammo, Location: Chamber of Extinction [Magatama], Feather
+Coin: Surface (Ruin Path) => Bomb, Bomb Ammo, Glitch: Raindrop
+Coin: Surface (Ruin Path) => Bomb, Bomb Ammo, Glitch: Natural Raindrop, Feather
 Coin: Guidance (One) => None
 Coin: Guidance (Two) => None
 Coin: Guidance (Trap) => None
@@ -28,6 +30,7 @@ Coin: Moonlight => Shuriken, Shuriken Ammo, Feather
 Coin: Moonlight => Rolling Shuriken, Rolling Shuriken Ammo, Feather
 Coin: Moonlight => Chakram, Chakram Ammo, Feather
 Coin: Moonlight => Pistol, Pistol Ammo, Feather
+Coin: Moonlight => Chakram, Chakram Ammo, Glitch: General
 Coin: Goddess (Shield) => Location: Tower of the Goddess [Grail], Katana
 Coin: Goddess (Shield) => Location: Tower of the Goddess [Grail], Knife
 Coin: Goddess (Shield) => Location: Tower of the Goddess [Grail], Caltrops, Caltrops Ammo

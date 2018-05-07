@@ -6,3 +6,5 @@ Glitch: Ice Raindrop => Grapple Claw, Setting: Ice Raindrop
 Glitch: Pot Clip => Grapple Claw, Setting: Pot Clip
 Glitch: Object Zip => Hermes' Boots, Setting: Object Zip
 Glitch: Edge Neutral => Setting: Edge Neutral
+# Glitches that everyone knows like chakrams going through walls
+Glitch: General => None

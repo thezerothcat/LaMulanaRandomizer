@@ -1,4 +1,0 @@
-Coin: Surface (Ruin Path) => Bomb, Bomb Ammo, Glitch: Raindrop
-Coin: Surface (Ruin Path) => Bomb, Bomb Ammo, Glitch: Natural Raindrop, Feather
-Coin: Moonlight => Chakram, Chakram Ammo
-Coin: Goddess (Shield) => Location: Tower of the Goddess [Grail], Glitch: Cat Pause
