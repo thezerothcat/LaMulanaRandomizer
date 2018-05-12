@@ -3,6 +3,11 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
+1.30:
+-----------------------------
+Re-randomized a coin chest that was unintentionally excluded from randomization. Merged some of Worse Than You's requirement updates.
+
+
 1.29:
 -----------------------------
 A new option has been added to start the game already knowing ancient La-Mulanese, allowing the translation tablets to be skipped.

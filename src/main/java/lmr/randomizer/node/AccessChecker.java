@@ -88,10 +88,8 @@ public class AccessChecker {
             }
 
             for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
-                if(nodeName.startsWith("Glitch:")) {
-                    continue;
-                }
-                if(nodeName.startsWith("Attack:")) {
+                if(nodeName.startsWith("Glitch:") || nodeName.startsWith("Attack:") || nodeName.startsWith("Location:")
+                        || nodeName.startsWith("Event:") || nodeName.startsWith("Exit:")) {
                     continue;
                 }
                 else if(NodeType.ITEM_LOCATION.equals(mapOfNodeNameToRequirementsObject.get(nodeName).getType())) {
