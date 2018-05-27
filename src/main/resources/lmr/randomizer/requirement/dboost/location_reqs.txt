@@ -10,4 +10,4 @@ Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Hand 
 Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Hand Scanner, Caltrops, Fruit of Eden, Boost: Item, Glitch: Object Zip
 Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Glitch: Raindrop, Bomb, Fruit of Eden, Boost: Item, Glitch: Object Zip
 Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Lower], Glitch: Raindrop, Caltrops, Fruit of Eden, Boost: Item, Glitch: Object Zip
-Location: Dimensional Corridor => Location: Twin Labyrinths [Upper], Bomb, Bomb Ammo, Boost: Item
+Location: Dimensional Corridor => Location: Twin Labyrinths [Upper], Crystal Skull, Bomb, Bomb Ammo, Boost: Item
