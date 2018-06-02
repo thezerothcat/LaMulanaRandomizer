@@ -375,7 +375,7 @@ public class AccessChecker {
                 return false;
             }
         }
-        else if(item.equals("Chain Whip") || item.equals("Buckler") || item.contains("Silver Shield")) {
+        else if(item.equals("Whip") || item.equals("Chain Whip") || item.equals("Buckler") || item.contains("Silver Shield")) {
             if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
                 return false;
             }
