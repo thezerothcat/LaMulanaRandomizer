@@ -276,6 +276,32 @@ public final class RcdReader {
                 }
             }
         }
+        else if(obj.getId() == 0xc4) {
+            if(objectContainer instanceof Screen) {
+                Screen screen = (Screen) objectContainer;
+                if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                    // Don't change to true shrine until you have Feather, since the old shrine has more requirement options.
+                    if (obj.getTestByteOperations().get(0).getIndex() == 258) {
+                        if(ByteOp.FLAG_EQUALS.equals(obj.getTestByteOperations().get(0).getOp())) {
+                            keepObject = false;
+                        }
+                        else {
+                            obj.getTestByteOperations().clear();
+                        }
+                    }
+                }
+                else if (screen.getZoneIndex() == 8 && screen.getRoomIndex() == 2 && screen.getScreenIndex() == 3) {
+                    // Don't change to true shrine until you have Feather, since the old shrine has more requirement options.
+                    if (ByteOp.FLAG_EQUALS.equals(obj.getTestByteOperations().get(0).getOp())) {
+                        TestByteOperation featherCheck = new TestByteOperation();
+                        featherCheck.setIndex(182);
+                        featherCheck.setOp(ByteOp.FLAG_EQUALS);
+                        featherCheck.setValue((byte) 2);
+                        obj.getTestByteOperations().add(featherCheck);
+                    }
+                }
+            }
+        }
 //        else if (obj.getId() == 0xa3) {
 //            for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
 //                if(testByteOperation.getIndex() == 254) {
@@ -501,6 +527,9 @@ public final class RcdReader {
         }
         else if(zoneIndex == 6 && roomIndex == 7 && screenIndex == 1) {
             AddObject.addExtinctionUntrueShrineBackupDoor(screen);
+        }
+        else if(zoneIndex == 8 && roomIndex == 2 && screenIndex == 3) {
+            AddObject.addEndlessCorridorNoFeatherUntrueShrineGate(screen);
         }
         else if(zoneIndex == 9 && roomIndex == 8 && screenIndex == 1) {
             AddObject.addUntrueShrineExit(screen);

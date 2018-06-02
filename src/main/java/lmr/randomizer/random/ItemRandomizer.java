@@ -74,8 +74,9 @@ public class ItemRandomizer {
         }
         else {
             mapOfItemLocationToItem.put(uselessMapLocation, "Provocative Bathing Suit");
-            shopRandomizer.randomizeForbiddenTreasure(uselessMap, false);
+            shopRandomizer.randomizeForbiddenTreasure(uselessMap, false); // If categorized shop randomization, puts missing map in place of guild in transformed fish shop.
         }
+        mapOfItemLocationToItem.put("Provocative Bathing Suit", uselessMap);
     }
 
     public void placeNonRandomizedItems() {

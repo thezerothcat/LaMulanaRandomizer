@@ -960,6 +960,26 @@ public final class GameDataTracker {
                     }
                 }
             }
+            else if(blockNumber == 1011) {
+                // Dracuet Provocative Bathing Suit conversation - needs to depend on HT item instead.
+                GameObjectId gameObjectId = new GameObjectId((short) 74, 262);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+            }
+            else if(blockNumber == 1013) {
+                // Mulbruk Provocative Bathing Suit conversation - needs to depend on HT item instead.
+                GameObjectId gameObjectId = new GameObjectId((short) 74, 262);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+            }
             else if(blockNumber == 1082 || blockNumber == 1083 || blockNumber == 924) {
                 // Remove the flags that prevent normal Mulbruk convos if you have Forbidden Treasure/Provocative Bathing Suit
                 Integer flagToRemoveIndex = null;
@@ -993,6 +1013,17 @@ public final class GameDataTracker {
                 else if(flagTest.getIndex() == 171) {
                     // Crucifix puzzle lit torches
                     GameObjectId gameObjectId = new GameObjectId((short) 42, 171);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+                else if(flagTest.getIndex() == 262) {
+                    // HT Dracuet stuff
+                    GameObjectId gameObjectId = new GameObjectId((short) 74, 262);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -1140,6 +1171,17 @@ public final class GameDataTracker {
                             return;
                         }
                     }
+                }
+                else if(flagUpdate.getIndex() == 844 && flagUpdate.getValue() == 8) {
+                    // Mulbruk swimsuit conversation timer.
+                    GameObjectId gameObjectId = new GameObjectId((short) 74, 262);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    return;
                 }
             }
             for(int i = 0; i < gameObject.getTestByteOperations().size(); i++) {

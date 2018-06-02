@@ -379,6 +379,10 @@ public class AccessChecker {
             if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
                 return false;
             }
+            if("Shop 2 Alt (Surface)".equals(location)) {
+                // Don't put low/mid tier shield/whip in the shop; you can't buy it to transform the shop if you have the higher tier version.
+                return false;
+            }
         }
 
         if(Settings.getCurrentRemovedItems().contains(item)

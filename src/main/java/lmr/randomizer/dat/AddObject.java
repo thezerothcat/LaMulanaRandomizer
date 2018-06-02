@@ -3,6 +3,7 @@ package lmr.randomizer.dat;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.Settings;
 import lmr.randomizer.rcd.object.*;
+import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.GameObjectId;
 
 public final class AddObject {
@@ -190,7 +191,7 @@ public final class AddObject {
         obj.getArgs().add((short)300);
         obj.getArgs().add((short)20);
         obj.getArgs().add((short)1);
-        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)1);
         obj.setX(300);
         obj.setY(940);
 
@@ -201,6 +202,39 @@ public final class AddObject {
         obj.getTestByteOperations().add(testByteOperation);
 
         screen.getObjects().add(obj);
+    }
+
+    /**
+     * Add an alternative gate from Endless Corridor to untransformed Shrine of the Mother room containing the Death Seal chest.
+     * @param screen the screen to add the objects to
+     */
+    public static void addEndlessCorridorNoFeatherUntrueShrineGate(Screen screen) {
+        GameObject backupShrineDoor = new GameObject(screen);
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(258);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte) 9);
+        backupShrineDoor.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(182);
+        testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+        testByteOperation.setValue((byte) 2);
+        backupShrineDoor.getTestByteOperations().add(testByteOperation);
+
+        backupShrineDoor.setId((short) 0xc4);
+        backupShrineDoor.setX(2220);
+        backupShrineDoor.setY(0);
+
+        backupShrineDoor.getArgs().add((short)9);
+        backupShrineDoor.getArgs().add((short)9);
+        backupShrineDoor.getArgs().add((short)0);
+        backupShrineDoor.getArgs().add((short)300);
+        backupShrineDoor.getArgs().add((short)392);
+        backupShrineDoor.getArgs().add((short)0);
+        backupShrineDoor.getArgs().add((short)0);
+
+        screen.getObjects().add(backupShrineDoor);
     }
 
     /**
@@ -371,4 +405,28 @@ public final class AddObject {
             screen.getObjects().add(itemGive);
         }
     }
+
+    /**
+     * For not having to damage boost up Gate of Illusion to Cog of the Soul
+     * @param screen the screen to add the objects to
+     */
+    public static void addFeatherlessCogAccessPot(Screen screen) {
+        GameObject backupShrineDoor = new GameObject(screen);
+        backupShrineDoor.setId((short) 0x0);
+        backupShrineDoor.setX(580);
+        backupShrineDoor.setY(260);
+
+        backupShrineDoor.getArgs().add((short)0);
+        backupShrineDoor.getArgs().add((short)0);
+        backupShrineDoor.getArgs().add((short)-1);
+        backupShrineDoor.getArgs().add((short)1);
+        backupShrineDoor.getArgs().add((short)10);
+        backupShrineDoor.getArgs().add((short)105);
+        backupShrineDoor.getArgs().add((short)35);
+        backupShrineDoor.getArgs().add((short)17);
+        backupShrineDoor.getArgs().add((short)0);
+
+        screen.getObjects().add(backupShrineDoor);
+    }
+
 }
