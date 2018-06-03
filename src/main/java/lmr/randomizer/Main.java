@@ -846,7 +846,9 @@ public class Main {
                 ++chosenRemovedItems;
             }
         }
-
+        if(Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
+            removedItems.add("Whip");
+        }
         Settings.setCurrentRemovedItems(removedItems);
     }
 

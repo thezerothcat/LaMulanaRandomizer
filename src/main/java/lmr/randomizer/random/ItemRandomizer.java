@@ -425,8 +425,10 @@ public class ItemRandomizer {
 
     private int getNewWorldFlag(String itemLocation, String newContents, GameObjectId itemLocationData, GameObjectId itemNewContentsData) {
         if(itemNewContentsData.getInventoryArg() == 62 && Settings.getRemovedItems().contains("Spaulder")) {
-            // Spaulder
             return 2781;
+        }
+        if(itemNewContentsData.getInventoryArg() == 0 && Settings.getRemovedItems().contains("Whip")) {
+            return 2773;
         }
         if(Settings.isReplaceMapsWithWeights()
                 && itemNewContentsData.getInventoryArg() == 70 && itemNewContentsData.getWorldFlag() != 218

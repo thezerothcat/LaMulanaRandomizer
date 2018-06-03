@@ -540,12 +540,29 @@ public final class RcdReader {
         if(zoneIndex == 1 && roomIndex == 1 && screenIndex == 1) {
             AddObject.addSacredOrbCountTimers(screen);
         }
-        else if(zoneIndex == 1 && roomIndex == 2 && screenIndex == 1) {
-            if (Settings.isAutomaticHardmode()) {
-                AddObject.addAutomaticHardmode(screen);
+        else if(zoneIndex == 1) {
+            if(roomIndex == 2) {
+                if(screenIndex == 0) {
+                    if (Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
+                        AddObject.addRandomWeaponKillTimer(screen, false);
+                    }
+                }
+                if(screenIndex == 1) {
+                    if (Settings.isAutomaticHardmode()) {
+                        AddObject.addAutomaticHardmode(screen);
+                    }
+                    if (Settings.isAutomaticTranslations()) {
+                        AddObject.addAutomaticTranslations(screen);
+                    }
+                    if (Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
+                        AddObject.addRandomWeaponKillTimer(screen, true);
+                    }
+                }
             }
-            if(Settings.isAutomaticTranslations()) {
-                AddObject.addAutomaticTranslations(screen);
+            else if(roomIndex == 3 && screenIndex == 0) {
+                if (Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
+                    AddObject.addRandomWeaponKillTimer(screen, false);
+                }
             }
         }
         else if(zoneIndex == 12 && roomIndex == 2 && screenIndex == 0) {

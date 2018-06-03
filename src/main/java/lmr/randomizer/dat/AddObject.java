@@ -205,6 +205,43 @@ public final class AddObject {
     }
 
     /**
+     * Add kill timers for randomized main weapons.
+     * @param screen the screen to add the objects to
+     * @param isXelpudScreen true if this is Xelpud's screen, where the kill timer should not activate until after you talk to him
+     */
+    public static void addRandomWeaponKillTimer(Screen screen, boolean isXelpudScreen) {
+        GameObject randomWeaponKillTimer = new GameObject(screen);
+        randomWeaponKillTimer.setId((short) 0x0b);
+        randomWeaponKillTimer.getArgs().add((short) 0);
+        randomWeaponKillTimer.getArgs().add((short) 0);
+        randomWeaponKillTimer.setX(-1);
+        randomWeaponKillTimer.setY(-1);
+
+        TestByteOperation flagTest = new TestByteOperation();
+        GameObjectId randomWeaponInfo = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(Settings.getCurrentStartingWeapon());
+        flagTest.setIndex(randomWeaponInfo.getWorldFlag());
+        flagTest.setValue((byte) 2);
+        flagTest.setOp(ByteOp.FLAG_NOT_EQUAL);
+        randomWeaponKillTimer.getTestByteOperations().add(flagTest);
+
+        if(isXelpudScreen) {
+            flagTest = new TestByteOperation();
+            flagTest.setIndex(0x07c);
+            flagTest.setValue((byte) 1);
+            flagTest.setOp(ByteOp.FLAG_EQUALS);
+            randomWeaponKillTimer.getTestByteOperations().add(flagTest);
+        }
+
+        WriteByteOperation flagUpdate = new WriteByteOperation();
+        flagUpdate.setIndex(0x3e9);
+        flagUpdate.setValue((byte) 1);
+        flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        randomWeaponKillTimer.getWriteByteOperations().add(flagUpdate);
+
+        screen.getObjects().add(0, randomWeaponKillTimer);
+    }
+
+    /**
      * Add an alternative gate from Endless Corridor to untransformed Shrine of the Mother room containing the Death Seal chest.
      * @param screen the screen to add the objects to
      */

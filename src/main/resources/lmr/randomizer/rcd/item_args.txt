@@ -1,4 +1,4 @@
-Whip => 1, 07d
+Whip => 0, ad5
 Chain Whip => 1, 07d
 Flail Whip => 2, 07e
 Knife => 3, 07f
@@ -145,7 +145,7 @@ Coin: Twin (Lower) => 50, 1ec
 Coin: Endless => 30, 203
 Coin: Shrine => 30, 216
 Coin: Illusion (Spikes) => 100, 22c
-Coin: Illusion (Katana) => 30, 233
+Coin: Illusion (Katana) => 80, 233
 Coin: Graveyard => 30, 242
 Coin: Moonlight => 100, 25a
 Coin: Goddess (Shield) => 30, 286
