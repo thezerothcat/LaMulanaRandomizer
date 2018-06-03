@@ -1,4 +1,4 @@
-Whip => 0, ad5
+Whip => 0, 07d
 Chain Whip => 1, 07d
 Flail Whip => 2, 07e
 Knife => 3, 07f

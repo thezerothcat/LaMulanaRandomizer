@@ -418,8 +418,16 @@ public class Main {
         int attempt = 0;
         while(true) {
             ++attempt;
+            if(Settings.isRandomizeMainWeapon()) {
+                determineMainWeapon(random);
+            }
             if(Settings.getMaxRandomRemovedItems() < 1) {
-                Settings.setCurrentRemovedItems(new HashSet<>(0));
+                if(Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
+                    Settings.setCurrentRemovedItems(new HashSet<>(Arrays.asList("Whip")));
+                }
+                else {
+                    Settings.setCurrentRemovedItems(new HashSet<>(0));
+                }
             }
             else {
                 dialog.updateProgress(20, Translations.getText("progress.shuffling.removing"));
@@ -443,9 +451,6 @@ public class Main {
                     }
                     break;
                 }
-            }
-            if(Settings.isRandomizeMainWeapon()) {
-                determineMainWeapon(random);
             }
             if(Settings.isRandomizeTrapItems()) {
                 // For flag space reasons, screens which contain more than one chest can have only one of those chests

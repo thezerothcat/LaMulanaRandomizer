@@ -82,7 +82,7 @@ public class AccessChecker {
     }
 
     public boolean isSuccess() {
-        if(Settings.getCurrentRemovedItems().isEmpty()) {
+        if(isRequireFullAccess()) {
             if(mapOfNodeNameToRequirementsObject.isEmpty()) {
                 return true;
             }
@@ -109,6 +109,11 @@ public class AccessChecker {
             }
         }
         return true;
+    }
+
+    private boolean isRequireFullAccess() {
+        return Settings.getCurrentRemovedItems().isEmpty()
+                || (Settings.isRandomizeMainWeapon() && Settings.getCurrentRemovedItems().size() == 1 && !"Whip".equals(Settings.getCurrentStartingWeapon()));
     }
 
     public void computeAccessibleNodes(String newState) {
