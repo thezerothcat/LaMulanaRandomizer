@@ -27,28 +27,49 @@ public class GameItemRadio extends JPanel {
         randomItem.setActionCommand("RANDOM");
         itemRandomization.add(randomItem);
 
-        initialItem = new JRadioButton(Translations.getText("randomization.initial"));
-        initialItem.setActionCommand("INITIAL");
-        itemRandomization.add(initialItem);
+        if("xmailer.exe".equals(item)) {
+            initialItem = null;
 
-        CheckboxContainer checkboxContainer = new CheckboxContainer(1);
-        checkboxContainer.add(randomItem);
-        checkboxContainer.add(initialItem);
-        add(checkboxContainer);
+            startingItem = new JRadioButton(Translations.getText("randomization.xelpud"));
+            startingItem.setActionCommand("XELPUD");
+            itemRandomization.add(startingItem);
 
-        startingItem = new JRadioButton(Translations.getText("randomization.starting"));
-        startingItem.setActionCommand("STARTING");
-        itemRandomization.add(startingItem);
-        checkboxContainer.add(startingItem);
+            CheckboxContainer checkboxContainer = new CheckboxContainer(1);
+            checkboxContainer.add(randomItem);
+            checkboxContainer.add(startingItem);
+            add(checkboxContainer);
 
-        if(Settings.getInitiallyAccessibleItems().contains(item)) {
-            initialItem.setSelected(true);
-        }
-        else if(Settings.getStartingItems().contains(item)) {
-            startingItem.setSelected(true);
+            if ("xmailer.exe".equals(Settings.getXmailerItem())) {
+                startingItem.setSelected(true);
+            }
+            else {
+                randomItem.setSelected(true);
+            }
         }
         else {
-            randomItem.setSelected(true);
+            initialItem = new JRadioButton(Translations.getText("randomization.initial"));
+            initialItem.setActionCommand("INITIAL");
+            itemRandomization.add(initialItem);
+
+            CheckboxContainer checkboxContainer = new CheckboxContainer(1);
+            checkboxContainer.add(randomItem);
+            checkboxContainer.add(initialItem);
+            add(checkboxContainer);
+
+            startingItem = new JRadioButton(Translations.getText("randomization.starting"));
+            startingItem.setActionCommand("STARTING");
+            itemRandomization.add(startingItem);
+            checkboxContainer.add(startingItem);
+
+            if (Settings.getInitiallyAccessibleItems().contains(item)) {
+                initialItem.setSelected(true);
+            }
+            else if (Settings.getStartingItems().contains(item)) {
+                startingItem.setSelected(true);
+            }
+            else {
+                randomItem.setSelected(true);
+            }
         }
 
         this.itemName = item;
@@ -65,16 +86,20 @@ public class GameItemRadio extends JPanel {
     public void updateTranslations() {
         itemLabel.setText(Translations.getItemText(itemName, false));
         randomItem.setText(Translations.getText("randomization.random"));
-        initialItem.setText(Translations.getText("randomization.initial"));
-        startingItem.setText(Translations.getText("randomization.starting"));
+        if(initialItem != null) {
+            initialItem.setText(Translations.getText("randomization.initial"));
+        }
+        startingItem.setText(Translations.getText("randomization." + startingItem.getActionCommand().toLowerCase()));
     }
 
     public void setSelected(String actionCommand) {
         if("RANDOM".equals(actionCommand)) {
             randomItem.setSelected(true);
-        } else if("INITIAL".equals(actionCommand)) {
+        }
+        else if("INITIAL".equals(actionCommand)) {
             initialItem.setSelected(true);
-        } else if ("STARTING".equals(actionCommand)) {
+        }
+        else if ("STARTING".equals(actionCommand)) {
             startingItem.setSelected(true);
         }
         else {

@@ -12,11 +12,10 @@ public class RandomizationPanel extends JPanel {
     private JCheckBox randomizeCoinChests;
     private JCheckBox randomizeTrapItems;
     private JCheckBox randomizeMainWeapon;
-    private JCheckBox randomizeForbiddenTreasure;
     private JCheckBox randomizeCursedChests;
 
     private ShopRandomizationRadio shopRandomization;
-    private XmailerRandomizationRadio xmailerRandomization;
+    private SwimsuitRandomizationPanel swimsuitRandomization;
 
     public RandomizationPanel() {
         super(new MigLayout("fillx, wrap"));
@@ -24,11 +23,11 @@ public class RandomizationPanel extends JPanel {
         radioPanel = new RadioPanel();
         add(radioPanel, "growx");
 
-        xmailerRandomization = new XmailerRandomizationRadio();
-        add(xmailerRandomization, "gap rel 0, growx, wrap");
-
         shopRandomization = new ShopRandomizationRadio();
         add(shopRandomization, "gap rel 0, growx, wrap");
+
+        swimsuitRandomization = new SwimsuitRandomizationPanel();
+        add(swimsuitRandomization, "gap rel 0, growx, wrap");
 
         randomizeCoinChests = new JCheckBox();
         randomizeCoinChests.setSelected(Settings.isRandomizeCoinChests());
@@ -39,9 +38,6 @@ public class RandomizationPanel extends JPanel {
         randomizeMainWeapon = new JCheckBox();
         randomizeMainWeapon.setSelected(Settings.isRandomizeMainWeapon());
 
-        randomizeForbiddenTreasure = new JCheckBox();
-        randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
-
         randomizeCursedChests = new JCheckBox();
         randomizeCursedChests.setSelected(Settings.isRandomizeCursedChests());
 
@@ -49,7 +45,6 @@ public class RandomizationPanel extends JPanel {
         checkboxContainer.add(randomizeCoinChests);
         checkboxContainer.add(randomizeMainWeapon);
         checkboxContainer.add(randomizeTrapItems);
-        checkboxContainer.add(randomizeForbiddenTreasure);
         checkboxContainer.add(randomizeCursedChests);
         add(checkboxContainer, "growx, wrap");
 
@@ -58,32 +53,29 @@ public class RandomizationPanel extends JPanel {
 
     public void updateTranslations() {
         radioPanel.updateTranslations();
-        randomizeForbiddenTreasure.setText(Translations.getText("randomization.randomizeForbiddenTreasure"));
         randomizeCoinChests.setText(Translations.getText("randomization.randomizeCoinChests"));
         randomizeTrapItems.setText(Translations.getText("randomization.randomizeTrapItems"));
         randomizeMainWeapon.setText(Translations.getText("randomization.randomizeMainWeapon"));
         randomizeCursedChests.setText(Translations.getText("randomization.randomizeCursedChests"));
         shopRandomization.updateTranslations();
-        xmailerRandomization.updateTranslations();
+        swimsuitRandomization.updateTranslations();
     }
 
     public void updateSettings() {
         radioPanel.updateSettings();
-        Settings.setRandomizeForbiddenTreasure(randomizeForbiddenTreasure.isSelected(), true);
         Settings.setRandomizeCoinChests(randomizeCoinChests.isSelected(), true);
         Settings.setRandomizeTrapItems(randomizeTrapItems.isSelected(), true);
         Settings.setRandomizeMainWeapon(randomizeMainWeapon.isSelected(), true);
         Settings.setRandomizeCursedChests(randomizeCursedChests.isSelected(), true);
         shopRandomization.updateSettings();
-        xmailerRandomization.updateSettings();
+        swimsuitRandomization.updateSettings();
     }
 
     public void reloadSettings() {
         radioPanel.reloadSettings();
         shopRandomization.reloadSettings();
-        xmailerRandomization.reloadSettings();
+        swimsuitRandomization.reloadSettings();
 
-        randomizeForbiddenTreasure.setSelected(Settings.isRandomizeForbiddenTreasure());
         randomizeCoinChests.setSelected(Settings.isRandomizeCoinChests());
         randomizeTrapItems.setSelected(Settings.isRandomizeTrapItems());
         randomizeMainWeapon.setSelected(Settings.isRandomizeMainWeapon());

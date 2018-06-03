@@ -1172,16 +1172,32 @@ public final class GameDataTracker {
                         }
                     }
                 }
-                else if(flagUpdate.getIndex() == 844 && flagUpdate.getValue() == 8) {
-                    // Mulbruk swimsuit conversation timer.
-                    GameObjectId gameObjectId = new GameObjectId((short) 74, 262);
-                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                    if (objects == null) {
-                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                else if(flagUpdate.getIndex() == 844) {
+                    if(flagUpdate.getValue() == 8) {
+                        // Mulbruk swimsuit conversation timer.
+                        GameObjectId gameObjectId = new GameObjectId((short) 74, 262);
+                        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        if (objects == null) {
+                            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        }
+                        objects.add(gameObject);
+                        return;
                     }
-                    objects.add(gameObject);
-                    return;
+                    else if(flagUpdate.getValue() == 1) {
+                        // Get rid of 8-boss requirement on HT.
+                        Integer flagToRemoveIndex = null;
+                        for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                            if (gameObject.getTestByteOperations().get(i).getIndex() == 258) {
+                                flagToRemoveIndex = i;
+                                break;
+                            }
+                        }
+                        if(flagToRemoveIndex != null) {
+                            gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
+                        }
+                        return;
+                    }
                 }
             }
             for(int i = 0; i < gameObject.getTestByteOperations().size(); i++) {

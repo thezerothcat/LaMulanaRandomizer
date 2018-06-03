@@ -32,6 +32,7 @@ public final class Settings {
     private boolean requireIceCapeForLava;
     private boolean requireFlaresForExtinction;
     private boolean randomizeForbiddenTreasure;
+    private boolean htFullRandom;
     private boolean randomizeCoinChests;
     private boolean randomizeTrapItems;
     private boolean randomizeMainWeapon;
@@ -78,6 +79,7 @@ public final class Settings {
         requireIceCapeForLava = true;
         requireFlaresForExtinction = true;
         randomizeForbiddenTreasure = false;
+        htFullRandom = false;
         randomizeCoinChests = true;
         randomizeTrapItems = true;
         randomizeMainWeapon = false;
@@ -297,6 +299,17 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.randomizeForbiddenTreasure = randomizeForbiddenTreasure;
+    }
+
+    public static boolean isHTFullRandom() {
+        return singleton.htFullRandom;
+    }
+
+    public static void setHTFullRandom(boolean htFullRandom, boolean update) {
+        if(update && htFullRandom != singleton.htFullRandom) {
+            singleton.changed = true;
+        }
+        singleton.htFullRandom = htFullRandom;
     }
 
     public static boolean isRandomizeCoinChests() {
@@ -595,6 +608,7 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.htFullRandom, 14);
         booleanSettings |= processBooleanFlag.apply(singleton.automaticTranslations, 13);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeMainWeapon, 12);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeCursedChests, 11);
@@ -673,6 +687,7 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.htFullRandom = getBoolFlagFromInt.apply(booleanSettingsFlag, 14);
         singleton.automaticTranslations = getBoolFlagFromInt.apply(booleanSettingsFlag, 13);
         singleton.randomizeMainWeapon = getBoolFlagFromInt.apply(booleanSettingsFlag, 12);
         singleton.randomizeCursedChests = getBoolFlagFromInt.apply(booleanSettingsFlag, 11);

@@ -30,6 +30,7 @@ public class RadioPanel extends JPanel {
         itemConfigRadioGroupPanels.add(new GameItemRadio("Bronze Mirror"));
         itemConfigRadioGroupPanels.add(new GameItemRadio("mirai.exe"));
         itemConfigRadioGroupPanels.add(new GameItemRadio("bunemon.exe"));
+        itemConfigRadioGroupPanels.add(new GameItemRadio("xmailer.exe"));
 
         for(GameItemRadio gameItemRadio : itemConfigRadioGroupPanels) {
             add(gameItemRadio);
@@ -56,6 +57,9 @@ public class RadioPanel extends JPanel {
             else if("STARTING".equals(actionCommand)) {
                 Main.addArgItemUI(startingItems, itemRadio.getItemName());
             }
+            else if("XELPUD".equals(actionCommand)) {
+                Settings.setXmailerItem(itemRadio.getItemName(), true);
+            }
         }
         Settings.setInitiallyAccessibleItems(initiallyAvailableItems, true);
         Settings.setNonRandomizedItems(nonRandomizedItems, true);
@@ -70,9 +74,11 @@ public class RadioPanel extends JPanel {
             String item = itemRadio.getItemName();
             if(initiallyAvailableItems.contains(item)) {
                 itemRadio.setSelected("INITIAL");
-            } else if(startingItems.contains(item)) {
+            }
+            else if(startingItems.contains(item) || Settings.getXmailerItem().equals(item)) {
                 itemRadio.setSelected("STARTING");
-            } else {
+            }
+            else {
                 itemRadio.setSelected("RANDOM");
             }
         }
