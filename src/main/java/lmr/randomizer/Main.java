@@ -468,6 +468,9 @@ public class Main {
 
             itemRandomizer.placeNonRandomizedItems();
             shopRandomizer.placeNonRandomizedItems();
+            if(Settings.isRandomizeForbiddenTreasure()) {
+                itemRandomizer.placeForbiddenTreasureItem(random);
+            }
             if(ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
                 ((EverythingShopRandomizer)shopRandomizer).placeGuaranteedWeights(random);
             }
@@ -481,6 +484,7 @@ public class Main {
                     continue;
                 }
             }
+
             if(!itemRandomizer.placeAllItems(random)) {
                 continue;
             }
@@ -531,10 +535,6 @@ public class Main {
                     dialog.updateProgress(80, String.format(Translations.getText("progress.shuffling.done"), attempt));
 
                     FileUtils.log(String.format("Successful attempt %s.", attempt));
-
-                    if(Settings.isRandomizeForbiddenTreasure()) {
-                        itemRandomizer.randomizeForbiddenTreasure(random);
-                    }
 
                     dialog.updateProgress(85, Translations.getText("progress.spoiler"));
                     outputLocations(itemRandomizer, shopRandomizer, attempt);
@@ -590,10 +590,10 @@ public class Main {
                         }
                     });
                     return;
-                } catch (Exception ex) {
-                    FileUtils.logException(ex);
-                    return;
-                }
+            } catch (Exception ex) {
+                FileUtils.logException(ex);
+                return;
+            }
             }
             try {
 //                accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);

@@ -19,6 +19,13 @@ public final class DataFromFile {
             "Mini Doll", "Pepper", "Anchor", "Mulana Talisman", "xmailer.exe", "Book of the Dead", "Provocative Bathing Suit");
     public static List<String> TRAP_ITEMS = Arrays.asList("Trap: Graveyard", "Trap: Exploding",
             "Trap: Inferno Orb", "Trap: Twin Ankh");
+    public static List<String> USELESS_ITEMS = Arrays.asList("Map (Surface)", "Map (Gate of Guidance)", "Map (Mausoleum of the Giants)", "Map (Temple of the Sun)",
+            "Map (Spring in the Sky)", "Map (Inferno Cavern)", "Map (Chamber of Extinction)", "Map (Twin Labyrinths)", "Map (Endless Corridor)", "Map (Gate of Illusion)", "Map (Graveyard of the Giants)",
+            "Map (Temple of Moonlight)", "Map (Tower of the Goddess)", "Map (Tower of Ruin)", "Map (Chamber of Birth)", "Map (Dimensional Corridor)");
+    public static List<String> HT_BANNED_ITEMS = Arrays.asList("Holy Grail", "Hand Scanner", "reader.exe", "Feather",
+            "Ice Cape", "Flail Whip", "Lamp of Time", "Bomb", "Ring", "guild.exe", "Grapple Claw",
+            "Origin Seal", "Isis' Pendant",
+            "Fruit of Eden");
     public static List<Integer> RANDOM_ITEM_GRAPHICS = Arrays.asList(1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15,
             18, 19, 20, 21, 24, 25, 26, 27, 28, 29, 32, 33, 38, 39, 41, 42, 43, 44, 45, 47, 48, 49, 51, 52, 53, 54,
             55, 56, 5, 58, 59, 60, 61, 63, 64, 65, 66, 67, 68, 69, 73, 76, 91, 96, 97, 98, 99, 100, 102, 103, 104);
@@ -113,6 +120,12 @@ public final class DataFromFile {
                 if(!nonRandomizedItems.contains(item)) {
                     nonRandomizedItems.add(item);
                 }
+            }
+            if(!Settings.isRandomizeForbiddenTreasure()) {
+                nonRandomizedItems.add("Provocative Bathing Suit");
+            }
+            if(!Settings.isRandomizeXmailer()) {
+                nonRandomizedItems.add("xmailer.exe");
             }
             if(nonRandomizedItems == null) {
                 nonRandomizedItems = new ArrayList<>(0);
@@ -298,11 +311,14 @@ public final class DataFromFile {
                     if(Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName)) {
                         continue; // Don't count the maps that will already be replaced.
                     }
-                    if(itemName.equals(Settings.getXmailerItem())) {
-                        continue; // If the user wanted this item from Xelpud, they probably don't want it gone.
-                    }
                     if(Settings.getNonRandomizedItems().contains(itemName)) {
                         continue; // If the user wanted this item in its original location, they probably don't want it gone.
+                    }
+                    if(!Settings.isRandomizeXmailer() && "xmailer.exe".equals(itemName)) {
+                        continue; // NPCs can't have removed items yet.
+                    }
+                    if("Provocative Bathing Suit".equals(itemName)) {
+                        continue; // No value in removing this, and if someone wanted it randomized they probably want to actually see it.
                     }
                     if(Settings.getStartingItems().contains(itemName)) {
                         continue; // If the user wanted this item in a specific location, they probably don't want it gone.
@@ -413,6 +429,26 @@ public final class DataFromFile {
             allCoinChests = FileUtils.getList("all/coin_chests.txt");
         }
         return allCoinChests;
+    }
+
+    public static List<String> getHTItems(List<String> possibleItems) {
+        List<String> enabledItems = new ArrayList<>(possibleItems.size());
+        if(Settings.isHTFullRandom()) {
+            for(String item : possibleItems) {
+                if(!HT_BANNED_ITEMS.contains(item) && !item.startsWith("Coin:") && !item.startsWith("Trap:")
+                        && !Settings.getCurrentRemovedItems().contains(item)) {
+                    enabledItems.add(item);
+                }
+            }
+        }
+        else {
+            for(String item : possibleItems) {
+                if(USELESS_ITEMS.contains(item)) {
+                    enabledItems.add(item);
+                }
+            }
+        }
+        return enabledItems;
     }
 
     public static void clearAllData() {

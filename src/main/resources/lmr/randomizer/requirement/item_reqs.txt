@@ -118,6 +118,7 @@ Perfume => Location: Chamber of Birth [East], Event: Mudmen Awakened
 Philosopher's Ocarina => Location: Temple of Moonlight [Pyramid], Feather, Maternity Statue
 Plane Model => Location: Tower of the Goddess [Grail], Eye of Truth, Event: Flooded Tower of the Goddess, Event: Vimana Defeated
 Pochette Key => Location: Chamber of Birth [West], Event: Mudmen Awakened, Cog of the Soul, Chakram, Chakram Ammo, Serpent Staff, Event: Skanda Defeated, Crystal Skull
+Provocative Bathing Suit => Location: Hell Temple [Dracuet]
 Ring => Location: Twin Labyrinths [Upper]
 Rolling Shuriken => None
 Sacred Orb (Gate of Guidance) => None

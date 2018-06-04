@@ -93,6 +93,7 @@ Philosopher's Ocarina
 Pistol
 Plane Model
 Pochette Key
+Provocative Bathing Suit
 randc.exe
 reader.exe
 Ring

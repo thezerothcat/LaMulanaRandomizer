@@ -1185,18 +1185,20 @@ public final class GameDataTracker {
                         return;
                     }
                     else if(flagUpdate.getValue() == 1) {
-                        // Get rid of 8-boss requirement on HT.
-                        Integer flagToRemoveIndex = null;
-                        for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
-                            if (gameObject.getTestByteOperations().get(i).getIndex() == 258) {
-                                flagToRemoveIndex = i;
-                                break;
+                        if(Settings.isRandomizeForbiddenTreasure() && Settings.isHTFullRandom()) {
+                            // Get rid of 8-boss requirement on HT.
+                            Integer flagToRemoveIndex = null;
+                            for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                                if (gameObject.getTestByteOperations().get(i).getIndex() == 258) {
+                                    flagToRemoveIndex = i;
+                                    break;
+                                }
                             }
+                            if (flagToRemoveIndex != null) {
+                                gameObject.getTestByteOperations().remove((int) flagToRemoveIndex);
+                            }
+                            return;
                         }
-                        if(flagToRemoveIndex != null) {
-                            gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
-                        }
-                        return;
                     }
                 }
             }
@@ -2153,8 +2155,9 @@ public final class GameDataTracker {
 
             List<BlockListData> flagChecks = new ArrayList<>(checkBlock.getFlagCheckReferences().size());
             flagChecks.add(checkBlock.getFlagCheckReferences().get(3));
+            flagChecks.addAll(checkBlock.getFlagCheckReferences().subList(13, checkBlock.getFlagCheckReferences().size()));
             flagChecks.addAll(checkBlock.getFlagCheckReferences().subList(0, 3));
-            flagChecks.addAll(checkBlock.getFlagCheckReferences().subList(3, checkBlock.getFlagCheckReferences().size()));
+            flagChecks.addAll(checkBlock.getFlagCheckReferences().subList(4, 13));
             checkBlock.getFlagCheckReferences().clear();
             checkBlock.getFlagCheckReferences().addAll(flagChecks);
         }

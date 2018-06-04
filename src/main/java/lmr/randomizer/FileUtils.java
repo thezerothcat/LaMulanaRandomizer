@@ -309,9 +309,6 @@ public class FileUtils {
             else if(line.startsWith("shopRandomization")) {
                 Settings.setShopRandomization(line.split("=")[1], false);
             }
-            else if(line.startsWith("xmailerItem")) {
-                Settings.setXmailerItem(line.split("=")[1], false);
-            }
             else if(line.startsWith("automaticHardmode")) {
                 Settings.setAutomaticHardmode(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -344,6 +341,9 @@ public class FileUtils {
             }
             else if(line.startsWith("htFullRandom")) {
                 Settings.setHTFullRandom(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("randomizeXmailer")) {
+                Settings.setRandomizeXmailer(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("replaceMapsWithWeights")) {
                 Settings.setReplaceMapsWithWeights(Boolean.valueOf(line.split("=")[1]), false);
@@ -398,11 +398,6 @@ public class FileUtils {
         writer.write(String.format("shopRandomization=%s", Settings.getShopRandomization().toString()));
         writer.newLine();
 
-        if(Settings.getXmailerItem() != null) {
-            writer.write(String.format("xmailerItem=%s", Settings.getXmailerItem()));
-            writer.newLine();
-        }
-
         writer.write(String.format("automaticHardmode=%s", Settings.isAutomaticHardmode()));
         writer.newLine();
 
@@ -431,6 +426,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("htFullRandom=%s", Settings.isHTFullRandom()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeXmailer=%s", Settings.isRandomizeXmailer()));
         writer.newLine();
 
         writer.write(String.format("replaceMapsWithWeights=%s", Settings.isReplaceMapsWithWeights()));
@@ -463,7 +461,10 @@ public class FileUtils {
         writer.write(String.format("maxRandomRemovedItems=%s", Settings.getMaxRandomRemovedItems()));
         writer.newLine();
 
-        for(String item : DataFromFile.getAllItems()) {
+        List<String> items = new ArrayList<>(DataFromFile.getAllItems());
+        items.remove("xmailer.exe");
+        items.remove("Provocative Bathing Suit");
+        for(String item : items) {
             if(Settings.getRemovedItems().contains(item)) {
                 writer.write(String.format("randomization.%s=%s", item, "REMOVED"));
             }

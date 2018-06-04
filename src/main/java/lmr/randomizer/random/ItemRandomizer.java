@@ -57,28 +57,6 @@ public class ItemRandomizer {
         unplacedItems.remove(originalShopItem);
     }
 
-    public void randomizeForbiddenTreasure(Random random) {
-        List<String> uselessMaps = Arrays.asList("Map (Surface)", "Map (Gate of Guidance)", "Map (Mausoleum of the Giants)", "Map (Temple of the Sun)",
-                "Map (Spring in the Sky)", "Map (Inferno Cavern)", "Map (Chamber of Extinction)", "Map (Twin Labyrinths)", "Map (Endless Corridor)", "Map (Gate of Illusion)", "Map (Graveyard of the Giants)",
-                "Map (Temple of Moonlight)", "Map (Tower of the Goddess)", "Map (Tower of Ruin)", "Map (Chamber of Birth)", "Map (Dimensional Corridor)");
-
-        String uselessMap = uselessMaps.get(random.nextInt(uselessMaps.size()));
-        String uselessMapLocation = null;
-        for(Map.Entry<String, String> itemLocationAndContents : mapOfItemLocationToItem.entrySet()) {
-            if(uselessMap.equals(itemLocationAndContents.getValue())) {
-                uselessMapLocation = itemLocationAndContents.getKey();
-            }
-        }
-        if(uselessMapLocation == null) {
-            shopRandomizer.randomizeForbiddenTreasure(uselessMap, true);
-        }
-        else {
-            mapOfItemLocationToItem.put(uselessMapLocation, "Provocative Bathing Suit");
-            shopRandomizer.randomizeForbiddenTreasure(uselessMap, false); // If categorized shop randomization, puts missing map in place of guild in transformed fish shop.
-        }
-        mapOfItemLocationToItem.put("Provocative Bathing Suit", uselessMap);
-    }
-
     public void placeNonRandomizedItems() {
         for(String item : DataFromFile.getNonRandomizedItems()) {
             if(!Settings.getStartingItems().contains(item)) {
@@ -92,14 +70,6 @@ public class ItemRandomizer {
                 mapOfItemLocationToItem.put(coinChest, coinChest);
                 unassignedNonShopItemLocations.remove(coinChest);
                 unplacedItems.remove(coinChest);
-            }
-        }
-
-        if(Settings.getXmailerItem() != null) {
-            if(!Settings.getStartingItems().contains(Settings.getXmailerItem())) {
-                mapOfItemLocationToItem.put("xmailer.exe", Settings.getXmailerItem());
-                unassignedNonShopItemLocations.remove("xmailer.exe");
-                unplacedItems.remove(Settings.getXmailerItem());
             }
         }
 
@@ -198,6 +168,15 @@ public class ItemRandomizer {
                 }
             }
         }
+        return true;
+    }
+
+    public boolean placeForbiddenTreasureItem(Random random) {
+        List<String> possibleItems = DataFromFile.getHTItems(unplacedItems);
+        String item = possibleItems.get(random.nextInt(possibleItems.size()));
+        mapOfItemLocationToItem.put("Provocative Bathing Suit", item);
+        unplacedItems.remove(item);
+        unassignedNonShopItemLocations.remove("Provocative Bathing Suit");
         return true;
     }
 

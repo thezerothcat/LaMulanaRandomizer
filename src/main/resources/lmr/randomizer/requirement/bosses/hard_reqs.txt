@@ -29,3 +29,4 @@ Event: Viy Defeated => Event: Viy Accessible, Ankh Jewel
 Event: Baphomet Defeated => Event: Baphomet Accessible, Ankh Jewel
 Event: Palenque Defeated => Event: Palenque Accessible, Ankh Jewel
 Event: Tiamat Defeated => Event: Tiamat Accessible, Ankh Jewel
+Event: HT Mushussu Defeated => Sacred Orb: 8, Flail Whip, Angel Shield

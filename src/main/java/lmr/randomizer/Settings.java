@@ -33,6 +33,7 @@ public final class Settings {
     private boolean requireFlaresForExtinction;
     private boolean randomizeForbiddenTreasure;
     private boolean htFullRandom;
+    private boolean randomizeXmailer;
     private boolean randomizeCoinChests;
     private boolean randomizeTrapItems;
     private boolean randomizeMainWeapon;
@@ -51,8 +52,7 @@ public final class Settings {
     private List<String> possibleDboosts = Arrays.asList("Item", "Environment", "Enemy");
 
     private List<String> possibleRandomizedItems = Arrays.asList("Holy Grail", "Hand Scanner", "reader.exe",
-            "Hermes' Boots", "Grapple Claw", "Feather", "Isis' Pendant", "Bronze Mirror", "mirai.exe", "bunemon.exe",
-            "Random", "xmailer.exe");
+            "Hermes' Boots", "Grapple Claw", "Feather", "Isis' Pendant", "Bronze Mirror", "mirai.exe", "bunemon.exe");
 
     private String laMulanaBaseDir;
     private String laMulanaSaveDir;
@@ -64,8 +64,6 @@ public final class Settings {
 
     private int minRandomRemovedItems;
     private int maxRandomRemovedItems;
-
-    private String xmailerItem;
 
     private BossDifficulty bossDifficulty;
     private ShopRandomizationEnum shopRandomization;
@@ -80,6 +78,7 @@ public final class Settings {
         requireFlaresForExtinction = true;
         randomizeForbiddenTreasure = false;
         htFullRandom = false;
+        randomizeXmailer = true;
         randomizeCoinChests = true;
         randomizeTrapItems = true;
         randomizeMainWeapon = false;
@@ -93,8 +92,6 @@ public final class Settings {
 
         bossDifficulty = BossDifficulty.MEDIUM;
         shopRandomization = ShopRandomizationEnum.EVERYTHING;
-
-        xmailerItem = null;
 
         minRandomRemovedItems = 0;
         maxRandomRemovedItems = 0;
@@ -199,20 +196,6 @@ public final class Settings {
         return "script_code_" + singleton.language + ".dat.bak";
     }
 
-    public static String getXmailerItem() {
-        return singleton.xmailerItem;
-    }
-
-    public static void setXmailerItem(String xmailerItem, boolean update) {
-        if(update) {
-            if(xmailerItem == null && singleton.xmailerItem != null
-                    || xmailerItem != null && xmailerItem.equals(singleton.xmailerItem)) {
-                singleton.changed = true;
-            }
-        }
-        singleton.xmailerItem = xmailerItem;
-    }
-
     public static ShopRandomizationEnum getShopRandomization() {
         return singleton.shopRandomization;
     }
@@ -310,6 +293,17 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.htFullRandom = htFullRandom;
+    }
+
+    public static boolean isRandomizeXmailer() {
+        return singleton.randomizeXmailer;
+    }
+
+    public static void setRandomizeXmailer(boolean randomizeXmailer, boolean update) {
+        if(update && randomizeXmailer != singleton.randomizeXmailer) {
+            singleton.changed = true;
+        }
+        singleton.randomizeXmailer = randomizeXmailer;
     }
 
     public static boolean isRandomizeCoinChests() {
@@ -608,6 +602,7 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeXmailer, 15);
         booleanSettings |= processBooleanFlag.apply(singleton.htFullRandom, 14);
         booleanSettings |= processBooleanFlag.apply(singleton.automaticTranslations, 13);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeMainWeapon, 12);
@@ -637,13 +632,6 @@ public final class Settings {
         //starting items
         int startingItems = itemSetToInt(getStartingItems(), singleton.possibleRandomizedItems);
 
-        // xmailer item
-        int xmailer = singleton.possibleRandomizedItems.indexOf(singleton.xmailerItem);
-
-        if(singleton.xmailerItem == null || xmailer == -1) {
-            xmailer = singleton.possibleRandomizedItems.indexOf("Random");
-        }
-
         // boss difficulty
         int bossDifficulty = singleton.bossDifficulty.ordinal();
 
@@ -655,7 +643,6 @@ public final class Settings {
         result += separator + Integer.toHexString(dboosts);
         result += separator + Integer.toHexString(initItems);
         result += separator + Integer.toHexString(startingItems);
-        result += separator + Integer.toHexString(xmailer);
         result += separator + Integer.toHexString(bossDifficulty);
         result += separator + Integer.toHexString(singleton.minRandomRemovedItems);
         result += separator + Integer.toHexString(singleton.maxRandomRemovedItems);
@@ -687,6 +674,7 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.randomizeXmailer = getBoolFlagFromInt.apply(booleanSettingsFlag, 15);
         singleton.htFullRandom = getBoolFlagFromInt.apply(booleanSettingsFlag, 14);
         singleton.automaticTranslations = getBoolFlagFromInt.apply(booleanSettingsFlag, 13);
         singleton.randomizeMainWeapon = getBoolFlagFromInt.apply(booleanSettingsFlag, 12);
@@ -707,17 +695,15 @@ public final class Settings {
         Collection<String> dboosts = intToItemSet(Integer.parseInt(parts[4],16), singleton.possibleDboosts);
         Set<String> initItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[5],16), singleton.possibleRandomizedItems));
         Set<String> startingItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[6],16), singleton.possibleRandomizedItems));
-        String xmailerItem = singleton.possibleRandomizedItems.get(Integer.parseInt(parts[7],16));
-        BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[8],16)];
-        int minRandomRemovedItems = Integer.parseInt(parts[9],16);
-        int maxRandomRemovedItems = Integer.parseInt(parts[10],16);
+        BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[7],16)];
+        int minRandomRemovedItems = Integer.parseInt(parts[8],16);
+        int maxRandomRemovedItems = Integer.parseInt(parts[9],16);
 
         setStartingSeed(seed);
         setEnabledGlitches((List<String>) glitches, true);
         setEnabledDamageBoosts((List<String>) dboosts, true);
         setInitiallyAccessibleItems(initItems, true);
         setStartingItems(startingItems, true);
-        setXmailerItem(xmailerItem, true);
         setBossDifficulty(bossDifficulty.toString(), true);
         setMinRandomRemovedItems(minRandomRemovedItems, true);
         setMaxRandomRemovedItems(maxRandomRemovedItems, true);

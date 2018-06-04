@@ -296,19 +296,6 @@ public class EverythingShopRandomizer implements ShopRandomizer {
     }
 
     @Override
-    public void randomizeForbiddenTreasure(String uselessMap, boolean placeForbiddenTreasure) {
-        if(placeForbiddenTreasure) {
-            String uselessMapLocation = null;
-            for(Map.Entry<String, String> shopItemLocationAndContents : mapOfShopInventoryItemToContents.entrySet()) {
-                if(uselessMap.equals(shopItemLocationAndContents.getValue())) {
-                    uselessMapLocation = shopItemLocationAndContents.getKey();
-                }
-            }
-            mapOfShopInventoryItemToContents.put(uselessMapLocation, "Provocative Bathing Suit");
-        }
-    }
-
-    @Override
     public String findNameOfShopNodeContainingItem(String itemToLookFor) {
         for(Map.Entry<String, String> shopNameAndContents : mapOfShopInventoryItemToContents.entrySet()) {
             if(shopNameAndContents.getValue().equals(itemToLookFor)) {

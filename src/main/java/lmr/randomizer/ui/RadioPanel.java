@@ -51,14 +51,16 @@ public class RadioPanel extends JPanel {
 
         for(GameItemRadio itemRadio : itemConfigRadioGroupPanels) {
             String actionCommand = itemRadio.getActionCommand();
-            if("INITIAL".equals(actionCommand)) {
-                Main.addArgItemUI(initiallyAvailableItems, itemRadio.getItemName());
+            if("xmailer.exe".equals(itemRadio.getItemName())) {
+                Settings.setRandomizeXmailer(!"XELPUD".equals(actionCommand), true);
             }
-            else if("STARTING".equals(actionCommand)) {
-                Main.addArgItemUI(startingItems, itemRadio.getItemName());
-            }
-            else if("XELPUD".equals(actionCommand)) {
-                Settings.setXmailerItem(itemRadio.getItemName(), true);
+            else {
+                if ("INITIAL".equals(actionCommand)) {
+                    Main.addArgItemUI(initiallyAvailableItems, itemRadio.getItemName());
+                }
+                else if ("STARTING".equals(actionCommand)) {
+                    Main.addArgItemUI(startingItems, itemRadio.getItemName());
+                }
             }
         }
         Settings.setInitiallyAccessibleItems(initiallyAvailableItems, true);
@@ -75,7 +77,10 @@ public class RadioPanel extends JPanel {
             if(initiallyAvailableItems.contains(item)) {
                 itemRadio.setSelected("INITIAL");
             }
-            else if(startingItems.contains(item) || Settings.getXmailerItem().equals(item)) {
+            else if(startingItems.contains(item)) {
+                itemRadio.setSelected("STARTING");
+            }
+            else if(!Settings.isRandomizeXmailer() && "xmailer.exe".equals(item)) {
                 itemRadio.setSelected("STARTING");
             }
             else {

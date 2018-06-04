@@ -39,11 +39,11 @@ public class GameItemRadio extends JPanel {
             checkboxContainer.add(startingItem);
             add(checkboxContainer);
 
-            if ("xmailer.exe".equals(Settings.getXmailerItem())) {
-                startingItem.setSelected(true);
+            if (Settings.isRandomizeXmailer()) {
+                randomItem.setSelected(true);
             }
             else {
-                randomItem.setSelected(true);
+                startingItem.setSelected(true);
             }
         }
         else {

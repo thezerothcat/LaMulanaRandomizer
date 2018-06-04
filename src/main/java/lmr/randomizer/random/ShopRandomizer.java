@@ -33,8 +33,6 @@ public interface ShopRandomizer {
 
     void updateFiles(List<Block> blocks, Random random);
 
-    void randomizeForbiddenTreasure(String uselessMap, boolean placeForbiddenTreasure);
-
     void setAccessChecker(AccessChecker accessChecker);
 
     void setItemRandomizer(ItemRandomizer itemRandomizer);
