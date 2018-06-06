@@ -46,8 +46,8 @@ public final class GameDataTracker {
                 inventoryArg = gameObject.getArgs().get(1); // Use coin amount as item arg
             }
             else if(gameObject.getArgs().get(0) == 7) {
-                // Bomb chest, will be replaced by a coin chest anyway.
-                inventoryArg = 30;
+                // Bomb chest, will be replaced by an 80-coin chest.
+                inventoryArg = 80;
             }
             else {
                 // Item chest
