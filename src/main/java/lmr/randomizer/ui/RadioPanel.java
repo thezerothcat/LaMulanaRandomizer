@@ -15,7 +15,7 @@ public class RadioPanel extends JPanel {
     List<GameItemRadio> itemConfigRadioGroupPanels;
 
     public RadioPanel() {
-        super(new MigLayout("fillx, wrap 6", "", "[fill]"));
+        super(new MigLayout("gapy 0, insets 8 0 0 0, fillx, wrap 6", "", "[fill]"));
         setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.randomization.items")));
 
         itemConfigRadioGroupPanels = new ArrayList<>();

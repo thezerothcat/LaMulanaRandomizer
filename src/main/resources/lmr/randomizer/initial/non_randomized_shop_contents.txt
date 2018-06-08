@@ -22,3 +22,4 @@ Shop 19 (Big Bro) => Dragon Bone, Earth Spear Ammo, Flare Gun Ammo
 Shop 20 (Twin Labs) => Bracelet, Bomb Ammo, Caltrops Ammo
 Shop 21 (Unsolvable) => Lamp of Time, Shuriken Ammo, Chakram Ammo
 Shop 22 (Endless) => Bomb Ammo, Caltrops Ammo, Weights
+Shop 23 (HT) => Flare　Gun　Ammo, Bomb Ammo, Pistol Ammo

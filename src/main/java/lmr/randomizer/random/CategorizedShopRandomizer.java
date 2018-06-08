@@ -35,7 +35,6 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
 
     public CategorizedShopRandomizer() {
         randomizedShops = new ArrayList<>(DataFromFile.getAllShops());
-        randomizedShops.removeAll(DataFromFile.getNonRandomizedShops());
 
         List<String> originalShopContents;
         String originalShopItem;
@@ -69,28 +68,6 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         List<String> originalShopContents;
         String originalShopItem;
         String shopItemLocation;
-
-        for(String shop : DataFromFile.getNonRandomizedShops()) {
-            originalShopContents = DataFromFile.getMapOfShopNameToShopOriginalContents().get(shop);
-            for (int i = 0; i < 3; i++) {
-                shopItemLocation = String.format("%s Item %d", shop, i + 1);
-                originalShopItem = originalShopContents.get(i);
-                mapOfShopInventoryItemToContents.put(shopItemLocation, originalShopItem);
-                unassignedShopItemLocations.remove(shopItemLocation);
-                if(Settings.getStartingItems().contains(originalShopItem)) {
-                    continue;
-                }
-                else if((MSX_SHOP_NAME.equals(shop) && "Mobile Super X2".equals(originalShopItem))) {
-                    itemRandomizer.removeItemFromUnplacedItems(originalShopItem);
-                }
-                else if(FISH_FAIRY_SHOP_NAME.equals(shop) && !"Shell Horn".equals(originalShopItem) && !"guild.exe".equals(originalShopItem)) {
-                    itemRandomizer.removeItemFromUnplacedItems(originalShopItem);
-                }
-                else if(!"Weights".equals(originalShopItem) && !originalShopItem.endsWith("Ammo")){
-                    itemRandomizer.removeItemFromUnplacedItems(originalShopItem);
-                }
-            }
-        }
 
         List<String> nonRandomizedItems = DataFromFile.getNonRandomizedItems();
         for(String shop : randomizedShops) {

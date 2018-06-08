@@ -101,3 +101,4 @@ Shop 19 (Big Bro) => None
 Shop 20 (Twin Labs) => Feather
 Shop 21 (Unsolvable) => Feather, Bomb, Bomb Ammo
 Shop 22 (Endless) => Origin Seal
+Shop 23 (HT) => Location: Hell Temple [Shop]

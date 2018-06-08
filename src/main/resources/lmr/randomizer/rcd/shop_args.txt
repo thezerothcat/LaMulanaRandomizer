@@ -22,3 +22,4 @@ Shop 19 (Big Bro) => 205
 Shop 20 (Twin Labs) => 204
 Shop 21 (Unsolvable) => 187
 Shop 22 (Endless) => 220
+Shop 23 (HT) => 1008

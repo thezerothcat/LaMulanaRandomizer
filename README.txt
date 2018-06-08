@@ -5,6 +5,10 @@ Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8
 
 1.33:
 -----------------------------
+Added an option to randomize Dracuet's shop.
+
+1.33:
+-----------------------------
 Added an option to fully randomize the Provocative Bathing Suit.
 
 1.32:

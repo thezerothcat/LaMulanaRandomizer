@@ -15,7 +15,7 @@ public class SwimsuitRandomizationPanel extends JPanel {
     private JRadioButton random;
 
     public SwimsuitRandomizationPanel() {
-        super(new MigLayout("gap rel 0"));
+        super(new MigLayout("gapy 0, insets 8 0 0 0"));
 
         swimsuitItemLabel = new JLabel(Translations.getText("randomization.swimsuitItem"), JLabel.LEFT);
         add(swimsuitItemLabel);

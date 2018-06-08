@@ -31,9 +31,10 @@ public final class Settings {
     private boolean requireSoftwareComboForKeyFairy;
     private boolean requireIceCapeForLava;
     private boolean requireFlaresForExtinction;
+    private boolean randomizeXmailer;
     private boolean randomizeForbiddenTreasure;
     private boolean htFullRandom;
-    private boolean randomizeXmailer;
+    private boolean randomizeDracuetShop;
     private boolean randomizeCoinChests;
     private boolean randomizeTrapItems;
     private boolean randomizeMainWeapon;
@@ -76,9 +77,10 @@ public final class Settings {
         requireSoftwareComboForKeyFairy = true;
         requireIceCapeForLava = true;
         requireFlaresForExtinction = true;
+        randomizeXmailer = true;
         randomizeForbiddenTreasure = false;
         htFullRandom = false;
-        randomizeXmailer = true;
+        randomizeDracuetShop = false;
         randomizeCoinChests = true;
         randomizeTrapItems = true;
         randomizeMainWeapon = false;
@@ -251,26 +253,15 @@ public final class Settings {
         singleton.requireFlaresForExtinction = requireFlaresForExtinction;
     }
 
-    public static boolean isRandomizeMainWeapon() {
-        return singleton.randomizeMainWeapon;
+    public static boolean isRandomizeXmailer() {
+        return singleton.randomizeXmailer;
     }
 
-    public static void setRandomizeMainWeapon(boolean randomizeMainWeapon, boolean update) {
-        if(update && randomizeMainWeapon != singleton.randomizeMainWeapon) {
+    public static void setRandomizeXmailer(boolean randomizeXmailer, boolean update) {
+        if(update && randomizeXmailer != singleton.randomizeXmailer) {
             singleton.changed = true;
         }
-        singleton.randomizeMainWeapon = randomizeMainWeapon;
-    }
-
-    public static boolean isRandomizeCursedChests() {
-        return singleton.randomizeCursedChests;
-    }
-
-    public static void setRandomizeCursedChests(boolean randomizeCursedChests, boolean update) {
-        if(update && randomizeCursedChests != singleton.randomizeCursedChests) {
-            singleton.changed = true;
-        }
-        singleton.randomizeCursedChests = randomizeCursedChests;
+        singleton.randomizeXmailer = randomizeXmailer;
     }
 
     public static boolean isRandomizeForbiddenTreasure() {
@@ -295,15 +286,15 @@ public final class Settings {
         singleton.htFullRandom = htFullRandom;
     }
 
-    public static boolean isRandomizeXmailer() {
-        return singleton.randomizeXmailer;
+    public static boolean isRandomizeDracuetShop() {
+        return singleton.randomizeDracuetShop;
     }
 
-    public static void setRandomizeXmailer(boolean randomizeXmailer, boolean update) {
-        if(update && randomizeXmailer != singleton.randomizeXmailer) {
+    public static void setRandomizeDracuetShop(boolean randomizeDracuetShop, boolean update) {
+        if(update && randomizeDracuetShop != singleton.randomizeDracuetShop) {
             singleton.changed = true;
         }
-        singleton.randomizeXmailer = randomizeXmailer;
+        singleton.randomizeDracuetShop = randomizeDracuetShop;
     }
 
     public static boolean isRandomizeCoinChests() {
@@ -326,6 +317,28 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.randomizeTrapItems = randomizeTrapItems;
+    }
+
+    public static boolean isRandomizeMainWeapon() {
+        return singleton.randomizeMainWeapon;
+    }
+
+    public static void setRandomizeMainWeapon(boolean randomizeMainWeapon, boolean update) {
+        if(update && randomizeMainWeapon != singleton.randomizeMainWeapon) {
+            singleton.changed = true;
+        }
+        singleton.randomizeMainWeapon = randomizeMainWeapon;
+    }
+
+    public static boolean isRandomizeCursedChests() {
+        return singleton.randomizeCursedChests;
+    }
+
+    public static void setRandomizeCursedChests(boolean randomizeCursedChests, boolean update) {
+        if(update && randomizeCursedChests != singleton.randomizeCursedChests) {
+            singleton.changed = true;
+        }
+        singleton.randomizeCursedChests = randomizeCursedChests;
     }
 
     public static boolean isReplaceMapsWithWeights() { return singleton.replaceMapsWithWeights; }
@@ -602,6 +615,7 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeDracuetShop, 16);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeXmailer, 15);
         booleanSettings |= processBooleanFlag.apply(singleton.htFullRandom, 14);
         booleanSettings |= processBooleanFlag.apply(singleton.automaticTranslations, 13);
@@ -674,6 +688,7 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.randomizeDracuetShop = getBoolFlagFromInt.apply(booleanSettingsFlag, 16);
         singleton.randomizeXmailer = getBoolFlagFromInt.apply(booleanSettingsFlag, 15);
         singleton.htFullRandom = getBoolFlagFromInt.apply(booleanSettingsFlag, 14);
         singleton.automaticTranslations = getBoolFlagFromInt.apply(booleanSettingsFlag, 13);

@@ -14,7 +14,7 @@ public class ShopRandomizationRadio extends JPanel {
     private JRadioButton shopEverythingRandomization;
 
     public ShopRandomizationRadio() {
-        super(new MigLayout("gap rel 0"));
+        super(new MigLayout("gapy 0, insets 8 0 0 0"));
 
         shopRandomizationLabel = new JLabel(Translations.getText("randomization.randomizeShops"), JLabel.LEFT);
         add(shopRandomizationLabel);

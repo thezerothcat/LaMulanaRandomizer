@@ -38,7 +38,6 @@ public final class DataFromFile {
     private static List<String> allCoinChests;
     private static List<String> allNonShopItemsPlusAllRandomizedShopItems;
     private static List<String> nonRandomizedItems;
-    private static List<String> nonRandomizedShops;
     private static List<String> randomizedShopItems;
     private static List<String> randomRemovableItems;
     private static List<String> nonShopItemLocations;
@@ -62,6 +61,9 @@ public final class DataFromFile {
     public static List<String> getAllShops() {
         if(allShops == null) {
             allShops = FileUtils.getList("all/all_shops.txt");
+            if(Settings.isRandomizeDracuetShop()) {
+                allShops.add("Shop 23 (HT)");
+            }
             if(allShops == null) {
                 allShops = new ArrayList<>(0);
             }
@@ -132,18 +134,6 @@ public final class DataFromFile {
             }
         }
         return nonRandomizedItems;
-    }
-
-    public static List<String> getNonRandomizedShops() {
-        if(nonRandomizedShops == null) {
-            if(!ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
-                nonRandomizedShops = FileUtils.getList("min/non_randomized_shops.txt");
-            }
-            if(nonRandomizedShops == null) {
-                nonRandomizedShops = new ArrayList<>(0);
-            }
-        }
-        return nonRandomizedShops;
     }
 
     public static List<String> getNonRandomizedCoinChests() {
@@ -247,12 +237,11 @@ public final class DataFromFile {
             if(!ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
                 randomizedShopItems = new ArrayList<>();
                 for(String shopName : getAllShops()) {
-                    if(!getNonRandomizedShops().contains(shopName)) {
-                        for(String shopItem : getMapOfShopNameToShopOriginalContents().get(shopName)) {
-                            if(!shopItem.equals("Weights") && !shopItem.endsWith("Ammo") && !"Shell Horn".equals(shopItem) && !randomizedShopItems.contains(shopItem)) {
-                                // Don't count weights, ammo, or the backup copies of Shell Horn or guild.exe
-                                randomizedShopItems.add(shopItem);
-                            }
+                    for(String shopItem : getMapOfShopNameToShopOriginalContents().get(shopName)) {
+                        if(!shopItem.equals("Weights") && !shopItem.endsWith("Ammo") && !"Shell Horn".equals(shopItem)
+                                && !randomizedShopItems.contains(shopItem)) {
+                            // Don't count weights, ammo, or the backup copies of Shell Horn or guild.exe
+                            randomizedShopItems.add(shopItem);
                         }
                     }
                 }
@@ -455,7 +444,7 @@ public final class DataFromFile {
         if(Settings.isChanged()) {
             allNonShopItemsPlusAllRandomizedShopItems = null;
             nonRandomizedItems = null;
-            nonRandomizedShops = null;
+            allShops = null;
             initialNonShopItemLocations = null;
             randomizedShopItems = null;
             randomRemovableItems = null;

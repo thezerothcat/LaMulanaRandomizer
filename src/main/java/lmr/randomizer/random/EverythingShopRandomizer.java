@@ -37,7 +37,6 @@ public class EverythingShopRandomizer implements ShopRandomizer {
 
     public EverythingShopRandomizer() {
         randomizedShops = new ArrayList<>(DataFromFile.getAllShops());
-        randomizedShops.removeAll(DataFromFile.getNonRandomizedShops());
 
         for(String shop : DataFromFile.getAllShops()) {
             if(MSX_SHOP_NAME.equals(shop)) {

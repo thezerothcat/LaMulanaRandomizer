@@ -11,6 +11,12 @@ public class CheckboxContainer extends JPanel {
                 String.format("[]%d[]0", checkboxesPerRow)));
     }
 
+    public CheckboxContainer(int checkboxesPerRow, String constraints) {
+        super(new MigLayout(String.format("%s, wrap %d", constraints, checkboxesPerRow),
+                "[sizegroup checkboxes]",
+                String.format("[]%d[]0", checkboxesPerRow)));
+    }
+
     public void add(JCheckBox jCheckBox) {
         super.add(jCheckBox);
     }
