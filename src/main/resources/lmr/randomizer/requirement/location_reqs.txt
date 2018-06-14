@@ -87,4 +87,4 @@ Location: True Shrine of the Mother => Location: Endless Corridor [5F], Hand Sca
 Location: Hell Temple [Entrance] => Event: Hell Temple Unlocked, Location: Gate of Guidance, Feather
 Location: Hell Temple [Shop] => Location: Hell Temple [Entrance], Hermes' Boots, Bomb, Bomb Ammo, Ring
 Location: Hell Temple [Shop] => Location: Hell Temple [Entrance], Lamp of Time, Bomb, Bomb Ammo, Ring
-Location: Hell Temple [Dracuet] => Location: Hell Temple [Shop], Hand Scanner, reader.exe, Grapple Claw, Event: HT Mushussu Defeated, guild.exe
+Location: Hell Temple [Dracuet] => Location: Hell Temple [Shop], Hand Scanner, reader.exe, Grapple Claw, Event: HT Bosses Defeated, guild.exe

@@ -501,13 +501,14 @@ public class FileUtils {
     }
 
     public static void logException(Exception ex) {
-        FileUtils.log(ex.getClass().getName() + ": " + ex.getMessage());
-        FileUtils.log("File: " + ex.getStackTrace()[0].getFileName());
-        FileUtils.log("Method: " + ex.getStackTrace()[0].getMethodName());
-        FileUtils.log("Line: " + ex.getStackTrace()[0].getLineNumber());
-        FileUtils.log("File: " + ex.getStackTrace()[1].getFileName());
-        FileUtils.log("Method: " + ex.getStackTrace()[1].getMethodName());
-        FileUtils.log("Line: " + ex.getStackTrace()[1].getLineNumber());
+        log(ex.getClass().getName() + ": " + ex.getMessage());
+        log("File: " + ex.getStackTrace()[0].getFileName());
+        log("Method: " + ex.getStackTrace()[0].getMethodName());
+        log("Line: " + ex.getStackTrace()[0].getLineNumber());
+        log("File: " + ex.getStackTrace()[1].getFileName());
+        log("Method: " + ex.getStackTrace()[1].getMethodName());
+        log("Line: " + ex.getStackTrace()[1].getLineNumber());
+        flush();
     }
 
     public static void log(String logText) {
@@ -518,6 +519,14 @@ public class FileUtils {
 
             logWriter.write(logText);
             logWriter.newLine();
+        } catch (Exception ex) {
+
+        }
+    }
+
+    public static void flush() {
+        try {
+            logWriter.flush();
         } catch (Exception ex) {
 
         }

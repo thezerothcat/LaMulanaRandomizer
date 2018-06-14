@@ -3,7 +3,7 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
-1.33:
+1.34:
 -----------------------------
 Added an option to randomize Dracuet's shop.
 

@@ -34,6 +34,7 @@ public class Main {
         }
         catch (Exception ex) {
             FileUtils.log("Unable to initialize: " + ex.getMessage()); // todo: should probably start the UI with an error
+            FileUtils.logException(ex);
         }
         SwingUtilities.invokeLater(new RandomizerRunnable());
     }
@@ -144,7 +145,14 @@ public class Main {
                         @Override
                         protected Void doInBackground() throws Exception {
                             progressDialog.setLocationRelativeTo(f);
-                            restore();
+                            try {
+                                restore();
+                            }
+                            catch (Exception ex) {
+                                JOptionPane.showMessageDialog(f,
+                                        ex.getMessage(),
+                                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                            }
 
                             return null;
                         }
@@ -171,7 +179,14 @@ public class Main {
                         @Override
                         protected Void doInBackground() throws Exception {
                             progressDialog.setLocationRelativeTo(f);
-                            restoreSaves();
+                            try {
+                                restoreSaves();
+                            }
+                            catch (Exception ex) {
+                                JOptionPane.showMessageDialog(f,
+                                        ex.getMessage(),
+                                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                            }
 
                             return null;
                         }
@@ -284,7 +299,7 @@ public class Main {
                 progressDialog.setVisible(true);
             } catch (Exception ex) {
                 FileUtils.log("Error: " + ex.getMessage());
-                ex.printStackTrace();
+                FileUtils.logException(ex);
                 throw new RuntimeException("Unknown error. Please see logs for more information.");
             }
             return true;
@@ -348,7 +363,7 @@ public class Main {
             catch (Exception ex) {
                 FileUtils.log("Unable to restore files to La-Mulana install: " + ex.getMessage());
                 FileUtils.logException(ex);
-                FileUtils.closeAll();
+                FileUtils.flush();
                 throw new RuntimeException("Unable to restore files to La-Mulana install. Please see logs for more information.");
             }
         }
@@ -409,7 +424,7 @@ public class Main {
         }
     }
 
-    protected static void doTheThing(ProgressDialog dialog) {
+    protected static void doTheThing(ProgressDialog dialog) throws Exception {
         FileUtils.log(String.format("Shuffling items for seed %s", Settings.getStartingSeed()));
 
         Random random = new Random(Settings.getStartingSeed());
@@ -505,6 +520,9 @@ public class Main {
             if(Settings.isAutomaticTranslations()) {
                 accessChecker.computeAccessibleNodes("Setting: La-Mulanese");
             }
+            if(!Settings.isAutomaticHardmode()) {
+                accessChecker.computeAccessibleNodes("Mode: Normal");
+            }
             if(accessChecker.updateForBosses(attempt)) {
                 while(!accessChecker.getQueuedUpdates().isEmpty()) {
                     accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next());
@@ -529,78 +547,69 @@ public class Main {
             }
 
             if(accessChecker.isSuccess()) {
-                try {
-                    dialog.progressBar.setIndeterminate(false);
-                    dialog.setSafeClose(false);
-                    dialog.updateProgress(80, String.format(Translations.getText("progress.shuffling.done"), attempt));
+                dialog.progressBar.setIndeterminate(false);
+                dialog.setSafeClose(false);
+                dialog.updateProgress(80, String.format(Translations.getText("progress.shuffling.done"), attempt));
 
-                    FileUtils.log(String.format("Successful attempt %s.", attempt));
+                FileUtils.log(String.format("Successful attempt %s.", attempt));
+                FileUtils.flush();
 
-                    dialog.updateProgress(85, Translations.getText("progress.spoiler"));
-                    outputLocations(itemRandomizer, shopRandomizer, attempt);
+                dialog.updateProgress(85, Translations.getText("progress.spoiler"));
+                outputLocations(itemRandomizer, shopRandomizer, attempt);
 
-                    dialog.updateProgress(90, Translations.getText("progress.read"));
+                dialog.updateProgress(90, Translations.getText("progress.read"));
 
-                    List<Zone> rcdData = RcdReader.getRcdScriptInfo();
-                    List<Block> datInfo = DatReader.getDatScriptInfo();
+                List<Zone> rcdData = RcdReader.getRcdScriptInfo();
+                List<Block> datInfo = DatReader.getDatScriptInfo();
 
-                    dialog.updateProgress(95, Translations.getText("progress.write"));
-                    itemRandomizer.updateFiles(random);
-                    shopRandomizer.updateFiles(datInfo, random);
+                dialog.updateProgress(95, Translations.getText("progress.write"));
+                itemRandomizer.updateFiles(random);
+                shopRandomizer.updateFiles(datInfo, random);
 //                    if(Settings.isRandomizeMantras()) {
 //                        GameDataTracker.randomizeMantras(random);
 //                    }
-                    RcdWriter.writeRcd(rcdData);
-                    DatWriter.writeDat(datInfo);
-                    if(Settings.isRandomizeMainWeapon()) {
-                        backupSaves();
-                        writeSaveFile();
-                    }
+                RcdWriter.writeRcd(rcdData);
+                DatWriter.writeDat(datInfo);
+                if(Settings.isRandomizeMainWeapon()) {
+                    backupSaves();
+                    writeSaveFile();
+                }
 
-                    File settingsFile = new File("randomizer-config.txt");
-                    if(settingsFile.exists()) {
+                File settingsFile = new File("randomizer-config.txt");
+                if(settingsFile.exists()) {
+                    FileOutputStream fileOutputStream = new FileOutputStream(
+                            new File(String.format("%s/randomizer-config.txt", Settings.getStartingSeed())));
+                    Files.copy(settingsFile.toPath(), fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                }
+
+                if(Settings.isRandomizeMainWeapon()) {
+                    File saveFile = new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir()));
+                    if(saveFile.exists()) {
                         FileOutputStream fileOutputStream = new FileOutputStream(
-                                new File(String.format("%s/randomizer-config.txt", Settings.getStartingSeed())));
-                        Files.copy(settingsFile.toPath(), fileOutputStream);
+                                new File(String.format("%s/lm_00.sav", Settings.getStartingSeed())));
+                        Files.copy(saveFile.toPath(), fileOutputStream);
                         fileOutputStream.flush();
                         fileOutputStream.close();
                     }
+                }
 
-                    if(Settings.isRandomizeMainWeapon()) {
-                        File saveFile = new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir()));
-                        if(saveFile.exists()) {
-                            FileOutputStream fileOutputStream = new FileOutputStream(
-                                    new File(String.format("%s/lm_00.sav", Settings.getStartingSeed())));
-                            Files.copy(saveFile.toPath(), fileOutputStream);
-                            fileOutputStream.flush();
-                            fileOutputStream.close();
-                        }
+                dialog.updateProgress(100, Translations.getText("progress.done"));
+                GameDataTracker.clearAll();
+
+                SwingUtilities.invokeLater(() -> {
+                    try {
+                        Thread.sleep(2000);
+                        dialog.setSafeClose(true);
+                        dialog.setVisible(false);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-
-                    dialog.updateProgress(100, Translations.getText("progress.done"));
-                    GameDataTracker.clearAll();
-
-                    SwingUtilities.invokeLater(() -> {
-                        try {
-                            Thread.sleep(2000);
-                            dialog.setSafeClose(true);
-                            dialog.setVisible(false);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                    return;
-            } catch (Exception ex) {
-                FileUtils.logException(ex);
+                });
                 return;
             }
-            }
-            try {
 //                accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
-            } catch (Exception ex) {
-                FileUtils.logException(ex);
-                return;
-            }
         }
     }
 
