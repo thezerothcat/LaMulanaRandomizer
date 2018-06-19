@@ -110,8 +110,9 @@ public class FileUtils {
         try(BufferedReader reader = getFileReader(file)) {
             String line;
             while((line = reader.readLine()) != null) {
+                line = line.split("#", 2)[0].trim(); // remove comments
                 if(!line.isEmpty()) {
-                    listContents.add(line.trim());
+                    listContents.add(line);
                 }
             }
             reader.close();
@@ -122,49 +123,44 @@ public class FileUtils {
         return listContents;
     }
 
-    public static void populateRequirements(Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject, String file) {
+    public static List<Map.Entry<String, List<String>>> getListOfLists(String file) {
+        List<Map.Entry<String, List<String>>> data = new ArrayList<>();
         try(BufferedReader reader = getFileReader(file)) {
             String line;
             String[] lineParts;
             while((line = reader.readLine()) != null) {
-                lineParts = line.trim().split(" => "); // delimiter
-                addNode(mapOfNodeNameToRequirementsObject, lineParts[0], lineParts[1]);
+                line = line.split("#", 2)[0].trim(); // remove comments
+                if (line.isEmpty())
+                    continue;
+                lineParts = line.split("=>", 2); // delimiter
+                List<String> reqs = new ArrayList<>();
+                for (String req : lineParts[1].split(","))
+                    reqs.add(req.trim());
+                data.add(new AbstractMap.SimpleImmutableEntry(lineParts[0].trim(), reqs));
             }
         } catch (Exception ex) {
             FileUtils.log("Unable to read file " + file + ", " + ex.getMessage());
-            return;
+            return new ArrayList<>();
         }
+        return data;
+    }
+
+    public static void populateRequirements(Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject, String file) {
+        for (Map.Entry<String, List<String>> line : getListOfLists(file))
+            addNode(mapOfNodeNameToRequirementsObject, line.getKey(), line.getValue());
     }
 
     public static Map<String, List<String>> getAccessibleLocations(String file) {
         Map<String, List<String>> accessibleLocations = new HashMap<>();
-        try(BufferedReader reader = getFileReader(file)) {
-            String line;
-            String[] lineParts;
-            while((line = reader.readLine()) != null) {
-                if(line.startsWith("#")) {
-                    continue;
-                }
-                lineParts = line.trim().split(" => "); // delimiter
-                String locationString = lineParts[1];
-                if(!locationString.contains(",")) {
-                    accessibleLocations.put(lineParts[0], Arrays.asList(locationString));
-                }
-
-                List<String> locations = new ArrayList<>();
-                for(String location : locationString.split(", ?")) {
-                    locations.add(location);
-                }
-                accessibleLocations.put(lineParts[0], locations);
-            }
-            return accessibleLocations;
-        } catch (Exception ex) {
-            FileUtils.log("Unable to read file " + file + ", " + ex.getMessage());
-            return new HashMap<>(0);
+        for (Map.Entry<String, List<String>> line : getListOfLists(file)) {
+            if (accessibleLocations.containsKey(line.getKey()))
+                throw new RuntimeException(file + " contains duplicated key " + line.getKey());
+            accessibleLocations.put(line.getKey(), line.getValue());
         }
+        return accessibleLocations;
     }
 
-    private static void addNode(Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject, String name, String requirementSet) {
+    private static void addNode(Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject, String name, List<String> requirementSet) {
         NodeWithRequirements node = mapOfNodeNameToRequirementsObject.get(name);
         if(node == null) {
             node = new NodeWithRequirements(name);
@@ -173,75 +169,47 @@ public class FileUtils {
         node.addRequirementSet(buildRequirementSet(requirementSet));
     }
 
-    private static List<String> buildRequirementSet(String requirementSet) {
-        if(requirementSet == null || requirementSet.isEmpty() || "None".equalsIgnoreCase(requirementSet)) {
-            return new ArrayList<>();
-        }
-        if(!requirementSet.contains(",")) {
-            return Arrays.asList(requirementSet);
-        }
-        List<String> requirements = new ArrayList<>();
-        for(String requirement : requirementSet.split(", ?")) {
-            requirements.add(requirement);
-        }
+    private static List<String> buildRequirementSet(List<String> requirementSet) {
+        List<String> requirements = new ArrayList<>(requirementSet);
+        requirements.removeIf(x -> "None".equalsIgnoreCase(x));
         return requirements;
     }
 
     public static Map<String, GameObjectId> getRcdDataIdMap(String filename) {
-        try(BufferedReader reader = getFileReader(filename)) {
-            String line;
-            String[] lineParts;
-            String[] ids;
-            Map<String, GameObjectId> mapOfItemToUsefulIdentifyingRcdData = new HashMap<>();
-            while((line = reader.readLine()) != null) {
-                lineParts = line.trim().split(" => "); // delimiter
-                ids = lineParts[1].split(", ?");
-                mapOfItemToUsefulIdentifyingRcdData.put(lineParts[0], new GameObjectId(ids[0], ids[1]));
-            }
-            return mapOfItemToUsefulIdentifyingRcdData;
-        } catch (Exception ex) {
-            FileUtils.log("Unable to read file " + filename + ", " + ex.getMessage());
-            return null;
+        Map<String, GameObjectId> map = new HashMap<>();
+        for (Map.Entry<String, List<String>> line : getListOfLists(filename)) {
+            if (map.containsKey(line.getKey()))
+                throw new RuntimeException(filename + " contains duplicated key " + line.getKey());
+            if (line.getValue().size() != 2)
+                throw new RuntimeException("Malformed RCD data for key " + line.getKey());
+            map.put(line.getKey(), new GameObjectId(line.getValue().get(0), line.getValue().get(1)));
         }
+        return map;
     }
 
     public static Map<String, Integer> getShopBlockMap(String filename) {
-        try(BufferedReader reader = getFileReader(filename)) {
-            String line;
-            String[] lineParts;
-            Map<String, Integer> mapOfShopNameToShopBlock = new HashMap<>();
-            while((line = reader.readLine()) != null) {
-                lineParts = line.trim().split(" => "); // delimiter
-                mapOfShopNameToShopBlock.put(lineParts[0], Integer.parseInt(lineParts[1]));
-            }
-            return mapOfShopNameToShopBlock;
-        } catch (Exception ex) {
-            FileUtils.log("Unable to read file " + filename + ", " + ex.getMessage());
-            return null;
+        Map<String, Integer> map = new HashMap<>();
+        for (Map.Entry<String, List<String>> line : getListOfLists(filename)) {
+            if (map.containsKey(line.getKey()))
+                throw new RuntimeException(filename + " contains duplicated key " + line.getKey());
+            if (line.getValue().size() != 1)
+                throw new RuntimeException("Malformed shop block entry: " + line.getKey());
+            int block = Integer.parseInt(line.getValue().get(0));
+            map.put(line.getKey(), Integer.parseInt(line.getValue().get(0)));
         }
+        return map;
     }
 
     public static Map<String, List<String>> getShopOriginalContentsMap(String filename) {
-        try(BufferedReader reader = getFileReader(filename)) {
-            String line;
-            String[] lineParts;
-            String[] items;
-            Map<String, List<String>> mapOfShopNameToOriginalShopContents = new HashMap<>();
-            List<String> shopContents;
-            while((line = reader.readLine()) != null) {
-                lineParts = line.trim().split(" => "); // delimiter
-                items = lineParts[1].split(", ?");
-                shopContents = new ArrayList<>(3);
-                shopContents.add(items[0]);
-                shopContents.add(items[1]);
-                shopContents.add(items[2]);
-                mapOfShopNameToOriginalShopContents.put(lineParts[0], shopContents);
-            }
-            return mapOfShopNameToOriginalShopContents;
-        } catch (Exception ex) {
-            FileUtils.log("Unable to read file " + filename + ", " + ex.getMessage());
-            return null;
+        Map<String, List<String>> map = new HashMap<>();
+        for (Map.Entry<String, List<String>> line : getListOfLists(filename)) {
+            if (map.containsKey(line.getKey()))
+                throw new RuntimeException(filename + " contains duplicated key " + line.getKey());
+            if (line.getValue().size() != 3)
+                throw new RuntimeException("Malformed shop contents: " + line.getKey());
+            map.put(line.getKey(), line.getValue());
         }
+        return map;
     }
 
     public static List<Short> stringToData(String stringToConvert) {
