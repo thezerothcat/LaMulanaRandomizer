@@ -1185,7 +1185,8 @@ public final class GameDataTracker {
                         return;
                     }
                     else if(flagUpdate.getValue() == 1) {
-                        if(Settings.isRandomizeForbiddenTreasure() && Settings.isHTFullRandom()) {
+                        if((Settings.isRandomizeForbiddenTreasure() && Settings.isHTFullRandom())
+                                || Settings.isRandomizeDracuetShop()) {
                             // Get rid of 8-boss requirement on HT.
                             Integer flagToRemoveIndex = null;
                             for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
