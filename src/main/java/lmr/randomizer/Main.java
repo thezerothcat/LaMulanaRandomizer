@@ -445,7 +445,9 @@ public class Main {
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
                         return false;
                     }
-                    if(items.contains(customPlacement.getContents())) {
+                    if(items.contains(customPlacement.getContents())
+                            && !"Weights".equals(customPlacement.getContents())
+                            && !customPlacement.getContents().endsWith(" Ammo")) {
                         JOptionPane.showMessageDialog(randomizerUI,
                                 "Item placed in multiple locations: " + customPlacement.getContents(),
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
