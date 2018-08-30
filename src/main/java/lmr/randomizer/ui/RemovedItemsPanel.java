@@ -19,6 +19,8 @@ public class RemovedItemsPanel extends JPanel {
     private JLabel maxRandomRemovableItemsLabel;
     private List<RemoveItemToggle> removableItems;
 
+    private JCheckBox requireFullAccess;
+
     public RemovedItemsPanel() {
         super(new MigLayout("fillx, wrap"));
 
@@ -56,6 +58,12 @@ public class RemovedItemsPanel extends JPanel {
         add(checkboxContainer, "growx, wrap");
         add(randomRemovableItemsPanel, "growx, wrap");
 
+        requireFullAccess = new JCheckBox();
+        requireFullAccess.setSelected(Settings.isRequireFullAccess());
+        checkboxContainer = new CheckboxContainer(1);
+        checkboxContainer.add(requireFullAccess);
+        add(checkboxContainer, "growx, wrap");
+
         updateTranslations();
     }
 
@@ -67,6 +75,7 @@ public class RemovedItemsPanel extends JPanel {
         }
         minRandomRemovableItemsLabel.setText(Translations.getText("settings.removal.min"));
         maxRandomRemovableItemsLabel.setText(Translations.getText("settings.removal.max"));
+        requireFullAccess.setText(Translations.getText("removal.requireFullAccess"));
     }
 
     public void updateSettings() {
@@ -76,6 +85,7 @@ public class RemovedItemsPanel extends JPanel {
         }
         Settings.setMinRandomRemovedItems((int)minRandomRemovableItems.getValue(), true);
         Settings.setMaxRandomRemovedItems((int)maxRandomRemovableItems.getValue(), true);
+        Settings.setRequireFullAccess(requireFullAccess.isSelected(), true);
     }
 
     public void reloadSettings() {
@@ -85,6 +95,7 @@ public class RemovedItemsPanel extends JPanel {
         for(RemoveItemToggle removeItemToggle : removableItems) {
             removeItemToggle.reloadSettings();
         }
+        requireFullAccess.setSelected(Settings.isRequireFullAccess());
     }
 
     class RemoveItemToggle {

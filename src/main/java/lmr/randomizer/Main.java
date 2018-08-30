@@ -4,6 +4,7 @@ import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.DatReader;
 import lmr.randomizer.dat.DatWriter;
 import lmr.randomizer.node.AccessChecker;
+import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.random.*;
 import lmr.randomizer.rcd.RcdReader;
 import lmr.randomizer.rcd.RcdWriter;
@@ -410,6 +411,62 @@ public class Main {
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
+            if(!validateCustomPlacements(this)) {
+                // Message created below
+                DataFromFile.clearCustomItemPlacements();
+                return false;
+            }
+            return true;
+        }
+
+        private boolean validateCustomPlacements(RandomizerUI randomizerUI) {
+            List<CustomPlacement> customPlacements = DataFromFile.getCustomItemPlacements();
+            if(customPlacements.isEmpty()) {
+                return true;
+            }
+
+            List<String> locations = new ArrayList<>();
+            List<String> items = new ArrayList<>();
+            List<String> removed = new ArrayList<>();
+            for(CustomPlacement customPlacement : customPlacements) {
+                if(customPlacement.getLocation() == null) {
+                    if(removed.contains(customPlacement.getContents())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Duplicate removed item " + customPlacement.getContents(),
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    removed.add(customPlacement.getContents());
+                }
+                else {
+                    if(locations.contains(customPlacement.getLocation())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Location used for multiple items: " + customPlacement.getLocation(),
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(items.contains(customPlacement.getContents())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Item placed in multiple locations: " + customPlacement.getContents(),
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(!isValidLocation(customPlacement.getLocation())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Location not valid: " + customPlacement.getLocation() + " for item " + customPlacement.getContents(),
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(!isValidContents(customPlacement.getContents())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Placed item not valid: " + customPlacement.getContents() + " at location " + customPlacement.getLocation(),
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    locations.add(customPlacement.getLocation());
+                    items.add(customPlacement.getContents());
+                }
+            }
             return true;
         }
 
@@ -421,6 +478,47 @@ public class Main {
         private boolean validateSaveDir() {
             return Settings.getLaMulanaSaveDir() != null && !Settings.getLaMulanaSaveDir().isEmpty()
                     && new File(Settings.getLaMulanaSaveDir()).exists();
+        }
+
+        private boolean isValidLocation(String location) {
+            if(DataFromFile.getAllItems().contains(location)) {
+                return true;
+            }
+            if(DataFromFile.getAllCoinChests().contains(location)) {
+                return true;
+            }
+            if(location.equals("Trap: Graveyard") || location.equals("Trap: Exploding")
+                    || location.equals("Trap: Inferno Orb") || location.equals("Trap: Twin Ankh")) {
+                return true;
+            }
+            if(location.startsWith("Shop ")
+                    && (location.endsWith(" Item 1") || location.endsWith(" Item 2") || location.endsWith(" Item 3"))) {
+                for(String shopName : DataFromFile.getAllShops()) {
+                    if(location.startsWith(shopName)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private boolean isValidContents(String contents) {
+            if(DataFromFile.getAllItems().contains(contents)) {
+                return true;
+            }
+            if(DataFromFile.getAllCoinChests().contains(contents)) {
+                return true;
+            }
+            if(contents.equals("Trap: Graveyard") || contents.equals("Trap: Exploding")
+                    || contents.equals("Trap: Inferno Orb") || contents.equals("Trap: Twin Ankh")) {
+                return true;
+            }
+            if(contents.equals("Weights") || contents.equals("Shuriken Ammo") || contents.equals("Rolling Shuriken Ammo")
+                    || contents.equals("Caltrops Ammo") || contents.equals("Chakram Ammo") || contents.equals("Flare Gun Ammo")
+                    || contents.equals("Earth Spear Ammo") || contents.equals("Pistol Ammo")) {
+                return true;
+            }
+            return false;
         }
     }
 

@@ -7,6 +7,7 @@ import lmr.randomizer.Translations;
 import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.AccessChecker;
+import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.GameObjectId;
 
@@ -54,6 +55,15 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                 if(!originalShopItem.equals("Weights") && !originalShopItem.endsWith("Ammo")) {
                     unassignedShopItemLocations.add(String.format("%s Item %d", shop, i + 1));
                 }
+            }
+        }
+
+        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
+            String customLocation = customPlacement.getLocation();
+            if(customLocation != null && customLocation.startsWith("Shop ")) {
+                mapOfShopInventoryItemToContents.put(customLocation, customPlacement.getContents());
+                unassignedShopItemLocations.remove(customLocation);
+                itemRandomizer.removeItemFromUnplacedItems(customPlacement.getContents());
             }
         }
 

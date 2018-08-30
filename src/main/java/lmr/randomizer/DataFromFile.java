@@ -1,5 +1,6 @@
 package lmr.randomizer;
 
+import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.node.NodeWithRequirements;
 import lmr.randomizer.random.BossDifficulty;
 import lmr.randomizer.random.ShopRandomizationEnum;
@@ -55,6 +56,8 @@ public final class DataFromFile {
     private static List<String> availableGlitches;
     private static List<String> winRequirements;
     private static List<String> chestOnlyLocations;
+
+    private static List<CustomPlacement> customItemPlacements;
 
     private DataFromFile() { }
 
@@ -438,6 +441,17 @@ public final class DataFromFile {
             }
         }
         return enabledItems;
+    }
+
+    public static List<CustomPlacement> getCustomItemPlacements() {
+        if(customItemPlacements == null) {
+            customItemPlacements = FileUtils.getCustomPlacementData();
+        }
+        return customItemPlacements;
+    }
+
+    public static void clearCustomItemPlacements() {
+        customItemPlacements = null;
     }
 
     public static void clearAllData() {

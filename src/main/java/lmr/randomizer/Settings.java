@@ -1,5 +1,6 @@
 package lmr.randomizer;
 
+import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.random.BossDifficulty;
 import lmr.randomizer.random.ShopRandomizationEnum;
 
@@ -29,6 +30,7 @@ public final class Settings {
     private boolean automaticHardmode;
     private boolean coinChestGraphics;
     private boolean requireSoftwareComboForKeyFairy;
+    private boolean requireFullAccess;
     private boolean requireIceCapeForLava;
     private boolean requireFlaresForExtinction;
     private boolean randomizeXmailer;
@@ -75,6 +77,7 @@ public final class Settings {
         language = "en";
 
         requireSoftwareComboForKeyFairy = true;
+        requireFullAccess = true;
         requireIceCapeForLava = true;
         requireFlaresForExtinction = true;
         randomizeXmailer = true;
@@ -229,6 +232,17 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.requireSoftwareComboForKeyFairy = requireSoftwareComboForKeyFairy;
+    }
+
+    public static boolean isRequireFullAccess() {
+        return singleton.requireFullAccess;
+    }
+
+    public static void setRequireFullAccess(boolean requireFullAccess, boolean update) {
+        if(update && requireFullAccess != singleton.requireFullAccess) {
+            singleton.changed = true;
+        }
+        singleton.requireFullAccess = requireFullAccess;
     }
 
     public static boolean isRequireIceCapeForLava() {
@@ -502,10 +516,17 @@ public final class Settings {
     }
 
     public static List<String> getRemovedItems() {
+        List<String> removedItems = new ArrayList<>();
         if(singleton.removeSpaulder) {
-            return Arrays.asList("Spaulder");
+            removedItems.add("Spaulder");
         }
-        return new ArrayList<>(0);
+        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
+            if(customPlacement.getLocation() == null) {
+                // Removed item
+                removedItems.add(customPlacement.getContents());
+            }
+        }
+        return removedItems;
     }
 
     public static void setRemovedItem(String itemName, boolean isRemoved, boolean update) {
@@ -615,6 +636,7 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.requireFullAccess, 17);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeDracuetShop, 16);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeXmailer, 15);
         booleanSettings |= processBooleanFlag.apply(singleton.htFullRandom, 14);
@@ -688,6 +710,7 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.requireFullAccess = getBoolFlagFromInt.apply(booleanSettingsFlag, 17);
         singleton.randomizeDracuetShop = getBoolFlagFromInt.apply(booleanSettingsFlag, 16);
         singleton.randomizeXmailer = getBoolFlagFromInt.apply(booleanSettingsFlag, 15);
         singleton.htFullRandom = getBoolFlagFromInt.apply(booleanSettingsFlag, 14);

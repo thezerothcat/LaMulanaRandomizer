@@ -7,6 +7,7 @@ import lmr.randomizer.Translations;
 import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.AccessChecker;
+import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.GameObjectId;
 
@@ -90,6 +91,16 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 }
             }
         }
+
+        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
+            String customLocation = customPlacement.getLocation();
+            if(customLocation != null && customLocation.startsWith("Shop ")) {
+                mapOfShopInventoryItemToContents.put(customLocation, customPlacement.getContents());
+                unassignedShopItemLocations.remove(customLocation);
+                itemRandomizer.removeItemFromUnplacedItems(customPlacement.getContents());
+            }
+        }
+
 //        if(Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
 //            mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 1", "Whip");
 //            unassignedShopItemLocations.remove("Shop 3 (Surface) Item 1");

@@ -112,6 +112,9 @@ public class AccessChecker {
     }
 
     private boolean isRequireFullAccess() {
+        if(!Settings.isRequireFullAccess()) {
+            return false;
+        }
         return Settings.getCurrentRemovedItems().isEmpty()
                 || (Settings.isRandomizeMainWeapon() && Settings.getCurrentRemovedItems().size() == 1 && !"Whip".equals(Settings.getCurrentStartingWeapon()));
     }

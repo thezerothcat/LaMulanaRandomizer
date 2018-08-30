@@ -1,5 +1,6 @@
 package lmr.randomizer;
 
+import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.node.NodeWithRequirements;
 import lmr.randomizer.update.GameObjectId;
 
@@ -12,7 +13,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "1.34.1";
+    public static final String VERSION = "1.35.0";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -45,9 +46,9 @@ public class FileUtils {
         }
     }
 
-    public static BufferedReader getFileReader(String file) {
+    public static BufferedReader getFileReader(String file, boolean inFolder) {
         try {
-            return new BufferedReader(new FileReader("src/main/resources/lmr/randomizer/" + file));
+            return new BufferedReader(new FileReader(inFolder ? ("src/main/resources/lmr/randomizer/" + file) : file));
         } catch (IOException ex) {
             try {
                 return new BufferedReader(new InputStreamReader(FileUtils.class.getResourceAsStream(file))); // If we can't read the file directly, this might be a jar, and we can just pull from that.
@@ -107,7 +108,7 @@ public class FileUtils {
 
     public static List<String> getList(String file) {
         List<String> listContents = new ArrayList<>();
-        try(BufferedReader reader = getFileReader(file)) {
+        try(BufferedReader reader = getFileReader(file, true)) {
             String line;
             while((line = reader.readLine()) != null) {
                 line = line.split("#", 2)[0].trim(); // remove comments
@@ -125,7 +126,7 @@ public class FileUtils {
 
     public static List<Map.Entry<String, List<String>>> getListOfLists(String file) {
         List<Map.Entry<String, List<String>>> data = new ArrayList<>();
-        try(BufferedReader reader = getFileReader(file)) {
+        try(BufferedReader reader = getFileReader(file, true)) {
             String line;
             String[] lineParts;
             while((line = reader.readLine()) != null) {
@@ -229,6 +230,37 @@ public class FileUtils {
         return dataString;
     }
 
+    public static List<CustomPlacement> getCustomPlacementData() {
+        if (!(new File("custom-placement.txt").exists())) {
+            return new ArrayList<>(0);
+        }
+        List<CustomPlacement> data = new ArrayList<>();
+        try(BufferedReader reader = getFileReader("custom-placement.txt", false)) {
+            String line;
+            String[] lineParts;
+            while((line = reader.readLine()) != null) {
+                line = line.split("#", 2)[0].trim(); // remove comments
+                if (line.isEmpty())
+                    continue;
+                lineParts = line.split("=", 2); // delimiter
+                if(lineParts.length > 1) {
+                    data.add(new CustomPlacement(lineParts[0].trim(), lineParts[1].trim()));
+                }
+                else {
+                    String removeItem = lineParts[0].trim();
+                    if(removeItem.startsWith("!")) {
+                        removeItem = removeItem.substring(1);
+                        data.add(new CustomPlacement(null, removeItem));
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            FileUtils.log("Unable to read file custom-placement.txt, " + ex.getMessage());
+            return new ArrayList<>();
+        }
+        return data;
+    }
+
     public static void readSettings() throws IOException {
         if(!(new File("randomizer-config.txt").exists())) {
             return;
@@ -285,6 +317,9 @@ public class FileUtils {
             }
             else if(line.startsWith("requireSoftwareComboForKeyFairy")) {
                 Settings.setRequireSoftwareComboForKeyFairy(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("requireFullAccess")) {
+                Settings.setRequireFullAccess(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("requireIceCapeForLava")) {
                 Settings.setRequireIceCapeForLava(Boolean.valueOf(line.split("=")[1]), false);
@@ -373,6 +408,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("requireSoftwareComboForKeyFairy=%s", Settings.isRequireSoftwareComboForKeyFairy()));
+        writer.newLine();
+
+        writer.write(String.format("requireFullAccess=%s", Settings.isRequireFullAccess()));
         writer.newLine();
 
         writer.write(String.format("requireIceCapeForLava=%s", Settings.isRequireIceCapeForLava()));

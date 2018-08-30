@@ -48,6 +48,5 @@ public class LogicPanel extends JPanel {
         requireIceCapeForLava.setSelected(Settings.isRequireIceCapeForLava());
         requireFlaresForExtinction.setSelected(Settings.isRequireFlaresForExtinction());
         requireSoftwareComboForKeyFairy.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
-
     }
 }

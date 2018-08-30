@@ -5,6 +5,7 @@ import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
 import lmr.randomizer.Translations;
 import lmr.randomizer.node.AccessChecker;
+import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.GameObjectId;
 
@@ -70,6 +71,15 @@ public class ItemRandomizer {
                 mapOfItemLocationToItem.put(coinChest, coinChest);
                 unassignedNonShopItemLocations.remove(coinChest);
                 unplacedItems.remove(coinChest);
+            }
+        }
+
+        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
+            String customLocation = customPlacement.getLocation();
+            if(customLocation != null && !customLocation.startsWith("Shop ")) {
+                mapOfItemLocationToItem.put(customLocation, customPlacement.getContents());
+                unassignedNonShopItemLocations.remove(customLocation);
+                unplacedItems.remove(customPlacement.getContents());
             }
         }
 
