@@ -94,7 +94,8 @@ public class EverythingShopRandomizer implements ShopRandomizer {
 
         for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
             String customLocation = customPlacement.getLocation();
-            if(customLocation != null && customLocation.startsWith("Shop ")) {
+            if(!customPlacement.isRemoveItem() && !customPlacement.isCurseChest()
+                    && customLocation != null && customLocation.startsWith("Shop ")) {
                 mapOfShopInventoryItemToContents.put(customLocation, customPlacement.getContents());
                 unassignedShopItemLocations.remove(customLocation);
                 itemRandomizer.removeItemFromUnplacedItems(customPlacement.getContents());

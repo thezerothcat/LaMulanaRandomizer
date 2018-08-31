@@ -35,13 +35,21 @@ public class AccessChecker {
     }
 
     public void determineCursedChests(Random random) {
-        if(Settings.isRandomizeCursedChests()) {
+        List<String> cursedChests = new ArrayList<>();
+        if(!DataFromFile.getCustomItemPlacements().isEmpty()) {
+            for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
+                if(customPlacement.isCurseChest()) {
+                    cursedChests.add(customPlacement.getLocation());
+                }
+            }
+            Settings.setCurrentCursedChests(cursedChests);
+        }
+        else if(Settings.isRandomizeCursedChests()) {
             List<String> possibleChests = new ArrayList<>(DataFromFile.getChestOnlyLocations());
             if(Settings.isRandomizeCoinChests()) {
                 possibleChests.addAll(DataFromFile.getAllCoinChests());
             }
             possibleChests.removeAll(DataFromFile.getNonRandomizedItems());
-            List<String> cursedChests = new ArrayList<>(4);
             String cursedChest;
             for(int i = 0; i < 4; i++) {
                 cursedChest = possibleChests.get(random.nextInt(possibleChests.size()));

@@ -429,7 +429,7 @@ public class Main {
             List<String> items = new ArrayList<>();
             List<String> removed = new ArrayList<>();
             for(CustomPlacement customPlacement : customPlacements) {
-                if(customPlacement.getLocation() == null) {
+                if(customPlacement.isRemoveItem()) {
                     if(removed.contains(customPlacement.getContents())) {
                         JOptionPane.showMessageDialog(randomizerUI,
                                 "Duplicate removed item " + customPlacement.getContents(),
@@ -448,7 +448,8 @@ public class Main {
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
                         return false;
                     }
-                    if(!DataFromFile.getRandomRemovableItems().contains(customPlacement.getContents())) {
+                    if(!DataFromFile.getRandomRemovableItems().contains(customPlacement.getContents())
+                            && !"Whip".equals(customPlacement.getContents())) {
                         JOptionPane.showMessageDialog(randomizerUI,
                                 customPlacement.getContents() + " cannot be a removed item",
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
@@ -456,6 +457,14 @@ public class Main {
                     }
 
                     removed.add(customPlacement.getContents());
+                }
+                else if(customPlacement.isCurseChest()) {
+                    if(!Settings.isRandomizeCursedChests()) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom placement of cursed chest not valid with current settings for cursed chest randomization",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                    }
                 }
                 else {
                     if(locations.contains(customPlacement.getLocation())) {

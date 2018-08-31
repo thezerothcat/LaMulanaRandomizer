@@ -8,6 +8,7 @@ import lmr.randomizer.dat.*;
 import lmr.randomizer.dat.conversation.CheckBlock;
 import lmr.randomizer.dat.shop.BlockStringData;
 import lmr.randomizer.dat.shop.ShopBlock;
+import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.random.ShopItemPriceCountRandomizer;
 import lmr.randomizer.rcd.object.*;
 
@@ -2653,7 +2654,7 @@ public final class GameDataTracker {
             }
             else if(objectToModify.getId() == 0x2f) {
                 // Note: Floating maps don't get removed.
-                updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData, newWorldFlag, random);
+                updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData, chestContents, newWorldFlag, random);
                 if("Map (Shrine of the Mother)".equals(chestContents)) {
                     addShrineMapSoundEffect(objectToModify.getObjectContainer());
                 }
@@ -2924,11 +2925,18 @@ public final class GameDataTracker {
                 addExplosion(objectToModify.getObjectContainer(), objectToModify.getX(), objectToModify.getY(), newWorldFlag);
             }
             else {
-                objectToModify.getArgs().set(0, (short)0); // Nothing
-                objectToModify.getArgs().set(1, (short)1); // Quantity is irrelevant
 
-//                objectToModify.getArgs().set(0, getRandomItemGraphic(random)); // Nothing
-//                objectToModify.getArgs().set(1, (short)0); // Fake item
+                short newContentsGraphic = getItemGraphic(newChestContentsItemName);
+                if(newContentsGraphic == 0) {
+                    // Nothing
+                    objectToModify.getArgs().set(0, newContentsGraphic);
+                    objectToModify.getArgs().set(1, (short)1); // Quantity is irrelevant
+                }
+                else {
+                    // Fake item graphic
+                    objectToModify.getArgs().set(0, (short)(newContentsGraphic + 11));
+                    objectToModify.getArgs().set(1, (short)0);
+                }
 
                 updateFlag = new WriteByteOperation();
                 updateFlag.setOp(ByteOp.ASSIGN_FLAG);
@@ -3103,7 +3111,7 @@ public final class GameDataTracker {
     }
 
     private static void updateFloatingItemContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData,
-                                                   int newWorldFlag, Random random) {
+                                                   String newChestContentsItemName, int newWorldFlag, Random random) {
         objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg());
         objectToModify.getArgs().set(2, (short)1); // Real item until determined otherwise.
         for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
@@ -3141,7 +3149,12 @@ public final class GameDataTracker {
         }
         else if(Settings.isRandomizeTrapItems() && (newWorldFlag == 2777 || newWorldFlag == 2779 || newWorldFlag == 2780)) {
             // Trap items
-            objectToModify.getArgs().set(1, getRandomItemGraphic(random));
+            short graphic = getItemGraphic(newChestContentsItemName);
+            if(graphic == 0) {
+                // No custom graphic
+                graphic = getRandomItemGraphic(random);
+            }
+            objectToModify.getArgs().set(1, graphic);
             objectToModify.getArgs().set(2, (short)0);
 
             WriteByteOperation writeByteOperation;
@@ -3262,6 +3275,15 @@ public final class GameDataTracker {
                 flagUpdate.setIndex(newWorldFlag);
             }
         }
+    }
+
+    private static short getItemGraphic(String itemName) {
+        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
+            if(customPlacement.getItemGraphic() != null && customPlacement.getContents().equals(itemName)) {
+                return DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(customPlacement.getItemGraphic()).getInventoryArg();
+            }
+        }
+        return 0;
     }
 
     private static short getRandomItemGraphic(Random random) {

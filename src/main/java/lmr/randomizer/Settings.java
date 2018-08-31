@@ -521,7 +521,7 @@ public final class Settings {
             removedItems.add("Spaulder");
         }
         for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
-            if(customPlacement.getLocation() == null) {
+            if(customPlacement.isRemoveItem()) {
                 // Removed item
                 removedItems.add(customPlacement.getContents());
             }

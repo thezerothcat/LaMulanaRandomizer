@@ -76,7 +76,8 @@ public class ItemRandomizer {
 
         for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
             String customLocation = customPlacement.getLocation();
-            if(customLocation != null && !customLocation.startsWith("Shop ")) {
+            if(!customPlacement.isRemoveItem() && !customPlacement.isCurseChest()
+                    && customLocation != null && !customLocation.startsWith("Shop ")) {
                 mapOfItemLocationToItem.put(customLocation, customPlacement.getContents());
                 unassignedNonShopItemLocations.remove(customLocation);
                 unplacedItems.remove(customPlacement.getContents());

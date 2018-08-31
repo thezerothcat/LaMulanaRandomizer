@@ -13,7 +13,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "1.35.1";
+    public static final String VERSION = "1.35.2";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -242,15 +242,24 @@ public class FileUtils {
                 line = line.split("#", 2)[0].trim(); // remove comments
                 if (line.isEmpty())
                     continue;
-                lineParts = line.split("=", 2); // delimiter
-                if(lineParts.length > 1) {
-                    data.add(new CustomPlacement(lineParts[0].trim(), lineParts[1].trim()));
-                }
-                else {
-                    String removeItem = lineParts[0].trim();
-                    if(removeItem.startsWith("!")) {
-                        removeItem = removeItem.substring(1);
-                        data.add(new CustomPlacement(null, removeItem));
+                if (line.startsWith("Curse ")) {
+                    data.add(new CustomPlacement(line.replace("Curse ", "").trim(), null, null, false, true));
+                } else {
+                    lineParts = line.split("=", 2); // delimiter
+                    if (lineParts.length > 1) {
+                        String contents = lineParts[1].trim();
+                        if (contents.startsWith("Trap:") && contents.contains("{") && contents.contains("}")) {
+                            String itemGraphic = contents.substring(contents.indexOf("{") + 1).replace("}", "");
+                            data.add(new CustomPlacement(lineParts[0].trim(), contents.substring(0, contents.indexOf('{')).trim(), itemGraphic, false, false));
+                        } else {
+                            data.add(new CustomPlacement(lineParts[0].trim(), contents, null, false, false));
+                        }
+                    } else {
+                        String removeItem = lineParts[0].trim();
+                        if(removeItem.startsWith("!")) {
+                            removeItem = removeItem.substring(1);
+                            data.add(new CustomPlacement(null, removeItem, null, true, false));
+                        }
                     }
                 }
             }
