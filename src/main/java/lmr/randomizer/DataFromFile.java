@@ -27,6 +27,17 @@ public final class DataFromFile {
             "Ice Cape", "Flail Whip", "Lamp of Time", "Bomb", "Ring", "guild.exe", "Grapple Claw",
             "Origin Seal", "Isis' Pendant",
             "Fruit of Eden");
+    public static List<String> SHOP_ITEMS = Arrays.asList("Ankh Jewel (Chamber of Birth)", "Bracelet", "Buckler", "bunemon.exe",
+            "capstar.exe", "Dragon Bone", "Fake Silver Shield", "guild.exe", "Hand Scanner", "Heatproof Case", "Helmet",
+            "Hermes' Boots", "Lamp of Time", "miracle.exe", "Mobile Super X2", "move.exe", "Pistol", "randc.exe", "reader.exe",
+            "Scriptures", "torude.exe", "Waterproof Case", "yagomap.exe");
+    public static List<String> CATEGORIZED_SHOP_ITEM_LOCATIONS = Arrays.asList("Shop 1 (Surface) Item 1",
+            "Shop 2 (Surface) Item 2", "Shop 2 (Surface) Item 3", "Shop 2 Alt (Surface) Item 1",
+            "Shop 3 (Surface) Item 1", "Shop 3 (Surface) Item 2", "Shop 3 (Surface) Item 3", "Shop 4 (Guidance) Item 2",
+            "Shop 5 (Illusion) Item 1", "Shop 6 (Mausoleum) Item 1", "Shop 7 (Graveyard) Item 2", "Shop 8 (Sun) Item 3",
+            "Shop 9 (Sun) Item 1", "Shop 11 (Moonlight) Item 1", "Shop 12 Alt (Spring) Item 3", "Shop 13 (Goddess) Item 1",
+            "Shop 14 (Inferno) Item 1", "Shop 15 (Ruin) Item 1", "Shop 17 (Birth) Item 2", "Shop 18 (Lil Bro) Item 1",
+            "Shop 19 (Big Bro) Item 1", "Shop 20 (Twin Labs) Item 1", "Shop 21 (Unsolvable) Item 1");
     public static List<Integer> RANDOM_ITEM_GRAPHICS = Arrays.asList(1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15,
             18, 19, 20, 21, 24, 25, 26, 27, 28, 29, 32, 33, 38, 39, 41, 42, 43, 44, 45, 47, 48, 49, 51, 52, 53, 54,
             55, 56, 5, 58, 59, 60, 61, 63, 64, 65, 66, 67, 68, 69, 73, 76, 91, 96, 97, 98, 99, 100, 102, 103, 104);
@@ -297,9 +308,6 @@ public final class DataFromFile {
                     if(requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
                         continue; // Earth Spear needed for Viy access. Bronze Mirror for VIY mantra statue.
                     }
-                    if(Settings.getRemovedItems().contains(itemName)) {
-                        continue; // Items removed by configuration are counted separately.
-                    }
                     if(Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName)) {
                         continue; // Don't count the maps that will already be replaced.
                     }
@@ -317,12 +325,6 @@ public final class DataFromFile {
                     }
                     if(Settings.getInitiallyAccessibleItems().contains(itemName)) {
                         continue; // If the user wanted this item early, they probably don't want it gone.
-                    }
-                    if(BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty())) {
-                        if(itemName.startsWith("Sacred Orb")
-                                && !"Sacred Orb (Gate of Guidance)".equals(itemName) && !"Sacred Orb (Surface)".equals(itemName)) {
-                            continue;
-                        }
                     }
                     randomRemovableItems.add(itemName);
                 }

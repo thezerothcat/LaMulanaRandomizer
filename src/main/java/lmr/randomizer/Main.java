@@ -436,6 +436,25 @@ public class Main {
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
                         return false;
                     }
+                    if(customPlacement.getContents().startsWith("Coin:")) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Coin chests cannot be removed items",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(customPlacement.getContents().startsWith("Trap:")) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Traps cannot be removed items",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(!DataFromFile.getRandomRemovableItems().contains(customPlacement.getContents())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                customPlacement.getContents() + " cannot be a removed item",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+
                     removed.add(customPlacement.getContents());
                 }
                 else {
@@ -465,8 +484,111 @@ public class Main {
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
                         return false;
                     }
+                    if(DataFromFile.SHOP_ITEMS.contains(customPlacement.getLocation())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "To place " + customPlacement.getLocation() + " in a shop, please use the shop name and item number instead of the item name",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(!Settings.isRandomizeTrapItems()) {
+                        if(customPlacement.getLocation().startsWith("Trap:")) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom placement at location " + customPlacement.getLocation() + " not valid with current settings for randomized traps",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                        if(customPlacement.getContents().startsWith("Trap:")) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom placement of item " + customPlacement.getContents() + " not valid with current settings for randomized traps",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
+                    if(!Settings.isRandomizeCoinChests()) {
+                        if(customPlacement.getLocation().startsWith("Coin:")) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom placement at location " + customPlacement.getLocation() + " not valid with current settings for randomized coin chests",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                        if(customPlacement.getContents().startsWith("Coin:")) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom placement of item " + customPlacement.getContents() + " not valid with current settings for randomized coin chests",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
+                    if(!Settings.isRandomizeForbiddenTreasure()) {
+                        if(customPlacement.getLocation().equals("Provocative Bathing Suit")
+                                || customPlacement.getContents().equals("Provocative Bathing Suit")) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom placement not valid with current settings for Provocative Bathing Suit randomization",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
+                    else if(!Settings.isHTFullRandom()) {
+                        if(customPlacement.getLocation().equals("Provocative Bathing Suit")
+                                && !customPlacement.getContents().startsWith("Map (")) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom placement not valid with current settings for Provocative Bathing Suit randomization",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
+
+                    if(!Settings.isRandomizeDracuetShop() && customPlacement.getLocation().startsWith("Shop 23 (HT)")) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Custom placement not valid with current settings for Dracuet shop randomization",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+
+                    if(ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())
+                            && customPlacement.getLocation().startsWith("Shop ")) {
+                        if(!DataFromFile.CATEGORIZED_SHOP_ITEM_LOCATIONS.contains(customPlacement.getLocation())) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom placement of item at " + customPlacement.getLocation() + " not valid with current settings for shop randomization",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                        else if("Weights".equals(customPlacement.getContents())
+                                || customPlacement.getContents().endsWith(" Ammo")) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom placement of " + customPlacement.getContents() + " not valid with current settings for shop randomization",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
+
+                    if(Settings.getInitiallyAccessibleItems().contains(customPlacement.getContents())
+                            && !DataFromFile.getInitialNonShopItemLocations().contains(customPlacement.getLocation())
+                            && !DataFromFile.getInitialCoinChestLocations().contains(customPlacement.getLocation())
+                            && !DataFromFile.getInitialTrapItemLocations().contains(customPlacement.getLocation())) {
+                        boolean initialShop = false;
+                        for(String shopName : DataFromFile.getInitialShops()) {
+                            if(customPlacement.getLocation().startsWith(shopName)) {
+                                initialShop = true;
+                                break;
+                            }
+                        }
+                        if(!initialShop) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom placement of " + customPlacement.getContents() + " not valid with current settings for initially accessible item",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
+
                     locations.add(customPlacement.getLocation());
                     items.add(customPlacement.getContents());
+                }
+
+                if(Settings.getStartingItems().contains(customPlacement.getContents())) {
+                    JOptionPane.showMessageDialog(randomizerUI,
+                            "Custom placement of " + customPlacement.getContents() + " not valid with current settings for starting item",
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
                 }
             }
             return true;
@@ -497,7 +619,7 @@ public class Main {
                     && (location.endsWith(" Item 1") || location.endsWith(" Item 2") || location.endsWith(" Item 3"))) {
                 for(String shopName : DataFromFile.getAllShops()) {
                     if(location.startsWith(shopName)) {
-                        return true;
+                        return !location.startsWith("Shop 2 Alt (Surface)") || location.endsWith("1");
                     }
                 }
             }
@@ -853,22 +975,19 @@ public class Main {
     }
 
     private static void determineMainWeapon(Random random) {
-        int randomWeapon = random.nextInt(5);
-        if(randomWeapon == 0) {
-            Settings.setCurrentStartingWeapon("Whip");
+        List<String> startingWeapons = new ArrayList<>(5);
+        startingWeapons.add("Whip");
+        startingWeapons.add("Knife");
+        startingWeapons.add("Key Sword");
+        startingWeapons.add("Axe");
+        startingWeapons.add("Katana");
+
+        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
+            // Whether it's a removed item or a custom placed item, we don't want it here.
+            startingWeapons.remove(customPlacement.getContents());
         }
-        else if(randomWeapon == 1) {
-            Settings.setCurrentStartingWeapon("Knife");
-        }
-        else if(randomWeapon == 2) {
-            Settings.setCurrentStartingWeapon("Key Sword");
-        }
-        else if(randomWeapon == 3) {
-            Settings.setCurrentStartingWeapon("Axe");
-        }
-        else if(randomWeapon == 4) {
-            Settings.setCurrentStartingWeapon("Katana");
-        }
+
+        Settings.setCurrentStartingWeapon(startingWeapons.get(random.nextInt(startingWeapons.size())));
     }
 
     private static void determineRemovedItems(Random random) {
@@ -877,12 +996,14 @@ public class Main {
         totalItemsRemoved += random.nextInt(Settings.getMaxRandomRemovedItems() - totalItemsRemoved + 1);
 
         List<String> removableItems = new ArrayList<>(DataFromFile.getRandomRemovableItems());
+        removableItems.removeAll(Settings.getRemovedItems());
 
         boolean objectZipEnabled = Settings.getEnabledGlitches().contains("Object Zip");
         boolean catPauseEnabled = Settings.getEnabledGlitches().contains("Cat Pause");
         boolean lampGlitchEnabled = Settings.getEnabledGlitches().contains("Lamp Glitch");
         boolean requireKeyFairyCombo = Settings.isRequireSoftwareComboForKeyFairy();
         boolean easierBosses = BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty());
+        boolean orbRemoved = false;
         int chosenRemovedItems = 0;
         while(chosenRemovedItems < totalItemsRemoved && !removableItems.isEmpty()) {
             int removedItemIndex = random.nextInt(removableItems.size());
@@ -955,6 +1076,23 @@ public class Main {
                         removableItems.remove("Angel Shield");
                     } else if ("Angel Shield".equals(removedItem)) {
                         removableItems.remove("Silver Shield");
+                    }
+                    if(removedItem.startsWith("Sacred Orb")) {
+                        if(orbRemoved) {
+                            removableItems.remove("Sacred Orb (Surface)");
+                            removableItems.remove("Sacred Orb (Gate of Guidance)");
+                            removableItems.remove("Sacred Orb (Mausoleum of the Giants)");
+                            removableItems.remove("Sacred Orb (Temple of the Sun)");
+                            removableItems.remove("Sacred Orb (Spring in the Sky)");
+                            removableItems.remove("Sacred Orb (Chamber of Extinction)");
+                            removableItems.remove("Sacred Orb (Twin Labyrinths)");
+                            removableItems.remove("Sacred Orb (Shrine of the Mother)");
+                            removableItems.remove("Sacred Orb (Tower of Ruin)");
+                            removableItems.remove("Sacred Orb (Chamber of Extinction)");
+                        }
+                        else {
+                            orbRemoved = true;
+                        }
                     }
                 }
                 ++chosenRemovedItems;

@@ -58,15 +58,6 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             }
         }
 
-        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
-            String customLocation = customPlacement.getLocation();
-            if(customLocation != null && customLocation.startsWith("Shop ")) {
-                mapOfShopInventoryItemToContents.put(customLocation, customPlacement.getContents());
-                unassignedShopItemLocations.remove(customLocation);
-                itemRandomizer.removeItemFromUnplacedItems(customPlacement.getContents());
-            }
-        }
-
         shopsWithSacredOrbs = new ArrayList<>();
     }
 
@@ -106,6 +97,16 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                 }
             }
         }
+
+        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
+            String customLocation = customPlacement.getLocation();
+            if(customLocation != null && customLocation.startsWith("Shop ")) {
+                mapOfShopInventoryItemToContents.put(customLocation, customPlacement.getContents());
+                unassignedShopItemLocations.remove(customLocation);
+                itemRandomizer.removeItemFromUnplacedItems(customPlacement.getContents());
+            }
+        }
+
 //        mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 1", "Sacred Orb (Gate of Guidance)");
 //        unassignedShopItemLocations.remove("Shop 3 (Surface) Item 1");
 //        itemRandomizer.removeItemFromUnplacedItems("Sacred Orb (Gate of Guidance)");
