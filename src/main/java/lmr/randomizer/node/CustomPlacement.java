@@ -5,8 +5,18 @@ public class CustomPlacement {
     private String contents; // what to put in the location
     private String itemGraphic; // ability to customize graphic for traps
 
+    private Short shopPrice;
+    private Short shopCount;
+
     private boolean curseChest;
     private boolean removeItem;
+
+    public CustomPlacement(String location, String contents, Short shopPrice, Short shopCount) {
+        this.location = location;
+        this.contents = contents;
+        this.shopPrice = shopPrice;
+        this.shopCount = shopCount;
+    }
 
     public CustomPlacement(String location, String contents, String itemGraphic, boolean removeItem, boolean curseChest) {
         this.location = location;
@@ -54,5 +64,21 @@ public class CustomPlacement {
 
     public void setRemoveItem(boolean removeItem) {
         this.removeItem = removeItem;
+    }
+
+    public Short getShopPrice() {
+        return shopPrice;
+    }
+
+    public void setShopPrice(Short shopPrice) {
+        this.shopPrice = shopPrice;
+    }
+
+    public Short getShopCount() {
+        return shopCount;
+    }
+
+    public void setShopCount(Short shopCount) {
+        this.shopCount = shopCount;
     }
 }

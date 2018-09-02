@@ -42,20 +42,23 @@ public class AccessChecker {
                     cursedChests.add(customPlacement.getLocation());
                 }
             }
-            Settings.setCurrentCursedChests(cursedChests);
         }
-        else if(Settings.isRandomizeCursedChests()) {
-            List<String> possibleChests = new ArrayList<>(DataFromFile.getChestOnlyLocations());
-            if(Settings.isRandomizeCoinChests()) {
-                possibleChests.addAll(DataFromFile.getAllCoinChests());
+        if(cursedChests.isEmpty()) {
+            if(Settings.isRandomizeCursedChests()) {
+                List<String> possibleChests = new ArrayList<>(DataFromFile.getChestOnlyLocations());
+                if (Settings.isRandomizeCoinChests()) {
+                    possibleChests.addAll(DataFromFile.getAllCoinChests());
+                }
+                possibleChests.removeAll(DataFromFile.getNonRandomizedItems());
+                String cursedChest;
+                for (int i = 0; i < 4; i++) {
+                    cursedChest = possibleChests.get(random.nextInt(possibleChests.size()));
+                    cursedChests.add(cursedChest);
+                    possibleChests.remove(cursedChest);
+                }
             }
-            possibleChests.removeAll(DataFromFile.getNonRandomizedItems());
-            String cursedChest;
-            for(int i = 0; i < 4; i++) {
-                cursedChest = possibleChests.get(random.nextInt(possibleChests.size()));
-                cursedChests.add(cursedChest);
-                possibleChests.remove(cursedChest);
-            }
+        }
+        if(!cursedChests.isEmpty()) {
             Settings.setCurrentCursedChests(cursedChests);
         }
         for(String chestLocation : Settings.getCurrentCursedChests()) {

@@ -13,7 +13,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "1.35.2";
+    public static final String VERSION = "1.35.3";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -247,10 +247,23 @@ public class FileUtils {
                 } else {
                     lineParts = line.split("=", 2); // delimiter
                     if (lineParts.length > 1) {
+                        String location = lineParts[0].trim();
                         String contents = lineParts[1].trim();
-                        if (contents.startsWith("Trap:") && contents.contains("{") && contents.contains("}")) {
-                            String itemGraphic = contents.substring(contents.indexOf("{") + 1).replace("}", "");
-                            data.add(new CustomPlacement(lineParts[0].trim(), contents.substring(0, contents.indexOf('{')).trim(), itemGraphic, false, false));
+                        if (contents.contains("{") && contents.contains("}")) {
+                            String specialData = contents.substring(contents.indexOf("{") + 1).replace("}", "");
+                            contents = contents.substring(0, contents.indexOf('{')).trim();
+                            if(contents.startsWith("Trap:")) {
+                                data.add(new CustomPlacement(location, contents, specialData, false, false));
+                            }
+                            else if(location.startsWith("Shop ")) {
+                                lineParts = specialData.split(",");
+                                if (lineParts.length > 1) {
+                                    data.add(new CustomPlacement(location, contents, Short.parseShort(lineParts[1].trim()), Short.parseShort(lineParts[0].trim())));
+                                }
+                                else {
+                                    data.add(new CustomPlacement(location, contents, Short.parseShort(lineParts[0].trim()), null));
+                                }
+                            }
                         } else {
                             data.add(new CustomPlacement(lineParts[0].trim(), contents, null, false, false));
                         }

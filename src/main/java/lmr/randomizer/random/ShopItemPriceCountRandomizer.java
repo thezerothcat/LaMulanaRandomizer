@@ -1,7 +1,9 @@
 package lmr.randomizer.random;
 
 import javafx.util.Pair;
+import lmr.randomizer.DataFromFile;
 import lmr.randomizer.Settings;
+import lmr.randomizer.node.CustomPlacement;
 
 import java.util.Arrays;
 import java.util.List;
@@ -73,19 +75,31 @@ public class ShopItemPriceCountRandomizer {
         this.random = random;
     }
 
-    public Pair<Short, Short> getItemPriceAndCount(String itemName) {
+    public Pair<Short, Short> getItemPriceAndCount(String location, String itemName) {
         if(!specialAmmoPlaced && "Pistol Ammo".equals(itemName)) {
             // Special case
             if(random.nextInt(10) == 0) {
                 return new Pair<>((short)400, (short)6);
             }
         }
-        short price = getPrice(itemName);
-        short count = getCount(itemName);
+        Short price = null;
+        Short count = null;
+        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
+            if(customPlacement.getShopPrice() != null && customPlacement.getLocation().equals(location)) {
+                price = customPlacement.getShopPrice();
+                count = customPlacement.getShopCount();
+            }
+        }
+        if(price == null) {
+            price = getPrice(itemName);
+        }
+        if(count == null) {
+            count = getCount(itemName);
+        }
         return new Pair<>(price, count);
     }
 
-    public short getPrice(String itemName) {
+    private short getPrice(String itemName) {
         if("Weights".equals(itemName)) {
             if(!normalPriceWeightsPlaced) {
                 normalPriceWeightsPlaced = true;

@@ -285,7 +285,8 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                     || (Settings.isReplaceMapsWithWeights() && shopItem3.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem3))) {
                 shopItem3 = "Weights";
             }
-            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks, null,
+            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks,
+                    null, null, null,
                     "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName));
         }
     }

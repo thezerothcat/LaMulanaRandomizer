@@ -68,7 +68,7 @@ public class Main {
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
                 e.printStackTrace();
             }
-            setTitle(Translations.getText("title"));
+            setTitle(String.format(Translations.getText("title"), FileUtils.VERSION));
             setLayout(new MigLayout("fill, aligny top", "[]", "[]"));
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             setResizable(true);
@@ -465,6 +465,16 @@ public class Main {
                                     "Custom placement error", JOptionPane.ERROR_MESSAGE);
                             return false;
                     }
+                    if(DataFromFile.FLOATING_ITEM_LOCATIONS.contains(customPlacement.getLocation())
+                            || DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(customPlacement.getLocation())
+                            || "mantra.exe".equals(customPlacement.getLocation())
+                            || "emusic.exe".equals(customPlacement.getLocation())
+                            || "beolamu.exe".equals(customPlacement.getLocation())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Non-chest location " + customPlacement.getLocation() + " cannot be cursed",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
                 }
                 else {
                     if(locations.contains(customPlacement.getLocation())) {
@@ -541,6 +551,18 @@ public class Main {
                                 && !customPlacement.getContents().startsWith("Map (")) {
                             JOptionPane.showMessageDialog(randomizerUI,
                                     "Custom placement not valid with current settings for Provocative Bathing Suit randomization",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
+                    if(customPlacement.getContents().startsWith("Coin:") || DataFromFile.EXPLODING_CHEST_NAME.equals(customPlacement.getContents())) {
+                        if(DataFromFile.FLOATING_ITEM_LOCATIONS.contains(customPlacement.getLocation())
+                                || DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(customPlacement.getLocation())
+                                || "mantra.exe".equals(customPlacement.getLocation())
+                                || "emusic.exe".equals(customPlacement.getLocation())
+                                || "beolamu.exe".equals(customPlacement.getLocation())) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Item " + customPlacement.getContents() + " cannot be placed at non-chest location " + customPlacement.getLocation(),
                                     "Custom placement error", JOptionPane.ERROR_MESSAGE);
                             return false;
                         }
@@ -828,6 +850,7 @@ public class Main {
 
                 dialog.updateProgress(100, Translations.getText("progress.done"));
                 GameDataTracker.clearAll();
+                DataFromFile.clearCustomItemPlacements();
 
                 SwingUtilities.invokeLater(() -> {
                     try {
@@ -1004,7 +1027,14 @@ public class Main {
         int totalItemsRemoved = Settings.getMinRandomRemovedItems();
         totalItemsRemoved += random.nextInt(Settings.getMaxRandomRemovedItems() - totalItemsRemoved + 1);
 
-        List<String> removableItems = new ArrayList<>(DataFromFile.getRandomRemovableItems());
+        List<String> removableItems;
+        if(Settings.getMaxRandomRemovedItems() < 1) {
+            removableItems = new ArrayList<>(0);
+        }
+        else {
+            removableItems = new ArrayList<>(DataFromFile.getRandomRemovableItems());
+        }
+
         removableItems.removeAll(Settings.getRemovedItems());
 
         boolean objectZipEnabled = Settings.getEnabledGlitches().contains("Object Zip");

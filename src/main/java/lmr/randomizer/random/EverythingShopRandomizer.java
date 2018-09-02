@@ -188,18 +188,33 @@ public class EverythingShopRandomizer implements ShopRandomizer {
     private void assignWeights(Random random) {
         List<String> shopsWithNoWeights = new ArrayList<>(randomizedShops);
         shopsWithNoWeights.remove(LITTLE_BROTHER_SHOP_NAME);
+
+        Map<String, Integer> mapOfShopNameToAvailableItems = new HashMap<>();
+        for(String shopName : randomizedShops) {
+            mapOfShopNameToAvailableItems.put(shopName, 3);
+        }
+
         for(Map.Entry<String, String> shopLocationAndItem : mapOfShopInventoryItemToContents.entrySet()) {
+            String shopInventoryLocation = shopLocationAndItem.getKey();
+            String shopName = shopInventoryLocation.substring(0, shopInventoryLocation.indexOf(")") + 1);
             if(shopLocationAndItem.getKey().contains("Surface") && shopLocationAndItem.getValue().equals("Weights")) {
-                String surfaceWeightsLocation = shopLocationAndItem.getKey();
-                String surfaceWeightsShop = surfaceWeightsLocation.substring(0, surfaceWeightsLocation.indexOf(")") + 1);
-                shopsWithNoWeights.remove(surfaceWeightsShop);
-                if(MSX_SHOP_NAME.equals(surfaceWeightsShop)) {
+                shopsWithNoWeights.remove(shopName);
+                if(MSX_SHOP_NAME.equals(shopName)) {
                     shopsWithNoWeights.remove(NON_MSX_SHOP_NAME);
+                    mapOfShopNameToAvailableItems.remove(shopName);
                 }
-                else if(NON_MSX_SHOP_NAME.equals(surfaceWeightsShop)) {
+                else if(NON_MSX_SHOP_NAME.equals(shopName)) {
                     shopsWithNoWeights.remove(MSX_SHOP_NAME);
+                    mapOfShopNameToAvailableItems.remove(shopName);
                 }
                 break;
+            }
+            mapOfShopNameToAvailableItems.put(shopName, mapOfShopNameToAvailableItems.get(shopName) - 1);
+            if(mapOfShopNameToAvailableItems.get(shopName) < 1) {
+                mapOfShopNameToAvailableItems.remove(shopName);
+            }
+            if(shopLocationAndItem.getValue().equals("Weights")) {
+                shopsWithNoWeights.remove(shopName);
             }
         }
 
@@ -207,7 +222,7 @@ public class EverythingShopRandomizer implements ShopRandomizer {
         String location;
         List<Integer> shopItemNumbers;
         int shopItemNumberIndex;
-        int maxAdditionalWeights = getWeightCount(random);
+        int maxAdditionalWeights = getWeightCount(random, mapOfShopNameToAvailableItems.size());
         int weightsPlaced = 0;
         while(weightsPlaced < maxAdditionalWeights) {
             location = null;
@@ -239,10 +254,16 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                     shopsWithNoWeights.remove(MSX_SHOP_NAME);
                 }
             }
+
+            if(shopsWithNoWeights.isEmpty()) {
+                // We've assigned to put weights in more shops than we actually have available. Logic for this should be cleaned up, but it's probably harmless as is.
+//                FileUtils.log("Unable to place " + maxAdditionalWeights + " weights");
+                break;
+            }
         }
     }
 
-    public String placeGuaranteedWeights(Random random) {
+    public void placeGuaranteedWeights(Random random) {
         // Guarantee weight shop on the Surface
         List<String> guaranteedWeightShopLocations = new ArrayList<>();
         for(String location : unassignedShopItemLocations) {
@@ -261,24 +282,29 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 guaranteedWeightShopLocations.add(location);
             }
         }
-        String littleBrotherShopWeightsLocation = guaranteedWeightShopLocations.get(random.nextInt(guaranteedWeightShopLocations.size()));
-        mapOfShopInventoryItemToContents.put(littleBrotherShopWeightsLocation, "Weights");
-        unassignedShopItemLocations.remove(littleBrotherShopWeightsLocation);
-        return surfaceWeightsLocation;
+        if(!guaranteedWeightShopLocations.isEmpty()) {
+            String littleBrotherShopWeightsLocation = guaranteedWeightShopLocations.get(random.nextInt(guaranteedWeightShopLocations.size()));
+            mapOfShopInventoryItemToContents.put(littleBrotherShopWeightsLocation, "Weights");
+            unassignedShopItemLocations.remove(littleBrotherShopWeightsLocation);
+        }
     }
 
-    private int getWeightCount(Random random) {
-        int maxAdditionalWeights = Math.min(randomizedShops.size() - 4,
+    private int getWeightCount(Random random, int usableShops) {
+        int maxAdditionalWeights = Math.min(usableShops - 4,
                 unassignedShopItemLocations.size() - ItemRandomizer.ALL_SUBWEAPONS.size() - itemRandomizer.getTotalShopItems()); // Must have enough room for all shop items plus one of each ammo type plus one weight. The remaining ammo to weights ratio can be random.
         if(maxAdditionalWeights < 0) {
             maxAdditionalWeights = 0;
         }
-        return random.nextInt(maxAdditionalWeights);
+        return maxAdditionalWeights == 0 ? 0 : random.nextInt(maxAdditionalWeights);
     }
 
     private void assignSubweaponAmmoLocations(Random random) {
         List<String> unassignedSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
+        unassignedSubweapons.removeAll(Settings.getRemovedItems());
+        unassignedSubweapons.removeAll(Settings.getCurrentRemovedItems());
         int totalSubweaponLocations = unassignedShopItemLocations.size() - itemRandomizer.getTotalShopItems();
+
+        List<String> availableSubweapons = new ArrayList<>(unassignedSubweapons);
 
         String location;
         String subweapon;
@@ -292,7 +318,7 @@ public class EverythingShopRandomizer implements ShopRandomizer {
             }
 
             if(unassignedSubweapons.isEmpty()) {
-                subweapon = ItemRandomizer.ALL_SUBWEAPONS.get(random.nextInt(ItemRandomizer.ALL_SUBWEAPONS.size()));
+                subweapon = availableSubweapons.get(random.nextInt(availableSubweapons.size()));
             }
             else {
                 int unassignedSubweaponIndex = random.nextInt(unassignedSubweapons.size());
@@ -352,6 +378,7 @@ public class EverythingShopRandomizer implements ShopRandomizer {
         String shopItem2;
         String shopItem3;
         ShopBlock shopBlock;
+        ShopItemPriceCountRandomizer shopItemPriceCountRandomizer = new ShopItemPriceCountRandomizer(random);
         for(String shopName : randomizedShops) {
             shopBlock = (ShopBlock) blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get(shopName));
 
@@ -390,7 +417,10 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                     || (Settings.isReplaceMapsWithWeights() && shopItem3.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem3))) {
                 shopItem3 = "Weights";
             }
-            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks, new ShopItemPriceCountRandomizer(random),
+            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks,
+                    shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 1", shopName), shopItem1),
+                    shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 2", shopName), shopItem2),
+                    shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 3", shopName), shopItem3),
                     "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName));
         }
     }

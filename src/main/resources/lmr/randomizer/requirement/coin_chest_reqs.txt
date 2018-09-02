@@ -1,7 +1,6 @@
 Coin: Surface (Waterfall) => None
 Coin: Surface (Seal) => Life Seal
 Coin: Surface (Ruin Path) => Bomb, Bomb Ammo, Location: Chamber of Extinction [Magatama], Feather
-Coin: Surface (Ruin Path) => Bomb, Bomb Ammo, Glitch: Raindrop
 Coin: Guidance (One) => None
 Coin: Guidance (Two) => None
 Coin: Guidance (Trap) => None

@@ -15,7 +15,7 @@ public final class DataFromFile {
     public static final List<String> FLOATING_ITEM_LOCATIONS = Arrays.asList("deathv.exe", "Shuriken",
             "Rolling Shuriken", "Knife", "Talisman", "Caltrops", "Chain Whip", "Flare Gun", "bunplus.com",
             "Chakram", "Ring", "Katana", "Key Sword", "Silver Shield", "Bomb", "Axe", "Philosopher's Ocarina",
-            "Flail Whip", "Earth Spear", "Angel Shield");
+            "Flail Whip", "Earth Spear", "Angel Shield", "Trap: Inferno Orb", "Trap: Twin Ankh");
     public static List<String> LOCATIONS_RELATED_TO_BLOCKS = Arrays.asList("Map (Surface)", "mekuri.exe",
             "Mini Doll", "Pepper", "Anchor", "Mulana Talisman", "xmailer.exe", "Book of the Dead", "Provocative Bathing Suit");
     public static List<String> TRAP_ITEMS = Arrays.asList("Trap: Graveyard", "Trap: Exploding",
@@ -269,65 +269,60 @@ public final class DataFromFile {
 
     public static List<String> getRandomRemovableItems() {
         if(randomRemovableItems == null) {
-            if(Settings.getMaxRandomRemovedItems() < 1) {
-                randomRemovableItems = new ArrayList<>(0);
-            }
-            else {
-                randomRemovableItems = new ArrayList<>();
-                boolean requireSerpentStaffAndChakrams = !Settings.getEnabledGlitches().contains("Cat Pause") && !Settings.getEnabledGlitches().contains("Object Zip") && !Settings.getEnabledGlitches().contains("Raindrop");
-                boolean requireFruitOfEden = !Settings.getEnabledGlitches().contains("Lamp Glitch");
-                boolean requirePlaneModelAndTwinStatue = !Settings.getEnabledGlitches().contains("Raindrop");
-                boolean requireEarthSpearAndBronzeMirror = !Settings.getEnabledGlitches().contains("Lamp Glitch") && !Settings.getEnabledGlitches().contains("Raindrop");
-                for(String itemName : getAllItems()) {
-                    if(itemName.startsWith("Ankh Jewel")) {
-                        continue; // Never remove an ankh jewel.
-                    }
-                    if(getWinRequirements().contains(itemName) || "Hand Scanner".equals(itemName)
-                            || "reader.exe".equals(itemName) || "mantra.exe".equals(itemName)
-                            || "Djed Pillar".equals(itemName) || "Dimensional Key".equals(itemName)
-                            || "Crystal Skull".equals(itemName) || "Pochette Key".equals(itemName)
-                            || "Philosopher's Ocarina".equals(itemName) || "Isis' Pendant".equals(itemName)
-                            || "Helmet".equals(itemName)) {
-                        continue; // Things that should never be removed.
-                    }
-                    if(Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
-                        continue; // Can't get Extinction grail without flares according to this logic.
-                    }
-                    if(Settings.isRequireIceCapeForLava() && "Ice Cape".equals(itemName)) {
-                        continue; // Needed for Viy
-                    }
-                    if(requireFruitOfEden && "Fruit of Eden".equals(itemName)) {
-                        continue; // Can't get Illusion grail without this.
-                    }
-                    if(requireSerpentStaffAndChakrams && ("Chakram".equals(itemName) || "Serpent Staff".equals(itemName))) {
-                        continue; // Can't get Birth grail without these.
-                    }
-                    if(requirePlaneModelAndTwinStatue && ("Plane Model".equals(itemName) || "Twin Statue".equals(itemName))) {
-                        continue; // Can't get to Birth grail area without Plane Model, Dimensional Corridor without Twin Statue.
-                    }
-                    if(requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
-                        continue; // Earth Spear needed for Viy access. Bronze Mirror for VIY mantra statue.
-                    }
-                    if(Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName)) {
-                        continue; // Don't count the maps that will already be replaced.
-                    }
-                    if(Settings.getNonRandomizedItems().contains(itemName)) {
-                        continue; // If the user wanted this item in its original location, they probably don't want it gone.
-                    }
-                    if(!Settings.isRandomizeXmailer() && "xmailer.exe".equals(itemName)) {
-                        continue; // NPCs can't have removed items yet.
-                    }
-                    if("Provocative Bathing Suit".equals(itemName)) {
-                        continue; // No value in removing this, and if someone wanted it randomized they probably want to actually see it.
-                    }
-                    if(Settings.getStartingItems().contains(itemName)) {
-                        continue; // If the user wanted this item in a specific location, they probably don't want it gone.
-                    }
-                    if(Settings.getInitiallyAccessibleItems().contains(itemName)) {
-                        continue; // If the user wanted this item early, they probably don't want it gone.
-                    }
-                    randomRemovableItems.add(itemName);
+            randomRemovableItems = new ArrayList<>();
+            boolean requireSerpentStaffAndChakrams = !Settings.getEnabledGlitches().contains("Cat Pause") && !Settings.getEnabledGlitches().contains("Object Zip") && !Settings.getEnabledGlitches().contains("Raindrop");
+            boolean requireFruitOfEden = !Settings.getEnabledGlitches().contains("Lamp Glitch");
+            boolean requirePlaneModelAndTwinStatue = !Settings.getEnabledGlitches().contains("Raindrop");
+            boolean requireEarthSpearAndBronzeMirror = !Settings.getEnabledGlitches().contains("Lamp Glitch") && !Settings.getEnabledGlitches().contains("Raindrop");
+            for(String itemName : getAllItems()) {
+                if(itemName.startsWith("Ankh Jewel")) {
+                    continue; // Never remove an ankh jewel.
                 }
+                if(getWinRequirements().contains(itemName) || "Hand Scanner".equals(itemName)
+                        || "reader.exe".equals(itemName) || "mantra.exe".equals(itemName)
+                        || "Djed Pillar".equals(itemName) || "Dimensional Key".equals(itemName)
+                        || "Crystal Skull".equals(itemName) || "Pochette Key".equals(itemName)
+                        || "Philosopher's Ocarina".equals(itemName) || "Isis' Pendant".equals(itemName)
+                        || "Helmet".equals(itemName)) {
+                    continue; // Things that should never be removed.
+                }
+                if(Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
+                    continue; // Can't get Extinction grail without flares according to this logic.
+                }
+                if(Settings.isRequireIceCapeForLava() && "Ice Cape".equals(itemName)) {
+                    continue; // Needed for Viy
+                }
+                if(requireFruitOfEden && "Fruit of Eden".equals(itemName)) {
+                    continue; // Can't get Illusion grail without this.
+                }
+                if(requireSerpentStaffAndChakrams && ("Chakram".equals(itemName) || "Serpent Staff".equals(itemName))) {
+                    continue; // Can't get Birth grail without these.
+                }
+                if(requirePlaneModelAndTwinStatue && ("Plane Model".equals(itemName) || "Twin Statue".equals(itemName))) {
+                    continue; // Can't get to Birth grail area without Plane Model, Dimensional Corridor without Twin Statue.
+                }
+                if(requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
+                    continue; // Earth Spear needed for Viy access. Bronze Mirror for VIY mantra statue.
+                }
+                if(Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName)) {
+                    continue; // Don't count the maps that will already be replaced.
+                }
+                if(Settings.getNonRandomizedItems().contains(itemName)) {
+                    continue; // If the user wanted this item in its original location, they probably don't want it gone.
+                }
+                if(!Settings.isRandomizeXmailer() && "xmailer.exe".equals(itemName)) {
+                    continue; // NPCs can't have removed items yet.
+                }
+                if("Provocative Bathing Suit".equals(itemName)) {
+                    continue; // No value in removing this, and if someone wanted it randomized they probably want to actually see it.
+                }
+                if(Settings.getStartingItems().contains(itemName)) {
+                    continue; // If the user wanted this item in a specific location, they probably don't want it gone.
+                }
+                if(Settings.getInitiallyAccessibleItems().contains(itemName)) {
+                    continue; // If the user wanted this item early, they probably don't want it gone.
+                }
+                randomRemovableItems.add(itemName);
             }
         }
         return randomRemovableItems;
@@ -405,7 +400,8 @@ public final class DataFromFile {
 
 
     public static List<String> getWinRequirements() {
-        if(winRequirements == null && (Settings.getMinRandomRemovedItems() > 0 || Settings.getMaxRandomRemovedItems() > 0)) {
+        if(winRequirements == null
+                && ((Settings.getMinRandomRemovedItems() > 0 || Settings.getMaxRandomRemovedItems() > 0) || !DataFromFile.getCustomItemPlacements().isEmpty())) {
             winRequirements = FileUtils.getList("requirement/win_reqs.txt");
         }
         return winRequirements;

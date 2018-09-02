@@ -1,13 +1,13 @@
 Anchor
 Angel Shield
-Ankh Jewel (Chamber of Birth)
-Ankh Jewel (Dimensional Corridor)
 Ankh Jewel (Gate of Guidance)
 Ankh Jewel (Mausoleum of the Giants)
-Ankh Jewel (Spring in the Sky)
 Ankh Jewel (Temple of the Sun)
+Ankh Jewel (Spring in the Sky)
 Ankh Jewel (Tower of Ruin)
+Ankh Jewel (Chamber of Birth)
 Ankh Jewel (Twin Labyrinths)
+Ankh Jewel (Dimensional Corridor)
 Axe
 beolamu.exe
 Birth Seal
@@ -98,16 +98,16 @@ randc.exe
 reader.exe
 Ring
 Rolling Shuriken
-Sacred Orb (Gate of Guidance)
-Sacred Orb (Chamber of Extinction)
-Sacred Orb (Dimensional Corridor)
-Sacred Orb (Mausoleum of the Giants)
-Sacred Orb (Shrine of the Mother)
-Sacred Orb (Spring in the Sky)
 Sacred Orb (Surface)
+Sacred Orb (Gate of Guidance)
+Sacred Orb (Mausoleum of the Giants)
 Sacred Orb (Temple of the Sun)
-Sacred Orb (Tower of Ruin)
+Sacred Orb (Spring in the Sky)
+Sacred Orb (Chamber of Extinction)
 Sacred Orb (Twin Labyrinths)
+Sacred Orb (Shrine of the Mother)
+Sacred Orb (Tower of Ruin)
+Sacred Orb (Dimensional Corridor)
 Scalesphere
 Scriptures
 Serpent Staff

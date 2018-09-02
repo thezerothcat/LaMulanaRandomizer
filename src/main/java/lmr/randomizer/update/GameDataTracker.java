@@ -2269,8 +2269,8 @@ public final class GameDataTracker {
         }
     }
 
-    public static void writeShopInventory(ShopBlock shopBlock, String shopItem1, String shopItem2, String shopItem3,
-                                          List<Block> blocks, ShopItemPriceCountRandomizer priceCountRandomizer,
+    public static void writeShopInventory(ShopBlock shopBlock, String shopItem1, String shopItem2, String shopItem3, List<Block> blocks,
+                                          Pair<Short, Short> itemPriceAndCount1, Pair<Short, Short> itemPriceAndCount2, Pair<Short, Short> itemPriceAndCount3,
                                           boolean littleBrotherShop, boolean msxShop) {
         short shopItem1Flag = getFlag(shopItem1);
         short shopItem2Flag = getFlag(shopItem2);
@@ -2280,8 +2280,8 @@ public final class GameDataTracker {
         if(shopItem1.contains("Sacred Orb")) {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
-            writeShopInventory(noOrbShopBlock, "Weights", shopItem2, shopItem3, blocks, priceCountRandomizer,
-                    littleBrotherShop, msxShop);
+            writeShopInventory(noOrbShopBlock, "Weights", shopItem2, shopItem3, blocks,
+                    new Pair<>((short)10, (short)5), itemPriceAndCount2, itemPriceAndCount3, littleBrotherShop, msxShop);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -2306,8 +2306,8 @@ public final class GameDataTracker {
         else if(shopItem2.contains("Sacred Orb")) {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
-            writeShopInventory(noOrbShopBlock, shopItem1, "Weights", shopItem3, blocks, priceCountRandomizer,
-                    littleBrotherShop, msxShop);
+            writeShopInventory(noOrbShopBlock, shopItem1, "Weights", shopItem3, blocks,
+                    itemPriceAndCount1, new Pair<>((short)10, (short)5), itemPriceAndCount3, littleBrotherShop, msxShop);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -2332,8 +2332,8 @@ public final class GameDataTracker {
         else if(shopItem3.contains("Sacred Orb")) {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
-            writeShopInventory(noOrbShopBlock, shopItem1, shopItem2, "Weights", blocks, priceCountRandomizer,
-                    littleBrotherShop, msxShop);
+            writeShopInventory(noOrbShopBlock, shopItem1, shopItem2, "Weights", blocks,
+                    itemPriceAndCount1, itemPriceAndCount2, new Pair<>((short)10, (short)5), littleBrotherShop, msxShop);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -2361,66 +2361,63 @@ public final class GameDataTracker {
         shopBlock.getInventoryItemArgsList().getData().add(getInventoryItemArg(shopItem2));
         shopBlock.getInventoryItemArgsList().getData().add(getInventoryItemArg(shopItem3));
 
-        if(priceCountRandomizer == null) {
-            List<Short> newCounts = new ArrayList<>();
-            if("Weights".equals(shopItem1)) {
-                newCounts.add((short)5);
-            }
-            else if(shopItem1.endsWith("Ammo")) {
+        List<Short> newCounts  = new ArrayList<>();
+        List<Short> newPrices  = new ArrayList<>();
+        if(itemPriceAndCount1 == null) {
+            newPrices.add(shopBlock.getInventoryPriceList().getData().get(0));
+            if ("Weights".equals(shopItem1)) {
+                newCounts.add((short) 5);
+            } else if (shopItem1.endsWith("Ammo")) {
                 newCounts.add(shopBlock.getInventoryCountList().getData().get(0));
+            } else {
+                newCounts.add((short) 1);
             }
-            else {
-                newCounts.add((short)1);
-            }
-
-            if("Weights".equals(shopItem2)) {
-                newCounts.add((short)5);
-            }
-            else if(shopItem2.endsWith("Ammo")) {
-                newCounts.add(shopBlock.getInventoryCountList().getData().get(1));
-            }
-            else {
-                newCounts.add((short)1);
-            }
-
-            if("Weights".equals(shopItem3)) {
-                newCounts.add((short)5);
-            }
-            else if(shopItem3.endsWith("Ammo")) {
-                newCounts.add(shopBlock.getInventoryCountList().getData().get(2));
-            }
-            else {
-                newCounts.add((short)1);
-            }
-            shopBlock.getInventoryCountList().getData().clear();
-            shopBlock.getInventoryCountList().getData().addAll(newCounts);
-
-//            shopBlock.getInventoryPriceList().getData().clear();
-//            shopBlock.getInventoryPriceList().getData().add((short)1);
-//            shopBlock.getInventoryPriceList().getData().add((short)1);
-//            shopBlock.getInventoryPriceList().getData().add((short)1);
         }
         else {
-            shopBlock.getInventoryPriceList().getData().clear();
-            shopBlock.getInventoryCountList().getData().clear();
+            newPrices.add(itemPriceAndCount1.getKey());
+            newCounts.add(itemPriceAndCount1.getValue());
+        }
 
-            Pair<Short, Short> itemPriceAndCount = priceCountRandomizer.getItemPriceAndCount(shopItem1);
-            shopBlock.getInventoryPriceList().getData().add(itemPriceAndCount.getKey());
-            shopBlock.getInventoryCountList().getData().add(itemPriceAndCount.getValue());
+        if(itemPriceAndCount2 == null) {
+            newPrices.add(shopBlock.getInventoryPriceList().getData().get(1));
+            if ("Weights".equals(shopItem2)) {
+                newCounts.add((short) 5);
+            } else if (shopItem2.endsWith("Ammo")) {
+                newCounts.add(shopBlock.getInventoryCountList().getData().get(1));
+            } else {
+                newCounts.add((short) 1);
+            }
+        }
+        else {
+            newPrices.add(itemPriceAndCount2.getKey());
+            newCounts.add(itemPriceAndCount2.getValue());
+        }
 
-            itemPriceAndCount = priceCountRandomizer.getItemPriceAndCount(shopItem2);
-            shopBlock.getInventoryPriceList().getData().add(itemPriceAndCount.getKey());
-            shopBlock.getInventoryCountList().getData().add(itemPriceAndCount.getValue());
+        if(itemPriceAndCount3 == null) {
+            newPrices.add(shopBlock.getInventoryPriceList().getData().get(2));
+            if ("Weights".equals(shopItem3)) {
+                newCounts.add((short) 5);
+            } else if (shopItem3.endsWith("Ammo")) {
+                newCounts.add(shopBlock.getInventoryCountList().getData().get(2));
+            } else {
+                newCounts.add((short) 1);
+            }
+        }
+        else {
+            newPrices.add(itemPriceAndCount3.getKey());
+            newCounts.add(itemPriceAndCount3.getValue());
+        }
 
-            itemPriceAndCount = priceCountRandomizer.getItemPriceAndCount(shopItem3);
-            shopBlock.getInventoryPriceList().getData().add(itemPriceAndCount.getKey());
-            shopBlock.getInventoryCountList().getData().add(itemPriceAndCount.getValue());
+        shopBlock.getInventoryPriceList().getData().clear();
+        shopBlock.getInventoryPriceList().getData().addAll(newPrices);
+
+        shopBlock.getInventoryCountList().getData().clear();
+        shopBlock.getInventoryCountList().getData().addAll(newCounts);
 
 //            shopBlock.getInventoryPriceList().getData().clear();
 //            shopBlock.getInventoryPriceList().getData().add((short)1);
 //            shopBlock.getInventoryPriceList().getData().add((short)1);
 //            shopBlock.getInventoryPriceList().getData().add((short)1);
-        }
 
         shopBlock.getFlagList().getData().clear();
         shopBlock.getFlagList().getData().add(shopItem1Flag);
