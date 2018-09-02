@@ -351,41 +351,39 @@ public final class DataFromFile {
     public static Map<String, NodeWithRequirements> getMapOfNodeNameToRequirementsObject() {
         if(mapOfNodeNameToRequirementsObject == null) {
             mapOfNodeNameToRequirementsObject = new HashMap<>();
-            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/location_reqs.txt");
-            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/item_reqs.txt");
-            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/event_reqs.txt");
-            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/shop_reqs.txt");
-            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/attack_reqs.txt");
-            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dead_ends.txt"); // todo: remove this when dead ends are handled better
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/location_reqs.txt", true);
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/item_reqs.txt", true);
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/event_reqs.txt", true);
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/shop_reqs.txt", true);
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/attack_reqs.txt", true);
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dead_ends.txt", true); // todo: remove this when dead ends are handled better
             if(!Settings.getEnabledGlitches().isEmpty()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/location_reqs.txt");
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/item_reqs.txt");
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/shop_reqs.txt");
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/event_reqs.txt");
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/glitch_reqs.txt");
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/location_reqs.txt", true);
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/item_reqs.txt", true);
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/shop_reqs.txt", true);
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/event_reqs.txt", true);
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/glitch_reqs.txt", true);
             }
             if(!Settings.getEnabledDamageBoosts().isEmpty()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/location_reqs.txt");
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/item_reqs.txt");
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/shop_reqs.txt");
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/location_reqs.txt", true);
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/item_reqs.txt", true);
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/shop_reqs.txt", true);
             }
             if(Settings.isRandomizeCoinChests()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/coin_chest_reqs.txt");
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/coin_chest_reqs.txt", true);
             }
             if(Settings.isRandomizeTrapItems()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/trap_item_reqs.txt");
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/trap_item_reqs.txt", true);
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject,
-                    String.format("requirement/bosses/%s_reqs.txt", Settings.getBossDifficulty().name().toLowerCase()));
+                    String.format("requirement/bosses/%s_reqs.txt", Settings.getBossDifficulty().name().toLowerCase()), true);
             if(!Settings.isRequireSoftwareComboForKeyFairy()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_software_combo_for_key_fairy_reqs.txt");
-            }
-            if(!Settings.isRequireIceCapeForLava()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_ice_cape_for_lava_reqs.txt");
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_software_combo_for_key_fairy_reqs.txt", true);
             }
             if(!Settings.isRequireFlaresForExtinction()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_flares_for_extinction_reqs.txt");
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_flares_for_extinction_reqs.txt", true);
             }
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "custom-reqs.txt", false);
         }
         return mapOfNodeNameToRequirementsObject;
     }
@@ -393,7 +391,7 @@ public final class DataFromFile {
     public static Map<String, NodeWithRequirements> getMapOfNodeNameToExitRequirementsObject() {
         if (mapOfNodeNameToExitRequirementsObject == null) {
             mapOfNodeNameToExitRequirementsObject = new HashMap<>();
-            FileUtils.populateRequirements(mapOfNodeNameToExitRequirementsObject, "requirement/dead_ends.txt");
+            FileUtils.populateRequirements(mapOfNodeNameToExitRequirementsObject, "requirement/dead_ends.txt", true);
         }
         return mapOfNodeNameToExitRequirementsObject;
     }
@@ -426,6 +424,7 @@ public final class DataFromFile {
         if(Settings.isHTFullRandom()) {
             for(String item : possibleItems) {
                 if(!HT_BANNED_ITEMS.contains(item) && !item.startsWith("Coin:") && !item.startsWith("Trap:")
+                        && !Settings.getRemovedItems().contains(item)
                         && !Settings.getCurrentRemovedItems().contains(item)) {
                     enabledItems.add(item);
                 }

@@ -13,7 +13,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "1.36.0";
+    public static final String VERSION = "1.37.0";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -124,9 +124,9 @@ public class FileUtils {
         return listContents;
     }
 
-    public static List<Map.Entry<String, List<String>>> getListOfLists(String file) {
+    public static List<Map.Entry<String, List<String>>> getListOfLists(String file, boolean inFolder) {
         List<Map.Entry<String, List<String>>> data = new ArrayList<>();
-        try(BufferedReader reader = getFileReader(file, true)) {
+        try(BufferedReader reader = getFileReader(file, inFolder)) {
             String line;
             String[] lineParts;
             while((line = reader.readLine()) != null) {
@@ -146,14 +146,14 @@ public class FileUtils {
         return data;
     }
 
-    public static void populateRequirements(Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject, String file) {
-        for (Map.Entry<String, List<String>> line : getListOfLists(file))
+    public static void populateRequirements(Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject, String file, boolean inFolder) {
+        for (Map.Entry<String, List<String>> line : getListOfLists(file, inFolder))
             addNode(mapOfNodeNameToRequirementsObject, line.getKey(), line.getValue());
     }
 
     public static Map<String, List<String>> getAccessibleLocations(String file) {
         Map<String, List<String>> accessibleLocations = new HashMap<>();
-        for (Map.Entry<String, List<String>> line : getListOfLists(file)) {
+        for (Map.Entry<String, List<String>> line : getListOfLists(file, true)) {
             if (accessibleLocations.containsKey(line.getKey()))
                 throw new RuntimeException(file + " contains duplicated key " + line.getKey());
             accessibleLocations.put(line.getKey(), line.getValue());
@@ -178,7 +178,7 @@ public class FileUtils {
 
     public static Map<String, GameObjectId> getRcdDataIdMap(String filename) {
         Map<String, GameObjectId> map = new HashMap<>();
-        for (Map.Entry<String, List<String>> line : getListOfLists(filename)) {
+        for (Map.Entry<String, List<String>> line : getListOfLists(filename, true)) {
             if (map.containsKey(line.getKey()))
                 throw new RuntimeException(filename + " contains duplicated key " + line.getKey());
             if (line.getValue().size() != 2)
@@ -190,7 +190,7 @@ public class FileUtils {
 
     public static Map<String, Integer> getShopBlockMap(String filename) {
         Map<String, Integer> map = new HashMap<>();
-        for (Map.Entry<String, List<String>> line : getListOfLists(filename)) {
+        for (Map.Entry<String, List<String>> line : getListOfLists(filename, true)) {
             if (map.containsKey(line.getKey()))
                 throw new RuntimeException(filename + " contains duplicated key " + line.getKey());
             if (line.getValue().size() != 1)
@@ -203,7 +203,7 @@ public class FileUtils {
 
     public static Map<String, List<String>> getShopOriginalContentsMap(String filename) {
         Map<String, List<String>> map = new HashMap<>();
-        for (Map.Entry<String, List<String>> line : getListOfLists(filename)) {
+        for (Map.Entry<String, List<String>> line : getListOfLists(filename, true)) {
             if (map.containsKey(line.getKey()))
                 throw new RuntimeException(filename + " contains duplicated key " + line.getKey());
             if (line.getValue().size() != 3)

@@ -701,18 +701,20 @@ public class Main {
                 dialog.updateProgress(20, Translations.getText("progress.shuffling.removing"));
                 while(true) {
                     determineRemovedItems(random);
+                    List<String> allRemovedItems = new ArrayList<>(Settings.getRemovedItems());
+                    allRemovedItems.addAll(Settings.getCurrentRemovedItems());
                     if(BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty())) {
                         // Some optimizations to save larger computations when boss requirements will definitely fail the seed.
-                        if(Settings.getCurrentRemovedItems().contains("Chain Whip") && Settings.getCurrentRemovedItems().contains("Flail Whip") && Settings.getCurrentRemovedItems().contains("Axe")) {
+                        if(allRemovedItems.contains("Chain Whip") && allRemovedItems.contains("Flail Whip") && allRemovedItems.contains("Axe")) {
                             // Rejected because none of the preferred weapons exists.
                             continue;
                         }
-                        if(Settings.getCurrentRemovedItems().contains("Silver Shield") && Settings.getCurrentRemovedItems().contains("Angel Shield")) {
+                        if(allRemovedItems.contains("Silver Shield") && allRemovedItems.contains("Angel Shield")) {
                             // Rejected because no permanent shield.
                             continue;
                         }
-                        if(Settings.getCurrentRemovedItems().contains("Rolling Shuriken") && Settings.getCurrentRemovedItems().contains("Chakram")
-                                && Settings.getCurrentRemovedItems().contains("Earth Spear") && Settings.getCurrentRemovedItems().contains("Pistol")) {
+                        if(allRemovedItems.contains("Rolling Shuriken") && allRemovedItems.contains("Chakram")
+                                && allRemovedItems.contains("Earth Spear") && allRemovedItems.contains("Pistol")) {
                             // Rejected because none of the "good" ranged weapons for Palenque are in the seed.
                             continue;
                         }
@@ -760,6 +762,7 @@ public class Main {
             boolean ankhJewelLock = false;
             accessChecker.initExitRequirements();
             accessChecker.computeAccessibleNodes("None");
+            accessChecker.computeAccessibleNodes("Setting: Lava HP");
             accessChecker.computeAccessibleNodes(Settings.getCurrentStartingWeapon());
             for(String startingItem : Settings.getStartingItems()) {
                 accessChecker.computeAccessibleNodes(startingItem);
@@ -1146,13 +1149,17 @@ public class Main {
     private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, int attempt) throws IOException {
         itemRandomizer.outputLocations(attempt);
         shopRandomizer.outputLocations(attempt);
-        if (!Settings.getCurrentRemovedItems().isEmpty()) {
+        if (!Settings.getCurrentRemovedItems().isEmpty() || !Settings.getRemovedItems().isEmpty()) {
             BufferedWriter writer = FileUtils.getFileWriter(String.format("%s/removed_items.txt", Settings.getStartingSeed()));
             if (writer == null) {
                 return;
             }
 
             for(String removedItem : Settings.getCurrentRemovedItems()) {
+                writer.write(Translations.getItemText(removedItem, false));
+                writer.newLine();
+            }
+            for(String removedItem : Settings.getRemovedItems()) {
                 writer.write(Translations.getItemText(removedItem, false));
                 writer.newLine();
             }

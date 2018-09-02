@@ -271,7 +271,7 @@ public class AccessChecker {
                 if(item == null) {
                     throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
                 }
-                if(!Settings.getCurrentRemovedItems().contains(item)) {
+                if(!Settings.getCurrentRemovedItems().contains(item) && !Settings.getRemovedItems().contains(item)) {
                     queuedUpdates.add(item);
                 }
                 break;
@@ -330,6 +330,7 @@ public class AccessChecker {
                         throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
                     }
                     if(!accessedNodes.contains(shopItem) && !queuedUpdates.contains(shopItem)
+                            && !Settings.getRemovedItems().contains(shopItem)
                             && !Settings.getCurrentRemovedItems().contains(shopItem)) {
                         queuedUpdates.add(shopItem);
                     }
