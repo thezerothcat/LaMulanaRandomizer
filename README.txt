@@ -3,6 +3,10 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
+1.36:
+-----------------------------
+Expanded support for custom item placement.
+
 1.35:
 -----------------------------
 Items can now be placed in specific locations through the use of a configuration file. See the wiki for more information.
