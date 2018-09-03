@@ -267,13 +267,15 @@ public class EverythingShopRandomizer implements ShopRandomizer {
         // Guarantee weight shop on the Surface
         List<String> guaranteedWeightShopLocations = new ArrayList<>();
         for(String location : unassignedShopItemLocations) {
-            if(location.contains("Surface") && !location.equals(MSX_SHOP_NAME + " Item 1")) {
+            if(location.contains("Surface") && !location.contains(MSX_SHOP_NAME)) {
                 guaranteedWeightShopLocations.add(location);
             }
         }
-        String surfaceWeightsLocation = guaranteedWeightShopLocations.get(random.nextInt(guaranteedWeightShopLocations.size()));
-        mapOfShopInventoryItemToContents.put(surfaceWeightsLocation, "Weights");
-        unassignedShopItemLocations.remove(surfaceWeightsLocation);
+        if(!guaranteedWeightShopLocations.isEmpty()) {
+            String surfaceWeightsLocation = guaranteedWeightShopLocations.get(random.nextInt(guaranteedWeightShopLocations.size()));
+            mapOfShopInventoryItemToContents.put(surfaceWeightsLocation, "Weights");
+            unassignedShopItemLocations.remove(surfaceWeightsLocation);
+        }
 
         // Guarantee weights at Little Brother's shop so there's a guaranteed way to unlock Big Brother's shop.
         guaranteedWeightShopLocations.clear();
