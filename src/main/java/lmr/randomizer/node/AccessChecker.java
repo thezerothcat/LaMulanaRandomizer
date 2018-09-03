@@ -126,7 +126,7 @@ public class AccessChecker {
         if(!Settings.isRequireFullAccess()) {
             return false;
         }
-        return Settings.getCurrentRemovedItems().isEmpty()
+        return Settings.getRemovedItems().isEmpty() && Settings.getCurrentRemovedItems().isEmpty()
                 || (Settings.isRandomizeMainWeapon() && Settings.getCurrentRemovedItems().size() == 1 && !"Whip".equals(Settings.getCurrentStartingWeapon()));
     }
 
