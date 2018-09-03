@@ -15,7 +15,6 @@ Exit: Graveyard of the Giants [East] => Holy Grail
 Exit: Graveyard of the Giants [East] => Glitch: Raindrop
 Exit: Graveyard of the Giants [East] => Bomb, Location: Gate of Illusion [Lower]
 Exit: Graveyard of the Giants [East] => Bomb, Exit: Graveyard of the Giants [West]
-Exit: Graveyard of the Giants [East] => Location: Graveyard of the Giants [Grail], Event: Viy Defeated, Bronze Mirror
 Exit: Graveyard of the Giants [West] => Event: Sakit Defeated, Bronze Mirror
 Exit: Graveyard of the Giants [West] => Feather, Exit: Temple of Moonlight [Lower]
 Exit: Tower of the Goddess [Lower] => Plane Model, Location: Gate of Illusion [Lower], Ice Cape
