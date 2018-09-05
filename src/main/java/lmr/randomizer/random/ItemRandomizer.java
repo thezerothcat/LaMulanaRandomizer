@@ -417,7 +417,7 @@ public class ItemRandomizer {
         if(itemNewContentsData.getInventoryArg() == 62 && Settings.getRemovedItems().contains("Spaulder")) {
             return 2781;
         }
-        if(itemNewContentsData.getInventoryArg() == 0
+        if("Whip".equals(newContents)
                 && (Settings.getCurrentRemovedItems().contains("Whip") || Settings.getRemovedItems().contains("Whip"))) {
             return 2773;
         }

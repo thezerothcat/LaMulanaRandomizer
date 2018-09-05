@@ -2922,7 +2922,6 @@ public final class GameDataTracker {
                 addExplosion(objectToModify.getObjectContainer(), objectToModify.getX(), objectToModify.getY(), newWorldFlag);
             }
             else {
-
                 short newContentsGraphic = getItemGraphic(newChestContentsItemName);
                 if(newContentsGraphic == 0) {
                     // Nothing

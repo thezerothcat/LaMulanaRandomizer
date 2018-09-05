@@ -3,6 +3,10 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
+1.38:
+-----------------------------
+Mostly bugfixes.
+
 1.37:
 -----------------------------
 Added the ability to declare custom logic. Fixed some logic problems from 1.35 and 1.36.

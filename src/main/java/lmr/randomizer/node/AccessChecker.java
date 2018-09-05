@@ -349,7 +349,14 @@ public class AccessChecker {
             FileUtils.log("No requirements for item " + item);
         }
 
-        if(item.contains("Ankh Jewel")) {
+        if(item.equals("Dimensional Key")) {
+            if("Angel Shield".equals(location) || "beolamu.exe".equals(location) || "Sacred Orb (Dimensional Corridor)".equals(location)
+                    || "Ankh Jewel (Dimensional Corridor".equals(location) || "Sacred Orb (Dimensional Corridor)".equals(location)
+                    || "Map (Dimensional Corridor)".equals(location) || "Coin: Dimensional".equals(location)) {
+                return false;
+            }
+        }
+        else if(item.contains("Ankh Jewel")) {
             item = "Ankh Jewel";
             if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
                 return false;

@@ -977,6 +977,12 @@ public class Main {
             }
             saveData[index++] = (byte) -1;
         }
+//        try {
+//            saveData = FileUtils.getBytes(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir()));
+//        }
+//        catch (Exception ex) {
+//            return saveData;
+//        }
         return saveData;
     }
 
