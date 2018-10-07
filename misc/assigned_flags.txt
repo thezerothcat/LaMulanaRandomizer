@@ -24,6 +24,7 @@ Bit flags for floating items?: 2767-2775
 {FLAG 209:=1}I got a map and was looking at it as I walked.{BR}And then, I fell and sort of died.{BR}Heh heh--well, maybe it's not that funny...
 {CMD 0-0}
 
+Wrong color medicine flag: ad4 (2772)
 Whip (removed/randomized) world flag: ad5 (2773)
 Extra ankh jewel flag: ad6 (2774)
 Whip (regular) world flag: 2775

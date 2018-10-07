@@ -203,6 +203,8 @@ public class Main {
 
         private boolean generateSeed() {
             if(!validateSettings()) {
+                DataFromFile.clearCustomItemPlacements();
+                DataFromFile.clearAllData();
                 return false;
             }
 
@@ -210,63 +212,13 @@ public class Main {
 
             Settings.saveSettings();
 
-            DataFromFile.clearAllData();
-
             progressDialog.updateProgress(10, Translations.getText("setup.backup"));
 
-            File rcdFile = new File("script.rcd.bak");
-            if(!rcdFile.exists()) {
-                File existingRcd = new File(Settings.getLaMulanaBaseDir(), "data/mapdata/script.rcd");
-                if(!existingRcd.exists()) {
-                    JOptionPane.showMessageDialog(this,
-                            "Unable to find file " + existingRcd.getAbsolutePath(),
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                else if (!FileUtils.hashRcdFile(existingRcd)) {
-                    JOptionPane.showMessageDialog(this,
-                            "The data/mapdata/script.rcd file in the game directory is not original! Please restore it from a backup / clean install!",
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-
-                try {
-                    // Make script.rcd backup
-                    FileOutputStream fileOutputStream = new FileOutputStream(new File("script.rcd.bak"));
-                    Files.copy(existingRcd.toPath(), fileOutputStream);
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
-                }
-                catch (Exception ex) {
-                    FileUtils.log("Unable to back up script.rcd: " + ex.getMessage());
-                    FileUtils.logException(ex);
-                    throw new RuntimeException("Unable to back up script.rcd. Please see logs for more information.");
-                }
+            if(!backupRcd()) {
+                return false; // Error messaging handled within
             }
-            File datFile = new File(Settings.getBackupDatFile());
-            if(!datFile.exists()) {
-                File existingDat = new File(String.format("%s/data/language/%s/script_code.dat",
-                        Settings.getLaMulanaBaseDir(), Settings.getLanguage()));
-                if(!FileUtils.hashDatFile(existingDat)) {
-                    JOptionPane.showMessageDialog(this,
-                            "Unable to back up script_code.dat - file already modified",
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-
-                try {
-                    // Make script_code.dat backup
-                    Files.copy(existingDat.toPath(),
-                            new FileOutputStream(new File(Settings.getBackupDatFile())));
-                }
-                catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this,
-                            "Unable to back up script.rcd. Please see logs for more information.",
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    FileUtils.log("Unable to back up script_code.dat: " + ex.getMessage());
-                    FileUtils.logException(ex);
-                    throw new RuntimeException("Unable to back up script_code.dat");
-                }
+            if(!backupDat()) {
+                return false; // Error messaging handled within
             }
 
             progressDialog.updateProgress(15, Translations.getText("setup.dir"));
@@ -302,6 +254,68 @@ public class Main {
                 FileUtils.log("Error: " + ex.getMessage());
                 FileUtils.logException(ex);
                 throw new RuntimeException("Unknown error. Please see logs for more information.");
+            }
+            return true;
+        }
+
+        private boolean backupRcd() {
+            File rcdFile = new File("script.rcd.bak");
+            if(!rcdFile.exists()) {
+                File existingRcd = new File(Settings.getLaMulanaBaseDir(), "data/mapdata/script.rcd");
+                if(!existingRcd.exists()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Unable to find file " + existingRcd.getAbsolutePath(),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                else if (!FileUtils.hashRcdFile(existingRcd)) {
+                    JOptionPane.showMessageDialog(this,
+                            "The data/mapdata/script.rcd file in the game directory is not original! Please restore it from a backup / clean install!",
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
+                try {
+                    // Make script.rcd backup
+                    FileOutputStream fileOutputStream = new FileOutputStream(new File("script.rcd.bak"));
+                    Files.copy(existingRcd.toPath(), fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                }
+                catch (Exception ex) {
+                    FileUtils.log("Unable to back up script.rcd: " + ex.getMessage());
+                    FileUtils.logException(ex);
+                    throw new RuntimeException("Unable to back up script.rcd. Please see logs for more information.");
+                }
+            }
+            return true;
+        }
+
+        private boolean backupDat() {
+            File datFile = new File(Settings.getBackupDatFile());
+            if(!datFile.exists()) {
+                File existingDat = new File(String.format("%s/data/language/%s/script_code.dat",
+                        Settings.getLaMulanaBaseDir(), Settings.getLanguage()));
+                if(!FileUtils.hashDatFile(existingDat)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Unable to back up script_code.dat - file already modified",
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
+                try {
+                    // Make script_code.dat backup
+                    Files.copy(existingDat.toPath(),
+                            new FileOutputStream(new File(Settings.getBackupDatFile())));
+                }
+                catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this,
+                            "Unable to back up script.rcd. Please see logs for more information.",
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    FileUtils.log("Unable to back up script_code.dat: " + ex.getMessage());
+                    FileUtils.logException(ex);
+                    throw new RuntimeException("Unable to back up script_code.dat");
+                }
             }
             return true;
         }
@@ -413,7 +427,6 @@ public class Main {
             }
             if(!validateCustomPlacements(this)) {
                 // Message created below
-                DataFromFile.clearCustomItemPlacements();
                 return false;
             }
             return true;
@@ -448,6 +461,18 @@ public class Main {
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
                         return false;
                     }
+                    if(Settings.isRequireIceCapeForLava() && customPlacement.getContents().equals("Ice Cape")) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Please disable the setting \"Require Ice Cape for swimming through lava\"",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(Settings.isRequireFlaresForExtinction() && customPlacement.getContents().equals("Flare Gun")) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Please disable the setting \"Require Flare Gun for Chamber of Extinction\"",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
                     if(!DataFromFile.getRandomRemovableItems().contains(customPlacement.getContents())
                             && !"Whip".equals(customPlacement.getContents())) {
                         JOptionPane.showMessageDialog(randomizerUI,
@@ -455,8 +480,55 @@ public class Main {
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
                         return false;
                     }
+                    if(!isValidContents(customPlacement.getContents())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Removed item not valid: " + customPlacement.getContents(),
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
 
                     removed.add(customPlacement.getContents());
+                }
+                else if(customPlacement.isStartingWeapon()) {
+                    if(removed.contains(customPlacement.getContents())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Cannot remove starting weapon",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(!Settings.isRandomizeMainWeapon()) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Please enable randomized starting weapon",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+
+                    if(ItemRandomizer.ALL_SUBWEAPONS.contains(customPlacement.getContents())) {
+                        if(!Settings.isAllowSubweaponStart()) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Please enable starting with subweapons",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
+                    else if(!"Whip".equals(customPlacement.getContents())
+                            && !"Knife".equals(customPlacement.getContents())
+                            && !"Katana".equals(customPlacement.getContents())
+                            && !"Axe".equals(customPlacement.getContents())
+                            && !"Key Sword".equals(customPlacement.getContents())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Invalid starting weapon: " + customPlacement.getContents(),
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                }
+                else if(customPlacement.isStartingItem()) {
+                    if(!isValidContents(customPlacement.getContents())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Placed item not valid: " + customPlacement.getContents() + " at location " + customPlacement.getLocation(),
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
                 }
                 else if(customPlacement.isCurseChest()) {
                     if(!Settings.isRandomizeCursedChests()) {
@@ -592,25 +664,6 @@ public class Main {
                         }
                     }
 
-                    if(Settings.getInitiallyAccessibleItems().contains(customPlacement.getContents())
-                            && !DataFromFile.getInitialNonShopItemLocations().contains(customPlacement.getLocation())
-                            && !DataFromFile.getInitialCoinChestLocations().contains(customPlacement.getLocation())
-                            && !DataFromFile.getInitialTrapItemLocations().contains(customPlacement.getLocation())) {
-                        boolean initialShop = false;
-                        for(String shopName : DataFromFile.getInitialShops()) {
-                            if(customPlacement.getLocation().startsWith(shopName)) {
-                                initialShop = true;
-                                break;
-                            }
-                        }
-                        if(!initialShop) {
-                            JOptionPane.showMessageDialog(randomizerUI,
-                                    "Custom placement of " + customPlacement.getContents() + " not valid with current settings for initially accessible item",
-                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                            return false;
-                        }
-                    }
-
                     locations.add(customPlacement.getLocation());
                     items.add(customPlacement.getContents());
                 }
@@ -658,7 +711,7 @@ public class Main {
         }
 
         private boolean isValidContents(String contents) {
-            if(DataFromFile.getAllItems().contains(contents)) {
+            if(DataFromFile.getAllItems().contains(contents) || "Whip".equals(contents)) {
                 return true;
             }
             if(DataFromFile.getAllCoinChests().contains(contents)) {
@@ -670,7 +723,7 @@ public class Main {
             }
             if(contents.equals("Weights") || contents.equals("Shuriken Ammo") || contents.equals("Rolling Shuriken Ammo")
                     || contents.equals("Caltrops Ammo") || contents.equals("Chakram Ammo") || contents.equals("Flare Gun Ammo")
-                    || contents.equals("Earth Spear Ammo") || contents.equals("Pistol Ammo")) {
+                    || contents.equals("Earth Spear Ammo") || contents.equals("Pistol Ammo") || contents.equals("Bomb Ammo")) {
                 return true;
             }
             return false;
@@ -680,14 +733,17 @@ public class Main {
     protected static void doTheThing(ProgressDialog dialog) throws Exception {
         FileUtils.log(String.format("Shuffling items for seed %s", Settings.getStartingSeed()));
 
+        DataFromFile.clearAllData();
+
         Random random = new Random(Settings.getStartingSeed());
         Set<String> initiallyAccessibleItems = getInitiallyAvailableItems();
+        boolean subweaponOnly;
 
         int attempt = 0;
         while(true) {
             ++attempt;
             if(Settings.isRandomizeMainWeapon()) {
-                determineMainWeapon(random);
+                determineStartingWeapon(random);
             }
             if(Settings.getMaxRandomRemovedItems() < 1) {
                 if(Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
@@ -735,24 +791,44 @@ public class Main {
             ItemRandomizer itemRandomizer = new ItemRandomizer();
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer);
+            accessChecker.initExitRequirements();
+
+            subweaponOnly = isSubweaponOnly();
+            List<String> startingNodes = getStartingNodes(subweaponOnly);
+
+            if(!initiallyAccessibleItems.isEmpty()) {
+                DataFromFile.clearInitialLocations();
+                AccessChecker initiallyAccessibleLocationFinder = new AccessChecker(accessChecker, true);
+                for (String startingNode : startingNodes) {
+                    initiallyAccessibleLocationFinder.computeAccessibleNodes(startingNode, false);
+                }
+                while (!initiallyAccessibleLocationFinder.getQueuedUpdates().isEmpty()) {
+                    // Get some additional access based on glitch logic/settings access
+                    initiallyAccessibleLocationFinder.computeAccessibleNodes(initiallyAccessibleLocationFinder.getQueuedUpdates().iterator().next(), false);
+                }
+            }
 
             itemRandomizer.placeNonRandomizedItems();
             shopRandomizer.placeNonRandomizedItems();
-            if(Settings.isRandomizeForbiddenTreasure()) {
-                itemRandomizer.placeForbiddenTreasureItem(random);
+            if(ItemRandomizer.ALL_SUBWEAPONS.contains(Settings.getCurrentStartingWeapon())) {
+                shopRandomizer.placeSpecialSubweaponAmmo(random);
             }
             if(ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
                 ((EverythingShopRandomizer)shopRandomizer).placeGuaranteedWeights(random);
             }
+            if(Settings.isRandomizeForbiddenTreasure()) {
+                itemRandomizer.placeForbiddenTreasureItem(random);
+            }
             shopRandomizer.determineItemTypes(random);
             accessChecker.determineCursedChests(random);
-            if(!itemRandomizer.placeNoRequirementItems(new ArrayList<>(initiallyAccessibleItems), random)) {
-                continue;
-            }
             if(Settings.isRandomizeCoinChests() || Settings.isRandomizeTrapItems()) {
                 if(!itemRandomizer.placeChestOnlyItems(random)) {
                     continue;
                 }
+            }
+
+            if(!itemRandomizer.placeNoRequirementItems(new ArrayList<>(initiallyAccessibleItems), random)) {
+                continue;
             }
 
             if(!itemRandomizer.placeAllItems(random)) {
@@ -760,24 +836,8 @@ public class Main {
             }
 
             boolean ankhJewelLock = false;
-            accessChecker.initExitRequirements();
-            accessChecker.computeAccessibleNodes("None");
-            accessChecker.computeAccessibleNodes("Setting: Lava HP");
-            accessChecker.computeAccessibleNodes(Settings.getCurrentStartingWeapon());
-            for(String startingItem : Settings.getStartingItems()) {
-                accessChecker.computeAccessibleNodes(startingItem);
-            }
-            for(String enabledGlitch : Settings.getEnabledGlitches()) {
-                accessChecker.computeAccessibleNodes("Setting: " + enabledGlitch);
-            }
-            for(String enabledDamageBoost : Settings.getEnabledDamageBoosts()) {
-                accessChecker.computeAccessibleNodes("Boost: " + enabledDamageBoost);
-            }
-            if(Settings.isAutomaticTranslations()) {
-                accessChecker.computeAccessibleNodes("Setting: La-Mulanese");
-            }
-            if(!Settings.isAutomaticHardmode()) {
-                accessChecker.computeAccessibleNodes("Mode: Normal");
+            for(String startingNode : startingNodes) {
+                accessChecker.computeAccessibleNodes(startingNode);
             }
             if(accessChecker.updateForBosses(attempt)) {
                 while(!accessChecker.getQueuedUpdates().isEmpty()) {
@@ -820,7 +880,7 @@ public class Main {
 
                 dialog.updateProgress(95, Translations.getText("progress.write"));
                 itemRandomizer.updateFiles(random);
-                shopRandomizer.updateFiles(datInfo, random);
+                shopRandomizer.updateFiles(datInfo, subweaponOnly, random);
 //                    if(Settings.isRandomizeMantras()) {
 //                        GameDataTracker.randomizeMantras(random);
 //                    }
@@ -868,6 +928,67 @@ public class Main {
             }
 //                accessChecker.outputRemaining(Settings.getStartingSeed(), attempt);
         }
+    }
+
+    private static boolean isSubweaponOnly() {
+        List<String> availableMainWeapons = new ArrayList<>(DataFromFile.MAIN_WEAPONS);
+        if (Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
+            availableMainWeapons.remove("Whip");
+        }
+        Set<String> allRemovedItems = new HashSet<>(Settings.getCurrentRemovedItems());
+        allRemovedItems.addAll(Settings.getRemovedItems());
+        for(String removedItem : allRemovedItems) {
+            availableMainWeapons.remove(removedItem);
+        }
+        return availableMainWeapons.isEmpty();
+    }
+
+    private static List<String> getStartingNodes(boolean subweaponOnly) {
+        List<String> startingNodes = new ArrayList<>();
+        startingNodes.add("None");
+        startingNodes.add(Settings.getCurrentStartingWeapon());
+        if(ItemRandomizer.ALL_SUBWEAPONS.contains(Settings.getCurrentStartingWeapon())) {
+            startingNodes.add(Settings.getCurrentStartingWeapon() + " Ammo");
+            if("Pistol".equals(Settings.getCurrentStartingWeapon())) {
+                startingNodes.add("Attack: Pistol"); // This one normally requires Isis' Pendant
+            }
+        }
+        for(String startingItem : Settings.getStartingItemsIncludingCustom()) {
+            startingNodes.add(startingItem);
+        }
+        for(String enabledGlitch : Settings.getEnabledGlitches()) {
+            startingNodes.add("Setting: " + enabledGlitch);
+        }
+        for(String enabledDamageBoost : Settings.getEnabledDamageBoosts()) {
+            startingNodes.add("Boost: " + enabledDamageBoost);
+        }
+        if(!Settings.isAutomaticHardmode()) {
+            startingNodes.add("Mode: Normal");
+        }
+        if(!Settings.isRequireSoftwareComboForKeyFairy()) {
+            startingNodes.add("Setting: No Combo Key Fairy");
+        }
+        if(Settings.isRequireIceCapeForLava()) {
+            startingNodes.add("Setting: Lava HP");
+        }
+        if(Settings.isAutomaticGrailPoints()) {
+            startingNodes.add("Setting: Autoread Grail");
+        }
+        if(Settings.isAutomaticMantras()) {
+            startingNodes.add("Setting: Skip Mantras");
+        }
+        if(Settings.isAutomaticTranslations()) {
+            startingNodes.add("Setting: La-Mulanese");
+        }
+        if(Settings.isUshumgalluAssist()) {
+            startingNodes.add("Setting: Ushumgallu Assist");
+        }
+        startingNodes.add(Settings.isAlternateMotherAnkh() ? "Setting: Alternate Mother" : "Setting: Standard Mother");
+
+        if(subweaponOnly) {
+            startingNodes.add("Setting: Subweapon Only");
+        }
+        return startingNodes;
     }
 
     private static void backupSaves() {
@@ -923,6 +1044,68 @@ public class Main {
                 saveData[4125] = (byte)1; // word + 0x1011; add katana
                 saveData[4623] = (byte)6; // Held main weapon item number
                 saveData[4626] = (byte)4; // Held main weapon slot number
+            }
+            else {
+                saveData[4623] = (byte)-1; // Held main weapon item number
+                saveData[4626] = (byte)-1; // Held main weapon slot number
+
+                if("Shuriken".equals(startingWeapon)) {
+                    saveData[148] = (byte)2;
+                    saveData[4129] = (byte)1;
+                    saveData[4624] = (byte)8; // Held subweapon item number
+                    saveData[4627] = (byte)0; // Held subweapon slot number
+                    saveData[0x06b * 2 + 0x1011 + 1] = (byte)150; // Ammo
+                }
+                else if("Rolling Shuriken".equals(startingWeapon)) {
+                    saveData[149] = (byte)2;
+                    saveData[4131] = (byte)1;
+                    saveData[4624] = (byte)9; // Held subweapon item number
+                    saveData[4627] = (byte)1; // Held subweapon slot number
+                    saveData[0x06c * 2 + 0x1011 + 1] = (byte)100; // Ammo
+                }
+                else if("Earth Spear".equals(startingWeapon)) {
+                    saveData[150] = (byte)2;
+                    saveData[4133] = (byte)1;
+                    saveData[4624] = (byte)10; // Held subweapon item number
+                    saveData[4627] = (byte)2; // Held subweapon slot number
+                    saveData[0x06d * 2 + 0x1011 + 1] = (byte)80; // Ammo
+                }
+                else if("Flare Gun".equals(startingWeapon)) {
+                    saveData[151] = (byte)2;
+                    saveData[4135] = (byte)1;
+                    saveData[4624] = (byte)11; // Held subweapon item number
+                    saveData[4627] = (byte)3; // Held subweapon slot number
+                    saveData[0x06e * 2 + 0x1011 + 1] = (byte)80; // Ammo
+                }
+                else if("Bomb".equals(startingWeapon)) {
+                    saveData[152] = (byte)2;
+                    saveData[4137] = (byte)1;
+                    saveData[4624] = (byte)12; // Held subweapon item number
+                    saveData[4627] = (byte)4; // Held subweapon slot number
+                    saveData[0x06f * 2 + 0x1011 + 1] = (byte)30; // Ammo
+                }
+                else if("Chakram".equals(startingWeapon)) {
+                    saveData[153] = (byte)2;
+                    saveData[4139] = (byte)1;
+                    saveData[4624] = (byte)13; // Held subweapon item number
+                    saveData[4627] = (byte)5; // Held subweapon slot number
+                    saveData[0x070 * 2 + 0x1011 + 1] = (byte)10; // Ammo
+                }
+                else if("Caltrops".equals(startingWeapon)) {
+                    saveData[154] = (byte)2;
+                    saveData[4141] = (byte)1;
+                    saveData[4624] = (byte)14; // Held subweapon item number
+                    saveData[4627] = (byte)6; // Held subweapon slot number
+                    saveData[0x071 * 2 + 0x1011 + 1] = (byte)80; // Ammo
+                }
+                else if("Pistol".equals(startingWeapon)) {
+                    saveData[155] = (byte)2;
+                    saveData[4143] = (byte)1;
+                    saveData[4624] = (byte)15; // Held subweapon item number
+                    saveData[4627] = (byte)7; // Held subweapon slot number
+                    saveData[0x072 * 2 + 0x1011 + 1] = (byte)3; // Ammo
+                    saveData[0x074 * 2 + 0x1011 + 1] = (byte)6; // Ammo
+                }
             }
         }
 
@@ -1015,16 +1198,23 @@ public class Main {
         return noRequirementItems;
     }
 
-    private static void determineMainWeapon(Random random) {
-        List<String> startingWeapons = new ArrayList<>(5);
+    private static void determineStartingWeapon(Random random) {
+        List<String> startingWeapons = new ArrayList<>();
         startingWeapons.add("Whip");
         startingWeapons.add("Knife");
         startingWeapons.add("Key Sword");
         startingWeapons.add("Axe");
         startingWeapons.add("Katana");
+        if(Settings.isAllowSubweaponStart()) {
+            startingWeapons.addAll(ItemRandomizer.ALL_SUBWEAPONS);
+        }
 
         for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
-            // Whether it's a removed item or a custom placed item, we don't want it here.
+            if(customPlacement.isStartingWeapon()) {
+                Settings.setCurrentStartingWeapon(customPlacement.getContents());
+                return;
+            }
+            // Whether it's a removed item, starting item, or a custom placed item, we don't want it here.
             startingWeapons.remove(customPlacement.getContents());
         }
 

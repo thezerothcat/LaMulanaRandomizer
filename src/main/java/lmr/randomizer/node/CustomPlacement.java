@@ -10,6 +10,14 @@ public class CustomPlacement {
 
     private boolean curseChest;
     private boolean removeItem;
+    private boolean removeLogic;
+    private boolean startingWeapon;
+    private boolean startingItem;
+
+    public CustomPlacement(String nodeName) {
+        this.location = nodeName;
+        this.removeLogic = true;
+    }
 
     public CustomPlacement(String location, String contents, Short shopPrice, Short shopCount) {
         this.location = location;
@@ -18,12 +26,24 @@ public class CustomPlacement {
         this.shopCount = shopCount;
     }
 
-    public CustomPlacement(String location, String contents, String itemGraphic, boolean removeItem, boolean curseChest) {
+    public CustomPlacement(String location, String contents, String itemGraphic, boolean curseChest) {
         this.location = location;
         this.contents = contents;
         this.itemGraphic = itemGraphic;
-        this.removeItem = removeItem;
         this.curseChest = curseChest;
+    }
+
+    public CustomPlacement(String contents, boolean removeItem, boolean startingWeaponTrueStartingItemFalse) {
+        this.contents = contents;
+        if(removeItem) {
+            this.removeItem = true;
+        }
+        else if(startingWeaponTrueStartingItemFalse) {
+            this.startingWeapon = true;
+        }
+        else {
+            this.startingItem = true;
+        }
     }
 
     public String getLocation() {
@@ -64,6 +84,30 @@ public class CustomPlacement {
 
     public void setRemoveItem(boolean removeItem) {
         this.removeItem = removeItem;
+    }
+
+    public boolean isRemoveLogic() {
+        return removeLogic;
+    }
+
+    public void setRemoveLogic(boolean removeLogic) {
+        this.removeLogic = removeLogic;
+    }
+
+    public boolean isStartingWeapon() {
+        return startingWeapon;
+    }
+
+    public void setStartingWeapon(boolean startingWeapon) {
+        this.startingWeapon = startingWeapon;
+    }
+
+    public boolean isStartingItem() {
+        return startingItem;
+    }
+
+    public void setStartingItem(boolean startingItem) {
+        this.startingItem = startingItem;
     }
 
     public Short getShopPrice() {

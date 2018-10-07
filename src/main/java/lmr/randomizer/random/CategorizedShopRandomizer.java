@@ -1,5 +1,6 @@
 package lmr.randomizer.random;
 
+import javafx.util.Pair;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
@@ -46,6 +47,9 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             }
             else if(FISH_FAIRY_SHOP_NAME.equals(shop)) {
                 unassignedShopItemLocations.add(String.format("%s Item 3", shop));
+                if (Settings.isAlternateMotherAnkh()) {
+                    unassignedShopItemLocations.add(String.format("%s Item 2", shop));
+                }
                 continue;
             }
 
@@ -59,6 +63,15 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         }
 
         shopsWithSacredOrbs = new ArrayList<>();
+    }
+
+    public ShopRandomizer copy() {
+        CategorizedShopRandomizer other = new CategorizedShopRandomizer();
+        other.randomizedShops = new ArrayList<>(this.randomizedShops);
+        other.unassignedShopItemLocations = new ArrayList<>(this.unassignedShopItemLocations);
+        other.shopsWithSacredOrbs = new ArrayList<>(this.shopsWithSacredOrbs);
+        other.mapOfShopInventoryItemToContents = new HashMap<>(this.mapOfShopInventoryItemToContents);
+        return other;
     }
 
     public List<String> getUnassignedShopItemLocations() {
@@ -101,22 +114,18 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
             String customLocation = customPlacement.getLocation();
             if(!customPlacement.isRemoveItem() && !customPlacement.isCurseChest()
+                    && !customPlacement.isRemoveLogic()
                     && customLocation != null && customLocation.startsWith("Shop ")) {
                 mapOfShopInventoryItemToContents.put(customLocation, customPlacement.getContents());
                 unassignedShopItemLocations.remove(customLocation);
                 itemRandomizer.removeItemFromUnplacedItems(customPlacement.getContents());
             }
         }
+    }
 
-//        mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 1", "Sacred Orb (Gate of Guidance)");
-//        unassignedShopItemLocations.remove("Shop 3 (Surface) Item 1");
-//        itemRandomizer.removeItemFromUnplacedItems("Sacred Orb (Gate of Guidance)");
-//        mapOfShopInventoryItemToContents.put("Shop 2 Alt (Surface) Item 1", "Diary");
-//        unassignedShopItemLocations.remove("Shop 2 Alt (Surface) Item 1");
-//        itemRandomizer.removeItemFromUnplacedItems("Diary");
-//        mapOfShopInventoryItemToContents.put("Shop 18 (Lil Bro) Item 1", "Fruit of Eden");
-//        unassignedShopItemLocations.remove("Shop 18 (Lil Bro) Item 1");
-//        itemRandomizer.removeItemFromUnplacedItems("Fruit of Eden");
+    @Override
+    public void placeSpecialSubweaponAmmo(Random random) {
+        mapOfShopInventoryItemToContents.put("Shop 1 (Surface) Item 3", Settings.getCurrentStartingWeapon() + " Ammo");
     }
 
     public List<String> getShopItems(String shopName) {
@@ -222,7 +231,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                     String itemName = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(location));
                     boolean removedItem = Settings.getCurrentRemovedItems().contains(itemName)
                             || Settings.getRemovedItems().contains(itemName)
-                            || Settings.getStartingItems().contains(itemName)
+                            || Settings.getStartingItemsIncludingCustom().contains(itemName)
                             || (Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName));
                     writer.write(Translations.getShopItemText(shop, i) + ": " + Translations.getItemText(itemName, removedItem));
                     writer.newLine();
@@ -238,7 +247,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         writer.close();
     }
 
-    public void updateFiles(List<Block> blocks, Random random) {
+    public void updateFiles(List<Block> blocks, boolean subweaponOnly, Random random) {
         String shopItem1;
         String shopItem2;
         String shopItem3;
@@ -269,26 +278,53 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             }
             if(Settings.getCurrentRemovedItems().contains(shopItem1)
                     || Settings.getRemovedItems().contains(shopItem1)
-                    || Settings.getStartingItems().contains(shopItem1)
+                    || Settings.getStartingItemsIncludingCustom().contains(shopItem1)
                     || (Settings.isReplaceMapsWithWeights() && shopItem1.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem1))) {
                 shopItem1 = "Weights";
             }
             if(Settings.getCurrentRemovedItems().contains(shopItem2)
                     || Settings.getRemovedItems().contains(shopItem2)
-                    || Settings.getStartingItems().contains(shopItem2)
+                    || Settings.getStartingItemsIncludingCustom().contains(shopItem2)
                     || (Settings.isReplaceMapsWithWeights() && shopItem2.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem2))) {
                 shopItem2 = "Weights";
             }
             if(Settings.getCurrentRemovedItems().contains(shopItem3)
                     || Settings.getRemovedItems().contains(shopItem3)
-                    || Settings.getStartingItems().contains(shopItem3)
+                    || Settings.getStartingItemsIncludingCustom().contains(shopItem3)
                     || (Settings.isReplaceMapsWithWeights() && shopItem3.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem3))) {
                 shopItem3 = "Weights";
             }
             GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks,
-                    null, null, null,
-                    "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName));
+                    getItemPriceCount(subweaponOnly, shopItem1), getItemPriceCount(subweaponOnly, shopItem2), getItemPriceCount(subweaponOnly, shopItem3),
+                    "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName), false);
         }
+    }
+
+    private Pair<Short, Short> getItemPriceCount(boolean subweaponOnly, String itemName) {
+        String startingWeapon = Settings.getCurrentStartingWeapon();
+        if((subweaponOnly && itemName.endsWith(" Ammo")) || itemName.equals(startingWeapon + " Ammo")) {
+            if("Shuriken".equals(startingWeapon)) {
+                return new Pair<>((short)0, (short)150);
+            }
+            if("Rolling Shuriken".equals(startingWeapon)) {
+                return new Pair<>((short)0, (short)100);
+            }
+            if("Earth Spears".equals(startingWeapon)
+                    || "Flare Gun".equals(startingWeapon)
+                    || "Caltrops".equals(startingWeapon)) {
+                return new Pair<>((short)0, (short)80);
+            }
+            if("Bomb".equals(startingWeapon)) {
+                return new Pair<>((short)0, (short)30);
+            }
+            if("Chakram".equals(startingWeapon)) {
+                return new Pair<>((short)0, (short)10);
+            }
+            if("Pistol".equals(startingWeapon)) {
+                return new Pair<>((short)0, (short)3);
+            }
+        }
+        return null;
     }
 
     public void setAccessChecker(AccessChecker accessChecker) {

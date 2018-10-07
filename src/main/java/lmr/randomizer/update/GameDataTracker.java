@@ -211,9 +211,29 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
+                else if (flagTest.getIndex() == 377) {
+                    // Turning on the lights in Temple of the Sun; moved in versions after 1.3 and should be restored
+                    gameObject.setX(400);
+                    break;
+                }
                 else if (flagTest.getIndex() == 501) {
                     // Breakable ceiling to Isis' Pendant room
                     flagIndexToRemove = i;
+                    break;
+                }
+                else if(flagTest.getIndex() == 695) {
+                    // Main-weapon-only tentacle blocking access to Mother ankh
+                    gameObject.getArgs().set(4, (short)18);
+                    break;
+                }
+                else if(flagTest.getIndex() == 877) {
+                    // Main-weapon-only wall in Tower of the Goddess
+                    gameObject.getArgs().set(4, (short)18);
+                    break;
+                }
+                else if(flagTest.getIndex() == 2033) {
+                    // Trigger for The Boss ankh, coded as a wall that triggers stuff when broken
+                    gameObject.getArgs().set(4, (short)18);
                     break;
                 }
                 else if(flagTest.getIndex() == 296) {
@@ -828,6 +848,14 @@ public final class GameDataTracker {
                         break;
                     }
                 }
+
+                GameObjectId gameObjectId = new GameObjectId((short) 30, 2702);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
             } else if(blockNumber == 690) {
                 // Conversation after receiving Pepper if you don't have Treasures
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
@@ -2271,7 +2299,7 @@ public final class GameDataTracker {
 
     public static void writeShopInventory(ShopBlock shopBlock, String shopItem1, String shopItem2, String shopItem3, List<Block> blocks,
                                           Pair<Short, Short> itemPriceAndCount1, Pair<Short, Short> itemPriceAndCount2, Pair<Short, Short> itemPriceAndCount3,
-                                          boolean littleBrotherShop, boolean msxShop) {
+                                          boolean littleBrotherShop, boolean msxShop, boolean recursive) {
         short shopItem1Flag = getFlag(shopItem1);
         short shopItem2Flag = getFlag(shopItem2);
         short shopItem3Flag = getFlag(shopItem3);
@@ -2281,7 +2309,7 @@ public final class GameDataTracker {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
             writeShopInventory(noOrbShopBlock, "Weights", shopItem2, shopItem3, blocks,
-                    new Pair<>((short)10, (short)5), itemPriceAndCount2, itemPriceAndCount3, littleBrotherShop, msxShop);
+                    new Pair<>((short)10, (short)5), itemPriceAndCount2, itemPriceAndCount3, littleBrotherShop, msxShop, true);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -2307,7 +2335,7 @@ public final class GameDataTracker {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
             writeShopInventory(noOrbShopBlock, shopItem1, "Weights", shopItem3, blocks,
-                    itemPriceAndCount1, new Pair<>((short)10, (short)5), itemPriceAndCount3, littleBrotherShop, msxShop);
+                    itemPriceAndCount1, new Pair<>((short)10, (short)5), itemPriceAndCount3, littleBrotherShop, msxShop, true);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -2333,7 +2361,7 @@ public final class GameDataTracker {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
             writeShopInventory(noOrbShopBlock, shopItem1, shopItem2, "Weights", blocks,
-                    itemPriceAndCount1, itemPriceAndCount2, new Pair<>((short)10, (short)5), littleBrotherShop, msxShop);
+                    itemPriceAndCount1, itemPriceAndCount2, new Pair<>((short)10, (short)5), littleBrotherShop, msxShop, true);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -2449,6 +2477,12 @@ public final class GameDataTracker {
             blockStringData.getData().clear();
             blockStringData.getData().addAll(Arrays.asList((short)70, (short)8, (short)297, (short)315, (short)308, (short)321,
                     (short)318, (short)326, (short)32, (short)320, (short)328, (short)310, (short)315, (short)264));
+        }
+
+        if(!recursive && Settings.isAutomaticMantras()) {
+            if("Key Sword".equals(shopItem1) || "Key Sword".equals(shopItem2) || "Key Sword".equals(shopItem3)) {
+                AddObject.addAutomaticMantras(mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber()).get(0).getObjectContainer());
+            }
         }
 
         updateAskItemName(shopBlock.getString(3), shopItem1);
@@ -2628,13 +2662,11 @@ public final class GameDataTracker {
         if(objectsToModify == null) {
             if("xmailer.exe".equals(chestLocation) || "Mulana Talisman".equals(chestLocation)) {
                 // Xelpud location, but no object with flags to update.
-                if("Map (Shrine of the Mother)".equals(chestContents)) {
-                    addShrineMapSoundEffect(xelpudScreen);
-                }
+                AddObject.addSpecialItemObjects(xelpudScreen, chestContents);
             }
             else if("Book of the Dead".equals(chestLocation)) {
                 // Mulbruk location, but no object with flags to update.
-                addShrineMapSoundEffect(mulbrukScreen);
+                AddObject.addSpecialItemObjects(mulbrukScreen, chestContents);
             }
             else {
                 FileUtils.log("Unable to find objects related to " + chestLocation);
@@ -2645,28 +2677,20 @@ public final class GameDataTracker {
             if(objectToModify.getId() == 0x2c) {
                 updateChestContents(objectToModify, itemLocationData, itemNewContentsData, chestContents, newWorldFlag,
                         Settings.getCurrentCursedChests().contains(chestLocation), random);
-                if("Map (Shrine of the Mother)".equals(chestContents)) {
-                    addShrineMapSoundEffect(objectToModify.getObjectContainer());
-                }
+                AddObject.addSpecialItemObjects(objectToModify.getObjectContainer(), chestContents);
             }
             else if(objectToModify.getId() == 0x2f) {
                 // Note: Floating maps don't get removed.
                 updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData, chestContents, newWorldFlag, random);
-                if("Map (Shrine of the Mother)".equals(chestContents)) {
-                    addShrineMapSoundEffect(objectToModify.getObjectContainer());
-                }
+                AddObject.addSpecialItemObjects(objectToModify.getObjectContainer(), chestContents);
             }
             else if(objectToModify.getId() == 0xc3) {
                 updateSnapshotsItemContents(objectToModify, itemLocationData, itemNewContentsData);
-                if("Map (Shrine of the Mother)".equals(chestContents)) {
-                    addShrineMapSoundEffect(objectToModify.getObjectContainer());
-                }
+                AddObject.addSpecialItemObjects(objectToModify.getObjectContainer(), chestContents);
             }
             else if(objectToModify.getId() == 0xb5) {
                 updateInstantItemContents(objectToModify, itemLocationData, itemNewContentsData);
-                if("Map (Shrine of the Mother)".equals(chestContents)) {
-                    addShrineMapSoundEffect(objectToModify.getObjectContainer());
-                }
+                AddObject.addSpecialItemObjects(objectToModify.getObjectContainer(), chestContents);
             }
             else if(objectToModify.getId() == 0xa0) {
                 updateRelatedObject(objectToModify, itemLocationData, newWorldFlag);
@@ -2676,83 +2700,13 @@ public final class GameDataTracker {
                     // 689 = Pepper
                     // 691 = Anchor
                     // 693 = Mini Doll
-                    if ("Map (Shrine of the Mother)".equals(chestContents)) {
-                        addShrineMapSoundEffect(objectToModify.getObjectContainer());
-                    }
+                    AddObject.addSpecialItemObjects(objectToModify.getObjectContainer(), chestContents);
                 }
             }
             else {
                 updateRelatedObject(objectToModify, itemLocationData, newWorldFlag);
             }
         }
-    }
-
-    private static void addShrineMapSoundEffect(ObjectContainer objectContainer) {
-        GameObject shrineMapSoundEffect = new GameObject(objectContainer);
-        shrineMapSoundEffect.setId((short)0x9b);
-        shrineMapSoundEffect.getArgs().add((short)30);
-        shrineMapSoundEffect.getArgs().add((short)120);
-        shrineMapSoundEffect.getArgs().add((short)64);
-        shrineMapSoundEffect.getArgs().add((short)0);
-        shrineMapSoundEffect.getArgs().add((short)120);
-        shrineMapSoundEffect.getArgs().add((short)64);
-        shrineMapSoundEffect.getArgs().add((short)0);
-        shrineMapSoundEffect.getArgs().add((short)25);
-        shrineMapSoundEffect.getArgs().add((short)1);
-        shrineMapSoundEffect.getArgs().add((short)5);
-        shrineMapSoundEffect.getArgs().add((short)0);
-        shrineMapSoundEffect.getArgs().add((short)10);
-        shrineMapSoundEffect.getArgs().add((short)0);
-        shrineMapSoundEffect.getArgs().add((short)0);
-        shrineMapSoundEffect.getArgs().add((short)0);
-        shrineMapSoundEffect.setX(-1);
-        shrineMapSoundEffect.setY(-1);
-
-        TestByteOperation testFlag = new TestByteOperation();
-        testFlag.setIndex(218);
-        testFlag.setOp(ByteOp.FLAG_EQUALS);
-        testFlag.setValue((byte)2);
-        shrineMapSoundEffect.getTestByteOperations().add(testFlag);
-
-        testFlag = new TestByteOperation();
-        testFlag.setIndex(42);
-        testFlag.setOp(ByteOp.FLAG_EQUALS);
-        testFlag.setValue((byte)1);
-        shrineMapSoundEffect.getTestByteOperations().add(testFlag);
-
-        GameObject shrineMapSoundEffectRemovalTimer = new GameObject(objectContainer);
-        shrineMapSoundEffectRemovalTimer.setId((short) 0x0b);
-        shrineMapSoundEffectRemovalTimer.getArgs().add((short) 0);
-        shrineMapSoundEffectRemovalTimer.getArgs().add((short) 0);
-        shrineMapSoundEffectRemovalTimer.setX(-1);
-        shrineMapSoundEffectRemovalTimer.setY(-1);
-
-        TestByteOperation shrineMapSoundEffectRemovalTimerFlagTest = new TestByteOperation();
-        shrineMapSoundEffectRemovalTimerFlagTest.setIndex(2798);
-        shrineMapSoundEffectRemovalTimerFlagTest.setValue((byte) 0);
-        shrineMapSoundEffectRemovalTimerFlagTest.setOp(ByteOp.FLAG_EQUALS);
-        shrineMapSoundEffectRemovalTimer.getTestByteOperations().add(shrineMapSoundEffectRemovalTimerFlagTest);
-
-        shrineMapSoundEffectRemovalTimerFlagTest = new TestByteOperation();
-        shrineMapSoundEffectRemovalTimerFlagTest.setIndex(218);
-        shrineMapSoundEffectRemovalTimerFlagTest.setValue((byte) 2);
-        shrineMapSoundEffectRemovalTimerFlagTest.setOp(ByteOp.FLAG_EQUALS);
-        shrineMapSoundEffectRemovalTimer.getTestByteOperations().add(shrineMapSoundEffectRemovalTimerFlagTest);
-
-        WriteByteOperation shrineMapSoundEffectRemovalTimerFlagUpdate = new WriteByteOperation();
-        shrineMapSoundEffectRemovalTimerFlagUpdate.setIndex(2798);
-        shrineMapSoundEffectRemovalTimerFlagUpdate.setValue((byte) 1);
-        shrineMapSoundEffectRemovalTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
-        shrineMapSoundEffectRemovalTimer.getWriteByteOperations().add(shrineMapSoundEffectRemovalTimerFlagUpdate);
-
-        shrineMapSoundEffectRemovalTimerFlagUpdate = new WriteByteOperation();
-        shrineMapSoundEffectRemovalTimerFlagUpdate.setIndex(42);
-        shrineMapSoundEffectRemovalTimerFlagUpdate.setValue((byte) 1);
-        shrineMapSoundEffectRemovalTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
-        shrineMapSoundEffectRemovalTimer.getWriteByteOperations().add(shrineMapSoundEffectRemovalTimerFlagUpdate);
-
-        objectContainer.getObjects().add(0, shrineMapSoundEffect);
-        objectContainer.getObjects().add(0, shrineMapSoundEffectRemovalTimer);
     }
 
     private static void addDiaryTalismanConversationTimers(ObjectContainer objectContainer) {
@@ -2897,7 +2851,7 @@ public final class GameDataTracker {
             WriteByteOperation updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
             updateFlag.setIndex(newWorldFlag);
-            updateFlag.setValue(1);
+            updateFlag.setValue(newWorldFlag == 2778 ? 2 : 1);
             objectToModify.getWriteByteOperations().add(updateFlag);
 
             objectToModify.getWriteByteOperations().add(puzzleFlag);

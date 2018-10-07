@@ -16,6 +16,8 @@ public class ShopItemPriceCountRandomizer {
     private boolean specialAmmoPlaced = false;
     private boolean normalPriceWeightsPlaced = false;
 
+    private boolean subweaponOnly;
+
     private Random random;
 
 //    // 50-70
@@ -71,23 +73,25 @@ public class ShopItemPriceCountRandomizer {
             "move.exe", "randc.exe", "Fairy Clothes", "Scriptures", "Gauntlet", "deathv.exe",
             "Provocative Bathing Suit", "Spaulder", "Flail Whip", "lamulana.exe");
 
-    public ShopItemPriceCountRandomizer(Random random) {
+    public ShopItemPriceCountRandomizer(boolean subweaponOnly, Random random) {
+        this.subweaponOnly = subweaponOnly;
         this.random = random;
     }
 
     public Pair<Short, Short> getItemPriceAndCount(String location, String itemName) {
-        if(!specialAmmoPlaced && "Pistol Ammo".equals(itemName)) {
-            // Special case
-            if(random.nextInt(10) == 0) {
-                return new Pair<>((short)400, (short)6);
-            }
-        }
         Short price = null;
         Short count = null;
         for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
             if(customPlacement.getShopPrice() != null && customPlacement.getLocation().equals(location)) {
                 price = customPlacement.getShopPrice();
                 count = customPlacement.getShopCount();
+            }
+        }
+        if(price == null && count == null && !specialAmmoPlaced && !subweaponOnly && "Pistol Ammo".equals(itemName)) {
+            // Special case
+            if(random.nextInt(10) == 0) {
+                specialAmmoPlaced = true;
+                return new Pair<>((short)400, (short)6);
             }
         }
         if(price == null) {
@@ -100,6 +104,12 @@ public class ShopItemPriceCountRandomizer {
     }
 
     private short getPrice(String itemName) {
+        if(subweaponOnly && itemName.endsWith(" Ammo")) {
+            return 0;
+        }
+        if(itemName.equals(Settings.getCurrentStartingWeapon() + " Ammo")) {
+            return 0;
+        }
         if("Weights".equals(itemName)) {
             if(!normalPriceWeightsPlaced) {
                 normalPriceWeightsPlaced = true;
@@ -198,33 +208,33 @@ public class ShopItemPriceCountRandomizer {
         return (short)(10 + 10 * random.nextInt(25) + 1);
     }
 
-    private static short getCount(String item) {
+    private short getCount(String item) {
         if("Weights".equals(item)) {
             return 5;
         }
         if("Shuriken Ammo".equals(item)) {
-            return 10;
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Shuriken") ? (short)150 : 10;
         }
         if("Rolling Shuriken Ammo".equals(item)) {
-            return 10;
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Rolling Shuriken") ? (short)100 : 10;
         }
         if("Earth Spear Ammo".equals(item)) {
-            return 10;
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Earth Spear") ? (short)80 : 10;
         }
         if("Flare Gun Ammo".equals(item)) {
-            return 10;
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Flare Gun") ? (short)80 : 10;
         }
         if("Bomb Ammo".equals(item)) {
-            return 10;
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Bomb") ? (short)30 : 10;
         }
         if("Chakram Ammo".equals(item)) {
-            return 2;
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Chakram") ? (short)10 : 2;
         }
         if("Caltrops Ammo".equals(item)) {
-            return 10;
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Caltrops") ? (short)80 : 10;
         }
         if("Pistol Ammo".equals(item)) {
-            return 1; // It looks like 6 is the count given by the Moonlight shop
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Pistol") ? (short)3 : 1;
         }
         return 1;
     }

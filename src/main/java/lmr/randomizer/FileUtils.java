@@ -13,7 +13,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "1.38.0";
+    public static final String VERSION = "1.39.0";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -127,17 +127,19 @@ public class FileUtils {
     public static List<Map.Entry<String, List<String>>> getListOfLists(String file, boolean inFolder) {
         List<Map.Entry<String, List<String>>> data = new ArrayList<>();
         try(BufferedReader reader = getFileReader(file, inFolder)) {
-            String line;
-            String[] lineParts;
-            while((line = reader.readLine()) != null) {
-                line = line.split("#", 2)[0].trim(); // remove comments
-                if (line.isEmpty())
-                    continue;
-                lineParts = line.split("=>", 2); // delimiter
-                List<String> reqs = new ArrayList<>();
-                for (String req : lineParts[1].split(","))
-                    reqs.add(req.trim());
-                data.add(new AbstractMap.SimpleImmutableEntry(lineParts[0].trim(), reqs));
+            if(reader != null) {
+                String line;
+                String[] lineParts;
+                while((line = reader.readLine()) != null) {
+                    line = line.split("#", 2)[0].trim(); // remove comments
+                    if (line.isEmpty())
+                        continue;
+                    lineParts = line.split("=>", 2); // delimiter
+                    List<String> reqs = new ArrayList<>();
+                    for (String req : lineParts[1].split(","))
+                        reqs.add(req.trim());
+                    data.add(new AbstractMap.SimpleImmutableEntry(lineParts[0].trim(), reqs));
+                }
             }
         } catch (Exception ex) {
             FileUtils.log("Unable to read file " + file + ", " + ex.getMessage());
@@ -234,17 +236,23 @@ public class FileUtils {
         if (!(new File("custom-placement.txt").exists())) {
             return new ArrayList<>(0);
         }
-        List<CustomPlacement> data = new ArrayList<>();
         try(BufferedReader reader = getFileReader("custom-placement.txt", false)) {
+            if(reader == null) {
+                return new ArrayList<>(0);
+            }
+            List<CustomPlacement> data = new ArrayList<>();
             String line;
             String[] lineParts;
+            boolean alternateMotherAnkh = false;
+            boolean automaticMantras = false;
+            String medicineColor = null;
             while((line = reader.readLine()) != null) {
                 line = line.split("#", 2)[0].trim(); // remove comments
-                if (line.isEmpty())
+                if (line.isEmpty()) {
                     continue;
-                if (line.startsWith("Curse ")) {
-                    data.add(new CustomPlacement(line.replace("Curse ", "").trim(), null, null, false, true));
-                } else {
+                }
+
+                if (line.contains("=")) {
                     lineParts = line.split("=", 2); // delimiter
                     if (lineParts.length > 1) {
                         String location = lineParts[0].trim();
@@ -253,7 +261,7 @@ public class FileUtils {
                             String specialData = contents.substring(contents.indexOf("{") + 1).replace("}", "");
                             contents = contents.substring(0, contents.indexOf('{')).trim();
                             if(contents.startsWith("Trap:")) {
-                                data.add(new CustomPlacement(location, contents, specialData, false, false));
+                                data.add(new CustomPlacement(location, contents, specialData, false));
                             }
                             else if(location.startsWith("Shop ")) {
                                 lineParts = specialData.split(",");
@@ -265,22 +273,61 @@ public class FileUtils {
                                 }
                             }
                         } else {
-                            data.add(new CustomPlacement(lineParts[0].trim(), contents, null, false, false));
+                            data.add(new CustomPlacement(lineParts[0].trim(), contents, null, false));
                         }
-                    } else {
-                        String removeItem = lineParts[0].trim();
+                    }
+                }
+                else {
+                    if(line.startsWith("!")) {
+                        String removeItem = line.trim();
                         if(removeItem.startsWith("!")) {
                             removeItem = removeItem.substring(1);
-                            data.add(new CustomPlacement(null, removeItem, null, true, false));
+                            data.add(new CustomPlacement(removeItem, true, false));
+                        }
+                    }
+                    else if (line.startsWith("Remove ")) {
+                        data.add(new CustomPlacement(line.replace("Remove", "").trim(), true, true));
+                    }
+                    else if (line.startsWith("Curse")) {
+                        data.add(new CustomPlacement(line.replace("Curse", "").trim(), null, null, true));
+                    }
+                    else if (line.startsWith("Weapon:")) {
+                        data.add(new CustomPlacement(line.replace("Weapon:", "").trim(), false, true));
+                    }
+                    else if (line.startsWith("Start:")) {
+                        data.add(new CustomPlacement(line.replace("Start:", "").trim(), false, false));
+                    }
+                    else if (line.startsWith("Remove Logic:")) {
+                        data.add(new CustomPlacement(line.replace("Remove Logic:", "").trim()));
+                    }
+                    else if (line.equals("Skip Mantras")) {
+                        automaticMantras = true;
+                    }
+                    else if (line.equals("Alternate Mother Ankh")) {
+                        alternateMotherAnkh = true;
+                    }
+                    else if (line.startsWith("Fill Vessel ")) {
+                        String color = line.replace("Fill Vessel ", "").trim();
+                        if(color.equalsIgnoreCase("red")) {
+                            medicineColor = "Red";
+                        }
+                        else if(color.equalsIgnoreCase("green")) {
+                            medicineColor = "Green";
+                        }
+                        else if(color.equalsIgnoreCase("yellow")) {
+                            medicineColor = "Yellow";
                         }
                     }
                 }
             }
+            Settings.setAlternateMotherAnkh(alternateMotherAnkh);
+            Settings.setAutomaticMantras(automaticMantras);
+            Settings.setMedicineColor(medicineColor);
+            return data;
         } catch (Exception ex) {
             FileUtils.log("Unable to read file custom-placement.txt, " + ex.getMessage());
-            return new ArrayList<>();
         }
-        return data;
+        return new ArrayList<>(0);
     }
 
     public static void readSettings() throws IOException {
@@ -370,6 +417,9 @@ public class FileUtils {
             else if(line.startsWith("randomizeMainWeapon")) {
                 Settings.setRandomizeMainWeapon(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("allowSubweaponStart")) {
+                Settings.setAllowSubweaponStart(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("randomizeCursedChests")) {
                 Settings.setRandomizeCursedChests(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -381,6 +431,9 @@ public class FileUtils {
             }
             else if(line.startsWith("automaticGrailPoints")) {
                 Settings.setAutomaticGrailPoints(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("ushumgalluAssist")) {
+                Settings.setUshumgalluAssist(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("quickStartItemsEnabled")) {
                 // Upgrade legacy settings
@@ -462,6 +515,9 @@ public class FileUtils {
         writer.write(String.format("randomizeMainWeapon=%s", Settings.isRandomizeMainWeapon()));
         writer.newLine();
 
+        writer.write(String.format("allowSubweaponStart=%s", Settings.isAllowSubweaponStart()));
+        writer.newLine();
+
         writer.write(String.format("randomizeCursedChests=%s", Settings.isRandomizeCursedChests()));
         writer.newLine();
 
@@ -475,6 +531,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("automaticTranslations=%s", Settings.isAutomaticTranslations()));
+        writer.newLine();
+
+        writer.write(String.format("ushumgalluAssist=%s", Settings.isUshumgalluAssist()));
         writer.newLine();
 
         writer.write(String.format("laMulanaBaseDir=%s", Settings.getLaMulanaBaseDir()));

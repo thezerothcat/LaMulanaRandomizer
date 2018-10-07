@@ -40,10 +40,16 @@ public final class Settings {
     private boolean randomizeCoinChests;
     private boolean randomizeTrapItems;
     private boolean randomizeMainWeapon;
+    private boolean allowSubweaponStart;
     private boolean randomizeCursedChests;
     private boolean replaceMapsWithWeights;
     private boolean automaticGrailPoints;
     private boolean automaticTranslations;
+    private boolean ushumgalluAssist;
+
+    private boolean alternateMotherAnkh;
+    private boolean automaticMantras;
+    private String medicineColor;
 
     private boolean removeSpaulder;
 
@@ -55,7 +61,7 @@ public final class Settings {
     private List<String> possibleDboosts = Arrays.asList("Item", "Environment", "Enemy");
 
     private List<String> possibleRandomizedItems = Arrays.asList("Holy Grail", "Hand Scanner", "reader.exe",
-            "Hermes' Boots", "Grapple Claw", "Feather", "Isis' Pendant", "Bronze Mirror", "mirai.exe", "bunemon.exe");
+            "Hermes' Boots", "Grapple Claw", "Feather", "Isis' Pendant", "Bronze Mirror", "mirai.exe", "bunemon.exe", "Ring");
 
     private String laMulanaBaseDir;
     private String laMulanaSaveDir;
@@ -87,6 +93,7 @@ public final class Settings {
         randomizeCoinChests = true;
         randomizeTrapItems = true;
         randomizeMainWeapon = false;
+        allowSubweaponStart = false;
         randomizeCursedChests = false;
         removeSpaulder = false;
         replaceMapsWithWeights = false;
@@ -94,6 +101,11 @@ public final class Settings {
         coinChestGraphics = false;
         automaticGrailPoints = false;
         automaticTranslations = false;
+        ushumgalluAssist = false;
+
+        alternateMotherAnkh = false;
+        automaticMantras = false;
+        medicineColor = null;
 
         bossDifficulty = BossDifficulty.MEDIUM;
         shopRandomization = ShopRandomizationEnum.EVERYTHING;
@@ -344,6 +356,17 @@ public final class Settings {
         singleton.randomizeMainWeapon = randomizeMainWeapon;
     }
 
+    public static boolean isAllowSubweaponStart() {
+        return singleton.allowSubweaponStart;
+    }
+
+    public static void setAllowSubweaponStart(boolean allowSubweaponStart, boolean update) {
+        if(update && allowSubweaponStart != singleton.allowSubweaponStart) {
+            singleton.changed = true;
+        }
+        singleton.allowSubweaponStart = allowSubweaponStart;
+    }
+
     public static boolean isRandomizeCursedChests() {
         return singleton.randomizeCursedChests;
     }
@@ -397,6 +420,17 @@ public final class Settings {
         singleton.automaticTranslations = automaticTranslations;
     }
 
+    public static boolean isUshumgalluAssist() {
+        return singleton.ushumgalluAssist;
+    }
+
+    public static void setUshumgalluAssist(boolean ushumgalluAssist, boolean update) {
+        if(update && ushumgalluAssist != singleton.ushumgalluAssist) {
+            singleton.changed = true;
+        }
+        singleton.ushumgalluAssist = ushumgalluAssist;
+    }
+
     public static boolean isCoinChestGraphics() {
         return singleton.coinChestGraphics;
     }
@@ -427,6 +461,16 @@ public final class Settings {
 
     public static Set<String> getStartingItems() {
         return singleton.startingItems;
+    }
+
+    public static Set<String> getStartingItemsIncludingCustom() {
+        Set<String> startingItems = new HashSet<>(singleton.startingItems);
+        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
+            if(customPlacement.isStartingItem()) {
+                startingItems.add(customPlacement.getContents());
+            }
+        }
+        return startingItems;
     }
 
     public static void setStartingItems(Set<String> startingItems, boolean update) {
@@ -570,13 +614,39 @@ public final class Settings {
     }
 
     public static String getUpdatedContents(String originalContents) {
-//        if("Vessel".equals(newContents)) {
-//            newContents = "Medicine of the Mind";
-//        }
-//        if("Djed Pillar".equals(newContents)) {
+        if("Vessel".equals(originalContents)) {
+            if(Settings.getMedicineColor() != null) {
+                return String.format("Medicine of the Mind (%s)", Settings.getMedicineColor());
+            }
+        }
+//        if("Djed Pillar".equals(originalContents)) {
 //            newContents = "Ankh Jewel (Extra)";
 //        }
         return originalContents;
+    }
+
+    public static String getMedicineColor() {
+        return singleton.medicineColor;
+    }
+
+    public static void setMedicineColor(String medicineColor) {
+        singleton.medicineColor = medicineColor;
+    }
+
+    public static boolean isAlternateMotherAnkh() {
+        return singleton.alternateMotherAnkh;
+    }
+
+    public static void setAlternateMotherAnkh(boolean alternateMotherAnkh) {
+        singleton.alternateMotherAnkh = alternateMotherAnkh;
+    }
+
+    public static boolean isAutomaticMantras() {
+        return singleton.automaticMantras;
+    }
+
+    public static void setAutomaticMantras(boolean automaticMantras) {
+        singleton.automaticMantras = automaticMantras;
     }
 
     public static void saveSettings() {
@@ -636,6 +706,8 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.ushumgalluAssist, 19);
+        booleanSettings |= processBooleanFlag.apply(singleton.allowSubweaponStart, 18);
         booleanSettings |= processBooleanFlag.apply(singleton.requireFullAccess, 17);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeDracuetShop, 16);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeXmailer, 15);
@@ -710,6 +782,8 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.ushumgalluAssist = getBoolFlagFromInt.apply(booleanSettingsFlag, 19);
+        singleton.allowSubweaponStart = getBoolFlagFromInt.apply(booleanSettingsFlag, 18);
         singleton.requireFullAccess = getBoolFlagFromInt.apply(booleanSettingsFlag, 17);
         singleton.randomizeDracuetShop = getBoolFlagFromInt.apply(booleanSettingsFlag, 16);
         singleton.randomizeXmailer = getBoolFlagFromInt.apply(booleanSettingsFlag, 15);

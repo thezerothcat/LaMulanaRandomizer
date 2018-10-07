@@ -12,6 +12,8 @@ import java.util.*;
  * Created by thezerothcat on 7/20/2017.
  */
 public final class DataFromFile {
+    public static final List<String> MAIN_WEAPONS = Arrays.asList("Whip", "Chain Whip", "Flail Whip", "Axe",
+            "Knife", "Katana", "Key Sword");
     public static final List<String> FLOATING_ITEM_LOCATIONS = Arrays.asList("deathv.exe", "Shuriken",
             "Rolling Shuriken", "Knife", "Talisman", "Caltrops", "Chain Whip", "Flare Gun", "bunplus.com",
             "Chakram", "Ring", "Katana", "Key Sword", "Silver Shield", "Bomb", "Axe", "Philosopher's Ocarina",
@@ -53,9 +55,7 @@ public final class DataFromFile {
     private static List<String> randomizedShopItems;
     private static List<String> randomRemovableItems;
     private static List<String> nonShopItemLocations;
-    private static List<String> nonRandomizedCoinChests;
     private static List<String> initialNonShopItemLocations;
-    private static List<String> initialCoinChestLocations;
     private static List<String> bannedTrapLocations;
     private static Map<String, GameObjectId> mapOfItemToUsefulIdentifyingRcdData;
     private static Map<String, Integer> mapOfShopNameToShopBlock;
@@ -115,15 +115,14 @@ public final class DataFromFile {
     public static List<String> getNonShopItemLocations() {
         if(nonShopItemLocations == null) {
             nonShopItemLocations = FileUtils.getList("all/non_shop_items.txt");
+            if(nonShopItemLocations == null) {
+                nonShopItemLocations = new ArrayList<>(0);
+            }
             if(Settings.isRandomizeCoinChests()) {
                 nonShopItemLocations.addAll(getAllCoinChests());
-                nonShopItemLocations.removeAll(getNonRandomizedCoinChests());
             }
             if(Settings.isRandomizeTrapItems()) {
                 nonShopItemLocations.addAll(DataFromFile.TRAP_ITEMS);
-            }
-            if(nonShopItemLocations == null) {
-                nonShopItemLocations = new ArrayList<>(0);
             }
         }
         return nonShopItemLocations;
@@ -131,7 +130,8 @@ public final class DataFromFile {
 
     public static List<String> getNonRandomizedItems() {
         if(nonRandomizedItems == null) {
-            nonRandomizedItems = FileUtils.getList("min/non_randomized_items.txt");
+            nonRandomizedItems = new ArrayList<>();
+            nonRandomizedItems.add("Maternity Statue");
             for(String item : Settings.getNonRandomizedItems()) {
                 if(!nonRandomizedItems.contains(item)) {
                     nonRandomizedItems.add(item);
@@ -150,56 +150,18 @@ public final class DataFromFile {
         return nonRandomizedItems;
     }
 
-    public static List<String> getNonRandomizedCoinChests() {
-        if(nonRandomizedCoinChests == null) {
-            if (Settings.isRandomizeCoinChests()) {
-                nonRandomizedCoinChests = FileUtils.getList("min/non_randomized_coin_chests.txt");
-            }
-            if (nonRandomizedCoinChests == null) {
-                nonRandomizedCoinChests = new ArrayList<>(0);
-            }
-        }
-        return nonRandomizedCoinChests;
-    }
-
     public static List<String> getInitialShops() {
         if(initialShops == null) {
-            initialShops = FileUtils.getList("initial/initial_shops.txt");
-            if(initialShops == null) {
-                initialShops = new ArrayList<>(0);
-            }
+            initialShops = new ArrayList<>();
         }
         return initialShops;
     }
 
     public static List<String> getInitialNonShopItemLocations() {
         if(initialNonShopItemLocations == null) {
-            initialNonShopItemLocations = FileUtils.getList("initial/initial_chests.txt");
-            if(initialNonShopItemLocations == null) {
-                initialNonShopItemLocations = new ArrayList<>(0);
-            }
-            else {
-                initialNonShopItemLocations.removeAll(getNonRandomizedItems());
-            }
+            initialNonShopItemLocations = new ArrayList<>();
         }
         return initialNonShopItemLocations;
-    }
-
-    public static List<String> getInitialCoinChestLocations() {
-        if(initialCoinChestLocations == null) {
-            initialCoinChestLocations = FileUtils.getList("initial/initial_coin_chests.txt");
-            if(initialCoinChestLocations == null) {
-                initialCoinChestLocations = new ArrayList<>(0);
-            }
-            else {
-                initialCoinChestLocations.removeAll(getNonRandomizedCoinChests());
-            }
-        }
-        return initialCoinChestLocations;
-    }
-
-    public static List<String> getInitialTrapItemLocations() {
-        return Arrays.asList("Trap: Inferno Orb", "Trap: Twin Ankh");
     }
 
     public static List<String> getBannedTrapLocations() {
@@ -377,11 +339,13 @@ public final class DataFromFile {
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject,
                     String.format("requirement/bosses/%s_reqs.txt", Settings.getBossDifficulty().name().toLowerCase()), true);
-            if(!Settings.isRequireSoftwareComboForKeyFairy()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_software_combo_for_key_fairy_reqs.txt", true);
-            }
             if(!Settings.isRequireFlaresForExtinction()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_flares_for_extinction_reqs.txt", true);
+            }
+            for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
+                if(customPlacement.isRemoveLogic()) {
+                    mapOfNodeNameToRequirementsObject.remove(customPlacement.getLocation());
+                }
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "custom-reqs.txt", false);
         }
@@ -398,8 +362,7 @@ public final class DataFromFile {
 
 
     public static List<String> getWinRequirements() {
-        if(winRequirements == null
-                && ((Settings.getMinRandomRemovedItems() > 0 || Settings.getMaxRandomRemovedItems() > 0) || !DataFromFile.getCustomItemPlacements().isEmpty())) {
+        if(winRequirements == null) {
             winRequirements = FileUtils.getList("requirement/win_reqs.txt");
         }
         return winRequirements;
@@ -449,6 +412,14 @@ public final class DataFromFile {
 
     public static void clearCustomItemPlacements() {
         customItemPlacements = null;
+        Settings.setAlternateMotherAnkh(false);
+        Settings.setAutomaticMantras(false);
+        Settings.setMedicineColor(null);
+    }
+
+    public static void clearInitialLocations() {
+        initialShops = null;
+        initialNonShopItemLocations = null;
     }
 
     public static void clearAllData() {
@@ -456,11 +427,11 @@ public final class DataFromFile {
             allNonShopItemsPlusAllRandomizedShopItems = null;
             nonRandomizedItems = null;
             allShops = null;
+            initialShops = null;
             initialNonShopItemLocations = null;
             randomizedShopItems = null;
             randomRemovableItems = null;
             nonShopItemLocations = null;
-            nonRandomizedCoinChests = null;
             bannedTrapLocations = null;
             mapOfNodeNameToRequirementsObject = null;
             mapOfNodeNameToExitRequirementsObject = null;
