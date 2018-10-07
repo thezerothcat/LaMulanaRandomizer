@@ -511,11 +511,7 @@ public class Main {
                             return false;
                         }
                     }
-                    else if(!"Whip".equals(customPlacement.getContents())
-                            && !"Knife".equals(customPlacement.getContents())
-                            && !"Katana".equals(customPlacement.getContents())
-                            && !"Axe".equals(customPlacement.getContents())
-                            && !"Key Sword".equals(customPlacement.getContents())) {
+                    else if(!DataFromFile.MAIN_WEAPONS.contains(customPlacement.getContents())) {
                         JOptionPane.showMessageDialog(randomizerUI,
                                 "Invalid starting weapon: " + customPlacement.getContents(),
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
@@ -1021,7 +1017,19 @@ public class Main {
             saveData[4113] = (byte)-1; // word + 0x1011; remove whip
             saveData[4114] = (byte)-1; // word + 0x1011; remove whip
 
-            if("Knife".equals(startingWeapon)) {
+            if("Chain Whip".equals(startingWeapon)) {
+                saveData[142] = (byte)2; // byte + 0x11; add chain whip flag
+                saveData[4115] = (byte)1; // word + 0x1011; add chain whip
+                saveData[4623] = (byte)1; // Held main weapon item number
+                saveData[4626] = (byte)0; // Held main weapon slot number
+            }
+            else if("Flail Whip".equals(startingWeapon)) {
+                saveData[143] = (byte)2; // byte + 0x11; add flail whip flag
+                saveData[4117] = (byte)1; // word + 0x1011; add flail whip
+                saveData[4623] = (byte)2; // Held main weapon item number
+                saveData[4626] = (byte)0; // Held main weapon slot number
+            }
+            else if("Knife".equals(startingWeapon)) {
                 saveData[144] = (byte)2; // byte + 0x11; add knife flag
                 saveData[4119] = (byte)1; // word + 0x1011; add knife
                 saveData[4623] = (byte)3; // Held main weapon item number

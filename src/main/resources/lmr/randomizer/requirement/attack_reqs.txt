@@ -56,6 +56,7 @@ Attack: Bomb => Bomb, Bomb Ammo
 Attack: Chakram => Chakram, Chakram Ammo
 Attack: Caltrops => Caltrops, Caltrops Ammo
 Attack: Pistol => Pistol, Pistol Ammo, State: Fairy Access
+Attack: Pistol => Pistol, Pistol Ammo, Setting: Subweapon Only # This makes Pistol Ammo cost 0g so you can get it reliably without worrying about being able to farm money
 Attack: Subweapon => Attack: Shuriken
 Attack: Subweapon => Attack: Rolling Shuriken
 Attack: Subweapon => Attack: Earth Spear
