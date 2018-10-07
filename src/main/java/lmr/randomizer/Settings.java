@@ -3,6 +3,7 @@ package lmr.randomizer;
 import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.random.BossDifficulty;
 import lmr.randomizer.random.ShopRandomizationEnum;
+import lmr.randomizer.random.ChestGraphics;
 
 import javax.swing.*;
 import java.io.File;
@@ -28,7 +29,7 @@ public final class Settings {
     private boolean changed = false;
 
     private boolean automaticHardmode;
-    private boolean coinChestGraphics;
+    private ChestGraphics chestGraphics;
     private boolean requireSoftwareComboForKeyFairy;
     private boolean requireFullAccess;
     private boolean requireIceCapeForLava;
@@ -91,7 +92,7 @@ public final class Settings {
         removeSpaulder = false;
         replaceMapsWithWeights = false;
         automaticHardmode = false;
-        coinChestGraphics = false;
+        chestGraphics = ChestGraphics.KEEP;
         automaticGrailPoints = false;
         automaticTranslations = false;
 
@@ -396,16 +397,20 @@ public final class Settings {
         }
         singleton.automaticTranslations = automaticTranslations;
     }
-
-    public static boolean isCoinChestGraphics() {
-        return singleton.coinChestGraphics;
+    
+    public static ChestGraphics getChestGraphics() {
+        return singleton.chestGraphics;
     }
-
-    public static void setCoinChestGraphics(boolean coinChestGraphics, boolean update) {
-        if(update && coinChestGraphics != singleton.coinChestGraphics) {
+    
+    public static void setChestGraphics(ChestGraphics chestGraphics, boolean update) {
+        if(update && chestGraphics != singleton.chestGraphics) {
             singleton.changed = true;
         }
-        singleton.coinChestGraphics = coinChestGraphics;
+        singleton.chestGraphics = chestGraphics;
+    }
+    
+    public static void setChestGraphics(String chestGraphics, boolean update) {
+        setChestGraphics(ChestGraphics.valueOf(chestGraphics), update);
     }
 
     public static Set<String> getNonRandomizedItems() {
@@ -644,7 +649,6 @@ public final class Settings {
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeMainWeapon, 12);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeCursedChests, 11);
         booleanSettings |= processBooleanFlag.apply(singleton.automaticHardmode, 10);
-        booleanSettings |= processBooleanFlag.apply(singleton.coinChestGraphics, 9);
         booleanSettings |= processBooleanFlag.apply(singleton.requireSoftwareComboForKeyFairy, 8);
         booleanSettings |= processBooleanFlag.apply(singleton.requireIceCapeForLava, 7);
         booleanSettings |= processBooleanFlag.apply(singleton.requireFlaresForExtinction, 6);
@@ -670,6 +674,9 @@ public final class Settings {
 
         // boss difficulty
         int bossDifficulty = singleton.bossDifficulty.ordinal();
+        
+        // chest graphics
+        int chestGraphics = singleton.chestGraphics.ordinal();
 
         // combine the results of the settings in a string
         long startingSeed = getStartingSeed();
@@ -680,6 +687,7 @@ public final class Settings {
         result += separator + Integer.toHexString(initItems);
         result += separator + Integer.toHexString(startingItems);
         result += separator + Integer.toHexString(bossDifficulty);
+        result += separator + Integer.toHexString(chestGraphics);
         result += separator + Integer.toHexString(singleton.minRandomRemovedItems);
         result += separator + Integer.toHexString(singleton.maxRandomRemovedItems);
 
@@ -709,6 +717,7 @@ public final class Settings {
         booleanSettingsFlag >>= 2;
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
+        
 
         singleton.requireFullAccess = getBoolFlagFromInt.apply(booleanSettingsFlag, 17);
         singleton.randomizeDracuetShop = getBoolFlagFromInt.apply(booleanSettingsFlag, 16);
@@ -718,7 +727,6 @@ public final class Settings {
         singleton.randomizeMainWeapon = getBoolFlagFromInt.apply(booleanSettingsFlag, 12);
         singleton.randomizeCursedChests = getBoolFlagFromInt.apply(booleanSettingsFlag, 11);
         singleton.automaticHardmode = getBoolFlagFromInt.apply(booleanSettingsFlag, 10);
-        singleton.coinChestGraphics = getBoolFlagFromInt.apply(booleanSettingsFlag, 9);
         singleton.requireSoftwareComboForKeyFairy = getBoolFlagFromInt.apply(booleanSettingsFlag, 8);
         singleton.requireIceCapeForLava = getBoolFlagFromInt.apply(booleanSettingsFlag, 7);
         singleton.requireFlaresForExtinction = getBoolFlagFromInt.apply(booleanSettingsFlag, 6);
@@ -734,6 +742,7 @@ public final class Settings {
         Set<String> initItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[5],16), singleton.possibleRandomizedItems));
         Set<String> startingItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[6],16), singleton.possibleRandomizedItems));
         BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[7],16)];
+        ChestGraphics chestGraphics = ChestGraphics.values()[Integer.parseInt(parts[9],16)];
         int minRandomRemovedItems = Integer.parseInt(parts[8],16);
         int maxRandomRemovedItems = Integer.parseInt(parts[9],16);
 
@@ -743,6 +752,7 @@ public final class Settings {
         setInitiallyAccessibleItems(initItems, true);
         setStartingItems(startingItems, true);
         setBossDifficulty(bossDifficulty.toString(), true);
+        setChestGraphics(chestGraphics, true);
         setMinRandomRemovedItems(minRandomRemovedItems, true);
         setMaxRandomRemovedItems(maxRandomRemovedItems, true);
 

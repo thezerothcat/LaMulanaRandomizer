@@ -2,6 +2,7 @@ package lmr.randomizer;
 
 import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.node.NodeWithRequirements;
+import lmr.randomizer.random.ChestGraphics;
 import lmr.randomizer.update.GameObjectId;
 
 import javax.xml.bind.DatatypeConverter;
@@ -376,8 +377,9 @@ public class FileUtils {
             else if(line.startsWith("replaceMapsWithWeights")) {
                 Settings.setReplaceMapsWithWeights(Boolean.valueOf(line.split("=")[1]), false);
             }
-            else if(line.startsWith("coinChestGraphics")) {
-                Settings.setCoinChestGraphics(Boolean.valueOf(line.split("=")[1]), false);
+            else if(line.startsWith("chestGraphics")) {
+                ChestGraphics g = ChestGraphics.valueOf(line.split("=")[1]);
+                Settings.setChestGraphics(g, false);
             }
             else if(line.startsWith("automaticGrailPoints")) {
                 Settings.setAutomaticGrailPoints(Boolean.valueOf(line.split("=")[1]), false);
@@ -468,7 +470,7 @@ public class FileUtils {
         writer.write(String.format("replaceMapsWithWeights=%s", Settings.isReplaceMapsWithWeights()));
         writer.newLine();
 
-        writer.write(String.format("coinChestGraphics=%s", Settings.isCoinChestGraphics()));
+        writer.write(String.format("chestGraphics=%s", Settings.getChestGraphics().name()));
         writer.newLine();
 
         writer.write(String.format("automaticGrailPoints=%s", Settings.isAutomaticGrailPoints()));

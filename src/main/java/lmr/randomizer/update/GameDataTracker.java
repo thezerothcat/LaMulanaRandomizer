@@ -26,8 +26,11 @@ public final class GameDataTracker {
     private static ObjectContainer xelpudScreen;
     private static ObjectContainer mulbrukScreen;
     private static ObjectContainer littleBrotherShopScreen;
+    
+    private static Random Randomizer;
 
     private GameDataTracker() {
+        Randomizer = new Random(Settings.getStartingSeed());
     }
 
     public static void clearAll() {
@@ -2843,6 +2846,28 @@ public final class GameDataTracker {
         }
         objects.add(altSurfaceShopTimer);
     }
+    
+    private static void setChestSprite(GameObject objectToModify) {
+        // Chest graphics (0 = coin chest, 1 = blue chest)
+        switch (Settings.getChestGraphics()) {
+            case ALLCOIN:
+                objectToModify.getArgs().set(2, (short)0);
+                break;
+                
+            case ALLTREASURE:
+                objectToModify.getArgs().set(2, (short)1);
+                break;
+                
+            case ALLRANDOM:
+                objectToModify.getArgs().set(2, (short)(Randomizer.nextInt(2)));
+                break;
+    
+            case KEEP:
+            default:
+                // don't change anything here!
+                break;
+        }
+    }
 
     private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData,
                                             String newChestContentsItemName, int newWorldFlag, boolean cursed, Random random) {
@@ -2880,13 +2905,7 @@ public final class GameDataTracker {
             objectToModify.getWriteByteOperations().add(updateFlag);
         }
         else if(newChestContentsItemName.startsWith("Trap:")) {
-            // Chest graphics (0 = coin chest, 1 = blue chest)
-            if(Settings.isCoinChestGraphics()) {
-                objectToModify.getArgs().set(2, (short)0);
-            }
-            else {
-                objectToModify.getArgs().set(2, (short)1);
-            }
+            setChestSprite(objectToModify);
 
             for (TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                 if (flagTest.getIndex() == itemLocationData.getWorldFlag()) {
@@ -2963,12 +2982,7 @@ public final class GameDataTracker {
 
                 objectToModify.getArgs().set(1, (short)1); // Real item, not fake (or 1 weight, because the game won't allow multiple)
 
-                if(Settings.isCoinChestGraphics()) {
-                    objectToModify.getArgs().set(2, (short)0);
-                }
-                else {
-                    objectToModify.getArgs().set(2, (short)1);
-                }
+                setChestSprite(objectToModify);
 
                 for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                     if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
