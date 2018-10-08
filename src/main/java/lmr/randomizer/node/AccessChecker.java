@@ -26,12 +26,25 @@ public class AccessChecker {
     private ShopRandomizer shopRandomizer;
 
     private int numberOfAccessibleAnkhJewels;
+    private int numberOfCollectedAnkhJewels;
     private int numberOfAccessibleSacredOrbs;
     private int bossesDefeated;
 
     public AccessChecker() {
         mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
 //        mapOfNodeNameToExitRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToExitRequirementsObject());
+    }
+
+    public AccessChecker(AccessChecker accessChecker, boolean copyAll) {
+        this.mapOfNodeNameToRequirementsObject = copyRequirementsMap(accessChecker.mapOfNodeNameToRequirementsObject);
+//        this.mapOfNodeNameToExitRequirementsObject = copyRequirementsMap(accessChecker.mapOfNodeNameToExitRequirementsObject);
+        this.itemRandomizer = copyAll ? new ItemRandomizer(accessChecker.itemRandomizer) : accessChecker.itemRandomizer;
+        this.shopRandomizer = copyAll ? accessChecker.shopRandomizer.copy() : accessChecker.shopRandomizer;
+        this.accessedNodes = new HashSet<>(accessChecker.accessedNodes);
+        this.accessibleBossNodes = new HashSet<>(accessChecker.accessibleBossNodes);
+        this.bossesDefeated = accessChecker.bossesDefeated;
+        this.numberOfAccessibleAnkhJewels = accessChecker.numberOfAccessibleAnkhJewels;
+        this.numberOfCollectedAnkhJewels = accessChecker.numberOfCollectedAnkhJewels;
     }
 
     public void determineCursedChests(Random random) {
@@ -77,17 +90,6 @@ public class AccessChecker {
         return copyMap;
     }
 
-    public AccessChecker(AccessChecker accessChecker) {
-        this.mapOfNodeNameToRequirementsObject = copyRequirementsMap(accessChecker.mapOfNodeNameToRequirementsObject);
-//        this.mapOfNodeNameToExitRequirementsObject = copyRequirementsMap(accessChecker.mapOfNodeNameToExitRequirementsObject);
-        this.itemRandomizer = accessChecker.itemRandomizer;
-        this.shopRandomizer = accessChecker.shopRandomizer;
-        this.accessedNodes = new HashSet<>(accessChecker.accessedNodes);
-        this.accessibleBossNodes = new HashSet<>(accessChecker.accessibleBossNodes);
-        this.bossesDefeated = accessChecker.bossesDefeated;
-        this.numberOfAccessibleAnkhJewels = accessChecker.numberOfAccessibleAnkhJewels;
-    }
-
     public List<String> getQueuedUpdates() {
         return queuedUpdates;
     }
@@ -98,24 +100,33 @@ public class AccessChecker {
                 return true;
             }
 
+            NodeType nodeType;
             for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
-                if(nodeName.startsWith("Glitch:") || nodeName.startsWith("Attack:") || nodeName.startsWith("Location:")
-                        || nodeName.startsWith("Event:") || nodeName.startsWith("Exit:")) {
+                nodeType = mapOfNodeNameToRequirementsObject.get(nodeName).getType();
+                if(NodeType.STATE.equals(nodeType) || NodeType.MAP_LOCATION.equals(nodeType)
+                        || NodeType.EXIT.equals(nodeType) || NodeType.SETTING.equals(nodeType)) {
                     continue;
                 }
-                else if(NodeType.ITEM_LOCATION.equals(mapOfNodeNameToRequirementsObject.get(nodeName).getType())) {
+                else if(NodeType.ITEM_LOCATION.equals(nodeType)) {
                     String item = itemRandomizer.getItem(nodeName);
-                    if(item.startsWith("Coin:") || item.startsWith("Trap:") || Settings.getStartingItems().contains(item)) {
+                    if(item.startsWith("Coin:") || item.startsWith("Trap:") || Settings.getStartingItemsIncludingCustom().contains(item)) {
                         continue;
                     }
                 }
                 FileUtils.log("Inaccessible node detected: " + nodeName + " containing " + itemRandomizer.getItem(nodeName));
                 return false;
             }
+            for(String requiredItem : DataFromFile.getWinRequirements()) {
+                if(!accessedNodes.contains(requiredItem)) {
+                    FileUtils.log("Win requirement not accessible: " + requiredItem);
+                    return false;
+                }
+            }
             return true;
         }
         for(String requiredItem : DataFromFile.getWinRequirements()) {
             if(!accessedNodes.contains(requiredItem)) {
+                FileUtils.log("Win requirement not accessible: " + requiredItem);
                 return false;
             }
         }
@@ -126,55 +137,26 @@ public class AccessChecker {
         if(!Settings.isRequireFullAccess()) {
             return false;
         }
-        return Settings.getRemovedItems().isEmpty() && Settings.getCurrentRemovedItems().isEmpty()
-                || (Settings.isRandomizeMainWeapon() && Settings.getCurrentRemovedItems().size() == 1 && !"Whip".equals(Settings.getCurrentStartingWeapon()));
+        if(!Settings.isRandomizeMainWeapon() || "Whip".equals(Settings.getCurrentStartingWeapon())) {
+            return Settings.getRemovedItems().isEmpty() && Settings.getCurrentRemovedItems().isEmpty();
+        }
+        if(Settings.getCurrentRemovedItems().size() == 1 && "Whip".equals(Settings.getCurrentRemovedItems().iterator().next())) {
+            return true;
+        }
+        return Settings.getRemovedItems().isEmpty() && Settings.getCurrentRemovedItems().isEmpty();
     }
 
     public void computeAccessibleNodes(String newState) {
-        String stateToUpdate = newState;
-        if(stateToUpdate.contains("Amphisbaena Accessible") || stateToUpdate.contains("Sakit Accessible")
-                || stateToUpdate.contains("Ellmac Accessible") || stateToUpdate.contains("Bahamut Accessible")
-                || stateToUpdate.contains("Viy Accessible") || stateToUpdate.contains("Baphomet Accessible")
-                || stateToUpdate.contains("Palenque Accessible") || stateToUpdate.contains("Tiamat Accessible")) {
-            accessibleBossNodes.add(stateToUpdate);
-            mapOfNodeNameToRequirementsObject.remove(stateToUpdate);
-            queuedUpdates.remove(stateToUpdate);
-            return;
-        }
-        if(stateToUpdate.startsWith("Coin:")) {
-            accessedNodes.add(stateToUpdate);
-            mapOfNodeNameToRequirementsObject.remove(stateToUpdate);
-            queuedUpdates.remove(stateToUpdate);
-            return;
-        }
+        computeAccessibleNodes(newState, true);
+    }
 
-        if(NODES_TO_DELAY.contains(newState) && queuedUpdates.size() > 1) {
-            // Re-add this update to the end of the queue. // todo: might want a separate queue for these things
-            queuedUpdates.remove(newState);
-            queuedUpdates.add(newState);
-            return;
-        }
-        if(stateToUpdate.contains("Ankh Jewel")) {
-            stateToUpdate = "Ankh Jewel";
-            numberOfAccessibleAnkhJewels += 1;
-        }
-        if(stateToUpdate.contains("Amphisbaena Defeated") || stateToUpdate.contains("Sakit Defeated")
-                || stateToUpdate.contains("Ellmac Defeated") || stateToUpdate.contains("Bahamut Defeated")
-                || stateToUpdate.contains("Viy Defeated") || stateToUpdate.contains("Baphomet Defeated")
-                || stateToUpdate.contains("Palenque Defeated") || stateToUpdate.contains("Tiamat Defeated")) {
-            bossesDefeated += 1;
-            if(bossesDefeated == 8 && !accessedNodes.contains("Event: All Bosses Defeated")) {
-                computeAccessibleNodes("Event: All Bosses Defeated");
+    public void computeAccessibleNodes(String newState, boolean fullValidation) {
+        String stateToUpdate = newState;
+        if(fullValidation) {
+            stateToUpdate = checkState(stateToUpdate);
+            if(stateToUpdate == null) {
+                return;
             }
-        }
-        if(stateToUpdate.contains("Sacred Orb (")) {
-            stateToUpdate = "Sacred Orb";
-            numberOfAccessibleSacredOrbs += 1;
-            queuedUpdates.add("Sacred Orb: " + numberOfAccessibleSacredOrbs);
-        }
-        if(Settings.isRandomizeMainWeapon()
-                && !"Whip".equals(Settings.getCurrentStartingWeapon()) && "Whip".equals(stateToUpdate)) {
-            stateToUpdate = "Chain Whip";
         }
 
         accessedNodes.add(newState);
@@ -185,7 +167,7 @@ public class AccessChecker {
         for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
             node = mapOfNodeNameToRequirementsObject.get(nodeName);
             if(node.updateRequirements(stateToUpdate)) {
-                handleNodeAccess(nodeName, node.getType());
+                handleNodeAccess(nodeName, node.getType(), fullValidation);
                 nodesToRemove.add(nodeName);
             }
         }
@@ -193,6 +175,63 @@ public class AccessChecker {
             mapOfNodeNameToRequirementsObject.remove(nodeToRemove);
         }
         queuedUpdates.remove(newState);
+    }
+
+    private String checkState(String stateToUpdate) {
+        if(stateToUpdate.contains("Amphisbaena Accessible") || stateToUpdate.contains("Sakit Accessible")
+                || stateToUpdate.contains("Ellmac Accessible") || stateToUpdate.contains("Bahamut Accessible")
+                || stateToUpdate.contains("Viy Accessible") || stateToUpdate.contains("Baphomet Accessible")
+                || stateToUpdate.contains("Palenque Accessible") || stateToUpdate.contains("Tiamat Accessible")) {
+            accessibleBossNodes.add(stateToUpdate);
+            mapOfNodeNameToRequirementsObject.remove(stateToUpdate);
+            queuedUpdates.remove(stateToUpdate);
+            return null;
+        }
+        if(stateToUpdate.startsWith("Coin:")) {
+            accessedNodes.add(stateToUpdate);
+            mapOfNodeNameToRequirementsObject.remove(stateToUpdate);
+            queuedUpdates.remove(stateToUpdate);
+            return null;
+        }
+        if(NODES_TO_DELAY.contains(stateToUpdate) && queuedUpdates.size() > 1) {
+            // Re-add this update to the end of the queue. // todo: might want a separate queue for these things
+            queuedUpdates.remove(stateToUpdate);
+            queuedUpdates.add(stateToUpdate);
+            return null;
+        }
+        if(stateToUpdate.contains("Ankh Jewel") && !stateToUpdate.equals("Ankh Jewel: 9")) {
+            numberOfAccessibleAnkhJewels += 1;
+            numberOfCollectedAnkhJewels += 1;
+            if(numberOfCollectedAnkhJewels == 9) {
+                // Alternate Mother Ankh
+                queuedUpdates.add("Ankh Jewel: 9");
+            }
+            return "Ankh Jewel";
+        }
+        if(stateToUpdate.contains("Sacred Orb (")) {
+            numberOfAccessibleSacredOrbs += 1;
+            queuedUpdates.add("Sacred Orb: " + numberOfAccessibleSacredOrbs);
+            return "Sacred Orb";
+        }
+        if(Settings.isRandomizeMainWeapon()
+                && !"Whip".equals(Settings.getCurrentStartingWeapon()) && "Whip".equals(stateToUpdate)) {
+            return null; // Whip is a removed item.
+        }
+        if(stateToUpdate.equals("Vessel")) {
+            if(Settings.getMedicineColor() != null) {
+                return String.format("Medicine of the Mind (%s)", Settings.getMedicineColor());
+            }
+        }
+        if(stateToUpdate.contains("Amphisbaena Defeated") || stateToUpdate.contains("Sakit Defeated")
+                || stateToUpdate.contains("Ellmac Defeated") || stateToUpdate.contains("Bahamut Defeated")
+                || stateToUpdate.contains("Viy Defeated") || stateToUpdate.contains("Baphomet Defeated")
+                || stateToUpdate.contains("Palenque Defeated") || stateToUpdate.contains("Tiamat Defeated")) {
+            bossesDefeated += 1;
+            if(bossesDefeated == 8 && !accessedNodes.contains("Event: All Bosses Defeated")) {
+                computeAccessibleNodes("Event: All Bosses Defeated");
+            }
+        }
+        return stateToUpdate;
     }
 
     public void markBossAccessed(String bossEventNodeName) {
@@ -204,7 +243,7 @@ public class AccessChecker {
         for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
             node = mapOfNodeNameToRequirementsObject.get(nodeName);
             if(node.updateRequirements(bossEventNodeName)) {
-                handleNodeAccess(nodeName, node.getType());
+                handleNodeAccess(nodeName, node.getType(), true);
                 nodesToRemove.add(nodeName);
             }
         }
@@ -231,7 +270,7 @@ public class AccessChecker {
             for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
                 node = mapOfNodeNameToRequirementsObject.get(nodeName);
                 if(node.updateRequirements("Event: All Bosses Defeated")) {
-                    handleNodeAccess(nodeName, node.getType());
+                    handleNodeAccess(nodeName, node.getType(), true);
                     nodesToRemove.add(nodeName);
                 }
             }
@@ -249,7 +288,7 @@ public class AccessChecker {
         for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
             node = mapOfNodeNameToRequirementsObject.get(nodeName);
             if(node.updateRequirements(bossDefeatedNodeName)) {
-                handleNodeAccess(nodeName, node.getType());
+                handleNodeAccess(nodeName, node.getType(), true);
                 nodesToRemove.add(nodeName);
             }
         }
@@ -258,7 +297,7 @@ public class AccessChecker {
         }
     }
 
-    private void handleNodeAccess(String nodeName, NodeType nodeType) {
+    private void handleNodeAccess(String nodeName, NodeType nodeType, boolean fullValidation) {
         switch (nodeType) {
             case ITEM_LOCATION:
                 if(nodeName.startsWith("Coin:") && !Settings.isRandomizeCoinChests()) {
@@ -267,12 +306,17 @@ public class AccessChecker {
                 if(nodeName.startsWith("Trap:") && !Settings.isRandomizeTrapItems()) {
                     break;
                 }
-                String item = itemRandomizer.getItem(nodeName);
-                if(item == null) {
-                    throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
+                if(fullValidation) {
+                    String item = itemRandomizer.getItem(nodeName);
+                    if (item == null) {
+                        throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
+                    }
+                    if (!Settings.getCurrentRemovedItems().contains(item) && !Settings.getRemovedItems().contains(item)) {
+                        queuedUpdates.add(item);
+                    }
                 }
-                if(!Settings.getCurrentRemovedItems().contains(item) && !Settings.getRemovedItems().contains(item)) {
-                    queuedUpdates.add(item);
+                else {
+                    DataFromFile.getInitialNonShopItemLocations().add(nodeName);
                 }
                 break;
             case MAP_LOCATION:
@@ -318,22 +362,33 @@ public class AccessChecker {
 //                        queuedUpdates.add("Chakram Ammo");
 //                    }
 //                }
-            case ATTACK:
-            case EVENT:
+            case STATE:
             case EXIT:
-            case GLITCH:
-                queuedUpdates.add(nodeName);
+            case SETTING:
+                if(fullValidation) {
+                    queuedUpdates.add(nodeName);
+                }
+                else {
+                    if(!nodeName.contains("Defeated")) {
+                        queuedUpdates.add(nodeName);
+                    }
+                }
                 break;
             case SHOP:
-                for(String shopItem : shopRandomizer.getShopItems(nodeName)) {
-                    if(shopItem == null) {
-                        throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
+                if(fullValidation) {
+                    for (String shopItem : shopRandomizer.getShopItems(nodeName)) {
+                        if (shopItem == null) {
+                            throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
+                        }
+                        if (!accessedNodes.contains(shopItem) && !queuedUpdates.contains(shopItem)
+                                && !Settings.getRemovedItems().contains(shopItem)
+                                && !Settings.getCurrentRemovedItems().contains(shopItem)) {
+                            queuedUpdates.add(shopItem);
+                        }
                     }
-                    if(!accessedNodes.contains(shopItem) && !queuedUpdates.contains(shopItem)
-                            && !Settings.getRemovedItems().contains(shopItem)
-                            && !Settings.getCurrentRemovedItems().contains(shopItem)) {
-                        queuedUpdates.add(shopItem);
-                    }
+                }
+                else {
+                    DataFromFile.getInitialShops().add(nodeName);
                 }
                 break;
         }
@@ -414,7 +469,7 @@ public class AccessChecker {
 
         if(Settings.getCurrentRemovedItems().contains(item)
                 || Settings.getRemovedItems().contains(item)
-                || Settings.getStartingItems().contains(item)) {
+                || Settings.getStartingItemsIncludingCustom().contains(item)) {
             if("Shop 2 Alt (Surface)".equals(location)) {
                 // Don't put removed item in transforming Surface shop.
                 return false;
@@ -505,7 +560,7 @@ public class AccessChecker {
         List<Thread> threads = new ArrayList<>(accessibleBossNodes.size());
         List<AnkhJewelLockChecker> ankhJewelLockCheckers = new ArrayList<>();
         for(String bossNode : accessibleBossNodes) {
-            AnkhJewelLockChecker ankhJewelLockChecker = new AnkhJewelLockChecker(new AccessChecker(this), bossNode);
+            AnkhJewelLockChecker ankhJewelLockChecker = new AnkhJewelLockChecker(new AccessChecker(this, false), bossNode);
             ankhJewelLockCheckers.add(ankhJewelLockChecker);
             Thread thread = new Thread(ankhJewelLockChecker);
             threads.add(thread);

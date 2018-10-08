@@ -1,15 +1,13 @@
 Feather
-Event: Recite LAMULANA
 Event: Remove True Shrine Fairy Block
 Event: All Grails Read
 Holy Grail
-Vessel
+Event: Medicine of the Mind (Yellow)
 Origin Seal
 Birth Seal
 Life Seal
 Death Seal
-Key Sword
-Location: Tower of Ruin [Medicine]
+Event: Mother Ankh
+Event: Fobos Ladder
 Location: True Shrine of the Mother
 Key of Eternity
-Lamp of Time

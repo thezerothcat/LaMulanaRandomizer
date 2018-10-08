@@ -3,6 +3,12 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
+1.39:
+-----------------------------
+Ability to start the game with a subweapon instead of a main weapon, although using quickswap keys will cause the game to crash.
+
+Custom placement now allows specification of starting weapon and items, mantra skip/automatic upgraded Key Sword, and placement of Medicine of the Mind instead of Vessel.
+
 1.38:
 -----------------------------
 Mostly bugfixes.

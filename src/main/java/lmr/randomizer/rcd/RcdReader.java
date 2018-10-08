@@ -310,20 +310,22 @@ public final class RcdReader {
 //                }
 //            }
 //        }
-//        else if (obj.getId() == 0xc0) {
-//            obj.setId((short)0x2e);
-//            obj.getArgs().set(0, (short)8);
-//            for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-//                if(testByteOperation.getIndex() == 254) {
-//                    testByteOperation.setValue((byte) 2);
-//                }
-//            }
-//
+        else if (obj.getId() == 0xc0) {
+            if(Settings.isAlternateMotherAnkh()) {
+                obj.setId((short)0x2e);
+                obj.getArgs().set(0, (short)8);
+                for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                    if(testByteOperation.getIndex() == 254) {
+                        testByteOperation.setValue((byte) 2);
+                    }
+                }
+                obj.setY(obj.getY() + 60);
+            }
+
 //            for(int i = 1; i <= 23; i++) {
 //                obj.getArgs().set(i, (short) 1);
 //            }
-//            obj.setY(obj.getY() + 60);
-//        }
+        }
 
         if(keepObject) {
             objectContainer.getObjects().add(obj);
@@ -521,9 +523,10 @@ public final class RcdReader {
 
     private static void addCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
         if(zoneIndex == 1 && roomIndex == 2 && screenIndex == 1) {
-            if(!Settings.getStartingItems().isEmpty()) {
-                AddObject.addStartingItems(screen);
-            }
+            AddObject.addStartingItems(screen);
+        }
+        else if(zoneIndex == 2 && roomIndex == 2 && screenIndex == 0) {
+            AddObject.addHardmodeToggleWeights(screen);
         }
         else if(zoneIndex == 6 && roomIndex == 7 && screenIndex == 1) {
             AddObject.addExtinctionUntrueShrineBackupDoor(screen);
@@ -533,6 +536,11 @@ public final class RcdReader {
         }
         else if(zoneIndex == 9 && roomIndex == 8 && screenIndex == 1) {
             AddObject.addUntrueShrineExit(screen);
+        }
+        else if(zoneIndex == 17 && roomIndex == 10 && screenIndex == 1) {
+            if(Settings.isUshumgalluAssist()) {
+                AddObject.addDimensionalOrbLadder(screen);
+            }
         }
     }
 
@@ -568,9 +576,15 @@ public final class RcdReader {
         else if(zoneIndex == 12 && roomIndex == 2 && screenIndex == 0) {
             AddObject.addMoonlightPassageTimer(screen);
         }
-        else if((zoneIndex == 13 && roomIndex == 5 && screenIndex == 1)
-            || (zoneIndex == 13 && roomIndex == 6 && screenIndex == 2)) {
-            AddObject.addFlailWhipPuzzleTimer(screen);
+        else if(zoneIndex == 13) {
+            if((roomIndex == 5 && screenIndex == 1) || (roomIndex == 6 && screenIndex == 2)) {
+                AddObject.addFlailWhipPuzzleTimer(screen);
+            }
+            else if(roomIndex == 4 && screenIndex == 1) {
+                if(Settings.isAllowSubweaponStart()) {
+                    AddObject.addFloodedTowerShortcutTimer(screen);
+                }
+            }
         }
         else if(zoneIndex == 17 && roomIndex == 8 && screenIndex == 0) {
             AddObject.addAngelShieldPuzzleTimers(screen);

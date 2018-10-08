@@ -28,6 +28,7 @@ public class RadioPanel extends JPanel {
 
         itemConfigRadioGroupPanels.add(new GameItemRadio("Isis' Pendant"));
         itemConfigRadioGroupPanels.add(new GameItemRadio("Bronze Mirror"));
+        itemConfigRadioGroupPanels.add(new GameItemRadio("Ring"));
         itemConfigRadioGroupPanels.add(new GameItemRadio("mirai.exe"));
         itemConfigRadioGroupPanels.add(new GameItemRadio("bunemon.exe"));
         itemConfigRadioGroupPanels.add(new GameItemRadio("xmailer.exe"));

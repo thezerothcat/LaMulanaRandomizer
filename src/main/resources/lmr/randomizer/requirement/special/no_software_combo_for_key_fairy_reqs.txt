@@ -1,7 +1,0 @@
-Fairy Clothes => Location: Gate of Illusion [Middle], Isis' Pendant, Attack: Below
-Fairy Clothes => Location: Gate of Illusion [Middle], Isis' Pendant, Glitch: Raindrop
-Spaulder => Location: Tower of the Goddess [Grail], Isis' Pendant, Feather, Hermes' Boots
-Spaulder => Location: Tower of the Goddess [Grail], Isis' Pendant, Holy Grail, mirai.exe, Hand Scanner, reader.exe
-Location: Gate of Time => Location: Chamber of Extinction [Main], Isis' Pendant
-Shop 12 Alt (Spring) => Helmet, Origin Seal, Isis' Pendant
-Event: Hell Temple Unlocked => Event: Mulbruk Awakened, Location: Gate of Guidance, Location: Gate of Illusion [Dracuet], Isis' Pendant, Location: Gate of Time, Feather, Location: Chamber of Extinction [Ankh], Ice Cape, Sacred Orb: 2, Holy Grail, Life Seal

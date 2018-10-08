@@ -1,5 +1,6 @@
 package lmr.randomizer.random;
 
+import javafx.util.Pair;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
@@ -26,6 +27,7 @@ public class EverythingShopRandomizer implements ShopRandomizer {
     private static final String FISH_SHOP_NAME = "Shop 12 (Spring)";
     private static final String FISH_FAIRY_SHOP_NAME = "Shop 12 Alt (Spring)";
     private static final String LITTLE_BROTHER_SHOP_NAME = "Shop 18 (Lil Bro)";
+    private static final String GRAVEYARD_SHOP_NAME = "Shop 7 (Graveyard)";
 
     private AccessChecker accessChecker;
     private ItemRandomizer itemRandomizer; // Not needed for this version of the randomizer?
@@ -53,6 +55,15 @@ public class EverythingShopRandomizer implements ShopRandomizer {
         shopsWithSacredOrbs = new ArrayList<>();
     }
 
+    public ShopRandomizer copy() {
+        EverythingShopRandomizer other = new EverythingShopRandomizer();
+        other.randomizedShops = new ArrayList<>(this.randomizedShops);
+        other.unassignedShopItemLocations = new ArrayList<>(this.unassignedShopItemLocations);
+        other.shopsWithSacredOrbs = new ArrayList<>(this.shopsWithSacredOrbs);
+        other.mapOfShopInventoryItemToContents = new HashMap<>(this.mapOfShopInventoryItemToContents);
+        return other;
+    }
+
     public List<String> getUnassignedShopItemLocations() {
         return unassignedShopItemLocations;
     }
@@ -71,7 +82,7 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 if(originalShopItem.equals("Weights") || originalShopItem.endsWith("Ammo")) {
                     continue;
                 }
-                else if(Settings.getStartingItems().contains(originalShopItem)) {
+                else if(Settings.getStartingItemsIncludingCustom().contains(originalShopItem)) {
                     continue;
                 }
                 else if(MSX_SHOP_NAME.equals(shop) && "Mobile Super X2".equals(originalShopItem) && nonRandomizedItems.contains(originalShopItem)) {
@@ -95,27 +106,31 @@ public class EverythingShopRandomizer implements ShopRandomizer {
         for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
             String customLocation = customPlacement.getLocation();
             if(!customPlacement.isRemoveItem() && !customPlacement.isCurseChest()
+                    && !customPlacement.isRemoveLogic()
                     && customLocation != null && customLocation.startsWith("Shop ")) {
                 mapOfShopInventoryItemToContents.put(customLocation, customPlacement.getContents());
                 unassignedShopItemLocations.remove(customLocation);
                 itemRandomizer.removeItemFromUnplacedItems(customPlacement.getContents());
+                if(customPlacement.getContents().contains("Sacred Orb")) {
+                    shopsWithSacredOrbs.add(customLocation.substring(0, customLocation.indexOf(')') + 1));
+                }
             }
         }
+    }
 
-//        if(Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
-//            mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 1", "Whip");
-//            unassignedShopItemLocations.remove("Shop 3 (Surface) Item 1");
-//            itemRandomizer.removeItemFromUnplacedItems("Whip");
-//        }
-//        mapOfShopInventoryItemToContents.put("Shop 3 (Surface) Item 1", "Sacred Orb (Gate of Guidance)");
-//        unassignedShopItemLocations.remove("Shop 3 (Surface) Item 1");
-//        itemRandomizer.removeItemFromUnplacedItems("Sacred Orb (Gate of Guidance)");
-//        mapOfShopInventoryItemToContents.put("Shop 2 Alt (Surface) Item 1", "Diary");
-//        unassignedShopItemLocations.remove("Shop 2 Alt (Surface) Item 1");
-//        itemRandomizer.removeItemFromUnplacedItems("Diary");
-//        mapOfShopInventoryItemToContents.put("Shop 18 (Lil Bro) Item 1", "Fruit of Eden");
-//        unassignedShopItemLocations.remove("Shop 18 (Lil Bro) Item 1");
-//        itemRandomizer.removeItemFromUnplacedItems("Fruit of Eden");
+    @Override
+    public void placeSpecialSubweaponAmmo(Random random) {
+        List<String> guaranteedAmmoShopLocations = new ArrayList<>();
+        for(String location : unassignedShopItemLocations) {
+            if(location.contains("Surface") && !location.equals(MSX_SHOP_NAME + " Item 1")) {
+                guaranteedAmmoShopLocations.add(location);
+            }
+        }
+        if(!guaranteedAmmoShopLocations.isEmpty()) {
+            String specialAmmoLocation = guaranteedAmmoShopLocations.get(random.nextInt(guaranteedAmmoShopLocations.size()));
+            mapOfShopInventoryItemToContents.put(specialAmmoLocation, Settings.getCurrentStartingWeapon() + " Ammo");
+            unassignedShopItemLocations.remove(specialAmmoLocation);
+        }
     }
 
     public List<String> getShopItems(String shopName) {
@@ -289,6 +304,19 @@ public class EverythingShopRandomizer implements ShopRandomizer {
             mapOfShopInventoryItemToContents.put(littleBrotherShopWeightsLocation, "Weights");
             unassignedShopItemLocations.remove(littleBrotherShopWeightsLocation);
         }
+
+        // Guarantee weights at the shop in Graveyard of the Giants, as mercy for people on long journeys across the backside areas
+        guaranteedWeightShopLocations.clear();
+        for(String location : unassignedShopItemLocations) {
+            if(location.contains(GRAVEYARD_SHOP_NAME)) {
+                guaranteedWeightShopLocations.add(location);
+            }
+        }
+        if(!guaranteedWeightShopLocations.isEmpty()) {
+            String graveyardShopWeightsLocation = guaranteedWeightShopLocations.get(random.nextInt(guaranteedWeightShopLocations.size()));
+            mapOfShopInventoryItemToContents.put(graveyardShopWeightsLocation, "Weights");
+            unassignedShopItemLocations.remove(graveyardShopWeightsLocation);
+        }
     }
 
     private int getWeightCount(Random random, int usableShops) {
@@ -359,7 +387,7 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                     String itemName = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(location));
                     boolean removedItem = Settings.getCurrentRemovedItems().contains(itemName)
                             || Settings.getRemovedItems().contains(itemName)
-                            || Settings.getStartingItems().contains(itemName)
+                            || Settings.getStartingItemsIncludingCustom().contains(itemName)
                             || (Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName));
                     writer.write(Translations.getShopItemText(shop, i) + ": " + Translations.getItemText(itemName, removedItem));
                     writer.newLine();
@@ -375,12 +403,14 @@ public class EverythingShopRandomizer implements ShopRandomizer {
         writer.close();
     }
 
-    public void updateFiles(List<Block> blocks, Random random) {
+    public void updateFiles(List<Block> blocks, boolean subweaponOnly, Random random) {
         String shopItem1;
         String shopItem2;
         String shopItem3;
         ShopBlock shopBlock;
-        ShopItemPriceCountRandomizer shopItemPriceCountRandomizer = new ShopItemPriceCountRandomizer(random);
+        ShopItemPriceCountRandomizer shopItemPriceCountRandomizer = new ShopItemPriceCountRandomizer(subweaponOnly, random);
+        Pair<Short, Short> itemPriceCountMsxShop2 = null;
+        Pair<Short, Short> itemPriceCountMsxShop3 = null;
         for(String shopName : randomizedShops) {
             shopBlock = (ShopBlock) blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get(shopName));
 
@@ -403,27 +433,43 @@ public class EverythingShopRandomizer implements ShopRandomizer {
 
             if(Settings.getCurrentRemovedItems().contains(shopItem1)
                     || Settings.getRemovedItems().contains(shopItem1)
-                    || Settings.getStartingItems().contains(shopItem1)
+                    || Settings.getStartingItemsIncludingCustom().contains(shopItem1)
                     || (Settings.isReplaceMapsWithWeights() && shopItem1.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem1))) {
                 shopItem1 = "Weights";
             }
             if(Settings.getCurrentRemovedItems().contains(shopItem2)
                     || Settings.getRemovedItems().contains(shopItem2)
-                    || Settings.getStartingItems().contains(shopItem2)
+                    || Settings.getStartingItemsIncludingCustom().contains(shopItem2)
                     || (Settings.isReplaceMapsWithWeights() && shopItem2.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem2))) {
                 shopItem2 = "Weights";
             }
             if(Settings.getCurrentRemovedItems().contains(shopItem3)
                     || Settings.getRemovedItems().contains(shopItem3)
-                    || Settings.getStartingItems().contains(shopItem3)
+                    || Settings.getStartingItemsIncludingCustom().contains(shopItem3)
                     || (Settings.isReplaceMapsWithWeights() && shopItem3.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem3))) {
                 shopItem3 = "Weights";
             }
-            GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks,
-                    shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 1", shopName), shopItem1),
-                    shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 2", shopName), shopItem2),
-                    shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 3", shopName), shopItem3),
-                    "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName));
+
+            if(NON_MSX_SHOP_NAME.equals(shopName) || MSX_SHOP_NAME.equals(shopName)) {
+                if(itemPriceCountMsxShop2 == null) {
+                    itemPriceCountMsxShop2 = shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 2", shopName), shopItem2);
+                }
+                if(itemPriceCountMsxShop3 == null) {
+                    itemPriceCountMsxShop3 = shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 3", shopName), shopItem3);
+                }
+                GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks,
+                        shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 1", shopName), shopItem1),
+                        itemPriceCountMsxShop2,
+                        itemPriceCountMsxShop3,
+                        false, MSX_SHOP_NAME.equals(shopName), false);
+            }
+            else {
+                GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks,
+                        shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 1", shopName), shopItem1),
+                        shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 2", shopName), shopItem2),
+                        shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 3", shopName), shopItem3),
+                        "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName), false);
+            }
         }
     }
 

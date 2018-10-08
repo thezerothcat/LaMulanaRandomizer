@@ -1,8 +1,9 @@
-Map (Chamber of Extinction) => Origin Seal
-Map (Chamber of Extinction) => Glitch: Raindrop
-Map (Chamber of Extinction) => Glitch: Lamp Glitch
-Location: Chamber of Extinction [Main] => Glitch: Lamp Glitch
-Location: Chamber of Extinction [Main] => Glitch: Raindrop
-Location: Chamber of Extinction [Main] => Origin Seal
+Map (Chamber of Extinction) => Location: Temple of the Sun [East], Event: Flooded Temple of the Sun, Attack: Chest-Any
+Map (Chamber of Extinction) => Location: Temple of the Sun [East], Glitch: Raindrop, Attack: Chest-Any
+Map (Chamber of Extinction) => Location: Temple of the Sun [East], Glitch: Lamp Glitch, Attack: Chest-Any
+Map (Chamber of Extinction) => Location: Chamber of Extinction [Main], Glitch: Raindrop, Attack: Chest-Any
+Location: Chamber of Extinction [Main] => Location: Temple of the Sun [East], Glitch: Lamp Glitch
+Location: Chamber of Extinction [Main] => Location: Temple of the Sun [East], Glitch: Raindrop
+Location: Chamber of Extinction [Main] => Location: Temple of the Sun [East], Event: Flooded Temple of the Sun, Origin Seal
 Location: Chamber of Extinction [Main] => Location: Shrine of the Mother [Main], Exit: Chamber of Extinction [Main], !Event: All Bosses Defeated, Event: Remove Shrine Skulls
 Location: Chamber of Extinction [Main] => Location: Shrine of the Mother [Main], Exit: Chamber of Extinction [Main], !Event: All Bosses Defeated, Feather

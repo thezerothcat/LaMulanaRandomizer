@@ -11,9 +11,13 @@ import java.util.Random;
  * Created by thezerothcat on 8/17/2017.
  */
 public interface ShopRandomizer {
+    ShopRandomizer copy();
+
     List<String> getUnassignedShopItemLocations();
 
     void placeNonRandomizedItems();
+
+    void placeSpecialSubweaponAmmo(Random random);
 
     List<String> getShopItems(String shopName);
 
@@ -31,7 +35,7 @@ public interface ShopRandomizer {
 
     void outputLocations(int attemptNumber) throws IOException;
 
-    void updateFiles(List<Block> blocks, Random random);
+    void updateFiles(List<Block> blocks, boolean subweaponOnly, Random random);
 
     void setAccessChecker(AccessChecker accessChecker);
 

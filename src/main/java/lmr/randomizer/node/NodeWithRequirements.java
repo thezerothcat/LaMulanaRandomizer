@@ -11,23 +11,20 @@ public class NodeWithRequirements {
     private NodeType type;
 
     public NodeWithRequirements(String name) {
-        if(name.startsWith("Event:")) {
-            type = NodeType.EVENT;
-        }
-        else if(name.startsWith("Location:")) {
+        if(name.startsWith("Location:")) {
             type = NodeType.MAP_LOCATION;
-        }
-        else if(name.startsWith("Glitch:")) {
-            type = NodeType.GLITCH;
         }
         else if(name.startsWith("Exit:")) {
             type = NodeType.EXIT;
         }
-        else if(name.contains("Shop")) {
-            type = NodeType.SHOP;
+        else if(name.startsWith("Setting:") || name.startsWith("Glitch:")) {
+            type = NodeType.SETTING;
         }
-        else if(name.contains("Attack:")) {
-            type = NodeType.ATTACK;
+        else if(name.startsWith("Event:") || name.startsWith("State:") || name.startsWith("Attack:") || name.startsWith("Combo:")) {
+            type = NodeType.STATE;
+        }
+        else if(name.startsWith("Shop")) {
+            type = NodeType.SHOP;
         }
         else {
             type = NodeType.ITEM_LOCATION;

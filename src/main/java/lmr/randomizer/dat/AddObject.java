@@ -2,9 +2,12 @@ package lmr.randomizer.dat;
 
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.Settings;
+import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.rcd.object.*;
-import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.GameObjectId;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public final class AddObject {
     private AddObject() { }
@@ -411,12 +414,42 @@ public final class AddObject {
         screen.getObjects().add(0, automaticTranslationTimer);
     }
 
+    public static void addAutomaticMantras(ObjectContainer screen) {
+        GameObject mantraTimer = new GameObject(screen);
+        mantraTimer.setId((short)0x0b);
+        mantraTimer.getArgs().add((short) 0);
+        mantraTimer.getArgs().add((short) 0);
+        mantraTimer.setX(-1);
+        mantraTimer.setY(-1);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(292);
+        testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+        testByteOperation.setValue((byte)4);
+        mantraTimer.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(292);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(4);
+        mantraTimer.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(0, mantraTimer);
+    }
+
     /**
      * Add instant item give to the starting location so items will be given at the start of the game.
      * @param screen the screen to add the objects to
      */
-    public static void addStartingItems(Screen screen) {
-        for(String itemName : Settings.getStartingItems()) {
+    public static void addStartingItems(ObjectContainer screen) {
+        Set<String> startingItems = new HashSet<>(Settings.getStartingItems());
+        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
+            if(customPlacement.isStartingItem()) {
+                startingItems.add(customPlacement.getContents());
+            }
+        }
+
+        for(String itemName : startingItems) {
             GameObjectId gameObjectId = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(itemName);
 
             GameObject itemGive = new GameObject(screen);
@@ -447,23 +480,262 @@ public final class AddObject {
      * For not having to damage boost up Gate of Illusion to Cog of the Soul
      * @param screen the screen to add the objects to
      */
-    public static void addFeatherlessCogAccessPot(Screen screen) {
-        GameObject backupShrineDoor = new GameObject(screen);
-        backupShrineDoor.setId((short) 0x0);
-        backupShrineDoor.setX(580);
-        backupShrineDoor.setY(260);
+    public static void addFeatherlessCogAccessPot(ObjectContainer screen) {
+        GameObject featherlessCogAccessPot = new GameObject(screen);
+        featherlessCogAccessPot.setId((short) 0x0);
+        featherlessCogAccessPot.setX(580);
+        featherlessCogAccessPot.setY(260);
 
-        backupShrineDoor.getArgs().add((short)0);
-        backupShrineDoor.getArgs().add((short)0);
-        backupShrineDoor.getArgs().add((short)-1);
-        backupShrineDoor.getArgs().add((short)1);
-        backupShrineDoor.getArgs().add((short)10);
-        backupShrineDoor.getArgs().add((short)105);
-        backupShrineDoor.getArgs().add((short)35);
-        backupShrineDoor.getArgs().add((short)17);
-        backupShrineDoor.getArgs().add((short)0);
+        featherlessCogAccessPot.getArgs().add((short)0);
+        featherlessCogAccessPot.getArgs().add((short)0);
+        featherlessCogAccessPot.getArgs().add((short)-1);
+        featherlessCogAccessPot.getArgs().add((short)1);
+        featherlessCogAccessPot.getArgs().add((short)10);
+        featherlessCogAccessPot.getArgs().add((short)105);
+        featherlessCogAccessPot.getArgs().add((short)35);
+        featherlessCogAccessPot.getArgs().add((short)17);
+        featherlessCogAccessPot.getArgs().add((short)0);
 
-        screen.getObjects().add(backupShrineDoor);
+        screen.getObjects().add(featherlessCogAccessPot);
     }
 
+    /**
+     * Add timer to auto-open the shortcut to lower Tower of the Goddess after flooding,
+     * to be used only when starting with a subweapon (in case no main weapon is available) to prevent soflocks.
+     * @param screen the screen to add the timers to
+     */
+    public static void addFloodedTowerShortcutTimer(ObjectContainer screen) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x0b);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.setX(-1);
+        obj.setY(-1);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(404);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)1);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(877);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)1);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(0, obj);
+    }
+
+    /**
+     * Add timer to set wrong color medicine statue to match whatever's in the Vessel.
+     * @param screen the screen to add the timers to
+     */
+    public static void addMedicineStatueTimer(ObjectContainer screen) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x0b);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.setX(-1);
+        obj.setY(-1);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(2772);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(847);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(847);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)1);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(2772);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)1);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(0, obj);
+    }
+
+    /**
+     * Add weights to activate/deactivate hardmode without literacy.
+     * @param screen the screen to add the timers to
+     */
+    public static void addHardmodeToggleWeights(ObjectContainer screen) {
+        // Toggle off
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x08);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)60);
+        obj.getArgs().add((short)-1);
+        obj.getArgs().add((short)2);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)860);
+        obj.getArgs().add((short)60);
+        obj.getArgs().add((short)1);
+        obj.getArgs().add((short)10);
+        obj.getArgs().add((short)60);
+        obj.setX(560);
+        obj.setY(100);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(362);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)2);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(362);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)0);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(obj);
+
+        // Toggle on
+        obj = new GameObject(screen);
+        obj.setId((short)0x08);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)60);
+        obj.getArgs().add((short)-1);
+        obj.getArgs().add((short)2);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)860);
+        obj.getArgs().add((short)60);
+        obj.getArgs().add((short)1);
+        obj.getArgs().add((short)10);
+        obj.getArgs().add((short)60);
+        obj.setX(560);
+        obj.setY(100);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(362);
+        testByteOperation.setOp(ByteOp.FLAG_LT);
+        testByteOperation.setValue((byte)2);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(362);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)2);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(obj);
+    }
+
+    public static void addSpecialItemObjects(ObjectContainer objectContainer, String newContents) {
+        if ("Map (Shrine of the Mother)".equals(newContents)) {
+            AddObject.addShrineMapSoundEffect(objectContainer);
+        }
+        if (newContents.startsWith("Medicine of the Mind") && !newContents.contains("Yellow")) {
+            AddObject.addMedicineStatueTimer(objectContainer);
+        }
+        if(Settings.isAutomaticMantras() && "Key Sword".equals(newContents)) {
+            AddObject.addAutomaticMantras(objectContainer);
+        }
+    }
+
+    public static void addShrineMapSoundEffect(ObjectContainer objectContainer) {
+        GameObject shrineMapSoundEffect = new GameObject(objectContainer);
+        shrineMapSoundEffect.setId((short)0x9b);
+        shrineMapSoundEffect.getArgs().add((short)30);
+        shrineMapSoundEffect.getArgs().add((short)120);
+        shrineMapSoundEffect.getArgs().add((short)64);
+        shrineMapSoundEffect.getArgs().add((short)0);
+        shrineMapSoundEffect.getArgs().add((short)120);
+        shrineMapSoundEffect.getArgs().add((short)64);
+        shrineMapSoundEffect.getArgs().add((short)0);
+        shrineMapSoundEffect.getArgs().add((short)25);
+        shrineMapSoundEffect.getArgs().add((short)1);
+        shrineMapSoundEffect.getArgs().add((short)5);
+        shrineMapSoundEffect.getArgs().add((short)0);
+        shrineMapSoundEffect.getArgs().add((short)10);
+        shrineMapSoundEffect.getArgs().add((short)0);
+        shrineMapSoundEffect.getArgs().add((short)0);
+        shrineMapSoundEffect.getArgs().add((short)0);
+        shrineMapSoundEffect.setX(-1);
+        shrineMapSoundEffect.setY(-1);
+
+        TestByteOperation testFlag = new TestByteOperation();
+        testFlag.setIndex(218);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)2);
+        shrineMapSoundEffect.getTestByteOperations().add(testFlag);
+
+        testFlag = new TestByteOperation();
+        testFlag.setIndex(42);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)1);
+        shrineMapSoundEffect.getTestByteOperations().add(testFlag);
+
+        GameObject shrineMapSoundEffectRemovalTimer = new GameObject(objectContainer);
+        shrineMapSoundEffectRemovalTimer.setId((short) 0x0b);
+        shrineMapSoundEffectRemovalTimer.getArgs().add((short) 0);
+        shrineMapSoundEffectRemovalTimer.getArgs().add((short) 0);
+        shrineMapSoundEffectRemovalTimer.setX(-1);
+        shrineMapSoundEffectRemovalTimer.setY(-1);
+
+        TestByteOperation shrineMapSoundEffectRemovalTimerFlagTest = new TestByteOperation();
+        shrineMapSoundEffectRemovalTimerFlagTest.setIndex(2798);
+        shrineMapSoundEffectRemovalTimerFlagTest.setValue((byte) 0);
+        shrineMapSoundEffectRemovalTimerFlagTest.setOp(ByteOp.FLAG_EQUALS);
+        shrineMapSoundEffectRemovalTimer.getTestByteOperations().add(shrineMapSoundEffectRemovalTimerFlagTest);
+
+        shrineMapSoundEffectRemovalTimerFlagTest = new TestByteOperation();
+        shrineMapSoundEffectRemovalTimerFlagTest.setIndex(218);
+        shrineMapSoundEffectRemovalTimerFlagTest.setValue((byte) 2);
+        shrineMapSoundEffectRemovalTimerFlagTest.setOp(ByteOp.FLAG_EQUALS);
+        shrineMapSoundEffectRemovalTimer.getTestByteOperations().add(shrineMapSoundEffectRemovalTimerFlagTest);
+
+        WriteByteOperation shrineMapSoundEffectRemovalTimerFlagUpdate = new WriteByteOperation();
+        shrineMapSoundEffectRemovalTimerFlagUpdate.setIndex(2798);
+        shrineMapSoundEffectRemovalTimerFlagUpdate.setValue((byte) 1);
+        shrineMapSoundEffectRemovalTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        shrineMapSoundEffectRemovalTimer.getWriteByteOperations().add(shrineMapSoundEffectRemovalTimerFlagUpdate);
+
+        shrineMapSoundEffectRemovalTimerFlagUpdate = new WriteByteOperation();
+        shrineMapSoundEffectRemovalTimerFlagUpdate.setIndex(42);
+        shrineMapSoundEffectRemovalTimerFlagUpdate.setValue((byte) 1);
+        shrineMapSoundEffectRemovalTimerFlagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        shrineMapSoundEffectRemovalTimer.getWriteByteOperations().add(shrineMapSoundEffectRemovalTimerFlagUpdate);
+
+        objectContainer.getObjects().add(0, shrineMapSoundEffect);
+        objectContainer.getObjects().add(0, shrineMapSoundEffectRemovalTimer);
+    }
+
+    /**
+     * Add ladder to help with Dimensional Sacred Orb chest after Ushumgallu's death.
+     * @param screen the screen to add the timers to
+     */
+    public static void addDimensionalOrbLadder(ObjectContainer screen) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x07);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)8);
+        obj.getArgs().add((short)2);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)660);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)1);
+        obj.setX(560);
+        obj.setY(620);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x2cc);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)2);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        screen.getObjects().add(obj);
+    }
 }

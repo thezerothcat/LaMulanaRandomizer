@@ -39,11 +39,23 @@ public class ItemRandomizer {
             unplacedItems.add("Whip");
             unplacedItems.remove(Settings.getCurrentStartingWeapon());
         }
+        if (Settings.isAlternateMotherAnkh()) {
+            unplacedItems.add("Ankh Jewel (Extra)");
+        }
 
         unassignedNonShopItemLocations = new ArrayList<>(DataFromFile.getNonShopItemLocations());
 
         mapOfWorldFlagToAssignedReplacementFlag = new HashMap<>();
         nextReplacedItemFlag = 2724;
+    }
+
+    public ItemRandomizer(ItemRandomizer itemRandomizer) {
+        allItems = new ArrayList<>(itemRandomizer.allItems);
+        unplacedItems = new ArrayList<>(itemRandomizer.unplacedItems);
+        unassignedNonShopItemLocations = new ArrayList<>(itemRandomizer.unassignedNonShopItemLocations);
+        mapOfItemLocationToItem = new HashMap<>(itemRandomizer.mapOfItemLocationToItem);
+        mapOfWorldFlagToAssignedReplacementFlag = new HashMap<>(itemRandomizer.mapOfWorldFlagToAssignedReplacementFlag);
+        nextReplacedItemFlag = itemRandomizer.nextReplacedItemFlag;
     }
 
     public int getTotalShopItems() {
@@ -60,76 +72,28 @@ public class ItemRandomizer {
 
     public void placeNonRandomizedItems() {
         for(String item : DataFromFile.getNonRandomizedItems()) {
-            if(!Settings.getStartingItems().contains(item)) {
+            if(!Settings.getStartingItemsIncludingCustom().contains(item)) {
                 mapOfItemLocationToItem.put(item, item);
                 unassignedNonShopItemLocations.remove(item);
                 unplacedItems.remove(item);
-            }
-        }
-        if(Settings.isRandomizeCoinChests()) {
-            for(String coinChest : DataFromFile.getNonRandomizedCoinChests()) {
-                mapOfItemLocationToItem.put(coinChest, coinChest);
-                unassignedNonShopItemLocations.remove(coinChest);
-                unplacedItems.remove(coinChest);
             }
         }
 
         for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
             String customLocation = customPlacement.getLocation();
             if(!customPlacement.isRemoveItem() && !customPlacement.isCurseChest()
+                    && !customPlacement.isRemoveLogic()
                     && customLocation != null && !customLocation.startsWith("Shop ")) {
                 mapOfItemLocationToItem.put(customLocation, customPlacement.getContents());
                 unassignedNonShopItemLocations.remove(customLocation);
                 unplacedItems.remove(customPlacement.getContents());
             }
         }
-
-//        mapOfItemLocationToItem.put("xmailer.exe", "Book of the Dead");
-//        unassignedNonShopItemLocations.remove("xmailer.exe");
-//        unplacedItems.remove("Book of the Dead");
-//        mapOfItemLocationToItem.put("Shell Horn", "Map (Surface)");
-//        unassignedNonShopItemLocations.remove("Shell Horn");
-//        unplacedItems.remove("Map (Surface)");
-//        mapOfItemLocationToItem.put("Shell Horn", "Chain Whip");
-//        unassignedNonShopItemLocations.remove("Shell Horn");
-//        unplacedItems.remove("Chain Whip");
-//        mapOfItemLocationToItem.put("Shell Horn", "Map (Gate of Guidance)");
-//        unassignedNonShopItemLocations.remove("Shell Horn");
-//        unplacedItems.remove("Map (Gate of Guidance)");
-//        mapOfItemLocationToItem.put("Sacred Orb (Gate of Guidance)", "Flail Whip");
-//        unassignedNonShopItemLocations.remove("Sacred Orb (Gate of Guidance)");
-//        unplacedItems.remove("Flail Whip");
-
-//        mapOfItemLocationToItem.put("deathv.exe", "Map (Gate of Guidance)");
-//        unassignedNonShopItemLocations.remove("deathv.exe");
-//        unplacedItems.remove("Map (Gate of Guidance)");
-//
-//        mapOfItemLocationToItem.put("Pepper", "Ankh Jewel (Temple of the Sun)");
-//        unassignedNonShopItemLocations.remove("Pepper");
-//        unplacedItems.remove("Ankh Jewel (Temple of the Sun)");
-//
-//        mapOfItemLocationToItem.put("Mini Doll", "Ankh Jewel (Mausoleum of the Giants)");
-//        unassignedNonShopItemLocations.remove("Mini Doll");
-//        unplacedItems.remove("Ankh Jewel (Mausoleum of the Giants)");
-//
-//        mapOfItemLocationToItem.put("Ankh Jewel (Temple of the Sun)", "Ankh Jewel (Spring in the Sky)");
-//        unassignedNonShopItemLocations.remove("Ankh Jewel (Temple of the Sun)");
-//        unplacedItems.remove("Ankh Jewel (Spring in the Sky)");
-//
-//        mapOfItemLocationToItem.put("Book of the Dead", "Ankh Jewel (Tower of Ruin)");
-//        unassignedNonShopItemLocations.remove("Book of the Dead");
-//        unplacedItems.remove("Ankh Jewel (Tower of Ruin)");
     }
 
     public boolean placeNoRequirementItems(List<String> items, Random random) {
         List<String> initialUnassignedNonShopLocations = new ArrayList<>(DataFromFile.getInitialNonShopItemLocations());
         initialUnassignedNonShopLocations.removeAll(Settings.getCurrentCursedChests());
-        if(Settings.isRandomizeCoinChests()) {
-            initialUnassignedNonShopLocations.addAll(DataFromFile.getInitialCoinChestLocations());
-        }
-        if(Settings.isRandomizeTrapItems()) {
-            initialUnassignedNonShopLocations.addAll(DataFromFile.getInitialTrapItemLocations());
-        }
         initialUnassignedNonShopLocations.removeAll(mapOfItemLocationToItem.keySet());
 
         List<String> initialUnassignedShopItemLocations = shopRandomizer.getInitialUnassignedShopItemLocations();
@@ -138,7 +102,7 @@ public class ItemRandomizer {
         List<String> itemsToPlace = new ArrayList<>(items);
         itemsToPlace.removeAll(mapOfItemLocationToItem.values());
         itemsToPlace.removeAll(shopRandomizer.getPlacedShopItems());
-        items.removeAll(Settings.getStartingItems());
+        items.removeAll(Settings.getStartingItemsIncludingCustom());
 
         int size = itemsToPlace.size();
         for(int i = 0; i < size; i++) {
@@ -349,7 +313,7 @@ public class ItemRandomizer {
         writer.write(Translations.getItemText(Settings.getCurrentStartingWeapon(), false) + ": starting weapon");
         writer.newLine();
 
-        List<String> sortedStartingItems = new ArrayList<>(Settings.getStartingItems());
+        List<String> sortedStartingItems = new ArrayList<>(Settings.getStartingItemsIncludingCustom());
         Collections.sort(sortedStartingItems, itemNameComparator);
 
         for(String itemName : sortedStartingItems) {
@@ -365,7 +329,7 @@ public class ItemRandomizer {
         for (String itemName : itemNames) {
             boolean isRemoved = Settings.getCurrentRemovedItems().contains(itemName)
                     || Settings.getRemovedItems().contains(itemName)
-                    || Settings.getStartingItems().contains(itemName);
+                    || Settings.getStartingItemsIncludingCustom().contains(itemName);
             String location = mapOfItemToLocation.get(itemName);
             itemName = Translations.getItemText(Settings.getUpdatedContents(itemName), isRemoved);
             location = Translations.getLocationText(location, Settings.getCurrentCursedChests().contains(location));
@@ -475,7 +439,7 @@ public class ItemRandomizer {
         }
         if(Settings.getCurrentRemovedItems().contains(newContents)
                 || Settings.getRemovedItems().contains(newContents)
-                || Settings.getStartingItems().contains(newContents)) {
+                || Settings.getStartingItemsIncludingCustom().contains(newContents)) {
             Integer newChestWorldFlag = mapOfWorldFlagToAssignedReplacementFlag.get(itemLocationData.getWorldFlag());
             if (newChestWorldFlag == null) {
                 newChestWorldFlag = nextReplacedItemFlag++;
