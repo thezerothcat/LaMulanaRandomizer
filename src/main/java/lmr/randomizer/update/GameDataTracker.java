@@ -13,6 +13,7 @@ import lmr.randomizer.random.ChestGraphics;
 import lmr.randomizer.random.ShopItemPriceCountRandomizer;
 import lmr.randomizer.rcd.object.*;
 
+import java.io.Console;
 import java.util.*;
 
 /**
@@ -31,9 +32,8 @@ public final class GameDataTracker {
     private static Random Randomizer;
 
     private GameDataTracker() {
-        Randomizer = new Random(Settings.getStartingSeed());
     }
-
+    
     public static void clearAll() {
         mapOfChestIdentifyingInfoToGameObject.clear();
         mapOfChestIdentifyingInfoToBlock.clear();
@@ -41,6 +41,10 @@ public final class GameDataTracker {
         mantraTablets.clear();
     }
 
+    public static void initializeChestRandomizer() {
+        Randomizer = new Random(Settings.getStartingSeed());
+    }
+    
     public static void addObject(GameObject gameObject) {
         if (gameObject.getId() == 0x2c) {
             int worldFlag;

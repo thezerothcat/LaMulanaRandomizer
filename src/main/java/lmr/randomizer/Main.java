@@ -732,6 +732,8 @@ public class Main {
         DataFromFile.clearAllData();
 
         Random random = new Random(Settings.getStartingSeed());
+        GameDataTracker.initializeChestRandomizer();
+        
         Set<String> initiallyAccessibleItems = getInitiallyAvailableItems();
         boolean subweaponOnly;
 
