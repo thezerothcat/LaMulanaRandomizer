@@ -9,6 +9,7 @@ import lmr.randomizer.dat.conversation.CheckBlock;
 import lmr.randomizer.dat.shop.BlockStringData;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.CustomPlacement;
+import lmr.randomizer.random.ChestGraphics;
 import lmr.randomizer.random.ShopItemPriceCountRandomizer;
 import lmr.randomizer.rcd.object.*;
 
@@ -2831,7 +2832,7 @@ public final class GameDataTracker {
         if(newChestContentsItemName.startsWith("Coin:")) {
             objectToModify.getArgs().set(0, (short)1); // Coins
             objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg()); // Re-purposing inventory arg to track coin amount
-            objectToModify.getArgs().set(2, (short)0); // Brown chest
+            setChestSprite(objectToModify);
             for (TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                 if (flagTest.getIndex() == itemLocationData.getWorldFlag()) {
                     flagTest.setIndex(itemNewContentsData.getWorldFlag());
@@ -2965,7 +2966,7 @@ public final class GameDataTracker {
 
                 updateFlag = new WriteByteOperation();
                 updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-                updateFlag.setIndex(newWorldFlag);
+                setChestSprite(objectToModify);        updateFlag.setIndex(newWorldFlag);
                 updateFlag.setValue(2);
                 objectToModify.getWriteByteOperations().add(updateFlag);
             }
@@ -2974,13 +2975,12 @@ public final class GameDataTracker {
                 if(random.nextBoolean()) {
                     objectToModify.getArgs().set(0, (short)1); // Coins
                     objectToModify.getArgs().set(1, (short)10); // 10 coins, the equivalent of a pot
-                    objectToModify.getArgs().set(2, (short)0); // Removed items use coin chest graphics.
                 }
                 else {
                     objectToModify.getArgs().set(0, (short)2); // Weights
                     objectToModify.getArgs().set(1, (short)1); // The game won't allow multiple weights, so just give 1
-                    objectToModify.getArgs().set(2, (short)0); // Removed items use coin chest graphics.
                 }
+                setChestSprite(objectToModify);
 
                 for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                     if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
@@ -3076,8 +3076,8 @@ public final class GameDataTracker {
 
     private static void updateFloatingItemContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData,
                                                    String newChestContentsItemName, int newWorldFlag, Random random) {
-        objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg());
-        objectToModify.getArgs().set(2, (short)1); // Real item until determined otherwise.
+        objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg()); 
+        setChestSprite(objectToModify); // Real item until determined otherwise.
         for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
             if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
                 flagTest.setIndex(newWorldFlag);
@@ -3101,7 +3101,7 @@ public final class GameDataTracker {
 
         if(itemNewContentsData.getWorldFlag() != newWorldFlag) {
             // Add handling for removed items.
-            objectToModify.getArgs().set(2, (short)0);
+            setChestSprite(objectToModify);
 
             WriteByteOperation updateFlag = new WriteByteOperation();
             updateFlag.setIndex(43);
@@ -3119,7 +3119,7 @@ public final class GameDataTracker {
                 graphic = getRandomItemGraphic(random);
             }
             objectToModify.getArgs().set(1, graphic);
-            objectToModify.getArgs().set(2, (short)0);
+            setChestSprite(objectToModify);
 
             WriteByteOperation writeByteOperation;
             if(objectToModify.getWriteByteOperations().size() > 1) {
