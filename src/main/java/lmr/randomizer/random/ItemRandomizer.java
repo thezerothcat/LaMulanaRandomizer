@@ -147,11 +147,13 @@ public class ItemRandomizer {
     }
 
     public boolean placeForbiddenTreasureItem(Random random) {
-        List<String> possibleItems = DataFromFile.getHTItems(unplacedItems);
-        String item = possibleItems.get(random.nextInt(possibleItems.size()));
-        mapOfItemLocationToItem.put("Provocative Bathing Suit", item);
-        unplacedItems.remove(item);
-        unassignedNonShopItemLocations.remove("Provocative Bathing Suit");
+        if(!mapOfItemLocationToItem.containsKey("Provocative Bathing Suit")) {
+            List<String> possibleItems = DataFromFile.getHTItems(unplacedItems);
+            String item = possibleItems.get(random.nextInt(possibleItems.size()));
+            mapOfItemLocationToItem.put("Provocative Bathing Suit", item);
+            unplacedItems.remove(item);
+            unassignedNonShopItemLocations.remove("Provocative Bathing Suit");
+        }
         return true;
     }
 

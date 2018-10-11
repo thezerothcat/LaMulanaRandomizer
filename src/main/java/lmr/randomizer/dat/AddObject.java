@@ -512,10 +512,18 @@ public final class AddObject {
         obj.setX(-1);
         obj.setY(-1);
 
+        // Check that the tower has been flooded.
         TestByteOperation testByteOperation = new TestByteOperation();
         testByteOperation.setIndex(404);
         testByteOperation.setOp(ByteOp.FLAG_EQUALS);
         testByteOperation.setValue((byte)1);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        // Check that feather has been found, otherwise it's not possible to get down before flooding the tower anyway.
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(182);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte) 2);
         obj.getTestByteOperations().add(testByteOperation);
 
         WriteByteOperation writeByteOperation = new WriteByteOperation();

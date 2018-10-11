@@ -835,7 +835,14 @@ public class Main {
             for(String startingNode : startingNodes) {
                 accessChecker.computeAccessibleNodes(startingNode);
             }
-            if(accessChecker.updateForBosses(attempt)) {
+
+            if(!accessChecker.getQueuedUpdates().isEmpty()) {
+                if (!accessChecker.updateForBosses(attempt)) {
+                    ankhJewelLock = true;
+                }
+            }
+
+            if(!ankhJewelLock) {
                 while(!accessChecker.getQueuedUpdates().isEmpty()) {
                     accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next());
                     if (accessChecker.getQueuedUpdates().isEmpty()) {
@@ -850,9 +857,7 @@ public class Main {
                     }
                 }
             }
-            else {
-                ankhJewelLock = true;
-            }
+
             if(ankhJewelLock) {
                 FileUtils.log(String.format("Detected ankh jewel lock on attempt %s. Re-shuffling items.", attempt));
                 continue;

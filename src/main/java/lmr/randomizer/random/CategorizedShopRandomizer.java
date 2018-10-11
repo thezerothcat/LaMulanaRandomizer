@@ -268,7 +268,12 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             }
             else if(FISH_FAIRY_SHOP_NAME.equals(shopName)) {
                 shopItem1 = "Shell Horn";
-                shopItem2 = "guild.exe";
+                if (Settings.isAlternateMotherAnkh()) {
+                    shopItem2 = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(String.format("%s Item 2", shopName)));
+                }
+                else {
+                    shopItem2 = "guild.exe";
+                }
                 shopItem3 = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(String.format("%s Item 3", shopName)));
             }
             else {

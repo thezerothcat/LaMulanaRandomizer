@@ -1,4 +1,4 @@
-Trap: Graveyard => Location: Graveyard of the Giants [West]
+Trap: Graveyard => Location: Graveyard of the Giants [West], Attack: Chest
 Trap: Exploding => Location: Gate of Illusion [Dracuet], Attack: Chest
-Trap: Inferno Orb => None
-Trap: Twin Ankh => None
+Trap: Inferno Orb => Location: Inferno Cavern [Main]
+Trap: Twin Ankh => Location: Twin Labyrinths [Loop]
