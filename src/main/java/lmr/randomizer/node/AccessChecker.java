@@ -113,7 +113,7 @@ public class AccessChecker {
                         continue;
                     }
                 }
-                FileUtils.log("Inaccessible node detected: " + nodeName + " containing " + itemRandomizer.getItem(nodeName));
+//                FileUtils.log("Inaccessible node detected: " + nodeName + " containing " + itemRandomizer.getItem(nodeName));
                 return false;
             }
             for(String requiredItem : DataFromFile.getWinRequirements()) {
