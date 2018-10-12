@@ -3,6 +3,10 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
+1.40:
+-----------------------------
+Logic fixes, mostly cleanup from 1.39.
+
 1.39:
 -----------------------------
 Ability to start the game with a subweapon instead of a main weapon, although using quickswap keys will cause the game to crash.

@@ -831,12 +831,12 @@ public class Main {
                 continue;
             }
 
-            boolean ankhJewelLock = false;
             for(String startingNode : startingNodes) {
                 accessChecker.computeAccessibleNodes(startingNode);
             }
 
-            if(!accessChecker.getQueuedUpdates().isEmpty()) {
+            boolean ankhJewelLock = false;
+            if(accessChecker.getQueuedUpdates().isEmpty()) {
                 if (!accessChecker.updateForBosses(attempt)) {
                     ankhJewelLock = true;
                 }
