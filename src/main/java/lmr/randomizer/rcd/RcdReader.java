@@ -302,14 +302,16 @@ public final class RcdReader {
                 }
             }
         }
-//        else if (obj.getId() == 0xa3) {
-//            for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-//                if(testByteOperation.getIndex() == 254) {
-//                    keepObject = false;
-//                    break;
-//                }
-//            }
-//        }
+        else if (obj.getId() == 0xa3) {
+            if(Settings.isAlternateMotherAnkh()) {
+                for (TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                    if (testByteOperation.getIndex() == 254) {
+                        keepObject = false;
+                        break;
+                    }
+                }
+            }
+        }
         else if (obj.getId() == 0xc0) {
             if(Settings.isAlternateMotherAnkh()) {
                 obj.setId((short)0x2e);

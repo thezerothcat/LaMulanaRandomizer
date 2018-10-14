@@ -13,7 +13,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "1.40.0";
+    public static final String VERSION = "1.40.1";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -285,7 +285,7 @@ public class FileUtils {
                             data.add(new CustomPlacement(removeItem, true, false));
                         }
                     }
-                    else if (line.startsWith("Remove ")) {
+                    else if (line.startsWith("Remove")) {
                         data.add(new CustomPlacement(line.replace("Remove", "").trim(), true, true));
                     }
                     else if (line.startsWith("Curse")) {

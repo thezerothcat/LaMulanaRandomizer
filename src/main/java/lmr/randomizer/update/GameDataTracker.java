@@ -216,10 +216,23 @@ public final class GameDataTracker {
                     gameObject.setX(400);
                     break;
                 }
+                else if (flagTest.getIndex() == 435) {
+                    // Breakable wall to Flare Gun room; hitbox is inside the wall and makes subweapon breaking a bit awkward
+                    gameObject.getArgs().set(6, (short)4); // Extend wall hitbox
+                }
                 else if (flagTest.getIndex() == 501) {
                     // Breakable ceiling to Isis' Pendant room
                     flagIndexToRemove = i;
                     break;
+                }
+                else if(flagTest.getIndex() == 591) {
+                    // emusic wall - not requiring precise hitbox
+                    gameObject.getArgs().set(3, (short)4);
+                }
+                else if (flagTest.getIndex() == 610) {
+                    // Moon-Gazing Pit faces - extend hitbox to make things a bit easier
+                    gameObject.setX(gameObject.getX() - 20);
+                    gameObject.getArgs().set(6, (short)(gameObject.getArgs().get(6) + 1)); // Extend wall hitbox
                 }
                 else if(flagTest.getIndex() == 695) {
                     // Main-weapon-only tentacle blocking access to Mother ankh
@@ -238,6 +251,7 @@ public final class GameDataTracker {
                 }
                 else if(flagTest.getIndex() == 296) {
                     // Breakable snake statue in Inferno Cavern spike area
+                    gameObject.getArgs().set(6, (short)2); // Extend wall hitbox
                     flagTest.setIndex(2795);
                     flagTest.setValue((byte)1);
                 }
@@ -1695,12 +1709,6 @@ public final class GameDataTracker {
                 gameObject.getObjectContainer().getObjects().add(mantraTimer);
             }
         }
-//        else if(gameObject.getId() == 0xc0) {
-//            // Mother ankh
-//            if(Settings.isAllowMantraSkip()) {
-//                addMantraDetector(gameObject.getObjectContainer());
-//            }
-//        }
     }
 
     private static void addGrailDetector(GameObject gameObject, int grailFlag) {

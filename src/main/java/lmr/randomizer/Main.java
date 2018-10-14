@@ -707,7 +707,8 @@ public class Main {
         }
 
         private boolean isValidContents(String contents) {
-            if(DataFromFile.getAllItems().contains(contents) || "Whip".equals(contents)) {
+            if(DataFromFile.getAllItems().contains(contents)
+                    || "Whip".equals(contents) || "Ankh Jewel (Extra)".equals(contents)) {
                 return true;
             }
             if(DataFromFile.getAllCoinChests().contains(contents)) {
