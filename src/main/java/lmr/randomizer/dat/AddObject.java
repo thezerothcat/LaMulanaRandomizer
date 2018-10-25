@@ -12,6 +12,61 @@ import java.util.Set;
 public final class AddObject {
     private AddObject() { }
 
+    private static ObjectContainer xelpudScreen;
+    private static ObjectContainer mulbrukScreen;
+    private static ObjectContainer littleBrotherShopScreen;
+
+    public static void setXelpudScreen(ObjectContainer xelpudScreen) {
+        AddObject.xelpudScreen = xelpudScreen;
+    }
+
+    public static void setMulbrukScreen(ObjectContainer mulbrukScreen) {
+        AddObject.mulbrukScreen = mulbrukScreen;
+    }
+
+    public static void setLittleBrotherShopScreen(ObjectContainer littleBrotherShopScreen) {
+        AddObject.littleBrotherShopScreen = littleBrotherShopScreen;
+    }
+
+    public static void clearObjects() {
+        xelpudScreen = null;
+        mulbrukScreen = null;
+        littleBrotherShopScreen = null;
+    }
+
+    /**
+     * Add a timer to set the flag for solving the Diary chest puzzle if the appropriate conditions are met.
+     * @param screen the screen to add the timers to
+     */
+    public static void addDiaryChestConditionTimer(Screen screen) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x0b);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.setX(-1);
+        obj.setY(-1);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(2796);
+        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+        testByteOperation.setValue((byte)3);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(536);
+        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+        testByteOperation.setValue((byte)1);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(537);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)2);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(0, obj);
+    }
+
     /**
      * Add timer to fix the puzzle for passage between Temple of Moonlight and Twin Labyrinths
      * @param screen the screen to add the timers to
@@ -36,7 +91,7 @@ public final class AddObject {
         writeByteOperation.setValue((byte)0);
         obj.getWriteByteOperations().add(writeByteOperation);
 
-        screen.getObjects().add(obj);
+        screen.getObjects().add(0, obj);
     }
 
     /**
@@ -63,7 +118,7 @@ public final class AddObject {
         writeByteOperation.setValue((byte)0);
         obj.getWriteByteOperations().add(writeByteOperation);
 
-        screen.getObjects().add(obj);
+        screen.getObjects().add(0, obj);
     }
 
     /**
@@ -105,13 +160,15 @@ public final class AddObject {
         writeByteOperation.setValue((byte)1);
         obj.getWriteByteOperations().add(writeByteOperation);
 
-        screen.getObjects().add(obj);
+        screen.getObjects().add(0, obj);
 
         // Timer to spawn dais for odd number of children
         obj = new GameObject(screen);
         obj.setId((short)0x0b);
         obj.getArgs().add((short)0);
         obj.getArgs().add((short)30);
+        obj.setX(-1);
+        obj.setY(-1);
 
         testByteOperation = new TestByteOperation();
         testByteOperation.setIndex(706);
@@ -136,6 +193,8 @@ public final class AddObject {
         writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
         writeByteOperation.setValue((byte)1);
         obj.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(0, obj);
     }
 
     /**
@@ -175,7 +234,7 @@ public final class AddObject {
             writeByteOperation.setValue((byte)1);
             obj.getWriteByteOperations().add(writeByteOperation);
 
-            screen.getObjects().add(obj);
+            screen.getObjects().add(0, obj);
         }
     }
 
@@ -476,6 +535,315 @@ public final class AddObject {
         }
     }
 
+    public static GameObject addBackupGyoninFishShop(GameObject untransformedGyoninFishShop) {
+        ObjectContainer objectContainer = untransformedGyoninFishShop.getObjectContainer();
+        if(objectContainer instanceof Screen) {
+            GameObject backupFishShop = new GameObject(untransformedGyoninFishShop.getObjectContainer());
+            for (int i = 0; i < untransformedGyoninFishShop.getArgs().size(); i++) {
+                backupFishShop.getArgs().add(untransformedGyoninFishShop.getArgs().get(i));
+            }
+            TestByteOperation testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(407);
+            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+            testByteOperation.setValue((byte) 3);
+            backupFishShop.getTestByteOperations().add(testByteOperation);
+
+            testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(254);
+            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+            testByteOperation.setValue((byte) 3);
+            backupFishShop.getTestByteOperations().add(testByteOperation);
+
+            backupFishShop.setId((short) 0xa0);
+            backupFishShop.setX(180);
+            backupFishShop.setY(1520);
+
+            untransformedGyoninFishShop.getObjectContainer().getObjects().add(backupFishShop);
+
+            GameObject backupFishNewDoorGraphic = new GameObject(untransformedGyoninFishShop.getObjectContainer());
+            testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(407);
+            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+            testByteOperation.setValue((byte) 3);
+            backupFishNewDoorGraphic.getTestByteOperations().add(testByteOperation);
+
+            testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(254);
+            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+            testByteOperation.setValue((byte) 3);
+            backupFishNewDoorGraphic.getTestByteOperations().add(testByteOperation);
+
+            backupFishNewDoorGraphic.getArgs().add((short)-1);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)260);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)40);
+            backupFishNewDoorGraphic.getArgs().add((short)40);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)1);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)255);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+            backupFishNewDoorGraphic.getArgs().add((short)0);
+
+            backupFishNewDoorGraphic.setId((short) 0x93);
+            backupFishNewDoorGraphic.setX(180);
+            backupFishNewDoorGraphic.setY(1520);
+
+            untransformedGyoninFishShop.getObjectContainer().getObjects().add(backupFishNewDoorGraphic);
+            return backupFishShop;
+        }
+        return null;
+    }
+
+    public static GameObject addAltSurfaceShopItemTimer(ObjectContainer objectContainer) {
+        // Handles the case where the shop item can be obtained somewhere else and you already have it.
+        // Without this timer, the shop could potentially be unable to transform back to its original state.
+        GameObject altSurfaceShopTimer = new GameObject(objectContainer);
+        altSurfaceShopTimer.setId((short) 0x0b);
+        altSurfaceShopTimer.getArgs().add((short) 0);
+        altSurfaceShopTimer.getArgs().add((short) 0);
+        altSurfaceShopTimer.setX(-1);
+        altSurfaceShopTimer.setY(-1);
+
+        TestByteOperation testFlag = new TestByteOperation();
+        testFlag.setIndex(742);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)1);
+        altSurfaceShopTimer.getTestByteOperations().add(testFlag);
+
+        WriteByteOperation updateFlag = new WriteByteOperation();
+        updateFlag.setIndex(742);
+        updateFlag.setValue((byte) 2);
+        updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+        altSurfaceShopTimer.getWriteByteOperations().add(updateFlag);
+
+        objectContainer.getObjects().add(0, altSurfaceShopTimer);
+        return altSurfaceShopTimer;
+    }
+
+    public static void addLittleBrotherShopTimer(short shopItemFlag) {
+        // Sets item world flags from 1 to 2, since one of the shop flags is taken up by checking the Big Brother shop trigger.
+        GameObject littleBrotherShopItemTimer = new GameObject(littleBrotherShopScreen);
+        littleBrotherShopItemTimer.setId((short) 0x0b);
+        littleBrotherShopItemTimer.getArgs().add((short) 0);
+        littleBrotherShopItemTimer.getArgs().add((short) 0);
+        littleBrotherShopItemTimer.setX(-1);
+        littleBrotherShopItemTimer.setY(-1);
+
+        TestByteOperation testFlag = new TestByteOperation();
+        testFlag.setIndex(shopItemFlag);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)1);
+        littleBrotherShopItemTimer.getTestByteOperations().add(testFlag);
+
+        WriteByteOperation updateFlag = new WriteByteOperation();
+        updateFlag.setIndex(shopItemFlag);
+        updateFlag.setValue((byte) 2);
+        updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+        littleBrotherShopItemTimer.getWriteByteOperations().add(updateFlag);
+
+        littleBrotherShopScreen.getObjects().add(0, littleBrotherShopItemTimer);
+    }
+
+    /**
+     * Add Diary updated timer to Xelpud's screen.
+     * @param objectContainer the screen to add the objects to
+     */
+    public static void addDiaryTalismanConversationTimers(ObjectContainer objectContainer) {
+        // Timer to trigger Xelpud Diary conversation (gives Mulana Talisman) if you enter his screen with the Diary.
+        GameObject diaryFlagTimer = new GameObject(objectContainer);
+        diaryFlagTimer.setId((short) 0x0b);
+        diaryFlagTimer.getArgs().add((short) 0);
+        diaryFlagTimer.getArgs().add((short) 0);
+        diaryFlagTimer.setX(-1);
+        diaryFlagTimer.setY(-1);
+
+        TestByteOperation testFlag = new TestByteOperation();
+        testFlag.setIndex(260);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)2);
+        diaryFlagTimer.getTestByteOperations().add(testFlag);
+
+        testFlag = new TestByteOperation();
+        testFlag.setIndex(2797);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)0);
+        diaryFlagTimer.getTestByteOperations().add(testFlag);
+
+        WriteByteOperation updateFlag = new WriteByteOperation();
+        updateFlag.setIndex(2797);
+        updateFlag.setValue((byte) 1);
+        updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+        diaryFlagTimer.getWriteByteOperations().add(updateFlag);
+
+        objectContainer.getObjects().add(0, diaryFlagTimer);
+
+        // Timer to trigger Xelpud Talisman conversation (allows Diary chest appearance) if you enter his screen with the Talisman.
+        GameObject xelpudTalismanConversationTimer = new GameObject(objectContainer);
+        xelpudTalismanConversationTimer.setId((short) 0x0b);
+        xelpudTalismanConversationTimer.getArgs().add((short) 0);
+        xelpudTalismanConversationTimer.getArgs().add((short) 0);
+        xelpudTalismanConversationTimer.setX(-1);
+        xelpudTalismanConversationTimer.setY(-1);
+
+        testFlag = new TestByteOperation();
+        testFlag.setIndex(164);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)2);
+        xelpudTalismanConversationTimer.getTestByteOperations().add(testFlag);
+
+        testFlag = new TestByteOperation();
+        testFlag.setIndex(2796);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)0);
+        xelpudTalismanConversationTimer.getTestByteOperations().add(testFlag);
+
+        testFlag = new TestByteOperation();
+        testFlag.setIndex(0x07c);
+        testFlag.setValue((byte) 1);
+        testFlag.setOp(ByteOp.FLAG_GTEQ);
+        xelpudTalismanConversationTimer.getTestByteOperations().add(testFlag);
+
+        updateFlag = new WriteByteOperation();
+        updateFlag.setIndex(2796);
+        updateFlag.setValue((byte) 1);
+        updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+        xelpudTalismanConversationTimer.getWriteByteOperations().add(updateFlag);
+
+        objectContainer.getObjects().add(0, xelpudTalismanConversationTimer);
+    }
+
+    /**
+     * Cheats for easy testing. Gives Shrine of the Mother frontside grail via a timer on the starting screen.
+     * Other warps could be added for convenience as needed (0x064 = guidance, through 0x075 = backside shrine)
+     * @param objectContainer screen to add the timers to
+     */
+    public static void addGrailWarpTimers(ObjectContainer objectContainer) {
+        GameObject warpTimer = new GameObject(objectContainer);
+        warpTimer.setId((short) 0x0b);
+        warpTimer.getArgs().add((short) 0);
+        warpTimer.getArgs().add((short) 0);
+        warpTimer.setX(-1);
+        warpTimer.setY(-1);
+
+        TestByteOperation testFlag = new TestByteOperation();
+        testFlag.setIndex(0x06c);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)0);
+        warpTimer.getTestByteOperations().add(testFlag);
+
+        WriteByteOperation updateFlag = new WriteByteOperation();
+        updateFlag.setIndex(0x06c);
+        updateFlag.setValue((byte) 1);
+        updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+        warpTimer.getWriteByteOperations().add(updateFlag);
+
+        objectContainer.getObjects().add(0, warpTimer);
+    }
+
+    /**
+     * Adds sound effect for removed/trap items
+     * @param objectContainer to add the sound effect to
+     * @param newWorldFlag flag to update once the sound has been played, so it will only play once
+     * @param screenFlag screen flag (non-permanent) to indicate that the sound should be played
+     */
+    public static void addNoItemSoundEffect(ObjectContainer objectContainer, Integer newWorldFlag, Integer screenFlag) {
+        GameObject noItemSoundEffect = new GameObject(objectContainer);
+        noItemSoundEffect.setId((short)0x9b);
+        noItemSoundEffect.getArgs().add((short)80);
+        noItemSoundEffect.getArgs().add((short)120);
+        noItemSoundEffect.getArgs().add((short)64);
+        noItemSoundEffect.getArgs().add((short)0);
+        noItemSoundEffect.getArgs().add((short)120);
+        noItemSoundEffect.getArgs().add((short)64);
+        noItemSoundEffect.getArgs().add((short)0);
+        noItemSoundEffect.getArgs().add((short)25);
+        noItemSoundEffect.getArgs().add((short)1);
+        noItemSoundEffect.getArgs().add((short)5);
+        noItemSoundEffect.getArgs().add((short)0);
+        noItemSoundEffect.getArgs().add((short)10);
+        noItemSoundEffect.getArgs().add((short)0);
+        noItemSoundEffect.getArgs().add((short)0);
+        noItemSoundEffect.getArgs().add((short)0);
+        noItemSoundEffect.setX(-1);
+        noItemSoundEffect.setY(-1);
+
+        TestByteOperation testFlag = new TestByteOperation();
+        testFlag.setIndex(newWorldFlag);
+        testFlag.setOp(ByteOp.FLAG_GT);
+        testFlag.setValue((byte)0);
+        noItemSoundEffect.getTestByteOperations().add(testFlag);
+
+        testFlag = new TestByteOperation();
+        testFlag.setIndex(screenFlag);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)1);
+        noItemSoundEffect.getTestByteOperations().add(testFlag);
+
+        objectContainer.getObjects().add(0, noItemSoundEffect);
+    }
+
+    public static void addBat(ObjectContainer objectContainer, int xPos, int yPos, int screenFlag) {
+        GameObject bat = new GameObject(objectContainer);
+        bat.setId((short)0x02);
+        bat.setX(xPos);
+        bat.setY(yPos);
+        bat.getArgs().add((short)1);
+        bat.getArgs().add((short)1);
+        bat.getArgs().add((short)2);
+        bat.getArgs().add((short)0);
+        bat.getArgs().add((short)3);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(screenFlag);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)1);
+        bat.getTestByteOperations().add(testByteOperation);
+
+        objectContainer.getObjects().add(bat);
+    }
+
+    public static void addExplosion(ObjectContainer objectContainer, int xPos, int yPos, int newWorldFlag) {
+        GameObject explosion = new GameObject(objectContainer);
+        explosion.setId((short)0xb4);
+        explosion.setX(xPos - 80);
+        explosion.setY(yPos - 80);
+        explosion.getArgs().add((short)200);
+        explosion.getArgs().add((short)1);
+        explosion.getArgs().add((short)6);
+        explosion.getArgs().add((short)6);
+        explosion.getArgs().add((short)1);
+        explosion.getArgs().add((short)60);
+        explosion.getArgs().add((short)85);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(newWorldFlag);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)1);
+        explosion.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(newWorldFlag);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(2);
+        explosion.getWriteByteOperations().add(writeByteOperation);
+
+        objectContainer.getObjects().add(explosion);
+    }
+
     /**
      * For not having to damage boost up Gate of Illusion to Cog of the Soul
      * @param screen the screen to add the objects to
@@ -640,6 +1008,20 @@ public final class AddObject {
         screen.getObjects().add(obj);
     }
 
+    public static boolean addSpecialItemObjects(String chestLocation, String chestContents) {
+        if("xmailer.exe".equals(chestLocation) || "Mulana Talisman".equals(chestLocation)) {
+            // Xelpud location, but no object with flags to update.
+            addSpecialItemObjects(xelpudScreen, chestContents);
+            return true;
+        }
+        else if("Book of the Dead".equals(chestLocation)) {
+            // Mulbruk location, but no object with flags to update.
+            addSpecialItemObjects(mulbrukScreen, chestContents);
+            return true;
+        }
+        return false;
+    }
+
     public static void addSpecialItemObjects(ObjectContainer objectContainer, String newContents) {
         if ("Map (Shrine of the Mother)".equals(newContents)) {
             AddObject.addShrineMapSoundEffect(objectContainer);
@@ -650,6 +1032,108 @@ public final class AddObject {
         if(Settings.isAutomaticMantras() && "Key Sword".equals(newContents)) {
             AddObject.addAutomaticMantras(objectContainer);
         }
+    }
+
+    public static void addGrailDetector(GameObject gameObject, int grailFlag) {
+        GameObject grailDetector = new GameObject(gameObject.getObjectContainer());
+        grailDetector.setId((short)0x14);
+        grailDetector.setX(gameObject.getX());
+        grailDetector.setY(gameObject.getY() - 20);
+
+        grailDetector.getArgs().add((short)0); // seconds wait
+        grailDetector.getArgs().add((short)0); // frames wait
+        grailDetector.getArgs().add((short)0); // continuous/total
+        grailDetector.getArgs().add((short)0); // interaction type 0 = any time except paused 1 = 2 = 3 = 4 = just be on the ground, ok. default: sleep
+        grailDetector.getArgs().add((short)2); // graphical tile width
+        grailDetector.getArgs().add((short)3); // graphical tile height
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(grailFlag);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        grailDetector.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(grailFlag);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(1);
+        grailDetector.getWriteByteOperations().add(writeByteOperation);
+
+        gameObject.getObjectContainer().getObjects().add(grailDetector);
+    }
+
+    public static void addBackupShrineDoor(ObjectContainer objectContainer) {
+        // Add actual door to old Shrine of the Mother
+        GameObject backupShrineDoor = new GameObject(objectContainer);
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(258);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte) 9);
+        backupShrineDoor.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(500);
+        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+        testByteOperation.setValue((byte) 1);
+        backupShrineDoor.getTestByteOperations().add(testByteOperation);
+
+        backupShrineDoor.setId((short) 0x98);
+        backupShrineDoor.setX(2430);
+        backupShrineDoor.setY(320);
+
+        backupShrineDoor.getArgs().add((short)0);
+        backupShrineDoor.getArgs().add((short)9);
+        backupShrineDoor.getArgs().add((short)0);
+        backupShrineDoor.getArgs().add((short)0);
+        backupShrineDoor.getArgs().add((short)420);
+        backupShrineDoor.getArgs().add((short)152);
+
+        objectContainer.getObjects().add(backupShrineDoor);
+
+        // Add graphics for door to old Shrine of the Mother
+        GameObject backupShrineDoorGraphic = new GameObject(objectContainer);
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(258);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte) 9);
+        backupShrineDoorGraphic.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(500);
+        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+        testByteOperation.setValue((byte) 1);
+        backupShrineDoorGraphic.getTestByteOperations().add(testByteOperation);
+
+        backupShrineDoorGraphic.getArgs().add((short)-1);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)540);
+        backupShrineDoorGraphic.getArgs().add((short)40);
+        backupShrineDoorGraphic.getArgs().add((short)80);
+        backupShrineDoorGraphic.getArgs().add((short)80);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)1);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)255);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+
+        backupShrineDoorGraphic.setId((short) 0x93);
+        backupShrineDoorGraphic.setX(2410);
+        backupShrineDoorGraphic.setY(280);
+
+        objectContainer.getObjects().add(backupShrineDoorGraphic);
     }
 
     public static void addShrineMapSoundEffect(ObjectContainer objectContainer) {

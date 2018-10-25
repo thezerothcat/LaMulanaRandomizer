@@ -42,7 +42,7 @@ Mantra count timers: ae1-ae8 (2785-2792)
 Mantra tablet counter flag: ae9
 LAMULANA recited flag: aea
 Mantras unlocked flag (Giltoriyo): aeb
-Xelpud Talisman convos: aec
+Xelpud Talisman convos: aec (2796)
 Xelpud Mulana Talisman convos: aed
 Shrine map sound effect played flag: aee
 Cog of Soul chest: aef

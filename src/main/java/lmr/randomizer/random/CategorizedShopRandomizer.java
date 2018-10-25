@@ -314,7 +314,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             if("Rolling Shuriken".equals(startingWeapon)) {
                 return new Pair<>((short)0, (short)100);
             }
-            if("Earth Spears".equals(startingWeapon)
+            if("Earth Spear".equals(startingWeapon)
                     || "Flare Gun".equals(startingWeapon)
                     || "Caltrops".equals(startingWeapon)) {
                 return new Pair<>((short)0, (short)80);

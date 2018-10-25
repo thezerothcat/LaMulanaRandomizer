@@ -1,5 +1,6 @@
 package lmr.randomizer;
 
+import lmr.randomizer.dat.AddObject;
 import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.DatReader;
 import lmr.randomizer.dat.DatWriter;
@@ -883,9 +884,18 @@ public class Main {
                 dialog.updateProgress(95, Translations.getText("progress.write"));
                 itemRandomizer.updateFiles(random);
                 shopRandomizer.updateFiles(datInfo, subweaponOnly, random);
-//                    if(Settings.isRandomizeMantras()) {
-//                        GameDataTracker.randomizeMantras(random);
-//                    }
+                if(!subweaponOnly && ItemRandomizer.ALL_SUBWEAPONS.contains(Settings.getCurrentStartingWeapon())) {
+                    GameDataTracker.updateSubweaponPot(Settings.getCurrentStartingWeapon());
+                }
+                else {
+                    List<String> availableSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
+                    availableSubweapons.removeAll(Settings.getRemovedItems());
+                    availableSubweapons.removeAll(Settings.getCurrentRemovedItems());
+                    GameDataTracker.updateSubweaponPot(availableSubweapons.get(random.nextInt(availableSubweapons.size())));
+                }
+//                if(Settings.isRandomizeMantras()) {
+//                    GameDataTracker.randomizeMantras(random);
+//                }
                 RcdWriter.writeRcd(rcdData);
                 DatWriter.writeDat(datInfo);
                 if(Settings.isRandomizeMainWeapon()) {
@@ -915,6 +925,7 @@ public class Main {
 
                 dialog.updateProgress(100, Translations.getText("progress.done"));
                 GameDataTracker.clearAll();
+                AddObject.clearObjects();
                 DataFromFile.clearCustomItemPlacements();
 
                 SwingUtilities.invokeLater(() -> {

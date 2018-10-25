@@ -132,6 +132,11 @@ public final class RcdReader {
                         keepObject = false;
                         break;
                     }
+                    else if(updateFlag.getIndex() == 537 && updateFlag.getValue() == 1) {
+                        // With changed event flow for Xelpud pillar/Diary chest, this timer isn't needed
+                        keepObject = false;
+                        break;
+                    }
                 }
             }
         }
@@ -177,6 +182,16 @@ public final class RcdReader {
             }
         }
         else if (obj.getId() == 0x00) {
+            if(objectContainer instanceof Screen) {
+                Screen screen = (Screen)objectContainer;
+                if(screen.getZoneIndex() == 10 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 2) {
+                    if(obj.getArgs().get(0) == 3) {
+                        // Shuriken pot
+                        GameDataTracker.setSubweaponPot(obj);
+                    }
+                }
+            }
+
             if(obj.getTestByteOperations().isEmpty() || obj.getTestByteOperations().get(0).getIndex() != 524) {
                 // Pots - update to 1.3 position and then return (no need to add tracking).
                 // Note that there is a pot tied to a warp in Illusion which is removed by randomizer (the warp is always active)
@@ -512,6 +527,22 @@ public final class RcdReader {
                         screen.getScreenExits().add(screenExit);
                     }
 
+                    if(zoneIndex == 1) {
+                        if(roomIndex == 2 && screenIndex == 1) {
+                            AddObject.setXelpudScreen(screen);
+                        }
+                    }
+                    else if(zoneIndex == 3) {
+                        if(roomIndex == 3 && screenIndex == 0) {
+                            AddObject.setMulbrukScreen(screen);
+                        }
+                    }
+                    else if(zoneIndex == 7) {
+                        if(roomIndex == 3 && screenIndex == 2) {
+                            AddObject.setLittleBrotherShopScreen(screen);
+                        }
+                    }
+
                     room.getScreens().add(screen);
                 }
 
@@ -533,8 +564,13 @@ public final class RcdReader {
         else if(zoneIndex == 6 && roomIndex == 7 && screenIndex == 1) {
             AddObject.addExtinctionUntrueShrineBackupDoor(screen);
         }
-        else if(zoneIndex == 8 && roomIndex == 2 && screenIndex == 3) {
-            AddObject.addEndlessCorridorNoFeatherUntrueShrineGate(screen);
+        else if(zoneIndex == 8) {
+            if(roomIndex == 2 && screenIndex == 3) {
+                AddObject.addEndlessCorridorNoFeatherUntrueShrineGate(screen);
+            }
+            else if(roomIndex == 5 && screenIndex == 3) {
+                AddObject.addBackupShrineDoor(screen);
+            }
         }
         else if(zoneIndex == 9 && roomIndex == 8 && screenIndex == 1) {
             AddObject.addUntrueShrineExit(screen);
@@ -558,6 +594,8 @@ public final class RcdReader {
                     }
                 }
                 if(screenIndex == 1) {
+                    AddObject.addDiaryTalismanConversationTimers(screen);
+//                    AddObject.addGrailWarpTimers(screen);
                     if (Settings.isAutomaticHardmode()) {
                         AddObject.addAutomaticHardmode(screen);
                     }
@@ -574,6 +612,9 @@ public final class RcdReader {
                     AddObject.addRandomWeaponKillTimer(screen, false);
                 }
             }
+        }
+        else if(zoneIndex == 9 && roomIndex == 2 && screenIndex == 0) {
+            AddObject.addDiaryChestConditionTimer(screen);
         }
         else if(zoneIndex == 12 && roomIndex == 2 && screenIndex == 0) {
             AddObject.addMoonlightPassageTimer(screen);
