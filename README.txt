@@ -3,6 +3,10 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
+1.41:
+-----------------------------
+Minor logic updates and more inclusive subweapon pot randomization.
+
 1.40:
 -----------------------------
 Logic fixes, mostly cleanup from 1.39.

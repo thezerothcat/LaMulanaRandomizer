@@ -9,7 +9,6 @@ import lmr.randomizer.dat.conversation.CheckBlock;
 import lmr.randomizer.dat.shop.BlockStringData;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.CustomPlacement;
-import lmr.randomizer.random.ShopItemPriceCountRandomizer;
 import lmr.randomizer.rcd.object.*;
 
 import java.util.*;
@@ -2121,15 +2120,20 @@ public final class GameDataTracker {
         }
     }
 
-    public static void updateTabletBlock(List<BlockContents> mantraBlockContents) {
-        mantraBlockContents.clear();
-        List<Short> stringCharacters = FileUtils.stringToData("Why are you reading this tablet? Djed Pillar and mantra.exe have been removed.");
+    public static void replaceTabletText(List<BlockContents> xelpudBlockContents, String replacement) {
+        xelpudBlockContents.clear();
+        List<Short> stringCharacters = FileUtils.stringToData(replacement);
         for (Short shortCharacter : stringCharacters) {
-            mantraBlockContents.add(new BlockSingleData(shortCharacter));
+            xelpudBlockContents.add(new BlockSingleData(shortCharacter));
         }
-        BlockListData blockListData = new BlockListData((short)0x004e, (short)2);
-        blockListData.getData().add((short)0);
-        blockListData.getData().add((short)0);
+
+        xelpudBlockContents.add(new BlockSingleData((short)10)); // Leaving this off breaks the tablet/prevents it from being translated to La-Mulanese if applicable.
+
+        BlockListData blockListData = new BlockListData((short)78, (short)2);
+        blockListData.getData().add((short)1); // 0 = English, 1 = La-Mulanese, 2 = ancient La-Mulanese, 3 = Rosetta Stone
+        blockListData.getData().add((short)0); // 0 = no picture, 1 = picture
+
+        xelpudBlockContents.add(blockListData);
     }
 
     public static void updateBlock(GameObjectId itemLocationData, GameObjectId itemNewContentsData) {

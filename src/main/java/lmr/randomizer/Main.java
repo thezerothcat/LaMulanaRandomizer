@@ -884,15 +884,14 @@ public class Main {
                 dialog.updateProgress(95, Translations.getText("progress.write"));
                 itemRandomizer.updateFiles(random);
                 shopRandomizer.updateFiles(datInfo, subweaponOnly, random);
-                if(!subweaponOnly && ItemRandomizer.ALL_SUBWEAPONS.contains(Settings.getCurrentStartingWeapon())) {
-                    GameDataTracker.updateSubweaponPot(Settings.getCurrentStartingWeapon());
-                }
-                else {
-                    List<String> availableSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
-                    availableSubweapons.removeAll(Settings.getRemovedItems());
-                    availableSubweapons.removeAll(Settings.getCurrentRemovedItems());
+
+                List<String> availableSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
+                availableSubweapons.removeAll(Settings.getRemovedItems());
+                availableSubweapons.removeAll(Settings.getCurrentRemovedItems());
+                if(!availableSubweapons.isEmpty()) {
                     GameDataTracker.updateSubweaponPot(availableSubweapons.get(random.nextInt(availableSubweapons.size())));
                 }
+
 //                if(Settings.isRandomizeMantras()) {
 //                    GameDataTracker.randomizeMantras(random);
 //                }

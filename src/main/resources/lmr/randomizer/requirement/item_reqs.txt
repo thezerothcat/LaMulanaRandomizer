@@ -80,10 +80,7 @@ Fairy Clothes => Location: Gate of Illusion [Middle], Event: Key Fairy, Attack: 
 Feather => Location: Surface, Serpent Staff, Event: Argus Defeated, Attack: Chest
 Flail Whip => Location: Tower of the Goddess [Lower], Event: Flooded Tower of the Goddess, Philosopher's Ocarina, State: Literacy
 # Flare Gun with Caltrops requires you to be exactly up against the wall; it's awkward enough that I'm not including it in the logic
-Flare Gun => Location: Inferno Cavern [Main], Attack: Main
-Flare Gun => Location: Inferno Cavern [Main], Attack: S-Straight
-Flare Gun => Location: Inferno Cavern [Main], Attack: Rolling Shuriken
-Flare Gun => Location: Inferno Cavern [Main], Attack: Bomb
+Flare Gun => Location: Inferno Cavern [Main], Attack: Forward
 Fruit of Eden => Location: Temple of Moonlight [Upper], Location: Temple of Moonlight [Lower], Location: Temple of Moonlight [Eden], Location: Temple of Moonlight [Southeast], Hand Scanner, Attack: Chest-Any
 Gauntlet => Location: Graveyard of the Giants [West], Life Seal, Feather, Attack: Chest-Any
 Glove => Location: Spring in the Sky, Event: Flooded Spring in the Sky, Attack: Chest-Any
