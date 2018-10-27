@@ -1,7 +1,5 @@
 Location: Temple of the Sun [East] => Location: Temple of the Sun [Main], Feather, Boost: Enemy
 Location: Tower of Ruin [Grail] => Location: Tower of Ruin [Southwest], Event: Thunderbird Defeated, Boost: Enemy
-Location: Inferno Cavern [Viy] => Location: Tower of Ruin [Southwest], Glitch: Raindrop, Bronze Mirror, Event: Bahamut Defeated, Boost: Environment
-Location: Inferno Cavern [Viy] => Location: Tower of Ruin [Southwest], Attack: Earth Spear, Bronze Mirror, Event: Bahamut Defeated, Boost: Environment
 Location: Gate of Illusion [Lower] => Location: Graveyard of the Giants [West], Feather, Grapple Claw, Glitch: Lamp Glitch, Boost: Environment
 Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Dracuet], Attack: Far, Location: Gate of Illusion [Fraud], Fruit of Eden, Boost: Item, Attack: Caltrops
 Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Dracuet], Attack: Far, Location: Gate of Illusion [Fraud], Fruit of Eden, Boost: Item, Attack: Bomb

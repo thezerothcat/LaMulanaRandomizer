@@ -1,4 +1,3 @@
-Coin: Surface (Ruin Path) => Location: Surface, Attack: Bomb, Glitch: Raindrop
 Coin: Moonlight => Location: Temple of Moonlight [Upper], Attack: Chakram
 Coin: Goddess (Shield) => Location: Tower of the Goddess [Grail], Glitch: Cat Pause, Attack: Forward
 Coin: Birth (Dance) => Location: Chamber of Birth [Dance], Glitch: Raindrop, Attack: Forward
