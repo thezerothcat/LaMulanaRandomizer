@@ -193,6 +193,7 @@ Event: Ellmac Defeated => Event: Ellmac Accessible, Ankh Jewel, Attack: Main
 Event: Ellmac Defeated => Event: Ellmac Accessible, Ankh Jewel, Attack: Shuriken
 Event: Ellmac Defeated => Event: Ellmac Accessible, Ankh Jewel, Attack: Chakram
 Event: Ellmac Defeated => Event: Ellmac Accessible, Ankh Jewel, Attack: Pistol
+Event: Ellmac Defeated => Event: Ellmac Accessible, Ankh Jewel, Attack: Bomb, Feather, Ring, Mode: Normal
 Event: Bahamut Defeated => Event: Bahamut Accessible, Ankh Jewel, Attack: Main
 Event: Bahamut Defeated => Event: Bahamut Accessible, Ankh Jewel, Attack: Flare Gun
 Event: Bahamut Defeated => Event: Bahamut Accessible, Ankh Jewel, Attack: Caltrops
