@@ -115,5 +115,5 @@ Location: Shrine of the Mother [Map] => Location: Twin Labyrinths [Upper]
 Location: True Shrine of the Mother => Location: Endless Corridor [5F], State: Literacy, Event: Backbeard & Tai Sui Defeated, Event: All Bosses Defeated, Attack: Chest
 Location: Hell Temple [Entrance] => Event: Hell Temple Unlocked, Location: Gate of Guidance, Feather
 Location: Hell Temple [Shop] => Location: Hell Temple [Entrance], Hermes' Boots, Attack: Bomb, Ring
-Location: Hell Temple [Shop] => Location: Hell Temple [Entrance], Lamp of Time, Attack: Bomb, Ring
+Location: Hell Temple [Shop] => Location: Hell Temple [Entrance], State: Lamp, Attack: Bomb, Ring
 Location: Hell Temple [Dracuet] => Location: Hell Temple [Shop], State: Literacy, Grapple Claw, Event: HT Bosses Defeated, guild.exe

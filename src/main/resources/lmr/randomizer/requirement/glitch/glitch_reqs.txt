@@ -1,4 +1,4 @@
-Glitch: Lamp Glitch => Lamp of Time, Setting: Lamp Glitch
+Glitch: Lamp Glitch => State: Lamp, Setting: Lamp Glitch
 Glitch: Cat Pause => Setting: Cat Pause
 Glitch: Raindrop => Hermes' Boots, Grapple Claw, Setting: Raindrop
 Glitch: Ice Raindrop => Grapple Claw, Setting: Ice Raindrop
