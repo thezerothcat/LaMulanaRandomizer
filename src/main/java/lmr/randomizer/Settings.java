@@ -41,6 +41,7 @@ public final class Settings {
     private boolean randomizeTrapItems;
     private boolean randomizeMainWeapon;
     private boolean allowSubweaponStart;
+    private boolean subweaponOnly;
     private boolean randomizeCursedChests;
     private boolean replaceMapsWithWeights;
     private boolean automaticGrailPoints;
@@ -94,6 +95,7 @@ public final class Settings {
         randomizeTrapItems = true;
         randomizeMainWeapon = false;
         allowSubweaponStart = false;
+        subweaponOnly = false;
         randomizeCursedChests = false;
         removeSpaulder = false;
         replaceMapsWithWeights = false;
@@ -365,6 +367,14 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.allowSubweaponStart = allowSubweaponStart;
+    }
+
+    public static boolean isSubweaponOnly() {
+        return singleton.subweaponOnly;
+    }
+
+    public static void setSubweaponOnly(boolean subweaponOnly) {
+        singleton.subweaponOnly = subweaponOnly;
     }
 
     public static boolean isRandomizeCursedChests() {

@@ -734,54 +734,27 @@ public class Main {
         DataFromFile.clearAllData();
 
         Random random = new Random(Settings.getStartingSeed());
+        if(Settings.isRandomizeTrapItems()) {
+            // For flag space reasons, screens which contain more than one chest can have only one of those chests
+            // contain a trap item. We'll randomly pick one location from each set to be the valid one for having
+            // the trap item.
+            DataFromFile.setBannedTrapLocations(random);
+        }
+
+        int totalItemsRemoved = getTotalItemsRemoved(random);
+        determineStartingWeapon(random);
+
         Set<String> initiallyAccessibleItems = getInitiallyAvailableItems();
-        boolean subweaponOnly;
 
         int attempt = 0;
         while(true) {
             ++attempt;
-            if(Settings.isRandomizeMainWeapon()) {
-                determineStartingWeapon(random);
-            }
-            if(Settings.getMaxRandomRemovedItems() < 1) {
-                if(Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
-                    Settings.setCurrentRemovedItems(new HashSet<>(Arrays.asList("Whip")));
-                }
-                else {
-                    Settings.setCurrentRemovedItems(new HashSet<>(0));
-                }
-            }
-            else {
+
+            if(totalItemsRemoved > 0) {
                 dialog.updateProgress(20, Translations.getText("progress.shuffling.removing"));
-                while(true) {
-                    determineRemovedItems(random);
-                    List<String> allRemovedItems = new ArrayList<>(Settings.getRemovedItems());
-                    allRemovedItems.addAll(Settings.getCurrentRemovedItems());
-                    if(BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty())) {
-                        // Some optimizations to save larger computations when boss requirements will definitely fail the seed.
-                        if(allRemovedItems.contains("Chain Whip") && allRemovedItems.contains("Flail Whip") && allRemovedItems.contains("Axe")) {
-                            // Rejected because none of the preferred weapons exists.
-                            continue;
-                        }
-                        if(allRemovedItems.contains("Silver Shield") && allRemovedItems.contains("Angel Shield")) {
-                            // Rejected because no permanent shield.
-                            continue;
-                        }
-                        if(allRemovedItems.contains("Rolling Shuriken") && allRemovedItems.contains("Chakram")
-                                && allRemovedItems.contains("Earth Spear") && allRemovedItems.contains("Pistol")) {
-                            // Rejected because none of the "good" ranged weapons for Palenque are in the seed.
-                            continue;
-                        }
-                    }
-                    break;
-                }
             }
-            if(Settings.isRandomizeTrapItems()) {
-                // For flag space reasons, screens which contain more than one chest can have only one of those chests
-                // contain a trap item. We'll randomly pick one location from each set to be the valid one for having
-                // the trap item.
-                DataFromFile.setBannedTrapLocations(random);
-            }
+            determineRemovedItems(totalItemsRemoved, random);
+
             dialog.updateProgress(25, String.format(Translations.getText("progress.shuffling"), attempt));
             dialog.setTitle(String.format(Translations.getText("progress.shuffling.title"), attempt));
             dialog.progressBar.setIndeterminate(true);
@@ -791,8 +764,7 @@ public class Main {
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer);
             accessChecker.initExitRequirements();
 
-            subweaponOnly = isSubweaponOnly();
-            List<String> startingNodes = getStartingNodes(subweaponOnly);
+            List<String> startingNodes = getStartingNodes(Settings.isSubweaponOnly());
 
             if(!initiallyAccessibleItems.isEmpty()) {
                 DataFromFile.clearInitialLocations();
@@ -883,7 +855,7 @@ public class Main {
 
                 dialog.updateProgress(95, Translations.getText("progress.write"));
                 itemRandomizer.updateFiles(random);
-                shopRandomizer.updateFiles(datInfo, subweaponOnly, random);
+                shopRandomizer.updateFiles(datInfo, Settings.isSubweaponOnly(), random);
 
                 List<String> availableSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
                 availableSubweapons.removeAll(Settings.getRemovedItems());
@@ -942,16 +914,26 @@ public class Main {
         }
     }
 
+    private static int getTotalItemsRemoved(Random random) {
+        if(Settings.getMaxRandomRemovedItems() < 1) {
+            return 0;
+        }
+        int totalItemsRemoved = Settings.getMinRandomRemovedItems();
+        return totalItemsRemoved + random.nextInt(Settings.getMaxRandomRemovedItems() - totalItemsRemoved + 1);
+    }
+
     private static boolean isSubweaponOnly() {
+        if(!Settings.isRandomizeMainWeapon()) {
+            return false;
+        }
+        if("Whip".equals(Settings.getCurrentStartingWeapon())) {
+            return false;
+        }
+
         List<String> availableMainWeapons = new ArrayList<>(DataFromFile.MAIN_WEAPONS);
-        if (Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
-            availableMainWeapons.remove("Whip");
-        }
-        Set<String> allRemovedItems = new HashSet<>(Settings.getCurrentRemovedItems());
-        allRemovedItems.addAll(Settings.getRemovedItems());
-        for(String removedItem : allRemovedItems) {
-            availableMainWeapons.remove(removedItem);
-        }
+        availableMainWeapons.remove("Whip");
+        availableMainWeapons.removeAll(Settings.getCurrentRemovedItems());
+        availableMainWeapons.removeAll(Settings.getRemovedItems());
         return availableMainWeapons.isEmpty();
     }
 
@@ -1223,6 +1205,11 @@ public class Main {
     }
 
     private static void determineStartingWeapon(Random random) {
+        if(!Settings.isRandomizeMainWeapon()) {
+            Settings.setCurrentStartingWeapon(null);
+            return;
+        }
+
         List<String> startingWeapons = new ArrayList<>();
         startingWeapons.add("Whip");
         startingWeapons.add("Knife");
@@ -1245,27 +1232,51 @@ public class Main {
         Settings.setCurrentStartingWeapon(startingWeapons.get(random.nextInt(startingWeapons.size())));
     }
 
-    private static void determineRemovedItems(Random random) {
+    private static void determineRemovedItems(int totalItemsRemoved, Random random) {
         Set<String> removedItems = new HashSet<>(Settings.getRemovedItems());
-        int totalItemsRemoved = Settings.getMinRandomRemovedItems();
-        totalItemsRemoved += random.nextInt(Settings.getMaxRandomRemovedItems() - totalItemsRemoved + 1);
-
-        List<String> removableItems;
-        if(Settings.getMaxRandomRemovedItems() < 1) {
-            removableItems = new ArrayList<>(0);
+        if(Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
+            removedItems.add("Whip");
         }
-        else {
-            removableItems = new ArrayList<>(DataFromFile.getRandomRemovableItems());
+        if(totalItemsRemoved < 1) {
+            Settings.setCurrentRemovedItems(removedItems);
+            Settings.setSubweaponOnly(false);
+            return;
+        }
+        List<String> removableItems = new ArrayList<>(DataFromFile.getRandomRemovableItems());
+        removableItems.removeAll(removedItems);
+        if(removableItems.isEmpty()) {
+            Settings.setCurrentRemovedItems(removedItems);
+            Settings.setSubweaponOnly(isSubweaponOnly());
+            return;
         }
 
-        removableItems.removeAll(Settings.getRemovedItems());
-
+        boolean easierBosses = BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty());
         boolean objectZipEnabled = Settings.getEnabledGlitches().contains("Object Zip");
         boolean catPauseEnabled = Settings.getEnabledGlitches().contains("Cat Pause");
         boolean lampGlitchEnabled = Settings.getEnabledGlitches().contains("Lamp Glitch");
         boolean requireKeyFairyCombo = Settings.isRequireSoftwareComboForKeyFairy();
-        boolean easierBosses = BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty());
         boolean orbRemoved = false;
+        boolean subweaponOnly = isSubweaponOnly(); // Preliminary check based on custom placements; currently this cannot happen randomly.
+
+        List<String> easierSubweaponsForPalenque = easierBosses ? new ArrayList<>(Arrays.asList("Rolling Shuriken", "Chakram", "Earth Spear", "Pistol")) : new ArrayList<>(0);
+        easierSubweaponsForPalenque.removeAll(removedItems);
+        if(easierBosses && easierSubweaponsForPalenque.size() == 1) {
+            removableItems.remove(easierSubweaponsForPalenque.get(0));
+        }
+
+        List<String> easierWeapons = easierBosses ? new ArrayList<>(Arrays.asList("Chain Whip", "Flail Whip", "Axe")) : new ArrayList<>(0);
+        easierWeapons.removeAll(removedItems);
+        if(subweaponOnly) {
+            removableItems.remove("Caltrops");
+            removableItems.remove("Flare Gun");
+            removableItems.remove("Bomb");
+            removableItems.remove("Feather");
+            removableItems.remove("Ring");
+        }
+        else if(easierBosses && easierWeapons.size() == 1) {
+            removableItems.remove(easierWeapons.get(0));
+        }
+
         int chosenRemovedItems = 0;
         while(chosenRemovedItems < totalItemsRemoved && !removableItems.isEmpty()) {
             int removedItemIndex = random.nextInt(removableItems.size());
@@ -1284,6 +1295,13 @@ public class Main {
                         removableItems.remove("Hermes' Boots");
                         if(!objectZipEnabled) {
                             removableItems.remove("Grapple Claw");
+                        }
+                    }
+
+                    if(easierBosses) {
+                        easierSubweaponsForPalenque.remove(removedItem);
+                        if(easierSubweaponsForPalenque.size() == 1) {
+                            removableItems.remove(easierSubweaponsForPalenque.get(0));
                         }
                     }
                 }
@@ -1307,7 +1325,8 @@ public class Main {
                     if(!lampGlitchEnabled) {
                         removableItems.remove("Bronze Mirror");
                     }
-                } else if("Grapple Claw".equals(removedItem)) {
+                }
+                else if("Grapple Claw".equals(removedItem)) {
                     // Don't remove anything that outright requires raindropping.
                     removableItems.remove("Twin Statue");
                     removableItems.remove("Plane Model");
@@ -1333,13 +1352,15 @@ public class Main {
                         removableItems.remove("Hermes' Boots");
                         removableItems.remove("Grapple Claw");
                     }
-                } else if(easierBosses) {
+                }
+                else if(easierBosses) {
                     if("Silver Shield".equals(removedItem)) {
                         removableItems.remove("Angel Shield");
-                    } else if ("Angel Shield".equals(removedItem)) {
+                    }
+                    else if ("Angel Shield".equals(removedItem)) {
                         removableItems.remove("Silver Shield");
                     }
-                    if(removedItem.startsWith("Sacred Orb")) {
+                    else if(removedItem.startsWith("Sacred Orb")) {
                         if(orbRemoved) {
                             removableItems.remove("Sacred Orb (Surface)");
                             removableItems.remove("Sacred Orb (Gate of Guidance)");
@@ -1356,14 +1377,24 @@ public class Main {
                             orbRemoved = true;
                         }
                     }
+                    else {
+                        easierSubweaponsForPalenque.remove(removedItem);
+                        if(easierSubweaponsForPalenque.size() == 1) {
+                            removableItems.remove(easierSubweaponsForPalenque.get(0));
+                        }
+                        if(!subweaponOnly) {
+                            easierWeapons.remove(removedItem);
+                            if(easierWeapons.size() == 1) {
+                                removableItems.remove(easierSubweaponsForPalenque.get(0));
+                            }
+                        }
+                    }
                 }
                 ++chosenRemovedItems;
             }
         }
-        if(Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
-            removedItems.add("Whip");
-        }
         Settings.setCurrentRemovedItems(removedItems);
+        Settings.setSubweaponOnly(isSubweaponOnly());
     }
 
     private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, int attempt) throws IOException {
