@@ -608,6 +608,168 @@ public final class AddObject {
         return null;
     }
 
+//    /**
+//     * Unused alternate version relying on graphics file modification.
+//     * @param backsideDoor the object we're decorating with graphics
+//     * @param bossNumber 1=Amphisbaena, 7=Baphomet, etc.
+//     */
+//    public static void addBossGraphic(GameObject backsideDoor, int bossNumber) {
+//        GameObject doorNumberGraphic = new GameObject(backsideDoor.getObjectContainer());
+//        doorNumberGraphic.setId((short) 0x93);
+//        doorNumberGraphic.setX(backsideDoor.getX());
+//        doorNumberGraphic.setY(backsideDoor.getY() - 40);
+//        doorNumberGraphic.getArgs().add((short)-1); // Layer
+//        doorNumberGraphic.getArgs().add((short)-1); // 01.effect.png for anything not 0-6?
+//        doorNumberGraphic.getArgs().add((short)(30 * (bossNumber - 1))); // Imagex
+//        doorNumberGraphic.getArgs().add((short)(478)); // Imagey
+//        doorNumberGraphic.getArgs().add((short)30); // dx
+//        doorNumberGraphic.getArgs().add((short)34); // dy
+//        doorNumberGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+//        doorNumberGraphic.getArgs().add((short)0); // Animation frames
+//        doorNumberGraphic.getArgs().add((short)1); // Pause frames
+//        doorNumberGraphic.getArgs().add((short)0); // Repeat count (<1 is forever)
+//        doorNumberGraphic.getArgs().add((short)0); // Hittile to fill with
+//        doorNumberGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+//        doorNumberGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+//        doorNumberGraphic.getArgs().add((short)0); // Cycle colors t/f
+//        doorNumberGraphic.getArgs().add((short)0); // Alpha/frame
+//        doorNumberGraphic.getArgs().add((short)255); // Max alpha
+//        doorNumberGraphic.getArgs().add((short)0); // R/frame
+//        doorNumberGraphic.getArgs().add((short)0); // Max R
+//        doorNumberGraphic.getArgs().add((short)0); // G/frame
+//        doorNumberGraphic.getArgs().add((short)0); // Max G
+//        doorNumberGraphic.getArgs().add((short)0); // B/frame
+//        doorNumberGraphic.getArgs().add((short)0); // Max B
+//        doorNumberGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+//        doorNumberGraphic.getArgs().add((short)1); // not0?
+//
+//        for (TestByteOperation testByteOperation : backsideDoor.getTestByteOperations()) {
+//            doorNumberGraphic.getTestByteOperations().add(new TestByteOperation(testByteOperation));
+//        }
+//        backsideDoor.getObjectContainer().getObjects().add(doorNumberGraphic);
+//    }
+
+    /**
+     * Actually-used modification for backside door numbers.
+     * @param backsideDoor the object we're decorating with graphics
+     * @param bossNumber 1=Amphisbaena, 7=Baphomet, etc.
+     */
+    public static void addBossNumberGraphic(GameObject backsideDoor, int bossNumber, int mirrorCoverFlag) {
+        GameObject doorNumberGraphic = new GameObject(backsideDoor.getObjectContainer());
+        doorNumberGraphic.setId((short) 0x93);
+        doorNumberGraphic.setX(backsideDoor.getX());
+        doorNumberGraphic.setY(backsideDoor.getY() - 40);
+        doorNumberGraphic.getArgs().add((short)-1); // Layer
+        doorNumberGraphic.getArgs().add((short)7); // 01.effect.png for anything not 0-6?
+        doorNumberGraphic.getArgs().add((short)(53 +  16 * (bossNumber - 1))); // Imagex
+        doorNumberGraphic.getArgs().add((short)(209)); // Imagey
+        doorNumberGraphic.getArgs().add((short)29); // dx
+        doorNumberGraphic.getArgs().add((short)31); // dy
+        doorNumberGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        doorNumberGraphic.getArgs().add((short)0); // Animation frames
+        doorNumberGraphic.getArgs().add((short)1); // Pause frames
+        doorNumberGraphic.getArgs().add((short)0); // Repeat count (<1 is forever)
+        doorNumberGraphic.getArgs().add((short)0); // Hittile to fill with
+        doorNumberGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        doorNumberGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        doorNumberGraphic.getArgs().add((short)0); // Cycle colors t/f
+        doorNumberGraphic.getArgs().add((short)0); // Alpha/frame
+        doorNumberGraphic.getArgs().add((short)255); // Max alpha
+        doorNumberGraphic.getArgs().add((short)0); // R/frame
+        doorNumberGraphic.getArgs().add((short)0); // Max R
+        doorNumberGraphic.getArgs().add((short)0); // G/frame
+        doorNumberGraphic.getArgs().add((short)0); // Max G
+        doorNumberGraphic.getArgs().add((short)0); // B/frame
+        doorNumberGraphic.getArgs().add((short)0); // Max B
+        doorNumberGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        doorNumberGraphic.getArgs().add((short)0); // not0?
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(mirrorCoverFlag);
+        testByteOperation.setOp(ByteOp.FLAG_GT);
+        testByteOperation.setValue((byte)0);
+        doorNumberGraphic.getTestByteOperations().add(testByteOperation);
+
+        backsideDoor.getObjectContainer().getObjects().add(doorNumberGraphic);
+
+        GameObject doorCoverup = new GameObject(backsideDoor.getObjectContainer());
+        doorCoverup.setId((short) 0x93);
+        doorCoverup.setX(backsideDoor.getX());
+        doorCoverup.setY(backsideDoor.getY() - 40);
+        doorCoverup.getArgs().add((short)0); // Layer
+        doorCoverup.getArgs().add((short)0); // 01.effect.png for anything not 0-6?
+        doorCoverup.getArgs().add((short)(940)); // Imagex
+//        doorNumberGraphic.getArgs().add((short)(478)); // Imagey
+        doorCoverup.getArgs().add((short)(0)); // Imagey
+        doorCoverup.getArgs().add((short)11); // dx
+//        doorCoverup.getArgs().add((short)32); // dy
+        doorCoverup.getArgs().add((short)33); // dy
+        doorCoverup.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        doorCoverup.getArgs().add((short)0); // Animation frames
+        doorCoverup.getArgs().add((short)1); // Pause frames
+        doorCoverup.getArgs().add((short)0); // Repeat count (<1 is forever)
+        doorCoverup.getArgs().add((short)0); // Hittile to fill with
+        doorCoverup.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        doorCoverup.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        doorCoverup.getArgs().add((short)0); // Cycle colors t/f
+        doorCoverup.getArgs().add((short)0); // Alpha/frame
+        doorCoverup.getArgs().add((short)255); // Max alpha
+        doorCoverup.getArgs().add((short)0); // R/frame
+        doorCoverup.getArgs().add((short)0); // Max R
+        doorCoverup.getArgs().add((short)0); // G/frame
+        doorCoverup.getArgs().add((short)0); // Max G
+        doorCoverup.getArgs().add((short)0); // B/frame
+        doorCoverup.getArgs().add((short)0); // Max B
+        doorCoverup.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        doorCoverup.getArgs().add((short)0); // not0?
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(mirrorCoverFlag);
+        testByteOperation.setOp(ByteOp.FLAG_GT);
+        testByteOperation.setValue((byte)0);
+        doorCoverup.getTestByteOperations().add(testByteOperation);
+
+        backsideDoor.getObjectContainer().getObjects().add(doorCoverup);
+
+        doorCoverup = new GameObject(backsideDoor.getObjectContainer());
+        doorCoverup.setId((short) 0x93);
+        doorCoverup.setX(backsideDoor.getX());
+        doorCoverup.setY(backsideDoor.getY() - 40);
+        doorCoverup.getArgs().add((short)0); // Layer
+        doorCoverup.getArgs().add((short)0); // 01.effect.png for anything not 0-6?
+        doorCoverup.getArgs().add((short)(940)); // Imagex
+//        doorNumberGraphic.getArgs().add((short)(478)); // Imagey
+        doorCoverup.getArgs().add((short)(0)); // Imagey
+        doorCoverup.getArgs().add((short)29); // dx
+        doorCoverup.getArgs().add((short)11); // dy
+        doorCoverup.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        doorCoverup.getArgs().add((short)0); // Animation frames
+        doorCoverup.getArgs().add((short)1); // Pause frames
+        doorCoverup.getArgs().add((short)0); // Repeat count (<1 is forever)
+        doorCoverup.getArgs().add((short)0); // Hittile to fill with
+        doorCoverup.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        doorCoverup.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        doorCoverup.getArgs().add((short)0); // Cycle colors t/f
+        doorCoverup.getArgs().add((short)0); // Alpha/frame
+        doorCoverup.getArgs().add((short)255); // Max alpha
+        doorCoverup.getArgs().add((short)0); // R/frame
+        doorCoverup.getArgs().add((short)0); // Max R
+        doorCoverup.getArgs().add((short)0); // G/frame
+        doorCoverup.getArgs().add((short)0); // Max G
+        doorCoverup.getArgs().add((short)0); // B/frame
+        doorCoverup.getArgs().add((short)0); // Max B
+        doorCoverup.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        doorCoverup.getArgs().add((short)0); // not0?
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(mirrorCoverFlag);
+        testByteOperation.setOp(ByteOp.FLAG_GT);
+        testByteOperation.setValue((byte)0);
+        doorCoverup.getTestByteOperations().add(testByteOperation);
+
+        backsideDoor.getObjectContainer().getObjects().add(doorCoverup);
+    }
+
     public static GameObject addAltSurfaceShopItemTimer(ObjectContainer objectContainer) {
         // Handles the case where the shop item can be obtained somewhere else and you already have it.
         // Without this timer, the shop could potentially be unable to transform back to its original state.
@@ -1202,6 +1364,236 @@ public final class AddObject {
 
         objectContainer.getObjects().add(0, shrineMapSoundEffect);
         objectContainer.getObjects().add(0, shrineMapSoundEffectRemovalTimer);
+    }
+
+    public static GameObject addMissingBacksideDoorCover(GameObject backsideDoor, int gateFlag) {
+        GameObject doorCoverGraphic = new GameObject(backsideDoor.getObjectContainer());
+        doorCoverGraphic.setId((short)0x93);
+        doorCoverGraphic.setX(backsideDoor.getX());
+        doorCoverGraphic.setY(backsideDoor.getY());
+        doorCoverGraphic.getArgs().add((short)-1); // Layer
+        doorCoverGraphic.getArgs().add((short)7); // 01.effect.png for anything not 0-6?
+        doorCoverGraphic.getArgs().add((short)0); // Imagex
+        doorCoverGraphic.getArgs().add((short)360); // Imagey
+        doorCoverGraphic.getArgs().add((short)40); // dx
+        doorCoverGraphic.getArgs().add((short)40); // dy
+        doorCoverGraphic.getArgs().add((short)1); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        doorCoverGraphic.getArgs().add((short)7); // Animation frames
+        doorCoverGraphic.getArgs().add((short)6); // Pause frames
+        doorCoverGraphic.getArgs().add((short)1); // Repeat count (<1 is forever)
+        doorCoverGraphic.getArgs().add((short)0); // Hittile to fill with
+        doorCoverGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        doorCoverGraphic.getArgs().add((short)5); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        doorCoverGraphic.getArgs().add((short)0); // Cycle colors t/f
+        doorCoverGraphic.getArgs().add((short)0); // Alpha/frame
+        doorCoverGraphic.getArgs().add((short)255); // Max alpha
+        doorCoverGraphic.getArgs().add((short)0); // R/frame
+        doorCoverGraphic.getArgs().add((short)0); // Max R
+        doorCoverGraphic.getArgs().add((short)0); // G/frame
+        doorCoverGraphic.getArgs().add((short)0); // Max G
+        doorCoverGraphic.getArgs().add((short)0); // B/frame
+        doorCoverGraphic.getArgs().add((short)0); // Max B
+        doorCoverGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        doorCoverGraphic.getArgs().add((short)1); // not0?
+
+        TestByteOperation testFlag = new TestByteOperation();
+        testFlag.setIndex(gateFlag);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)0);
+        doorCoverGraphic.getTestByteOperations().add(testFlag);
+
+        testFlag = new TestByteOperation();
+        testFlag.setIndex(0x0ae);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)2);
+        doorCoverGraphic.getTestByteOperations().add(testFlag);
+
+        WriteByteOperation updateFlag = new WriteByteOperation();
+        updateFlag.setIndex(gateFlag);
+        updateFlag.setValue((byte) 1);
+        updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+        doorCoverGraphic.getWriteByteOperations().add(updateFlag);
+
+        backsideDoor.getObjectContainer().getObjects().add(doorCoverGraphic);
+        return doorCoverGraphic;
+    }
+
+    public static GameObject addMissingBacksideDoorTimerAndSound(ObjectContainer objectContainer, int bossFlag, int gateFlag) {
+        GameObject doorSoundEffect = new GameObject(objectContainer);
+        doorSoundEffect.setId((short)0x9b);
+        doorSoundEffect.getArgs().add((short)95);
+        doorSoundEffect.getArgs().add((short)127);
+        doorSoundEffect.getArgs().add((short)64); // balance initial
+        doorSoundEffect.getArgs().add((short)-400);
+        doorSoundEffect.getArgs().add((short)127);
+        doorSoundEffect.getArgs().add((short)64); // balance final
+        doorSoundEffect.getArgs().add((short)0);
+        doorSoundEffect.getArgs().add((short)15);
+        doorSoundEffect.getArgs().add((short)0);
+        doorSoundEffect.getArgs().add((short)0);
+        doorSoundEffect.getArgs().add((short)0);
+        doorSoundEffect.getArgs().add((short)10);
+        doorSoundEffect.getArgs().add((short)0);
+        doorSoundEffect.getArgs().add((short)0);
+        doorSoundEffect.getArgs().add((short)0);
+        doorSoundEffect.setX(-1);
+        doorSoundEffect.setY(-1);
+
+        TestByteOperation testFlag = new TestByteOperation();
+        testFlag.setIndex(0x029);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)1);
+        doorSoundEffect.getTestByteOperations().add(testFlag);
+
+        GameObject doorTimer = new GameObject(objectContainer);
+        doorTimer.setId((short) 0x0b);
+        doorTimer.getArgs().add((short) 1);
+        doorTimer.getArgs().add((short) 0);
+        doorTimer.setX(-1);
+        doorTimer.setY(-1);
+
+        TestByteOperation doorTimerTest = new TestByteOperation();
+        doorTimerTest.setIndex(bossFlag);
+        doorTimerTest.setValue((byte) 3);
+        doorTimerTest.setOp(ByteOp.FLAG_GTEQ);
+        doorTimer.getTestByteOperations().add(doorTimerTest);
+
+        doorTimerTest = new TestByteOperation();
+        doorTimerTest.setIndex(0x0ae);
+        doorTimerTest.setValue((byte) 2);
+        doorTimerTest.setOp(ByteOp.FLAG_EQUALS);
+        doorTimer.getTestByteOperations().add(doorTimerTest);
+
+        doorTimerTest = new TestByteOperation();
+        doorTimerTest.setIndex(gateFlag);
+        doorTimerTest.setValue((byte) 0);
+        doorTimerTest.setOp(ByteOp.FLAG_EQUALS);
+        doorTimer.getTestByteOperations().add(doorTimerTest);
+
+        WriteByteOperation doorTimerUpdate = new WriteByteOperation();
+        doorTimerUpdate.setIndex(gateFlag);
+        doorTimerUpdate.setValue((byte) 1);
+        doorTimerUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        doorTimer.getWriteByteOperations().add(doorTimerUpdate);
+
+        doorTimerUpdate = new WriteByteOperation();
+        doorTimerUpdate.setIndex(0x029);
+        doorTimerUpdate.setValue((byte) 1);
+        doorTimerUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        doorTimer.getWriteByteOperations().add(doorTimerUpdate);
+
+        objectContainer.getObjects().add(0, doorSoundEffect);
+        objectContainer.getObjects().add(0, doorTimer);
+        return doorTimer;
+    }
+
+    public static GameObject addMissingBacksideMirrorTimerAndSound(ObjectContainer objectContainer, int mirrorCoverFlag) {
+        GameObject mirrorSoundEffect = new GameObject(objectContainer);
+        mirrorSoundEffect.setId((short)0x9b);
+        mirrorSoundEffect.getArgs().add((short)48); // sound effect
+        mirrorSoundEffect.getArgs().add((short)127); // volume initial
+        mirrorSoundEffect.getArgs().add((short)64); // balance initial
+        mirrorSoundEffect.getArgs().add((short)-700); // pitch initial
+        mirrorSoundEffect.getArgs().add((short)127); // volume final
+        mirrorSoundEffect.getArgs().add((short)64); // balance final
+        mirrorSoundEffect.getArgs().add((short)-700); // pitch final
+        mirrorSoundEffect.getArgs().add((short)20); // voice priority
+        mirrorSoundEffect.getArgs().add((short)0); // UNUSED????
+        mirrorSoundEffect.getArgs().add((short)0); // frames to wait before playing
+        mirrorSoundEffect.getArgs().add((short)0); // vibrate (bool)
+        mirrorSoundEffect.getArgs().add((short)10); // ??? vibration strength
+        mirrorSoundEffect.getArgs().add((short)10); // volume slide frames
+        mirrorSoundEffect.getArgs().add((short)0); // balance slide frames
+        mirrorSoundEffect.getArgs().add((short)0); // pitch slide frames
+        mirrorSoundEffect.setX(-1);
+        mirrorSoundEffect.setY(-1);
+
+        TestByteOperation testFlag = new TestByteOperation();
+        testFlag.setIndex(0x028);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)1);
+        mirrorSoundEffect.getTestByteOperations().add(testFlag);
+
+        GameObject mirrorTimer = new GameObject(objectContainer);
+        mirrorTimer.setId((short) 0x0b);
+        mirrorTimer.getArgs().add((short) 0);
+        mirrorTimer.getArgs().add((short) 30);
+        mirrorTimer.setX(-1);
+        mirrorTimer.setY(-1);
+
+        TestByteOperation mirrorTimerTest = new TestByteOperation();
+        mirrorTimerTest.setIndex(0x0ae);
+        mirrorTimerTest.setValue((byte) 2);
+        mirrorTimerTest.setOp(ByteOp.FLAG_EQUALS);
+        mirrorTimer.getTestByteOperations().add(mirrorTimerTest);
+
+        mirrorTimerTest = new TestByteOperation();
+        mirrorTimerTest.setIndex(mirrorCoverFlag);
+        mirrorTimerTest.setValue((byte) 0);
+        mirrorTimerTest.setOp(ByteOp.FLAG_EQUALS);
+        mirrorTimer.getTestByteOperations().add(mirrorTimerTest);
+
+        WriteByteOperation mirrorTimerUpdate = new WriteByteOperation();
+        mirrorTimerUpdate.setIndex(mirrorCoverFlag);
+        mirrorTimerUpdate.setValue((byte) 1);
+        mirrorTimerUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        mirrorTimer.getWriteByteOperations().add(mirrorTimerUpdate);
+
+        mirrorTimerUpdate = new WriteByteOperation();
+        mirrorTimerUpdate.setIndex(0x028);
+        mirrorTimerUpdate.setValue((byte) 1);
+        mirrorTimerUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        mirrorTimer.getWriteByteOperations().add(mirrorTimerUpdate);
+
+        objectContainer.getObjects().add(0, mirrorSoundEffect);
+        objectContainer.getObjects().add(0, mirrorTimer);
+        return mirrorTimer;
+    }
+
+    public static GameObject addMissingBacksideDoorMirrorCoverGraphic(GameObject backsideDoor, int mirrorCoverFlag, boolean extinctionDoor) {
+        GameObject mirrorCoverGraphic = new GameObject(backsideDoor.getObjectContainer());
+        mirrorCoverGraphic.setId((short) 0x93);
+        mirrorCoverGraphic.setX(backsideDoor.getX() - 20);
+        mirrorCoverGraphic.setY(backsideDoor.getY() - 40);
+        mirrorCoverGraphic.getArgs().add((short)-1); // Layer
+        mirrorCoverGraphic.getArgs().add((short)1); // 01.effect.png for anything not 0-6?
+        if(extinctionDoor) {
+            mirrorCoverGraphic.getArgs().add((short)940); // Imagex
+            mirrorCoverGraphic.getArgs().add((short)120); // Imagey
+        }
+        else {
+            mirrorCoverGraphic.getArgs().add((short)540); // Imagex
+            mirrorCoverGraphic.getArgs().add((short)0); // Imagey
+        }
+        mirrorCoverGraphic.getArgs().add((short)80); // dx
+        mirrorCoverGraphic.getArgs().add((short)80); // dy
+        mirrorCoverGraphic.getArgs().add((short)1); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        mirrorCoverGraphic.getArgs().add((short)1); // Animation frames
+        mirrorCoverGraphic.getArgs().add((short)4); // Pause frames
+        mirrorCoverGraphic.getArgs().add((short)0); // Repeat count (<1 is forever)
+        mirrorCoverGraphic.getArgs().add((short)0); // Hittile to fill with
+        mirrorCoverGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        mirrorCoverGraphic.getArgs().add((short)1); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        mirrorCoverGraphic.getArgs().add((short)0); // Cycle colors t/f
+        mirrorCoverGraphic.getArgs().add((short)0); // Alpha/frame
+        mirrorCoverGraphic.getArgs().add((short)255); // Max alpha
+        mirrorCoverGraphic.getArgs().add((short)0); // R/frame
+        mirrorCoverGraphic.getArgs().add((short)0); // Max R
+        mirrorCoverGraphic.getArgs().add((short)0); // G/frame
+        mirrorCoverGraphic.getArgs().add((short)0); // Max G
+        mirrorCoverGraphic.getArgs().add((short)0); // B/frame
+        mirrorCoverGraphic.getArgs().add((short)0); // Max B
+        mirrorCoverGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        mirrorCoverGraphic.getArgs().add((short)1); // not0?
+
+        TestByteOperation mirrorCoverTest = new TestByteOperation();
+        mirrorCoverTest.setIndex(mirrorCoverFlag);
+        mirrorCoverTest.setValue((byte) 0);
+        mirrorCoverTest.setOp(ByteOp.FLAG_EQUALS);
+        mirrorCoverGraphic.getTestByteOperations().add(mirrorCoverTest);
+
+        backsideDoor.getObjectContainer().getObjects().add(mirrorCoverGraphic);
+        return mirrorCoverGraphic;
     }
 
     /**

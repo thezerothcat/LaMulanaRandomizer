@@ -761,9 +761,11 @@ public class Main {
 
             ItemRandomizer itemRandomizer = new ItemRandomizer();
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
-            AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer);
+            BacksideDoorRandomizer backsideDoorRandomizer = new BacksideDoorRandomizer();
+            AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer);
             accessChecker.initExitRequirements();
 
+            backsideDoorRandomizer.determineBacksideDoors(random);
             List<String> startingNodes = getStartingNodes(Settings.isSubweaponOnly());
 
             if(!initiallyAccessibleItems.isEmpty()) {
@@ -809,6 +811,11 @@ public class Main {
                 accessChecker.computeAccessibleNodes(startingNode);
             }
 
+            // Add backside door nodes - we didn't need these for initially-accessible stuff since that can't require boss fights
+            for(String startingNode : backsideDoorRandomizer.getSettingNodes()) {
+                accessChecker.computeAccessibleNodes(startingNode);
+            }
+
             boolean ankhJewelLock = false;
             if(accessChecker.getQueuedUpdates().isEmpty()) {
                 if (!accessChecker.updateForBosses(attempt)) {
@@ -846,7 +853,7 @@ public class Main {
                 FileUtils.flush();
 
                 dialog.updateProgress(85, Translations.getText("progress.spoiler"));
-                outputLocations(itemRandomizer, shopRandomizer, attempt);
+                outputLocations(itemRandomizer, shopRandomizer, backsideDoorRandomizer, attempt);
 
                 dialog.updateProgress(90, Translations.getText("progress.read"));
 
@@ -862,6 +869,10 @@ public class Main {
                 availableSubweapons.removeAll(Settings.getCurrentRemovedItems());
                 if(!availableSubweapons.isEmpty()) {
                     GameDataTracker.updateSubweaponPot(availableSubweapons.get(random.nextInt(availableSubweapons.size())));
+                }
+
+                if(Settings.isRandomizeBacksideDoors()) {
+                    backsideDoorRandomizer.updateBacksideDoors();
                 }
 
 //                if(Settings.isRandomizeMantras()) {
@@ -1189,10 +1200,11 @@ public class Main {
         return shopRandomizer;
     }
 
-    private static AccessChecker buildAccessChecker(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer) {
+    private static AccessChecker buildAccessChecker(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, BacksideDoorRandomizer backsideDoorRandomizer) {
         AccessChecker accessChecker = new AccessChecker();
         accessChecker.setItemRandomizer(itemRandomizer);
         accessChecker.setShopRandomizer(shopRandomizer);
+        accessChecker.setBacksideDoorRandomizer(backsideDoorRandomizer);
         itemRandomizer.setAccessChecker(accessChecker);
         shopRandomizer.setAccessChecker(accessChecker);
         return accessChecker;
@@ -1397,9 +1409,10 @@ public class Main {
         Settings.setSubweaponOnly(isSubweaponOnly());
     }
 
-    private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, int attempt) throws IOException {
+    private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, BacksideDoorRandomizer backsideDoorRandomizer, int attempt) throws IOException {
         itemRandomizer.outputLocations(attempt);
         shopRandomizer.outputLocations(attempt);
+        backsideDoorRandomizer.outputLocations(attempt);
         if (!Settings.getCurrentRemovedItems().isEmpty() || !Settings.getRemovedItems().isEmpty()) {
             BufferedWriter writer = FileUtils.getFileWriter(String.format("%s/removed_items.txt", Settings.getStartingSeed()));
             if (writer == null) {

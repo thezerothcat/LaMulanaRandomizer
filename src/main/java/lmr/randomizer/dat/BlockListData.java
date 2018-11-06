@@ -36,7 +36,7 @@ public class BlockListData implements BlockContents {
     @Override
     public void writeBytes(DataOutputStream dataOutputStream) throws IOException {
         dataOutputStream.writeShort(idData);
-        dataOutputStream.writeShort(listSize); // todo: this might need to change
+        dataOutputStream.writeShort(listSize);
         for(int i = 0; i < data.size(); i++) {
             dataOutputStream.writeShort(data.get(i));
         }

@@ -33,7 +33,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
     private List<String> unassignedShopItemLocations = new ArrayList<>(); // Shop locations which still need something placed.
     private List<String> randomizedShops;
 
-    private List<String> shopsWithSacredOrbs;
+    private List<String> shopsWithTransformations;
 
     public CategorizedShopRandomizer() {
         randomizedShops = new ArrayList<>(DataFromFile.getAllShops());
@@ -62,14 +62,16 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             }
         }
 
-        shopsWithSacredOrbs = new ArrayList<>();
+        shopsWithTransformations = new ArrayList<>();
+        shopsWithTransformations.add(NON_MSX_SHOP_NAME);
+        shopsWithTransformations.add(MSX_SHOP_NAME);
     }
 
     public ShopRandomizer copy() {
         CategorizedShopRandomizer other = new CategorizedShopRandomizer();
         other.randomizedShops = new ArrayList<>(this.randomizedShops);
         other.unassignedShopItemLocations = new ArrayList<>(this.unassignedShopItemLocations);
-        other.shopsWithSacredOrbs = new ArrayList<>(this.shopsWithSacredOrbs);
+        other.shopsWithTransformations = new ArrayList<>(this.shopsWithTransformations);
         other.mapOfShopInventoryItemToContents = new HashMap<>(this.mapOfShopInventoryItemToContents);
         return other;
     }
@@ -157,7 +159,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             mapOfShopInventoryItemToContents.put(location, item);
             unassignedShopItemLocations.remove(location);
             if(item.contains("Sacred Orb")) {
-                shopsWithSacredOrbs.add(location.substring(0, location.indexOf(")") + 1));
+                shopsWithTransformations.add(location.substring(0, location.indexOf(")") + 1));
             }
             return true;
         }
@@ -165,8 +167,8 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
     }
 
     @Override
-    public boolean shopContainsSacredOrb(String shopName) {
-        return shopsWithSacredOrbs.contains(shopName);
+    public boolean shopHasTransformation(String shopName) {
+        return shopsWithTransformations.contains(shopName);
     }
 
     public List<String> getInitialUnassignedShopItemLocations() {

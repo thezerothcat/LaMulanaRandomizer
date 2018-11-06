@@ -3,6 +3,10 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
+1.42:
+-----------------------------
+Randomized backside doors so that any front-side door can lead to any back-side door.
+
 1.41:
 -----------------------------
 Minor logic updates and more inclusive subweapon pot randomization.

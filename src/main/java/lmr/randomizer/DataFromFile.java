@@ -40,6 +40,9 @@ public final class DataFromFile {
             "Shop 9 (Sun) Item 1", "Shop 11 (Moonlight) Item 1", "Shop 12 Alt (Spring) Item 3", "Shop 13 (Goddess) Item 1",
             "Shop 14 (Inferno) Item 1", "Shop 15 (Ruin) Item 1", "Shop 17 (Birth) Item 2", "Shop 18 (Lil Bro) Item 1",
             "Shop 19 (Big Bro) Item 1", "Shop 20 (Twin Labs) Item 1", "Shop 21 (Unsolvable) Item 1");
+    public static final List<String> GUARDIAN_DEFEATED_EVENTS = Arrays.asList("Event: Amphisbaena Defeated",
+            "Event: Sakit Defeated", "Event: Ellmac Defeated", "Event: Bahamut Defeated", "Event: Viy Defeated",
+            "Event: Palenque Defeated", "Event: Baphomet Defeated", "Event: Tiamat Defeated");
     public static List<Integer> RANDOM_ITEM_GRAPHICS = Arrays.asList(1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15,
             18, 19, 20, 21, 24, 25, 26, 27, 28, 29, 32, 33, 38, 39, 41, 42, 43, 44, 45, 47, 48, 49, 51, 52, 53, 54,
             55, 56, 5, 58, 59, 60, 61, 63, 64, 65, 66, 67, 68, 69, 73, 76, 91, 96, 97, 98, 99, 100, 102, 103, 104);
@@ -318,7 +321,7 @@ public final class DataFromFile {
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/event_reqs.txt", true);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/shop_reqs.txt", true);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/attack_reqs.txt", true);
-            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dead_ends.txt", true); // todo: remove this when dead ends are handled better
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dead_ends.txt", true);
             if(!Settings.getEnabledGlitches().isEmpty()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/location_reqs.txt", true);
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/item_reqs.txt", true);

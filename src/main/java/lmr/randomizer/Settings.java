@@ -43,6 +43,7 @@ public final class Settings {
     private boolean allowSubweaponStart;
     private boolean subweaponOnly;
     private boolean randomizeCursedChests;
+    private boolean randomizeBacksideDoors;
     private boolean replaceMapsWithWeights;
     private boolean automaticGrailPoints;
     private boolean automaticTranslations;
@@ -97,6 +98,7 @@ public final class Settings {
         allowSubweaponStart = false;
         subweaponOnly = false;
         randomizeCursedChests = false;
+        randomizeBacksideDoors = false;
         removeSpaulder = false;
         replaceMapsWithWeights = false;
         automaticHardmode = false;
@@ -386,6 +388,17 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.randomizeCursedChests = randomizeCursedChests;
+    }
+
+    public static boolean isRandomizeBacksideDoors() {
+        return singleton.randomizeBacksideDoors;
+    }
+
+    public static void setRandomizeBacksideDoors(boolean randomizeBacksideDoors, boolean update) {
+        if(update && randomizeBacksideDoors != singleton.randomizeBacksideDoors) {
+            singleton.changed = true;
+        }
+        singleton.randomizeBacksideDoors = randomizeBacksideDoors;
     }
 
     public static boolean isReplaceMapsWithWeights() { return singleton.replaceMapsWithWeights; }
@@ -716,6 +729,7 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeBacksideDoors, 20);
         booleanSettings |= processBooleanFlag.apply(singleton.ushumgalluAssist, 19);
         booleanSettings |= processBooleanFlag.apply(singleton.allowSubweaponStart, 18);
         booleanSettings |= processBooleanFlag.apply(singleton.requireFullAccess, 17);
@@ -792,6 +806,7 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.randomizeBacksideDoors = getBoolFlagFromInt.apply(booleanSettingsFlag, 20);
         singleton.ushumgalluAssist = getBoolFlagFromInt.apply(booleanSettingsFlag, 19);
         singleton.allowSubweaponStart = getBoolFlagFromInt.apply(booleanSettingsFlag, 18);
         singleton.requireFullAccess = getBoolFlagFromInt.apply(booleanSettingsFlag, 17);

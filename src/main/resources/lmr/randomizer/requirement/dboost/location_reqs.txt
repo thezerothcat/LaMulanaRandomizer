@@ -1,7 +1,7 @@
 Location: Temple of the Sun [East] => Location: Temple of the Sun [Main], Feather, Boost: Enemy
 Location: Tower of Ruin [Grail] => Location: Tower of Ruin [Southwest], Event: Thunderbird Defeated, Boost: Enemy
 Location: Gate of Illusion [Lower] => Location: Graveyard of the Giants [West], Feather, Grapple Claw, Glitch: Lamp Glitch, Boost: Environment
-Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Dracuet], Attack: Far, Location: Gate of Illusion [Fraud], Fruit of Eden, Boost: Item, Attack: Caltrops
-Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Dracuet], Attack: Far, Location: Gate of Illusion [Fraud], Fruit of Eden, Boost: Item, Attack: Bomb
-Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Dracuet], Attack: Bomb, Location: Gate of Illusion [Fraud], Fruit of Eden, Boost: Item # Bombs used for dboost as well as for breaking the block
+Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Dracuet], Attack: Far, Location: Gate of Illusion [Fraud], Event: Illusion Unlocked, Boost: Item, Attack: Caltrops
+Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Dracuet], Attack: Far, Location: Gate of Illusion [Fraud], Event: Illusion Unlocked, Boost: Item, Attack: Bomb
+Location: Gate of Illusion [Middle] => Location: Gate of Illusion [Dracuet], Attack: Bomb, Location: Gate of Illusion [Fraud], Event: Illusion Unlocked, Boost: Item # Bombs used for dboost as well as for breaking the block
 Location: Dimensional Corridor => Location: Twin Labyrinths [Upper], Crystal Skull, Attack: Bomb, Boost: Item

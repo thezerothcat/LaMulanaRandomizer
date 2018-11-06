@@ -1,8 +1,5 @@
 package lmr.randomizer;
 
-import lmr.randomizer.FileUtils;
-import lmr.randomizer.Settings;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -136,6 +133,10 @@ public final class Translations {
         return String.format(
                 getText(cursedLocation ? "locations.LocationCursedFormat" : "locations.LocationFormat"),
                 translation);
+    }
+
+    public static String getDoorLocation(String doorName) {
+        return getText("doors." + doorName.replace("Location: ", "").replaceAll("[ \\[\\]]", ""));
     }
 
     private static String getMapLocationText(String locationKey) {
