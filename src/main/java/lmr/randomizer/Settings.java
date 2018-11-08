@@ -610,6 +610,9 @@ public final class Settings {
     }
 
     public static Set<String> getCurrentRemovedItems() {
+        if(currentRemovedItems == null) {
+            return new HashSet<>(0);
+        }
         return currentRemovedItems;
     }
 
