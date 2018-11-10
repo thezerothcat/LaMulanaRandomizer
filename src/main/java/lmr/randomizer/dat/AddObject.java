@@ -820,6 +820,29 @@ public final class AddObject {
         littleBrotherShopScreen.getObjects().add(0, littleBrotherShopItemTimer);
     }
 
+    public static void addSurfaceCoverTimer(ObjectContainer screen) {
+        GameObject surfaceCoverTimer = new GameObject(screen);
+        surfaceCoverTimer.setId((short) 0x0b);
+        surfaceCoverTimer.getArgs().add((short) 0);
+        surfaceCoverTimer.getArgs().add((short) 0);
+        surfaceCoverTimer.setX(-1);
+        surfaceCoverTimer.setY(-1);
+
+        TestByteOperation testFlag = new TestByteOperation();
+        testFlag.setIndex(0x14c);
+        testFlag.setOp(ByteOp.FLAG_EQUALS);
+        testFlag.setValue((byte)0);
+        surfaceCoverTimer.getTestByteOperations().add(testFlag);
+
+        WriteByteOperation updateFlag = new WriteByteOperation();
+        updateFlag.setIndex(0x14c);
+        updateFlag.setValue((byte) 1);
+        updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+        surfaceCoverTimer.getWriteByteOperations().add(updateFlag);
+
+        screen.getObjects().add(0, surfaceCoverTimer);
+    }
+
     /**
      * Add Diary updated timer to Xelpud's screen.
      * @param objectContainer the screen to add the objects to

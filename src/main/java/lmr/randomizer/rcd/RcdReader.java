@@ -595,7 +595,6 @@ public final class RcdReader {
                 }
                 if(screenIndex == 1) {
                     AddObject.addDiaryTalismanConversationTimers(screen);
-//                    AddObject.addGrailWarpTimers(screen);
                     if (Settings.isAutomaticHardmode()) {
                         AddObject.addAutomaticHardmode(screen);
                     }
@@ -611,6 +610,11 @@ public final class RcdReader {
                 if (Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
                     AddObject.addRandomWeaponKillTimer(screen, false);
                 }
+            }
+        }
+        else if(zoneIndex == 5 && roomIndex == 9 && screenIndex == 1) {
+            if(Settings.isRandomizeBacksideDoors()) {
+                AddObject.addSurfaceCoverTimer(screen);
             }
         }
         else if(zoneIndex == 9 && roomIndex == 2 && screenIndex == 0) {
