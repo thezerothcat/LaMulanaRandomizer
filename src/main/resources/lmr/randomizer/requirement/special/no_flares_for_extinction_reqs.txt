@@ -1,4 +1,4 @@
-Map (Chamber of Extinction) => Location: Temple of the Sun [East], Event: Flooded Temple of the Sun, Attack: Chest-Any
+Map (Chamber of Extinction) => Location: Temple of the Sun [East], Event: Flooded Temple of the Sun, Origin Seal, Attack: Chest-Any
 Map (Chamber of Extinction) => Location: Temple of the Sun [East], Glitch: Raindrop, Attack: Chest-Any
 Map (Chamber of Extinction) => Location: Temple of the Sun [East], Glitch: Lamp Glitch, Attack: Chest-Any
 Map (Chamber of Extinction) => Location: Chamber of Extinction [Main], Glitch: Raindrop, Attack: Chest-Any
