@@ -453,6 +453,11 @@ public final class GameDataTracker {
                         break;
                     }
                 }
+                else if(flagTest.getIndex() == 0x14c) {
+                    if(Settings.isRandomizeBacksideDoors()) {
+                        gameObject.getArgs().set(4, (short)2);
+                    }
+                }
             }
         } else if (gameObject.getId() == 0x9b) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {

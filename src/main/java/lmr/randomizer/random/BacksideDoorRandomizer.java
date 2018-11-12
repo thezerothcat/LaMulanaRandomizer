@@ -14,17 +14,20 @@ import java.util.*;
 public class BacksideDoorRandomizer {
     Map<String, String> backsideDoorLocationMap;
     Map<String, Integer> backsideDoorBossMap;
+    Map<String, String> mapOfDoorToPairDoor;
     private Map<String, NodeWithRequirements> mapOfNodeNameToDoorRequirementsObject;
 
     public BacksideDoorRandomizer() {
         backsideDoorLocationMap = new HashMap<>(14);
         backsideDoorBossMap = new HashMap<>(14);
+        mapOfDoorToPairDoor = new HashMap<>(14);
         mapOfNodeNameToDoorRequirementsObject = new HashMap<>(14);
     }
 
     public BacksideDoorRandomizer(BacksideDoorRandomizer backsideDoorRandomizer) {
         backsideDoorLocationMap = new HashMap<>(backsideDoorRandomizer.backsideDoorLocationMap);
         backsideDoorBossMap = new HashMap<>(backsideDoorRandomizer.backsideDoorBossMap);
+        mapOfDoorToPairDoor = new HashMap<>(backsideDoorRandomizer.mapOfDoorToPairDoor);
         mapOfNodeNameToDoorRequirementsObject = copyRequirementsMap(backsideDoorRandomizer.mapOfNodeNameToDoorRequirementsObject);
     }
 
@@ -36,9 +39,9 @@ public class BacksideDoorRandomizer {
         return copyMap;
     }
 
-    public void determineBacksideDoors(Random random) {
+    public void determineDoorDestinations(Random random) {
         if(Settings.isRandomizeBacksideDoors()) {
-            randomizeBacksideDoors(random);
+            randomizeDoorDestinations(random);
         }
         else {
             String fronstideDoor;
@@ -48,42 +51,107 @@ public class BacksideDoorRandomizer {
                 backsideDoor = "Door: B" + i;
                 backsideDoorLocationMap.put(fronstideDoor, getDoorLocation(fronstideDoor));
                 backsideDoorLocationMap.put(backsideDoor, getDoorLocation(backsideDoor));
+            }
+        }
+    }
+
+    public void determineDoorBosses(Random random) {
+        if(Settings.isRandomizeBacksideDoors()) {
+            backsideDoorBossMap.clear();
+            randomizeBosses(random);
+        }
+        else {
+            String fronstideDoor;
+            String backsideDoor;
+            for(int i = 1; i <= 7; i++) {
+                fronstideDoor = "Door: F" + i;
+                backsideDoor = "Door: B" + i;
                 backsideDoorBossMap.put(fronstideDoor, i);
                 backsideDoorBossMap.put(backsideDoor, i);
             }
         }
 
+        mapOfNodeNameToDoorRequirementsObject.clear();
         for(String door : backsideDoorLocationMap.keySet()) {
             addToMap(door, backsideDoorLocationMap.get(door), getBoss(backsideDoorBossMap.get(door)));
         }
     }
 
-    private void randomizeBacksideDoors(Random random) {
-        List<String> frontsideDoors = new ArrayList<>(6);
-        frontsideDoors.add("Door: F1");
-        frontsideDoors.add("Door: F2");
-        frontsideDoors.add("Door: F3");
-        frontsideDoors.add("Door: F4");
-        frontsideDoors.add("Door: F5");
-        frontsideDoors.add("Door: F6");
-        frontsideDoors.add("Door: F7");
+    private void randomizeDoorDestinations(Random random) {
+        List<String> riskDoors = new ArrayList<>(4);
+        riskDoors.add("Door: F1");
+        riskDoors.add("Door: B7");
 
-        List<String> backsideDoors = new ArrayList<>(6);
-        backsideDoors.add("Door: B1");
-        backsideDoors.add("Door: B2");
-        backsideDoors.add("Door: B3");
-        backsideDoors.add("Door: B4");
-        backsideDoors.add("Door: B5");
-        backsideDoors.add("Door: B6");
+        List<String> unassignedDoors = new ArrayList<>(14);
+        unassignedDoors.add("Door: B1");
+        unassignedDoors.add("Door: B2");
+        unassignedDoors.add("Door: B3");
+        unassignedDoors.add("Door: B4");
+        unassignedDoors.add("Door: B5");
+        unassignedDoors.add("Door: B6");
+        unassignedDoors.add("Door: F2");
+        unassignedDoors.add("Door: F3");
+        unassignedDoors.add("Door: F5");
 
-        List<String> unplacedDoors = new ArrayList<>(7);
-        unplacedDoors.add("Door: B2");
-        unplacedDoors.add("Door: B3");
-        unplacedDoors.add("Door: B4");
-        unplacedDoors.add("Door: B5");
-        unplacedDoors.add("Door: B6");
-        unplacedDoors.add("Door: B7");
+        if(Settings.getEnabledGlitches().contains("Lamp Glitch")) {
+            riskDoors.add("Door: F4");
+        }
+        else {
+            unassignedDoors.add("Door: F4");
+        }
 
+        if(Settings.getEnabledGlitches().contains("Raindrop")) {
+            unassignedDoors.add("Door: F6");
+            unassignedDoors.add("Door: F7");
+        }
+        else if (random.nextBoolean()) {
+            riskDoors.add("Door: F6");
+            unassignedDoors.add("Door: F7");
+        } else {
+            unassignedDoors.add("Door: F6");
+            riskDoors.add("Door: F7");
+        }
+
+        String door1;
+        String door2;
+        String key1;
+        String key2;
+        while(!riskDoors.isEmpty()) {
+            door1 = riskDoors.get(random.nextInt(riskDoors.size()));
+            riskDoors.remove(door1);
+
+            door2 = unassignedDoors.get(random.nextInt(unassignedDoors.size()));
+            unassignedDoors.remove(door2);
+
+            key1 = swapFrontToBack(door2);
+            key2 = swapFrontToBack(door1);
+
+            backsideDoorLocationMap.put(key1, getDoorLocation(door1));
+            backsideDoorLocationMap.put(key2, getDoorLocation(door2));
+
+            mapOfDoorToPairDoor.put(key1, key2);
+            mapOfDoorToPairDoor.put(key2, key1);
+        }
+
+        while(!unassignedDoors.isEmpty()) {
+            door1 = unassignedDoors.get(random.nextInt(unassignedDoors.size()));
+            unassignedDoors.remove(door1);
+
+            door2 = unassignedDoors.get(random.nextInt(unassignedDoors.size()));
+            unassignedDoors.remove(door2);
+
+            key1 = swapFrontToBack(door2);
+            key2 = swapFrontToBack(door1);
+
+            backsideDoorLocationMap.put(key1, getDoorLocation(door1));
+            backsideDoorLocationMap.put(key2, getDoorLocation(door2));
+
+            mapOfDoorToPairDoor.put(key1, key2);
+            mapOfDoorToPairDoor.put(key2, key1);
+        }
+    }
+
+    private void randomizeBosses(Random random) {
         List<Integer> bosses = new ArrayList<>(7);
         bosses.add(1);
         bosses.add(2);
@@ -93,76 +161,34 @@ public class BacksideDoorRandomizer {
         bosses.add(6);
         bosses.add(7);
 
-        String doorToPlace = "Door: B1";
-        String backsideDoor = backsideDoors.get(random.nextInt(backsideDoors.size()));
-        backsideDoors.remove(backsideDoor);
-        String location = getDoorLocation(backsideDoor);
-        String reverseLocation = getDoorLocation(doorToPlace.replace("Door: B", "Door: F"));
-        String frontsideDoor = getDoorToLocation(location);
-        frontsideDoors.remove(frontsideDoor);
-        int bossNumber = bosses.get(random.nextInt(bosses.size()));
-        bosses.remove((Integer)bossNumber);
-        backsideDoorLocationMap.put(doorToPlace, location);
-        backsideDoorLocationMap.put(frontsideDoor, reverseLocation);
-        backsideDoorBossMap.put(doorToPlace, bossNumber);
-        backsideDoorBossMap.put(frontsideDoor, bossNumber);
+        List<String> doors = new ArrayList<>(7);
+        doors.add("Door: F1");
+        doors.add("Door: F2");
+        doors.add("Door: F3");
+        doors.add("Door: F4");
+        doors.add("Door: F5");
+        doors.add("Door: F6");
+        doors.add("Door: F7");
+        doors.add("Door: B1");
+        doors.add("Door: B2");
+        doors.add("Door: B3");
+        doors.add("Door: B4");
+        doors.add("Door: B5");
+        doors.add("Door: B6");
+        doors.add("Door: B7");
 
-        if(!Settings.getEnabledGlitches().contains("Lamp Glitch")) {
-            doorToPlace = "Door: B4";
-            backsideDoor = backsideDoors.get(random.nextInt(backsideDoors.size()));
-            backsideDoors.remove(backsideDoor);
-            location = getDoorLocation(backsideDoor);
-            reverseLocation = getDoorLocation(doorToPlace.replace("Door: B", "Door: F"));
-            frontsideDoor = getDoorToLocation(location);
-            frontsideDoors.remove(frontsideDoor);
-            bossNumber = bosses.get(random.nextInt(bosses.size()));
-            bosses.remove((Integer)bossNumber);
-            backsideDoorLocationMap.put(doorToPlace, location);
-            backsideDoorLocationMap.put(frontsideDoor, reverseLocation);
-            backsideDoorBossMap.put(doorToPlace, bossNumber);
-            backsideDoorBossMap.put(frontsideDoor, bossNumber);
-            unplacedDoors.remove(doorToPlace);
-        }
-
-        if(!Settings.getEnabledGlitches().contains("Raindrop")) {
-            if(random.nextBoolean()) {
-                doorToPlace = "Door: B6";
-            }
-            else {
-                doorToPlace = "Door: B7";
-            }
-            backsideDoor = backsideDoors.get(random.nextInt(backsideDoors.size()));
-            backsideDoors.remove(backsideDoor);
-            location = getDoorLocation(backsideDoor);
-            reverseLocation = getDoorLocation(doorToPlace.replace("Door: B", "Door: F"));
-            frontsideDoor = getDoorToLocation(location);
-            frontsideDoors.remove(frontsideDoor);
-            bossNumber = bosses.get(random.nextInt(bosses.size()));
-            bosses.remove((Integer)bossNumber);
-            backsideDoorLocationMap.put(doorToPlace, location);
-            backsideDoorLocationMap.put(frontsideDoor, reverseLocation);
-            backsideDoorBossMap.put(doorToPlace, bossNumber);
-            backsideDoorBossMap.put(frontsideDoor, bossNumber);
-            unplacedDoors.remove(doorToPlace);
-        }
-
-        backsideDoors.add("Door: B7"); // This one is dangerous, so we'll add it only now that we've placed the dangerous frontside doors.
-
-        while(!unplacedDoors.isEmpty()) {
-            doorToPlace = unplacedDoors.get(random.nextInt(unplacedDoors.size()));
-            backsideDoor = backsideDoors.get(random.nextInt(backsideDoors.size()));
-            backsideDoors.remove(backsideDoor);
-            location = getDoorLocation(backsideDoor);
-            reverseLocation = getDoorLocation(doorToPlace.replace("Door: B", "Door: F"));
-            frontsideDoor = getDoorToLocation(location);
-            frontsideDoors.remove(frontsideDoor);
-            bossNumber = bosses.get(random.nextInt(bosses.size()));
-            bosses.remove((Integer)bossNumber);
-            backsideDoorLocationMap.put(doorToPlace, location);
-            backsideDoorLocationMap.put(frontsideDoor, reverseLocation);
-            backsideDoorBossMap.put(doorToPlace, bossNumber);
-            backsideDoorBossMap.put(frontsideDoor, bossNumber);
-            unplacedDoors.remove(doorToPlace);
+        int boss;
+        String door;
+        String reverseDoor;
+        while(!bosses.isEmpty()) {
+            boss = bosses.get(random.nextInt(bosses.size()));
+            bosses.remove((Integer)boss);
+            door = doors.get(random.nextInt(doors.size()));
+            reverseDoor = mapOfDoorToPairDoor.get(door);
+            doors.remove(door);
+            doors.remove(reverseDoor);
+            backsideDoorBossMap.put(door, boss);
+            backsideDoorBossMap.put(reverseDoor, boss);
         }
     }
 
@@ -352,6 +378,19 @@ public class BacksideDoorRandomizer {
             return "Event: Baphomet Defeated";
         }
         return null;
+    }
+
+    private String swapFrontToBack(String door) {
+        return door.startsWith("Door: B")
+                ? door.replace("Door: B", "Door: F")
+                : door.replace("Door: F", "Door: B");
+    }
+
+    public void logLocations() throws IOException {
+        for(String door : backsideDoorLocationMap.keySet()) {
+            FileUtils.log(door + ": " + backsideDoorLocationMap.get(door));
+        }
+        FileUtils.flush();
     }
 
     public void outputLocations(int attemptNumber) throws IOException {

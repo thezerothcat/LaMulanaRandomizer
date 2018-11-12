@@ -744,6 +744,10 @@ public class Main {
         int totalItemsRemoved = getTotalItemsRemoved(random);
         determineStartingWeapon(random);
 
+        BacksideDoorRandomizer backsideDoorRandomizer = new BacksideDoorRandomizer();
+        backsideDoorRandomizer.determineDoorDestinations(random);
+        backsideDoorRandomizer.logLocations();
+
         Set<String> initiallyAccessibleItems = getInitiallyAvailableItems();
 
         int attempt = 0;
@@ -759,13 +763,13 @@ public class Main {
             dialog.setTitle(String.format(Translations.getText("progress.shuffling.title"), attempt));
             dialog.progressBar.setIndeterminate(true);
 
+            backsideDoorRandomizer.determineDoorBosses(random);
+
             ItemRandomizer itemRandomizer = new ItemRandomizer();
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
-            BacksideDoorRandomizer backsideDoorRandomizer = new BacksideDoorRandomizer();
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer);
             accessChecker.initExitRequirements();
 
-            backsideDoorRandomizer.determineBacksideDoors(random);
             List<String> startingNodes = getStartingNodes(Settings.isSubweaponOnly());
 
             if(!initiallyAccessibleItems.isEmpty()) {
@@ -1125,6 +1129,24 @@ public class Main {
                 }
             }
         }
+//        saveData[0x11 + 0x064] = 1;
+//        saveData[0x11 + 0x065] = 1;
+//        saveData[0x11 + 0x066] = 1;
+//        saveData[0x11 + 0x067] = 1;
+//        saveData[0x11 + 0x068] = 1;
+//        saveData[0x11 + 0x069] = 1;
+//        saveData[0x11 + 0x06a] = 1;
+//        saveData[0x11 + 0x06b] = 1;
+//        saveData[0x11 + 0x06c] = 1;
+//        saveData[0x11 + 0x06d] = 1;
+//        saveData[0x11 + 0x06e] = 1;
+//        saveData[0x11 + 0x06f] = 1;
+//        saveData[0x11 + 0x070] = 1;
+//        saveData[0x11 + 0x071] = 1;
+//        saveData[0x11 + 0x072] = 1;
+//        saveData[0x11 + 0x073] = 1;
+//        saveData[0x11 + 0x074] = 1;
+//        saveData[0x11 + 0x075] = 1;
 
         try {
             DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(
@@ -1240,8 +1262,8 @@ public class Main {
             // Whether it's a removed item, starting item, or a custom placed item, we don't want it here.
             startingWeapons.remove(customPlacement.getContents());
         }
-
         Settings.setCurrentStartingWeapon(startingWeapons.get(random.nextInt(startingWeapons.size())));
+        FileUtils.log("Selected starting weapon: " + Settings.getCurrentStartingWeapon());
     }
 
     private static void determineRemovedItems(int totalItemsRemoved, Random random) {

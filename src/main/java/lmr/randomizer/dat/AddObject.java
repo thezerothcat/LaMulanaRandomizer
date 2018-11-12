@@ -820,27 +820,33 @@ public final class AddObject {
         littleBrotherShopScreen.getObjects().add(0, littleBrotherShopItemTimer);
     }
 
-    public static void addSurfaceCoverTimer(ObjectContainer screen) {
-        GameObject surfaceCoverTimer = new GameObject(screen);
-        surfaceCoverTimer.setId((short) 0x0b);
-        surfaceCoverTimer.getArgs().add((short) 0);
-        surfaceCoverTimer.getArgs().add((short) 0);
-        surfaceCoverTimer.setX(-1);
-        surfaceCoverTimer.setY(-1);
+    public static void addSurfaceCoverDetector(ObjectContainer screen) {
+        GameObject surfaceCoverDetector = new GameObject(screen);
+        surfaceCoverDetector.setId((short)0x14);
+        surfaceCoverDetector.setX(420);
+        surfaceCoverDetector.setY(1340);
 
-        TestByteOperation testFlag = new TestByteOperation();
-        testFlag.setIndex(0x14c);
-        testFlag.setOp(ByteOp.FLAG_EQUALS);
-        testFlag.setValue((byte)0);
-        surfaceCoverTimer.getTestByteOperations().add(testFlag);
+        surfaceCoverDetector.getArgs().add((short)0); // seconds wait
+        surfaceCoverDetector.getArgs().add((short)0); // frames wait
+        surfaceCoverDetector.getArgs().add((short)0); // continuous/total
+        surfaceCoverDetector.getArgs().add((short)0); // interaction type 0 = any time except paused 1 = 2 = 3 = 4 = just be on the ground, ok. default: sleep
 
-        WriteByteOperation updateFlag = new WriteByteOperation();
-        updateFlag.setIndex(0x14c);
-        updateFlag.setValue((byte) 1);
-        updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-        surfaceCoverTimer.getWriteByteOperations().add(updateFlag);
+        surfaceCoverDetector.getArgs().add((short)3); // graphical tile width
+        surfaceCoverDetector.getArgs().add((short)5); // graphical tile height
 
-        screen.getObjects().add(0, surfaceCoverTimer);
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x14c);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        surfaceCoverDetector.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x14c);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(1);
+        surfaceCoverDetector.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(surfaceCoverDetector);
     }
 
     /**

@@ -555,8 +555,15 @@ public final class RcdReader {
     }
 
     private static void addCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
-        if(zoneIndex == 1 && roomIndex == 2 && screenIndex == 1) {
-            AddObject.addStartingItems(screen);
+        if(zoneIndex == 1) {
+            if(roomIndex == 2 && screenIndex == 1) {
+                AddObject.addStartingItems(screen);
+            }
+            else if(roomIndex == 4 && screenIndex == 2) {
+                if(Settings.isRandomizeBacksideDoors()) {
+                    AddObject.addSurfaceCoverDetector(screen);
+                }
+            }
         }
         else if(zoneIndex == 2 && roomIndex == 2 && screenIndex == 0) {
             AddObject.addHardmodeToggleWeights(screen);
@@ -610,11 +617,6 @@ public final class RcdReader {
                 if (Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
                     AddObject.addRandomWeaponKillTimer(screen, false);
                 }
-            }
-        }
-        else if(zoneIndex == 5 && roomIndex == 9 && screenIndex == 1) {
-            if(Settings.isRandomizeBacksideDoors()) {
-                AddObject.addSurfaceCoverTimer(screen);
             }
         }
         else if(zoneIndex == 9 && roomIndex == 2 && screenIndex == 0) {
