@@ -1273,7 +1273,7 @@ public class Main {
         }
         if(totalItemsRemoved < 1) {
             Settings.setCurrentRemovedItems(removedItems);
-            Settings.setSubweaponOnly(false);
+            Settings.setSubweaponOnly(isSubweaponOnly());
             return;
         }
         List<String> removableItems = new ArrayList<>(DataFromFile.getRandomRemovableItems());

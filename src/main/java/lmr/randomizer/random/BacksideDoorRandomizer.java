@@ -94,10 +94,10 @@ public class BacksideDoorRandomizer {
         unassignedDoors.add("Door: F5");
 
         if(Settings.getEnabledGlitches().contains("Lamp Glitch")) {
-            riskDoors.add("Door: F4");
+            unassignedDoors.add("Door: F4");
         }
         else {
-            unassignedDoors.add("Door: F4");
+            riskDoors.add("Door: F4");
         }
 
         if(Settings.getEnabledGlitches().contains("Raindrop")) {
