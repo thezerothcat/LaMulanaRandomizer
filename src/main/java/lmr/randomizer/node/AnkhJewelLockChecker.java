@@ -14,7 +14,7 @@ public class AnkhJewelLockChecker implements Runnable {
     @Override
     public void run() {
         while (!accessChecker.getQueuedUpdates().isEmpty()) {
-            accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next());
+            accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next(), null);
         }
     }
 

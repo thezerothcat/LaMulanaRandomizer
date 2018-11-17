@@ -149,13 +149,14 @@ public class AccessChecker {
         return Settings.getRemovedItems().isEmpty() && Settings.getCurrentRemovedItems().isEmpty();
     }
 
-    public void computeAccessibleNodes(String newState) {
-        computeAccessibleNodes(newState, true);
+    public void computeAccessibleNodes(String newState, Integer attemptNumber) {
+        computeAccessibleNodes(newState, true, attemptNumber);
     }
 
-    public void computeAccessibleNodes(String newState, boolean fullValidation) {
+    public void computeAccessibleNodes(String newState, boolean fullValidation, Integer attemptNumber) {
         String stateToUpdate = newState;
         if(fullValidation) {
+            FileUtils.logDetail("Checking progress for node " + newState, attemptNumber);
             stateToUpdate = checkState(stateToUpdate);
             if(stateToUpdate == null) {
                 return;
@@ -170,7 +171,8 @@ public class AccessChecker {
         for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
             node = mapOfNodeNameToRequirementsObject.get(nodeName);
             if(node.updateRequirements(stateToUpdate)) {
-                handleNodeAccess(nodeName, node.getType(), fullValidation);
+                FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
+                handleNodeAccess(nodeName, node.getType(), fullValidation, attemptNumber);
                 nodesToRemove.add(nodeName);
             }
         }
@@ -231,7 +233,7 @@ public class AccessChecker {
                 || stateToUpdate.contains("Palenque Defeated") || stateToUpdate.contains("Tiamat Defeated")) {
             bossesDefeated += 1;
             if(bossesDefeated == 8 && !accessedNodes.contains("Event: All Bosses Defeated")) {
-                computeAccessibleNodes("Event: All Bosses Defeated");
+                computeAccessibleNodes("Event: All Bosses Defeated", null);
             }
         }
         return stateToUpdate;
@@ -246,7 +248,7 @@ public class AccessChecker {
         for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
             node = mapOfNodeNameToRequirementsObject.get(nodeName);
             if(node.updateRequirements(bossEventNodeName)) {
-                handleNodeAccess(nodeName, node.getType(), true);
+                handleNodeAccess(nodeName, node.getType(), true, null);
                 nodesToRemove.add(nodeName);
             }
         }
@@ -273,7 +275,7 @@ public class AccessChecker {
             for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
                 node = mapOfNodeNameToRequirementsObject.get(nodeName);
                 if(node.updateRequirements("Event: All Bosses Defeated")) {
-                    handleNodeAccess(nodeName, node.getType(), true);
+                    handleNodeAccess(nodeName, node.getType(), true, null);
                     nodesToRemove.add(nodeName);
                 }
             }
@@ -291,7 +293,7 @@ public class AccessChecker {
         for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
             node = mapOfNodeNameToRequirementsObject.get(nodeName);
             if(node.updateRequirements(bossDefeatedNodeName)) {
-                handleNodeAccess(nodeName, node.getType(), true);
+                handleNodeAccess(nodeName, node.getType(), true, null);
                 nodesToRemove.add(nodeName);
             }
         }
@@ -300,7 +302,7 @@ public class AccessChecker {
         }
     }
 
-    private void handleNodeAccess(String nodeName, NodeType nodeType, boolean fullValidation) {
+    private void handleNodeAccess(String nodeName, NodeType nodeType, boolean fullValidation, Integer attemptNumber) {
         switch (nodeType) {
             case ITEM_LOCATION:
                 if(nodeName.startsWith("Coin:") && !Settings.isRandomizeCoinChests()) {
@@ -315,6 +317,7 @@ public class AccessChecker {
                         throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
                     }
                     if (!Settings.getCurrentRemovedItems().contains(item) && !Settings.getRemovedItems().contains(item)) {
+                        FileUtils.logDetail("Found item " + item, attemptNumber);
                         queuedUpdates.add(item);
                     }
                 }
@@ -324,7 +327,7 @@ public class AccessChecker {
                 break;
             case MAP_LOCATION:
                 if(fullValidation) {
-                    queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName));
+                    queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
                 }
             case STATE:
             case EXIT:
@@ -332,7 +335,7 @@ public class AccessChecker {
                 if(fullValidation) {
                     queuedUpdates.add(nodeName);
                     if(DataFromFile.GUARDIAN_DEFEATED_EVENTS.contains(nodeName)) {
-                        queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName));
+                        queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
                     }
                 }
                 else {
@@ -350,6 +353,7 @@ public class AccessChecker {
                         if (!accessedNodes.contains(shopItem) && !queuedUpdates.contains(shopItem)
                                 && !Settings.getRemovedItems().contains(shopItem)
                                 && !Settings.getCurrentRemovedItems().contains(shopItem)) {
+                            FileUtils.logDetail("Found item " + shopItem, attemptNumber);
                             queuedUpdates.add(shopItem);
                         }
                     }

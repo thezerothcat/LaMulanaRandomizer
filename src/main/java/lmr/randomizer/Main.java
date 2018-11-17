@@ -32,6 +32,9 @@ public class Main {
     public static void main(String[] args) {
         try {
             FileUtils.readSettings();
+            if(args.length > 0) {
+                FileUtils.setDetailedLogging(Integer.parseInt(args[0]));
+            }
             Translations.initTranslations();
         }
         catch (Exception ex) {
@@ -328,23 +331,40 @@ public class Main {
                     return;
                 }
 
+                FileUtils.logFlush("Copying rcd file from seed folder to La-Mulana install directory");
                 FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/script.rcd"));
                 Files.copy(new File(String.format("%s/script.rcd", Settings.getStartingSeed())).toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
+                FileUtils.logFlush("rcd copy complete");
 
+                FileUtils.logFlush("Copying dat file from seed folder to La-Mulana install directory");
                 fileOutputStream = new FileOutputStream(new File(String.format("%s/data/language/%s/script_code.dat",
                         Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
                 Files.copy(new File(String.format("%s/script_code.dat", Settings.getStartingSeed())).toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
+                FileUtils.logFlush("dat copy complete");
+
+                FileUtils.logFlush("Copying save file from seed folder to La-Mulana save directory");
+                if(Settings.isRandomizeMainWeapon()) {
+                    File saveFile = new File(String.format("%s/lm_00.sav", Settings.getStartingSeed()));
+                    if(saveFile.exists()) {
+                        fileOutputStream = new FileOutputStream(
+                                new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir())));
+                        Files.copy(saveFile.toPath(), fileOutputStream);
+                        fileOutputStream.flush();
+                        fileOutputStream.close();
+                    }
+                }
+                FileUtils.logFlush("Save file copy complete");
 
                 FileUtils.closeAll();
             }
             catch (Exception ex) {
-                FileUtils.log("Unable to copy files to La-Mulana install:" + ex.getMessage());
+                FileUtils.log("Unable to update game files for La-Mulana:" + ex.getMessage());
                 FileUtils.logException(ex);
-                throw new RuntimeException("Unable to back up script.rcd. Please see logs for more information.");
+                throw new RuntimeException("Unable to update game files for La-Mulana. Please see logs for more information.");
             }
         }
 
@@ -776,11 +796,11 @@ public class Main {
                 DataFromFile.clearInitialLocations();
                 AccessChecker initiallyAccessibleLocationFinder = new AccessChecker(accessChecker, true);
                 for (String startingNode : startingNodes) {
-                    initiallyAccessibleLocationFinder.computeAccessibleNodes(startingNode, false);
+                    initiallyAccessibleLocationFinder.computeAccessibleNodes(startingNode, false, null);
                 }
                 while (!initiallyAccessibleLocationFinder.getQueuedUpdates().isEmpty()) {
                     // Get some additional access based on glitch logic/settings access
-                    initiallyAccessibleLocationFinder.computeAccessibleNodes(initiallyAccessibleLocationFinder.getQueuedUpdates().iterator().next(), false);
+                    initiallyAccessibleLocationFinder.computeAccessibleNodes(initiallyAccessibleLocationFinder.getQueuedUpdates().iterator().next(), false, null);
                 }
             }
 
@@ -812,12 +832,12 @@ public class Main {
             }
 
             for(String startingNode : startingNodes) {
-                accessChecker.computeAccessibleNodes(startingNode);
+                accessChecker.computeAccessibleNodes(startingNode, attempt);
             }
 
             // Add backside door nodes - we didn't need these for initially-accessible stuff since that can't require boss fights
             for(String startingNode : backsideDoorRandomizer.getSettingNodes()) {
-                accessChecker.computeAccessibleNodes(startingNode);
+                accessChecker.computeAccessibleNodes(startingNode, attempt);
             }
 
             boolean ankhJewelLock = false;
@@ -829,7 +849,7 @@ public class Main {
 
             if(!ankhJewelLock) {
                 while(!accessChecker.getQueuedUpdates().isEmpty()) {
-                    accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next());
+                    accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next(), attempt);
                     if (accessChecker.getQueuedUpdates().isEmpty()) {
                         if (!accessChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
                             ankhJewelLock = true;
@@ -862,11 +882,17 @@ public class Main {
                 dialog.updateProgress(90, Translations.getText("progress.read"));
 
                 List<Zone> rcdData = RcdReader.getRcdScriptInfo();
+                FileUtils.logFlush("rcd file successfully read");
+
                 List<Block> datInfo = DatReader.getDatScriptInfo();
+                FileUtils.logFlush("dat file successfully read");
 
                 dialog.updateProgress(95, Translations.getText("progress.write"));
                 itemRandomizer.updateFiles(random);
+                FileUtils.log("Updated item location data");
+
                 shopRandomizer.updateFiles(datInfo, Settings.isSubweaponOnly(), random);
+                FileUtils.log("Updated shop data");
 
                 List<String> availableSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
                 availableSubweapons.removeAll(Settings.getRemovedItems());
@@ -874,21 +900,30 @@ public class Main {
                 if(!availableSubweapons.isEmpty()) {
                     GameDataTracker.updateSubweaponPot(availableSubweapons.get(random.nextInt(availableSubweapons.size())));
                 }
+                FileUtils.log("Updated subweapon pot data");
 
                 if(Settings.isRandomizeBacksideDoors()) {
                     backsideDoorRandomizer.updateBacksideDoors();
                 }
+                FileUtils.log("Updated backside door data");
 
 //                if(Settings.isRandomizeMantras()) {
 //                    GameDataTracker.randomizeMantras(random);
 //                }
+                FileUtils.logFlush("Writing rcd file");
                 RcdWriter.writeRcd(rcdData);
+
+                FileUtils.log("rcd file successfully written");
+                FileUtils.logFlush("Writing dat file");
+
                 DatWriter.writeDat(datInfo);
+                FileUtils.logFlush("dat file successfully written");
                 if(Settings.isRandomizeMainWeapon()) {
                     backupSaves();
                     writeSaveFile();
                 }
 
+                FileUtils.logFlush("Copying settings file");
                 File settingsFile = new File("randomizer-config.txt");
                 if(settingsFile.exists()) {
                     FileOutputStream fileOutputStream = new FileOutputStream(
@@ -896,17 +931,6 @@ public class Main {
                     Files.copy(settingsFile.toPath(), fileOutputStream);
                     fileOutputStream.flush();
                     fileOutputStream.close();
-                }
-
-                if(Settings.isRandomizeMainWeapon()) {
-                    File saveFile = new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir()));
-                    if(saveFile.exists()) {
-                        FileOutputStream fileOutputStream = new FileOutputStream(
-                                new File(String.format("%s/lm_00.sav", Settings.getStartingSeed())));
-                        Files.copy(saveFile.toPath(), fileOutputStream);
-                        fileOutputStream.flush();
-                        fileOutputStream.close();
-                    }
                 }
 
                 dialog.updateProgress(100, Translations.getText("progress.done"));
@@ -1001,19 +1025,23 @@ public class Main {
     }
 
     private static void backupSaves() {
+        FileUtils.logFlush("Backing up save files");
         try {
             // Make lm_00.sav backup
             File existingSave = new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir()));
             if(existingSave.exists()) {
                 File firstBackupSave = new File(String.format("%s/lm_00.sav.lmr.orig.bak", Settings.getLaMulanaSaveDir()));
                 if(!firstBackupSave.exists()) {
+                    FileUtils.logFlush("Backing up first save file as lm_00.sav.lmr.orig.bak");
                     Files.copy(existingSave.toPath(), firstBackupSave.toPath());
                 }
                 File backupSave = new File(String.format("%s/lm_00.sav.lmr.bak", Settings.getLaMulanaSaveDir()));
                 if(backupSave.exists()) {
+                    FileUtils.logFlush("Deleting existing backup save");
                     Files.delete(backupSave.toPath());
                 }
                 Files.copy(existingSave.toPath(), backupSave.toPath());
+                FileUtils.logFlush("Current backup save created");
             }
         }
         catch (Exception ex) {
@@ -1027,6 +1055,7 @@ public class Main {
         byte[] saveData = buildNewSave();
         String startingWeapon = Settings.getCurrentStartingWeapon();
         if(!"Whip".equals(startingWeapon)) {
+            FileUtils.logFlush("Updating weapon data");
             saveData[4113] = (byte)-1; // word + 0x1011; remove whip
             saveData[4114] = (byte)-1; // word + 0x1011; remove whip
 
@@ -1148,12 +1177,14 @@ public class Main {
 //        saveData[0x11 + 0x074] = 1;
 //        saveData[0x11 + 0x075] = 1;
 
+        FileUtils.logFlush("Writing save file");
         try {
             DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(
-                    String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir())));
+                    String.format("%s/lm_00.sav", Settings.getStartingSeed())));
             dataOutputStream.write(saveData);
             dataOutputStream.flush();
             dataOutputStream.close();
+            FileUtils.logFlush("Save file created");
         }
         catch (Exception ex) {
             FileUtils.log("Problem modifying save file for randomized main weapons: " + ex.getMessage());

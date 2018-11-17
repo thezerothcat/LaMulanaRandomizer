@@ -227,7 +227,7 @@ public class BacksideDoorRandomizer {
         return settingNodes;
     }
 
-    public List<String> getAvailableNodes(String stateToUpdate) {
+    public List<String> getAvailableNodes(String stateToUpdate, Integer attemptNumber) {
         if(!stateToUpdate.startsWith("Event:") && !stateToUpdate.startsWith("Location:")) {
             return new ArrayList<>(0);
         }
@@ -237,6 +237,7 @@ public class BacksideDoorRandomizer {
         for(String nodeName : mapOfNodeNameToDoorRequirementsObject.keySet()) {
             node = mapOfNodeNameToDoorRequirementsObject.get(nodeName);
             if(node.updateRequirements(stateToUpdate)) {
+                FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
                 availableNodes.add(nodeName);
             }
         }
