@@ -3,6 +3,10 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
+1.45:
+-----------------------------
+Fixed backwards logic for requiring Ice Cape.
+
 1.44:
 -----------------------------
 Front-to-front and back-to-back door transitions now available.

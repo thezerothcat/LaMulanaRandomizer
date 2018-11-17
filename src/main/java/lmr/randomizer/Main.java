@@ -977,7 +977,7 @@ public class Main {
         if(!Settings.isRequireSoftwareComboForKeyFairy()) {
             startingNodes.add("Setting: No Combo Key Fairy");
         }
-        if(Settings.isRequireIceCapeForLava()) {
+        if(!Settings.isRequireIceCapeForLava()) {
             startingNodes.add("Setting: Lava HP");
         }
         if(Settings.isAutomaticGrailPoints()) {
