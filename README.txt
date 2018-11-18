@@ -3,6 +3,10 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 Note: The randomizer is not yet compatible with Java 9+, so you will need Java 8 in order to run it.
 
+2.0
+-----------------------------
+Update to java 11.
+
 1.45:
 -----------------------------
 Fixed backwards logic for requiring Ice Cape.

@@ -4,7 +4,6 @@ import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.node.NodeWithRequirements;
 import lmr.randomizer.update.GameObjectId;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.*;
 import java.security.MessageDigest;
 import java.util.*;
@@ -13,7 +12,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "1.45.1";
+    public static final String VERSION = "2.0.0";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -95,7 +94,7 @@ public class FileUtils {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             byte[] fileBytes = getBytes(new FileInputStream(file), file.length());
-            String md5Hash = DatatypeConverter.printHexBinary(md5.digest(fileBytes)).toUpperCase();
+            String md5Hash = printHexBinary(md5.digest(fileBytes)).toUpperCase();
             if(KNOWN_RCD_FILE_HASHES.contains(md5Hash)) {
                 return true;
             }
@@ -106,6 +105,17 @@ public class FileUtils {
             FileUtils.log("Unable to read file " + file.getAbsolutePath() + ", " + ex.getMessage());
             return false;
         }
+    }
+
+    // Copied from java 8, to avoid importing a dependency no longer present in java 11.
+    private static String printHexBinary(byte[] data) {
+        char[] hexCode = "0123456789ABCDEF".toCharArray();
+        StringBuilder r = new StringBuilder(data.length * 2);
+        for (byte b : data) {
+            r.append(hexCode[(b >> 4) & 0xF]);
+            r.append(hexCode[(b & 0xF)]);
+        }
+        return r.toString();
     }
 
     public static boolean hashDatFile(File file) {
