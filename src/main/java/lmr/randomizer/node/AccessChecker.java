@@ -97,7 +97,7 @@ public class AccessChecker {
         return queuedUpdates;
     }
 
-    public boolean isSuccess() {
+    public boolean isSuccess(Integer attemptNumber) {
         if(isRequireFullAccess()) {
             if(mapOfNodeNameToRequirementsObject.isEmpty()) {
                 return true;
@@ -121,15 +121,52 @@ public class AccessChecker {
             }
             for(String requiredItem : DataFromFile.getWinRequirements()) {
                 if(!accessedNodes.contains(requiredItem)) {
-                    FileUtils.log("Win requirement not accessible: " + requiredItem);
-                    return false;
+                    FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
+                    if(FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+                        if (requiredItem.startsWith("Event:") || requiredItem.startsWith("Location:")) {
+                            NodeWithRequirements remainingRequirements = mapOfNodeNameToRequirementsObject.get(requiredItem);
+                            for (List<String> requirementSet : remainingRequirements.getAllRequirements()) {
+                                FileUtils.log("Missing requirements from set: " + requirementSet);
+                                for (String requirement : requirementSet) {
+                                    remainingRequirements = mapOfNodeNameToRequirementsObject.get(requirement);
+                                    for (List<String> requirementsForRequirement : remainingRequirements.getAllRequirements()) {
+                                        FileUtils.log("Missing requirements for " + requirement + ": " + requirementsForRequirement);
+                                        for(String requirementInner : requirementsForRequirement) {
+                                            if(requirementInner.startsWith("Door:")) {
+                                                backsideDoorRandomizer.logRequirements(requirementInner);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             return true;
         }
         for(String requiredItem : DataFromFile.getWinRequirements()) {
             if(!accessedNodes.contains(requiredItem)) {
-                FileUtils.log("Win requirement not accessible: " + requiredItem);
+                FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
+                if(FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+                    if (requiredItem.startsWith("Event:") || requiredItem.startsWith("Location:")) {
+                        NodeWithRequirements remainingRequirements = mapOfNodeNameToRequirementsObject.get(requiredItem);
+                        for (List<String> requirementSet : remainingRequirements.getAllRequirements()) {
+                            FileUtils.log("Missing requirements from set: " + requirementSet);
+                            for (String requirement : requirementSet) {
+                                remainingRequirements = mapOfNodeNameToRequirementsObject.get(requirement);
+                                for (List<String> requirementsForRequirement : remainingRequirements.getAllRequirements()) {
+                                    FileUtils.log("Missing requirements for " + requirement + ": " + requirementsForRequirement);
+                                    for(String requirementInner : requirementsForRequirement) {
+                                        if(requirementInner.startsWith("Door:")) {
+                                            backsideDoorRandomizer.logRequirements(requirementInner);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 return false;
             }
         }
@@ -139,9 +176,6 @@ public class AccessChecker {
     private boolean isRequireFullAccess() {
         if(!Settings.isRequireFullAccess()) {
             return false;
-        }
-        if(!Settings.isRandomizeMainWeapon() || "Whip".equals(Settings.getCurrentStartingWeapon())) {
-            return Settings.getRemovedItems().isEmpty() && Settings.getCurrentRemovedItems().isEmpty();
         }
         if(Settings.getCurrentRemovedItems().size() == 1 && "Whip".equals(Settings.getCurrentRemovedItems().iterator().next())) {
             return true;
@@ -218,8 +252,7 @@ public class AccessChecker {
             queuedUpdates.add("Sacred Orb: " + numberOfAccessibleSacredOrbs);
             return "Sacred Orb";
         }
-        if(Settings.isRandomizeMainWeapon()
-                && !"Whip".equals(Settings.getCurrentStartingWeapon()) && "Whip".equals(stateToUpdate)) {
+        if(!"Whip".equals(Settings.getCurrentStartingWeapon()) && "Whip".equals(stateToUpdate)) {
             return null; // Whip is a removed item.
         }
         if(stateToUpdate.equals("Vessel")) {

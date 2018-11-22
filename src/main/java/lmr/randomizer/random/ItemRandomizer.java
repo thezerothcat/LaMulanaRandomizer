@@ -17,7 +17,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class ItemRandomizer {
-    public static final List<String> ALL_SUBWEAPONS = Arrays.asList("Shuriken", "Caltrops", "Rolling Shuriken", "Bomb", "Flare Gun", "Chakram", "Earth Spear", "Pistol");
+    public static final List<String> ALL_SUBWEAPONS = Arrays.asList("Shuriken", "Rolling Shuriken", "Earth Spear", "Flare Gun", "Bomb", "Chakram", "Caltrops", "Pistol");
 
     private Map<String, String> mapOfItemLocationToItem = new HashMap<>(); // The map we're trying to build.
 
@@ -35,7 +35,7 @@ public class ItemRandomizer {
     public ItemRandomizer() {
         allItems = new ArrayList<>(DataFromFile.getAllNonShopItemsPlusAllRandomizedShopItemsPlusAllRandomizedCoinChests());
         unplacedItems = new ArrayList<>(allItems);
-        if(Settings.isRandomizeMainWeapon()) {
+        if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
             unplacedItems.add("Whip");
             unplacedItems.remove(Settings.getCurrentStartingWeapon());
         }

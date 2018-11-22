@@ -15,6 +15,7 @@ Location: Gate of Illusion [Dracuet] => Location: Gate of Illusion [Middle]
 Location: Gate of Illusion [Fraud] => Location: Gate of Illusion [Dracuet], Attack: Chest
 Location: Gate of Illusion [Grail] => Location: Gate of Illusion [Middle]
 Location: Gate of Illusion [Grail] => Location: Gate of Illusion [Upper]
+Location: Gate of Illusion [Grail] => Bronze Mirror, Door: F1
 Location: Gate of Illusion [Ruin] => Location: Gate of Illusion [Grail]
 Location: Gate of Illusion [Upper] => Location: Gate of Illusion [Pot Room], Feather
 Location: Gate of Illusion [Pot Room] => Location: Tower of the Goddess [Grail], Plane Model, Event: Illusion Unlocked, Attack: Forward

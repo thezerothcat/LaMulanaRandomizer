@@ -15,7 +15,7 @@ public class RandomizationPanel extends JPanel {
     private JCheckBox randomizeDracuetShop;
     private JCheckBox randomizeBacksideDoors;
 
-    private WeaponRandomizationRadio weaponRandomization;
+    private WeaponRandomizationPanel weaponRandomization;
     private ShopRandomizationRadio shopRandomization;
     private SwimsuitRandomizationPanel swimsuitRandomization;
 
@@ -25,7 +25,7 @@ public class RandomizationPanel extends JPanel {
         radioPanel = new RadioPanel();
         add(radioPanel, "growx");
 
-        weaponRandomization = new WeaponRandomizationRadio();
+        weaponRandomization = new WeaponRandomizationPanel();
         add(weaponRandomization, "growx, wrap");
 
         shopRandomization = new ShopRandomizationRadio();
@@ -49,7 +49,7 @@ public class RandomizationPanel extends JPanel {
         randomizeBacksideDoors = new JCheckBox();
         randomizeBacksideDoors.setSelected(Settings.isRandomizeBacksideDoors());
 
-        CheckboxContainer checkboxContainer = new CheckboxContainer(2, "gapy 0, insets 8 0 0 0");
+        CheckboxContainer checkboxContainer = new CheckboxContainer(3, "gapy 0, insets 8 0 0 0");
         checkboxContainer.add(randomizeCoinChests);
         checkboxContainer.add(randomizeTrapItems);
         checkboxContainer.add(randomizeCursedChests);

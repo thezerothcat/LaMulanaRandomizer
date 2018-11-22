@@ -8,8 +8,6 @@ public class TabbedPanel extends JTabbedPane {
     private RandomizationPanel randomizationPanel;
     private LogicPanel logicPanel;
     private ChallengePanel challengePanel;
-    private DboostPanel dboostPanel;
-    private GlitchPanel glitchPanel;
     private SpeedPanel speedPanel;
     private RemovedItemsPanel removedItemsPanel;
     private SettingsTransportPanel settingsTransportPanel;
@@ -27,12 +25,6 @@ public class TabbedPanel extends JTabbedPane {
         challengePanel = new ChallengePanel();
         addTab(Translations.getText("settings.challenge"), challengePanel);
 
-        dboostPanel = new DboostPanel();
-        addTab(Translations.getText("settings.dboost"), dboostPanel);
-
-        glitchPanel = new GlitchPanel();
-        addTab(Translations.getText("settings.glitches"), glitchPanel);
-
         speedPanel = new SpeedPanel();
         addTab(Translations.getText("settings.speed"), speedPanel);
 
@@ -46,8 +38,6 @@ public class TabbedPanel extends JTabbedPane {
     public void reloadSettings() {
         mainPanel.reloadSettings();
         randomizationPanel.reloadSettings();
-        dboostPanel.reloadSettings();
-        glitchPanel.reloadSettings();
         logicPanel.reloadSettings();
         challengePanel.reloadSettings();
         speedPanel.reloadSettings();
@@ -57,8 +47,6 @@ public class TabbedPanel extends JTabbedPane {
     public void updateSettings() {
         mainPanel.updateSettings();
         randomizationPanel.updateSettings();
-        dboostPanel.updateSettings();
-        glitchPanel.updateSettings();
         logicPanel.updateSettings();
         challengePanel.updateSettings();
         speedPanel.updateSettings();
@@ -67,8 +55,6 @@ public class TabbedPanel extends JTabbedPane {
 
     public void updateTranslations() {
         randomizationPanel.updateTranslations();
-        dboostPanel.updateTranslations();
-        glitchPanel.updateTranslations();
         logicPanel.updateTranslations();
         challengePanel.updateTranslations();
         speedPanel.updateTranslations();
@@ -77,10 +63,8 @@ public class TabbedPanel extends JTabbedPane {
         setTitleAt(0, Translations.getText("settings.randomization"));
         setTitleAt(1, Translations.getText("settings.logic"));
         setTitleAt(2, Translations.getText("settings.challenge"));
-        setTitleAt(3, Translations.getText("settings.dboost"));
-        setTitleAt(4, Translations.getText("settings.glitches"));
-        setTitleAt(5, Translations.getText("settings.speed"));
-        setTitleAt(6, Translations.getText("settings.removal"));
-        setTitleAt(7, Translations.getText("settings.share"));
+        setTitleAt(3, Translations.getText("settings.speed"));
+        setTitleAt(4, Translations.getText("settings.removal"));
+        setTitleAt(5, Translations.getText("settings.share"));
     }
 }

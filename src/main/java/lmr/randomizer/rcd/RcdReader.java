@@ -596,7 +596,7 @@ public final class RcdReader {
         else if(zoneIndex == 1) {
             if(roomIndex == 2) {
                 if(screenIndex == 0) {
-                    if (Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
+                    if (!"Whip".equals(Settings.getCurrentStartingWeapon())) {
                         AddObject.addRandomWeaponKillTimer(screen, false);
                     }
                 }
@@ -608,13 +608,13 @@ public final class RcdReader {
                     if (Settings.isAutomaticTranslations()) {
                         AddObject.addAutomaticTranslations(screen);
                     }
-                    if (Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
+                    if (!"Whip".equals(Settings.getCurrentStartingWeapon())) {
                         AddObject.addRandomWeaponKillTimer(screen, true);
                     }
                 }
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                if (Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
+                if (!"Whip".equals(Settings.getCurrentStartingWeapon())) {
                     AddObject.addRandomWeaponKillTimer(screen, false);
                 }
             }

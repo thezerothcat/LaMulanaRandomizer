@@ -37,6 +37,11 @@ public class FileUtils {
         KNOWN_RCD_FILE_HASHES.add("21869050145662F6DAAC6A1B3D54F3B9"); // 1.6.6.x
     }
 
+    public static boolean isDetailedLoggingAttempt(Integer attempt) {
+        return detailedLoggingAttemptNumber != null
+                && (detailedLoggingAttemptNumber.equals(attempt) || detailedLoggingAttemptNumber.equals(-1));
+    }
+
     public static void setDetailedLogging(int attemptNumber) {
         FileUtils.detailedLoggingAttemptNumber = attemptNumber;
     }
@@ -430,11 +435,20 @@ public class FileUtils {
             else if(line.startsWith("randomizeTrapItems")) {
                 Settings.setRandomizeTrapItems(Boolean.valueOf(line.split("=")[1]), false);
             }
-            else if(line.startsWith("randomizeMainWeapon")) {
-                Settings.setRandomizeMainWeapon(Boolean.valueOf(line.split("=")[1]), false);
+            else if(line.startsWith("allowWhipStart")) {
+                Settings.setAllowWhipStart(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("allowMainWeaponStart")) {
+                Settings.setAllowMainWeaponStart(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("allowSubweaponStart")) {
                 Settings.setAllowSubweaponStart(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("subweaponOnlyLogic")) {
+                Settings.setSubweaponOnlyLogic(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("removeMainWeapons")) {
+                Settings.setRemoveMainWeapons(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeCursedChests")) {
                 Settings.setRandomizeCursedChests(Boolean.valueOf(line.split("=")[1]), false);
@@ -531,10 +545,19 @@ public class FileUtils {
         writer.write(String.format("randomizeTrapItems=%s", Settings.isRandomizeTrapItems()));
         writer.newLine();
 
-        writer.write(String.format("randomizeMainWeapon=%s", Settings.isRandomizeMainWeapon()));
+        writer.write(String.format("allowWhipStart=%s", Settings.isAllowWhipStart()));
+        writer.newLine();
+
+        writer.write(String.format("allowMainWeaponStart=%s", Settings.isAllowMainWeaponStart()));
         writer.newLine();
 
         writer.write(String.format("allowSubweaponStart=%s", Settings.isAllowSubweaponStart()));
+        writer.newLine();
+
+        writer.write(String.format("subweaponOnlyLogic=%s", Settings.isSubweaponOnlyLogic()));
+        writer.newLine();
+
+        writer.write(String.format("removeMainWeapons=%s", Settings.isRemoveMainWeapons()));
         writer.newLine();
 
         writer.write(String.format("randomizeCursedChests=%s", Settings.isRandomizeCursedChests()));
@@ -656,7 +679,6 @@ public class FileUtils {
         try {
             logWriter.flush();
             logWriter.close();
-            logWriter = null;
         } catch (Exception ex) {
 
         }

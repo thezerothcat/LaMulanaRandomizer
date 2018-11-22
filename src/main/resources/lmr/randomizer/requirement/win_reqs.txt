@@ -1,13 +1,13 @@
-Feather
-Event: Remove True Shrine Fairy Block
-Event: All Grails Read
 Holy Grail
-Event: Medicine of the Mind (Yellow)
+Feather
+Key of Eternity
 Origin Seal
 Birth Seal
 Life Seal
 Death Seal
-Event: Mother Ankh
 Event: Fobos Ladder
+Event: Medicine of the Mind (Yellow)
+Event: All Grails Read
+Event: Mother Ankh
 Location: True Shrine of the Mother
-Key of Eternity
+Event: Remove True Shrine Fairy Block

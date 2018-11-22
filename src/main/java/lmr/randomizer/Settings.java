@@ -39,9 +39,11 @@ public final class Settings {
     private boolean randomizeDracuetShop;
     private boolean randomizeCoinChests;
     private boolean randomizeTrapItems;
-    private boolean randomizeMainWeapon;
+    private boolean allowWhipStart;
+    private boolean allowMainWeaponStart;
     private boolean allowSubweaponStart;
-    private boolean subweaponOnly;
+    private boolean subweaponOnlyLogic;
+    private boolean removeMainWeapons;
     private boolean randomizeCursedChests;
     private boolean randomizeBacksideDoors;
     private boolean replaceMapsWithWeights;
@@ -94,9 +96,11 @@ public final class Settings {
         randomizeDracuetShop = false;
         randomizeCoinChests = true;
         randomizeTrapItems = true;
-        randomizeMainWeapon = false;
+        allowWhipStart = true;
+        allowMainWeaponStart = false;
         allowSubweaponStart = false;
-        subweaponOnly = false;
+        subweaponOnlyLogic = false;
+        removeMainWeapons = false;
         randomizeCursedChests = false;
         randomizeBacksideDoors = false;
         removeSpaulder = false;
@@ -349,15 +353,26 @@ public final class Settings {
         singleton.randomizeTrapItems = randomizeTrapItems;
     }
 
-    public static boolean isRandomizeMainWeapon() {
-        return singleton.randomizeMainWeapon;
+    public static boolean isAllowWhipStart() {
+        return singleton.allowWhipStart;
     }
 
-    public static void setRandomizeMainWeapon(boolean randomizeMainWeapon, boolean update) {
-        if(update && randomizeMainWeapon != singleton.randomizeMainWeapon) {
+    public static void setAllowWhipStart(boolean allowWhipStart, boolean update) {
+        if(update && allowWhipStart != singleton.allowWhipStart) {
             singleton.changed = true;
         }
-        singleton.randomizeMainWeapon = randomizeMainWeapon;
+        singleton.allowWhipStart = allowWhipStart;
+    }
+
+    public static boolean isAllowMainWeaponStart() {
+        return singleton.allowMainWeaponStart;
+    }
+
+    public static void setAllowMainWeaponStart(boolean allowMainWeaponStart, boolean update) {
+        if(update && allowMainWeaponStart != singleton.allowMainWeaponStart) {
+            singleton.changed = true;
+        }
+        singleton.allowMainWeaponStart = allowMainWeaponStart;
     }
 
     public static boolean isAllowSubweaponStart() {
@@ -371,12 +386,26 @@ public final class Settings {
         singleton.allowSubweaponStart = allowSubweaponStart;
     }
 
-    public static boolean isSubweaponOnly() {
-        return singleton.subweaponOnly;
+    public static boolean isSubweaponOnlyLogic() {
+        return singleton.subweaponOnlyLogic;
     }
 
-    public static void setSubweaponOnly(boolean subweaponOnly) {
-        singleton.subweaponOnly = subweaponOnly;
+    public static void setSubweaponOnlyLogic(boolean subweaponOnlyLogic, boolean update) {
+        if(update && subweaponOnlyLogic != singleton.subweaponOnlyLogic) {
+            singleton.changed = true;
+        }
+        singleton.subweaponOnlyLogic = subweaponOnlyLogic;
+    }
+
+    public static boolean isRemoveMainWeapons() {
+        return singleton.removeMainWeapons;
+    }
+
+    public static void setRemoveMainWeapons(boolean removeMainWeapons, boolean update) {
+        if(update && removeMainWeapons != singleton.removeMainWeapons) {
+            singleton.changed = true;
+        }
+        singleton.removeMainWeapons = removeMainWeapons;
     }
 
     public static boolean isRandomizeCursedChests() {
@@ -587,6 +616,15 @@ public final class Settings {
         if(singleton.removeSpaulder) {
             removedItems.add("Spaulder");
         }
+        if(singleton.removeMainWeapons) {
+            removedItems.add("Whip");
+            removedItems.add("Chain Whip");
+            removedItems.add("Flail Whip");
+            removedItems.add("Axe");
+            removedItems.add("Knife");
+            removedItems.add("Katana");
+            removedItems.add("Key Sword");
+        }
         for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
             if(customPlacement.isRemoveItem()) {
                 // Removed item
@@ -732,6 +770,9 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.removeMainWeapons, 23);
+        booleanSettings |= processBooleanFlag.apply(singleton.subweaponOnlyLogic, 22);
+        booleanSettings |= processBooleanFlag.apply(singleton.allowWhipStart, 21);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeBacksideDoors, 20);
         booleanSettings |= processBooleanFlag.apply(singleton.ushumgalluAssist, 19);
         booleanSettings |= processBooleanFlag.apply(singleton.allowSubweaponStart, 18);
@@ -740,7 +781,7 @@ public final class Settings {
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeXmailer, 15);
         booleanSettings |= processBooleanFlag.apply(singleton.htFullRandom, 14);
         booleanSettings |= processBooleanFlag.apply(singleton.automaticTranslations, 13);
-        booleanSettings |= processBooleanFlag.apply(singleton.randomizeMainWeapon, 12);
+        booleanSettings |= processBooleanFlag.apply(singleton.allowMainWeaponStart, 12);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeCursedChests, 11);
         booleanSettings |= processBooleanFlag.apply(singleton.automaticHardmode, 10);
         booleanSettings |= processBooleanFlag.apply(singleton.coinChestGraphics, 9);
@@ -809,6 +850,9 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.removeMainWeapons = getBoolFlagFromInt.apply(booleanSettingsFlag, 23);
+        singleton.subweaponOnlyLogic = getBoolFlagFromInt.apply(booleanSettingsFlag, 22);
+        singleton.allowWhipStart = getBoolFlagFromInt.apply(booleanSettingsFlag, 21);
         singleton.randomizeBacksideDoors = getBoolFlagFromInt.apply(booleanSettingsFlag, 20);
         singleton.ushumgalluAssist = getBoolFlagFromInt.apply(booleanSettingsFlag, 19);
         singleton.allowSubweaponStart = getBoolFlagFromInt.apply(booleanSettingsFlag, 18);
@@ -817,7 +861,7 @@ public final class Settings {
         singleton.randomizeXmailer = getBoolFlagFromInt.apply(booleanSettingsFlag, 15);
         singleton.htFullRandom = getBoolFlagFromInt.apply(booleanSettingsFlag, 14);
         singleton.automaticTranslations = getBoolFlagFromInt.apply(booleanSettingsFlag, 13);
-        singleton.randomizeMainWeapon = getBoolFlagFromInt.apply(booleanSettingsFlag, 12);
+        singleton.allowMainWeaponStart = getBoolFlagFromInt.apply(booleanSettingsFlag, 12);
         singleton.randomizeCursedChests = getBoolFlagFromInt.apply(booleanSettingsFlag, 11);
         singleton.automaticHardmode = getBoolFlagFromInt.apply(booleanSettingsFlag, 10);
         singleton.coinChestGraphics = getBoolFlagFromInt.apply(booleanSettingsFlag, 9);

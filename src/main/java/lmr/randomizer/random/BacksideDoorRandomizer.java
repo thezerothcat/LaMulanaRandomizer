@@ -55,7 +55,7 @@ public class BacksideDoorRandomizer {
         }
     }
 
-    public void determineDoorBosses(Random random) {
+    public void determineDoorBosses(Random random, Integer attempt) {
         if(Settings.isRandomizeBacksideDoors()) {
             backsideDoorBossMap.clear();
             randomizeBosses(random);
@@ -75,6 +75,7 @@ public class BacksideDoorRandomizer {
         for(String door : backsideDoorLocationMap.keySet()) {
             addToMap(door, backsideDoorLocationMap.get(door), getBoss(backsideDoorBossMap.get(door)));
         }
+        logBosses(attempt);
     }
 
     private void randomizeDoorDestinations(Random random) {
@@ -83,7 +84,6 @@ public class BacksideDoorRandomizer {
         riskDoors.add("Door: B7");
 
         List<String> unassignedDoors = new ArrayList<>(14);
-        unassignedDoors.add("Door: B1");
         unassignedDoors.add("Door: B2");
         unassignedDoors.add("Door: B3");
         unassignedDoors.add("Door: B4");
@@ -110,6 +110,14 @@ public class BacksideDoorRandomizer {
         } else {
             unassignedDoors.add("Door: F6");
             riskDoors.add("Door: F7");
+        }
+
+        if(Settings.getRemovedItems().contains("Fruit of Eden")) {
+            // Only consider manually removed items; random removed items will be rerolled each attempt.
+            riskDoors.add("Door: B1");
+        }
+        else {
+            unassignedDoors.add("Door: B1");
         }
 
         String door1;
@@ -387,11 +395,24 @@ public class BacksideDoorRandomizer {
                 : door.replace("Door: F", "Door: B");
     }
 
-    public void logLocations() throws IOException {
+    public void logLocations() {
         for(String door : backsideDoorLocationMap.keySet()) {
             FileUtils.log(door + ": " + backsideDoorLocationMap.get(door));
         }
         FileUtils.flush();
+    }
+
+    public void logBosses(Integer attemptNumber) {
+        if(FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+            for(String door : backsideDoorBossMap.keySet()) {
+                FileUtils.log(door + ": " + backsideDoorBossMap.get(door));
+            }
+            FileUtils.flush();
+        }
+    }
+
+    public void logRequirements(String door) {
+        FileUtils.logFlush(door + ": " + mapOfNodeNameToDoorRequirementsObject.get(door).getAllRequirements().get(0));
     }
 
     public void outputLocations(int attemptNumber) throws IOException {

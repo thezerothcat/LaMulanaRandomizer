@@ -236,19 +236,17 @@ public final class DataFromFile {
         if(randomRemovableItems == null) {
             randomRemovableItems = new ArrayList<>();
             boolean requireSerpentStaffAndChakrams = !Settings.getEnabledGlitches().contains("Cat Pause") && !Settings.getEnabledGlitches().contains("Object Zip") && !Settings.getEnabledGlitches().contains("Raindrop");
-            boolean requireFruitOfEden = !Settings.getEnabledGlitches().contains("Lamp Glitch");
-            boolean requirePlaneModelAndTwinStatue = !Settings.getEnabledGlitches().contains("Raindrop");
+            boolean requireFruitOfEden = !Settings.isRandomizeBacksideDoors() || (!Settings.getEnabledGlitches().contains("Raindrop") && !Settings.isAutomaticMantras() && !Settings.isAlternateMotherAnkh()); // Deep dive not supported in logic, so the only way to reach upper Illusion grail is the backside door, and raindropping is needed to get to where you'd recite LAMULANA
+            boolean requirePlaneModelAndTwinStatueAndLiteracy = !Settings.getEnabledGlitches().contains("Raindrop");
             boolean requireEarthSpearAndBronzeMirror = !Settings.getEnabledGlitches().contains("Lamp Glitch") && !Settings.getEnabledGlitches().contains("Raindrop");
             for(String itemName : getAllItems()) {
                 if(itemName.startsWith("Ankh Jewel")) {
                     continue; // Never remove an ankh jewel.
                 }
-                if(getWinRequirements().contains(itemName) || "Hand Scanner".equals(itemName)
-                        || "reader.exe".equals(itemName) || "mantra.exe".equals(itemName)
-                        || "Djed Pillar".equals(itemName) || "Dimensional Key".equals(itemName)
+                if(getWinRequirements().contains(itemName) || "Dimensional Key".equals(itemName)
                         || "Crystal Skull".equals(itemName) || "Pochette Key".equals(itemName)
                         || "Philosopher's Ocarina".equals(itemName) || "Isis' Pendant".equals(itemName)
-                        || "Helmet".equals(itemName)) {
+                        || "Helmet".equals(itemName) || "Vessel".equals(itemName)) {
                     continue; // Things that should never be removed.
                 }
                 if(Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
@@ -263,7 +261,7 @@ public final class DataFromFile {
                 if(requireSerpentStaffAndChakrams && ("Chakram".equals(itemName) || "Serpent Staff".equals(itemName))) {
                     continue; // Can't get Birth grail without these.
                 }
-                if(requirePlaneModelAndTwinStatue && ("Plane Model".equals(itemName) || "Twin Statue".equals(itemName))) {
+                if(requirePlaneModelAndTwinStatueAndLiteracy && ("Plane Model".equals(itemName) || "Twin Statue".equals(itemName))) {
                     continue; // Can't get to Birth grail area without Plane Model, Dimensional Corridor without Twin Statue.
                 }
                 if(requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
@@ -271,6 +269,9 @@ public final class DataFromFile {
                 }
                 if(Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName)) {
                     continue; // Don't count the maps that will already be replaced.
+                }
+                if(!Settings.isAlternateMotherAnkh() && "Key Sword".equals(itemName)) {
+                    continue; // Required to start the Mother fight
                 }
                 if(Settings.getNonRandomizedItems().contains(itemName)) {
                     continue; // If the user wanted this item in its original location, they probably don't want it gone.
@@ -287,6 +288,19 @@ public final class DataFromFile {
                 if(Settings.getInitiallyAccessibleItems().contains(itemName)) {
                     continue; // If the user wanted this item early, they probably don't want it gone.
                 }
+
+                if("mantra.exe".equals(itemName) || "Djed Pillar".equals(itemName)) {
+                    if(!Settings.isAlternateMotherAnkh() || !"Yellow".equals(Settings.getMedicineColor())) {
+                        continue; // Don't remove mantra or Djed Pillar if they're needed for reciting mantras to fight mother.
+                    }
+                }
+                if("Hand Scanner".equals(itemName) || "reader.exe".equals(itemName)) {
+                    if(requirePlaneModelAndTwinStatueAndLiteracy || !Settings.isAutomaticGrailPoints()
+                            || !Settings.isAlternateMotherAnkh() || !"Yellow".equals(Settings.getMedicineColor())) {
+                        continue; // Don't remove literacy if it's needed for reciting mantras to fight Mother.
+                    }
+                }
+
                 randomRemovableItems.add(itemName);
             }
         }

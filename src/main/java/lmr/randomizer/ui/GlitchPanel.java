@@ -14,6 +14,7 @@ public class GlitchPanel extends JPanel {
 
     public GlitchPanel() {
         super(new MigLayout("fillx, wrap 4", "[sizegroup checkboxes]", "[]4[]"));
+        setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.glitches")));
 
         for(String availableGlitch : DataFromFile.getAvailableGlitches()) {
             JCheckBox glitchCheckbox = new JCheckBox();
@@ -37,6 +38,7 @@ public class GlitchPanel extends JPanel {
     }
 
     public void updateTranslations() {
+        setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.glitches")));
         for(JCheckBox glitchOption : glitchOptions) {
             glitchOption.setText(Translations.getGlitchText(glitchOption.getActionCommand()));
         }

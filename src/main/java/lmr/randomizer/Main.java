@@ -346,8 +346,8 @@ public class Main {
                 fileOutputStream.close();
                 FileUtils.logFlush("dat copy complete");
 
-                FileUtils.logFlush("Copying save file from seed folder to La-Mulana save directory");
-                if(Settings.isRandomizeMainWeapon()) {
+                if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
+                    FileUtils.logFlush("Copying save file from seed folder to La-Mulana save directory");
                     File saveFile = new File(String.format("%s/lm_00.sav", Settings.getStartingSeed()));
                     if(saveFile.exists()) {
                         fileOutputStream = new FileOutputStream(
@@ -440,15 +440,47 @@ public class Main {
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            if(Settings.isRandomizeMainWeapon() && !validateSaveDir()) {
+            if((Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart()) && !validateSaveDir()) {
                 JOptionPane.showMessageDialog(this,
                         "Unable to find La-Mulana save directory",
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(!Settings.isAllowWhipStart() && !Settings.isAllowMainWeaponStart() && !Settings.isAllowSubweaponStart()) {
+                JOptionPane.showMessageDialog(this,
+                        "Starting without a weapon is not currently enabled",
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
             if(!validateCustomPlacements(this)) {
                 // Message created below
                 return false;
+            }
+
+            Set<String> manuallyRemovedItems = new HashSet<>();
+            for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
+                if(customPlacement.isRemoveItem()) {
+                    // Removed item
+                    manuallyRemovedItems.add(customPlacement.getContents());
+                }
+            }
+            if(Settings.isRemoveMainWeapons()) {
+                manuallyRemovedItems.addAll(DataFromFile.MAIN_WEAPONS);
+                manuallyRemovedItems.remove("Whip"); // Whip gets special treatment.
+
+                Settings.setAlternateMotherAnkh(true); // Required to clear the game without Key Sword.
+            }
+            if((Settings.getMinRandomRemovedItems() + manuallyRemovedItems.size() > 48)) {
+                JOptionPane.showMessageDialog(this,
+                        "Minimum removed item count is too high with custom placement settings. A minimum of " + (48 - manuallyRemovedItems.size()) + " will be used instead.",
+                        "Randomizer error", JOptionPane.WARNING_MESSAGE);
+                Settings.setMinRandomRemovedItems(48 - manuallyRemovedItems.size(), false);
+            }
+            if((Settings.getMaxRandomRemovedItems() + manuallyRemovedItems.size() > 48)) {
+                JOptionPane.showMessageDialog(this,
+                        "Maximum removed item count is too high with custom placement settings. A maximum of " + (48 - manuallyRemovedItems.size()) + " will be used instead.",
+                        "Randomizer error", JOptionPane.WARNING_MESSAGE);
+                Settings.setMaxRandomRemovedItems(48 - manuallyRemovedItems.size(), false);
             }
             return true;
         }
@@ -517,22 +549,33 @@ public class Main {
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
                         return false;
                     }
-                    if(!Settings.isRandomizeMainWeapon()) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Please enable randomized starting weapon",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
 
                     if(ItemRandomizer.ALL_SUBWEAPONS.contains(customPlacement.getContents())) {
                         if(!Settings.isAllowSubweaponStart()) {
                             JOptionPane.showMessageDialog(randomizerUI,
-                                    "Please enable starting with subweapons",
+                                    "Custom starting weapon not enabled",
                                     "Custom placement error", JOptionPane.ERROR_MESSAGE);
                             return false;
                         }
                     }
-                    else if(!DataFromFile.MAIN_WEAPONS.contains(customPlacement.getContents())) {
+                    else if(DataFromFile.MAIN_WEAPONS.contains(customPlacement.getContents())) {
+                        if("Whip".equals(customPlacement.getContents())) {
+                            if(!Settings.isAllowWhipStart()) {
+                                JOptionPane.showMessageDialog(randomizerUI,
+                                        "Custom starting weapon not enabled",
+                                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                                return false;
+                            }
+                        }
+                        else if(!Settings.isAllowMainWeaponStart()) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom starting weapon not enabled",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+
+                    }
+                    else {
                         JOptionPane.showMessageDialog(randomizerUI,
                                 "Invalid starting weapon: " + customPlacement.getContents(),
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
@@ -783,14 +826,14 @@ public class Main {
             dialog.setTitle(String.format(Translations.getText("progress.shuffling.title"), attempt));
             dialog.progressBar.setIndeterminate(true);
 
-            backsideDoorRandomizer.determineDoorBosses(random);
+            backsideDoorRandomizer.determineDoorBosses(random, attempt);
 
             ItemRandomizer itemRandomizer = new ItemRandomizer();
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer);
             accessChecker.initExitRequirements();
 
-            List<String> startingNodes = getStartingNodes(Settings.isSubweaponOnly());
+            List<String> startingNodes = getStartingNodes();
 
             if(!initiallyAccessibleItems.isEmpty()) {
                 DataFromFile.clearInitialLocations();
@@ -868,7 +911,7 @@ public class Main {
                 continue;
             }
 
-            if(accessChecker.isSuccess()) {
+            if(accessChecker.isSuccess(attempt)) {
                 dialog.progressBar.setIndeterminate(false);
                 dialog.setSafeClose(false);
                 dialog.updateProgress(80, String.format(Translations.getText("progress.shuffling.done"), attempt));
@@ -891,7 +934,7 @@ public class Main {
                 itemRandomizer.updateFiles(random);
                 FileUtils.log("Updated item location data");
 
-                shopRandomizer.updateFiles(datInfo, Settings.isSubweaponOnly(), random);
+                shopRandomizer.updateFiles(datInfo, isSubweaponOnly(), random);
                 FileUtils.log("Updated shop data");
 
                 List<String> availableSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
@@ -918,7 +961,7 @@ public class Main {
 
                 DatWriter.writeDat(datInfo);
                 FileUtils.logFlush("dat file successfully written");
-                if(Settings.isRandomizeMainWeapon()) {
+                if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
                     backupSaves();
                     writeSaveFile();
                 }
@@ -962,10 +1005,7 @@ public class Main {
     }
 
     private static boolean isSubweaponOnly() {
-        if(!Settings.isRandomizeMainWeapon()) {
-            return false;
-        }
-        if("Whip".equals(Settings.getCurrentStartingWeapon())) {
+        if(DataFromFile.MAIN_WEAPONS.contains(Settings.getCurrentStartingWeapon())) {
             return false;
         }
 
@@ -976,7 +1016,7 @@ public class Main {
         return availableMainWeapons.isEmpty();
     }
 
-    private static List<String> getStartingNodes(boolean subweaponOnly) {
+    private static List<String> getStartingNodes() {
         List<String> startingNodes = new ArrayList<>();
         startingNodes.add("None");
         startingNodes.add(Settings.getCurrentStartingWeapon());
@@ -1018,7 +1058,7 @@ public class Main {
         }
         startingNodes.add(Settings.isAlternateMotherAnkh() ? "Setting: Alternate Mother" : "Setting: Standard Mother");
 
-        if(subweaponOnly) {
+        if(Settings.isSubweaponOnlyLogic() || isSubweaponOnly()) {
             startingNodes.add("Setting: Subweapon Only");
         }
         return startingNodes;
@@ -1051,7 +1091,7 @@ public class Main {
         }
     }
 
-    private static void writeSaveFile() throws IOException {
+    private static void writeSaveFile() {
         byte[] saveData = buildNewSave();
         String startingWeapon = Settings.getCurrentStartingWeapon();
         if(!"Whip".equals(startingWeapon)) {
@@ -1082,6 +1122,10 @@ public class Main {
                 saveData[4121] = (byte)1; // word + 0x1011; add key sword
                 saveData[4623] = (byte)4; // Held main weapon item number
                 saveData[4626] = (byte)2; // Held main weapon slot number
+
+                if(Settings.isAutomaticMantras()) {
+                    saveData[0x11 + 0x124] = (byte)4; // Held main weapon slot number
+                }
             }
             else if("Axe".equals(startingWeapon)) {
                 saveData[146] = (byte)2; // byte + 0x11; add axe flag
@@ -1270,76 +1314,77 @@ public class Main {
     }
 
     private static void determineStartingWeapon(Random random) {
-        if(!Settings.isRandomizeMainWeapon()) {
-            Settings.setCurrentStartingWeapon(null);
-            return;
-        }
-
         List<String> startingWeapons = new ArrayList<>();
-        startingWeapons.add("Whip");
-        startingWeapons.add("Knife");
-        startingWeapons.add("Key Sword");
-        startingWeapons.add("Axe");
-        startingWeapons.add("Katana");
+        if(Settings.isAllowWhipStart()) {
+            startingWeapons.add("Whip");
+        }
+        if(Settings.isAllowMainWeaponStart()) {
+            startingWeapons.add("Knife");
+            startingWeapons.add("Key Sword");
+            startingWeapons.add("Axe");
+            startingWeapons.add("Katana");
+        }
         if(Settings.isAllowSubweaponStart()) {
             startingWeapons.addAll(ItemRandomizer.ALL_SUBWEAPONS);
         }
 
         for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
             if(customPlacement.isStartingWeapon()) {
+                FileUtils.log("Selected starting weapon: " + customPlacement.getContents());
                 Settings.setCurrentStartingWeapon(customPlacement.getContents());
                 return;
             }
             // Whether it's a removed item, starting item, or a custom placed item, we don't want it here.
             startingWeapons.remove(customPlacement.getContents());
         }
+        startingWeapons.removeAll(Settings.getRemovedItems());
         Settings.setCurrentStartingWeapon(startingWeapons.get(random.nextInt(startingWeapons.size())));
         FileUtils.log("Selected starting weapon: " + Settings.getCurrentStartingWeapon());
     }
 
     private static void determineRemovedItems(int totalItemsRemoved, Random random) {
         Set<String> removedItems = new HashSet<>(Settings.getRemovedItems());
-        if(Settings.isRandomizeMainWeapon() && !"Whip".equals(Settings.getCurrentStartingWeapon())) {
+        if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
             removedItems.add("Whip");
         }
         if(totalItemsRemoved < 1) {
             Settings.setCurrentRemovedItems(removedItems);
-            Settings.setSubweaponOnly(isSubweaponOnly());
             return;
         }
         List<String> removableItems = new ArrayList<>(DataFromFile.getRandomRemovableItems());
         removableItems.removeAll(removedItems);
+        removableItems.remove(Settings.getCurrentStartingWeapon());
         if(removableItems.isEmpty()) {
             Settings.setCurrentRemovedItems(removedItems);
-            Settings.setSubweaponOnly(isSubweaponOnly());
             return;
         }
 
-        boolean easierBosses = BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty());
         boolean objectZipEnabled = Settings.getEnabledGlitches().contains("Object Zip");
         boolean catPauseEnabled = Settings.getEnabledGlitches().contains("Cat Pause");
         boolean lampGlitchEnabled = Settings.getEnabledGlitches().contains("Lamp Glitch");
         boolean requireKeyFairyCombo = Settings.isRequireSoftwareComboForKeyFairy();
+        boolean lamulanaMantraRequired = !lampGlitchEnabled && !Settings.isAutomaticMantras() && !Settings.isAlternateMotherAnkh();
         boolean orbRemoved = false;
-        boolean subweaponOnly = isSubweaponOnly(); // Preliminary check based on custom placements; currently this cannot happen randomly.
 
+        boolean easierBosses = BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty());
         List<String> easierSubweaponsForPalenque = easierBosses ? new ArrayList<>(Arrays.asList("Rolling Shuriken", "Chakram", "Earth Spear", "Pistol")) : new ArrayList<>(0);
-        easierSubweaponsForPalenque.removeAll(removedItems);
-        if(easierBosses && easierSubweaponsForPalenque.size() == 1) {
-            removableItems.remove(easierSubweaponsForPalenque.get(0));
+        List<String> easierWeapons = easierBosses ? new ArrayList<>(Arrays.asList("Chain Whip", "Flail Whip", "Axe")) : new ArrayList<>(0);
+        List<String> mainWeapons = new ArrayList<>(DataFromFile.MAIN_WEAPONS);
+        mainWeapons.remove("Whip");
+        List<String> subweaponOnlyItems = new ArrayList<>(Arrays.asList("Caltrops", "Flare Gun", "Bomb", "Feather", "Ring"));
+
+        boolean subweaponOnly = isSubweaponOnly(); // Preliminary check based on custom placements; currently this cannot happen randomly.
+        if(isSubweaponOnly()) {
+            removableItems.removeAll(subweaponOnlyItems);
         }
 
-        List<String> easierWeapons = easierBosses ? new ArrayList<>(Arrays.asList("Chain Whip", "Flail Whip", "Axe")) : new ArrayList<>(0);
-        easierWeapons.removeAll(removedItems);
-        if(subweaponOnly) {
-            removableItems.remove("Caltrops");
-            removableItems.remove("Flare Gun");
-            removableItems.remove("Bomb");
-            removableItems.remove("Feather");
-            removableItems.remove("Ring");
+        for(String removedItem : removedItems) {
+            orbRemoved = filterRemovableItems(removedItem, removableItems, objectZipEnabled, easierBosses, lampGlitchEnabled, requireKeyFairyCombo, catPauseEnabled, lamulanaMantraRequired, subweaponOnly, orbRemoved, mainWeapons, easierWeapons, subweaponOnlyItems, easierSubweaponsForPalenque);
         }
-        else if(easierBosses && easierWeapons.size() == 1) {
-            removableItems.remove(easierWeapons.get(0));
+
+        if(removableItems.isEmpty()) {
+            Settings.setCurrentRemovedItems(removedItems);
+            return;
         }
 
         int chosenRemovedItems = 0;
@@ -1349,117 +1394,183 @@ public class Main {
             if(!removedItems.contains(removedItem)) {
                 removedItems.add(removedItem);
                 removableItems.remove(removedItem);
-                if("Twin Statue".equals(removedItem)) {
-                    // Only possible if raindropping enabled
-                    removableItems.remove("Hermes' Boots");
-                    removableItems.remove("Grapple Claw");
-                }
-                else if("Chakram".equals(removedItem)) {
-                    // Must be able to raindrop unless alternative glitches are a thing.
-                    if(!catPauseEnabled) {
-                        removableItems.remove("Hermes' Boots");
-                        if(!objectZipEnabled) {
-                            removableItems.remove("Grapple Claw");
-                        }
-                    }
-
-                    if(easierBosses) {
-                        easierSubweaponsForPalenque.remove(removedItem);
-                        if(easierSubweaponsForPalenque.size() == 1) {
-                            removableItems.remove(easierSubweaponsForPalenque.get(0));
-                        }
-                    }
-                }
-                else if("Serpent Staff".equals(removedItem)) {
-                    // Must be able to raindrop unless alternative glitches are a thing.
-                    if(!catPauseEnabled) {
-                        removableItems.remove("Hermes' Boots");
-                        if(!objectZipEnabled) {
-                            removableItems.remove("Grapple Claw");
-                        }
-                    }
-                }
-                else if("Hermes' Boots".equals(removedItem)) {
-                    // Don't remove anything that outright requires raindropping.
-                    removableItems.remove("Twin Statue");
-                    removableItems.remove("Plane Model");
-                    if(!catPauseEnabled) {
-                        removableItems.remove("Chakram");
-                        removableItems.remove("Serpent Staff");
-                    }
-                    if(!lampGlitchEnabled) {
-                        removableItems.remove("Bronze Mirror");
-                    }
-                }
-                else if("Grapple Claw".equals(removedItem)) {
-                    // Don't remove anything that outright requires raindropping.
-                    removableItems.remove("Twin Statue");
-                    removableItems.remove("Plane Model");
-                    if(!objectZipEnabled && !catPauseEnabled) {
-                        removableItems.remove("Chakram");
-                        removableItems.remove("Serpent Staff");
-                    }
-                    if(!lampGlitchEnabled) {
-                        removableItems.remove("Bronze Mirror");
-                    }
-                } else if("Plane Model".equals(removedItem)) {
-                    // Don't remove alternative means of getting into Chamber of Birth and the Medicine of the Mind area.
-                    removableItems.remove("Hermes' Boots");
-                    removableItems.remove("Grapple Claw");
-                    removableItems.remove("Bronze Mirror");
-                    if(requireKeyFairyCombo) {
-                        removableItems.remove("miracle.exe");
-                        removableItems.remove("mekuri.exe");
-                    }
-                } else if("Bronze Mirror".equals(removedItem)) {
-                    removableItems.remove("Plane Model");
-                    if(!lampGlitchEnabled) {
-                        removableItems.remove("Hermes' Boots");
-                        removableItems.remove("Grapple Claw");
-                    }
-                }
-                else if(easierBosses) {
-                    if("Silver Shield".equals(removedItem)) {
-                        removableItems.remove("Angel Shield");
-                    }
-                    else if ("Angel Shield".equals(removedItem)) {
-                        removableItems.remove("Silver Shield");
-                    }
-                    else if(removedItem.startsWith("Sacred Orb")) {
-                        if(orbRemoved) {
-                            removableItems.remove("Sacred Orb (Surface)");
-                            removableItems.remove("Sacred Orb (Gate of Guidance)");
-                            removableItems.remove("Sacred Orb (Mausoleum of the Giants)");
-                            removableItems.remove("Sacred Orb (Temple of the Sun)");
-                            removableItems.remove("Sacred Orb (Spring in the Sky)");
-                            removableItems.remove("Sacred Orb (Chamber of Extinction)");
-                            removableItems.remove("Sacred Orb (Twin Labyrinths)");
-                            removableItems.remove("Sacred Orb (Shrine of the Mother)");
-                            removableItems.remove("Sacred Orb (Tower of Ruin)");
-                            removableItems.remove("Sacred Orb (Chamber of Extinction)");
-                        }
-                        else {
-                            orbRemoved = true;
-                        }
-                    }
-                    else {
-                        easierSubweaponsForPalenque.remove(removedItem);
-                        if(easierSubweaponsForPalenque.size() == 1) {
-                            removableItems.remove(easierSubweaponsForPalenque.get(0));
-                        }
-                        if(!subweaponOnly) {
-                            easierWeapons.remove(removedItem);
-                            if(easierWeapons.size() == 1) {
-                                removableItems.remove(easierSubweaponsForPalenque.get(0));
-                            }
-                        }
-                    }
-                }
+                orbRemoved = filterRemovableItems(removedItem, removableItems, objectZipEnabled, easierBosses, lampGlitchEnabled, requireKeyFairyCombo, catPauseEnabled, lamulanaMantraRequired, subweaponOnly, orbRemoved, mainWeapons, easierWeapons, subweaponOnlyItems, easierSubweaponsForPalenque);
                 ++chosenRemovedItems;
             }
         }
         Settings.setCurrentRemovedItems(removedItems);
-        Settings.setSubweaponOnly(isSubweaponOnly());
+    }
+
+    private static boolean filterRemovableItems(String removedItem, List<String> removableItems, boolean objectZipEnabled, boolean easierBosses, boolean lampGlitchEnabled, boolean requireKeyFairyCombo, boolean catPauseEnabled, boolean lamulanaMantraRequired, boolean subweaponOnly, boolean orbRemoved, List<String> mainWeapons, List<String> easierWeapons, List<String> subweaponOnlyItems, List<String> easierSubweaponsForPalenque) {
+        if("Twin Statue".equals(removedItem)) {
+            // Raindropping needed to reach Dimensional Corridor
+            removableItems.remove("Hermes' Boots");
+            removableItems.remove("Grapple Claw");
+        }
+        else if("Hand Scanner".equals(removedItem) || "reader.exe".equals(removedItem)) {
+            // Raindropping needed to enter Shrine of the Mother
+            removableItems.remove("Hermes' Boots");
+            removableItems.remove("Grapple Claw");
+        }
+        else if("Fruit of Eden".equals(removedItem) && lamulanaMantraRequired) {
+            // Raindropping needed to recite LAMULANA
+            removableItems.remove("Hermes' Boots");
+            removableItems.remove("Grapple Claw");
+        }
+        else if("Chakram".equals(removedItem)) {
+            // Must be able to raindrop unless alternative glitches are a thing.
+            if(!catPauseEnabled) {
+                removableItems.remove("Hermes' Boots");
+                if(!objectZipEnabled) {
+                    removableItems.remove("Grapple Claw");
+                }
+            }
+
+            if(easierBosses) {
+                easierSubweaponsForPalenque.remove(removedItem);
+                if(easierSubweaponsForPalenque.size() == 1) {
+                    removableItems.remove(easierSubweaponsForPalenque.get(0));
+                }
+            }
+
+            subweaponOnlyItems.remove(removedItem); // Chakram is considered required for subweapon-only.
+            if(mainWeapons.size() == 1) {
+                removableItems.remove(mainWeapons.get(0));
+            }
+        }
+        else if("Serpent Staff".equals(removedItem)) {
+            // Must be able to raindrop unless alternative glitches are a thing.
+            if(!catPauseEnabled) {
+                removableItems.remove("Hermes' Boots");
+                if(!objectZipEnabled) {
+                    removableItems.remove("Grapple Claw");
+                }
+            }
+        }
+        else if("Hermes' Boots".equals(removedItem)) {
+            // Don't remove anything that outright requires raindropping.
+            removableItems.remove("Twin Statue");
+            removableItems.remove("Plane Model");
+            removableItems.remove("Hand Scanner");
+            removableItems.remove("reader.exe");
+            if(lamulanaMantraRequired) {
+                removableItems.remove("Fruit of Eden");
+            }
+            if(!catPauseEnabled) {
+                removableItems.remove("Chakram");
+                removableItems.remove("Serpent Staff");
+            }
+            if(!lampGlitchEnabled) {
+                removableItems.remove("Bronze Mirror");
+            }
+        }
+        else if("Grapple Claw".equals(removedItem)) {
+            // Don't remove anything that outright requires raindropping.
+            removableItems.remove("Twin Statue");
+            removableItems.remove("Plane Model");
+            if(!objectZipEnabled && !catPauseEnabled) {
+                removableItems.remove("Chakram");
+                removableItems.remove("Serpent Staff");
+            }
+            if(!lampGlitchEnabled) {
+                removableItems.remove("Bronze Mirror");
+            }
+        }
+        else if("Plane Model".equals(removedItem)) {
+            // Don't remove alternative means of getting into Chamber of Birth and the Medicine of the Mind area.
+            removableItems.remove("Hermes' Boots");
+            removableItems.remove("Grapple Claw");
+            removableItems.remove("Bronze Mirror");
+            if(requireKeyFairyCombo) {
+                removableItems.remove("miracle.exe");
+                removableItems.remove("mekuri.exe");
+            }
+        }
+        else if("Bronze Mirror".equals(removedItem)) {
+            removableItems.remove("Plane Model");
+            if(!lampGlitchEnabled) {
+                removableItems.remove("Hermes' Boots");
+                removableItems.remove("Grapple Claw");
+            }
+        }
+        else if("Ring".equals(removedItem)) {
+            subweaponOnlyItems.remove(removedItem);
+            if(Settings.isSubweaponOnlyLogic() && mainWeapons.size() == 1) {
+                // Can't kill Tiamat, main weapon is now required.
+                removableItems.remove(mainWeapons.get(0));
+            }
+        }
+        else if(DataFromFile.MAIN_WEAPONS.contains(removedItem)) {
+            mainWeapons.remove(removedItem);
+            if(Settings.isSubweaponOnlyLogic()) {
+                if(mainWeapons.isEmpty()) {
+                    removableItems.removeAll(subweaponOnlyItems);
+                }
+                else if(mainWeapons.size() == 1 && subweaponOnlyItems.size() < 5) {
+                    // One of the subweapon-only items has been removed, so a main weapon is required.
+                    removableItems.remove(mainWeapons.get(0));
+                }
+            }
+            else {
+                if(mainWeapons.size() == 1) {
+                    removableItems.remove(mainWeapons.get(0));
+                }
+            }
+
+            if(easierBosses) {
+                easierWeapons.remove(removedItem);
+                if(easierWeapons.size() == 1) {
+                    removableItems.remove(easierWeapons.get(0));
+                }
+            }
+        }
+        else if(ItemRandomizer.ALL_SUBWEAPONS.contains(removedItem)) {
+            subweaponOnlyItems.remove(removedItem);
+            if(Settings.isSubweaponOnlyLogic()) {
+                if(mainWeapons.size() == 1 && subweaponOnlyItems.size() < 5) {
+                    // One of the subweapon-only items has been removed, so a main weapon is required.
+                    removableItems.remove(mainWeapons.get(0));
+                }
+            }
+
+            if(easierBosses) {
+                easierWeapons.remove(removedItem);
+                if(easierWeapons.size() == 1) {
+                    removableItems.remove(easierWeapons.get(0));
+                }
+
+                easierSubweaponsForPalenque.remove(removedItem);
+                if(easierSubweaponsForPalenque.size() == 1) {
+                    removableItems.remove(easierSubweaponsForPalenque.get(0));
+                }
+            }
+        }
+        else if(easierBosses) {
+            if("Silver Shield".equals(removedItem)) {
+                removableItems.remove("Angel Shield");
+            }
+            else if ("Angel Shield".equals(removedItem)) {
+                removableItems.remove("Silver Shield");
+            }
+            else if(removedItem.startsWith("Sacred Orb")) {
+                if(orbRemoved) {
+                    removableItems.remove("Sacred Orb (Surface)");
+                    removableItems.remove("Sacred Orb (Gate of Guidance)");
+                    removableItems.remove("Sacred Orb (Mausoleum of the Giants)");
+                    removableItems.remove("Sacred Orb (Temple of the Sun)");
+                    removableItems.remove("Sacred Orb (Spring in the Sky)");
+                    removableItems.remove("Sacred Orb (Chamber of Extinction)");
+                    removableItems.remove("Sacred Orb (Twin Labyrinths)");
+                    removableItems.remove("Sacred Orb (Shrine of the Mother)");
+                    removableItems.remove("Sacred Orb (Tower of Ruin)");
+                    removableItems.remove("Sacred Orb (Chamber of Extinction)");
+                }
+                else {
+                    orbRemoved = true;
+                }
+            }
+        }
+        return orbRemoved;
     }
 
     private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, BacksideDoorRandomizer backsideDoorRandomizer, int attempt) throws IOException {

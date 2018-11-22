@@ -16,6 +16,7 @@ public class DboostPanel extends JPanel {
 
     public DboostPanel() {
         super(new MigLayout("fillx"));
+        setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.dboost")));
 
         itemBased = new JCheckBox();
         itemBased.setSelected(Settings.getEnabledDamageBoosts().contains("Item"));
@@ -49,6 +50,7 @@ public class DboostPanel extends JPanel {
     }
 
     public void updateTranslations() {
+        setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.dboost")));
         itemBased.setText(Translations.getText("dboost.Item"));
         environmentBased.setText(Translations.getText("dboost.Environment"));
         enemyBased.setText(Translations.getText("dboost.Enemy"));

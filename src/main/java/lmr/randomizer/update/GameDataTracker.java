@@ -2391,7 +2391,7 @@ public final class GameDataTracker {
     }
 
     public static void updateXmailerBlock(List<BlockContents> xelpudBlockContents) {
-        if(Settings.isRandomizeMainWeapon()) {
+        if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
             xelpudBlockContents.clear();
             xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1)); // 64
             List<Short> stringCharacters = FileUtils.stringToData("Did you know that randomized starting weapon requires you to load the provided save file?");

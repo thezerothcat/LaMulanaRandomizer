@@ -1,3 +1,5 @@
+Exit: Gate of Illusion [Lower] => Holy Grail
+Exit: Gate of Illusion [Lower] => Glitch: Raindrop
 Exit: Gate of Illusion [Top] => Holy Grail
 Exit: Gate of Illusion [Top] => Glitch: Raindrop
 Exit: Gate of Illusion [Top] => Event: Illusion Unlocked, Bronze Mirror, Door: F1

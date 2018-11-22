@@ -12,6 +12,7 @@ public class RemovedItemsPanel extends JPanel {
     private static final List<String> SUPPORTED_REMOVED_ITEMS = Arrays.asList("Spaulder");
 
     private JCheckBox removeNonShrineMaps;
+    private JCheckBox removeMainWeapons;
     private JPanel randomRemovableItemsPanel;
     private JSpinner minRandomRemovableItems;
     private JSpinner maxRandomRemovableItems;
@@ -27,6 +28,9 @@ public class RemovedItemsPanel extends JPanel {
         removeNonShrineMaps = new JCheckBox();
         removeNonShrineMaps.setSelected(Settings.isReplaceMapsWithWeights());
 
+        removeMainWeapons = new JCheckBox();
+        removeMainWeapons.setSelected(Settings.isRemoveMainWeapons());
+
         minRandomRemovableItems = new JSpinner(new SpinnerNumberModel(Settings.getMinRandomRemovedItems(),
                 0, Settings.MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED, 1));
         minRandomRemovableItemsLabel = new JLabel(Translations.getText("settings.removal.min"));
@@ -36,6 +40,7 @@ public class RemovedItemsPanel extends JPanel {
 
         CheckboxContainer checkboxContainer = new CheckboxContainer(1);
         checkboxContainer.add(removeNonShrineMaps);
+        checkboxContainer.add(removeMainWeapons);
 
         removableItems = new ArrayList<>(SUPPORTED_REMOVED_ITEMS.size());
         for(String itemName : SUPPORTED_REMOVED_ITEMS) {
@@ -69,6 +74,7 @@ public class RemovedItemsPanel extends JPanel {
 
     public void updateTranslations() {
         removeNonShrineMaps.setText(Translations.getText("randomization.replaceMapsWithWeights"));
+        removeMainWeapons.setText(Translations.getText("randomization.removeMainWeapons"));
         randomRemovableItemsPanel.setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.removal.randomCount")));
         for(RemoveItemToggle removeItemToggle : removableItems) {
             removeItemToggle.updateTranslations();
@@ -80,6 +86,7 @@ public class RemovedItemsPanel extends JPanel {
 
     public void updateSettings() {
         Settings.setReplaceMapsWithWeights(removeNonShrineMaps.isSelected(), true);
+        Settings.setRemoveMainWeapons(removeMainWeapons.isSelected(), true);
         for(RemoveItemToggle removeItemToggle : removableItems) {
             Settings.setRemovedItem(removeItemToggle.getItemName(), removeItemToggle.isRemovedItem(), true);
         }
@@ -90,6 +97,7 @@ public class RemovedItemsPanel extends JPanel {
 
     public void reloadSettings() {
         removeNonShrineMaps.setSelected(Settings.isReplaceMapsWithWeights());
+        removeMainWeapons.setSelected(Settings.isRemoveMainWeapons());
         minRandomRemovableItems.setValue(Settings.getMinRandomRemovedItems());
         maxRandomRemovableItems.setValue(Settings.getMaxRandomRemovedItems());
         for(RemoveItemToggle removeItemToggle : removableItems) {
