@@ -10,8 +10,6 @@ public class ChallengePanel extends JPanel {
     private JCheckBox automaticHardmode;
     private JCheckBox coinChestGraphics;
 
-    private DifficultyPanel difficultyPanel;
-
     public ChallengePanel() {
         super(new MigLayout("fillx, wrap"));
 
@@ -26,27 +24,21 @@ public class ChallengePanel extends JPanel {
         checkboxContainer.add(coinChestGraphics);
         add(checkboxContainer, "growx, wrap");
 
-        difficultyPanel = new DifficultyPanel();
-        add(difficultyPanel, "growx, aligny, wrap");
-
         updateTranslations();
     }
 
     public void updateTranslations() {
         automaticHardmode.setText(Translations.getText("challenge.automaticHardmode"));
         coinChestGraphics.setText(Translations.getText("challenge.coinChestGraphics"));
-        difficultyPanel.updateTranslations();
     }
 
     public void updateSettings() {
         Settings.setAutomaticHardmode(automaticHardmode.isSelected(), true);
         Settings.setCoinChestGraphics(coinChestGraphics.isSelected(), true);
-        difficultyPanel.updateSettings();
     }
 
     public void reloadSettings() {
         automaticHardmode.setSelected(Settings.isAutomaticHardmode());
         coinChestGraphics.setSelected(Settings.isCoinChestGraphics());
-        difficultyPanel.reloadSettings();
     }
 }

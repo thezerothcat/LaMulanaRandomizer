@@ -10,6 +10,8 @@ public class LogicPanel extends JPanel {
     private DboostPanel dboostPanel;
     private GlitchPanel glitchPanel;
 
+    private DifficultyPanel difficultyPanel;
+
     private JCheckBox requireSoftwareComboForKeyFairy;
     private JCheckBox requireIceCapeForLava;
     private JCheckBox requireFlaresForExtinction;
@@ -48,12 +50,16 @@ public class LogicPanel extends JPanel {
         checkboxContainer.add(subweaponOnlyLogic);
         add(checkboxContainer, "growx, wrap");
 
+        difficultyPanel = new DifficultyPanel();
+        add(difficultyPanel, "growx, aligny, wrap");
+
         updateTranslations();
     }
 
     public void updateTranslations() {
         dboostPanel.updateTranslations();
         glitchPanel.updateTranslations();
+        difficultyPanel.updateTranslations();
         requireIceCapeForLava.setText(Translations.getText("logic.requireIceCapeForLava"));
         requireFlaresForExtinction.setText(Translations.getText("logic.requireFlaresForExtinction"));
         requireSoftwareComboForKeyFairy.setText(Translations.getText("logic.requireSoftwareComboForKeyFairy"));
@@ -64,6 +70,7 @@ public class LogicPanel extends JPanel {
     public void updateSettings() {
         dboostPanel.updateSettings();
         glitchPanel.updateSettings();
+        difficultyPanel.updateSettings();
         Settings.setRequireIceCapeForLava(requireIceCapeForLava.isSelected(), true);
         Settings.setRequireFlaresForExtinction(requireFlaresForExtinction.isSelected(), true);
         Settings.setRequireSoftwareComboForKeyFairy(requireSoftwareComboForKeyFairy.isSelected(), true);
@@ -74,6 +81,7 @@ public class LogicPanel extends JPanel {
     public void reloadSettings() {
         dboostPanel.reloadSettings();
         glitchPanel.reloadSettings();
+        difficultyPanel.reloadSettings();
         requireIceCapeForLava.setSelected(Settings.isRequireIceCapeForLava());
         requireFlaresForExtinction.setSelected(Settings.isRequireFlaresForExtinction());
         requireSoftwareComboForKeyFairy.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
