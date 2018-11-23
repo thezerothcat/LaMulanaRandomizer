@@ -4,7 +4,7 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 2.0
 -----------------------------
-Update to java 11.
+Update to java 11. UI adjustments. Better control over starting weapons. Ability to remove all main weapons without using plando features. Logic adjustments for removed items.
 
 1.45:
 -----------------------------
