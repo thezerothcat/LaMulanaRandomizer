@@ -63,7 +63,7 @@ public class TransitionGateRandomizer {
             transitionGateDestinationMap.put("Transition: Shrine U1", "Transition: Endless D1");
             transitionGateDestinationMap.put("Transition: Shrine D1", "Transition: Extinction U1");
             transitionGateDestinationMap.put("Transition: Shrine D2", "Transition: Endless U1");
-            transitionGateDestinationMap.put("Transition: Shrine D3", "Transition: Twin U1");
+            transitionGateDestinationMap.put("Transition: Shrine D3", "Transition: Twin U2");
 
             transitionGateDestinationMap.put("Transition: Illusion D1", "Transition: Graveyard U1");
             transitionGateDestinationMap.put("Transition: Illusion D2", "Transition: Moonlight U1");
@@ -83,7 +83,7 @@ public class TransitionGateRandomizer {
             transitionGateDestinationMap.put("Transition: Goddess L1", "Transition: Illusion R1");
             transitionGateDestinationMap.put("Transition: Goddess L2", "Transition: Ruin R1");
             transitionGateDestinationMap.put("Transition: Goddess U1", "Transition: Birth D1");
-            transitionGateDestinationMap.put("Transition: Goddess D1", "Transition: Graveyard U1");
+            transitionGateDestinationMap.put("Transition: Goddess D1", "Transition: Graveyard U2");
 
             transitionGateDestinationMap.put("Transition: Ruin L1", "Transition: Illusion R2");
             transitionGateDestinationMap.put("Transition: Ruin R1", "Transition: Goddess L2");
@@ -106,6 +106,7 @@ public class TransitionGateRandomizer {
         transitionGateDestinationMap.put("Transition: Extinction L2", "Transition: Sun R2"); // todo: ignore?
         transitionGateDestinationMap.put("Transition: Extinction U1", "Transition: Shrine D1"); // todo: ignore?
 
+        transitionGateDestinationMap.put("Transition: Twin U2", "Transition: Shrine D3");
         transitionGateDestinationMap.put("Transition: Twin U3", "Transition: Dimensional D1");
 
         transitionGateDestinationMap.put("Transition: Endless D1", "Transition: Shrine U1");
@@ -114,6 +115,7 @@ public class TransitionGateRandomizer {
         transitionGateDestinationMap.put("Transition: Shrine U1", "Transition: Endless D1");
         transitionGateDestinationMap.put("Transition: Shrine D1", "Transition: Extinction U1");
         transitionGateDestinationMap.put("Transition: Shrine D2", "Transition: Endless U1");
+        transitionGateDestinationMap.put("Transition: Shrine D3", "Transition: Twin U2");
 
         transitionGateDestinationMap.put("Transition: Illusion D1", "Transition: Graveyard U1");
         transitionGateDestinationMap.put("Transition: Illusion R1", "Transition: Goddess L1");
@@ -125,7 +127,7 @@ public class TransitionGateRandomizer {
         transitionGateDestinationMap.put("Transition: Goddess L1", "Transition: Illusion R1");
         transitionGateDestinationMap.put("Transition: Goddess L2", "Transition: Ruin R1");
         transitionGateDestinationMap.put("Transition: Goddess U1", "Transition: Birth D1");
-        transitionGateDestinationMap.put("Transition: Goddess D1", "Transition: Graveyard U1");
+        transitionGateDestinationMap.put("Transition: Goddess D1", "Transition: Graveyard U2");
 
         transitionGateDestinationMap.put("Transition: Ruin L1", "Transition: Illusion R2");
         transitionGateDestinationMap.put("Transition: Ruin R1", "Transition: Goddess L2");
@@ -161,7 +163,6 @@ public class TransitionGateRandomizer {
         upTransitions.add("Transition: Extinction U2");
         upTransitions.add("Transition: Birth U1");
         upTransitions.add("Transition: Twin U1");
-        upTransitions.add("Transition: Twin U2");
         downTransitions.add("Transition: Surface D1");
         downTransitions.add("Transition: Surface D2");
         downTransitions.add("Transition: Guidance D1");
@@ -173,7 +174,6 @@ public class TransitionGateRandomizer {
         downTransitions.add("Transition: Birth D1");
         downTransitions.add("Transition: Twin D1");
         downTransitions.add("Transition: Twin D2");
-        downTransitions.add("Transition: Shrine D3");
 
         String chosenTransitionStart;
         String chosenTransitionEnd;
@@ -214,7 +214,13 @@ public class TransitionGateRandomizer {
             return;
         }
 
-        // todo: log
+        List<String> sortedTransitions = new ArrayList<>(transitionGateDestinationMap.keySet());
+        Collections.sort(sortedTransitions);
+
+        for(String transition : sortedTransitions) {
+            writer.write(transition + " <==> " + transitionGateDestinationMap.get(transition));
+            writer.newLine();
+        }
 
         writer.flush();
         writer.close();
