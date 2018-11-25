@@ -1,7 +1,0 @@
-Shop 8 (Sun) => Location: Temple of the Sun [Main], Boost: Enemy, Hermes' Boots
-Shop 8 (Sun) => Location: Temple of the Sun [Main], Boost: Item, Attack: Bomb, Hermes' Boots
-Shop 10 (Sun) => Location: Temple of the Sun [Main], Death Seal, Boost: Item, Attack: Bomb
-Shop 15 (Ruin) => Location: Tower of Ruin [Grail], Attack: Below, Boost: Item, Attack: Bomb
-Shop 15 (Ruin) => Location: Tower of Ruin [Grail], Attack: Earth Spear, Boost: Item, Attack: Bomb
-Shop 15 (Ruin) => Location: Tower of Ruin [Grail], Attack: Rolling Shuriken, Boost: Item, Attack: Bomb
-Shop 15 (Ruin) => Location: Tower of Ruin [Grail], Attack: Caltrops, Boost: Item, Attack: Bomb

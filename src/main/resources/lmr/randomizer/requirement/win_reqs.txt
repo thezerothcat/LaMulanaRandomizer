@@ -5,7 +5,7 @@ Origin Seal
 Birth Seal
 Life Seal
 Death Seal
-Event: Fobos Ladder
+Event: Fobos Visited
 Event: Medicine of the Mind (Yellow)
 Event: All Grails Read
 Event: Mother Ankh
