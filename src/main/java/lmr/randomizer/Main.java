@@ -923,7 +923,7 @@ public class Main {
                 FileUtils.flush();
 
                 dialog.updateProgress(85, Translations.getText("progress.spoiler"));
-                outputLocations(itemRandomizer, shopRandomizer, backsideDoorRandomizer, attempt);
+                outputLocations(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer, attempt);
 
                 dialog.updateProgress(90, Translations.getText("progress.read"));
 
@@ -1585,10 +1585,13 @@ public class Main {
         return orbRemoved;
     }
 
-    private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, BacksideDoorRandomizer backsideDoorRandomizer, int attempt) throws IOException {
+    private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer,
+                                        BacksideDoorRandomizer backsideDoorRandomizer,
+                                        TransitionGateRandomizer transitionGateRandomizer, int attempt) throws IOException {
         itemRandomizer.outputLocations(attempt);
         shopRandomizer.outputLocations(attempt);
         backsideDoorRandomizer.outputLocations(attempt);
+        transitionGateRandomizer.outputLocations(attempt);
         if (!Settings.getCurrentRemovedItems().isEmpty() || !Settings.getRemovedItems().isEmpty()) {
             BufferedWriter writer = FileUtils.getFileWriter(String.format("%s/removed_items.txt", Settings.getStartingSeed()));
             if (writer == null) {
