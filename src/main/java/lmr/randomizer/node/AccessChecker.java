@@ -6,6 +6,7 @@ import lmr.randomizer.Settings;
 import lmr.randomizer.random.BacksideDoorRandomizer;
 import lmr.randomizer.random.ItemRandomizer;
 import lmr.randomizer.random.ShopRandomizer;
+import lmr.randomizer.random.TransitionGateRandomizer;
 
 import java.util.*;
 
@@ -26,6 +27,7 @@ public class AccessChecker {
     private ItemRandomizer itemRandomizer;
     private ShopRandomizer shopRandomizer;
     private BacksideDoorRandomizer backsideDoorRandomizer;
+    private TransitionGateRandomizer transitionGateRandomizer;
 
     private int numberOfAccessibleAnkhJewels;
     private int numberOfCollectedAnkhJewels;
@@ -43,6 +45,7 @@ public class AccessChecker {
         this.itemRandomizer = copyAll ? new ItemRandomizer(accessChecker.itemRandomizer) : accessChecker.itemRandomizer;
         this.shopRandomizer = copyAll ? accessChecker.shopRandomizer.copy() : accessChecker.shopRandomizer;
         this.backsideDoorRandomizer = new BacksideDoorRandomizer(accessChecker.backsideDoorRandomizer);
+        this.transitionGateRandomizer = accessChecker.transitionGateRandomizer; // todo: might need to copy at some point
         this.accessedNodes = new HashSet<>(accessChecker.accessedNodes);
         this.accessibleBossNodes = new HashSet<>(accessChecker.accessibleBossNodes);
         this.bossesDefeated = accessChecker.bossesDefeated;
@@ -107,7 +110,7 @@ public class AccessChecker {
             for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
                 nodeType = mapOfNodeNameToRequirementsObject.get(nodeName).getType();
                 if(NodeType.STATE.equals(nodeType) || NodeType.MAP_LOCATION.equals(nodeType)
-                        || NodeType.EXIT.equals(nodeType) || NodeType.SETTING.equals(nodeType)) {
+                        || NodeType.EXIT.equals(nodeType)|| NodeType.SETTING.equals(nodeType) || NodeType.TRANSITION.equals(nodeType) ) {
                     continue;
                 }
                 else if(NodeType.ITEM_LOCATION.equals(nodeType)) {
@@ -122,23 +125,10 @@ public class AccessChecker {
             for(String requiredItem : DataFromFile.getWinRequirements()) {
                 if(!accessedNodes.contains(requiredItem)) {
                     FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
-                    if(FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+                    if(accessedNodes.size() > 400 || FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+                        List<String> logged = new ArrayList<>();
                         if (requiredItem.startsWith("Event:") || requiredItem.startsWith("Location:")) {
-                            NodeWithRequirements remainingRequirements = mapOfNodeNameToRequirementsObject.get(requiredItem);
-                            for (List<String> requirementSet : remainingRequirements.getAllRequirements()) {
-                                FileUtils.log("Missing requirements from set: " + requirementSet);
-                                for (String requirement : requirementSet) {
-                                    remainingRequirements = mapOfNodeNameToRequirementsObject.get(requirement);
-                                    for (List<String> requirementsForRequirement : remainingRequirements.getAllRequirements()) {
-                                        FileUtils.log("Missing requirements for " + requirement + ": " + requirementsForRequirement);
-                                        for(String requirementInner : requirementsForRequirement) {
-                                            if(requirementInner.startsWith("Door:")) {
-                                                backsideDoorRandomizer.logRequirements(requirementInner);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            logAccess(requiredItem, logged);
                         }
                     }
                 }
@@ -148,29 +138,64 @@ public class AccessChecker {
         for(String requiredItem : DataFromFile.getWinRequirements()) {
             if(!accessedNodes.contains(requiredItem)) {
                 FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
-                if(FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+                if(accessedNodes.size() > 400 || FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+                    List<String> logged = new ArrayList<>();
                     if (requiredItem.startsWith("Event:") || requiredItem.startsWith("Location:")) {
-                        NodeWithRequirements remainingRequirements = mapOfNodeNameToRequirementsObject.get(requiredItem);
-                        for (List<String> requirementSet : remainingRequirements.getAllRequirements()) {
-                            FileUtils.log("Missing requirements from set: " + requirementSet);
-                            for (String requirement : requirementSet) {
-                                remainingRequirements = mapOfNodeNameToRequirementsObject.get(requirement);
-                                for (List<String> requirementsForRequirement : remainingRequirements.getAllRequirements()) {
-                                    FileUtils.log("Missing requirements for " + requirement + ": " + requirementsForRequirement);
-                                    for(String requirementInner : requirementsForRequirement) {
-                                        if(requirementInner.startsWith("Door:")) {
-                                            backsideDoorRandomizer.logRequirements(requirementInner);
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        logAccess(requiredItem, logged);
                     }
                 }
                 return false;
             }
         }
         return true;
+    }
+
+    private void logAccess(String requiredNode, List<String> loggedRequirements) {
+        if(loggedRequirements.contains(requiredNode)) {
+            return;
+        }
+
+        NodeWithRequirements remainingRequirements = mapOfNodeNameToRequirementsObject.get(requiredNode);
+        if(remainingRequirements == null) {
+            return;
+        }
+
+        loggedRequirements.add(requiredNode);
+        for (List<String> requirementSet : remainingRequirements.getAllRequirements()) {
+            FileUtils.log("Missing requirements for " + requiredNode + " from set: " + requirementSet);
+            for (String requirement : requirementSet) {
+                if(requirement.startsWith("Transition:")) {
+                    FileUtils.log("Missing requirements for " + requirement + ": " + transitionGateRandomizer.getTransitionReverse(requirement));
+                    logAccess(transitionGateRandomizer.getTransitionReverse(requirement), loggedRequirements);
+                }
+
+                if(!requirement.contains(": ")) {
+                    continue;
+                }
+                remainingRequirements = mapOfNodeNameToRequirementsObject.get(requirement);
+                if(remainingRequirements != null) {
+                    for (List<String> requirementsForRequirement : remainingRequirements.getAllRequirements()) {
+                        FileUtils.log("Missing requirements for " + requirement + ": " + requirementsForRequirement);
+                        for (String requirementInner : requirementsForRequirement) {
+                            if (requirementInner.startsWith("Door:")) {
+                                List<String> missingRequirements = backsideDoorRandomizer.getMissingRequirements(requirementInner);
+                                for(String doorRequirement : missingRequirements) {
+                                    logAccess(doorRequirement, loggedRequirements);
+                                }
+                            }
+                            else if (requirementInner.startsWith("Transition:")) {
+                                FileUtils.log("Unable to access " + transitionGateRandomizer.getTransitionReverse(requirementInner));
+                                logAccess(transitionGateRandomizer.getTransitionReverse(requirementInner), loggedRequirements);
+                            }
+                            else if (requirementInner.startsWith("Event:") || requirementInner.startsWith("State:") || requirementInner.startsWith("Location:")) {
+                                logAccess(requirementInner, loggedRequirements);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     private boolean isRequireFullAccess() {
@@ -371,10 +396,8 @@ public class AccessChecker {
                         queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
                     }
                 }
-                else {
-                    if(!DataFromFile.GUARDIAN_DEFEATED_EVENTS.contains(nodeName)) {
-                        queuedUpdates.add(nodeName);
-                    }
+                else if(!DataFromFile.GUARDIAN_DEFEATED_EVENTS.contains(nodeName)) {
+                    queuedUpdates.add(nodeName);
                 }
                 break;
             case SHOP:
@@ -393,6 +416,14 @@ public class AccessChecker {
                 }
                 else {
                     DataFromFile.getInitialShops().add(nodeName);
+                }
+                break;
+            case TRANSITION:
+                queuedUpdates.add(nodeName);
+                String reverseTransition = transitionGateRandomizer.getTransitionReverse(nodeName);
+                if(!accessedNodes.contains(reverseTransition) && !queuedUpdates.contains(reverseTransition)) {
+                    FileUtils.logDetail("Gained access to node " + reverseTransition, attemptNumber);
+                    queuedUpdates.add(reverseTransition);
                 }
                 break;
         }
@@ -564,7 +595,11 @@ public class AccessChecker {
         this.backsideDoorRandomizer = backsideDoorRandomizer;
     }
 
-    public boolean updateForBosses(int attempt) {
+    public void setTransitionGateRandomizer(TransitionGateRandomizer transitionGateRandomizer) {
+        this.transitionGateRandomizer = transitionGateRandomizer;
+    }
+
+    public boolean updateForBosses() {
         List<Thread> threads = new ArrayList<>(accessibleBossNodes.size());
         List<AnkhJewelLockChecker> ankhJewelLockCheckers = new ArrayList<>();
         for(String bossNode : accessibleBossNodes) {

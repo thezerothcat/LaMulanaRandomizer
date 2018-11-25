@@ -22,6 +22,7 @@ public final class GameDataTracker {
     private static Map<Integer, List<GameObject>> mapOfShopBlockToShopObjects = new HashMap<>();
     private static Map<String, List<GameObject>> mantraTablets = new HashMap<>();
     private static Map<String, List<GameObject>> mapOfDoorNameToBacksideDoor = new HashMap<>();
+    private static Map<String, List<GameObject>> mapOfGateNameToTransitionGate = new HashMap<>();
 
     private static GameObject subweaponPot;
 
@@ -33,6 +34,7 @@ public final class GameDataTracker {
         mapOfChestIdentifyingInfoToBlock.clear();
         mapOfShopBlockToShopObjects.clear();
         mapOfDoorNameToBacksideDoor.clear();
+        mapOfGateNameToTransitionGate.clear();
         mantraTablets.clear();
     }
 
@@ -205,6 +207,24 @@ public final class GameDataTracker {
                     objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                 }
                 objects.add(gameObject);
+            }
+        } else if (gameObject.getId() == 0xc4) {
+            Screen screen = (Screen)gameObject.getObjectContainer();
+            String gateName = null;
+            if(screen.getZoneIndex() == 0) {
+                // Gate of Guidance
+                if(screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                    gateName = "Transition: Guidance L1";
+                }
+
+                if(gateName != null) {
+                    List<GameObject> transitionGates = mapOfGateNameToTransitionGate.get(gateName);
+                    if(transitionGates == null) {
+                        transitionGates = new ArrayList<>();
+                        mapOfGateNameToTransitionGate.put(gateName, transitionGates);
+                    }
+                    transitionGates.add(gameObject);
+                }
             }
         } else if (gameObject.getId() == 0x12) {
             Integer flagIndexToRemove = null;
@@ -569,7 +589,7 @@ public final class GameDataTracker {
                 }
                 else if(zone == 6) {
                     if(screen.getRoomIndex() != 7) {
-                        // Chamber of Extinction [Magatama Left] => Chamber of Birth [East]
+                        // Chamber of Extinction [Magatama Left] => Chamber of Birth [Northeast]
                         doorName = "Door: F6";
                         replaceBacksideDoorFlags(gameObject, 0x0fb, 0x1d0, false);
 
@@ -668,7 +688,7 @@ public final class GameDataTracker {
                     }
                 }
                 else if(zone == 15) {
-                    // Chamber of Birth [East] => Chamber of Extinction [Magatama Left]
+                    // Chamber of Birth [Northeast] => Chamber of Extinction [Magatama Left]
                     doorName = "Door: B6";
                 }
                 if(doorName != null) {
@@ -2987,6 +3007,34 @@ public final class GameDataTracker {
                 bunemonData.add((short)275);
             }
         }
+    }
+
+    public static void writeTransitionGate(String gateToUpdate, String gateDestination) {
+        List<GameObject> objectsToModify = mapOfGateNameToTransitionGate.get(gateToUpdate); // todo: finish
+        for(GameObject gameObject : objectsToModify) {
+            replaceTransitionGateArgs(gameObject, gateDestination);
+            // todo: get screen from gameObject and make sure the screen transition matches the gate transition in case of raindropping
+            // todo: how to handle a case of multiple gates on the same side? good thing sun <> extinction isn't random yet
+        }
+    }
+
+    private static void replaceTransitionGateArgs(GameObject gameObject, String gateDestination) {
+//        gameObject.getArgs().clear();
+
+//        if("Transition: Surface R1".equals(gateDestination)) {
+//            gameObject.getArgs().add((short)10);
+//            gameObject.getArgs().add((short)3);
+//            gameObject.getArgs().add((short)0);
+//            gameObject.getArgs().add((short)40);
+//            gameObject.getArgs().add((short)80);
+//        }
+//        else if("Transition: Guidance L1".equals(gateDestination)) {
+//            gameObject.getArgs().add((short)11);
+//            gameObject.getArgs().add((short)3);
+//            gameObject.getArgs().add((short)0);
+//            gameObject.getArgs().add((short)80);
+//            gameObject.getArgs().add((short)160);
+//        }
     }
 
     public static void writeBacksideDoor(String doorToReplace, String doorWithCoordinateData, int bossNumber) {

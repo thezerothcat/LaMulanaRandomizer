@@ -309,7 +309,7 @@ public class BacksideDoorRandomizer {
             return "Location: Tower of the Goddess [Lower]";
         }
         if("Door: B6".equals(door)) {
-            return "Location: Chamber of Birth [East]";
+            return "Location: Chamber of Birth [Northeast]";
         }
         if("Door: B7".equals(door)) {
             return "Location: Tower of Ruin [Top]";
@@ -355,7 +355,7 @@ public class BacksideDoorRandomizer {
         if("Location: Tower of the Goddess [Lower]".equals(location)) {
             return "Door: F5";
         }
-        if("Location: Chamber of Birth [East]".equals(location)) {
+        if("Location: Chamber of Birth [Northeast]".equals(location)) {
             return "Door: F6";
         }
         if("Location: Tower of Ruin [Top]".equals(location)) {
@@ -395,15 +395,17 @@ public class BacksideDoorRandomizer {
                 : door.replace("Door: F", "Door: B");
     }
 
-    public void logLocations() {
-        for(String door : backsideDoorLocationMap.keySet()) {
-            FileUtils.log(door + ": " + backsideDoorLocationMap.get(door));
+    public void logLocations(Integer attemptNumber) {
+        if(Settings.isRandomizeBacksideDoors() && FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+            for (String door : backsideDoorLocationMap.keySet()) {
+                FileUtils.log(door + ": " + backsideDoorLocationMap.get(door));
+            }
+            FileUtils.flush();
         }
-        FileUtils.flush();
     }
 
     public void logBosses(Integer attemptNumber) {
-        if(FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+        if(Settings.isRandomizeBacksideDoors() && FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
             for(String door : backsideDoorBossMap.keySet()) {
                 FileUtils.log(door + ": " + backsideDoorBossMap.get(door));
             }
@@ -411,8 +413,8 @@ public class BacksideDoorRandomizer {
         }
     }
 
-    public void logRequirements(String door) {
-        FileUtils.logFlush(door + ": " + mapOfNodeNameToDoorRequirementsObject.get(door).getAllRequirements().get(0));
+    public List<String> getMissingRequirements(String door) {
+        return mapOfNodeNameToDoorRequirementsObject.get(door).getAllRequirements().get(0);
     }
 
     public void outputLocations(int attemptNumber) throws IOException {

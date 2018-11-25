@@ -809,7 +809,9 @@ public class Main {
 
         BacksideDoorRandomizer backsideDoorRandomizer = new BacksideDoorRandomizer();
         backsideDoorRandomizer.determineDoorDestinations(random);
-        backsideDoorRandomizer.logLocations();
+        backsideDoorRandomizer.logLocations(null);
+
+        TransitionGateRandomizer transitionGateRandomizer = new TransitionGateRandomizer();
 
         Set<String> initiallyAccessibleItems = getInitiallyAvailableItems();
 
@@ -826,11 +828,12 @@ public class Main {
             dialog.setTitle(String.format(Translations.getText("progress.shuffling.title"), attempt));
             dialog.progressBar.setIndeterminate(true);
 
+            transitionGateRandomizer.determineGateDestinations(random);
             backsideDoorRandomizer.determineDoorBosses(random, attempt);
 
             ItemRandomizer itemRandomizer = new ItemRandomizer();
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
-            AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer);
+            AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer);
             accessChecker.initExitRequirements();
 
             List<String> startingNodes = getStartingNodes();
@@ -885,7 +888,7 @@ public class Main {
 
             boolean ankhJewelLock = false;
             if(accessChecker.getQueuedUpdates().isEmpty()) {
-                if (!accessChecker.updateForBosses(attempt)) {
+                if (!accessChecker.updateForBosses()) {
                     ankhJewelLock = true;
                 }
             }
@@ -898,7 +901,7 @@ public class Main {
                             ankhJewelLock = true;
                             break;
                         }
-                        if (!accessChecker.updateForBosses(attempt)) {
+                        if (!accessChecker.updateForBosses()) {
                             ankhJewelLock = true;
                             break;
                         }
@@ -947,8 +950,12 @@ public class Main {
 
                 if(Settings.isRandomizeBacksideDoors()) {
                     backsideDoorRandomizer.updateBacksideDoors();
+                    FileUtils.log("Updated backside door data");
                 }
-                FileUtils.log("Updated backside door data");
+                if(Settings.isRandomizeTransitionGates()) {
+                    transitionGateRandomizer.updateTransitions();
+                    FileUtils.log("Updated transition gate data");
+                }
 
 //                if(Settings.isRandomizeMantras()) {
 //                    GameDataTracker.randomizeMantras(random);
@@ -1055,6 +1062,9 @@ public class Main {
         }
         if(Settings.isUshumgalluAssist()) {
             startingNodes.add("Setting: Ushumgallu Assist");
+        }
+        if(!Settings.isRequireFlaresForExtinction()) {
+            startingNodes.add("Setting: Flareless Extinction");
         }
         startingNodes.add(Settings.isAlternateMotherAnkh() ? "Setting: Alternate Mother" : "Setting: Standard Mother");
 
@@ -1297,11 +1307,13 @@ public class Main {
         return shopRandomizer;
     }
 
-    private static AccessChecker buildAccessChecker(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, BacksideDoorRandomizer backsideDoorRandomizer) {
+    private static AccessChecker buildAccessChecker(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer,
+                                                    BacksideDoorRandomizer backsideDoorRandomizer, TransitionGateRandomizer transitionGateRandomizer) {
         AccessChecker accessChecker = new AccessChecker();
         accessChecker.setItemRandomizer(itemRandomizer);
         accessChecker.setShopRandomizer(shopRandomizer);
         accessChecker.setBacksideDoorRandomizer(backsideDoorRandomizer);
+        accessChecker.setTransitionGateRandomizer(transitionGateRandomizer);
         itemRandomizer.setAccessChecker(accessChecker);
         shopRandomizer.setAccessChecker(accessChecker);
         return accessChecker;
