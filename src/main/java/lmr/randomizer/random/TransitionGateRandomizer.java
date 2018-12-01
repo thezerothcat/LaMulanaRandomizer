@@ -122,12 +122,9 @@ public class TransitionGateRandomizer {
         transitionGateDestinationMap.put("Transition: Illusion R2", "Transition: Ruin L1");
 
         transitionGateDestinationMap.put("Transition: Graveyard U1", "Transition: Illusion D1");
-        transitionGateDestinationMap.put("Transition: Graveyard U2", "Transition: Goddess D1");
 
         transitionGateDestinationMap.put("Transition: Goddess L1", "Transition: Illusion R1");
-        transitionGateDestinationMap.put("Transition: Goddess L2", "Transition: Ruin R1");
         transitionGateDestinationMap.put("Transition: Goddess U1", "Transition: Birth D1");
-        transitionGateDestinationMap.put("Transition: Goddess D1", "Transition: Graveyard U2");
 
         transitionGateDestinationMap.put("Transition: Ruin L1", "Transition: Illusion R2");
         transitionGateDestinationMap.put("Transition: Ruin R1", "Transition: Goddess L2");
@@ -147,13 +144,16 @@ public class TransitionGateRandomizer {
         leftTransitions.add("Transition: Graveyard L1");
         leftTransitions.add("Transition: Sun L1");
         leftTransitions.add("Transition: Moonlight L1");
+        leftTransitions.add("Transition: Goddess L2");
         rightTransitions.add("Transition: Surface R1");
         rightTransitions.add("Transition: Inferno R1");
         rightTransitions.add("Transition: Graveyard R1");
+        rightTransitions.add("Transition: Ruin R1");
         rightTransitions.add("Transition: Ruin R2");
         rightTransitions.add("Transition: Endless R1");
         upTransitions.add("Transition: Guidance U1");
         upTransitions.add("Transition: Mausoleum U1");
+        upTransitions.add("Transition: Graveyard U2");
         upTransitions.add("Transition: Sun U1");
         upTransitions.add("Transition: Moonlight U1");
         upTransitions.add("Transition: Moonlight U2");
@@ -171,6 +171,7 @@ public class TransitionGateRandomizer {
         downTransitions.add("Transition: Mausoleum D1");
         downTransitions.add("Transition: Graveyard D1");
         downTransitions.add("Transition: Spring D1");
+        downTransitions.add("Transition: Goddess D1");
         downTransitions.add("Transition: Birth D1");
         downTransitions.add("Transition: Twin D1");
         downTransitions.add("Transition: Twin D2");

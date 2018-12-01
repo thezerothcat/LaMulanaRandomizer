@@ -209,83 +209,95 @@ public final class GameDataTracker {
                 objects.add(gameObject);
             }
         } else if (gameObject.getId() == 0xc4) {
-            Screen screen = (Screen)gameObject.getObjectContainer();
-            String gateName = null;
-            if(screen.getZoneIndex() == 0) {
-                // Gate of Guidance
-                if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Guidance L1";
+            if(Settings.isRandomizeTransitionGates()) {
+                Screen screen = (Screen)gameObject.getObjectContainer();
+                FileUtils.logFlush(String.format("Gate on screen [%d, %d, %d] leads to screen [%d, %d, %d] with position (%d, %d)",
+                        screen.getZoneIndex(), screen.getRoomIndex(), screen.getScreenIndex(),
+                        gameObject.getArgs().get(0), gameObject.getArgs().get(1), gameObject.getArgs().get(2),
+                        gameObject.getArgs().get(3), gameObject.getArgs().get(4)));
+
+                String gateName = null;
+                boolean needEscapeDoor = false;
+                if(screen.getZoneIndex() == 0) {
+                    // Gate of Guidance
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Guidance L1";
+                        needEscapeDoor = true;
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Guidance U1";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Guidance D1";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Guidance D2";
+                    }
                 }
-                else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Guidance U1";
+                else if(screen.getZoneIndex() == 1) {
+                    // Surface
+                    if (screen.getRoomIndex() == 11 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Surface R1";
+                        needEscapeDoor = true;
+                    }
+                    else if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Surface D1";
+                        needEscapeDoor = true;
+                    }
+                    else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Surface D2";
+                        needEscapeDoor = true;
+                    }
                 }
-                else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Guidance D1";
+                else if(screen.getZoneIndex() == 2) {
+                    // Mausoleum
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Mausoleum U1";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Mausoleum D1";
+                    }
+                    else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Mausoleum L1";
+                    }
                 }
-                else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Guidance D2";
-                }
-            }
-            else if(screen.getZoneIndex() == 1) {
-                // Surface
-                if (screen.getRoomIndex() == 11 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Surface R1";
-                }
-                else if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 2) {
-                    gateName = "Transition: Surface D1";
-                }
-                else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 2) {
-                    gateName = "Transition: Surface D2";
-                }
-            }
-            else if(screen.getZoneIndex() == 2) {
-                // Mausoleum
-                if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Mausoleum U1";
-                }
-                else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 2) {
-                    gateName = "Transition: Mausoleum D1";
-                }
-                else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Mausoleum L1";
-                }
-            }
-            else if(screen.getZoneIndex() == 3) {
-                // Sun
-                if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Sun U1";
-                }
-                else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Sun L1";
-                }
+                else if(screen.getZoneIndex() == 3) {
+                    // Sun
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Sun U1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Sun L1";
+                    }
 //                else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
 //                    // todo: compare position for R1 vs R2
 //                    gateName = "Transition: Sun R1";
 //                }
-            }
-            else if(screen.getZoneIndex() == 4) {
-                // Spring
-                if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2) {
-                    gateName = "Transition: Spring D1";
                 }
-            }
-            else if(screen.getZoneIndex() == 5) {
-                // Inferno
-                if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Inferno R1";
+                else if(screen.getZoneIndex() == 4) {
+                    // Spring
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Spring D1";
+                    }
                 }
-                else if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Inferno U1";
+                else if(screen.getZoneIndex() == 5) {
+                    // Inferno
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Inferno R1";
+                    }
+                    else if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Inferno U1";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Inferno U2";
+                        needEscapeDoor = true;
+                    }
                 }
-                else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Inferno U2";
-                }
-            }
-            else if(screen.getZoneIndex() == 6) {
-                // Extinction
-                if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Extinction U2";
-                }
+                else if(screen.getZoneIndex() == 6) {
+                    // Extinction
+                    if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Extinction U2";
+                    }
 //                else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
 //                    gateName = "Transition: Extinction U3";
 //                }
@@ -296,18 +308,20 @@ public final class GameDataTracker {
 //                    // todo: compare position for L1 vs L2
 //                    gateName = "Transition: Extinction L1";
 //                }
-            }
-            else if(screen.getZoneIndex() == 7) {
-                // Twin Labyrinths
-                if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Twin U1";
                 }
-                else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Twin D1";
-                }
-                else if (screen.getRoomIndex() == 16 && screen.getScreenIndex() == 2) {
-                    gateName = "Transition: Twin D2";
-                }
+                else if(screen.getZoneIndex() == 7) {
+                    // Twin Labyrinths
+                    if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
+                        if(gameObject.getArgs().get(0) != 7) {
+                            gateName = "Transition: Twin U1";
+                        }
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Twin D1";
+                    }
+                    else if (screen.getRoomIndex() == 16 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Twin D2";
+                    }
 //                else if (screen.getRoomIndex() == 10 && screen.getScreenIndex() == 1) {
 //                    gateName = "Transition: Twin U3";
 //                }
@@ -317,19 +331,19 @@ public final class GameDataTracker {
 //                else if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
 //                    gateName = "Transition: Twin U4";
 //                }
-            }
-            else if(screen.getZoneIndex() == 8) {
-                // Endless
-                if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Endless R1";
                 }
-                else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 3) {
-                    gateName = "Transition: Endless U1";
+                else if(screen.getZoneIndex() == 8) {
+                    // Endless
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Endless R1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 3) {
+                        gateName = "Transition: Endless U1";
+                    }
+                    else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 3) {
+                        gateName = "Transition: Endless D1";
+                    }
                 }
-                else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 3) {
-                    gateName = "Transition: Endless D1";
-                }
-            }
 //            else if(screen.getZoneIndex() == 9) {
 //                // Shrine
 //                if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
@@ -342,124 +356,130 @@ public final class GameDataTracker {
 //                    gateName = "Transition: Endless D1";
 //                }
 //            }
-            else if(screen.getZoneIndex() == 10) {
-                // Illusion
-                if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Illusion D2";
+                else if(screen.getZoneIndex() == 10) {
+                    // Illusion
+                    if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Illusion D2";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Illusion D1";
+                    }
+                    else if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Illusion R1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Illusion R2";
+                    }
                 }
-                else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Illusion D1";
+                else if(screen.getZoneIndex() == 11) {
+                    // Graveyard
+                    if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Graveyard L1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Graveyard R1";
+                    }
+                    else if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Graveyard U1";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Graveyard U2";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Graveyard D1";
+                    }
                 }
-                else if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Illusion R1";
+                else if(screen.getZoneIndex() == 12) {
+                    // Moonlight
+                    if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Moonlight U1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Moonlight U2";
+                    }
+                    else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Moonlight L1";
+                    }
                 }
-                else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Illusion R2";
-                }
-            }
-            else if(screen.getZoneIndex() == 11) {
-                // Graveyard
-                if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Graveyard L1";
-                }
-                else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Graveyard R1";
-                }
-                else if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Graveyard U1";
-                }
-                else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Graveyard U2";
-                }
-                else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Graveyard D1";
-                }
-            }
-            else if(screen.getZoneIndex() == 12) {
-                // Moonlight
-                if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Moonlight U1";
-                }
-                else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Moonlight U2";
-                }
-                else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Moonlight L1";
-                }
-            }
-            else if(screen.getZoneIndex() == 13) {
-                // Goddess
-                if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Goddess L1";
-                }
-                else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 2) {
-                    gateName = "Transition: Goddess D1";
-                }
-                else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 2) {
-                    gateName = "Transition: Goddess L2";
-                }
-                else if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Goddess U1";
-                }
+                else if(screen.getZoneIndex() == 13) {
+                    // Goddess
+                    if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Goddess L1";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Goddess D1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Goddess L2";
+                    }
+                    else if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Goddess U1";
+                    }
 //                else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
 //                    // todo: something to distinguish between L1 and R1
 //                    gateName = "Transition: Pipe L1";
 //                }
-            }
-            else if(screen.getZoneIndex() == 14) {
-                // Ruin
-                if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2) {
-                    gateName = "Transition: Ruin R2";
                 }
-                else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Ruin R1";
-                }
+                else if(screen.getZoneIndex() == 14) {
+                    // Ruin
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Ruin R2";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Ruin R1";
+                    }
 //                else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
 //                    gateName = "Transition: Ruin L1";
 //                }
-            }
-            else if(screen.getZoneIndex() == 15) {
-                // Birth (East)
-                if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Birth U1";
                 }
+                else if(screen.getZoneIndex() == 15) {
+                    // Birth (East)
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Birth U1";
+                    }
 //                else if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
 //                    gateName = "Transition: Birth L1";
 //                }
-            }
-            else if(screen.getZoneIndex() == 16) {
-                // Birth (West)
-                if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
-                    gateName = "Transition: Birth D1";
                 }
+                else if(screen.getZoneIndex() == 16) {
+                    // Birth (West)
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Birth D1";
+                    }
 //                else if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
 //                    gateName = "Transition: Birth R1";
 //                }
-            }
-            else if(screen.getZoneIndex() == 18) {
-                // True Shrine
-                // todo: stuff
-            }
+                }
+                else if(screen.getZoneIndex() == 18) {
+                    // True Shrine
+                    // todo: stuff
+                }
 //            else if(screen.getZoneIndex() == 19) {
 //                // Gate of Time
 //                if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 2) {
 //                    gateName = "Transition: Time D1";
 //                }
 //            }
-            else if(screen.getZoneIndex() == 22) {
-                // Night Surface
-                if (screen.getRoomIndex() == 11 && screen.getScreenIndex() == 1) {
-                    gateName = "Transition: Surface R1";
+                else if(screen.getZoneIndex() == 22) {
+                    // Night Surface
+                    if (screen.getRoomIndex() == 11 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Surface R1";
+                    }
                 }
-            }
 
-            if(gateName != null) {
-                List<GameObject> transitionGates = mapOfGateNameToTransitionGate.get(gateName);
-                if(transitionGates == null) {
-                    transitionGates = new ArrayList<>();
-                    mapOfGateNameToTransitionGate.put(gateName, transitionGates);
+                if(gateName != null) {
+                    List<GameObject> transitionGates = mapOfGateNameToTransitionGate.get(gateName);
+                    if(transitionGates == null) {
+                        transitionGates = new ArrayList<>();
+                        mapOfGateNameToTransitionGate.put(gateName, transitionGates);
+                    }
+                    transitionGates.add(gameObject);
+
+                    if(needEscapeDoor) {
+                        GameObject escapeDoor = AddObject.addEscapeGate(gameObject);
+                        transitionGates.add(escapeDoor);
+                    }
                 }
-                transitionGates.add(gameObject);
             }
         } else if (gameObject.getId() == 0x12) {
             Integer flagIndexToRemove = null;
@@ -537,19 +557,6 @@ public final class GameDataTracker {
                 gameObject.getTestByteOperations().remove((int)flagIndexToRemove);
             }
         } else if (gameObject.getId() == 0x0e) {
-            // Temple of the Sun Map chest ladder stuff
-            ObjectContainer objectContainer = gameObject.getObjectContainer();
-            if(objectContainer instanceof Screen) {
-                Screen screen = (Screen)objectContainer;
-                if(screen.getZoneIndex() == 3 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
-                    TestByteOperation testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(12);
-                    testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                    testByteOperation.setValue((byte)0);
-                    gameObject.getTestByteOperations().add(testByteOperation);
-                }
-            }
-
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                 if (flagTest.getIndex() == 335) {
                     // deathv stuff
@@ -823,7 +830,22 @@ public final class GameDataTracker {
                     }
                 }
                 else if(zone == 6) {
-                    if(screen.getRoomIndex() != 7) {
+                    if(screen.getRoomIndex() == 7) {
+                        if(Settings.isRandomizeTransitionGates()) {
+                            Integer flagIndexToRemove = null;
+                            for(int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                                TestByteOperation testByteOperation = gameObject.getTestByteOperations().get(i);
+                                if(testByteOperation.getIndex() == 0x382) {
+                                    flagIndexToRemove = i;
+                                    break;
+                                }
+                            }
+                            if(flagIndexToRemove != null) {
+                                gameObject.getTestByteOperations().remove((int)flagIndexToRemove);
+                            }
+                        }
+                    }
+                    else {
                         // Chamber of Extinction [Magatama Left] => Chamber of Birth [Northeast]
                         doorName = "Door: F6";
                         replaceBacksideDoorFlags(gameObject, 0x0fb, 0x1d0, false);
@@ -2693,7 +2715,7 @@ public final class GameDataTracker {
         testByteOperation.setOp(ByteOp.FLAG_EQUALS);
         gameObject.getTestByteOperations().add(testByteOperation);
 
-        if(motherCheck) {
+        if(motherCheck && !Settings.isRandomizeTransitionGates()) {
             testByteOperation = new TestByteOperation();
             testByteOperation.setIndex(0x0fe);
             testByteOperation.setValue((byte) 3);
@@ -3247,9 +3269,14 @@ public final class GameDataTracker {
     public static void writeTransitionGate(String gateToUpdate, String gateDestination) {
         List<GameObject> objectsToModify = mapOfGateNameToTransitionGate.get(gateToUpdate); // todo: finish
         if(objectsToModify != null) {
+            boolean firstObject = true;
             for (GameObject gameObject : objectsToModify) {
                 replaceTransitionGateArgs(gameObject, gateDestination);
                 updateScreenTransition(gameObject, gateDestination); // todo: how to handle a case of multiple gates on the same side? good thing sun <> extinction isn't random yet
+                if(firstObject && "Transition: Goddess L2".equals(gateDestination)) {
+                    AddObject.addGoddessStatueLemezaDetector(gameObject);
+                    firstObject = false;
+                }
             }
         }
     }

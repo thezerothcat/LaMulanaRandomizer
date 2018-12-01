@@ -68,6 +68,70 @@ public final class AddObject {
     }
 
     /**
+     * Add a timer to set the flag for solving the Diary chest puzzle if the appropriate conditions are met.
+     * @param screen the screen to add the timers to
+     */
+    public static void addWeightDoorTimer(Screen screen, int weightFlag) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x0b);
+        obj.getArgs().add((short)1);
+        obj.getArgs().add((short)0);
+        obj.setX(-1);
+        obj.setY(-1);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x382);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)1);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(weightFlag);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(weightFlag);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)1);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(0, obj);
+    }
+
+    /**
+     * Add a timer to set the flag for solving the Diary chest puzzle if the appropriate conditions are met.
+     * @param transitionGate the gate to put the detector with
+     */
+    public static void addGoddessStatueLemezaDetector(GameObject transitionGate) {
+        GameObject obj = new GameObject(transitionGate.getObjectContainer());
+        obj.setId((short)0x14);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)2);
+        obj.getArgs().add((short)3);
+        obj.setX(transitionGate.getX() - 40);
+        obj.setY(transitionGate.getY() - 20);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x278);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x278);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)1);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        transitionGate.getObjectContainer().getObjects().add(obj);
+    }
+
+    /**
      * Add timer to fix the puzzle for passage between Temple of Moonlight and Twin Labyrinths
      * @param screen the screen to add the timers to
      */
@@ -1325,6 +1389,19 @@ public final class AddObject {
         backupShrineDoorGraphic.setY(280);
 
         objectContainer.getObjects().add(backupShrineDoorGraphic);
+    }
+
+    public static GameObject addEscapeGate(GameObject nonEscapeGate) {
+        GameObject escapeGate = new GameObject(nonEscapeGate);
+        for(TestByteOperation testByteOperation : escapeGate.getTestByteOperations()) {
+            if(testByteOperation.getIndex() == 0x382 && testByteOperation.getValue() == 0) {
+                testByteOperation.setValue((byte)1);
+                break;
+            }
+        }
+        escapeGate.getArgs().set(6, (short)1);
+        nonEscapeGate.getObjectContainer().getObjects().add(escapeGate);
+        return escapeGate;
     }
 
     public static void addShrineMapSoundEffect(ObjectContainer objectContainer) {
