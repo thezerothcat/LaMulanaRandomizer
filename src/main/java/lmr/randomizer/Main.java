@@ -1351,7 +1351,7 @@ public class Main {
         }
         startingWeapons.removeAll(Settings.getRemovedItems());
         Settings.setCurrentStartingWeapon(startingWeapons.get(random.nextInt(startingWeapons.size())));
-        FileUtils.log("Selected starting weapon: " + Settings.getCurrentStartingWeapon());
+        FileUtils.logFlush("Selected starting weapon: " + Settings.getCurrentStartingWeapon());
     }
 
     private static void determineRemovedItems(int totalItemsRemoved, Random random) {

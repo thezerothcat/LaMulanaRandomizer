@@ -685,6 +685,7 @@ public class FileUtils {
         try {
             logWriter.flush();
             logWriter.close();
+            logWriter = null;
         } catch (Exception ex) {
 
         }

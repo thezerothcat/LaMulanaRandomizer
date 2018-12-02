@@ -388,7 +388,6 @@ public class AccessChecker {
                     queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
                 }
             case STATE:
-            case EXIT:
             case SETTING:
                 if(fullValidation) {
                     queuedUpdates.add(nodeName);
@@ -399,6 +398,11 @@ public class AccessChecker {
                 else if(!DataFromFile.GUARDIAN_DEFEATED_EVENTS.contains(nodeName)) {
                     queuedUpdates.add(nodeName);
                 }
+                break;
+            case EXIT:
+                queuedUpdates.add(nodeName);
+                queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
+                queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits(nodeName, attemptNumber));
                 break;
             case SHOP:
                 if(fullValidation) {
@@ -424,6 +428,9 @@ public class AccessChecker {
                 if(!accessedNodes.contains(reverseTransition) && !queuedUpdates.contains(reverseTransition)) {
                     FileUtils.logDetail("Gained access to node " + reverseTransition, attemptNumber);
                     queuedUpdates.add(reverseTransition);
+                    if("Transition: Goddess L2".equals(reverseTransition) ) {
+                        queuedUpdates.add("Event: Special Statue Removal");
+                    }
                 }
                 break;
         }

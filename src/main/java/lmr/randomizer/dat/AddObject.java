@@ -68,7 +68,7 @@ public final class AddObject {
     }
 
     /**
-     * Add a timer to set the flag for solving the Diary chest puzzle if the appropriate conditions are met.
+     * Add a timer to open weight doors during the escape that don't open naturally.
      * @param screen the screen to add the timers to
      */
     public static void addWeightDoorTimer(Screen screen, int weightFlag) {
@@ -95,6 +95,39 @@ public final class AddObject {
         writeByteOperation.setIndex(weightFlag);
         writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
         writeByteOperation.setValue((byte)1);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(0, obj);
+    }
+
+    /**
+     * Add a timer to set the flag that resets the Twin Labyrinths poison timer
+     * @param screen the screen to add the timers to
+     */
+    public static void addTwinLabsPoisonTimerRemoval(ObjectContainer screen) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x0b);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.setX(-1);
+        obj.setY(-1);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x1dc);
+        testByteOperation.setOp(ByteOp.FLAG_LTEQ);
+        testByteOperation.setValue((byte)1);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x1d7);
+        testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+        testByteOperation.setValue((byte)0);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x1d7);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)0);
         obj.getWriteByteOperations().add(writeByteOperation);
 
         screen.getObjects().add(0, obj);

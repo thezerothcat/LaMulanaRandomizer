@@ -220,23 +220,34 @@ public class BacksideDoorRandomizer {
         doorRequirements.add(doorLocation);
         doorRequirements.add(requiredBoss);
         node.addRequirementSet(doorRequirements);
+
+        String doorExit = doorName.replace("Door: ", "Exit: Door ");
+        node = mapOfNodeNameToDoorRequirementsObject.get(doorExit);
+        if(node == null) {
+            node = new NodeWithRequirements(doorExit);
+            mapOfNodeNameToDoorRequirementsObject.put(doorExit, node);
+        }
+        doorRequirements = new ArrayList<>(1);
+        doorRequirements.add(doorLocation.replace("Location:", "Exit:"));
+        doorRequirements.add(requiredBoss);
+        node.addRequirementSet(doorRequirements);
     }
 
     public List<String> getSettingNodes() {
         List<String> settingNodes = new ArrayList<>();
-        for(Map.Entry<String, String> doorKeyAndLocation : backsideDoorLocationMap.entrySet()) {
-            if(doorKeyAndLocation.getValue().contains("Gate of Guidance")) {
-                settingNodes.add("Setting: " + doorKeyAndLocation.getKey().replace("Door:", "Guidance"));
-            }
-            else if(doorKeyAndLocation.getValue().contains("Inferno Cavern [Viy]")) {
-                settingNodes.add("Setting: " + doorKeyAndLocation.getKey().replace("Door:", "Viy"));
-            }
-        }
+//        for(Map.Entry<String, String> doorKeyAndLocation : backsideDoorLocationMap.entrySet()) {
+//            if(doorKeyAndLocation.getValue().contains("Gate of Guidance")) {
+//                settingNodes.add("Setting: " + doorKeyAndLocation.getKey().replace("Door:", "Guidance"));
+//            }
+//            else if(doorKeyAndLocation.getValue().contains("Inferno Cavern [Viy]")) {
+//                settingNodes.add("Setting: " + doorKeyAndLocation.getKey().replace("Door:", "Viy"));
+//            }
+//        }
         return settingNodes;
     }
 
     public List<String> getAvailableNodes(String stateToUpdate, Integer attemptNumber) {
-        if(!stateToUpdate.startsWith("Event:") && !stateToUpdate.startsWith("Location:")) {
+        if(!stateToUpdate.startsWith("Event:") && !stateToUpdate.startsWith("Location:") && !stateToUpdate.startsWith("Exit:")) {
             return new ArrayList<>(0);
         }
 
@@ -245,12 +256,14 @@ public class BacksideDoorRandomizer {
         for(String nodeName : mapOfNodeNameToDoorRequirementsObject.keySet()) {
             node = mapOfNodeNameToDoorRequirementsObject.get(nodeName);
             if(node.updateRequirements(stateToUpdate)) {
-                FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
                 availableNodes.add(nodeName);
             }
         }
         for(String door : availableNodes) {
             mapOfNodeNameToDoorRequirementsObject.remove(door);
+        }
+        if(!availableNodes.isEmpty()) {
+            FileUtils.logDetail("Gained access to nodes " + availableNodes, attemptNumber);
         }
         return availableNodes;
     }

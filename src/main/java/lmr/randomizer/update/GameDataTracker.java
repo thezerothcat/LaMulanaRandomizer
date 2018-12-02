@@ -3277,6 +3277,9 @@ public final class GameDataTracker {
                     AddObject.addGoddessStatueLemezaDetector(gameObject);
                     firstObject = false;
                 }
+                if(firstObject && gateDestination.contains("Transition: Twin ")) { //  && !gateToUpdate.contains("Transition: Twin")
+                    AddObject.addTwinLabsPoisonTimerRemoval(gameObject.getObjectContainer());
+                }
             }
         }
     }

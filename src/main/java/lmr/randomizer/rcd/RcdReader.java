@@ -97,6 +97,15 @@ public final class RcdReader {
                 }
             }
 
+            if(Settings.isRandomizeTransitionGates()) {
+                for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                    if(testByteOperation.getIndex() == 0x1d7) {
+                        keepObject = false;
+                        break;
+                    }
+                }
+            }
+
             if(!(objectContainer instanceof Zone)) {
                 for (int i = 0; i < obj.getWriteByteOperations().size(); i++) {
                     WriteByteOperation updateFlag = obj.getWriteByteOperations().get(i);
