@@ -98,10 +98,13 @@ public final class RcdReader {
             }
 
             if(Settings.isRandomizeTransitionGates()) {
-                for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                    if(testByteOperation.getIndex() == 0x1d7) {
-                        keepObject = false;
-                        break;
+                if(obj.getObjectContainer() instanceof Screen
+                        && ((Screen)obj.getObjectContainer()).getZoneIndex() != 3) {
+                    for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                        if(testByteOperation.getIndex() == 0x1d7) {
+                            keepObject = false;
+                            break;
+                        }
                     }
                 }
             }

@@ -56,6 +56,7 @@ Event: Kamaitachi Defeated => Attack: Bomb
 Event: Kamaitachi Defeated => Attack: Caltrops
 Event: Kamaitachi Defeated => Attack: Pistol
 Event: Kulullu Defeated => Location: Dimensional Corridor, Helmet, Attack: Main
+Event: Kulullu Defeated => Location: Dimensional Corridor, Helmet, Attack: Subweapon
 Event: Kulullu Defeated => Location: Dimensional Corridor, Attack: Shuriken
 Event: Kulullu Defeated => Location: Dimensional Corridor, Attack: Chakram
 Event: Kulullu Defeated => Location: Dimensional Corridor, Attack: Pistol
