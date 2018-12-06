@@ -11,6 +11,7 @@ public class RandomizationPanel extends JPanel {
 
     private JCheckBox randomizeCoinChests;
     private JCheckBox randomizeTrapItems;
+    private JCheckBox randomizeEscapeChest;
     private JCheckBox randomizeCursedChests;
     private JCheckBox randomizeDracuetShop;
     private JCheckBox randomizeTransitionGates;
@@ -41,6 +42,9 @@ public class RandomizationPanel extends JPanel {
         randomizeTrapItems = new JCheckBox();
         randomizeTrapItems.setSelected(Settings.isRandomizeTrapItems());
 
+        randomizeEscapeChest = new JCheckBox();
+        randomizeEscapeChest.setSelected(Settings.isRandomizeEscapeChest());
+
         randomizeCursedChests = new JCheckBox();
         randomizeCursedChests.setSelected(Settings.isRandomizeCursedChests());
 
@@ -53,9 +57,10 @@ public class RandomizationPanel extends JPanel {
         randomizeBacksideDoors = new JCheckBox();
         randomizeBacksideDoors.setSelected(Settings.isRandomizeBacksideDoors());
 
-        CheckboxContainer checkboxContainer = new CheckboxContainer(3, "gapy 0, insets 8 0 0 0");
+        CheckboxContainer checkboxContainer = new CheckboxContainer(5, "gapy 0, insets 8 0 0 0");
         checkboxContainer.add(randomizeCoinChests);
         checkboxContainer.add(randomizeTrapItems);
+        checkboxContainer.add(randomizeEscapeChest);
         checkboxContainer.add(randomizeCursedChests);
         checkboxContainer.add(randomizeDracuetShop);
         checkboxContainer.add(randomizeTransitionGates);
@@ -69,6 +74,7 @@ public class RandomizationPanel extends JPanel {
         radioPanel.updateTranslations();
         randomizeCoinChests.setText(Translations.getText("randomization.randomizeCoinChests"));
         randomizeTrapItems.setText(Translations.getText("randomization.randomizeTrapItems"));
+        randomizeEscapeChest.setText(Translations.getText("randomization.randomizeEscapeChest"));
         randomizeCursedChests.setText(Translations.getText("randomization.randomizeCursedChests"));
         randomizeDracuetShop.setText(Translations.getText("randomization.randomizeDracuetShop"));
         randomizeTransitionGates.setText(Translations.getText("randomization.randomizeTransitionGates"));
@@ -82,6 +88,7 @@ public class RandomizationPanel extends JPanel {
         radioPanel.updateSettings();
         Settings.setRandomizeCoinChests(randomizeCoinChests.isSelected(), true);
         Settings.setRandomizeTrapItems(randomizeTrapItems.isSelected(), true);
+        Settings.setRandomizeEscapeChest(randomizeEscapeChest.isSelected(), true);
         Settings.setRandomizeCursedChests(randomizeCursedChests.isSelected(), true);
         Settings.setRandomizeDracuetShop(randomizeDracuetShop.isSelected(), true);
         Settings.setRandomizeTransitionGates(randomizeTransitionGates.isSelected(), true);
@@ -99,6 +106,7 @@ public class RandomizationPanel extends JPanel {
 
         randomizeCoinChests.setSelected(Settings.isRandomizeCoinChests());
         randomizeTrapItems.setSelected(Settings.isRandomizeTrapItems());
+        randomizeEscapeChest.setSelected(Settings.isRandomizeEscapeChest());
         randomizeCursedChests.setSelected(Settings.isRandomizeCursedChests());
         randomizeDracuetShop.setSelected(Settings.isRandomizeDracuetShop());
         randomizeTransitionGates.setSelected(Settings.isRandomizeTransitionGates());

@@ -68,6 +68,9 @@ public class AccessChecker {
                 if (Settings.isRandomizeCoinChests()) {
                     possibleChests.addAll(DataFromFile.getAllCoinChests());
                 }
+                if (Settings.isRandomizeEscapeChest()) {
+                    possibleChests.add(DataFromFile.ESCAPE_CHEST_NAME);
+                }
                 possibleChests.removeAll(DataFromFile.getNonRandomizedItems());
                 String cursedChest;
                 for (int i = 0; i < 4; i++) {
@@ -114,6 +117,9 @@ public class AccessChecker {
                     continue;
                 }
                 else if(NodeType.ITEM_LOCATION.equals(nodeType)) {
+                    if(DataFromFile.ESCAPE_CHEST_NAME.equals(nodeName)) {
+                        continue;
+                    }
                     String item = itemRandomizer.getItem(nodeName);
                     if(item.startsWith("Coin:") || item.startsWith("Trap:") || Settings.getStartingItemsIncludingCustom().contains(item)) {
                         continue;
@@ -437,6 +443,9 @@ public class AccessChecker {
     }
 
     public boolean validRequirements(String item, String location) {
+        if(DataFromFile.ESCAPE_CHEST_NAME.equals(location)) {
+            return DataFromFile.getRandomRemovableItems().contains(item); // Must be something not strictly required for the seed. // todo: better handling?
+        }
         if(location.contains("Shop")) {
             location = location.substring(0, location.indexOf(")") + 1);
         }
@@ -448,7 +457,7 @@ public class AccessChecker {
 
         if(item.equals("Dimensional Key")) {
             if("Angel Shield".equals(location) || "beolamu.exe".equals(location) || "Sacred Orb (Dimensional Corridor)".equals(location)
-                    || "Ankh Jewel (Dimensional Corridor".equals(location) || "Sacred Orb (Dimensional Corridor)".equals(location)
+                    || "Ankh Jewel (Dimensional Corridor".equals(location) || "Magatama Jewel".equals(location)
                     || "Map (Dimensional Corridor)".equals(location) || "Coin: Dimensional".equals(location)) {
                 return false;
             }

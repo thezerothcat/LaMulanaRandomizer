@@ -655,6 +655,14 @@ public class Main {
                             return false;
                         }
                     }
+                    if(!Settings.isRandomizeEscapeChest()) {
+                        if(customPlacement.getLocation().equals(DataFromFile.ESCAPE_CHEST_NAME) || customPlacement.getContents().startsWith(DataFromFile.ESCAPE_CHEST_NAME)) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom placement not valid with current settings for randomized escape chest",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
                     if(!Settings.isRandomizeCoinChests()) {
                         if(customPlacement.getLocation().startsWith("Coin:")) {
                             JOptionPane.showMessageDialog(randomizerUI,

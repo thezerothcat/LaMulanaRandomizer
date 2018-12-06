@@ -435,6 +435,9 @@ public class FileUtils {
             else if(line.startsWith("randomizeTrapItems")) {
                 Settings.setRandomizeTrapItems(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("randomizeEscapeChest")) {
+                Settings.setRandomizeEscapeChest(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("allowWhipStart")) {
                 Settings.setAllowWhipStart(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -548,6 +551,9 @@ public class FileUtils {
         writer.write(String.format("randomizeTrapItems=%s", Settings.isRandomizeTrapItems()));
         writer.newLine();
 
+        writer.write(String.format("randomizeEscapeChest=%s", Settings.isRandomizeEscapeChest()));
+        writer.newLine();
+
         writer.write(String.format("allowWhipStart=%s", Settings.isAllowWhipStart()));
         writer.newLine();
 
@@ -566,7 +572,7 @@ public class FileUtils {
         writer.write(String.format("randomizeCursedChests=%s", Settings.isRandomizeCursedChests()));
         writer.newLine();
 
-        writer.write(String.format("randomizeTransitionGates=%s", Settings.isRandomizeBacksideDoors()));
+        writer.write(String.format("randomizeTransitionGates=%s", Settings.isRandomizeTransitionGates()));
         writer.newLine();
 
         writer.write(String.format("randomizeBacksideDoors=%s", Settings.isRandomizeBacksideDoors()));

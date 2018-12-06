@@ -144,6 +144,7 @@ Coin: Inferno (Spikes) => 50, 1ba
 Coin: Extinction => 30, 401
 Coin: Twin (Witches) => 50, 1ee
 Coin: Twin (Lower) => 50, 1ec
+Coin: Twin (Escape) => 300, 3fc
 Coin: Endless => 30, 203
 Coin: Shrine => 30, 216
 Coin: Illusion (Spikes) => 100, 22c

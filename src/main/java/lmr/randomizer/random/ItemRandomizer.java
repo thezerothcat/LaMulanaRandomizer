@@ -204,6 +204,9 @@ public class ItemRandomizer {
                 }
             }
         }
+        if(Settings.isRandomizeEscapeChest() && unplacedItems.contains(DataFromFile.ESCAPE_CHEST_NAME)) {
+            chestOnlyItems.add(DataFromFile.ESCAPE_CHEST_NAME);
+        }
         if(Settings.isRandomizeTrapItems() && unplacedItems.contains(DataFromFile.EXPLODING_CHEST_NAME)) {
             chestOnlyItems.add(DataFromFile.EXPLODING_CHEST_NAME);
         }
@@ -222,6 +225,11 @@ public class ItemRandomizer {
                 if(unassignedNonShopItemLocations.contains(coinChest)) {
                     possibleLocations.add(coinChest);
                 }
+            }
+        }
+        if(Settings.isRandomizeEscapeChest()) {
+            if(unassignedNonShopItemLocations.contains(DataFromFile.ESCAPE_CHEST_NAME)) {
+                possibleLocations.add(DataFromFile.ESCAPE_CHEST_NAME);
             }
         }
         if(Settings.isRandomizeTrapItems()) {

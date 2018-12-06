@@ -49,6 +49,7 @@ public final class DataFromFile {
 
     public static String EXPLODING_CHEST_NAME = "Trap: Exploding";
     public static String GRAVEYARD_TRAP_CHEST_NAME = "Trap: Graveyard";
+    public static String ESCAPE_CHEST_NAME = "Coin: Twin (Escape)";
 
     private static List<String> allShops;
     private static List<String> allItems;
@@ -126,6 +127,9 @@ public final class DataFromFile {
             }
             if(Settings.isRandomizeTrapItems()) {
                 nonShopItemLocations.addAll(DataFromFile.TRAP_ITEMS);
+            }
+            if(Settings.isRandomizeEscapeChest()) {
+                nonShopItemLocations.add(DataFromFile.ESCAPE_CHEST_NAME);
             }
         }
         return nonShopItemLocations;
