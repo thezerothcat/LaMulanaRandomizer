@@ -45,7 +45,7 @@ public class AccessChecker {
         this.itemRandomizer = copyAll ? new ItemRandomizer(accessChecker.itemRandomizer) : accessChecker.itemRandomizer;
         this.shopRandomizer = copyAll ? accessChecker.shopRandomizer.copy() : accessChecker.shopRandomizer;
         this.backsideDoorRandomizer = new BacksideDoorRandomizer(accessChecker.backsideDoorRandomizer);
-        this.transitionGateRandomizer = accessChecker.transitionGateRandomizer; // todo: might need to copy at some point
+        this.transitionGateRandomizer = accessChecker.transitionGateRandomizer; // Might need to copy at some point, but currently this only keeps a map/doesn't track state.
         this.accessedNodes = new HashSet<>(accessChecker.accessedNodes);
         this.accessibleBossNodes = new HashSet<>(accessChecker.accessibleBossNodes);
         this.bossesDefeated = accessChecker.bossesDefeated;
@@ -444,7 +444,9 @@ public class AccessChecker {
 
     public boolean validRequirements(String item, String location) {
         if(DataFromFile.ESCAPE_CHEST_NAME.equals(location)) {
-            return DataFromFile.getRandomRemovableItems().contains(item); // Must be something not strictly required for the seed. // todo: better handling?
+            // Must be something not strictly required for the seed.
+            // This doesn't prevent some conditionally required items from getting placed here, but it should mostly be optional stuff.
+            return DataFromFile.getRandomRemovableItems().contains(item);
         }
         if(location.contains("Shop")) {
             location = location.substring(0, location.indexOf(")") + 1);

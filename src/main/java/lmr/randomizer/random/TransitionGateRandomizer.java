@@ -46,9 +46,9 @@ public class TransitionGateRandomizer {
             transitionGateDestinationMap.put("Transition: Inferno U2", "Transition: Surface D1");
             transitionGateDestinationMap.put("Transition: Inferno D1", "Transition: Extinction U3");
 
-            transitionGateDestinationMap.put("Transition: Extinction L1", "Transition: Sun R1"); // todo: ignore?
-            transitionGateDestinationMap.put("Transition: Extinction L2", "Transition: Sun R2"); // todo: ignore?
-            transitionGateDestinationMap.put("Transition: Extinction U1", "Transition: Shrine D1"); // todo: ignore?
+            transitionGateDestinationMap.put("Transition: Extinction L1", "Transition: Sun R1");
+            transitionGateDestinationMap.put("Transition: Extinction L2", "Transition: Sun R2");
+            transitionGateDestinationMap.put("Transition: Extinction U1", "Transition: Shrine D1");
             transitionGateDestinationMap.put("Transition: Extinction U2", "Transition: Surface D2");
             transitionGateDestinationMap.put("Transition: Extinction U3", "Transition: Inferno D1");
 
@@ -106,9 +106,9 @@ public class TransitionGateRandomizer {
 
         transitionGateDestinationMap.put("Transition: Inferno D1", "Transition: Extinction U3");
 
-        transitionGateDestinationMap.put("Transition: Extinction L1", "Transition: Sun R1"); // todo: ignore?
-        transitionGateDestinationMap.put("Transition: Extinction L2", "Transition: Sun R2"); // todo: ignore?
-        transitionGateDestinationMap.put("Transition: Extinction U1", "Transition: Shrine D1"); // todo: ignore?
+        transitionGateDestinationMap.put("Transition: Extinction L1", "Transition: Sun R1");
+        transitionGateDestinationMap.put("Transition: Extinction L2", "Transition: Sun R2");
+        transitionGateDestinationMap.put("Transition: Extinction U1", "Transition: Shrine D1");
         transitionGateDestinationMap.put("Transition: Extinction U3", "Transition: Inferno D1");
 
         transitionGateDestinationMap.put("Transition: Twin U2", "Transition: Shrine D3");
@@ -213,7 +213,7 @@ public class TransitionGateRandomizer {
             return new ArrayList<>(0);
         }
         List<String> transitionExits = new ArrayList<>(transitionNames.size());
-        for(String transitionName : transitionNames) {// todo: extinction U3 NPE
+        for(String transitionName : transitionNames) {
             transitionExits.add(getTransitionReverse(transitionName).replace("Transition:", "Exit:"));
         }
         if(!transitionExits.isEmpty()) {
@@ -271,14 +271,18 @@ public class TransitionGateRandomizer {
         else if("Location: Chamber of Extinction [Magatama Right]".equals(gateName)) {
             return Arrays.asList("Transition: Extinction U2");
         }
-        else if("Location: Chamber of Extinction [Ankh]".equals(gateName)) {
-            return Arrays.asList("Transition: Extinction U3");
+        else if("Location: Chamber of Extinction [Ankh Upper]".equals(gateName)) {
+//            return Arrays.asList("Transition: Extinction U3");
+            return new ArrayList<>(0);
         }
         else if("Location: Twin Labyrinths [Loop]".equals(gateName)) {
             return Arrays.asList("Transition: Twin U1");
         }
-        else if("Location: Twin Labyrinths [Upper]".equals(gateName)) {
-            return Arrays.asList("Transition: Twin U2", "Transition: Twin U3");
+        else if("Location: Twin Labyrinths [Poison 2]".equals(gateName)) {
+            return Arrays.asList("Transition: Twin U2");
+        }
+        else if("Location: Twin Labyrinths [Poseidon]".equals(gateName)) {
+            return Arrays.asList("Transition: Twin U3");
         }
         else if("Location: Twin Labyrinths [Lower]".equals(gateName)) {
             return Arrays.asList("Transition: Twin D1", "Transition: Twin D2");
@@ -286,7 +290,7 @@ public class TransitionGateRandomizer {
         else if("Location: Endless Corridor [1F]".equals(gateName)) {
             return Arrays.asList("Transition: Endless R1");
         }
-        else if("Location: Endless Corridor [2F-4F]".equals(gateName)) {
+        else if("Location: Endless Corridor [2F]".equals(gateName)) {
             return Arrays.asList("Transition: Endless U1");
         }
         else if("Location: Endless Corridor [5F]".equals(gateName)) {
@@ -326,7 +330,7 @@ public class TransitionGateRandomizer {
             return Arrays.asList("Transition: Graveyard U2", "Transition: Graveyard D1");
         }
         else if("Location: Temple of Moonlight [Lower]".equals(gateName)) {
-            return Arrays.asList("Transition: Moonlight L1"); // todo: probably needs special handling
+            return Arrays.asList("Transition: Moonlight L1");
         }
         else if("Location: Temple of Moonlight [Eden]".equals(gateName)) {
             return Arrays.asList("Transition: Moonlight U1");
@@ -335,7 +339,10 @@ public class TransitionGateRandomizer {
             return Arrays.asList("Transition: Moonlight U2");
         }
         else if("Location: Tower of the Goddess [Grail]".equals(gateName)) {
-            return Arrays.asList("Transition: Goddess L1", "Transition: Goddess D1");
+            return Arrays.asList("Transition: Goddess L1");
+        }
+        else if("Location: Tower of the Goddess [Shield Statue]".equals(gateName)) {
+            return Arrays.asList("Transition: Goddess D1");
         }
         else if("Location: Tower of the Goddess [Lower]".equals(gateName)) {
             return Arrays.asList("Transition: Goddess L2");
@@ -425,6 +432,9 @@ public class TransitionGateRandomizer {
         else if("Transition: Inferno U2".equals(gateName)) {
             return "Location: Inferno Cavern [Spikes]";
         }
+//        else if("Transition: Inferno D1".equals(gateName)) {
+//            return "Location: Inferno Cavern [Lava]";
+//        }
         else if("Transition: Extinction L1".equals(gateName)) {
             return "Location: Chamber of Extinction [Main]";
         }
@@ -438,16 +448,16 @@ public class TransitionGateRandomizer {
             return "Location: Chamber of Extinction [Magatama Right]";
         }
 //        else if("Transition: Extinction U3".equals(gateName)) {
-//            return "Location: Chamber of Extinction [Ankh]";
+//            return "Location: Chamber of Extinction [Ankh Upper]";
 //        }
         else if("Transition: Twin U1".equals(gateName)) {
             return "Location: Twin Labyrinths [Loop]";
         }
         else if("Transition: Twin U2".equals(gateName)) {
-            return "Location: Twin Labyrinths [Upper]";
+            return "Location: Twin Labyrinths [Poison 2]";
         }
         else if("Transition: Twin U3".equals(gateName)) {
-            return "Location: Twin Labyrinths [Upper]";
+            return "Location: Twin Labyrinths [Poseidon]";
         }
         else if("Transition: Twin D1".equals(gateName)) {
             return "Location: Twin Labyrinths [Lower]";
@@ -459,7 +469,7 @@ public class TransitionGateRandomizer {
             return "Location: Endless Corridor [1F]";
         }
         else if("Transition: Endless U1".equals(gateName)) {
-            return "Location: Endless Corridor [2F-4F]";
+            return "Location: Endless Corridor [2F]";
         }
         else if("Transition: Endless D1".equals(gateName)) {
             return "Location: Endless Corridor [5F]";
@@ -480,7 +490,7 @@ public class TransitionGateRandomizer {
             return "Location: Gate of Illusion [Lower]";
         }
         else if("Transition: Illusion D2".equals(gateName)) {
-            return "Location: Gate of Illusion [Eden]"; // todo: is this correct?
+            return "Location: Gate of Illusion [Eden]";
         }
         else if("Transition: Illusion R1".equals(gateName)) {
             return "Location: Gate of Illusion [Pot Room]";
@@ -504,7 +514,7 @@ public class TransitionGateRandomizer {
             return "Location: Graveyard of the Giants [East]";
         }
         else if("Transition: Moonlight L1".equals(gateName)) {
-            return "Location: Temple of Moonlight [Lower]"; // todo: probably needs special handling
+            return "Location: Temple of Moonlight [Lower]";
         }
         else if("Transition: Moonlight U1".equals(gateName)) {
             return "Location: Temple of Moonlight [Eden]";
@@ -522,7 +532,7 @@ public class TransitionGateRandomizer {
             return "Location: Tower of the Goddess [Lamp]";
         }
         else if("Transition: Goddess D1".equals(gateName)) {
-            return "Location: Tower of the Goddess [Grail]";
+            return "Location: Tower of the Goddess [Shield Statue]";
         }
         else if("Transition: Ruin L1".equals(gateName)) {
             return "Location: Tower of Ruin [Illusion Left]";
@@ -537,7 +547,7 @@ public class TransitionGateRandomizer {
             return "Location: Chamber of Birth [Northeast]";
         }
         else if("Transition: Birth L1".equals(gateName)) {
-            return "Location: Chamber of Birth [Southeast]"; // todo: one way?
+            return "Location: Chamber of Birth [Southeast]";
         }
         else if("Transition: Birth D1".equals(gateName)) {
             return "Location: Chamber of Birth [West]";

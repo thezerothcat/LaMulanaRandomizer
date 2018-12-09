@@ -1074,6 +1074,9 @@ public class Main {
         if(!Settings.isRequireFlaresForExtinction()) {
             startingNodes.add("Setting: Flareless Extinction");
         }
+        if(!Settings.isRandomizeTransitionGates()) {
+            startingNodes.add("Setting: Nonrandom Transitions");
+        }
         startingNodes.add(Settings.isAlternateMotherAnkh() ? "Setting: Alternate Mother" : "Setting: Standard Mother");
 
         if(Settings.isSubweaponOnlyLogic() || isSubweaponOnly()) {

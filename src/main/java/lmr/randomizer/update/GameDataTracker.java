@@ -3267,7 +3267,7 @@ public final class GameDataTracker {
     }
 
     public static void writeTransitionGate(String gateToUpdate, String gateDestination) {
-        List<GameObject> objectsToModify = mapOfGateNameToTransitionGate.get(gateToUpdate); // todo: finish
+        List<GameObject> objectsToModify = mapOfGateNameToTransitionGate.get(gateToUpdate);
         if(objectsToModify != null) {
             boolean firstObject = true;
             for (GameObject gameObject : objectsToModify) {
@@ -3594,7 +3594,6 @@ public final class GameDataTracker {
             gameObject.getArgs().set(4, (short)20);
         }
         else if("Transition: Goddess U2".equals(gateDestination)) {
-            // todo: one way from gate of time
             gameObject.getArgs().set(0, (short)13);
             gameObject.getArgs().set(1, (short)4);
             gameObject.getArgs().set(2, (short)0);
