@@ -247,6 +247,7 @@ public class Main {
                                     "Randomizer error", JOptionPane.ERROR_MESSAGE);
                             SwingUtilities.invokeLater(() -> {
                                 progressDialog.setVisible(false);
+                                progressDialog.setSafeClose(true);
                             });
                         }
                         return null;
@@ -346,7 +347,7 @@ public class Main {
                 fileOutputStream.close();
                 FileUtils.logFlush("dat copy complete");
 
-                if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart()) {
                     FileUtils.logFlush("Copying save file from seed folder to La-Mulana save directory");
                     File saveFile = new File(String.format("%s/lm_00.sav", Settings.getStartingSeed()));
                     if(saveFile.exists()) {
@@ -976,7 +977,7 @@ public class Main {
 
                 DatWriter.writeDat(datInfo);
                 FileUtils.logFlush("dat file successfully written");
-                if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart()) {
                     backupSaves();
                     writeSaveFile();
                 }

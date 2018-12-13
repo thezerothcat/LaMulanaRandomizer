@@ -2,6 +2,7 @@ package lmr.randomizer.random;
 
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
+import lmr.randomizer.Translations;
 import lmr.randomizer.update.GameDataTracker;
 
 import java.io.BufferedWriter;
@@ -567,15 +568,32 @@ public class TransitionGateRandomizer {
             return;
         }
 
-        List<String> sortedTransitions = new ArrayList<>(transitionGateDestinationMap.keySet());
-        Collections.sort(sortedTransitions);
-
-        for(String transition : sortedTransitions) {
-            writer.write(transition + " <==> " + transitionGateDestinationMap.get(transition));
+        for(String transition : getTransitionList()) {
+            writer.write(Translations.getTransitionText(transition) + " <==> " + Translations.getTransitionText(transitionGateDestinationMap.get(transition)));
             writer.newLine();
         }
 
         writer.flush();
         writer.close();
+    }
+
+    private List<String> getTransitionList() {
+        return new ArrayList<>(Arrays.asList("Transition: Surface R1", "Transition: Surface D1", "Transition: Surface D2",
+                "Transition: Guidance L1", "Transition: Guidance U1", "Transition: Guidance D1", "Transition: Guidance D2",
+                "Transition: Mausoleum L1", "Transition: Mausoleum U1", "Transition: Mausoleum D1",
+                "Transition: Sun L1", "Transition: Sun R1", "Transition: Sun R2", "Transition: Sun U1",
+                "Transition: Spring D1",
+                "Transition: Inferno R1", "Transition: Inferno U1", "Transition: Inferno U2",
+                "Transition: Extinction L1", "Transition: Extinction L2", "Transition: Extinction U1", "Transition: Extinction U2",
+                "Transition: Twin U1", "Transition: Twin U2", "Transition: Twin U3", "Transition: Twin D1", "Transition: Twin D2",
+                "Transition: Endless R1", "Transition: Endless U1", "Transition: Endless D1",
+                "Transition: Shrine U1", "Transition: Shrine D1", "Transition: Shrine D2", "Transition: Shrine D3",
+                "Transition: Illusion R1", "Transition: Illusion R2", "Transition: Illusion D1", "Transition: Illusion D2",
+                "Transition: Graveyard L1", "Transition: Graveyard R1", "Transition: Graveyard U1", "Transition: Graveyard U2", "Transition: Graveyard D1",
+                "Transition: Moonlight L1", "Transition: Moonlight U1", "Transition: Moonlight U2",
+                "Transition: Goddess L1", "Transition: Goddess L2", "Transition: Goddess U1", "Transition: Goddess D1",
+                "Transition: Ruin L1", "Transition: Ruin R1", "Transition: Ruin R2",
+                "Transition: Birth L1", "Transition: Birth R1", "Transition: Birth U1", "Transition: Birth D1",
+                "Transition: Dimensional D1"));
     }
 }

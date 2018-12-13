@@ -211,10 +211,10 @@ public final class GameDataTracker {
         } else if (gameObject.getId() == 0xc4) {
             if(Settings.isRandomizeTransitionGates()) {
                 Screen screen = (Screen)gameObject.getObjectContainer();
-                FileUtils.logFlush(String.format("Gate on screen [%d, %d, %d] leads to screen [%d, %d, %d] with position (%d, %d)",
-                        screen.getZoneIndex(), screen.getRoomIndex(), screen.getScreenIndex(),
-                        gameObject.getArgs().get(0), gameObject.getArgs().get(1), gameObject.getArgs().get(2),
-                        gameObject.getArgs().get(3), gameObject.getArgs().get(4)));
+//                FileUtils.logFlush(String.format("Gate on screen [%d, %d, %d] leads to screen [%d, %d, %d] with position (%d, %d)",
+//                        screen.getZoneIndex(), screen.getRoomIndex(), screen.getScreenIndex(),
+//                        gameObject.getArgs().get(0), gameObject.getArgs().get(1), gameObject.getArgs().get(2),
+//                        gameObject.getArgs().get(3), gameObject.getArgs().get(4)));
 
                 String gateName = null;
                 boolean needEscapeDoor = false;
