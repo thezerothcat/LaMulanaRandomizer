@@ -63,8 +63,8 @@ public class RandomizationPanel extends JPanel {
         checkboxContainer.add(randomizeEscapeChest);
         checkboxContainer.add(randomizeCursedChests);
         checkboxContainer.add(randomizeDracuetShop);
-        checkboxContainer.add(randomizeTransitionGates);
         checkboxContainer.add(randomizeBacksideDoors);
+        checkboxContainer.add(randomizeTransitionGates);
         add(checkboxContainer, "growx, wrap");
 
         updateTranslations();
@@ -77,8 +77,8 @@ public class RandomizationPanel extends JPanel {
         randomizeEscapeChest.setText(Translations.getText("randomization.randomizeEscapeChest"));
         randomizeCursedChests.setText(Translations.getText("randomization.randomizeCursedChests"));
         randomizeDracuetShop.setText(Translations.getText("randomization.randomizeDracuetShop"));
-        randomizeTransitionGates.setText(Translations.getText("randomization.randomizeTransitionGates"));
         randomizeBacksideDoors.setText(Translations.getText("randomization.randomizeBacksideDoors"));
+        randomizeTransitionGates.setText(Translations.getText("randomization.randomizeTransitionGates"));
         weaponRandomization.updateTranslations();
         shopRandomization.updateTranslations();
         swimsuitRandomization.updateTranslations();
@@ -91,8 +91,8 @@ public class RandomizationPanel extends JPanel {
         Settings.setRandomizeEscapeChest(randomizeEscapeChest.isSelected(), true);
         Settings.setRandomizeCursedChests(randomizeCursedChests.isSelected(), true);
         Settings.setRandomizeDracuetShop(randomizeDracuetShop.isSelected(), true);
-        Settings.setRandomizeTransitionGates(randomizeTransitionGates.isSelected(), true);
         Settings.setRandomizeBacksideDoors(randomizeBacksideDoors.isSelected(), true);
+        Settings.setRandomizeTransitionGates(randomizeTransitionGates.isSelected(), true);
         weaponRandomization.updateSettings();
         shopRandomization.updateSettings();
         swimsuitRandomization.updateSettings();
@@ -109,7 +109,7 @@ public class RandomizationPanel extends JPanel {
         randomizeEscapeChest.setSelected(Settings.isRandomizeEscapeChest());
         randomizeCursedChests.setSelected(Settings.isRandomizeCursedChests());
         randomizeDracuetShop.setSelected(Settings.isRandomizeDracuetShop());
-        randomizeTransitionGates.setSelected(Settings.isRandomizeTransitionGates());
         randomizeBacksideDoors.setSelected(Settings.isRandomizeBacksideDoors());
+        randomizeTransitionGates.setSelected(Settings.isRandomizeTransitionGates());
     }
 }

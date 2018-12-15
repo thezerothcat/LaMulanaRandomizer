@@ -98,6 +98,12 @@ public class TransitionGateRandomizer {
             transitionGateDestinationMap.put("Transition: Birth D1", "Transition: Goddess U1");
 
             transitionGateDestinationMap.put("Transition: Dimensional D1", "Transition: Twin U3");
+
+            transitionGateDestinationMap.put("Transition: Retromausoleum U1", "Transition: Retroguidance D1");
+            transitionGateDestinationMap.put("Transition: Retroguidance D1", "Transition: Retromausoleum U1");
+
+            transitionGateDestinationMap.put("Transition: Retroguidance L1", "Transition: Retrosurface R1");
+            transitionGateDestinationMap.put("Transition: Retrosurface R1", "Transition: Retroguidance L1");
         }
     }
 
@@ -138,6 +144,9 @@ public class TransitionGateRandomizer {
 
         transitionGateDestinationMap.put("Transition: Dimensional D1", "Transition: Twin U3");
 
+        transitionGateDestinationMap.put("Transition: Retromausoleum U1", "Transition: Twin D2");
+        transitionGateDestinationMap.put("Transition: Twin D2", "Transition: Retromausoleum U1");
+
         List<String> leftTransitions = new ArrayList<>();
         List<String> rightTransitions = new ArrayList<>();
         List<String> upTransitions = new ArrayList<>();
@@ -149,12 +158,14 @@ public class TransitionGateRandomizer {
         leftTransitions.add("Transition: Sun L1");
         leftTransitions.add("Transition: Moonlight L1");
         leftTransitions.add("Transition: Goddess L2");
+        leftTransitions.add("Transition: Retroguidance L1");
         rightTransitions.add("Transition: Surface R1");
         rightTransitions.add("Transition: Inferno R1");
         rightTransitions.add("Transition: Graveyard R1");
         rightTransitions.add("Transition: Ruin R1");
         rightTransitions.add("Transition: Ruin R2");
         rightTransitions.add("Transition: Endless R1");
+        rightTransitions.add("Transition: Retrosurface R1");
         upTransitions.add("Transition: Guidance U1");
         upTransitions.add("Transition: Mausoleum U1");
         upTransitions.add("Transition: Graveyard U2");
@@ -167,6 +178,7 @@ public class TransitionGateRandomizer {
         upTransitions.add("Transition: Extinction U2");
         upTransitions.add("Transition: Birth U1");
         upTransitions.add("Transition: Twin U1");
+//        upTransitions.add("Transition: Retromausoleum U1");
         downTransitions.add("Transition: Surface D1");
         downTransitions.add("Transition: Surface D2");
         downTransitions.add("Transition: Guidance D1");
@@ -178,7 +190,8 @@ public class TransitionGateRandomizer {
         downTransitions.add("Transition: Goddess D1");
         downTransitions.add("Transition: Birth D1");
         downTransitions.add("Transition: Twin D1");
-        downTransitions.add("Transition: Twin D2");
+//        downTransitions.add("Transition: Twin D2");
+        downTransitions.add("Transition: Retroguidance D1");
 
         String chosenTransitionStart;
         String chosenTransitionEnd;
@@ -245,6 +258,7 @@ public class TransitionGateRandomizer {
         leftTransitions.add("Transition: Goddess L2");
 //        leftTransitions.add("Transition: Ruin L1");
 //        leftTransitions.add("Transition: Birth L1");
+        leftTransitions.add("Transition: Retroguidance L1");
         String leftTransition = leftTransitions.get(random.nextInt(leftTransitions.size()));
         String rightTransition = transitionGateDestinationMap.get(leftTransition);
         transitionGateDestinationMap.put(leftTransition, "Transition: Pipe R1");
@@ -398,6 +412,15 @@ public class TransitionGateRandomizer {
         }
         else if("Location: Dimensional Corridor".equals(gateName)) {
             return Arrays.asList("Transition: Dimensional D1");
+        }
+        else if("Location: Gate of Time [Mausoleum Upper]".equals(gateName)) {
+            return Arrays.asList("Transition: Retromausoleum U1");
+        }
+        else if("Location: Gate of Time [Guidance]".equals(gateName)) {
+            return Arrays.asList("Transition: Retroguidance L1", "Transition: Retroguidance D1");
+        }
+        else if("Location: Gate of Time [Surface]".equals(gateName)) {
+            return Arrays.asList("Transition: Retrosurface R1");
         }
         return new ArrayList<>(0);
     }
@@ -634,6 +657,10 @@ public class TransitionGateRandomizer {
                 "Transition: Goddess L1", "Transition: Goddess L2", "Transition: Goddess U1", "Transition: Goddess D1",
                 "Transition: Ruin L1", "Transition: Ruin R1", "Transition: Ruin R2",
                 "Transition: Birth L1", "Transition: Birth R1", "Transition: Birth U1", "Transition: Birth D1",
-                "Transition: Dimensional D1"));
+                "Transition: Dimensional D1",
+                "Transition: Retromausoleum U1",
+                "Transition: Retroguidance D1",
+                "Transition: Retroguidance L1",
+                "Transition: Retrosurface R1"));
     }
 }

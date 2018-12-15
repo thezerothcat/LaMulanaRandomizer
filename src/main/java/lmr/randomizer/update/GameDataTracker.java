@@ -458,18 +458,31 @@ public final class GameDataTracker {
                     // True Shrine
                     // todo: stuff
                 }
-//            else if(screen.getZoneIndex() == 19) {
-//                // Gate of Time
-//                if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 2) {
-//                    gateName = "Transition: Time D1";
-//                }
-//            }
-//            else if(screen.getZoneIndex() == 20) {
-//                // Gate of Time
-//                if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 2) {
-//                    gateName = "Transition: Time D1";
-//                }
-//            }
+                else if(screen.getZoneIndex() == 19) {
+                    // Gate of Time (Mausoleum of the Giants)
+                    if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Retromausoleum U1";
+                        needEscapeDoor = true;
+                    }
+                }
+                else if(screen.getZoneIndex() == 20) {
+                    // Gate of Time (Gate of Guidance)
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Retroguidance D1";
+                        needEscapeDoor = true;
+                    }
+                    else if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Retroguidance L1";
+                        needEscapeDoor = true;
+                    }
+                }
+                else if(screen.getZoneIndex() == 21) {
+                    // Gate of Time (Surface)
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Retrosurface R1";
+                        needEscapeDoor = true;
+                    }
+                }
                 else if(screen.getZoneIndex() == 22) {
                     // Night Surface
                     if (screen.getRoomIndex() == 11 && screen.getScreenIndex() == 1) {
@@ -3665,6 +3678,34 @@ public final class GameDataTracker {
             gameObject.getArgs().set(2, (short)0);
             gameObject.getArgs().set(3, (short)80);
             gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Retromausoleum U1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)19);
+            gameObject.getArgs().set(1, (short)4);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)60);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Retroguidance L1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)20);
+            gameObject.getArgs().set(1, (short)4);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)20);
+            gameObject.getArgs().set(4, (short)312);
+        }
+        else if("Transition: Retroguidance D1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)20);
+            gameObject.getArgs().set(1, (short)0);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)60);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Retrosurface R1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)21);
+            gameObject.getArgs().set(1, (short)0);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)580);
+            gameObject.getArgs().set(4, (short)312);
         }
         else if("Transition: Pipe L1".equals(gateDestination)) {
             gameObject.getArgs().set(0, (short)13);
