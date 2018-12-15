@@ -49,6 +49,7 @@ public final class DataFromFile {
 
     public static String EXPLODING_CHEST_NAME = "Trap: Exploding";
     public static String GRAVEYARD_TRAP_CHEST_NAME = "Trap: Graveyard";
+    public static String ESCAPE_CHEST_NAME = "Coin: Twin (Escape)";
 
     private static List<String> allShops;
     private static List<String> allItems;
@@ -126,6 +127,9 @@ public final class DataFromFile {
             }
             if(Settings.isRandomizeTrapItems()) {
                 nonShopItemLocations.addAll(DataFromFile.TRAP_ITEMS);
+            }
+            if(Settings.isRandomizeEscapeChest()) {
+                nonShopItemLocations.add(DataFromFile.ESCAPE_CHEST_NAME);
             }
         }
         return nonShopItemLocations;
@@ -336,17 +340,9 @@ public final class DataFromFile {
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/shop_reqs.txt", true);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/attack_reqs.txt", true);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dead_ends.txt", true);
+            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/transition_reqs.txt", true);
             if(!Settings.getEnabledGlitches().isEmpty()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/location_reqs.txt", true);
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/item_reqs.txt", true);
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/shop_reqs.txt", true);
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/event_reqs.txt", true);
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/glitch_reqs.txt", true);
-            }
-            if(!Settings.getEnabledDamageBoosts().isEmpty()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/location_reqs.txt", true);
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/item_reqs.txt", true);
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dboost/shop_reqs.txt", true);
             }
             if(Settings.isRandomizeCoinChests()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/coin_chest_reqs.txt", true);
@@ -356,9 +352,6 @@ public final class DataFromFile {
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject,
                     String.format("requirement/bosses/%s_reqs.txt", Settings.getBossDifficulty().name().toLowerCase()), true);
-            if(!Settings.isRequireFlaresForExtinction()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/special/no_flares_for_extinction_reqs.txt", true);
-            }
             for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
                 if(customPlacement.isRemoveLogic()) {
                     mapOfNodeNameToRequirementsObject.remove(customPlacement.getLocation());

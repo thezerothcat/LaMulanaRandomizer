@@ -220,23 +220,34 @@ public class BacksideDoorRandomizer {
         doorRequirements.add(doorLocation);
         doorRequirements.add(requiredBoss);
         node.addRequirementSet(doorRequirements);
+
+        String doorExit = doorName.replace("Door: ", "Exit: Door ");
+        node = mapOfNodeNameToDoorRequirementsObject.get(doorExit);
+        if(node == null) {
+            node = new NodeWithRequirements(doorExit);
+            mapOfNodeNameToDoorRequirementsObject.put(doorExit, node);
+        }
+        doorRequirements = new ArrayList<>(1);
+        doorRequirements.add(doorLocation.replace("Location:", "Exit:"));
+        doorRequirements.add(requiredBoss);
+        node.addRequirementSet(doorRequirements);
     }
 
     public List<String> getSettingNodes() {
         List<String> settingNodes = new ArrayList<>();
-        for(Map.Entry<String, String> doorKeyAndLocation : backsideDoorLocationMap.entrySet()) {
-            if(doorKeyAndLocation.getValue().contains("Gate of Guidance")) {
-                settingNodes.add("Setting: " + doorKeyAndLocation.getKey().replace("Door:", "Guidance"));
-            }
-            else if(doorKeyAndLocation.getValue().contains("Inferno Cavern [Viy]")) {
-                settingNodes.add("Setting: " + doorKeyAndLocation.getKey().replace("Door:", "Viy"));
-            }
-        }
+//        for(Map.Entry<String, String> doorKeyAndLocation : backsideDoorLocationMap.entrySet()) {
+//            if(doorKeyAndLocation.getValue().contains("Gate of Guidance")) {
+//                settingNodes.add("Setting: " + doorKeyAndLocation.getKey().replace("Door:", "Guidance"));
+//            }
+//            else if(doorKeyAndLocation.getValue().contains("Inferno Cavern [Viy]")) {
+//                settingNodes.add("Setting: " + doorKeyAndLocation.getKey().replace("Door:", "Viy"));
+//            }
+//        }
         return settingNodes;
     }
 
     public List<String> getAvailableNodes(String stateToUpdate, Integer attemptNumber) {
-        if(!stateToUpdate.startsWith("Event:") && !stateToUpdate.startsWith("Location:")) {
+        if(!stateToUpdate.startsWith("Event:") && !stateToUpdate.startsWith("Location:") && !stateToUpdate.startsWith("Exit:")) {
             return new ArrayList<>(0);
         }
 
@@ -245,12 +256,14 @@ public class BacksideDoorRandomizer {
         for(String nodeName : mapOfNodeNameToDoorRequirementsObject.keySet()) {
             node = mapOfNodeNameToDoorRequirementsObject.get(nodeName);
             if(node.updateRequirements(stateToUpdate)) {
-                FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
                 availableNodes.add(nodeName);
             }
         }
         for(String door : availableNodes) {
             mapOfNodeNameToDoorRequirementsObject.remove(door);
+        }
+        if(!availableNodes.isEmpty()) {
+            FileUtils.logDetail("Gained access to nodes " + availableNodes, attemptNumber);
         }
         return availableNodes;
     }
@@ -309,7 +322,7 @@ public class BacksideDoorRandomizer {
             return "Location: Tower of the Goddess [Lower]";
         }
         if("Door: B6".equals(door)) {
-            return "Location: Chamber of Birth [East]";
+            return "Location: Chamber of Birth [Northeast]";
         }
         if("Door: B7".equals(door)) {
             return "Location: Tower of Ruin [Top]";
@@ -355,7 +368,7 @@ public class BacksideDoorRandomizer {
         if("Location: Tower of the Goddess [Lower]".equals(location)) {
             return "Door: F5";
         }
-        if("Location: Chamber of Birth [East]".equals(location)) {
+        if("Location: Chamber of Birth [Northeast]".equals(location)) {
             return "Door: F6";
         }
         if("Location: Tower of Ruin [Top]".equals(location)) {
@@ -395,15 +408,17 @@ public class BacksideDoorRandomizer {
                 : door.replace("Door: F", "Door: B");
     }
 
-    public void logLocations() {
-        for(String door : backsideDoorLocationMap.keySet()) {
-            FileUtils.log(door + ": " + backsideDoorLocationMap.get(door));
+    public void logLocations(Integer attemptNumber) {
+        if(Settings.isRandomizeBacksideDoors() && FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+            for (String door : backsideDoorLocationMap.keySet()) {
+                FileUtils.log(door + ": " + backsideDoorLocationMap.get(door));
+            }
+            FileUtils.flush();
         }
-        FileUtils.flush();
     }
 
     public void logBosses(Integer attemptNumber) {
-        if(FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+        if(Settings.isRandomizeBacksideDoors() && FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
             for(String door : backsideDoorBossMap.keySet()) {
                 FileUtils.log(door + ": " + backsideDoorBossMap.get(door));
             }
@@ -411,8 +426,8 @@ public class BacksideDoorRandomizer {
         }
     }
 
-    public void logRequirements(String door) {
-        FileUtils.logFlush(door + ": " + mapOfNodeNameToDoorRequirementsObject.get(door).getAllRequirements().get(0));
+    public List<String> getMissingRequirements(String door) {
+        return mapOfNodeNameToDoorRequirementsObject.get(door).getAllRequirements().get(0);
     }
 
     public void outputLocations(int attemptNumber) throws IOException {

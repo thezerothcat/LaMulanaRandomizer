@@ -12,7 +12,7 @@ import java.util.*;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.0.0";
+    public static final String VERSION = "2.1.0";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -435,6 +435,9 @@ public class FileUtils {
             else if(line.startsWith("randomizeTrapItems")) {
                 Settings.setRandomizeTrapItems(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("randomizeEscapeChest")) {
+                Settings.setRandomizeEscapeChest(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("allowWhipStart")) {
                 Settings.setAllowWhipStart(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -452,6 +455,9 @@ public class FileUtils {
             }
             else if(line.startsWith("randomizeCursedChests")) {
                 Settings.setRandomizeCursedChests(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("randomizeTransitionGates")) {
+                Settings.setRandomizeTransitionGates(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeBacksideDoors")) {
                 Settings.setRandomizeBacksideDoors(Boolean.valueOf(line.split("=")[1]), false);
@@ -545,6 +551,9 @@ public class FileUtils {
         writer.write(String.format("randomizeTrapItems=%s", Settings.isRandomizeTrapItems()));
         writer.newLine();
 
+        writer.write(String.format("randomizeEscapeChest=%s", Settings.isRandomizeEscapeChest()));
+        writer.newLine();
+
         writer.write(String.format("allowWhipStart=%s", Settings.isAllowWhipStart()));
         writer.newLine();
 
@@ -561,6 +570,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("randomizeCursedChests=%s", Settings.isRandomizeCursedChests()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeTransitionGates=%s", Settings.isRandomizeTransitionGates()));
         writer.newLine();
 
         writer.write(String.format("randomizeBacksideDoors=%s", Settings.isRandomizeBacksideDoors()));
@@ -662,7 +674,7 @@ public class FileUtils {
     }
 
     public static void logDetail(String logText, Integer attemptNumber) {
-        if(attemptNumber != null && attemptNumber.equals(FileUtils.detailedLoggingAttemptNumber)) {
+        if(FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
             log(logText);
         }
     }
@@ -679,6 +691,7 @@ public class FileUtils {
         try {
             logWriter.flush();
             logWriter.close();
+            logWriter = null;
         } catch (Exception ex) {
 
         }

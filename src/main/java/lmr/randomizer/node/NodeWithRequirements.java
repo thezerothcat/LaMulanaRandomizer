@@ -23,6 +23,9 @@ public class NodeWithRequirements {
         else if(name.startsWith("Event:") || name.startsWith("State:") || name.startsWith("Attack:") || name.startsWith("Combo:")) {
             type = NodeType.STATE;
         }
+        else if(name.startsWith("Transition:")) {
+            type = NodeType.TRANSITION;
+        }
         else if(name.startsWith("Shop")) {
             type = NodeType.SHOP;
         }

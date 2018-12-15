@@ -2,6 +2,10 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+2.1
+-----------------------------
+Entrance randomizer, version 1. Not all area transitions are randomized yet.
+
 2.0
 -----------------------------
 Update to java 11. UI adjustments. Better control over starting weapons. Ability to remove all main weapons without using plando features. Logic adjustments for removed items.

@@ -97,6 +97,20 @@ public final class RcdReader {
                 }
             }
 
+            if(Settings.isRandomizeTransitionGates()) {
+                if(obj.getObjectContainer() instanceof Screen) {
+                    int zoneIndex = ((Screen)obj.getObjectContainer()).getZoneIndex();
+                    if(zoneIndex != 3 && zoneIndex != 7) {
+                        for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                            if(testByteOperation.getIndex() == 0x1d7) {
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
             if(!(objectContainer instanceof Zone)) {
                 for (int i = 0; i < obj.getWriteByteOperations().size(); i++) {
                     WriteByteOperation updateFlag = obj.getWriteByteOperations().get(i);
@@ -140,9 +154,102 @@ public final class RcdReader {
                 }
             }
         }
-        else if(obj.getId() == 0x2f && obj.getArgs().get(1) == 7) {
-            // Remove empowered Key Sword
-            keepObject = false;
+        else if(obj.getId() == 0x2f) {
+            if(obj.getArgs().get(1) == 7) {
+                // Remove empowered Key Sword
+                keepObject = false;
+            }
+        }
+        else if(obj.getId() == 0x46) {
+            if(Settings.isRandomizeTransitionGates()) {
+                // Spriggan statue still reachable during the escape sequence.
+                Integer flagIndexToRemove = null;
+                for(int i = 0; i < obj.getTestByteOperations().size(); i++) {
+                    TestByteOperation testByteOperation = obj.getTestByteOperations().get(i);
+                    if(testByteOperation.getIndex() == 0x0fe) {
+                        flagIndexToRemove = i;
+                        break;
+                    }
+                }
+                if(flagIndexToRemove != null) {
+                    obj.getTestByteOperations().remove((int)flagIndexToRemove);
+                }
+            }
+        }
+        else if(obj.getId() == 0x0e) {
+            if(objectContainer instanceof Screen) {
+                Screen screen = (Screen)objectContainer;
+                if(screen.getZoneIndex() == 0 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                    if(Settings.isRandomizeTransitionGates()) {
+                        for (TestByteOperation flagTest : obj.getTestByteOperations()) {
+                            if(flagTest.getIndex() == 0x0fe && flagTest.getValue() == 3) {
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if(screen.getZoneIndex() == 3 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                    // Temple of the Sun Map chest ladder stuff
+                    TestByteOperation testByteOperation = new TestByteOperation();
+                    testByteOperation.setIndex(12);
+                    testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                    testByteOperation.setValue((byte)0);
+                    obj.getTestByteOperations().add(testByteOperation);
+                }
+                else if(screen.getZoneIndex() == 6) {
+                    if(screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
+                        if (Settings.isRandomizeTransitionGates()) {
+                            for (TestByteOperation flagTest : obj.getTestByteOperations()) {
+                                if(flagTest.getIndex() == 0x0fe && flagTest.getValue() == 3) {
+                                    keepObject = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                        if (Settings.isRandomizeTransitionGates()) {
+                            for (TestByteOperation flagTest : obj.getTestByteOperations()) {
+                                if (flagTest.getIndex() == 0x382 && flagTest.getValue() == 1) {
+                                    keepObject = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if(screen.getZoneIndex() == 11 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                    if(Settings.isRandomizeTransitionGates()) {
+                        for (TestByteOperation flagTest : obj.getTestByteOperations()) {
+                            if(flagTest.getIndex() == 0x0fe && flagTest.getValue() == 3) {
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if(screen.getZoneIndex() == 12 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                    if(Settings.isRandomizeTransitionGates()) {
+                        for (TestByteOperation flagTest : obj.getTestByteOperations()) {
+                            if(flagTest.getIndex() == 0x0fe && flagTest.getValue() == 3) {
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if(screen.getZoneIndex() == 13 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                    if(Settings.isRandomizeTransitionGates()) {
+                        for (TestByteOperation flagTest : obj.getTestByteOperations()) {
+                            if(flagTest.getIndex() == 0x0fe && flagTest.getValue() == 3) {
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
         else if (obj.getId() == 0xa0) {
             if(obj.getArgs().get(3) == 1) {
@@ -227,6 +334,20 @@ public final class RcdReader {
                     }
                 }
             }
+            if(Settings.isRandomizeTransitionGates()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen) objectContainer;
+                    if (screen.getZoneIndex() == 14 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                        for(WriteByteOperation writeByteOperation : obj.getWriteByteOperations()) {
+                            if(writeByteOperation.getIndex() == 0x278) {
+                                // Lemeza detector for ToG statue
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
         else if(obj.getId() == 0x34) {
             if(objectContainer instanceof Screen) {
@@ -250,6 +371,11 @@ public final class RcdReader {
                         keepObject = false;
                     }
                 }
+            }
+        }
+        else if (obj.getId() == 0xc5) {
+            if(Settings.isRandomizeTransitionGates()) {
+                obj.getArgs().set(2, (short)10);
             }
         }
         else if (obj.getId() == 0x93) {
@@ -328,6 +454,7 @@ public final class RcdReader {
             }
         }
         else if (obj.getId() == 0xc0) {
+            // Mother ankh
             if(Settings.isAlternateMotherAnkh()) {
                 obj.setId((short)0x2e);
                 obj.getArgs().set(0, (short)8);
@@ -622,8 +749,20 @@ public final class RcdReader {
         else if(zoneIndex == 9 && roomIndex == 2 && screenIndex == 0) {
             AddObject.addDiaryChestConditionTimer(screen);
         }
-        else if(zoneIndex == 12 && roomIndex == 2 && screenIndex == 0) {
-            AddObject.addMoonlightPassageTimer(screen);
+        else if(zoneIndex == 10 && roomIndex == 1 && screenIndex == 0) {
+            if(Settings.isRandomizeTransitionGates()) {
+                AddObject.addWeightDoorTimer(screen, 0x037);
+            }
+        }
+        else if(zoneIndex == 12) {
+            if(roomIndex == 2) {
+                if(screenIndex == 0) {
+                    AddObject.addMoonlightPassageTimer(screen);
+                }
+                else if(screenIndex == 1 && Settings.isRandomizeTransitionGates()) {
+                    AddObject.addWeightDoorTimer(screen, 0x045);
+                }
+            }
         }
         else if(zoneIndex == 13) {
             if((roomIndex == 5 && screenIndex == 1) || (roomIndex == 6 && screenIndex == 2)) {

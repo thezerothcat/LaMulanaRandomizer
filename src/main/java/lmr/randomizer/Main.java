@@ -247,6 +247,7 @@ public class Main {
                                     "Randomizer error", JOptionPane.ERROR_MESSAGE);
                             SwingUtilities.invokeLater(() -> {
                                 progressDialog.setVisible(false);
+                                progressDialog.setSafeClose(true);
                             });
                         }
                         return null;
@@ -346,7 +347,7 @@ public class Main {
                 fileOutputStream.close();
                 FileUtils.logFlush("dat copy complete");
 
-                if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart()) {
                     FileUtils.logFlush("Copying save file from seed folder to La-Mulana save directory");
                     File saveFile = new File(String.format("%s/lm_00.sav", Settings.getStartingSeed()));
                     if(saveFile.exists()) {
@@ -655,6 +656,14 @@ public class Main {
                             return false;
                         }
                     }
+                    if(!Settings.isRandomizeEscapeChest()) {
+                        if(customPlacement.getLocation().equals(DataFromFile.ESCAPE_CHEST_NAME) || customPlacement.getContents().startsWith(DataFromFile.ESCAPE_CHEST_NAME)) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom placement not valid with current settings for randomized escape chest",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
                     if(!Settings.isRandomizeCoinChests()) {
                         if(customPlacement.getLocation().startsWith("Coin:")) {
                             JOptionPane.showMessageDialog(randomizerUI,
@@ -809,7 +818,9 @@ public class Main {
 
         BacksideDoorRandomizer backsideDoorRandomizer = new BacksideDoorRandomizer();
         backsideDoorRandomizer.determineDoorDestinations(random);
-        backsideDoorRandomizer.logLocations();
+        backsideDoorRandomizer.logLocations(null);
+
+        TransitionGateRandomizer transitionGateRandomizer = new TransitionGateRandomizer();
 
         Set<String> initiallyAccessibleItems = getInitiallyAvailableItems();
 
@@ -826,11 +837,12 @@ public class Main {
             dialog.setTitle(String.format(Translations.getText("progress.shuffling.title"), attempt));
             dialog.progressBar.setIndeterminate(true);
 
+            transitionGateRandomizer.determineGateDestinations(random);
             backsideDoorRandomizer.determineDoorBosses(random, attempt);
 
             ItemRandomizer itemRandomizer = new ItemRandomizer();
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
-            AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer);
+            AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer);
             accessChecker.initExitRequirements();
 
             List<String> startingNodes = getStartingNodes();
@@ -885,7 +897,7 @@ public class Main {
 
             boolean ankhJewelLock = false;
             if(accessChecker.getQueuedUpdates().isEmpty()) {
-                if (!accessChecker.updateForBosses(attempt)) {
+                if (!accessChecker.updateForBosses()) {
                     ankhJewelLock = true;
                 }
             }
@@ -898,7 +910,7 @@ public class Main {
                             ankhJewelLock = true;
                             break;
                         }
-                        if (!accessChecker.updateForBosses(attempt)) {
+                        if (!accessChecker.updateForBosses()) {
                             ankhJewelLock = true;
                             break;
                         }
@@ -919,8 +931,13 @@ public class Main {
                 FileUtils.log(String.format("Successful attempt %s.", attempt));
                 FileUtils.flush();
 
+                if(Settings.isRandomizeTransitionGates()) {
+                    transitionGateRandomizer.placeTowerOfTheGoddessPassthroughPipe(random);
+                    FileUtils.logDetail("Placed pipe transitions", attempt);
+                }
+
                 dialog.updateProgress(85, Translations.getText("progress.spoiler"));
-                outputLocations(itemRandomizer, shopRandomizer, backsideDoorRandomizer, attempt);
+                outputLocations(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer, attempt);
 
                 dialog.updateProgress(90, Translations.getText("progress.read"));
 
@@ -947,8 +964,12 @@ public class Main {
 
                 if(Settings.isRandomizeBacksideDoors()) {
                     backsideDoorRandomizer.updateBacksideDoors();
+                    FileUtils.log("Updated backside door data");
                 }
-                FileUtils.log("Updated backside door data");
+                if(Settings.isRandomizeTransitionGates()) {
+                    transitionGateRandomizer.updateTransitions(random);
+                    FileUtils.log("Updated transition gate data");
+                }
 
 //                if(Settings.isRandomizeMantras()) {
 //                    GameDataTracker.randomizeMantras(random);
@@ -961,7 +982,7 @@ public class Main {
 
                 DatWriter.writeDat(datInfo);
                 FileUtils.logFlush("dat file successfully written");
-                if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart()) {
                     backupSaves();
                     writeSaveFile();
                 }
@@ -1055,6 +1076,12 @@ public class Main {
         }
         if(Settings.isUshumgalluAssist()) {
             startingNodes.add("Setting: Ushumgallu Assist");
+        }
+        if(!Settings.isRequireFlaresForExtinction()) {
+            startingNodes.add("Setting: Flareless Extinction");
+        }
+        if(!Settings.isRandomizeTransitionGates()) {
+            startingNodes.add("Setting: Nonrandom Transitions");
         }
         startingNodes.add(Settings.isAlternateMotherAnkh() ? "Setting: Alternate Mother" : "Setting: Standard Mother");
 
@@ -1297,11 +1324,13 @@ public class Main {
         return shopRandomizer;
     }
 
-    private static AccessChecker buildAccessChecker(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, BacksideDoorRandomizer backsideDoorRandomizer) {
+    private static AccessChecker buildAccessChecker(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer,
+                                                    BacksideDoorRandomizer backsideDoorRandomizer, TransitionGateRandomizer transitionGateRandomizer) {
         AccessChecker accessChecker = new AccessChecker();
         accessChecker.setItemRandomizer(itemRandomizer);
         accessChecker.setShopRandomizer(shopRandomizer);
         accessChecker.setBacksideDoorRandomizer(backsideDoorRandomizer);
+        accessChecker.setTransitionGateRandomizer(transitionGateRandomizer);
         itemRandomizer.setAccessChecker(accessChecker);
         shopRandomizer.setAccessChecker(accessChecker);
         return accessChecker;
@@ -1339,7 +1368,7 @@ public class Main {
         }
         startingWeapons.removeAll(Settings.getRemovedItems());
         Settings.setCurrentStartingWeapon(startingWeapons.get(random.nextInt(startingWeapons.size())));
-        FileUtils.log("Selected starting weapon: " + Settings.getCurrentStartingWeapon());
+        FileUtils.logFlush("Selected starting weapon: " + Settings.getCurrentStartingWeapon());
     }
 
     private static void determineRemovedItems(int totalItemsRemoved, Random random) {
@@ -1573,10 +1602,13 @@ public class Main {
         return orbRemoved;
     }
 
-    private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, BacksideDoorRandomizer backsideDoorRandomizer, int attempt) throws IOException {
+    private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer,
+                                        BacksideDoorRandomizer backsideDoorRandomizer,
+                                        TransitionGateRandomizer transitionGateRandomizer, int attempt) throws IOException {
         itemRandomizer.outputLocations(attempt);
         shopRandomizer.outputLocations(attempt);
         backsideDoorRandomizer.outputLocations(attempt);
+        transitionGateRandomizer.outputLocations(attempt);
         if (!Settings.getCurrentRemovedItems().isEmpty() || !Settings.getRemovedItems().isEmpty()) {
             BufferedWriter writer = FileUtils.getFileWriter(String.format("%s/removed_items.txt", Settings.getStartingSeed()));
             if (writer == null) {

@@ -22,6 +22,7 @@ public final class GameDataTracker {
     private static Map<Integer, List<GameObject>> mapOfShopBlockToShopObjects = new HashMap<>();
     private static Map<String, List<GameObject>> mantraTablets = new HashMap<>();
     private static Map<String, List<GameObject>> mapOfDoorNameToBacksideDoor = new HashMap<>();
+    private static Map<String, List<GameObject>> mapOfGateNameToTransitionGate = new HashMap<>();
 
     private static GameObject subweaponPot;
 
@@ -33,6 +34,7 @@ public final class GameDataTracker {
         mapOfChestIdentifyingInfoToBlock.clear();
         mapOfShopBlockToShopObjects.clear();
         mapOfDoorNameToBacksideDoor.clear();
+        mapOfGateNameToTransitionGate.clear();
         mantraTablets.clear();
     }
 
@@ -206,6 +208,302 @@ public final class GameDataTracker {
                 }
                 objects.add(gameObject);
             }
+        } else if (gameObject.getId() == 0xc4) {
+            if(Settings.isRandomizeTransitionGates()) {
+                Screen screen = (Screen)gameObject.getObjectContainer();
+//                FileUtils.logFlush(String.format("Gate on screen [%d, %d, %d] leads to screen [%d, %d, %d] with position (%d, %d)",
+//                        screen.getZoneIndex(), screen.getRoomIndex(), screen.getScreenIndex(),
+//                        gameObject.getArgs().get(0), gameObject.getArgs().get(1), gameObject.getArgs().get(2),
+//                        gameObject.getArgs().get(3), gameObject.getArgs().get(4)));
+
+                String gateName = null;
+                boolean needEscapeDoor = false;
+                if(screen.getZoneIndex() == 0) {
+                    // Gate of Guidance
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Guidance L1";
+                        needEscapeDoor = true;
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Guidance U1";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Guidance D1";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Guidance D2";
+                    }
+                }
+                else if(screen.getZoneIndex() == 1) {
+                    // Surface
+                    if (screen.getRoomIndex() == 11 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Surface R1";
+                        needEscapeDoor = true;
+                    }
+                    else if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Surface D1";
+                        needEscapeDoor = true;
+                    }
+                    else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Surface D2";
+                        needEscapeDoor = true;
+                    }
+                }
+                else if(screen.getZoneIndex() == 2) {
+                    // Mausoleum
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Mausoleum U1";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Mausoleum D1";
+                    }
+                    else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Mausoleum L1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 3) {
+                    // Sun
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Sun U1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Sun L1";
+                    }
+//                else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
+//                    // todo: compare position for R1 vs R2
+//                    gateName = "Transition: Sun R1";
+//                }
+                }
+                else if(screen.getZoneIndex() == 4) {
+                    // Spring
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Spring D1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 5) {
+                    // Inferno
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Inferno R1";
+                    }
+                    else if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Inferno U1";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Inferno U2";
+                        needEscapeDoor = true;
+                    }
+                }
+                else if(screen.getZoneIndex() == 6) {
+                    // Extinction
+                    if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Extinction U2";
+                    }
+//                else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+//                    gateName = "Transition: Extinction U3";
+//                }
+//                else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+//                    gateName = "Transition: Extinction U1";
+//                }
+//                else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 0) {
+//                    // todo: compare position for L1 vs L2
+//                    gateName = "Transition: Extinction L1";
+//                }
+                }
+                else if(screen.getZoneIndex() == 7) {
+                    // Twin Labyrinths
+                    if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
+                        if(gameObject.getArgs().get(0) != 7) {
+                            gateName = "Transition: Twin U1";
+                        }
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Twin D1";
+                    }
+                    else if (screen.getRoomIndex() == 16 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Twin D2";
+                    }
+//                else if (screen.getRoomIndex() == 10 && screen.getScreenIndex() == 1) {
+//                    gateName = "Transition: Twin U3";
+//                }
+//                else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+//                    gateName = "Transition: Twin U2";
+//                }
+//                else if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
+//                    gateName = "Transition: Twin U4";
+//                }
+                }
+                else if(screen.getZoneIndex() == 8) {
+                    // Endless
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Endless R1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 3) {
+                        gateName = "Transition: Endless U1";
+                    }
+                    else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 3) {
+                        gateName = "Transition: Endless D1";
+                    }
+                }
+//            else if(screen.getZoneIndex() == 9) {
+//                // Shrine
+//                if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+//                    gateName = "Transition: Shrine D1";
+//                }
+//                else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 3) {
+//                    gateName = "Transition: Endless U1";
+//                }
+//                else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 3) {
+//                    gateName = "Transition: Endless D1";
+//                }
+//            }
+                else if(screen.getZoneIndex() == 10) {
+                    // Illusion
+                    if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Illusion D2";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Illusion D1";
+                    }
+                    else if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Illusion R1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Illusion R2";
+                    }
+                }
+                else if(screen.getZoneIndex() == 11) {
+                    // Graveyard
+                    if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Graveyard L1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Graveyard R1";
+                    }
+                    else if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Graveyard U1";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Graveyard U2";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Graveyard D1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 12) {
+                    // Moonlight
+                    if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Moonlight U1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Moonlight U2";
+                    }
+                    else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Moonlight L1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 13) {
+                    // Goddess
+                    if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Goddess L1";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Goddess D1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Goddess L2";
+                    }
+                    else if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Goddess U1";
+                    }
+                    else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                        if(gameObject.getArgs().get(0) == 11) {
+                            gateName = "Transition: Pipe L1";
+                        }
+                        else if(gameObject.getArgs().get(0) == 12) {
+                            gateName = "Transition: Pipe R1";
+                        }
+                    }
+                }
+                else if(screen.getZoneIndex() == 14) {
+                    // Ruin
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Ruin R2";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Ruin R1";
+                    }
+//                else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
+//                    gateName = "Transition: Ruin L1";
+//                }
+                }
+                else if(screen.getZoneIndex() == 15) {
+                    // Birth (East)
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Birth U1";
+                    }
+//                else if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
+//                    gateName = "Transition: Birth L1";
+//                }
+                }
+                else if(screen.getZoneIndex() == 16) {
+                    // Birth (West)
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Birth D1";
+                    }
+//                else if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
+//                    gateName = "Transition: Birth R1";
+//                }
+                }
+                else if(screen.getZoneIndex() == 18) {
+                    // True Shrine
+                    // todo: stuff
+                }
+                else if(screen.getZoneIndex() == 19) {
+                    // Gate of Time (Mausoleum of the Giants)
+                    if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Retromausoleum U1";
+                        needEscapeDoor = true;
+                    }
+                }
+                else if(screen.getZoneIndex() == 20) {
+                    // Gate of Time (Gate of Guidance)
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Retroguidance D1";
+                        needEscapeDoor = true;
+                    }
+                    else if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Retroguidance L1";
+                        needEscapeDoor = true;
+                    }
+                }
+                else if(screen.getZoneIndex() == 21) {
+                    // Gate of Time (Surface)
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Retrosurface R1";
+                        needEscapeDoor = true;
+                    }
+                }
+                else if(screen.getZoneIndex() == 22) {
+                    // Night Surface
+                    if (screen.getRoomIndex() == 11 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Surface R1";
+                    }
+                }
+
+                if(gateName != null) {
+                    List<GameObject> transitionGates = mapOfGateNameToTransitionGate.get(gateName);
+                    if(transitionGates == null) {
+                        transitionGates = new ArrayList<>();
+                        mapOfGateNameToTransitionGate.put(gateName, transitionGates);
+                    }
+                    transitionGates.add(gameObject);
+
+                    if(needEscapeDoor) {
+                        GameObject escapeDoor = AddObject.addEscapeGate(gameObject);
+                        transitionGates.add(escapeDoor);
+                    }
+                }
+            }
         } else if (gameObject.getId() == 0x12) {
             Integer flagIndexToRemove = null;
             TestByteOperation flagTest;
@@ -282,19 +580,6 @@ public final class GameDataTracker {
                 gameObject.getTestByteOperations().remove((int)flagIndexToRemove);
             }
         } else if (gameObject.getId() == 0x0e) {
-            // Temple of the Sun Map chest ladder stuff
-            ObjectContainer objectContainer = gameObject.getObjectContainer();
-            if(objectContainer instanceof Screen) {
-                Screen screen = (Screen)objectContainer;
-                if(screen.getZoneIndex() == 3 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
-                    TestByteOperation testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(12);
-                    testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                    testByteOperation.setValue((byte)0);
-                    gameObject.getTestByteOperations().add(testByteOperation);
-                }
-            }
-
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                 if (flagTest.getIndex() == 335) {
                     // deathv stuff
@@ -568,8 +853,23 @@ public final class GameDataTracker {
                     }
                 }
                 else if(zone == 6) {
-                    if(screen.getRoomIndex() != 7) {
-                        // Chamber of Extinction [Magatama Left] => Chamber of Birth [East]
+                    if(screen.getRoomIndex() == 7) {
+                        if(Settings.isRandomizeTransitionGates()) {
+                            Integer flagIndexToRemove = null;
+                            for(int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                                TestByteOperation testByteOperation = gameObject.getTestByteOperations().get(i);
+                                if(testByteOperation.getIndex() == 0x382) {
+                                    flagIndexToRemove = i;
+                                    break;
+                                }
+                            }
+                            if(flagIndexToRemove != null) {
+                                gameObject.getTestByteOperations().remove((int)flagIndexToRemove);
+                            }
+                        }
+                    }
+                    else {
+                        // Chamber of Extinction [Magatama Left] => Chamber of Birth [Northeast]
                         doorName = "Door: F6";
                         replaceBacksideDoorFlags(gameObject, 0x0fb, 0x1d0, false);
 
@@ -668,7 +968,7 @@ public final class GameDataTracker {
                     }
                 }
                 else if(zone == 15) {
-                    // Chamber of Birth [East] => Chamber of Extinction [Magatama Left]
+                    // Chamber of Birth [Northeast] => Chamber of Extinction [Magatama Left]
                     doorName = "Door: B6";
                 }
                 if(doorName != null) {
@@ -2438,7 +2738,7 @@ public final class GameDataTracker {
         testByteOperation.setOp(ByteOp.FLAG_EQUALS);
         gameObject.getTestByteOperations().add(testByteOperation);
 
-        if(motherCheck) {
+        if(motherCheck && !Settings.isRandomizeTransitionGates()) {
             testByteOperation = new TestByteOperation();
             testByteOperation.setIndex(0x0fe);
             testByteOperation.setValue((byte) 3);
@@ -2987,6 +3287,463 @@ public final class GameDataTracker {
                 bunemonData.add((short)275);
             }
         }
+    }
+
+    public static void writeTransitionGate(String gateToUpdate, String gateDestination) {
+        List<GameObject> objectsToModify = mapOfGateNameToTransitionGate.get(gateToUpdate);
+        if(objectsToModify != null) {
+            boolean firstObject = true;
+            for (GameObject gameObject : objectsToModify) {
+                replaceTransitionGateArgs(gameObject, gateDestination);
+                updateScreenTransition(gameObject, gateDestination); // todo: how to handle a case of multiple gates on the same side? good thing sun <> extinction isn't random yet
+                if(firstObject && "Transition: Goddess L2".equals(gateDestination)) {
+                    AddObject.addGoddessStatueLemezaDetector(gameObject);
+                    firstObject = false;
+                }
+                if(firstObject && gateDestination.contains("Transition: Twin ")) { //  && !gateToUpdate.contains("Transition: Twin")
+                    AddObject.addTwinLabsPoisonTimerRemoval(gameObject.getObjectContainer());
+                }
+            }
+        }
+    }
+
+    private static void replaceTransitionGateArgs(GameObject gameObject, String gateDestination) {
+        if("Transition: Surface R1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)1);
+            gameObject.getArgs().set(1, (short)11);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)580);
+            gameObject.getArgs().set(4, (short)312);
+        }
+        else if("Transition: Surface D1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)1);
+            gameObject.getArgs().set(1, (short)4);
+            gameObject.getArgs().set(2, (short)2);
+            gameObject.getArgs().set(3, (short)440);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Surface D2".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)1);
+            gameObject.getArgs().set(1, (short)5);
+            gameObject.getArgs().set(2, (short)2);
+            gameObject.getArgs().set(3, (short)440);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Guidance L1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)0);
+            gameObject.getArgs().set(1, (short)0);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)20);
+            gameObject.getArgs().set(4, (short)312);
+        }
+        else if("Transition: Guidance U1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)0);
+            gameObject.getArgs().set(1, (short)2);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)540);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Guidance D1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)0);
+            gameObject.getArgs().set(1, (short)9);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)60);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Guidance D2".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)0);
+            gameObject.getArgs().set(1, (short)7);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)540);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Mausoleum L1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)2);
+            gameObject.getArgs().set(1, (short)8);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)20);
+            gameObject.getArgs().set(4, (short)312);
+        }
+        else if("Transition: Mausoleum U1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)2);
+            gameObject.getArgs().set(1, (short)0);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)60);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Mausoleum D1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)2);
+            gameObject.getArgs().set(1, (short)7);
+            gameObject.getArgs().set(2, (short)2);
+            gameObject.getArgs().set(3, (short)480);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Sun L1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)3);
+            gameObject.getArgs().set(1, (short)2);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)20);
+            gameObject.getArgs().set(4, (short)152);
+        }
+        else if("Transition: Sun R1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)3);
+            gameObject.getArgs().set(1, (short)5);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)580);
+            gameObject.getArgs().set(4, (short)72);
+        }
+        else if("Transition: Sun R2".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)3);
+            gameObject.getArgs().set(1, (short)5);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)580);
+            gameObject.getArgs().set(4, (short)232);
+        }
+        else if("Transition: Sun U1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)3);
+            gameObject.getArgs().set(1, (short)0);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)540);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Spring D1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)4);
+            gameObject.getArgs().set(1, (short)0);
+            gameObject.getArgs().set(2, (short)2);
+            gameObject.getArgs().set(3, (short)540);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Inferno R1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)5);
+            gameObject.getArgs().set(1, (short)0);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)580);
+            gameObject.getArgs().set(4, (short)152);
+        }
+        else if("Transition: Inferno U1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)5);
+            gameObject.getArgs().set(1, (short)1);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)60);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Inferno U2".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)5);
+            gameObject.getArgs().set(1, (short)9);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)440);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Extinction L1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)6);
+            gameObject.getArgs().set(1, (short)2);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)20);
+            gameObject.getArgs().set(4, (short)72);
+        }
+        else if("Transition: Extinction L2".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)6);
+            gameObject.getArgs().set(1, (short)2);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)20);
+            gameObject.getArgs().set(4, (short)232);
+        }
+//        else if("Transition: Extinction U1".equals(gateDestination)) {
+//            gameObject.getArgs().set(0, (short)6);
+//            gameObject.getArgs().set(1, (short)7);
+//            gameObject.getArgs().set(2, (short)1);
+//            gameObject.getArgs().set(3, (short)300);
+//            gameObject.getArgs().set(4, (short)20);
+//        }
+        else if("Transition: Extinction U2".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)6);
+            gameObject.getArgs().set(1, (short)1);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)440);
+            gameObject.getArgs().set(4, (short)20);
+        }
+//        else if("Transition: Extinction U3".equals(gateDestination)) {
+//            gameObject.getArgs().set(0, (short)5);
+//            gameObject.getArgs().set(1, (short)5);
+//            gameObject.getArgs().set(2, (short)1);
+//            gameObject.getArgs().set(3, (short)40);
+//            gameObject.getArgs().set(4, (short)392);
+//        }
+        else if("Transition: Twin U1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)7);
+            gameObject.getArgs().set(1, (short)3);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)480);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Twin D1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)7);
+            gameObject.getArgs().set(1, (short)7);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)60);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Twin D2".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)7);
+            gameObject.getArgs().set(1, (short)16);
+            gameObject.getArgs().set(2, (short)2);
+            gameObject.getArgs().set(3, (short)540);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Endless R1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)8);
+            gameObject.getArgs().set(1, (short)0);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)580);
+            gameObject.getArgs().set(4, (short)312);
+        }
+//        else if("Transition: Shrine D1".equals(gateDestination)) {
+//            gameObject.getArgs().set(0, (short)(frontside ? 9 : 18));
+//            gameObject.getArgs().set(1, (short)8);
+//            gameObject.getArgs().set(2, (short)1);
+//            gameObject.getArgs().set(3, (short)300);
+//            gameObject.getArgs().set(4, (short)20);
+//        }
+        else if("Transition: Illusion R1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)10);
+            gameObject.getArgs().set(1, (short)1);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)580);
+            gameObject.getArgs().set(4, (short)152);
+        }
+        else if("Transition: Illusion R2".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)10);
+            gameObject.getArgs().set(1, (short)2);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)580);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Illusion D1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)10);
+            gameObject.getArgs().set(1, (short)7);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)60);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Illusion D2".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)10);
+            gameObject.getArgs().set(1, (short)9);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)120);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Graveyard L1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)11);
+            gameObject.getArgs().set(1, (short)5);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)20);
+            gameObject.getArgs().set(4, (short)152);
+        }
+        else if("Transition: Graveyard R1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)11);
+            gameObject.getArgs().set(1, (short)2);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)580);
+            gameObject.getArgs().set(4, (short)232);
+        }
+        else if("Transition: Graveyard U1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)11);
+            gameObject.getArgs().set(1, (short)0);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)60);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Graveyard U2".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)11);
+            gameObject.getArgs().set(1, (short)9);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)540);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Graveyard R1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)11);
+            gameObject.getArgs().set(1, (short)2);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)60);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Graveyard D1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)11);
+            gameObject.getArgs().set(1, (short)7);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)500);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Moonlight L1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)12);
+            gameObject.getArgs().set(1, (short)8);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)20);
+            gameObject.getArgs().set(4, (short)232);
+        }
+        else if("Transition: Moonlight U1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)12);
+            gameObject.getArgs().set(1, (short)1);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)120);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Moonlight U2".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)12);
+            gameObject.getArgs().set(1, (short)2);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)540);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Goddess L1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)13);
+            gameObject.getArgs().set(1, (short)7);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)20);
+            gameObject.getArgs().set(4, (short)152);
+        }
+        else if("Transition: Goddess L2".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)13);
+            gameObject.getArgs().set(1, (short)2);
+            gameObject.getArgs().set(2, (short)2);
+            gameObject.getArgs().set(3, (short)20);
+            gameObject.getArgs().set(4, (short)312);
+        }
+        else if("Transition: Goddess U1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)13);
+            gameObject.getArgs().set(1, (short)4);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)80);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Goddess U2".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)13);
+            gameObject.getArgs().set(1, (short)4);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)500);
+            gameObject.getArgs().set(4, (short)40);
+        }
+        else if("Transition: Goddess D1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)13);
+            gameObject.getArgs().set(1, (short)7);
+            gameObject.getArgs().set(2, (short)2);
+            gameObject.getArgs().set(3, (short)540);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Ruin L1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)14);
+            gameObject.getArgs().set(1, (short)5);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)20);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Ruin R1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)14);
+            gameObject.getArgs().set(1, (short)7);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)580);
+            gameObject.getArgs().set(4, (short)312);
+        }
+        else if("Transition: Ruin R2".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)14);
+            gameObject.getArgs().set(1, (short)0);
+            gameObject.getArgs().set(2, (short)2);
+            gameObject.getArgs().set(3, (short)580);
+            gameObject.getArgs().set(4, (short)152);
+        }
+        else if("Transition: Birth L1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)15);
+            gameObject.getArgs().set(1, (short)3);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)20);
+            gameObject.getArgs().set(4, (short)312);
+        }
+        else if("Transition: Birth R1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)16);
+            gameObject.getArgs().set(1, (short)3);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)580);
+            gameObject.getArgs().set(4, (short)312);
+        }
+        else if("Transition: Birth U1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)15);
+            gameObject.getArgs().set(1, (short)0);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)500);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Birth D1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)16);
+            gameObject.getArgs().set(1, (short)0);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)80);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Retromausoleum U1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)19);
+            gameObject.getArgs().set(1, (short)4);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)60);
+            gameObject.getArgs().set(4, (short)20);
+        }
+        else if("Transition: Retroguidance L1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)20);
+            gameObject.getArgs().set(1, (short)4);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)20);
+            gameObject.getArgs().set(4, (short)312);
+        }
+        else if("Transition: Retroguidance D1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)20);
+            gameObject.getArgs().set(1, (short)0);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)60);
+            gameObject.getArgs().set(4, (short)392);
+        }
+        else if("Transition: Retrosurface R1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)21);
+            gameObject.getArgs().set(1, (short)0);
+            gameObject.getArgs().set(2, (short)1);
+            gameObject.getArgs().set(3, (short)580);
+            gameObject.getArgs().set(4, (short)312);
+        }
+        else if("Transition: Pipe L1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)13);
+            gameObject.getArgs().set(1, (short)8);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)20);
+            gameObject.getArgs().set(4, (short)232);
+        }
+        else if("Transition: Pipe R1".equals(gateDestination)) {
+            gameObject.getArgs().set(0, (short)13);
+            gameObject.getArgs().set(1, (short)8);
+            gameObject.getArgs().set(2, (short)0);
+            gameObject.getArgs().set(3, (short)580);
+            gameObject.getArgs().set(4, (short)232);
+        }
+    }
+
+    private static void updateScreenTransition(GameObject transitionGate, String gateDestination) {
+        int screenExitIndex = 0;
+        char transitionDirection = gateDestination.charAt(gateDestination.length() - 2);
+        if(transitionDirection == 'U') {
+            screenExitIndex = 2;
+        }
+        else if(transitionDirection == 'R') {
+            screenExitIndex = 3;
+        }
+        else if(transitionDirection == 'D') {
+            screenExitIndex = 0;
+        }
+        else if(transitionDirection == 'L') {
+            screenExitIndex = 1;
+        }
+
+        ScreenExit screenExit = new ScreenExit();
+        screenExit.setZoneIndex(transitionGate.getArgs().get(0).byteValue());
+        screenExit.setRoomIndex(transitionGate.getArgs().get(1).byteValue());
+        screenExit.setScreenIndex(transitionGate.getArgs().get(2).byteValue());
+        ((Screen)transitionGate.getObjectContainer()).getScreenExits().set(screenExitIndex, screenExit);
     }
 
     public static void writeBacksideDoor(String doorToReplace, String doorWithCoordinateData, int bossNumber) {

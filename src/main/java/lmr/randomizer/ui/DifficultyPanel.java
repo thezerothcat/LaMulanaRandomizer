@@ -35,14 +35,11 @@ public class DifficultyPanel extends JPanel {
         add(medium);
         add(hard);
 
-        if(BossDifficulty.EASY.equals(Settings.getBossDifficulty())) {
-            medium.setSelected(true); // todo: easy is not a setting yet
-        }
-        else if(BossDifficulty.MEDIUM.equals(Settings.getBossDifficulty())) {
-            medium.setSelected(true);
+        if(BossDifficulty.HARD.equals(Settings.getBossDifficulty())) {
+            hard.setSelected(true);
         }
         else {
-            hard.setSelected(true);
+            medium.setSelected(true);
         }
     }
 

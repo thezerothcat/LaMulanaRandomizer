@@ -139,6 +139,10 @@ public final class Translations {
         return getText("doors." + doorName.replace("Location: ", "").replaceAll("[ \\[\\]]", ""));
     }
 
+    public static String getTransitionText(String transitionName) {
+        return getText("transitions." + transitionName.replace("Transition: ", "").replaceAll("[: \\[\\]]", ""));
+    }
+
     private static String getMapLocationText(String locationKey) {
         return getText("locations." + locationKey.replaceAll("[ ']", ""));
     }

@@ -8,6 +8,7 @@ public enum NodeType {
     SHOP,
     EXIT,
     MAP_LOCATION,
+    TRANSITION,
     SETTING,
     STATE
 }
