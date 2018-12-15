@@ -223,10 +223,34 @@ public class TransitionGateRandomizer {
         return transitionExits;
     }
 
-    public void updateTransitions() {
+    public void updateTransitions(Random random) {
         for(Map.Entry<String, String> gateStartAndEnd : transitionGateDestinationMap.entrySet()) {
             GameDataTracker.writeTransitionGate(gateStartAndEnd.getKey(), gateStartAndEnd.getValue());
         }
+    }
+
+    /**
+     * This doesn't get placed until the end, since it has no effect on logic.
+     * @param random for determining where to place the transition
+     */
+    public void placeTowerOfTheGoddessPassthroughPipe(Random random) {
+        List<String> leftTransitions = new ArrayList<>();
+        leftTransitions.add("Transition: Guidance L1");
+        leftTransitions.add("Transition: Mausoleum L1");
+        leftTransitions.add("Transition: Sun L1");
+//        leftTransitions.add("Transition: Extinction L1");
+//        leftTransitions.add("Transition: Extinction L2");
+        leftTransitions.add("Transition: Graveyard L1");
+        leftTransitions.add("Transition: Moonlight L1");
+        leftTransitions.add("Transition: Goddess L2");
+//        leftTransitions.add("Transition: Ruin L1");
+//        leftTransitions.add("Transition: Birth L1");
+        String leftTransition = leftTransitions.get(random.nextInt(leftTransitions.size()));
+        String rightTransition = transitionGateDestinationMap.get(leftTransition);
+        transitionGateDestinationMap.put(leftTransition, "Transition: Pipe R1");
+        transitionGateDestinationMap.put("Transition: Pipe R1", leftTransition);
+        transitionGateDestinationMap.put(rightTransition, "Transition: Pipe L1");
+        transitionGateDestinationMap.put("Transition: Pipe L1", rightTransition);
     }
 
     private List<String> getGatesFromLocation(String gateName) {
@@ -569,7 +593,23 @@ public class TransitionGateRandomizer {
         }
 
         for(String transition : getTransitionList()) {
-            writer.write(Translations.getTransitionText(transition) + " <==> " + Translations.getTransitionText(transitionGateDestinationMap.get(transition)));
+            String transitionFormat;
+            String transitionOut = transitionGateDestinationMap.get(transition);
+
+            if("Transition: Pipe L1".equals(transitionOut)) {
+                transitionFormat = "transitions.PipeTransitionFormat";
+                transitionOut = transitionGateDestinationMap.get("Transition: Pipe R1");
+            }
+            else if("Transition: Pipe R1".equals(transitionOut)) {
+                transitionFormat = "transitions.PipeTransitionFormat";
+                transitionOut = transitionGateDestinationMap.get("Transition: Pipe L1");
+            }
+            else {
+                transitionFormat = "transitions.RegularTransitionFormat";
+            }
+            writer.write(String.format(Translations.getText(transitionFormat),
+                    Translations.getTransitionText(transition),
+                    Translations.getTransitionText(transitionOut)));
             writer.newLine();
         }
 

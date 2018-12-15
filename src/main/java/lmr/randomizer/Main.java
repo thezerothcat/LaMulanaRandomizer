@@ -931,6 +931,11 @@ public class Main {
                 FileUtils.log(String.format("Successful attempt %s.", attempt));
                 FileUtils.flush();
 
+                if(Settings.isRandomizeTransitionGates()) {
+                    transitionGateRandomizer.placeTowerOfTheGoddessPassthroughPipe(random);
+                    FileUtils.logDetail("Placed pipe transitions", attempt);
+                }
+
                 dialog.updateProgress(85, Translations.getText("progress.spoiler"));
                 outputLocations(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer, attempt);
 
@@ -962,7 +967,7 @@ public class Main {
                     FileUtils.log("Updated backside door data");
                 }
                 if(Settings.isRandomizeTransitionGates()) {
-                    transitionGateRandomizer.updateTransitions();
+                    transitionGateRandomizer.updateTransitions(random);
                     FileUtils.log("Updated transition gate data");
                 }
 

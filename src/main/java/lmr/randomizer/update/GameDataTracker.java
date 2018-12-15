@@ -415,10 +415,14 @@ public final class GameDataTracker {
                     else if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
                         gateName = "Transition: Goddess U1";
                     }
-//                else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
-//                    // todo: something to distinguish between L1 and R1
-//                    gateName = "Transition: Pipe L1";
-//                }
+                    else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                        if(gameObject.getArgs().get(0) == 11) {
+                            gateName = "Transition: Pipe L1";
+                        }
+                        else if(gameObject.getArgs().get(0) == 12) {
+                            gateName = "Transition: Pipe R1";
+                        }
+                    }
                 }
                 else if(screen.getZoneIndex() == 14) {
                     // Ruin
@@ -455,6 +459,12 @@ public final class GameDataTracker {
                     // todo: stuff
                 }
 //            else if(screen.getZoneIndex() == 19) {
+//                // Gate of Time
+//                if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 2) {
+//                    gateName = "Transition: Time D1";
+//                }
+//            }
+//            else if(screen.getZoneIndex() == 20) {
 //                // Gate of Time
 //                if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 2) {
 //                    gateName = "Transition: Time D1";
