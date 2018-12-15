@@ -144,9 +144,6 @@ public class TransitionGateRandomizer {
 
         transitionGateDestinationMap.put("Transition: Dimensional D1", "Transition: Twin U3");
 
-        transitionGateDestinationMap.put("Transition: Retromausoleum U1", "Transition: Twin D2");
-        transitionGateDestinationMap.put("Transition: Twin D2", "Transition: Retromausoleum U1");
-
         List<String> leftTransitions = new ArrayList<>();
         List<String> rightTransitions = new ArrayList<>();
         List<String> upTransitions = new ArrayList<>();
@@ -178,7 +175,7 @@ public class TransitionGateRandomizer {
         upTransitions.add("Transition: Extinction U2");
         upTransitions.add("Transition: Birth U1");
         upTransitions.add("Transition: Twin U1");
-//        upTransitions.add("Transition: Retromausoleum U1");
+        upTransitions.add("Transition: Retromausoleum U1");
         downTransitions.add("Transition: Surface D1");
         downTransitions.add("Transition: Surface D2");
         downTransitions.add("Transition: Guidance D1");
@@ -190,7 +187,7 @@ public class TransitionGateRandomizer {
         downTransitions.add("Transition: Goddess D1");
         downTransitions.add("Transition: Birth D1");
         downTransitions.add("Transition: Twin D1");
-//        downTransitions.add("Transition: Twin D2");
+        downTransitions.add("Transition: Twin D2");
         downTransitions.add("Transition: Retroguidance D1");
 
         String chosenTransitionStart;
