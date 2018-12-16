@@ -4086,7 +4086,13 @@ public final class GameDataTracker {
     private static void updateScreenTransition(Screen screen, String gateDestination) {
         int screenExitIndex = 0;
         char transitionDirection = gateDestination.charAt(gateDestination.length() - 2);
-        if(transitionDirection == 'U') {
+        if(gateDestination.equals("Transition: Goddess W1")) {
+            screenExitIndex = 2;
+        }
+        else if(gateDestination.equals("Transition: Inferno W1")) {
+            screenExitIndex = 0;
+        }
+        else if(transitionDirection == 'U') {
             screenExitIndex = 2;
         }
         else if(transitionDirection == 'R') {
