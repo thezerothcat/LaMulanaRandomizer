@@ -47,6 +47,7 @@ public final class Settings {
     private boolean removeMainWeapons;
     private boolean randomizeCursedChests;
     private boolean randomizeTransitionGates;
+    private boolean randomizeOneWayTransitions;
     private boolean randomizeBacksideDoors;
     private boolean replaceMapsWithWeights;
     private boolean automaticGrailPoints;
@@ -106,6 +107,7 @@ public final class Settings {
         removeMainWeapons = false;
         randomizeCursedChests = false;
         randomizeTransitionGates = false;
+        randomizeOneWayTransitions = false;
         randomizeBacksideDoors = false;
         removeSpaulder = false;
         replaceMapsWithWeights = false;
@@ -443,6 +445,17 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.randomizeTransitionGates = randomizeTransitionGates;
+    }
+
+    public static boolean isRandomizeOneWayTransitions() {
+        return singleton.randomizeOneWayTransitions;
+    }
+
+    public static void setRandomizeOneWayTransitions(boolean randomizeOneWayTransitions, boolean update) {
+        if(update && randomizeOneWayTransitions != singleton.randomizeOneWayTransitions) {
+            singleton.changed = true;
+        }
+        singleton.randomizeOneWayTransitions = randomizeOneWayTransitions;
     }
 
     public static boolean isRandomizeBacksideDoors() {
@@ -796,6 +809,7 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeOneWayTransitions, 26);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeEscapeChest, 25);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeTransitionGates, 24);
         booleanSettings |= processBooleanFlag.apply(singleton.removeMainWeapons, 23);
@@ -878,6 +892,7 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.randomizeOneWayTransitions = getBoolFlagFromInt.apply(booleanSettingsFlag, 26);
         singleton.randomizeEscapeChest = getBoolFlagFromInt.apply(booleanSettingsFlag, 25);
         singleton.randomizeTransitionGates = getBoolFlagFromInt.apply(booleanSettingsFlag, 24);
         singleton.removeMainWeapons = getBoolFlagFromInt.apply(booleanSettingsFlag, 23);

@@ -459,6 +459,9 @@ public class FileUtils {
             else if(line.startsWith("randomizeTransitionGates")) {
                 Settings.setRandomizeTransitionGates(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("randomizeOneWayTransitions")) {
+                Settings.setRandomizeOneWayTransitions(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("randomizeBacksideDoors")) {
                 Settings.setRandomizeBacksideDoors(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -573,6 +576,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("randomizeTransitionGates=%s", Settings.isRandomizeTransitionGates()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeOneWayTransitions=%s", Settings.isRandomizeOneWayTransitions()));
         writer.newLine();
 
         writer.write(String.format("randomizeBacksideDoors=%s", Settings.isRandomizeBacksideDoors()));

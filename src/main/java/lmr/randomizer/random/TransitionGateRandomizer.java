@@ -45,13 +45,13 @@ public class TransitionGateRandomizer {
             transitionGateDestinationMap.put("Transition: Inferno R1", "Transition: Sun L1");
             transitionGateDestinationMap.put("Transition: Inferno U1", "Transition: Twin D1");
             transitionGateDestinationMap.put("Transition: Inferno U2", "Transition: Surface D1");
-            transitionGateDestinationMap.put("Transition: Inferno D1", "Transition: Extinction U3");
+            transitionGateDestinationMap.put("Transition: Inferno W1", "Transition: Extinction U3");
 
             transitionGateDestinationMap.put("Transition: Extinction L1", "Transition: Sun R1");
             transitionGateDestinationMap.put("Transition: Extinction L2", "Transition: Sun R2");
             transitionGateDestinationMap.put("Transition: Extinction U1", "Transition: Shrine D1");
             transitionGateDestinationMap.put("Transition: Extinction U2", "Transition: Surface D2");
-            transitionGateDestinationMap.put("Transition: Extinction U3", "Transition: Inferno D1");
+            transitionGateDestinationMap.put("Transition: Extinction U3", "Transition: Inferno W1");
 
             transitionGateDestinationMap.put("Transition: Twin U1", "Transition: Mausoleum D1");
             transitionGateDestinationMap.put("Transition: Twin U2", "Transition: Shrine D3");
@@ -111,15 +111,14 @@ public class TransitionGateRandomizer {
         transitionGateDestinationMap.put("Transition: Sun R1", "Transition: Extinction L1");
         transitionGateDestinationMap.put("Transition: Sun R2", "Transition: Extinction L2");
 
-        transitionGateDestinationMap.put("Transition: Inferno D1", "Transition: Extinction U3");
+        transitionGateDestinationMap.put("Transition: Inferno W1", "Transition: Extinction U3");
 
         transitionGateDestinationMap.put("Transition: Extinction L1", "Transition: Sun R1");
         transitionGateDestinationMap.put("Transition: Extinction L2", "Transition: Sun R2");
         transitionGateDestinationMap.put("Transition: Extinction U1", "Transition: Shrine D1");
-        transitionGateDestinationMap.put("Transition: Extinction U3", "Transition: Inferno D1");
+        transitionGateDestinationMap.put("Transition: Extinction U3", "Transition: Inferno W1");
 
         transitionGateDestinationMap.put("Transition: Twin U2", "Transition: Shrine D3");
-        transitionGateDestinationMap.put("Transition: Twin U3", "Transition: Dimensional D1");
 
         transitionGateDestinationMap.put("Transition: Endless D1", "Transition: Shrine U1");
         transitionGateDestinationMap.put("Transition: Endless U1", "Transition: Shrine D2");
@@ -142,7 +141,16 @@ public class TransitionGateRandomizer {
         transitionGateDestinationMap.put("Transition: Birth L1", "Transition: Birth R1");
         transitionGateDestinationMap.put("Transition: Birth R1", "Transition: Birth L1");
 
-        transitionGateDestinationMap.put("Transition: Dimensional D1", "Transition: Twin U3");
+        if(!Settings.isRandomizeOneWayTransitions()) {
+            transitionGateDestinationMap.put("Transition: Twin U3", "Transition: Dimensional D1");
+            transitionGateDestinationMap.put("Transition: Dimensional D1", "Transition: Twin U3");
+
+            transitionGateDestinationMap.put("Transition: Extinction U3", "Transition: Inferno W1");
+            transitionGateDestinationMap.put("Transition: Inferno W1", "Transition: Extinction U3");
+
+            transitionGateDestinationMap.put("Transition: Retromausoleum D1", "Transition: Goddess W1");
+            transitionGateDestinationMap.put("Transition: Goddess W1", "Transition: Retromausoleum D1");
+        }
 
         List<String> leftTransitions = new ArrayList<>();
         List<String> rightTransitions = new ArrayList<>();
@@ -190,6 +198,15 @@ public class TransitionGateRandomizer {
         downTransitions.add("Transition: Twin D2");
         downTransitions.add("Transition: Retroguidance D1");
 
+        if(Settings.isRandomizeOneWayTransitions()) {
+            downTransitions.add("Transition: Retromausoleum D1");
+            downTransitions.add("Transition: Inferno W1");
+            downTransitions.add("Transition: Dimensional D1");
+            upTransitions.add("Transition: Extinction U3");
+            upTransitions.add("Transition: Twin U3");
+            upTransitions.add("Transition: Goddess W1");
+        }
+
         String chosenTransitionStart;
         String chosenTransitionEnd;
         while(!leftTransitions.isEmpty()) {
@@ -233,7 +250,7 @@ public class TransitionGateRandomizer {
         return transitionExits;
     }
 
-    public void updateTransitions(Random random) {
+    public void updateTransitions() {
         for(Map.Entry<String, String> gateStartAndEnd : transitionGateDestinationMap.entrySet()) {
             GameDataTracker.writeTransitionGate(gateStartAndEnd.getKey(), gateStartAndEnd.getValue());
         }
@@ -295,6 +312,9 @@ public class TransitionGateRandomizer {
         else if("Location: Inferno Cavern [Main]".equals(gateName)) {
             return Arrays.asList("Transition: Inferno R1", "Transition: Inferno U1");
         }
+        else if("Location: Inferno Cavern [Lava]".equals(gateName)) {
+            return Arrays.asList("Transition: Inferno W1");
+        }
         else if("Location: Inferno Cavern [Spikes]".equals(gateName)) {
             return Arrays.asList("Transition: Inferno U2");
         }
@@ -308,8 +328,7 @@ public class TransitionGateRandomizer {
             return Arrays.asList("Transition: Extinction U2");
         }
         else if("Location: Chamber of Extinction [Ankh Upper]".equals(gateName)) {
-//            return Arrays.asList("Transition: Extinction U3");
-            return new ArrayList<>(0);
+            return Arrays.asList("Transition: Extinction U3");
         }
         else if("Location: Twin Labyrinths [Loop]".equals(gateName)) {
             return Arrays.asList("Transition: Twin U1");
@@ -384,7 +403,7 @@ public class TransitionGateRandomizer {
             return Arrays.asList("Transition: Goddess L2");
         }
         else if("Location: Tower of the Goddess [Lamp]".equals(gateName)) {
-            return Arrays.asList("Transition: Goddess U1");
+            return Arrays.asList("Transition: Goddess U1", "Transition: Goddess W1");
         }
         else if("Location: Tower of Ruin [Illusion Left]".equals(gateName)) {
             return Arrays.asList("Transition: Ruin L1");
@@ -409,6 +428,9 @@ public class TransitionGateRandomizer {
         }
         else if("Location: Dimensional Corridor".equals(gateName)) {
             return Arrays.asList("Transition: Dimensional D1");
+        }
+        else if("Location: Gate of Time [Mausoleum Lower]".equals(gateName)) {
+            return Arrays.asList("Transition: Retromausoleum D1");
         }
         else if("Location: Gate of Time [Mausoleum Upper]".equals(gateName)) {
             return Arrays.asList("Transition: Retromausoleum U1");
@@ -477,7 +499,7 @@ public class TransitionGateRandomizer {
         else if("Transition: Inferno U2".equals(gateName)) {
             return "Location: Inferno Cavern [Spikes]";
         }
-//        else if("Transition: Inferno D1".equals(gateName)) {
+//        else if("Transition: Inferno W1".equals(gateName)) {
 //            return "Location: Inferno Cavern [Lava]";
 //        }
         else if("Transition: Extinction L1".equals(gateName)) {
@@ -624,6 +646,9 @@ public class TransitionGateRandomizer {
                 transitionFormat = "transitions.PipeTransitionFormat";
                 transitionOut = transitionGateDestinationMap.get("Transition: Pipe L1");
             }
+            else if(transitionOut.endsWith("W1")) {
+                transitionFormat = "transitions.OneWayTransitionFormat";
+            }
             else {
                 transitionFormat = "transitions.RegularTransitionFormat";
             }
@@ -644,7 +669,7 @@ public class TransitionGateRandomizer {
                 "Transition: Sun L1", "Transition: Sun R1", "Transition: Sun R2", "Transition: Sun U1",
                 "Transition: Spring D1",
                 "Transition: Inferno R1", "Transition: Inferno U1", "Transition: Inferno U2",
-                "Transition: Extinction L1", "Transition: Extinction L2", "Transition: Extinction U1", "Transition: Extinction U2",
+                "Transition: Extinction L1", "Transition: Extinction L2", "Transition: Extinction U1", "Transition: Extinction U2", "Transition: Extinction U3",
                 "Transition: Twin U1", "Transition: Twin U2", "Transition: Twin U3", "Transition: Twin D1", "Transition: Twin D2",
                 "Transition: Endless R1", "Transition: Endless U1", "Transition: Endless D1",
                 "Transition: Shrine U1", "Transition: Shrine D1", "Transition: Shrine D2", "Transition: Shrine D3",
@@ -655,7 +680,7 @@ public class TransitionGateRandomizer {
                 "Transition: Ruin L1", "Transition: Ruin R1", "Transition: Ruin R2",
                 "Transition: Birth L1", "Transition: Birth R1", "Transition: Birth U1", "Transition: Birth D1",
                 "Transition: Dimensional D1",
-                "Transition: Retromausoleum U1",
+                "Transition: Retromausoleum U1", "Transition: Retromausoleum D1",
                 "Transition: Retroguidance D1",
                 "Transition: Retroguidance L1",
                 "Transition: Retrosurface R1"));

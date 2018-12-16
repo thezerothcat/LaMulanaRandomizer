@@ -967,7 +967,7 @@ public class Main {
                     FileUtils.log("Updated backside door data");
                 }
                 if(Settings.isRandomizeTransitionGates()) {
-                    transitionGateRandomizer.updateTransitions(random);
+                    transitionGateRandomizer.updateTransitions();
                     FileUtils.log("Updated transition gate data");
                 }
 

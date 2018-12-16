@@ -616,6 +616,7 @@ public final class RcdReader {
                     screen.setZoneIndex(zoneIndex);
                     screen.setRoomIndex(roomIndex);
                     screen.setScreenIndex(screenIndex);
+                    registerScreen(screen);
 
                     byte screenNameLength = rcdBytes[rcdByteIndex];
                     rcdByteIndex += 1;
@@ -679,6 +680,12 @@ public final class RcdReader {
         }
         PotMover.addRemovedPots();
         return zones;
+    }
+
+    private static void registerScreen(Screen screen) {
+        if(screen.getZoneIndex() == 17 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+            GameDataTracker.putTransitionScreen("Transition: Dimensional D1", screen);
+        }
     }
 
     private static void addCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {

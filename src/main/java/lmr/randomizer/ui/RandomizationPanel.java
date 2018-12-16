@@ -5,6 +5,8 @@ import lmr.randomizer.Translations;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class RandomizationPanel extends JPanel {
     private RadioPanel radioPanel;
@@ -14,8 +16,9 @@ public class RandomizationPanel extends JPanel {
     private JCheckBox randomizeEscapeChest;
     private JCheckBox randomizeCursedChests;
     private JCheckBox randomizeDracuetShop;
-    private JCheckBox randomizeTransitionGates;
     private JCheckBox randomizeBacksideDoors;
+    private JCheckBox randomizeTransitionGates;
+    private JCheckBox randomizeOneWayTransitions;
 
     private WeaponRandomizationPanel weaponRandomization;
     private ShopRandomizationRadio shopRandomization;
@@ -51,11 +54,24 @@ public class RandomizationPanel extends JPanel {
         randomizeDracuetShop = new JCheckBox();
         randomizeDracuetShop.setSelected(Settings.isRandomizeDracuetShop());
 
+        randomizeBacksideDoors = new JCheckBox();
+        randomizeBacksideDoors.setSelected(Settings.isRandomizeBacksideDoors());
+
         randomizeTransitionGates = new JCheckBox();
         randomizeTransitionGates.setSelected(Settings.isRandomizeTransitionGates());
 
-        randomizeBacksideDoors = new JCheckBox();
-        randomizeBacksideDoors.setSelected(Settings.isRandomizeBacksideDoors());
+        randomizeOneWayTransitions = new JCheckBox();
+        randomizeOneWayTransitions.setSelected(Settings.isRandomizeOneWayTransitions());
+        randomizeOneWayTransitions.setEnabled(Settings.isRandomizeTransitionGates());
+
+        randomizeTransitionGates.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource() instanceof JCheckBox) {
+                    randomizeOneWayTransitions.setEnabled(((JCheckBox)e.getSource()).isSelected());
+                }
+            }
+        });
 
         CheckboxContainer checkboxContainer = new CheckboxContainer(5, "gapy 0, insets 8 0 0 0");
         checkboxContainer.add(randomizeCoinChests);
@@ -65,6 +81,7 @@ public class RandomizationPanel extends JPanel {
         checkboxContainer.add(randomizeDracuetShop);
         checkboxContainer.add(randomizeBacksideDoors);
         checkboxContainer.add(randomizeTransitionGates);
+        checkboxContainer.add(randomizeOneWayTransitions);
         add(checkboxContainer, "growx, wrap");
 
         updateTranslations();
@@ -79,6 +96,7 @@ public class RandomizationPanel extends JPanel {
         randomizeDracuetShop.setText(Translations.getText("randomization.randomizeDracuetShop"));
         randomizeBacksideDoors.setText(Translations.getText("randomization.randomizeBacksideDoors"));
         randomizeTransitionGates.setText(Translations.getText("randomization.randomizeTransitionGates"));
+        randomizeOneWayTransitions.setText(Translations.getText("randomization.randomizeOneWayTransitions"));
         weaponRandomization.updateTranslations();
         shopRandomization.updateTranslations();
         swimsuitRandomization.updateTranslations();
@@ -93,6 +111,7 @@ public class RandomizationPanel extends JPanel {
         Settings.setRandomizeDracuetShop(randomizeDracuetShop.isSelected(), true);
         Settings.setRandomizeBacksideDoors(randomizeBacksideDoors.isSelected(), true);
         Settings.setRandomizeTransitionGates(randomizeTransitionGates.isSelected(), true);
+        Settings.setRandomizeOneWayTransitions(randomizeOneWayTransitions.isEnabled() && randomizeOneWayTransitions.isSelected(), true);
         weaponRandomization.updateSettings();
         shopRandomization.updateSettings();
         swimsuitRandomization.updateSettings();
@@ -111,5 +130,7 @@ public class RandomizationPanel extends JPanel {
         randomizeDracuetShop.setSelected(Settings.isRandomizeDracuetShop());
         randomizeBacksideDoors.setSelected(Settings.isRandomizeBacksideDoors());
         randomizeTransitionGates.setSelected(Settings.isRandomizeTransitionGates());
+        randomizeOneWayTransitions.setSelected(Settings.isRandomizeOneWayTransitions());
+        randomizeOneWayTransitions.setEnabled(Settings.isRandomizeTransitionGates());
     }
 }

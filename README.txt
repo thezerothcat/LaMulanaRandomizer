@@ -2,6 +2,10 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+2.3
+-----------------------------
+Added an option to randomize some one-way transitions.
+
 2.2
 -----------------------------
 Entrance randomizer, version 1. Not all area transitions are randomized yet. Escape chest can also be randomized.
