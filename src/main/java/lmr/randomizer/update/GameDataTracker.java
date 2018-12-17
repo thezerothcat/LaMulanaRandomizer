@@ -343,12 +343,12 @@ public final class GameDataTracker {
                     if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
                         gateName = "Transition: Endless R1";
                     }
-                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 3) {
-                        gateName = "Transition: Endless U1";
-                    }
-                    else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 3) {
-                        gateName = "Transition: Endless D1";
-                    }
+//                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 3) {
+//                        gateName = "Transition: Endless U1";
+//                    }
+//                    else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 3) {
+//                        gateName = "Transition: Endless D1";
+//                    }
                 }
 //            else if(screen.getZoneIndex() == 9) {
 //                // Shrine
@@ -4062,18 +4062,23 @@ public final class GameDataTracker {
 
     private static void updateScreenTransition(GameObject transitionGate, String gateDestination) {
         int screenExitIndex = 0;
-        char transitionDirection = gateDestination.charAt(gateDestination.length() - 2);
-        if(transitionDirection == 'U') {
+        if(gateDestination.equals("Transition: Goddess W1")) {
             screenExitIndex = 2;
         }
-        else if(transitionDirection == 'R') {
-            screenExitIndex = 3;
-        }
-        else if(transitionDirection == 'D') {
+        else if(gateDestination.equals("Transition: Inferno W1")) {
             screenExitIndex = 0;
         }
-        else if(transitionDirection == 'L') {
-            screenExitIndex = 1;
+        else {
+            char transitionDirection = gateDestination.charAt(gateDestination.length() - 2);
+            if (transitionDirection == 'U') {
+                screenExitIndex = 2;
+            } else if (transitionDirection == 'R') {
+                screenExitIndex = 3;
+            } else if (transitionDirection == 'D') {
+                screenExitIndex = 0;
+            } else if (transitionDirection == 'L') {
+                screenExitIndex = 1;
+            }
         }
 
         ScreenExit screenExit = new ScreenExit();
@@ -4085,24 +4090,23 @@ public final class GameDataTracker {
 
     private static void updateScreenTransition(Screen screen, String gateDestination) {
         int screenExitIndex = 0;
-        char transitionDirection = gateDestination.charAt(gateDestination.length() - 2);
         if(gateDestination.equals("Transition: Goddess W1")) {
             screenExitIndex = 2;
         }
         else if(gateDestination.equals("Transition: Inferno W1")) {
             screenExitIndex = 0;
         }
-        else if(transitionDirection == 'U') {
-            screenExitIndex = 2;
-        }
-        else if(transitionDirection == 'R') {
-            screenExitIndex = 3;
-        }
-        else if(transitionDirection == 'D') {
-            screenExitIndex = 0;
-        }
-        else if(transitionDirection == 'L') {
-            screenExitIndex = 1;
+        else {
+            char transitionDirection = gateDestination.charAt(gateDestination.length() - 2);
+            if (transitionDirection == 'U') {
+                screenExitIndex = 2;
+            } else if (transitionDirection == 'R') {
+                screenExitIndex = 3;
+            } else if (transitionDirection == 'D') {
+                screenExitIndex = 0;
+            } else if (transitionDirection == 'L') {
+                screenExitIndex = 1;
+            }
         }
 
         screen.getScreenExits().set(screenExitIndex, getScreenExit(gateDestination));
