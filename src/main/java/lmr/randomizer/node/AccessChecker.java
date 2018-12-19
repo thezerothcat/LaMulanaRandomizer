@@ -125,13 +125,17 @@ public class AccessChecker {
                         continue;
                     }
                 }
-                FileUtils.log("Inaccessible node detected: " + nodeName + " containing " + itemRandomizer.getItem(nodeName));
+                FileUtils.log("Inaccessible node detected: " + nodeName + " containing " + itemRandomizer.getItem(nodeName) + ", accessed nodes = " + accessedNodes.size());
+                if(accessedNodes.size() > 500 || FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+                    List<String> logged = new ArrayList<>();
+                    logAccess(nodeName, logged);
+                }
                 return false;
             }
             for(String requiredItem : DataFromFile.getWinRequirements()) {
                 if(!accessedNodes.contains(requiredItem)) {
                     FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
-                    if(accessedNodes.size() > 400 || FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+                    if(accessedNodes.size() > 500 || FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
                         List<String> logged = new ArrayList<>();
                         if (requiredItem.startsWith("Event:") || requiredItem.startsWith("Location:")) {
                             logAccess(requiredItem, logged);
@@ -139,12 +143,13 @@ public class AccessChecker {
                     }
                 }
             }
+            FileUtils.log("Successful resolution found with accessed nodes = " + accessedNodes.size());
             return true;
         }
         for(String requiredItem : DataFromFile.getWinRequirements()) {
             if(!accessedNodes.contains(requiredItem)) {
                 FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
-                if(accessedNodes.size() > 400 || FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+                if(accessedNodes.size() > 500 || FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
                     List<String> logged = new ArrayList<>();
                     if (requiredItem.startsWith("Event:") || requiredItem.startsWith("Location:")) {
                         logAccess(requiredItem, logged);
@@ -153,6 +158,7 @@ public class AccessChecker {
                 return false;
             }
         }
+        FileUtils.log("Successful resolution found with accessed nodes = " + accessedNodes.size());
         return true;
     }
 
