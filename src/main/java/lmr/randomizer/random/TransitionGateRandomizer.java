@@ -87,6 +87,7 @@ public class TransitionGateRandomizer {
             transitionGateDestinationMap.put("Transition: Goddess L2", "Transition: Ruin R1");
             transitionGateDestinationMap.put("Transition: Goddess U1", "Transition: Birth D1");
             transitionGateDestinationMap.put("Transition: Goddess D1", "Transition: Graveyard U2");
+            transitionGateDestinationMap.put("Transition: Goddess W1", "Transition: Retromausoleum D1");
 
             transitionGateDestinationMap.put("Transition: Ruin L1", "Transition: Illusion R2");
             transitionGateDestinationMap.put("Transition: Ruin R1", "Transition: Goddess L2");
@@ -100,9 +101,11 @@ public class TransitionGateRandomizer {
             transitionGateDestinationMap.put("Transition: Dimensional D1", "Transition: Twin U3");
 
             transitionGateDestinationMap.put("Transition: Retromausoleum U1", "Transition: Retroguidance D1");
-            transitionGateDestinationMap.put("Transition: Retroguidance D1", "Transition: Retromausoleum U1");
+            transitionGateDestinationMap.put("Transition: Retromausoleum D1", "Transition: Goddess W1");
 
+            transitionGateDestinationMap.put("Transition: Retroguidance D1", "Transition: Retromausoleum U1");
             transitionGateDestinationMap.put("Transition: Retroguidance L1", "Transition: Retrosurface R1");
+
             transitionGateDestinationMap.put("Transition: Retrosurface R1", "Transition: Retroguidance L1");
         }
     }
