@@ -2,6 +2,10 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+2.5
+-----------------------------
+Logic cleanup. No-validation mode usable via command line (numeric argument indicating how many shuffles to perform).
+
 2.3
 -----------------------------
 Added an option to randomize some one-way transitions.

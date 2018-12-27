@@ -233,6 +233,12 @@ public class BacksideDoorRandomizer {
         node.addRequirementSet(doorRequirements);
     }
 
+    public boolean isDoorOneWay(String doorName) {
+        String doorLocation = backsideDoorLocationMap.get(doorName);
+        return doorLocation.contains("Gate of Guidance") || doorLocation.contains("Tower of Ruin [Top]")
+                || (!Settings.getEnabledGlitches().contains("Lamp Glitch") && doorLocation.contains("Inferno Cavern [Viy]"));
+    }
+
     public List<String> getSettingNodes() {
         List<String> settingNodes = new ArrayList<>();
 //        for(Map.Entry<String, String> doorKeyAndLocation : backsideDoorLocationMap.entrySet()) {
@@ -408,17 +414,19 @@ public class BacksideDoorRandomizer {
                 : door.replace("Door: F", "Door: B");
     }
 
-    public void logLocations(Integer attemptNumber) {
-        if(Settings.isRandomizeBacksideDoors() && FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+    public void logLocations() {
+        if(Settings.isRandomizeBacksideDoors()) {
             for (String door : backsideDoorLocationMap.keySet()) {
-                FileUtils.log(door + ": " + backsideDoorLocationMap.get(door));
+                FileUtils.log(Translations.getDoorLocation(backsideDoorLocationMap.get(getDoorToLocation(backsideDoorLocationMap.get(door))))
+                        + " <==> "
+                        + Translations.getDoorLocation(backsideDoorLocationMap.get(door)));
             }
             FileUtils.flush();
         }
     }
 
     public void logBosses(Integer attemptNumber) {
-        if(Settings.isRandomizeBacksideDoors() && FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+        if(Settings.isRandomizeBacksideDoors() && Settings.isDetailedLoggingAttempt(attemptNumber)) {
             for(String door : backsideDoorBossMap.keySet()) {
                 FileUtils.log(door + ": " + backsideDoorBossMap.get(door));
             }

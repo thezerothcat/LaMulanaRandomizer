@@ -60,12 +60,10 @@ public final class Settings {
 
     private boolean removeSpaulder;
 
+    private Integer skipValidation;
+
     private List<String> enabledGlitches = new ArrayList<>();
     private List<String> enabledDamageBoosts = new ArrayList<>();
-
-    private List<String> possibleGlitches = Arrays.asList("Lamp Glitch", "Cat Pause",
-            "Raindrop", "Ice Raindrop", "Pot Clip", "Object Zip");
-    private List<String> possibleDboosts = Arrays.asList("Item", "Environment", "Enemy");
 
     private List<String> possibleRandomizedItems = Arrays.asList("Holy Grail", "Hand Scanner", "reader.exe",
             "Hermes' Boots", "Grapple Claw", "Feather", "Isis' Pendant", "Bronze Mirror", "mirai.exe", "bunemon.exe", "Ring");
@@ -120,6 +118,8 @@ public final class Settings {
         alternateMotherAnkh = false;
         automaticMantras = false;
         medicineColor = null;
+
+        skipValidation = null;
 
         bossDifficulty = BossDifficulty.MEDIUM;
         shopRandomization = ShopRandomizationEnum.EVERYTHING;
@@ -752,6 +752,24 @@ public final class Settings {
         singleton.automaticMantras = automaticMantras;
     }
 
+    public static boolean isGenerationComplete(int attemptNumber) {
+        return singleton.skipValidation != null
+                && (singleton.skipValidation <= attemptNumber || singleton.skipValidation.equals(-1));
+    }
+
+    public static boolean isDetailedLoggingAttempt(Integer attemptNumber) {
+        return singleton.skipValidation != null
+                && (singleton.skipValidation.equals(attemptNumber) || singleton.skipValidation.equals(-1));
+    }
+
+    public static boolean isSkipValidation(int attemptNumber) {
+        return singleton.skipValidation != null;
+    }
+
+    public static void setSkipValidation(int skipValidationAttemptNumber) {
+        singleton.skipValidation = skipValidationAttemptNumber;
+    }
+
     public static void saveSettings() {
         if(singleton.changed) {
             try {
@@ -839,10 +857,10 @@ public final class Settings {
         booleanSettings = booleanSettings << 2 | singleton.shopRandomization.ordinal();
 
         //glitches
-        int glitches = itemSetToInt(getEnabledGlitches(), singleton.possibleGlitches);
+        int glitches = itemSetToInt(getEnabledGlitches(), DataFromFile.POSSIBLE_GLITCHES);
 
         //dboosts
-        int dboosts = itemSetToInt(getEnabledDamageBoosts(), singleton.possibleDboosts);
+        int dboosts = itemSetToInt(getEnabledDamageBoosts(), DataFromFile.POSSIBLE_DBOOSTS);
 
         //initially accessible items
         int initItems = itemSetToInt(getInitiallyAccessibleItems(), singleton.possibleRandomizedItems);
@@ -920,8 +938,8 @@ public final class Settings {
         singleton.replaceMapsWithWeights = getBoolFlagFromInt.apply(booleanSettingsFlag, 1);
         singleton.automaticGrailPoints = getBoolFlagFromInt.apply(booleanSettingsFlag, 0);
 
-        Collection<String> glitches = intToItemSet(Integer.parseInt(parts[3],16), singleton.possibleGlitches);
-        Collection<String> dboosts = intToItemSet(Integer.parseInt(parts[4],16), singleton.possibleDboosts);
+        Collection<String> glitches = intToItemSet(Integer.parseInt(parts[3],16), DataFromFile.POSSIBLE_GLITCHES);
+        Collection<String> dboosts = intToItemSet(Integer.parseInt(parts[4],16), DataFromFile.POSSIBLE_DBOOSTS);
         Set<String> initItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[5],16), singleton.possibleRandomizedItems));
         Set<String> startingItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[6],16), singleton.possibleRandomizedItems));
         BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[7],16)];

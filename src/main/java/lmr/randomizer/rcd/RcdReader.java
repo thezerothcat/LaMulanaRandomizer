@@ -654,6 +654,9 @@ public final class RcdReader {
 
                         screen.getScreenExits().add(screenExit);
                     }
+                    if(Settings.isRandomizeTransitionGates()) {
+                        updateScreenExits(screen);
+                    }
 
                     if(zoneIndex == 1) {
                         if(roomIndex == 2 && screenIndex == 1) {
@@ -685,6 +688,16 @@ public final class RcdReader {
     private static void registerScreen(Screen screen) {
         if(screen.getZoneIndex() == 17 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
             GameDataTracker.putTransitionScreen("Transition: Dimensional D1", screen);
+        }
+    }
+
+    private static void updateScreenExits(Screen screen) {
+        if(screen.getZoneIndex() == 2 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 2
+                || screen.getZoneIndex() == 19 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 1) {
+            ScreenExit screenExit = screen.getScreenExits().get(2);
+            screenExit.setZoneIndex((byte)-1);
+            screenExit.setRoomIndex((byte)-1);
+            screenExit.setScreenIndex((byte)-1);
         }
     }
 

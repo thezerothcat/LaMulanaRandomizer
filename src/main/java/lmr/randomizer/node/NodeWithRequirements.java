@@ -1,5 +1,7 @@
 package lmr.randomizer.node;
 
+import lmr.randomizer.Settings;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +49,54 @@ public class NodeWithRequirements {
 
     public void addRequirementSet(List<String> requirementSet) {
         this.listOfRequirementSets.add(new ArrayList<>(requirementSet));
+    }
+
+    /**
+     * This is intended to help avoid placing items somewhere they can't be reached.
+     */
+    public void expandRequirements() {
+        for(List<String> requirementSet : listOfRequirementSets) {
+            if(requirementSet.contains("Attack: Flare Gun")) {
+                requirementSet.add("Flare Gun");
+            }
+            if(requirementSet.contains("Attack: Bomb")) {
+                requirementSet.add("Bomb");
+            }
+            if(requirementSet.contains("State: Literacy")) {
+                requirementSet.remove("State: Literacy");
+                requirementSet.add("Hand Scanner");
+                requirementSet.add("reader.exe");
+            }
+            if(requirementSet.contains("State: Extinction Light") && Settings.isRequireFlaresForExtinction()) {
+                requirementSet.add("Flare Gun");
+            }
+            if(requirementSet.contains("Event: Key Fairy")) {
+                requirementSet.add("Isis' Pendant");
+            }
+            if(requirementSet.contains("State: Lamp")) {
+                requirementSet.add("Lamp of Time");
+            }
+            if(requirementSet.contains("Event: Illusion Unlocked")) {
+                requirementSet.add("Fruit of Eden");
+            }
+            if(requirementSet.contains("Event: Mulbruk Awakened")) {
+                requirementSet.add("Origin Seal");
+            }
+            if(requirementSet.contains("Event: Mudmen Awakened")) {
+                requirementSet.add("Cog of the Soul");
+                requirementSet.add("Feather");
+            }
+            if(requirementSet.contains("Event: Flooded Spring in the Sky")) {
+                requirementSet.add("Helmet");
+                requirementSet.add("Origin Seal");
+            }
+            if(requirementSet.contains("Event: Remove Shrine Skulls")) {
+                requirementSet.add("Dragon Bone");
+                requirementSet.add("yagomap.exe");
+                requirementSet.add("yagostr.exe");
+                requirementSet.add("Map (Shrine of the Mother)");
+            }
+        }
     }
 
     /**

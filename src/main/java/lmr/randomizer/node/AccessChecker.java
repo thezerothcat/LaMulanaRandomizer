@@ -126,7 +126,7 @@ public class AccessChecker {
                     }
                 }
                 FileUtils.log("Inaccessible node detected: " + nodeName + " containing " + itemRandomizer.getItem(nodeName) + ", accessed nodes = " + accessedNodes.size());
-                if(accessedNodes.size() > 500 || FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+                if(accessedNodes.size() > 500 || Settings.isDetailedLoggingAttempt(attemptNumber)) {
                     List<String> logged = new ArrayList<>();
                     logAccess(nodeName, logged);
                 }
@@ -135,7 +135,7 @@ public class AccessChecker {
             for(String requiredItem : DataFromFile.getWinRequirements()) {
                 if(!accessedNodes.contains(requiredItem)) {
                     FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
-                    if(accessedNodes.size() > 500 || FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+                    if(accessedNodes.size() > 500 || Settings.isDetailedLoggingAttempt(attemptNumber)) {
                         List<String> logged = new ArrayList<>();
                         if (requiredItem.startsWith("Event:") || requiredItem.startsWith("Location:")) {
                             logAccess(requiredItem, logged);
@@ -149,7 +149,7 @@ public class AccessChecker {
         for(String requiredItem : DataFromFile.getWinRequirements()) {
             if(!accessedNodes.contains(requiredItem)) {
                 FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
-                if(accessedNodes.size() > 500 || FileUtils.isDetailedLoggingAttempt(attemptNumber)) {
+                if(accessedNodes.size() > 500 || Settings.isDetailedLoggingAttempt(attemptNumber)) {
                     List<String> logged = new ArrayList<>();
                     if (requiredItem.startsWith("Event:") || requiredItem.startsWith("Location:")) {
                         logAccess(requiredItem, logged);

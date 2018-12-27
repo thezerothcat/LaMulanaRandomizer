@@ -33,7 +33,7 @@ public class Main {
         try {
             FileUtils.readSettings();
             if(args.length > 0) {
-                FileUtils.setDetailedLogging(Integer.parseInt(args[0]));
+                Settings.setSkipValidation(Integer.parseInt(args[0]));
             }
             Translations.initTranslations();
         }
@@ -761,7 +761,8 @@ public class Main {
             if(DataFromFile.getAllItems().contains(location)) {
                 return true;
             }
-            if(DataFromFile.getAllCoinChests().contains(location)) {
+            if(DataFromFile.getAllCoinChests().contains(location)
+                    || DataFromFile.ESCAPE_CHEST_NAME.equals(location)) {
                 return true;
             }
             if(location.equals("Trap: Graveyard") || location.equals("Trap: Exploding")
@@ -784,7 +785,8 @@ public class Main {
                     || "Whip".equals(contents) || "Ankh Jewel (Extra)".equals(contents)) {
                 return true;
             }
-            if(DataFromFile.getAllCoinChests().contains(contents)) {
+            if(DataFromFile.getAllCoinChests().contains(contents)
+                    || DataFromFile.ESCAPE_CHEST_NAME.equals(contents)) {
                 return true;
             }
             if(contents.equals("Trap: Graveyard") || contents.equals("Trap: Exploding")
@@ -818,9 +820,9 @@ public class Main {
 
         BacksideDoorRandomizer backsideDoorRandomizer = new BacksideDoorRandomizer();
         backsideDoorRandomizer.determineDoorDestinations(random);
-        backsideDoorRandomizer.logLocations(null);
+        backsideDoorRandomizer.logLocations();
 
-        TransitionGateRandomizer transitionGateRandomizer = new TransitionGateRandomizer();
+        TransitionGateRandomizer transitionGateRandomizer = new TransitionGateRandomizer(backsideDoorRandomizer);
 
         Set<String> initiallyAccessibleItems = getInitiallyAvailableItems();
 
@@ -886,44 +888,46 @@ public class Main {
                 continue;
             }
 
-            for(String startingNode : startingNodes) {
-                accessChecker.computeAccessibleNodes(startingNode, attempt);
-            }
-
-            // Add backside door nodes - we didn't need these for initially-accessible stuff since that can't require boss fights
-            for(String startingNode : backsideDoorRandomizer.getSettingNodes()) {
-                accessChecker.computeAccessibleNodes(startingNode, attempt);
-            }
-
-            boolean ankhJewelLock = false;
-            if(accessChecker.getQueuedUpdates().isEmpty()) {
-                if (!accessChecker.updateForBosses()) {
-                    ankhJewelLock = true;
+            if(!Settings.isSkipValidation(attempt)) {
+                for (String startingNode : startingNodes) {
+                    accessChecker.computeAccessibleNodes(startingNode, attempt);
                 }
-            }
 
-            if(!ankhJewelLock) {
-                while(!accessChecker.getQueuedUpdates().isEmpty()) {
-                    accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next(), attempt);
-                    if (accessChecker.getQueuedUpdates().isEmpty()) {
-                        if (!accessChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
-                            ankhJewelLock = true;
-                            break;
-                        }
-                        if (!accessChecker.updateForBosses()) {
-                            ankhJewelLock = true;
-                            break;
+                // Add backside door nodes - we didn't need these for initially-accessible stuff since that can't require boss fights
+                for (String startingNode : backsideDoorRandomizer.getSettingNodes()) {
+                    accessChecker.computeAccessibleNodes(startingNode, attempt);
+                }
+
+                boolean ankhJewelLock = false;
+                if (accessChecker.getQueuedUpdates().isEmpty()) {
+                    if (!accessChecker.updateForBosses()) {
+                        ankhJewelLock = true;
+                    }
+                }
+
+                if (!ankhJewelLock) {
+                    while (!accessChecker.getQueuedUpdates().isEmpty()) {
+                        accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next(), attempt);
+                        if (accessChecker.getQueuedUpdates().isEmpty()) {
+                            if (!accessChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
+                                ankhJewelLock = true;
+                                break;
+                            }
+                            if (!accessChecker.updateForBosses()) {
+                                ankhJewelLock = true;
+                                break;
+                            }
                         }
                     }
                 }
+
+                if (!ankhJewelLock) {
+                    FileUtils.log(String.format("Detected ankh jewel lock on attempt %s. Re-shuffling items.", attempt));
+                    continue;
+                }
             }
 
-            if(ankhJewelLock) {
-                FileUtils.log(String.format("Detected ankh jewel lock on attempt %s. Re-shuffling items.", attempt));
-                continue;
-            }
-
-            if(accessChecker.isSuccess(attempt)) {
+            if(Settings.isGenerationComplete(attempt) || accessChecker.isSuccess(attempt)) {
                 dialog.progressBar.setIndeterminate(false);
                 dialog.setSafeClose(false);
                 dialog.updateProgress(80, String.format(Translations.getText("progress.shuffling.done"), attempt));

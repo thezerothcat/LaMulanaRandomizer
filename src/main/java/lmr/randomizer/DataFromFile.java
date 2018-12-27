@@ -47,6 +47,10 @@ public final class DataFromFile {
             18, 19, 20, 21, 24, 25, 26, 27, 28, 29, 32, 33, 38, 39, 41, 42, 43, 44, 45, 47, 48, 49, 51, 52, 53, 54,
             55, 56, 5, 58, 59, 60, 61, 63, 64, 65, 66, 67, 68, 69, 73, 76, 91, 96, 97, 98, 99, 100, 102, 103, 104);
 
+    public static List<String> POSSIBLE_GLITCHES = Arrays.asList("Lamp Glitch", "Cat Pause",
+            "Raindrop", "Ice Raindrop", "Pot Clip", "Object Zip");
+    public static List<String> POSSIBLE_DBOOSTS = Arrays.asList("Item", "Environment", "Enemy");
+
     public static String EXPLODING_CHEST_NAME = "Trap: Exploding";
     public static String GRAVEYARD_TRAP_CHEST_NAME = "Trap: Graveyard";
     public static String ESCAPE_CHEST_NAME = "Coin: Twin (Escape)";
@@ -358,18 +362,13 @@ public final class DataFromFile {
                 }
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "custom-reqs.txt", false);
+
+            for(NodeWithRequirements nodeWithRequirements : mapOfNodeNameToRequirementsObject.values()) {
+                nodeWithRequirements.expandRequirements();
+            }
         }
         return mapOfNodeNameToRequirementsObject;
     }
-
-    public static Map<String, NodeWithRequirements> getMapOfNodeNameToExitRequirementsObject() {
-        if (mapOfNodeNameToExitRequirementsObject == null) {
-            mapOfNodeNameToExitRequirementsObject = new HashMap<>();
-            FileUtils.populateRequirements(mapOfNodeNameToExitRequirementsObject, "requirement/dead_ends.txt", true);
-        }
-        return mapOfNodeNameToExitRequirementsObject;
-    }
-
 
     public static List<String> getWinRequirements() {
         if(winRequirements == null) {
