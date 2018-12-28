@@ -893,11 +893,6 @@ public class Main {
                     accessChecker.computeAccessibleNodes(startingNode, attempt);
                 }
 
-                // Add backside door nodes - we didn't need these for initially-accessible stuff since that can't require boss fights
-                for (String startingNode : backsideDoorRandomizer.getSettingNodes()) {
-                    accessChecker.computeAccessibleNodes(startingNode, attempt);
-                }
-
                 boolean ankhJewelLock = false;
                 if (accessChecker.getQueuedUpdates().isEmpty()) {
                     if (!accessChecker.updateForBosses()) {
@@ -921,7 +916,7 @@ public class Main {
                     }
                 }
 
-                if (!ankhJewelLock) {
+                if (ankhJewelLock) {
                     FileUtils.log(String.format("Detected ankh jewel lock on attempt %s. Re-shuffling items.", attempt));
                     continue;
                 }

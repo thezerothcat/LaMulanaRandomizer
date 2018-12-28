@@ -1,13 +1,17 @@
 package lmr.randomizer.ui;
 
+import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
+import lmr.randomizer.Translations;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class SettingsTransportPanel extends JPanel {
     JButton generateSettingsButton;
-    JButton importButton;
+    JButton settingsImportButton;
     JTextField stringField;
     TabbedPanel parent;
 
@@ -23,10 +27,10 @@ public class SettingsTransportPanel extends JPanel {
         generateSettingsButton.addActionListener(e -> generateSettingsString());
         add(generateSettingsButton, "w 150!");
 
-        importButton = new JButton("Import settings string");
-        importButton.addActionListener(e -> importSettings(tabbedPanel));
+        settingsImportButton = new JButton("Import settings string");
+        settingsImportButton.addActionListener(e -> importSettings(tabbedPanel));
 
-        add(importButton, "w 150!");
+        add(settingsImportButton, "w 150!");
     }
 
     private void generateSettingsString() {

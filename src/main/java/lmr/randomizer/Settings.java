@@ -763,7 +763,7 @@ public final class Settings {
     }
 
     public static boolean isSkipValidation(int attemptNumber) {
-        return singleton.skipValidation != null;
+        return singleton.skipValidation != null && attemptNumber < singleton.skipValidation;
     }
 
     public static void setSkipValidation(int skipValidationAttemptNumber) {

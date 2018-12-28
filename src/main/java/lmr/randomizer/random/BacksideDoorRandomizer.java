@@ -239,19 +239,6 @@ public class BacksideDoorRandomizer {
                 || (!Settings.getEnabledGlitches().contains("Lamp Glitch") && doorLocation.contains("Inferno Cavern [Viy]"));
     }
 
-    public List<String> getSettingNodes() {
-        List<String> settingNodes = new ArrayList<>();
-//        for(Map.Entry<String, String> doorKeyAndLocation : backsideDoorLocationMap.entrySet()) {
-//            if(doorKeyAndLocation.getValue().contains("Gate of Guidance")) {
-//                settingNodes.add("Setting: " + doorKeyAndLocation.getKey().replace("Door:", "Guidance"));
-//            }
-//            else if(doorKeyAndLocation.getValue().contains("Inferno Cavern [Viy]")) {
-//                settingNodes.add("Setting: " + doorKeyAndLocation.getKey().replace("Door:", "Viy"));
-//            }
-//        }
-        return settingNodes;
-    }
-
     public List<String> getAvailableNodes(String stateToUpdate, Integer attemptNumber) {
         if(!stateToUpdate.startsWith("Event:") && !stateToUpdate.startsWith("Location:") && !stateToUpdate.startsWith("Exit:")) {
             return new ArrayList<>(0);

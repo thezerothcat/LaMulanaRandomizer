@@ -5,8 +5,11 @@ import lmr.randomizer.node.NodeWithRequirements;
 import lmr.randomizer.update.GameObjectId;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Created by thezerothcat on 7/10/2017.
@@ -654,6 +657,69 @@ public class FileUtils {
 
         writer.flush();
         writer.close();
+    }
+
+    public static boolean importExistingSeed(File zipFile) {
+        File destinationFolder = new File(zipFile.getName().replaceAll("\\.zip$", ""));
+        if(!destinationFolder.exists()) {
+            destinationFolder.mkdir();
+        }
+        byte[] buffer = new byte[1024];
+        try(ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFile))) {
+            ZipEntry zipEntry = zipInputStream.getNextEntry();
+            while(zipEntry != null) {
+                File newFile = getSafeFile(destinationFolder, zipEntry);
+                FileOutputStream fileOutputStream = new FileOutputStream(newFile);
+                int length;
+                while((length = zipInputStream.read(buffer)) > 0) {
+                    fileOutputStream.write(buffer, 0, length);
+                }
+                fileOutputStream.close();
+                zipEntry = zipInputStream.getNextEntry();
+            }
+            zipInputStream.closeEntry();
+
+            FileUtils.logFlush("Copying rcd file from seed folder to La-Mulana install directory");
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/script.rcd"));
+            Files.copy(new File(String.format("%s/script.rcd", destinationFolder)).toPath(), fileOutputStream);
+            fileOutputStream.flush();
+            fileOutputStream.close();
+            FileUtils.logFlush("rcd copy complete");
+
+            FileUtils.logFlush("Copying dat file from seed folder to La-Mulana install directory");
+            fileOutputStream = new FileOutputStream(new File(String.format("%s/data/language/%s/script_code.dat",
+                    Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
+            Files.copy(new File(String.format("%s/script_code.dat", destinationFolder)).toPath(), fileOutputStream);
+            fileOutputStream.flush();
+            fileOutputStream.close();
+            FileUtils.logFlush("dat copy complete");
+
+            File saveFile = new File(destinationFolder, "lm_00.sav");
+            if(saveFile.exists()) {
+                FileUtils.logFlush("Copying save file from seed folder to La-Mulana save directory");
+                    fileOutputStream = new FileOutputStream(
+                            new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir())));
+                    Files.copy(saveFile.toPath(), fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+            }
+            FileUtils.logFlush("Save file copy complete");
+
+        }
+        catch (IOException ex) {
+            FileUtils.log("Unable to unpack zipfile");
+            FileUtils.logException(ex);
+            return false;
+        }
+        return true;
+    }
+
+    public static File getSafeFile(File destinationFolder, ZipEntry zipEntry) throws IOException {
+        File destinationFile = new File(destinationFolder, zipEntry.getName());
+        if(!destinationFile.getCanonicalPath().startsWith(destinationFolder.getCanonicalPath() + File.separator)) {
+            throw new IOException("Entry is outside of target folder: " + zipEntry.getName());
+        }
+        return destinationFile;
     }
 
     public static void logException(Exception ex) {

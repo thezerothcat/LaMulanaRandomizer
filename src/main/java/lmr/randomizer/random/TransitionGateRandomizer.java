@@ -265,8 +265,6 @@ public class TransitionGateRandomizer {
         }
 
         if(Settings.isRandomizeOneWayTransitions()) {
-            downTransitions.add("Transition: Inferno W1");
-            downTransitions.add("Transition: Dimensional D1");
             upTransitions.add("Transition: Extinction U3");
             upTransitions.add("Transition: Twin U3");
 
@@ -284,6 +282,10 @@ public class TransitionGateRandomizer {
         // Add these late so no transition problems.
         downTransitions.add("Transition: Birth D1");
         downTransitions.add("Transition: Spring D1");
+        if(Settings.isRandomizeOneWayTransitions()) {
+            downTransitions.add("Transition: Inferno W1");
+            downTransitions.add("Transition: Dimensional D1");
+        }
         if(backsideDoorRandomizer.isDoorOneWay("Door: F1")) {
             downTransitions.add("Transition: Illusion D2");
         }

@@ -4,7 +4,7 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 2.5
 -----------------------------
-Logic cleanup. No-validation mode usable via command line (numeric argument indicating how many shuffles to perform).
+Logic cleanup. Removed raindrop-based wrong warps from Mausoleum and Gate of Time for entrance randomizer. Basic seed zip importer functionality, to be cleaned up in a later release. No-validation mode usable via command line (numeric argument indicating how many shuffles to perform).
 
 2.3
 -----------------------------
