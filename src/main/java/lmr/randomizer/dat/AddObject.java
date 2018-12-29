@@ -134,6 +134,33 @@ public final class AddObject {
     }
 
     /**
+     * Add a timer to make Isis' Pendant room ceiling breakable
+     * @param screen the screen to add the timers to
+     */
+    public static void addIsisRoomCeilingTimer(ObjectContainer screen) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x0b);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.setX(-1);
+        obj.setY(-1);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x17a);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)1);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x17a);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)2);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(0, obj);
+    }
+
+    /**
      * Add a timer to set the flag for solving the Diary chest puzzle if the appropriate conditions are met.
      * @param transitionGate the gate to put the detector with
      */

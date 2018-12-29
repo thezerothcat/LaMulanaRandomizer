@@ -3310,6 +3310,10 @@ public final class GameDataTracker {
                     AddObject.addGoddessStatueLemezaDetector(gameObject);
                     firstObject = false;
                 }
+                if(firstObject && "Transition: Sun L1".equals(gateDestination)) {
+                    AddObject.addIsisRoomCeilingTimer(gameObject.getObjectContainer());
+                    firstObject = false;
+                }
                 if(firstObject && gateDestination.contains("Transition: Twin ")) { //  && !gateToUpdate.contains("Transition: Twin")
                     AddObject.addTwinLabsPoisonTimerRemoval(gameObject.getObjectContainer());
                 }
