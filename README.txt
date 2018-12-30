@@ -2,6 +2,10 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+2.6
+-----------------------------
+Logic fix. Fix for lingering Goddess statue shield graphic after down transition from Tower of the Goddess.
+
 2.5
 -----------------------------
 Logic cleanup. Removed raindrop-based wrong warps from Mausoleum and Gate of Time for entrance randomizer. Basic seed zip importer functionality, to be cleaned up in a later release. No-validation mode usable via command line (numeric argument indicating how many shuffles to perform).

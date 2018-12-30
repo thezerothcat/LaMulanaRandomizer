@@ -3314,6 +3314,10 @@ public final class GameDataTracker {
                     AddObject.addIsisRoomCeilingTimer(gameObject.getObjectContainer());
                     firstObject = false;
                 }
+                if(firstObject && "Transition: Goddess D1".equals(gateDestination)) {
+                    AddObject.addGoddessShieldTimer(gameObject.getObjectContainer());
+                    firstObject = false;
+                }
                 if(firstObject && gateDestination.contains("Transition: Twin ")) { //  && !gateToUpdate.contains("Transition: Twin")
                     AddObject.addTwinLabsPoisonTimerRemoval(gameObject.getObjectContainer());
                 }

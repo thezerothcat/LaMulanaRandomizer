@@ -108,9 +108,18 @@ public final class RcdReader {
                             }
                         }
                     }
+
                     if(zoneIndex == 5) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
                             if (testByteOperation.getIndex() == 0x17a && testByteOperation.getValue() == 1) {
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
+                    else if(zoneIndex == 11) {
+                        for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                            if (testByteOperation.getIndex() == 0x284 && testByteOperation.getValue() == 2) {
                                 keepObject = false;
                                 break;
                             }

@@ -15,7 +15,7 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.5.1";
+    public static final String VERSION = "2.6.0";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -704,7 +704,6 @@ public class FileUtils {
                     fileOutputStream.close();
             }
             FileUtils.logFlush("Save file copy complete");
-
         }
         catch (IOException ex) {
             FileUtils.log("Unable to unpack zipfile");

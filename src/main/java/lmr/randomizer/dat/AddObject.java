@@ -161,6 +161,45 @@ public final class AddObject {
     }
 
     /**
+     * Add a timer to make Goddess statue shield disappear after leaving the room
+     * @param screen the screen to add the timers to
+     */
+    public static void addGoddessShieldTimer(ObjectContainer screen) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x0b);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.setX(-1);
+        obj.setY(-1);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x284);
+        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+        testByteOperation.setValue((byte)2);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x34e);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x34e);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)12);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x284);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)3);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(0, obj);
+    }
+
+    /**
      * Add a timer to set the flag for solving the Diary chest puzzle if the appropriate conditions are met.
      * @param transitionGate the gate to put the detector with
      */
