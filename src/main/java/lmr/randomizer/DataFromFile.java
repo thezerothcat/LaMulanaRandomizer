@@ -325,16 +325,6 @@ public final class DataFromFile {
         return mapOfShopNameToShopOriginalContents;
     }
 
-    public static Map<String, List<String>> getMapOfExitRequirementNodeToAccessibleNodes() {
-        if(mapOfExitRequirementNodeToAccessibleNodes == null) {
-            mapOfExitRequirementNodeToAccessibleNodes = FileUtils.getAccessibleLocations("requirement/accessible_from_area.txt");
-            if(mapOfExitRequirementNodeToAccessibleNodes == null) {
-                mapOfExitRequirementNodeToAccessibleNodes = new HashMap<>(0);
-            }
-        }
-        return mapOfExitRequirementNodeToAccessibleNodes;
-    }
-
     public static Map<String, NodeWithRequirements> getMapOfNodeNameToRequirementsObject() {
         if(mapOfNodeNameToRequirementsObject == null) {
             mapOfNodeNameToRequirementsObject = new HashMap<>();
@@ -346,7 +336,7 @@ public final class DataFromFile {
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dead_ends.txt", true);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/transition_reqs.txt", true);
             if(!Settings.getEnabledGlitches().isEmpty()) {
-                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch/glitch_reqs.txt", true);
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch_reqs.txt", true);
             }
             if(Settings.isRandomizeCoinChests()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/coin_chest_reqs.txt", true);
