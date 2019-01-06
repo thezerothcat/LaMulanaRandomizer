@@ -9,6 +9,7 @@ import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.node.CustomPlacement;
+import lmr.randomizer.node.MoneyChecker;
 import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.GameObjectId;
 
@@ -249,7 +250,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         writer.close();
     }
 
-    public void updateFiles(List<Block> blocks, boolean subweaponOnly, Random random) {
+    public void updateFiles(List<Block> blocks, boolean subweaponOnly, MoneyChecker moneyChecker, Random random) {
         String shopItem1;
         String shopItem2;
         String shopItem3;
@@ -302,12 +303,14 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                 shopItem3 = "Weights";
             }
             GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks,
-                    getItemPriceCount(subweaponOnly, shopItem1), getItemPriceCount(subweaponOnly, shopItem2), getItemPriceCount(subweaponOnly, shopItem3),
+                    getItemPriceCount(subweaponOnly, shopItem1, String.format("%s Item 1", shopName), moneyChecker, random),
+                    getItemPriceCount(subweaponOnly, shopItem2, String.format("%s Item 2", shopName), moneyChecker, random),
+                    getItemPriceCount(subweaponOnly, shopItem3, String.format("%s Item 3", shopName), moneyChecker, random),
                     "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName), false);
         }
     }
 
-    private Pair<Short, Short> getItemPriceCount(boolean subweaponOnly, String itemName) {
+    private Pair<Short, Short> getItemPriceCount(boolean subweaponOnly, String itemName, String shopInventoryLocation, MoneyChecker moneyChecker, Random random) {
         String startingWeapon = Settings.getCurrentStartingWeapon();
         if((subweaponOnly && itemName.endsWith(" Ammo")) || itemName.equals(startingWeapon + " Ammo")) {
             if("Shuriken".equals(startingWeapon)) {
@@ -330,6 +333,39 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             if("Pistol".equals(startingWeapon)) {
                 return new Pair<>((short)0, (short)3);
             }
+        }
+
+        Integer shopPrice = moneyChecker.getShopPrice(itemName, shopInventoryLocation.replaceAll(" Item \\d", ""));
+        if(shopPrice != null) {
+            Integer defaultShopPrice = null;
+            if("Shop 1 (Surface) Item 1".equals(shopInventoryLocation)) {
+                defaultShopPrice = 10;
+            }
+            else if("Shop 2 (Surface) Item 2".equals(shopInventoryLocation)) {
+                defaultShopPrice = 50;
+            }
+            else if("Shop 2 (Surface) Item 3".equals(shopInventoryLocation)) {
+                defaultShopPrice = 20;
+            }
+            else if("Shop 3 (Surface) Item 1".equals(shopInventoryLocation)) {
+                defaultShopPrice = 10;
+            }
+            else if("Shop 3 (Surface) Item 2".equals(shopInventoryLocation)) {
+                defaultShopPrice = 50;
+            }
+            else if("Shop 3 (Surface) Item 3".equals(shopInventoryLocation)) {
+                defaultShopPrice = 100;
+            }
+            else if("Shop 6 (Mausoleum) Item 1".equals(shopInventoryLocation)) {
+                defaultShopPrice = 60;
+            }
+            else if("Shop 7 (Graveyard) Item 1".equals(shopInventoryLocation)) {
+                defaultShopPrice = 60;
+            }
+            if(defaultShopPrice != null) {
+                return new Pair<>((short)(int)(defaultShopPrice < shopPrice ? defaultShopPrice : shopPrice - 5 * random.nextInt(2)), null);
+            }
+            return new Pair<>((short)(int)(shopPrice - 5 * random.nextInt(2)), null);
         }
         return null;
     }

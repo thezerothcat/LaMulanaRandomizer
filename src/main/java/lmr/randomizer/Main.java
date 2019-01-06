@@ -6,6 +6,7 @@ import lmr.randomizer.dat.DatReader;
 import lmr.randomizer.dat.DatWriter;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.node.CustomPlacement;
+import lmr.randomizer.node.MoneyChecker;
 import lmr.randomizer.random.*;
 import lmr.randomizer.rcd.RcdReader;
 import lmr.randomizer.rcd.RcdWriter;
@@ -930,9 +931,21 @@ public class Main {
                 FileUtils.log(String.format("Successful attempt %s.", attempt));
                 FileUtils.flush();
 
+                MoneyChecker moneyChecker;
                 if(Settings.isRandomizeTransitionGates()) {
                     transitionGateRandomizer.placeTowerOfTheGoddessPassthroughPipe(random);
                     FileUtils.logDetail("Placed pipe transitions", attempt);
+
+                    moneyChecker = new MoneyChecker(itemRandomizer, shopRandomizer, transitionGateRandomizer);
+                    for (String startingNode : startingNodes) {
+                        moneyChecker.computeAccessibleNodes(startingNode, attempt);
+                    }
+                    while(!moneyChecker.getQueuedUpdates().isEmpty()) {
+                        moneyChecker.computeAccessibleNodes(moneyChecker.getQueuedUpdates().iterator().next(), attempt);
+                    }
+                }
+                else {
+                    moneyChecker = null;
                 }
 
                 dialog.updateProgress(85, Translations.getText("progress.spoiler"));
@@ -950,7 +963,7 @@ public class Main {
                 itemRandomizer.updateFiles(random);
                 FileUtils.log("Updated item location data");
 
-                shopRandomizer.updateFiles(datInfo, isSubweaponOnly(), random);
+                shopRandomizer.updateFiles(datInfo, isSubweaponOnly(), moneyChecker, random);
                 FileUtils.log("Updated shop data");
 
                 List<String> availableSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);

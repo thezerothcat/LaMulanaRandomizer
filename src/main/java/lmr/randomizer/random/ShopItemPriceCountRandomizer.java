@@ -4,6 +4,7 @@ import javafx.util.Pair;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.Settings;
 import lmr.randomizer.node.CustomPlacement;
+import lmr.randomizer.node.MoneyChecker;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,8 @@ public class ShopItemPriceCountRandomizer {
     private boolean normalPriceWeightsPlaced = false;
 
     private boolean subweaponOnly;
+
+    private MoneyChecker moneyChecker;
 
     private Random random;
 
@@ -73,8 +76,9 @@ public class ShopItemPriceCountRandomizer {
             "move.exe", "randc.exe", "Fairy Clothes", "Scriptures", "Gauntlet", "deathv.exe",
             "Provocative Bathing Suit", "Spaulder", "Flail Whip", "lamulana.exe");
 
-    public ShopItemPriceCountRandomizer(boolean subweaponOnly, Random random) {
+    public ShopItemPriceCountRandomizer(boolean subweaponOnly, MoneyChecker moneyChecker, Random random) {
         this.subweaponOnly = subweaponOnly;
+        this.moneyChecker = moneyChecker;
         this.random = random;
     }
 
@@ -95,7 +99,7 @@ public class ShopItemPriceCountRandomizer {
             }
         }
         if(price == null) {
-            price = getPrice(itemName);
+            price = getPrice(itemName, location);
         }
         if(count == null) {
             count = getCount(itemName);
@@ -103,7 +107,7 @@ public class ShopItemPriceCountRandomizer {
         return new Pair<>(price, count);
     }
 
-    private short getPrice(String itemName) {
+    private short getPrice(String itemName, String shopInventoryLocation) {
         if(subweaponOnly && itemName.endsWith(" Ammo")) {
             return 0;
         }
@@ -190,6 +194,10 @@ public class ShopItemPriceCountRandomizer {
             itemName = "Sacred Orb";
         }
 
+        Integer shopPrice = moneyChecker.getShopPrice(itemName, shopInventoryLocation.replaceAll(" Item \\d", ""));
+        if(shopPrice != null) {
+            return (short)(shopPrice - 5 * random.nextInt(2));
+        }
         if(PRICE_TIER1.contains(itemName)) {
             return (short)(40 + 5 * random.nextInt(5));
         }

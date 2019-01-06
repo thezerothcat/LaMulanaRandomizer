@@ -3116,8 +3116,19 @@ public final class GameDataTracker {
             }
         }
         else {
-            newPrices.add(itemPriceAndCount1.getKey());
-            newCounts.add(itemPriceAndCount1.getValue());
+            if(itemPriceAndCount1.getKey() == null) {
+                newPrices.add(shopBlock.getInventoryPriceList().getData().get(0));
+            }
+            else {
+                newPrices.add(itemPriceAndCount1.getKey());
+            }
+
+            if(itemPriceAndCount1.getValue() == null) {
+                newCounts.add(shopBlock.getInventoryCountList().getData().get(0));
+            }
+            else {
+                newCounts.add(itemPriceAndCount1.getValue());
+            }
         }
 
         if(itemPriceAndCount2 == null) {
@@ -3131,8 +3142,19 @@ public final class GameDataTracker {
             }
         }
         else {
-            newPrices.add(itemPriceAndCount2.getKey());
-            newCounts.add(itemPriceAndCount2.getValue());
+            if(itemPriceAndCount2.getKey() == null) {
+                newPrices.add(shopBlock.getInventoryPriceList().getData().get(1));
+            }
+            else {
+                newPrices.add(itemPriceAndCount2.getKey());
+            }
+
+            if(itemPriceAndCount2.getValue() == null) {
+                newCounts.add(shopBlock.getInventoryCountList().getData().get(1));
+            }
+            else {
+                newCounts.add(itemPriceAndCount2.getValue());
+            }
         }
 
         if(itemPriceAndCount3 == null) {
@@ -3146,8 +3168,19 @@ public final class GameDataTracker {
             }
         }
         else {
-            newPrices.add(itemPriceAndCount3.getKey());
-            newCounts.add(itemPriceAndCount3.getValue());
+            if(itemPriceAndCount3.getKey() == null) {
+                newPrices.add(shopBlock.getInventoryPriceList().getData().get(2));
+            }
+            else {
+                newPrices.add(itemPriceAndCount3.getKey());
+            }
+
+            if(itemPriceAndCount3.getValue() == null) {
+                newCounts.add(shopBlock.getInventoryCountList().getData().get(2));
+            }
+            else {
+                newCounts.add(itemPriceAndCount3.getValue());
+            }
         }
 
         shopBlock.getInventoryPriceList().getData().clear();

@@ -9,6 +9,7 @@ import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.node.CustomPlacement;
+import lmr.randomizer.node.MoneyChecker;
 import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.GameObjectId;
 
@@ -405,12 +406,12 @@ public class EverythingShopRandomizer implements ShopRandomizer {
         writer.close();
     }
 
-    public void updateFiles(List<Block> blocks, boolean subweaponOnly, Random random) {
+    public void updateFiles(List<Block> blocks, boolean subweaponOnly, MoneyChecker moneyChecker, Random random) {
         String shopItem1;
         String shopItem2;
         String shopItem3;
         ShopBlock shopBlock;
-        ShopItemPriceCountRandomizer shopItemPriceCountRandomizer = new ShopItemPriceCountRandomizer(subweaponOnly, random);
+        ShopItemPriceCountRandomizer shopItemPriceCountRandomizer = new ShopItemPriceCountRandomizer(subweaponOnly, moneyChecker, random);
         Pair<Short, Short> itemPriceCountMsxShop2 = null;
         Pair<Short, Short> itemPriceCountMsxShop3 = null;
         for(String shopName : randomizedShops) {

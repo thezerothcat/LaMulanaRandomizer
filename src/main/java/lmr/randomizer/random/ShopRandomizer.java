@@ -2,6 +2,7 @@ package lmr.randomizer.random;
 
 import lmr.randomizer.dat.Block;
 import lmr.randomizer.node.AccessChecker;
+import lmr.randomizer.node.MoneyChecker;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,7 +36,7 @@ public interface ShopRandomizer {
 
     void outputLocations(int attemptNumber) throws IOException;
 
-    void updateFiles(List<Block> blocks, boolean subweaponOnly, Random random);
+    void updateFiles(List<Block> blocks, boolean subweaponOnly, MoneyChecker moneyChecker, Random random);
 
     void setAccessChecker(AccessChecker accessChecker);
 
