@@ -1,4 +1,4 @@
-Exit: Surface [Main] => None
+#Exit: Surface [Main] => None
 Exit: Surface [Ruin Path Lower] => Holy Grail
 Exit: Surface [Ruin Path Lower] => Glitch: Raindrop
 Exit: Surface [Ruin Path Lower] => Exit: Surface D1

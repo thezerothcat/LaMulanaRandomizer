@@ -68,8 +68,6 @@ public final class DataFromFile {
     private static Map<String, Integer> mapOfShopNameToShopBlock;
     private static Map<String, List<String>> mapOfShopNameToShopOriginalContents;
     private static Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject;
-    private static Map<String, NodeWithRequirements> mapOfNodeNameToExitRequirementsObject;
-    private static Map<String, List<String>> mapOfExitRequirementNodeToAccessibleNodes;
     private static List<String> initialShops;
     private static List<String> availableGlitches;
     private static List<String> winRequirements;
@@ -432,9 +430,7 @@ public final class DataFromFile {
             nonShopItemLocations = null;
             bannedTrapLocations = null;
             mapOfNodeNameToRequirementsObject = null;
-            mapOfNodeNameToExitRequirementsObject = null;
             winRequirements = null;
-            mapOfExitRequirementNodeToAccessibleNodes = null;
         }
     }
 }

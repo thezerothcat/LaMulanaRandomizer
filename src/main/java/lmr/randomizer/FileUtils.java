@@ -4,10 +4,14 @@ import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.node.NodeWithRequirements;
 import lmr.randomizer.update.GameObjectId;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.util.*;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -15,7 +19,8 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.6.1";
+    public static final String VERSION = "2.7.0";
+    private static final int CUSTOM_IMAGE_HEIGHT = 80;
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -719,6 +724,68 @@ public class FileUtils {
             throw new IOException("Entry is outside of target folder: " + zipEntry.getName());
         }
         return destinationFile;
+    }
+
+    private static boolean backupGraphicsFile(File graphicsPack) {
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(graphicsPack, "01effect.png.bak"));
+            Files.copy(new File(graphicsPack, "01effect.png").toPath(), fileOutputStream);
+            fileOutputStream.flush();
+            fileOutputStream.close();
+            return true;
+        }
+        catch (IOException ex) {
+            return false;
+        }
+    }
+
+    public static boolean updateGraphicsFiles() {
+        BufferedImage custom;
+        try {
+            custom = ImageIO.read(FileUtils.class.getResource("01effect-custom.png"));
+        }
+        catch (IOException ex) {
+            return false;
+        }
+
+        for(File graphicsPack : getGraphicsPacks()) {
+            try {
+                if(!backupGraphicsFile(graphicsPack)) {
+                    return false;
+                }
+                File graphicsFile = new File(graphicsPack, "01effect.png");
+                BufferedImage existing = ImageIO.read(graphicsFile);
+                if(existing.getHeight() < (512 + CUSTOM_IMAGE_HEIGHT)) {
+                    FileUtils.logFlush("Updating graphics file: " + graphicsFile.getAbsolutePath());
+                    // Hasn't been updated yet.
+                    BufferedImage newImage = new BufferedImage(existing.getWidth(), existing.getHeight() + custom.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D graphics2D = newImage.createGraphics();
+                    graphics2D.drawImage(existing, null, 0, 0);
+                    graphics2D.drawImage(custom, null, 0, existing.getHeight());
+                    graphics2D.dispose();
+                    ImageIO.write(newImage, "png", graphicsFile);
+                    FileUtils.log("Graphics file successfully updated");
+                }
+            }
+            catch (IOException ex) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static List<File> getGraphicsPacks() {
+        File graphicsFolder = new File(Settings.getLaMulanaBaseDir() + "/data/graphics");
+        if(graphicsFolder.exists() && graphicsFolder.isDirectory()) {
+            List<File> graphicsSubfolders = new ArrayList<>();
+            for(File file : graphicsFolder.listFiles()) {
+                if(file.isDirectory()) {
+                    graphicsSubfolders.add(file);
+                }
+            }
+            return graphicsSubfolders;
+        }
+        return new ArrayList<>(0);
     }
 
     public static void logException(Exception ex) {

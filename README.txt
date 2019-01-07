@@ -2,6 +2,10 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+2.7
+-----------------------------
+Randomized the upper and lower entrances to the main part of Shrine of the Mother, and the transition between Tower of the Goddess and Gate of Illusion. The two dead-end Shrine rooms and the other Illusion entrances are still not random.
+
 2.6
 -----------------------------
 Logic fix. Fix for lingering Goddess statue shield graphic after down transition from Tower of the Goddess.

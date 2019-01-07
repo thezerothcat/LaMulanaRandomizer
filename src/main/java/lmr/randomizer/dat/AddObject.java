@@ -402,34 +402,6 @@ public final class AddObject {
     }
 
     /**
-     * The backup door from Endless Corridor to untransformed Shrine of the Mother allows entry to untrue Shrine
-     * during the escape, but it's a time-waster since the gate at the bottom doesn't work during the escape.
-     * We'll fix by adding another exit that
-     * @param screen the screen to add the object to
-     */
-    public static void addUntrueShrineExit(Screen screen) {
-        GameObject obj = new GameObject(screen);
-        obj.setId((short)0xc4);
-        obj.getArgs().add((short)6);
-        obj.getArgs().add((short)7);
-        obj.getArgs().add((short)1);
-        obj.getArgs().add((short)300);
-        obj.getArgs().add((short)20);
-        obj.getArgs().add((short)1);
-        obj.getArgs().add((short)1);
-        obj.setX(300);
-        obj.setY(940);
-
-        TestByteOperation testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(898);
-        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-        testByteOperation.setValue((byte)1);
-        obj.getTestByteOperations().add(testByteOperation);
-
-        screen.getObjects().add(obj);
-    }
-
-    /**
      * Add kill timers for randomized main weapons.
      * @param screen the screen to add the objects to
      * @param isXelpudScreen true if this is Xelpud's screen, where the kill timer should not activate until after you talk to him
@@ -503,23 +475,12 @@ public final class AddObject {
      * Add a backup door from Chamber of Extinction to untransformed Shrine of the Mother.
      * @param screen the screen to add the objects to
      */
-    public static void addExtinctionUntrueShrineBackupDoor(Screen screen) {
+    public static void addLowerUntrueShrineBackupDoor(Screen screen) {
         GameObject backupShrineDoor = new GameObject(screen);
-        TestByteOperation testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(258);
-        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-        testByteOperation.setValue((byte) 9);
-        backupShrineDoor.getTestByteOperations().add(testByteOperation);
-
-        testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(500);
-        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
-        testByteOperation.setValue((byte) 1);
-        backupShrineDoor.getTestByteOperations().add(testByteOperation);
 
         backupShrineDoor.setId((short) 0x98);
-        backupShrineDoor.setX(1040);
-        backupShrineDoor.setY(80);
+        backupShrineDoor.setX(260);
+        backupShrineDoor.setY(800);
 
         backupShrineDoor.getArgs().add((short)0);
         backupShrineDoor.getArgs().add((short)9);
@@ -528,52 +489,158 @@ public final class AddObject {
         backupShrineDoor.getArgs().add((short)300);
         backupShrineDoor.getArgs().add((short)320);
 
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(258);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte) 9);
+        backupShrineDoor.getTestByteOperations().add(testByteOperation);
+
         screen.getObjects().add(backupShrineDoor);
 
         GameObject backupShrineDoorGraphic = new GameObject(screen);
+        backupShrineDoorGraphic.setId((short) 0x93);
+        backupShrineDoorGraphic.setX(240);
+        backupShrineDoorGraphic.setY(760);
+
         testByteOperation = new TestByteOperation();
         testByteOperation.setIndex(258);
         testByteOperation.setOp(ByteOp.FLAG_EQUALS);
         testByteOperation.setValue((byte) 9);
         backupShrineDoorGraphic.getTestByteOperations().add(testByteOperation);
 
+        backupShrineDoorGraphic.getArgs().add((short)-1);
+        backupShrineDoorGraphic.getArgs().add((short)-1);
+        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)512);
+        backupShrineDoorGraphic.getArgs().add((short)80);
+        backupShrineDoorGraphic.getArgs().add((short)80);
+        backupShrineDoorGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        backupShrineDoorGraphic.getArgs().add((short)0); // Animation frames
+        backupShrineDoorGraphic.getArgs().add((short)1); // Pause frames
+        backupShrineDoorGraphic.getArgs().add((short)0); // Repeat count (<1 is forever)
+        backupShrineDoorGraphic.getArgs().add((short)0); // Hittile to fill with
+        backupShrineDoorGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        backupShrineDoorGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        backupShrineDoorGraphic.getArgs().add((short)0); // Cycle colors t/f
+        backupShrineDoorGraphic.getArgs().add((short)0); // Alpha/frame
+        backupShrineDoorGraphic.getArgs().add((short)255); // Max alpha
+        backupShrineDoorGraphic.getArgs().add((short)0); // R/frame
+        backupShrineDoorGraphic.getArgs().add((short)0); // Max R
+        backupShrineDoorGraphic.getArgs().add((short)0); // G/frame
+        backupShrineDoorGraphic.getArgs().add((short)0); // Max G
+        backupShrineDoorGraphic.getArgs().add((short)0); // B/frame
+        backupShrineDoorGraphic.getArgs().add((short)0); // Max B
+        backupShrineDoorGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        backupShrineDoorGraphic.getArgs().add((short)1); // not0?
+        screen.getObjects().add(backupShrineDoorGraphic);
+    }
+
+    /**
+     * Add a backup door from Chamber of Extinction to untransformed Shrine of the Mother.
+     * @param screen the screen to add the objects to
+     */
+    public static void addUpperUntrueShrineBackupDoor(Screen screen) {
+        GameObject backupShrineDoor = new GameObject(screen);
+
+        backupShrineDoor.setId((short) 0x98);
+        backupShrineDoor.setX(340);
+        backupShrineDoor.setY(80);
+
+        backupShrineDoor.getArgs().add((short)0);
+        backupShrineDoor.getArgs().add((short)9);
+        backupShrineDoor.getArgs().add((short)0);
+        backupShrineDoor.getArgs().add((short)0);
+        backupShrineDoor.getArgs().add((short)340);
+        backupShrineDoor.getArgs().add((short)92);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(258);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte) 9);
+        backupShrineDoor.getTestByteOperations().add(testByteOperation);
+
+        screen.getObjects().add(backupShrineDoor);
+
+        GameObject backupShrineDoorGraphic = new GameObject(screen);
+        backupShrineDoorGraphic.setId((short) 0x93);
+        backupShrineDoorGraphic.setX(320);
+        backupShrineDoorGraphic.setY(40);
+
         testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(500);
-        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
-        testByteOperation.setValue((byte) 1);
+        testByteOperation.setIndex(258);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte) 9);
         backupShrineDoorGraphic.getTestByteOperations().add(testByteOperation);
 
         backupShrineDoorGraphic.getArgs().add((short)-1);
+        backupShrineDoorGraphic.getArgs().add((short)-1);
         backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)920);
-        backupShrineDoorGraphic.getArgs().add((short)0);
+        backupShrineDoorGraphic.getArgs().add((short)512);
         backupShrineDoorGraphic.getArgs().add((short)80);
         backupShrineDoorGraphic.getArgs().add((short)80);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)1);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)255);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-
-
-        backupShrineDoorGraphic.setId((short) 0x93);
-        backupShrineDoorGraphic.setX(1020);
-        backupShrineDoorGraphic.setY(40);
-
+        backupShrineDoorGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        backupShrineDoorGraphic.getArgs().add((short)0); // Animation frames
+        backupShrineDoorGraphic.getArgs().add((short)1); // Pause frames
+        backupShrineDoorGraphic.getArgs().add((short)0); // Repeat count (<1 is forever)
+        backupShrineDoorGraphic.getArgs().add((short)0); // Hittile to fill with
+        backupShrineDoorGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        backupShrineDoorGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        backupShrineDoorGraphic.getArgs().add((short)0); // Cycle colors t/f
+        backupShrineDoorGraphic.getArgs().add((short)0); // Alpha/frame
+        backupShrineDoorGraphic.getArgs().add((short)255); // Max alpha
+        backupShrineDoorGraphic.getArgs().add((short)0); // R/frame
+        backupShrineDoorGraphic.getArgs().add((short)0); // Max R
+        backupShrineDoorGraphic.getArgs().add((short)0); // G/frame
+        backupShrineDoorGraphic.getArgs().add((short)0); // Max G
+        backupShrineDoorGraphic.getArgs().add((short)0); // B/frame
+        backupShrineDoorGraphic.getArgs().add((short)0); // Max B
+        backupShrineDoorGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        backupShrineDoorGraphic.getArgs().add((short)1); // not0?
         screen.getObjects().add(backupShrineDoorGraphic);
+    }
+
+    /**
+     * Add Illusion door cover to the screen that left-transitions into upper Gate of Illusion
+     * @param transitionGate the gate to cover with the graphic
+     */
+    public static void addIllusionFruitBlockHorizontal(GameObject transitionGate) {
+        GameObject fruitBlockGraphic = new GameObject(transitionGate.getObjectContainer());
+
+        fruitBlockGraphic.setId((short) 0x93);
+        fruitBlockGraphic.setX(transitionGate.getX());
+        fruitBlockGraphic.setY(transitionGate.getY() - 40);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x226);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte) 0);
+        fruitBlockGraphic.getTestByteOperations().add(testByteOperation);
+
+        fruitBlockGraphic.getArgs().add((short)20);
+        fruitBlockGraphic.getArgs().add((short)-1);
+        fruitBlockGraphic.getArgs().add((short)220);
+        fruitBlockGraphic.getArgs().add((short)512);
+        fruitBlockGraphic.getArgs().add((short)20);
+        fruitBlockGraphic.getArgs().add((short)80);
+        fruitBlockGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        fruitBlockGraphic.getArgs().add((short)1); // Animation frames
+        fruitBlockGraphic.getArgs().add((short)4); // Pause frames
+        fruitBlockGraphic.getArgs().add((short)1); // Repeat count (<1 is forever)
+        fruitBlockGraphic.getArgs().add((short)128); // Hittile to fill with
+        fruitBlockGraphic.getArgs().add((short)1); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        fruitBlockGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        fruitBlockGraphic.getArgs().add((short)0); // Cycle colors t/f
+        fruitBlockGraphic.getArgs().add((short)0); // Alpha/frame
+        fruitBlockGraphic.getArgs().add((short)255); // Max alpha
+        fruitBlockGraphic.getArgs().add((short)0); // R/frame
+        fruitBlockGraphic.getArgs().add((short)0); // Max R
+        fruitBlockGraphic.getArgs().add((short)0); // G/frame
+        fruitBlockGraphic.getArgs().add((short)0); // Max G
+        fruitBlockGraphic.getArgs().add((short)0); // B/frame
+        fruitBlockGraphic.getArgs().add((short)0); // Max B
+        fruitBlockGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        fruitBlockGraphic.getArgs().add((short)1); // not0?
+        transitionGate.getObjectContainer().getObjects().add(fruitBlockGraphic);
     }
 
     /**
@@ -770,47 +837,6 @@ public final class AddObject {
         }
         return null;
     }
-
-//    /**
-//     * Unused alternate version relying on graphics file modification.
-//     * @param backsideDoor the object we're decorating with graphics
-//     * @param bossNumber 1=Amphisbaena, 7=Baphomet, etc.
-//     */
-//    public static void addBossGraphic(GameObject backsideDoor, int bossNumber) {
-//        GameObject doorNumberGraphic = new GameObject(backsideDoor.getObjectContainer());
-//        doorNumberGraphic.setId((short) 0x93);
-//        doorNumberGraphic.setX(backsideDoor.getX());
-//        doorNumberGraphic.setY(backsideDoor.getY() - 40);
-//        doorNumberGraphic.getArgs().add((short)-1); // Layer
-//        doorNumberGraphic.getArgs().add((short)-1); // 01.effect.png for anything not 0-6?
-//        doorNumberGraphic.getArgs().add((short)(30 * (bossNumber - 1))); // Imagex
-//        doorNumberGraphic.getArgs().add((short)(478)); // Imagey
-//        doorNumberGraphic.getArgs().add((short)30); // dx
-//        doorNumberGraphic.getArgs().add((short)34); // dy
-//        doorNumberGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
-//        doorNumberGraphic.getArgs().add((short)0); // Animation frames
-//        doorNumberGraphic.getArgs().add((short)1); // Pause frames
-//        doorNumberGraphic.getArgs().add((short)0); // Repeat count (<1 is forever)
-//        doorNumberGraphic.getArgs().add((short)0); // Hittile to fill with
-//        doorNumberGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
-//        doorNumberGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
-//        doorNumberGraphic.getArgs().add((short)0); // Cycle colors t/f
-//        doorNumberGraphic.getArgs().add((short)0); // Alpha/frame
-//        doorNumberGraphic.getArgs().add((short)255); // Max alpha
-//        doorNumberGraphic.getArgs().add((short)0); // R/frame
-//        doorNumberGraphic.getArgs().add((short)0); // Max R
-//        doorNumberGraphic.getArgs().add((short)0); // G/frame
-//        doorNumberGraphic.getArgs().add((short)0); // Max G
-//        doorNumberGraphic.getArgs().add((short)0); // B/frame
-//        doorNumberGraphic.getArgs().add((short)0); // Max B
-//        doorNumberGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
-//        doorNumberGraphic.getArgs().add((short)1); // not0?
-//
-//        for (TestByteOperation testByteOperation : backsideDoor.getTestByteOperations()) {
-//            doorNumberGraphic.getTestByteOperations().add(new TestByteOperation(testByteOperation));
-//        }
-//        backsideDoor.getObjectContainer().getObjects().add(doorNumberGraphic);
-//    }
 
     /**
      * Actually-used modification for backside door numbers.
@@ -1416,78 +1442,33 @@ public final class AddObject {
         gameObject.getObjectContainer().getObjects().add(grailDetector);
     }
 
-    public static void addBackupShrineDoor(ObjectContainer objectContainer) {
-        // Add actual door to old Shrine of the Mother
-        GameObject backupShrineDoor = new GameObject(objectContainer);
+    /**
+     * The backup door from Endless Corridor to untransformed Shrine of the Mother allows entry to untrue Shrine
+     * during the escape, but it's a time-waster since the gate at the bottom doesn't work during the escape.
+     * We'll fix by adding another exit that
+     * @param screen the screen to add the object to
+     */
+    public static GameObject addUntrueShrineExit(Screen screen) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0xc4);
+        obj.getArgs().add((short)6);
+        obj.getArgs().add((short)7);
+        obj.getArgs().add((short)1);
+        obj.getArgs().add((short)300);
+        obj.getArgs().add((short)20);
+        obj.getArgs().add((short)1);
+        obj.getArgs().add((short)1);
+        obj.setX(300);
+        obj.setY(940);
+
         TestByteOperation testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(258);
+        testByteOperation.setIndex(898);
         testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-        testByteOperation.setValue((byte) 9);
-        backupShrineDoor.getTestByteOperations().add(testByteOperation);
+        testByteOperation.setValue((byte)1);
+        obj.getTestByteOperations().add(testByteOperation);
 
-        testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(500);
-        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
-        testByteOperation.setValue((byte) 1);
-        backupShrineDoor.getTestByteOperations().add(testByteOperation);
-
-        backupShrineDoor.setId((short) 0x98);
-        backupShrineDoor.setX(2430);
-        backupShrineDoor.setY(320);
-
-        backupShrineDoor.getArgs().add((short)0);
-        backupShrineDoor.getArgs().add((short)9);
-        backupShrineDoor.getArgs().add((short)0);
-        backupShrineDoor.getArgs().add((short)0);
-        backupShrineDoor.getArgs().add((short)420);
-        backupShrineDoor.getArgs().add((short)152);
-
-        objectContainer.getObjects().add(backupShrineDoor);
-
-        // Add graphics for door to old Shrine of the Mother
-        GameObject backupShrineDoorGraphic = new GameObject(objectContainer);
-        testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(258);
-        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-        testByteOperation.setValue((byte) 9);
-        backupShrineDoorGraphic.getTestByteOperations().add(testByteOperation);
-
-        testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(500);
-        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
-        testByteOperation.setValue((byte) 1);
-        backupShrineDoorGraphic.getTestByteOperations().add(testByteOperation);
-
-        backupShrineDoorGraphic.getArgs().add((short)-1);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)540);
-        backupShrineDoorGraphic.getArgs().add((short)40);
-        backupShrineDoorGraphic.getArgs().add((short)80);
-        backupShrineDoorGraphic.getArgs().add((short)80);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)1);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)255);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-        backupShrineDoorGraphic.getArgs().add((short)0);
-
-        backupShrineDoorGraphic.setId((short) 0x93);
-        backupShrineDoorGraphic.setX(2410);
-        backupShrineDoorGraphic.setY(280);
-
-        objectContainer.getObjects().add(backupShrineDoorGraphic);
+        screen.getObjects().add(obj);
+        return obj;
     }
 
     public static GameObject addEscapeGate(GameObject nonEscapeGate) {
@@ -1501,6 +1482,20 @@ public final class AddObject {
         escapeGate.getArgs().set(6, (short)1);
         nonEscapeGate.getObjectContainer().getObjects().add(escapeGate);
         return escapeGate;
+    }
+
+    public static GameObject addTrueShrineGate(GameObject basicGate) {
+        GameObject trueShrineGate = new GameObject(basicGate);
+
+        TestByteOperation testByteOperation = trueShrineGate.getTestByteOperations().get(0);
+        testByteOperation.setIndex(0x102);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)9);
+
+        trueShrineGate.getArgs().set(0, (short)18);
+        trueShrineGate.getArgs().set(6, (short)0);
+        basicGate.getObjectContainer().getObjects().add(trueShrineGate);
+        return trueShrineGate;
     }
 
     public static void addShrineMapSoundEffect(ObjectContainer objectContainer) {

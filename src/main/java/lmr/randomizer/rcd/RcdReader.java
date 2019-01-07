@@ -433,11 +433,38 @@ public final class RcdReader {
                     }
                 }
             }
+            if(Settings.isRandomizeTransitionGates()) {
+                if (objectContainer instanceof Screen) {
+                    Screen screen = (Screen) objectContainer;
+                    if (screen.getZoneIndex() == 13 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                        for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                            if(testByteOperation.getIndex() == 0x226) {
+                                // Fruit block graphic
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
         else if(obj.getId() == 0xc4) {
             if(objectContainer instanceof Screen) {
                 Screen screen = (Screen) objectContainer;
-                if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                    if(Settings.isRandomizeTransitionGates()) {
+                        if(obj.getArgs().get(0) == 18) {
+                            keepObject = false;
+                        }
+                        else if(obj.getArgs().get(0) == 9) {
+                            TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
+                            testByteOperation.setIndex(0x382);
+                            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                            testByteOperation.setValue((byte)0);
+                        }
+                    }
+                }
+                else if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
                     // Don't change to true shrine until you have Feather, since the old shrine has more requirement options.
                     if (obj.getTestByteOperations().get(0).getIndex() == 258) {
                         if(ByteOp.FLAG_EQUALS.equals(obj.getTestByteOperations().get(0).getOp())) {
@@ -448,16 +475,48 @@ public final class RcdReader {
                         }
                     }
                 }
-                else if (screen.getZoneIndex() == 8 && screen.getRoomIndex() == 2 && screen.getScreenIndex() == 3) {
-                    // Don't change to true shrine until you have Feather, since the old shrine has more requirement options.
-                    if (ByteOp.FLAG_EQUALS.equals(obj.getTestByteOperations().get(0).getOp())) {
-                        TestByteOperation featherCheck = new TestByteOperation();
-                        featherCheck.setIndex(182);
-                        featherCheck.setOp(ByteOp.FLAG_EQUALS);
-                        featherCheck.setValue((byte) 2);
-                        obj.getTestByteOperations().add(featherCheck);
+                else if(screen.getZoneIndex() == 8) {
+                    if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 3) {
+                        // Don't change to true shrine until you have Feather, since the old shrine has more requirement options.
+                        if (ByteOp.FLAG_EQUALS.equals(obj.getTestByteOperations().get(0).getOp())) {
+                            TestByteOperation featherCheck = new TestByteOperation();
+                            featherCheck.setIndex(182);
+                            featherCheck.setOp(ByteOp.FLAG_EQUALS);
+                            featherCheck.setValue((byte) 2);
+                            obj.getTestByteOperations().add(featherCheck);
+                        }
+                    }
+                    else if(screen.getRoomIndex() == 5 && screen.getScreenIndex() == 3) {
+                        if(Settings.isRandomizeTransitionGates()) {
+                            if(obj.getArgs().get(0) == 18) {
+                                keepObject = false;
+                            }
+                            else if(obj.getArgs().get(0) == 9) {
+                                TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
+                                testByteOperation.setIndex(0x382);
+                                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                                testByteOperation.setValue((byte)0);
+                            }
+                        }
                     }
                 }
+                else if (screen.getZoneIndex() == 13 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                    if(Settings.isRandomizeTransitionGates()) {
+                        // Remove the Eden flag, since this door may not lead to Eden.
+                        Integer flagIndexToRemove = null;
+                        for(int i = 0; i < obj.getTestByteOperations().size(); i++) {
+                            TestByteOperation testByteOperation = obj.getTestByteOperations().get(i);
+                            if(testByteOperation.getIndex() == 0x226) {
+                                flagIndexToRemove = i;
+                                break;
+                            }
+                        }
+                        if(flagIndexToRemove != null) {
+                            obj.getTestByteOperations().remove((int)flagIndexToRemove);
+                        }
+                    }
+                }
+
             }
         }
         else if (obj.getId() == 0xa3) {
@@ -732,23 +791,23 @@ public final class RcdReader {
         else if(zoneIndex == 2 && roomIndex == 2 && screenIndex == 0) {
             AddObject.addHardmodeToggleWeights(screen);
         }
-        else if(zoneIndex == 6 && roomIndex == 7 && screenIndex == 1) {
-            AddObject.addExtinctionUntrueShrineBackupDoor(screen);
-        }
-        else if(zoneIndex == 8) {
-            if(roomIndex == 2 && screenIndex == 3) {
-                AddObject.addEndlessCorridorNoFeatherUntrueShrineGate(screen);
-            }
-            else if(roomIndex == 5 && screenIndex == 3) {
-                AddObject.addBackupShrineDoor(screen);
-            }
+        else if(zoneIndex == 8 && roomIndex == 2 && screenIndex == 3) {
+            AddObject.addEndlessCorridorNoFeatherUntrueShrineGate(screen);
         }
         else if(zoneIndex == 9 && roomIndex == 8 && screenIndex == 1) {
-            AddObject.addUntrueShrineExit(screen);
+            GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen));
         }
         else if(zoneIndex == 17 && roomIndex == 10 && screenIndex == 1) {
             if(Settings.isUshumgalluAssist()) {
                 AddObject.addDimensionalOrbLadder(screen);
+            }
+        }
+        else if(zoneIndex == 18) {
+            if (roomIndex == 0 && screenIndex == 0) {
+                AddObject.addUpperUntrueShrineBackupDoor(screen);
+            }
+            else if (roomIndex == 8 && screenIndex == 1) {
+                AddObject.addLowerUntrueShrineBackupDoor(screen);
             }
         }
     }

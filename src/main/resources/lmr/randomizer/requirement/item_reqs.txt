@@ -49,6 +49,7 @@ Axe => Location: Temple of Moonlight [Upper], Feather, Attack: Forward
 Axe => Location: Temple of Moonlight [Upper], Feather, Attack: Vertical, Holy Grail
 Axe => Location: Temple of Moonlight [Upper], Feather, Attack: Vertical, Location: Temple of Moonlight [Lower]
 Axe => Location: Temple of Moonlight [Upper], Grapple Claw, Attack: Shuriken
+Axe => Location: Temple of Moonlight [Upper], Grapple Claw, Attack: Rolling Shuriken
 beolamu.exe => Location: Dimensional Corridor, torude.exe, Event: Tiamat Angel Shield Children Defeated
 Birth Seal => Location: Surface [Main], Origin Seal, Hermes' Boots, Helmet, Attack: Chest
 Birth Seal => Location: Surface [Main], Origin Seal, Feather, Helmet, Attack: Chest

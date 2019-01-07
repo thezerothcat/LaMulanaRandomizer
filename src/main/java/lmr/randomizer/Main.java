@@ -999,6 +999,10 @@ public class Main {
                     writeSaveFile();
                 }
 
+                if(Settings.isRandomizeBacksideDoors()) {
+                    FileUtils.updateGraphicsFiles();
+                }
+
                 FileUtils.logFlush("Copying settings file");
                 File settingsFile = new File("randomizer-config.txt");
                 if(settingsFile.exists()) {
@@ -1051,7 +1055,8 @@ public class Main {
 
     private static List<String> getStartingNodes() {
         List<String> startingNodes = new ArrayList<>();
-        startingNodes.add("None");
+        startingNodes.add("Location: Surface [Main]");
+        startingNodes.add("Exit: Surface [Main]");
         startingNodes.add(Settings.getCurrentStartingWeapon());
         if(ItemRandomizer.ALL_SUBWEAPONS.contains(Settings.getCurrentStartingWeapon())) {
             startingNodes.add(Settings.getCurrentStartingWeapon() + " Ammo");

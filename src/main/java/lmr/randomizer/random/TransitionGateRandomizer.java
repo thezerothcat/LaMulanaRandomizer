@@ -117,30 +117,20 @@ public class TransitionGateRandomizer {
         transitionGateDestinationMap.put("Transition: Sun R1", "Transition: Extinction L1");
         transitionGateDestinationMap.put("Transition: Sun R2", "Transition: Extinction L2");
 
-        transitionGateDestinationMap.put("Transition: Inferno W1", "Transition: Extinction U3");
-
         transitionGateDestinationMap.put("Transition: Extinction L1", "Transition: Sun R1");
         transitionGateDestinationMap.put("Transition: Extinction L2", "Transition: Sun R2");
-        transitionGateDestinationMap.put("Transition: Extinction U1", "Transition: Shrine D1");
-        transitionGateDestinationMap.put("Transition: Extinction U3", "Transition: Inferno W1");
 
         transitionGateDestinationMap.put("Transition: Twin U2", "Transition: Shrine D3");
 
-        transitionGateDestinationMap.put("Transition: Endless D1", "Transition: Shrine U1");
         transitionGateDestinationMap.put("Transition: Endless U1", "Transition: Shrine D2");
 
-        transitionGateDestinationMap.put("Transition: Shrine U1", "Transition: Endless D1");
-        transitionGateDestinationMap.put("Transition: Shrine D1", "Transition: Extinction U1");
         transitionGateDestinationMap.put("Transition: Shrine D2", "Transition: Endless U1");
         transitionGateDestinationMap.put("Transition: Shrine D3", "Transition: Twin U2");
 
         transitionGateDestinationMap.put("Transition: Illusion D1", "Transition: Graveyard U1");
-        transitionGateDestinationMap.put("Transition: Illusion R1", "Transition: Goddess L1");
         transitionGateDestinationMap.put("Transition: Illusion R2", "Transition: Ruin L1");
 
         transitionGateDestinationMap.put("Transition: Graveyard U1", "Transition: Illusion D1");
-
-        transitionGateDestinationMap.put("Transition: Goddess L1", "Transition: Illusion R1");
 
         transitionGateDestinationMap.put("Transition: Ruin L1", "Transition: Illusion R2");
 
@@ -151,6 +141,9 @@ public class TransitionGateRandomizer {
             transitionGateDestinationMap.put("Transition: Twin U3", "Transition: Dimensional D1");
             transitionGateDestinationMap.put("Transition: Dimensional D1", "Transition: Twin U3");
 
+            transitionGateDestinationMap.put("Transition: Shrine U1", "Transition: Endless D1");
+            transitionGateDestinationMap.put("Transition: Endless D1", "Transition: Shrine U1");
+
             transitionGateDestinationMap.put("Transition: Extinction U3", "Transition: Inferno W1");
             transitionGateDestinationMap.put("Transition: Inferno W1", "Transition: Extinction U3");
 
@@ -159,39 +152,53 @@ public class TransitionGateRandomizer {
         }
 
         List<String> leftTransitions = new ArrayList<>();
+        List<String> unsafeLeftTransitions = new ArrayList<>();
         List<String> rightTransitions = new ArrayList<>();
+        List<String> unsafeRightTransitions = new ArrayList<>();
 
         leftTransitions.add("Transition: Guidance L1");
         leftTransitions.add("Transition: Mausoleum L1");
         leftTransitions.add("Transition: Graveyard L1");
         leftTransitions.add("Transition: Sun L1");
-        leftTransitions.add("Transition: Moonlight L1");
+        leftTransitions.add("Transition: Goddess L1");
         leftTransitions.add("Transition: Goddess L2");
         leftTransitions.add("Transition: Retroguidance L1");
+        unsafeLeftTransitions.add("Transition: Moonlight L1");
         rightTransitions.add("Transition: Surface R1");
         rightTransitions.add("Transition: Inferno R1");
         rightTransitions.add("Transition: Graveyard R1");
         rightTransitions.add("Transition: Ruin R1");
         rightTransitions.add("Transition: Ruin R2");
         rightTransitions.add("Transition: Endless R1");
-        rightTransitions.add("Transition: Retrosurface R1");
+
+        if(Settings.getEnabledGlitches().contains("Raindrop")) {
+            rightTransitions.add("Transition: Illusion R1");
+        }
+        else {
+            unsafeRightTransitions.add("Transition: Illusion R1");
+        }
+
+        if(Settings.isRequireFullAccess()) {
+            unsafeRightTransitions.add("Transition: Retrosurface R1");
+        }
+        else {
+            rightTransitions.add("Transition: Retrosurface R1");
+        }
 
         String chosenTransitionStart;
         String chosenTransitionEnd;
 
-        if(Settings.isRequireFullAccess() && leftTransitions.contains("Transition: Moonlight L1")) {
-            rightTransitions.remove("Transition: Retrosurface R1"); // Don't assign to Moonlight.
-
-            chosenTransitionStart = "Transition: Moonlight L1";
+        while(!unsafeLeftTransitions.isEmpty()) {
+            chosenTransitionStart = unsafeLeftTransitions.get(random.nextInt(unsafeLeftTransitions.size()));
             chosenTransitionEnd = rightTransitions.get(random.nextInt(rightTransitions.size()));
 
             transitionGateDestinationMap.put(chosenTransitionStart, chosenTransitionEnd);
             transitionGateDestinationMap.put(chosenTransitionEnd, chosenTransitionStart);
 
-            leftTransitions.remove("Transition: Moonlight L1"); // Don't assign to Moonlight.
-            rightTransitions.remove(chosenTransitionEnd); // Don't assign to Moonlight.
-            rightTransitions.add("Transition: Retrosurface R1"); // Re-add for the rest of the shuffle.
+            unsafeLeftTransitions.remove(chosenTransitionStart);
+            rightTransitions.remove(chosenTransitionEnd);
         }
+        rightTransitions.addAll(unsafeRightTransitions);
 
         while(!leftTransitions.isEmpty()) {
             chosenTransitionStart = leftTransitions.get(random.nextInt(leftTransitions.size()));
@@ -205,6 +212,8 @@ public class TransitionGateRandomizer {
 
         List<String> upTransitions = new ArrayList<>();
         List<String> downTransitions = new ArrayList<>();
+        List<String> unsafeUpTransitions = new ArrayList<>();
+        List<String> unsafeDownTransitions = new ArrayList<>();
 
         upTransitions.add("Transition: Guidance U1");
         upTransitions.add("Transition: Mausoleum U1");
@@ -214,6 +223,7 @@ public class TransitionGateRandomizer {
         upTransitions.add("Transition: Moonlight U2");
         upTransitions.add("Transition: Goddess U1");
         upTransitions.add("Transition: Inferno U1");
+        upTransitions.add("Transition: Extinction U1");
         upTransitions.add("Transition: Birth U1");
         upTransitions.add("Transition: Twin U1");
         upTransitions.add("Transition: Retromausoleum U1");
@@ -226,69 +236,65 @@ public class TransitionGateRandomizer {
         downTransitions.add("Transition: Goddess D1");
         downTransitions.add("Transition: Twin D1");
         downTransitions.add("Transition: Twin D2");
+        downTransitions.add("Transition: Shrine D1");
         downTransitions.add("Transition: Retroguidance D1");
+        unsafeDownTransitions.add("Transition: Birth D1");
+        unsafeDownTransitions.add("Transition: Spring D1");
 
         if(Settings.isRandomizeOneWayTransitions()) {
+            downTransitions.add("Transition: Endless D1");
             downTransitions.add("Transition: Retromausoleum D1");
+            upTransitions.add("Transition: Extinction U3");
+            upTransitions.add("Transition: Twin U3");
+            unsafeUpTransitions.add("Transition: Goddess W1");
+            unsafeUpTransitions.add("Transition: Shrine U1");
+            unsafeDownTransitions.add("Transition: Inferno W1");
+            unsafeDownTransitions.add("Transition: Dimensional D1");
         }
 
-        if(!backsideDoorRandomizer.isDoorOneWay("Door: F1")) {
-            downTransitions.add("Transition: Illusion D2");
-        }
-
-        // Handle for backside doors in Echidna's Chamber
-        if(backsideDoorRandomizer.isDoorOneWay("Door: B7")) {
-            chosenTransitionStart = "Transition: Inferno U2";
-            chosenTransitionEnd = downTransitions.get(random.nextInt(downTransitions.size()));
-
-            transitionGateDestinationMap.put(chosenTransitionStart, chosenTransitionEnd);
-            transitionGateDestinationMap.put(chosenTransitionEnd, chosenTransitionStart);
-
-            downTransitions.remove(chosenTransitionEnd);
+        // Handle for backside doors in Illusion
+        if(backsideDoorRandomizer.isDoorOneWay("Door: F1")) {
+            unsafeDownTransitions.add("Transition: Illusion D2");
         }
         else {
-            upTransitions.add("Transition: Inferno U2");
+            downTransitions.add("Transition: Illusion D2");
         }
 
         // Handle for backside doors in Extinction (Magatama area)
         if(backsideDoorRandomizer.isDoorOneWay("Door: B6")) {
-            chosenTransitionStart = "Transition: Extinction U2";
-            chosenTransitionEnd = downTransitions.get(random.nextInt(downTransitions.size()));
-
-            transitionGateDestinationMap.put(chosenTransitionStart, chosenTransitionEnd);
-            transitionGateDestinationMap.put(chosenTransitionEnd, chosenTransitionStart);
-
-            downTransitions.remove(chosenTransitionEnd);
+            unsafeUpTransitions.add("Transition: Extinction U2");
         }
         else {
             upTransitions.add("Transition: Extinction U2");
         }
 
-        if(Settings.isRandomizeOneWayTransitions()) {
-            upTransitions.add("Transition: Extinction U3");
-            upTransitions.add("Transition: Twin U3");
+        // Handle for backside doors in Echidna's Chamber
+        if(backsideDoorRandomizer.isDoorOneWay("Door: B7")) {
+            unsafeUpTransitions.add("Transition: Inferno U2");
+        }
+        else {
+            upTransitions.add("Transition: Inferno U2");
+        }
 
-            // Place Goddess warp early, before any dead-end down transitions are added.
-            chosenTransitionStart = "Transition: Goddess W1";
-            chosenTransitionEnd = downTransitions.get(random.nextInt(downTransitions.size()));
+        while(!unsafeUpTransitions.isEmpty()) {
+            chosenTransitionStart = unsafeUpTransitions.get(random.nextInt(unsafeUpTransitions.size()));
+            if("Transition: Shrine U1".equals(chosenTransitionStart)) {
+                // Shrine can't lead to itself, but other places can handle it. There should be more than enough down transitions, so no worry about running out of options.
+                do {
+                    chosenTransitionEnd = downTransitions.get(random.nextInt(downTransitions.size()));
+                } while (!"Transition: Shrine D1".equals(chosenTransitionEnd));
+            }
+            else {
+                chosenTransitionEnd = downTransitions.get(random.nextInt(downTransitions.size()));
+            }
 
             transitionGateDestinationMap.put(chosenTransitionStart, chosenTransitionEnd);
             transitionGateDestinationMap.put(chosenTransitionEnd, chosenTransitionStart);
 
-            upTransitions.remove("Transition: Goddess W1");
+            unsafeUpTransitions.remove(chosenTransitionStart);
             downTransitions.remove(chosenTransitionEnd);
         }
-
-        // Add these late so no transition problems.
-        downTransitions.add("Transition: Birth D1");
-        downTransitions.add("Transition: Spring D1");
-        if(Settings.isRandomizeOneWayTransitions()) {
-            downTransitions.add("Transition: Inferno W1");
-            downTransitions.add("Transition: Dimensional D1");
-        }
-        if(backsideDoorRandomizer.isDoorOneWay("Door: F1")) {
-            downTransitions.add("Transition: Illusion D2");
-        }
+        downTransitions.addAll(unsafeDownTransitions);
 
         while(!upTransitions.isEmpty()) {
             chosenTransitionStart = upTransitions.get(random.nextInt(upTransitions.size()));

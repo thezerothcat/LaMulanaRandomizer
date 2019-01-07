@@ -17,7 +17,6 @@ public class AccessChecker {
     private static final List<String> NODES_TO_DELAY = Arrays.asList("Anchor");
 
     private Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject = new HashMap<>();
-    private static Map<String, NodeWithRequirements> mapOfNodeNameToExitRequirementsObject;
 
     private Set<String> accessedNodes = new HashSet<>();
 
@@ -36,12 +35,10 @@ public class AccessChecker {
 
     public AccessChecker() {
         mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
-//        mapOfNodeNameToExitRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToExitRequirementsObject());
     }
 
     public AccessChecker(AccessChecker accessChecker, boolean copyAll) {
         this.mapOfNodeNameToRequirementsObject = copyRequirementsMap(accessChecker.mapOfNodeNameToRequirementsObject);
-//        this.mapOfNodeNameToExitRequirementsObject = copyRequirementsMap(accessChecker.mapOfNodeNameToExitRequirementsObject);
         this.itemRandomizer = copyAll ? new ItemRandomizer(accessChecker.itemRandomizer) : accessChecker.itemRandomizer;
         this.shopRandomizer = copyAll ? accessChecker.shopRandomizer.copy() : accessChecker.shopRandomizer;
         this.backsideDoorRandomizer = new BacksideDoorRandomizer(accessChecker.backsideDoorRandomizer);
@@ -143,8 +140,13 @@ public class AccessChecker {
                     }
                 }
             }
-            FileUtils.log("Successful resolution found with accessed nodes = " + accessedNodes.size());
-            return true;
+            if(isEscapeSuccess()) {
+                FileUtils.log("Successful resolution found with accessed nodes = " + accessedNodes.size());
+                return true;
+            }
+            else {
+                return false;
+            }
         }
         for(String requiredItem : DataFromFile.getWinRequirements()) {
             if(!accessedNodes.contains(requiredItem)) {
@@ -158,8 +160,18 @@ public class AccessChecker {
                 return false;
             }
         }
-        FileUtils.log("Successful resolution found with accessed nodes = " + accessedNodes.size());
-        return true;
+        if(isEscapeSuccess()) {
+            FileUtils.log("Successful resolution found with accessed nodes = " + accessedNodes.size());
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private boolean isEscapeSuccess() {
+        return !Settings.isRandomizeTransitionGates()
+                || new EscapeChecker(backsideDoorRandomizer, transitionGateRandomizer, accessedNodes).isSuccess();
     }
 
     private void logAccess(String requiredNode, List<String> loggedRequirements) {
