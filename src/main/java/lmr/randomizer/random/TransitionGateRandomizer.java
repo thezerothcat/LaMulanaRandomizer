@@ -134,9 +134,6 @@ public class TransitionGateRandomizer {
 
         transitionGateDestinationMap.put("Transition: Ruin L1", "Transition: Illusion R2");
 
-        transitionGateDestinationMap.put("Transition: Birth L1", "Transition: Birth R1");
-        transitionGateDestinationMap.put("Transition: Birth R1", "Transition: Birth L1");
-
         if(!Settings.isRandomizeOneWayTransitions()) {
             transitionGateDestinationMap.put("Transition: Twin U3", "Transition: Dimensional D1");
             transitionGateDestinationMap.put("Transition: Dimensional D1", "Transition: Twin U3");
@@ -162,6 +159,7 @@ public class TransitionGateRandomizer {
         leftTransitions.add("Transition: Sun L1");
         leftTransitions.add("Transition: Goddess L1");
         leftTransitions.add("Transition: Goddess L2");
+        leftTransitions.add("Transition: Birth L1");
         leftTransitions.add("Transition: Retroguidance L1");
         unsafeLeftTransitions.add("Transition: Moonlight L1");
         rightTransitions.add("Transition: Surface R1");
@@ -169,6 +167,7 @@ public class TransitionGateRandomizer {
         rightTransitions.add("Transition: Graveyard R1");
         rightTransitions.add("Transition: Ruin R1");
         rightTransitions.add("Transition: Ruin R2");
+        rightTransitions.add("Transition: Birth R1");
         rightTransitions.add("Transition: Endless R1");
 
         if(Settings.getEnabledGlitches().contains("Raindrop")) {

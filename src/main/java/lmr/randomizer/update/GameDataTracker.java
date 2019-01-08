@@ -456,18 +456,18 @@ public final class GameDataTracker {
                     if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
                         gateName = "Transition: Birth U1";
                     }
-//                    else if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
-//                        gateName = "Transition: Birth L1";
-//                    }
+                    else if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Birth L1";
+                    }
                 }
                 else if(screen.getZoneIndex() == 16) {
                     // Birth (West)
                     if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
                         gateName = "Transition: Birth D1";
                     }
-//                    else if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
-//                        gateName = "Transition: Birth R1";
-//                    }
+                    else if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Birth R1";
+                    }
                 }
                 else if(screen.getZoneIndex() == 18) {
                     // True Shrine
@@ -3365,10 +3365,6 @@ public final class GameDataTracker {
                     AddObject.addTrueShrineGate(gameObject);
                 }
                 updateScreenTransition(gameObject, gateDestination); // todo: how to handle a case of multiple gates on the same side? good thing sun <> extinction isn't random yet
-                if(firstObject && "Transition: Goddess L2".equals(gateDestination)) {
-                    AddObject.addGoddessStatueLemezaDetector(gameObject);
-                    firstObject = false;
-                }
                 if(firstObject && "Transition: Illusion R1".equals(gateDestination)) {
                     AddObject.addIllusionFruitBlockHorizontal(gameObject);
                     firstObject = false;
@@ -3377,8 +3373,16 @@ public final class GameDataTracker {
                     AddObject.addIsisRoomCeilingTimer(gameObject.getObjectContainer());
                     firstObject = false;
                 }
+                if(firstObject && "Transition: Goddess L2".equals(gateDestination)) {
+                    AddObject.addGoddessStatueLemezaDetector(gameObject);
+                    firstObject = false;
+                }
                 if(firstObject && "Transition: Goddess D1".equals(gateDestination)) {
                     AddObject.addGoddessShieldTimer(gameObject.getObjectContainer());
+                    firstObject = false;
+                }
+                if(firstObject && "Transition: Birth R1".equals(gateDestination)) {
+                    AddObject.addSkandaBlock(gameObject);
                     firstObject = false;
                 }
                 if(firstObject && gateDestination.contains("Transition: Twin ")) { //  && !gateToUpdate.contains("Transition: Twin")

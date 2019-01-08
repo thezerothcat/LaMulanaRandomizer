@@ -150,6 +150,7 @@ Location: Chamber of Birth [Grail] => Location: Chamber of Birth [West], Glitch:
 Location: Chamber of Birth [Skanda] => Location: Chamber of Birth [West], Glitch: Raindrop
 Location: Chamber of Birth [Skanda] => Location: Chamber of Birth [Grail], Serpent Staff, Attack: Chakram, Cog of the Soul
 Location: Chamber of Birth [Skanda] => Location: Chamber of Birth [Grail], Serpent Staff, Attack: Chakram, Glitch: Pot Clip
+#Location: Chamber of Birth [Skanda] => Transition: Birth R1, Event: Skanda Accessible, Event: Skanda Defeated
 Location: Chamber of Birth [Dance] => Location: Chamber of Birth [West], Serpent Staff, Attack: Chakram, Exit: Chamber of Birth [Dance]
 Location: Chamber of Birth [Dance] => Location: Chamber of Birth [West], Glitch: Raindrop
 Location: Chamber of Birth [Northeast] => Location: Chamber of Birth [Southeast], Feather

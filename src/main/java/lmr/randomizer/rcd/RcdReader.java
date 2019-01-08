@@ -445,6 +445,15 @@ public final class RcdReader {
                             }
                         }
                     }
+                    else if(screen.getZoneIndex() == 15 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
+                        for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                            if(testByteOperation.getIndex() == 0x2a6) {
+                                // Skanda block graphic
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -600,6 +600,50 @@ public final class AddObject {
     }
 
     /**
+     * Add Skanda door cover to the screen that left-transitions into west Chamber of Birth
+     * @param transitionGate the gate to cover with the graphic
+     */
+    public static void addSkandaBlock(GameObject transitionGate) {
+        GameObject skandaBlockGraphic = new GameObject(transitionGate.getObjectContainer());
+
+        skandaBlockGraphic.setId((short) 0x93);
+        skandaBlockGraphic.setX(transitionGate.getX());
+        skandaBlockGraphic.setY(transitionGate.getY() - 20);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x2a6);
+        testByteOperation.setOp(ByteOp.FLAG_LTEQ);
+        testByteOperation.setValue((byte) 1);
+        skandaBlockGraphic.getTestByteOperations().add(testByteOperation);
+
+        skandaBlockGraphic.getArgs().add((short)20);
+        skandaBlockGraphic.getArgs().add((short)-1);
+        skandaBlockGraphic.getArgs().add((short)320);
+        skandaBlockGraphic.getArgs().add((short)512);
+        skandaBlockGraphic.getArgs().add((short)40);
+        skandaBlockGraphic.getArgs().add((short)60);
+        skandaBlockGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        skandaBlockGraphic.getArgs().add((short)1); // Animation frames
+        skandaBlockGraphic.getArgs().add((short)4); // Pause frames
+        skandaBlockGraphic.getArgs().add((short)1); // Repeat count (<1 is forever)
+        skandaBlockGraphic.getArgs().add((short)128); // Hittile to fill with
+        skandaBlockGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        skandaBlockGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        skandaBlockGraphic.getArgs().add((short)0); // Cycle colors t/f
+        skandaBlockGraphic.getArgs().add((short)0); // Alpha/frame
+        skandaBlockGraphic.getArgs().add((short)255); // Max alpha
+        skandaBlockGraphic.getArgs().add((short)0); // R/frame
+        skandaBlockGraphic.getArgs().add((short)0); // Max R
+        skandaBlockGraphic.getArgs().add((short)0); // G/frame
+        skandaBlockGraphic.getArgs().add((short)0); // Max G
+        skandaBlockGraphic.getArgs().add((short)0); // B/frame
+        skandaBlockGraphic.getArgs().add((short)0); // Max B
+        skandaBlockGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        skandaBlockGraphic.getArgs().add((short)1); // not0?
+        transitionGate.getObjectContainer().getObjects().add(skandaBlockGraphic);
+    }
+
+    /**
      * Add Illusion door cover to the screen that left-transitions into upper Gate of Illusion
      * @param transitionGate the gate to cover with the graphic
      */

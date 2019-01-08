@@ -102,7 +102,8 @@ public class MoneyChecker {
     public Integer getShopPrice(String itemName, String shopName) {
         if(!accessedNodes.contains("State: Fairy") && availableShops.contains(shopName) && accessedAreas.size() <= 3) {
             if(accessedMoney <= 80) {
-                if("Plane Model".equals(itemName) && accessedAreas.contains("Tower of the Goddess")) {
+                if("Plane Model".equals(itemName)
+                        && accessedAreas.contains("Tower of the Goddess")) {
                     return accessedMoney < 50 ? accessedMoney : 50;
                 }
                 if("Ankh Jewel".equals(itemName) && accessedAreas.contains("Mausoleum of the Giants")) {
@@ -111,8 +112,16 @@ public class MoneyChecker {
                 if("Bronze Mirror".equals(itemName) && accessedAreas.contains("Mausoleum of the Giants")) {
                     return accessedMoney < 50 ? accessedMoney : 50;
                 }
-                if("Feather".equals(itemName) && accessedAreas.contains("Graveyard of the Giants")) {
-                    return accessedMoney < 80 ? accessedMoney : 80;
+                if("Feather".equals(itemName)) {
+                    if(accessedAreas.contains("Chamber of Birth")) {
+                        return accessedMoney < 30 ? accessedMoney : 30;
+                    }
+                    if(accessedAreas.contains("Graveyard of the Giants")) {
+                        return accessedMoney < 50 ? accessedMoney : 50;
+                    }
+                    if(accessedAreas.contains("Tower of the Goddess")) {
+                        return accessedMoney < 80 ? accessedMoney : 80;
+                    }
                 }
                 if("Bomb".equals(itemName) && accessedAreas.contains("Graveyard of the Giants")) {
                     return accessedMoney < 50 ? accessedMoney : 50;
