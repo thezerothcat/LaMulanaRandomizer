@@ -201,12 +201,13 @@ public class TransitionGateRandomizer {
 
         while(!leftTransitions.isEmpty()) {
             chosenTransitionStart = leftTransitions.get(random.nextInt(leftTransitions.size()));
-            leftTransitions.remove(chosenTransitionStart);
             chosenTransitionEnd = rightTransitions.get(random.nextInt(rightTransitions.size()));
-            rightTransitions.remove(chosenTransitionEnd);
 
             transitionGateDestinationMap.put(chosenTransitionStart, chosenTransitionEnd);
             transitionGateDestinationMap.put(chosenTransitionEnd, chosenTransitionStart);
+
+            leftTransitions.remove(chosenTransitionStart);
+            rightTransitions.remove(chosenTransitionEnd);
         }
 
         List<String> upTransitions = new ArrayList<>();
@@ -281,7 +282,7 @@ public class TransitionGateRandomizer {
                 // Shrine can't lead to itself, but other places can handle it. There should be more than enough down transitions, so no worry about running out of options.
                 do {
                     chosenTransitionEnd = downTransitions.get(random.nextInt(downTransitions.size()));
-                } while (!"Transition: Shrine D1".equals(chosenTransitionEnd));
+                } while ("Transition: Shrine D1".equals(chosenTransitionEnd));
             }
             else {
                 chosenTransitionEnd = downTransitions.get(random.nextInt(downTransitions.size()));
