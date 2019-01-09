@@ -374,11 +374,11 @@ public final class GameDataTracker {
                 }
                 else if(screen.getZoneIndex() == 10) {
                     // Illusion
-                    if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
-                        gateName = "Transition: Illusion D2";
-                    }
-                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                    if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
                         gateName = "Transition: Illusion D1";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Illusion D2";
                     }
                     else if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
                         gateName = "Transition: Illusion R1";
@@ -3368,6 +3368,10 @@ public final class GameDataTracker {
                 updateScreenTransition(gameObject, gateDestination); // todo: how to handle a case of multiple gates on the same side? good thing sun <> extinction isn't random yet
                 if(firstObject && "Transition: Illusion R1".equals(gateDestination)) {
                     AddObject.addIllusionFruitBlockHorizontal(gameObject);
+                    firstObject = false;
+                }
+                if(firstObject && "Transition: Illusion D1".equals(gateDestination)) {
+                    AddObject.addIllusionFruitBlockVertical(gameObject);
                     firstObject = false;
                 }
                 if(firstObject && "Transition: Sun L1".equals(gateDestination)) {

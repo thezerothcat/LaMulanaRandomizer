@@ -719,6 +719,50 @@ public final class AddObject {
     }
 
     /**
+     * Add Illusion door cover to the screen that up-transitions into lower Gate of Illusion
+     * @param transitionGate the gate to cover with the graphic
+     */
+    public static void addIllusionFruitBlockVertical(GameObject transitionGate) {
+        GameObject fruitBlockGraphic = new GameObject(transitionGate.getObjectContainer());
+
+        fruitBlockGraphic.setId((short) 0x93);
+        fruitBlockGraphic.setX(transitionGate.getX() - 20);
+        fruitBlockGraphic.setY(transitionGate.getY());
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x226);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte) 0);
+        fruitBlockGraphic.getTestByteOperations().add(testByteOperation);
+
+        fruitBlockGraphic.getArgs().add((short)20);
+        fruitBlockGraphic.getArgs().add((short)-1);
+        fruitBlockGraphic.getArgs().add((short)80);
+        fruitBlockGraphic.getArgs().add((short)512);
+        fruitBlockGraphic.getArgs().add((short)80);
+        fruitBlockGraphic.getArgs().add((short)80);
+        fruitBlockGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        fruitBlockGraphic.getArgs().add((short)1); // Animation frames
+        fruitBlockGraphic.getArgs().add((short)4); // Pause frames
+        fruitBlockGraphic.getArgs().add((short)1); // Repeat count (<1 is forever)
+        fruitBlockGraphic.getArgs().add((short)128); // Hittile to fill with
+        fruitBlockGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        fruitBlockGraphic.getArgs().add((short)1); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        fruitBlockGraphic.getArgs().add((short)0); // Cycle colors t/f
+        fruitBlockGraphic.getArgs().add((short)0); // Alpha/frame
+        fruitBlockGraphic.getArgs().add((short)255); // Max alpha
+        fruitBlockGraphic.getArgs().add((short)0); // R/frame
+        fruitBlockGraphic.getArgs().add((short)0); // Max R
+        fruitBlockGraphic.getArgs().add((short)0); // G/frame
+        fruitBlockGraphic.getArgs().add((short)0); // Max G
+        fruitBlockGraphic.getArgs().add((short)0); // B/frame
+        fruitBlockGraphic.getArgs().add((short)0); // Max B
+        fruitBlockGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        fruitBlockGraphic.getArgs().add((short)1); // not0?
+        transitionGate.getObjectContainer().getObjects().add(fruitBlockGraphic);
+    }
+
+    /**
      * Add a timer to automatically start hard mode.
      * @param screen the screen to add the objects to
      */

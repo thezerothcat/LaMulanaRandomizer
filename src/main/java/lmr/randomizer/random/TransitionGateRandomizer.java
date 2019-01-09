@@ -120,11 +120,7 @@ public class TransitionGateRandomizer {
         transitionGateDestinationMap.put("Transition: Extinction L1", "Transition: Sun R1");
         transitionGateDestinationMap.put("Transition: Extinction L2", "Transition: Sun R2");
 
-        transitionGateDestinationMap.put("Transition: Illusion D1", "Transition: Graveyard U1");
         transitionGateDestinationMap.put("Transition: Illusion R2", "Transition: Ruin L1");
-
-        transitionGateDestinationMap.put("Transition: Graveyard U1", "Transition: Illusion D1");
-
         transitionGateDestinationMap.put("Transition: Ruin L1", "Transition: Illusion R2");
 
         if(!Settings.isRandomizeOneWayTransitions()) {
@@ -216,6 +212,7 @@ public class TransitionGateRandomizer {
 
         upTransitions.add("Transition: Guidance U1");
         upTransitions.add("Transition: Mausoleum U1");
+        upTransitions.add("Transition: Graveyard U1");
         upTransitions.add("Transition: Graveyard U2");
         upTransitions.add("Transition: Sun U1");
         upTransitions.add("Transition: Moonlight U1");
@@ -230,6 +227,7 @@ public class TransitionGateRandomizer {
         downTransitions.add("Transition: Surface D2");
         downTransitions.add("Transition: Guidance D1");
         downTransitions.add("Transition: Guidance D2");
+        downTransitions.add("Transition: Illusion D1");
         downTransitions.add("Transition: Mausoleum D1");
         downTransitions.add("Transition: Graveyard D1");
         downTransitions.add("Transition: Goddess D1");

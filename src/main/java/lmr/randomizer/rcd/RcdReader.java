@@ -436,7 +436,16 @@ public final class RcdReader {
             if(Settings.isRandomizeTransitionGates()) {
                 if (objectContainer instanceof Screen) {
                     Screen screen = (Screen) objectContainer;
-                    if (screen.getZoneIndex() == 13 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                    if (screen.getZoneIndex() == 11 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                            if(testByteOperation.getIndex() == 0x226) {
+                                // Fruit block graphic
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
+                    else if (screen.getZoneIndex() == 13 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
                             if(testByteOperation.getIndex() == 0x226) {
                                 // Fruit block graphic
@@ -528,7 +537,6 @@ public final class RcdReader {
                         }
                     }
                 }
-
             }
         }
         else if (obj.getId() == 0xa3) {
