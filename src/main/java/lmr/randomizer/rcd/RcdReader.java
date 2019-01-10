@@ -82,7 +82,28 @@ public final class RcdReader {
         }
 
         boolean keepObject = true;
-        if (obj.getId() == 0x0b) {
+        if (obj.getId() == 0x07) {
+            if(Settings.isRandomizeTransitionGates()) {
+                if (obj.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen)obj.getObjectContainer();
+                    if (screen.getZoneIndex() == 11 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        // Remove the Eden flag, since this door may not lead to Eden.
+                        Integer flagIndexToRemove = null;
+                        for(int i = 0; i < obj.getTestByteOperations().size(); i++) {
+                            TestByteOperation testByteOperation = obj.getTestByteOperations().get(i);
+                            if(testByteOperation.getIndex() == 0x226) {
+                                flagIndexToRemove = i;
+                                break;
+                            }
+                        }
+                        if(flagIndexToRemove != null) {
+                            obj.getTestByteOperations().remove((int)flagIndexToRemove);
+                        }
+                    }
+                }
+            }
+        }
+        else if (obj.getId() == 0x0b) {
             if(!ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
                 // Get rid of timer objects related to purchasing the pre-randomized item
                 for (WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
@@ -167,6 +188,21 @@ public final class RcdReader {
                         // With changed event flow for Xelpud pillar/Diary chest, this timer isn't needed
                         keepObject = false;
                         break;
+                    }
+                }
+            }
+        }
+        else if (obj.getId() == 0x12) {
+            if(Settings.isRandomizeTransitionGates()) {
+                if (obj.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen)obj.getObjectContainer();
+                    if (screen.getZoneIndex() == 11 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                            if (testByteOperation.getIndex() == 0x226) {
+                                keepObject = false;
+                                break;
+                            }
+                        }
                     }
                 }
             }

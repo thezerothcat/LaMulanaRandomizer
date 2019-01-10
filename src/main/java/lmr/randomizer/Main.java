@@ -1097,7 +1097,10 @@ public class Main {
         if(!Settings.isRequireFlaresForExtinction()) {
             startingNodes.add("Setting: Flareless Extinction");
         }
-        if(!Settings.isRandomizeTransitionGates()) {
+        if(Settings.isRandomizeTransitionGates()) {
+            startingNodes.add("Setting: Random Transitions");
+        }
+        else {
             startingNodes.add("Setting: Nonrandom Transitions");
         }
         startingNodes.add(Settings.isAlternateMotherAnkh() ? "Setting: Alternate Mother" : "Setting: Standard Mother");

@@ -691,7 +691,7 @@ public final class AddObject {
         testByteOperation.setValue((byte) 0);
         fruitBlockGraphic.getTestByteOperations().add(testByteOperation);
 
-        fruitBlockGraphic.getArgs().add((short)20);
+        fruitBlockGraphic.getArgs().add((short)19);
         fruitBlockGraphic.getArgs().add((short)-1);
         fruitBlockGraphic.getArgs().add((short)220);
         fruitBlockGraphic.getArgs().add((short)512);
@@ -735,7 +735,7 @@ public final class AddObject {
         testByteOperation.setValue((byte) 0);
         fruitBlockGraphic.getTestByteOperations().add(testByteOperation);
 
-        fruitBlockGraphic.getArgs().add((short)20);
+        fruitBlockGraphic.getArgs().add((short)19);
         fruitBlockGraphic.getArgs().add((short)-1);
         fruitBlockGraphic.getArgs().add((short)80);
         fruitBlockGraphic.getArgs().add((short)512);
