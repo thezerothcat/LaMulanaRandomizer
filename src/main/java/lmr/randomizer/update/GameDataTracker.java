@@ -448,9 +448,9 @@ public final class GameDataTracker {
                     else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
                         gateName = "Transition: Ruin R1";
                     }
-//                    else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
-//                        gateName = "Transition: Ruin L1";
-//                    }
+                    else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Ruin L1";
+                    }
                 }
                 else if(screen.getZoneIndex() == 15) {
                     // Birth (East)
@@ -3359,14 +3359,20 @@ public final class GameDataTracker {
             boolean firstObject = true;
             for (GameObject gameObject : objectsToModify) {
                 replaceTransitionGateArgs(gameObject, gateDestination);
-                replaceTransitionGateFlags(gameObject, gateDestination);
+                replaceTransitionGateFlags(gameObject, gateToUpdate, gateDestination);
                 if(gateDestination.startsWith("Transition: Shrine")
                         && !"Transition: Shrine D3".equals(gateDestination)
                         && gameObject.getTestByteOperations().get(0).getValue() != 1) {
                     AddObject.addTrueShrineGate(gameObject);
                 }
                 updateScreenTransition(gameObject, gateDestination); // todo: how to handle a case of multiple gates on the same side? good thing sun <> extinction isn't random yet
-                if(firstObject && "Transition: Illusion R1".equals(gateDestination)) {
+                if(firstObject && "Transition: Illusion R2".equals(gateToUpdate)) {
+                    AddObject.addIllusionFruitBlockHorizontal(gameObject);
+                    firstObject = false;
+                }
+                if(firstObject
+                        && ("Transition: Illusion R1".equals(gateDestination)
+                        || "Transition: Illusion R2".equals(gateDestination))) {
                     AddObject.addIllusionFruitBlockHorizontal(gameObject);
                     firstObject = false;
                 }
@@ -4255,7 +4261,16 @@ public final class GameDataTracker {
         ((Screen)transitionGate.getObjectContainer()).getScreenExits().set(screenExitIndex, screenExit);
     }
 
-    private static void replaceTransitionGateFlags(GameObject gameObject, String gateDestination) {
+    private static void replaceTransitionGateFlags(GameObject gameObject, String gateToUpdate, String gateDestination) {
+        if(gateToUpdate.equals("Transition: Illusion R2")) {
+            // Add extra check for Fruit of Eden placed.
+            TestByteOperation testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(0x226);
+            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+            testByteOperation.setValue((byte)0);
+            gameObject.getTestByteOperations().add(testByteOperation);
+        }
+
         if(gateDestination.startsWith("Transition: Shrine") && !"Transition: Shrine D3".equals(gateDestination)) {
             TestByteOperation testByteOperation = gameObject.getTestByteOperations().get(0);
             if(testByteOperation.getValue() != 1) {
@@ -4265,7 +4280,8 @@ public final class GameDataTracker {
                 testByteOperation.setValue((byte)9);
             }
         }
-        else if(gateDestination.equals("Transition: Illusion R1")) {
+        else if(gateDestination.equals("Transition: Illusion R1")
+                || gateDestination.equals("Transition: Illusion R2")) {
             // Add extra check for Fruit of Eden placed.
             TestByteOperation testByteOperation = new TestByteOperation();
             testByteOperation.setIndex(0x226);

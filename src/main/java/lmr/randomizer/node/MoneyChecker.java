@@ -113,20 +113,17 @@ public class MoneyChecker {
                     return accessedMoney < 50 ? accessedMoney : 50;
                 }
                 if("Feather".equals(itemName)) {
-                    if(accessedAreas.contains("Chamber of Birth")) {
-                        return accessedMoney < 30 ? accessedMoney : 30;
-                    }
                     if(accessedAreas.contains("Graveyard of the Giants")) {
                         return accessedMoney < 50 ? accessedMoney : 50;
                     }
                     if(accessedAreas.contains("Tower of the Goddess")) {
                         return accessedMoney < 80 ? accessedMoney : 80;
                     }
+                    if(accessedAreas.contains("Chamber of Birth")) {
+                        return accessedMoney < 30 ? accessedMoney : 30;
+                    }
                 }
                 if("Bomb".equals(itemName) && accessedAreas.contains("Graveyard of the Giants")) {
-                    return accessedMoney < 50 ? accessedMoney : 50;
-                }
-                if("Flare Gun".equals(itemName) && accessedAreas.contains("Chamber of Extinction")) {
                     return accessedMoney < 50 ? accessedMoney : 50;
                 }
                 if(accessedAreas.contains("Temple of Moonlight")
@@ -138,6 +135,9 @@ public class MoneyChecker {
                             && !accessedNodes.contains("Attack: Chakram") && !accessedNodes.contains("Attack: Pistol")) {
                         return accessedMoney < 50 ? accessedMoney : 50;
                     }
+                }
+                if("Flare Gun".equals(itemName) && accessedAreas.contains("Chamber of Extinction")) {
+                    return accessedMoney < 50 ? accessedMoney : 50;
                 }
             }
         }
@@ -256,6 +256,9 @@ public class MoneyChecker {
             return 10;
         }
         if(locationNodeName.equals("Location: Tower of Ruin [Southwest]")) {
+            return 10;
+        }
+        if(locationNodeName.equals("Location: Tower of Ruin [Grail]")) {
             return 10;
         }
         if(locationNodeName.equals("Location: Chamber of Extinction [Main]")) {

@@ -120,9 +120,6 @@ public class TransitionGateRandomizer {
         transitionGateDestinationMap.put("Transition: Extinction L1", "Transition: Sun R1");
         transitionGateDestinationMap.put("Transition: Extinction L2", "Transition: Sun R2");
 
-        transitionGateDestinationMap.put("Transition: Illusion R2", "Transition: Ruin L1");
-        transitionGateDestinationMap.put("Transition: Ruin L1", "Transition: Illusion R2");
-
         if(!Settings.isRandomizeOneWayTransitions()) {
             transitionGateDestinationMap.put("Transition: Twin U3", "Transition: Dimensional D1");
             transitionGateDestinationMap.put("Transition: Dimensional D1", "Transition: Twin U3");
@@ -157,9 +154,11 @@ public class TransitionGateRandomizer {
         leftTransitions.add("Transition: Birth L1");
         leftTransitions.add("Transition: Retroguidance L1");
         unsafeLeftTransitions.add("Transition: Moonlight L1");
+        unsafeLeftTransitions.add("Transition: Ruin L1");
         rightTransitions.add("Transition: Surface R1");
-        rightTransitions.add("Transition: Inferno R1");
+        rightTransitions.add("Transition: Illusion R2");
         rightTransitions.add("Transition: Graveyard R1");
+        rightTransitions.add("Transition: Inferno R1");
         rightTransitions.add("Transition: Ruin R1");
         rightTransitions.add("Transition: Ruin R2");
         rightTransitions.add("Transition: Birth R1");
@@ -486,7 +485,7 @@ public class TransitionGateRandomizer {
         else if("Location: Tower of the Goddess [Lamp]".equals(gateName)) {
             return Arrays.asList("Transition: Goddess U1", "Transition: Goddess W1");
         }
-        else if("Location: Tower of Ruin [Illusion Left]".equals(gateName)) {
+        else if("Location: Tower of Ruin [Illusion]".equals(gateName)) {
             return Arrays.asList("Transition: Ruin L1");
         }
         else if("Location: Tower of Ruin [Medicine]".equals(gateName)) {
@@ -683,7 +682,7 @@ public class TransitionGateRandomizer {
             return "Location: Tower of the Goddess [Shield Statue]";
         }
         else if("Transition: Ruin L1".equals(gateName)) {
-            return "Location: Tower of Ruin [Illusion Left]";
+            return "Location: Tower of Ruin [Illusion]";
         }
         else if("Transition: Ruin R1".equals(gateName)) {
             return "Location: Tower of Ruin [Medicine]";

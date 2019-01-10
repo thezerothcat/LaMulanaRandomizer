@@ -454,6 +454,15 @@ public final class RcdReader {
                             }
                         }
                     }
+                    else if (screen.getZoneIndex() == 14 && screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
+                        for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                            if(testByteOperation.getIndex() == 0x226) {
+                                // Fruit block graphic
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
                     else if(screen.getZoneIndex() == 15 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
                             if(testByteOperation.getIndex() == 0x2a6) {
