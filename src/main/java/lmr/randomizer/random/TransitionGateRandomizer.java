@@ -347,7 +347,7 @@ public class TransitionGateRandomizer {
         leftTransitions.add("Transition: Graveyard L1");
         leftTransitions.add("Transition: Moonlight L1");
         leftTransitions.add("Transition: Goddess L2");
-//        leftTransitions.add("Transition: Ruin L1");
+        leftTransitions.add("Transition: Ruin L1");
         leftTransitions.add("Transition: Birth L1");
         leftTransitions.add("Transition: Retroguidance L1");
         String leftTransition = leftTransitions.get(random.nextInt(leftTransitions.size()));
