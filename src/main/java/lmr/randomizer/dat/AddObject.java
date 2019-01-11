@@ -647,7 +647,7 @@ public final class AddObject {
         testByteOperation.setValue((byte) 1);
         skandaBlockGraphic.getTestByteOperations().add(testByteOperation);
 
-        skandaBlockGraphic.getArgs().add((short)20);
+        skandaBlockGraphic.getArgs().add((short)19);
         skandaBlockGraphic.getArgs().add((short)-1);
         skandaBlockGraphic.getArgs().add((short)320);
         skandaBlockGraphic.getArgs().add((short)512);
