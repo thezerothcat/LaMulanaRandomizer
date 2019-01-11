@@ -755,7 +755,7 @@ public class FileUtils {
                 }
                 File graphicsFile = new File(graphicsPack, "01effect.png");
                 BufferedImage existing = ImageIO.read(graphicsFile);
-                if(existing.getHeight() < (512 + CUSTOM_IMAGE_HEIGHT)) {
+                if(existing.getHeight() != (512 + CUSTOM_IMAGE_HEIGHT)) {
                     FileUtils.logFlush("Updating graphics file: " + graphicsFile.getAbsolutePath());
                     // Hasn't been updated yet.
                     BufferedImage newImage = new BufferedImage(existing.getWidth(), existing.getHeight() + custom.getHeight(), BufferedImage.TYPE_INT_ARGB);

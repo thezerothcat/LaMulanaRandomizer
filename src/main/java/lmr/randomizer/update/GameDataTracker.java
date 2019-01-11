@@ -595,6 +595,11 @@ public final class GameDataTracker {
                     gameObject.getArgs().set(4, (short)18);
                     break;
                 }
+                else if(flagTest.getIndex() == 0x23f) {
+                    // Main-weapon-only blockage of the ice block in Graveyard of the Giants, needed to access the up-ladder
+                    gameObject.getArgs().set(4, (short)18);
+                    break;
+                }
                 else if(flagTest.getIndex() == 2033) {
                     // Trigger for The Boss ankh, coded as a wall that triggers stuff when broken
                     gameObject.getArgs().set(4, (short)18);

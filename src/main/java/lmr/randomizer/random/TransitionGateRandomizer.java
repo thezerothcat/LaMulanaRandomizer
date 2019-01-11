@@ -115,9 +115,9 @@ public class TransitionGateRandomizer {
 
     private void randomizeGateDestinations(Random random) {
         transitionGateDestinationMap.put("Transition: Sun R1", "Transition: Extinction L1");
-        transitionGateDestinationMap.put("Transition: Sun R2", "Transition: Extinction L2");
-
         transitionGateDestinationMap.put("Transition: Extinction L1", "Transition: Sun R1");
+
+        transitionGateDestinationMap.put("Transition: Sun R2", "Transition: Extinction L2");
         transitionGateDestinationMap.put("Transition: Extinction L2", "Transition: Sun R2");
 
         if(!Settings.isRandomizeOneWayTransitions()) {

@@ -134,6 +134,7 @@ Key of Eternity => Location: Gate of Illusion [Grail], Event: Chi You Defeated, 
 Key Sword => Location: Endless Corridor [2F], Attack: Chest # Can break from above with Earth Spear
 Knife => Location: Temple of the Sun [Main], Attack: Shuriken
 Knife => Location: Temple of the Sun [Main], Attack: Chakram, Feather
+Knife => Location: Temple of the Sun [Main], Attack: Chakram, Grapple Claw
 Knife => Location: Temple of the Sun [Main], Attack: Bomb
 Knife => Location: Temple of the Sun [Main], Feather, Attack: Flare Gun, Attack: Forward
 Knife => Location: Temple of the Sun [Main], Glitch: Cat Pause
