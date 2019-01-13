@@ -19,7 +19,7 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.7.1";
+    public static final String VERSION = "2.8.0";
     private static final int CUSTOM_IMAGE_HEIGHT = 80;
 
     private static BufferedWriter logWriter;

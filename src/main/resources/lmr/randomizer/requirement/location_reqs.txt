@@ -197,7 +197,6 @@ Location: Endless Corridor [2F] => Location: Endless Corridor [3F Upper], Exit: 
 Location: Endless Corridor [2F] => Transition: Endless U1, Exit: Endless Corridor [2F]
 Location: Endless Corridor [3F Upper] => Location: Endless Corridor [2F], Key of Eternity
 Location: Endless Corridor [3F Upper] => Location: Endless Corridor [2F], Glitch: Raindrop
-Location: Endless Corridor [3F Upper] => Location: Endless Corridor [3F Lower], State: Can Escape Endless Shortcut
 Location: Endless Corridor [3F Lower] => Location: Endless Corridor [4F], Exit: Endless Corridor [3F Lower]
 Location: Endless Corridor [3F Lower] => Location: Endless Corridor [3F Upper], Exit: Endless Corridor [3F Lower]
 Location: Endless Corridor [4F] => Location: Endless Corridor [3F Lower], Glitch: Raindrop
