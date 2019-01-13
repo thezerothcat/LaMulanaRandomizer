@@ -499,7 +499,7 @@ public final class RcdReader {
                             }
                         }
                     }
-                    else if(screen.getZoneIndex() == 15 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
+                    else if(screen.getZoneIndex() == 15 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
                             if(testByteOperation.getIndex() == 0x2a6) {
                                 // Skanda block graphic
@@ -912,6 +912,9 @@ public final class RcdReader {
                     AddObject.addRandomWeaponKillTimer(screen, false);
                 }
             }
+        }
+        else if(zoneIndex == 6 && roomIndex == 9 && screenIndex == 1) {
+            AddObject.addPalenqueMSX2Timer(screen);
         }
         else if(zoneIndex == 9 && roomIndex == 2 && screenIndex == 0) {
             AddObject.addDiaryChestConditionTimer(screen);

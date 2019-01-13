@@ -68,6 +68,57 @@ public final class AddObject {
     }
 
     /**
+     * Add a timer to trigger
+     * @param screen the screen to add the timers to
+     */
+    public static void addPalenqueMSX2Timer(Screen screen) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x0b);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.setX(-1);
+        obj.setY(-1);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x102);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)4);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x21d);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x382);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x21d);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)1);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x317);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)1);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x328);
+        writeByteOperation.setOp(ByteOp.ADD_FLAG);
+        writeByteOperation.setValue((byte)1);
+        obj.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(0, obj);
+    }
+
+    /**
      * Add a timer to open weight doors during the escape that don't open naturally.
      * @param screen the screen to add the timers to
      */
