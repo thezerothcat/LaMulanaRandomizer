@@ -68,6 +68,7 @@ public final class DataFromFile {
     private static Map<String, Integer> mapOfShopNameToShopBlock;
     private static Map<String, List<String>> mapOfShopNameToShopOriginalContents;
     private static Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject;
+	private static Map<String, Set<String>> mapOfRequirementsToNodeNameObject;
     private static List<String> initialShops;
     private static List<String> availableGlitches;
     private static List<String> winRequirements;
@@ -357,6 +358,31 @@ public final class DataFromFile {
         return mapOfNodeNameToRequirementsObject;
     }
 
+	//Goes through the map of nodes and their requirements, and makes a reverse map, where the keys are the items/areas/etc
+	// and the value is a set of all nodes that have that item/area as a requirement.  Call this after building the previous map.
+	public static Map<String, Set<String>> getMapOfRequirementsToNodeNameObject() {
+		if(mapOfRequirementsToNodeNameObject == null) {
+			mapOfRequirementsToNodeNameObject = new HashMap<String, Set<String>>();
+			NodeWithRequirements node;
+			List<List<String>> listOfRequirementSets;
+			
+            for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
+                node = mapOfNodeNameToRequirementsObject.get(nodeName);
+				listOfRequirementSets = node.getAllRequirements();
+				for(List<String> requirementSet : listOfRequirementSets) {
+					for(String requirement : requirementSet) {	
+						Set nodeSet = mapOfRequirementsToNodeNameObject.get(requirement);
+						if(nodeSet == null)
+							nodeSet = new HashSet<String>();
+						nodeSet.add(nodeName);
+						mapOfRequirementsToNodeNameObject.put(requirement, nodeSet);
+					}
+				}
+			}
+		}
+		return mapOfRequirementsToNodeNameObject;
+	}
+	
     public static List<String> getWinRequirements() {
         if(winRequirements == null) {
             winRequirements = FileUtils.getList("requirement/win_reqs.txt");

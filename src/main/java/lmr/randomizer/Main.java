@@ -828,8 +828,13 @@ public class Main {
         Set<String> initiallyAccessibleItems = getInitiallyAvailableItems();
 
         int attempt = 0;
+		long startTime,endTime;
+        long setupTime =0;
+		long shuffleTime =0;
+		long verifyTime =0;
         while(true) {
             ++attempt;
+			startTime = System.currentTimeMillis();    
 
             if(totalItemsRemoved > 0) {
                 dialog.updateProgress(20, Translations.getText("progress.shuffling.removing"));
@@ -862,6 +867,9 @@ public class Main {
                     initiallyAccessibleLocationFinder.computeAccessibleNodes(initiallyAccessibleLocationFinder.getQueuedUpdates().iterator().next(), false, null);
                 }
             }
+        endTime = System.currentTimeMillis();
+        setupTime += (endTime - startTime);
+					startTime = System.currentTimeMillis();    
 
             itemRandomizer.placeNonRandomizedItems();
             shopRandomizer.placeNonRandomizedItems();
@@ -889,8 +897,11 @@ public class Main {
             if(!itemRandomizer.placeAllItems(random)) {
                 continue;
             }
-
+endTime = System.currentTimeMillis();
+        shuffleTime += (endTime - startTime);
             if(!Settings.isSkipValidation(attempt)) {
+				startTime = System.currentTimeMillis();
+				
                 accessChecker.computeStartingLocationAccess(true, attempt);
                 for (String startingNode : startingNodes) {
                     accessChecker.computeAccessibleNodes(startingNode, attempt);
@@ -924,6 +935,8 @@ public class Main {
                     continue;
                 }
             }
+        endTime = System.currentTimeMillis();
+        verifyTime += (endTime - startTime);
 
             if(Settings.isGenerationComplete(attempt) || accessChecker.isSuccess(attempt)) {
                 dialog.progressBar.setIndeterminate(false);
@@ -931,6 +944,7 @@ public class Main {
                 dialog.updateProgress(80, String.format(Translations.getText("progress.shuffling.done"), attempt));
 
                 FileUtils.log(String.format("Successful attempt %s.", attempt));
+				FileUtils.log(String.format("setup: %s       shuffle: %s       verify %s", setupTime, shuffleTime, verifyTime));
                 FileUtils.flush();
 
                 MoneyChecker moneyChecker;

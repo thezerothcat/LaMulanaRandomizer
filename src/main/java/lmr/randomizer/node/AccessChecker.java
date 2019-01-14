@@ -17,6 +17,7 @@ public class AccessChecker {
     private static final List<String> NODES_TO_DELAY = Arrays.asList("Anchor");
 
     private Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject = new HashMap<>();
+	private Map<String, Set<String>> mapOfRequirementsToNodeNameObject = new HashMap<>();
 
     private Set<String> accessedNodes = new HashSet<>();
 
@@ -35,10 +36,12 @@ public class AccessChecker {
 
     public AccessChecker() {
         mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
+		mapOfRequirementsToNodeNameObject = copyNodeNameMap(DataFromFile.getMapOfRequirementsToNodeNameObject());
     }
 
     public AccessChecker(AccessChecker accessChecker, boolean copyAll) {
         this.mapOfNodeNameToRequirementsObject = copyRequirementsMap(accessChecker.mapOfNodeNameToRequirementsObject);
+		this.mapOfRequirementsToNodeNameObject = copyNodeNameMap(accessChecker.mapOfRequirementsToNodeNameObject);
         this.itemRandomizer = copyAll ? new ItemRandomizer(accessChecker.itemRandomizer) : accessChecker.itemRandomizer;
         this.shopRandomizer = copyAll ? accessChecker.shopRandomizer.copy() : accessChecker.shopRandomizer;
         this.backsideDoorRandomizer = new BacksideDoorRandomizer(accessChecker.backsideDoorRandomizer);
@@ -82,6 +85,11 @@ public class AccessChecker {
         }
         for(String chestLocation : Settings.getCurrentCursedChests()) {
             NodeWithRequirements chest = mapOfNodeNameToRequirementsObject.get(chestLocation);
+			Set nodeSet = mapOfRequirementsToNodeNameObject.get("Mulana Talisman");
+			if(nodeSet == null)
+				nodeSet = new HashSet<String>();
+			nodeSet.add(chestLocation);
+			mapOfRequirementsToNodeNameObject.put("Mulana Talisman", nodeSet);
             for(List<String> requirementSet : chest.getAllRequirements()) {
                 requirementSet.add("Mulana Talisman");
             }
@@ -96,6 +104,14 @@ public class AccessChecker {
         return copyMap;
     }
 
+	private static Map<String, Set<String>> copyNodeNameMap(Map<String, Set<String>> mapToCopy) {
+        Map<String, Set<String>> copyMap = new HashMap<>();
+        for(Map.Entry<String, Set<String>> entry : mapToCopy.entrySet()) {
+            copyMap.put(entry.getKey(), new HashSet(entry.getValue()));
+        }
+        return copyMap;
+    }
+	
     public List<String> getQueuedUpdates() {
         return queuedUpdates;
     }
@@ -257,23 +273,26 @@ public class AccessChecker {
                 return;
             }
         }
-
         accessedNodes.add(newState);
         accessedNodes.add(stateToUpdate);
 
         NodeWithRequirements node;
         Set<String> nodesToRemove = new HashSet<>();
-        for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
-            node = mapOfNodeNameToRequirementsObject.get(nodeName);
-            if(node.updateRequirements(stateToUpdate)) {
-                FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
-                handleNodeAccess(nodeName, node.getType(), fullValidation, attemptNumber);
-                nodesToRemove.add(nodeName);
-            }
-        }
-        for(String nodeToRemove : nodesToRemove) {
-            mapOfNodeNameToRequirementsObject.remove(nodeToRemove);
-        }
+		
+		//If nothing requires this state, don't bother checking for newly opened nodes since there will be none
+		if(mapOfRequirementsToNodeNameObject.containsKey(stateToUpdate)) {
+			for(String nodeName : mapOfRequirementsToNodeNameObject.get(stateToUpdate)) {
+				node = mapOfNodeNameToRequirementsObject.get(nodeName);
+				if(node != null && node.updateRequirements(stateToUpdate)) {
+					FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
+					handleNodeAccess(nodeName, node.getType(), fullValidation, attemptNumber);
+					nodesToRemove.add(nodeName);
+				}
+			}
+			for(String nodeToRemove : nodesToRemove) {
+				mapOfNodeNameToRequirementsObject.remove(nodeToRemove);
+			}
+		}
         queuedUpdates.remove(newState);
     }
 
@@ -339,9 +358,9 @@ public class AccessChecker {
         numberOfAccessibleAnkhJewels -= 1;
         NodeWithRequirements node;
         Set<String> nodesToRemove = new HashSet<>();
-        for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
+        for(String nodeName : mapOfRequirementsToNodeNameObject.get(bossEventNodeName)) {
             node = mapOfNodeNameToRequirementsObject.get(nodeName);
-            if(node.updateRequirements(bossEventNodeName)) {
+            if(node != null && node.updateRequirements(bossEventNodeName)) {
                 handleNodeAccess(nodeName, node.getType(), true, null);
                 nodesToRemove.add(nodeName);
             }
@@ -384,9 +403,9 @@ public class AccessChecker {
         accessedNodes.add(bossDefeatedNodeName);
         NodeWithRequirements node;
         Set<String> nodesToRemove = new HashSet<>();
-        for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
+        for(String nodeName : mapOfRequirementsToNodeNameObject.get(bossDefeatedNodeName)) {
             node = mapOfNodeNameToRequirementsObject.get(nodeName);
-            if(node.updateRequirements(bossDefeatedNodeName)) {
+            if(node != null && node.updateRequirements(bossDefeatedNodeName)) {
                 handleNodeAccess(nodeName, node.getType(), true, null);
                 nodesToRemove.add(nodeName);
             }
