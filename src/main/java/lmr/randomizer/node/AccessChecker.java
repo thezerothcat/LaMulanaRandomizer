@@ -279,20 +279,35 @@ public class AccessChecker {
         NodeWithRequirements node;
         Set<String> nodesToRemove = new HashSet<>();
 		
-		//If nothing requires this state, don't bother checking for newly opened nodes since there will be none
-		if(mapOfRequirementsToNodeNameObject.containsKey(stateToUpdate)) {
-			for(String nodeName : mapOfRequirementsToNodeNameObject.get(stateToUpdate)) {
+		// If nothing requires this state, don't bother checking for newly opened nodes since there will be none.
+		// Only use this shortcut during full validation, or you lose some initial nodes which cause different output to previous rando version.
+		if (fullValidation) {
+			if(mapOfRequirementsToNodeNameObject.containsKey(stateToUpdate)) {
+				for(String nodeName : mapOfRequirementsToNodeNameObject.get(stateToUpdate)) {
+					node = mapOfNodeNameToRequirementsObject.get(nodeName);
+					if(node != null && node.updateRequirements(stateToUpdate)) {
+						FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
+						handleNodeAccess(nodeName, node.getType(), fullValidation, attemptNumber);
+						nodesToRemove.add(nodeName);
+					}
+				}
+			}
+		}
+		else { // When not doing full validation, just use old version of this check.  It's slower but this doesn't happen many times per loop so not a big deal
+			for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
 				node = mapOfNodeNameToRequirementsObject.get(nodeName);
-				if(node != null && node.updateRequirements(stateToUpdate)) {
+				if(node.updateRequirements(stateToUpdate)) {
 					FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
 					handleNodeAccess(nodeName, node.getType(), fullValidation, attemptNumber);
 					nodesToRemove.add(nodeName);
 				}
 			}
-			for(String nodeToRemove : nodesToRemove) {
-				mapOfNodeNameToRequirementsObject.remove(nodeToRemove);
-			}
 		}
+
+		for(String nodeToRemove : nodesToRemove) {
+			mapOfNodeNameToRequirementsObject.remove(nodeToRemove);
+		}
+
         queuedUpdates.remove(newState);
     }
 

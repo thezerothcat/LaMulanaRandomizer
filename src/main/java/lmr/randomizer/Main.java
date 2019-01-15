@@ -937,7 +937,6 @@ endTime = System.currentTimeMillis();
             }
         endTime = System.currentTimeMillis();
         verifyTime += (endTime - startTime);
-
             if(Settings.isGenerationComplete(attempt) || accessChecker.isSuccess(attempt)) {
                 dialog.progressBar.setIndeterminate(false);
                 dialog.setSafeClose(false);
