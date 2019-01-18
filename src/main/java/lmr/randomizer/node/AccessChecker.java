@@ -106,6 +106,19 @@ public class AccessChecker {
                 return true;
             }
 
+            for(String requiredItem : DataFromFile.getWinRequirements()) {
+                if(!accessedNodes.contains(requiredItem)) {
+                    FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
+                    if(accessedNodes.size() > 500 || Settings.isDetailedLoggingAttempt(attemptNumber)) {
+                        List<String> logged = new ArrayList<>();
+                        if (requiredItem.startsWith("Event:") || requiredItem.startsWith("Location:")) {
+                            logAccess(requiredItem, logged);
+                        }
+                    }
+                    return false;
+                }
+            }
+
             NodeType nodeType;
             for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
                 nodeType = mapOfNodeNameToRequirementsObject.get(nodeName).getType();
@@ -128,17 +141,6 @@ public class AccessChecker {
                     logAccess(nodeName, logged);
                 }
                 return false;
-            }
-            for(String requiredItem : DataFromFile.getWinRequirements()) {
-                if(!accessedNodes.contains(requiredItem)) {
-                    FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
-                    if(accessedNodes.size() > 500 || Settings.isDetailedLoggingAttempt(attemptNumber)) {
-                        List<String> logged = new ArrayList<>();
-                        if (requiredItem.startsWith("Event:") || requiredItem.startsWith("Location:")) {
-                            logAccess(requiredItem, logged);
-                        }
-                    }
-                }
             }
             if(isEscapeSuccess()) {
                 FileUtils.log("Successful resolution found with accessed nodes = " + accessedNodes.size());

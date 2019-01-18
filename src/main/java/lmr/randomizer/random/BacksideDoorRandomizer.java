@@ -104,7 +104,7 @@ public class BacksideDoorRandomizer {
             unassignedDoors.add("Door: F6");
             unassignedDoors.add("Door: F7");
         }
-        else if (random.nextBoolean()) {
+        else if(random.nextBoolean()) {
             riskDoors.add("Door: F6");
             unassignedDoors.add("Door: F7");
         } else {
@@ -128,7 +128,22 @@ public class BacksideDoorRandomizer {
             door1 = riskDoors.get(random.nextInt(riskDoors.size()));
             riskDoors.remove(door1);
 
-            door2 = unassignedDoors.get(random.nextInt(unassignedDoors.size()));
+            if ("Door: F6".equals(door1) && !Settings.isRandomizeTransitionGates()) {
+                // Make sure F6 and F7 don't lead to each other.
+                do {
+                    door2 = unassignedDoors.get(random.nextInt(unassignedDoors.size()));
+                } while ("Door: F7".equals(door2));
+            }
+            else if ("Door: F7".equals(door1) && !Settings.isRandomizeTransitionGates()) {
+                // Make sure F6 and F7 don't lead to each other.
+                do {
+                    door2 = unassignedDoors.get(random.nextInt(unassignedDoors.size()));
+                } while ("Door: F6".equals(door2));
+            }
+            else {
+                door2 = unassignedDoors.get(random.nextInt(unassignedDoors.size()));
+            }
+
             unassignedDoors.remove(door2);
 
             key1 = swapFrontToBack(door2);

@@ -19,7 +19,7 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.7.0";
+    public static final String VERSION = "2.8.0";
     private static final int CUSTOM_IMAGE_HEIGHT = 80;
 
     private static BufferedWriter logWriter;
@@ -708,6 +708,9 @@ public class FileUtils {
                     fileOutputStream.flush();
                     fileOutputStream.close();
             }
+
+            FileUtils.updateGraphicsFiles();
+
             FileUtils.logFlush("Save file copy complete");
         }
         catch (IOException ex) {
@@ -755,7 +758,7 @@ public class FileUtils {
                 }
                 File graphicsFile = new File(graphicsPack, "01effect.png");
                 BufferedImage existing = ImageIO.read(graphicsFile);
-                if(existing.getHeight() < (512 + CUSTOM_IMAGE_HEIGHT)) {
+                if(existing.getHeight() != (512 + CUSTOM_IMAGE_HEIGHT)) {
                     FileUtils.logFlush("Updating graphics file: " + graphicsFile.getAbsolutePath());
                     // Hasn't been updated yet.
                     BufferedImage newImage = new BufferedImage(existing.getWidth(), existing.getHeight() + custom.getHeight(), BufferedImage.TYPE_INT_ARGB);

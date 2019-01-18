@@ -4,7 +4,7 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 2.7
 -----------------------------
-Randomized the upper and lower entrances to the main part of Shrine of the Mother, the transition between Tower of the Goddess and Gate of Illusion, and the door between the two sides of Chamber of Birth. The two dead-end Shrine rooms and the other Illusion entrances are still not random.
+Randomized Shrine of the Mother, Gate of Illusion, and Chamber of Birth.
 
 2.6
 -----------------------------
