@@ -194,7 +194,9 @@ public class ShopItemPriceCountRandomizer {
             itemName = "Sacred Orb";
         }
 
-        Integer shopPrice = moneyChecker.getShopPrice(itemName, shopInventoryLocation.replaceAll(" Item \\d", ""));
+        Integer shopPrice = moneyChecker == null
+                ? null
+                : moneyChecker.getShopPrice(itemName, shopInventoryLocation.replaceAll(" Item \\d", ""));
         if(shopPrice != null) {
             return (short)(shopPrice - 5 * random.nextInt(2));
         }

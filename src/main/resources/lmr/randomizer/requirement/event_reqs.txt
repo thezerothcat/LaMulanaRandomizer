@@ -42,6 +42,7 @@ Event: Learn La-Mulanese => State: Literacy, Location: Tower of Ruin [La-Mulanes
 Event: Learn La-Mulanese => State: Literacy, Location: Tower of Ruin [La-Mulanese], Location: Shrine of the Mother [Seal], Location: Chamber of Birth [Northeast], Event: Thunderbird Defeated, Event: All Bosses Defeated
 Event: Learn La-Mulanese => State: Literacy, Location: Tower of Ruin [La-Mulanese], Location: Shrine of the Mother [Seal], Location: Chamber of Birth [Northeast], Event: Thunderbird Defeated, Glitch: Raindrop
 Event: Learn La-Mulanese => Setting: La-Mulanese
+Event: Left Ruin Unlocked => Location: Tower of Ruin [Illusion] # This node will be relevant for escape logic
 Event: Medicine of the Mind (Yellow) => Medicine of the Mind (Yellow)
 Event: Medicine of the Mind (Yellow) => State: Vessel, Event: Medicine Statue Open, Location: Tower of Ruin [Medicine], Location: Tower of Ruin [Spirits], Location: Dimensional Corridor, State: Mantra Shared Reqs
 Event: Medicine Statue Open => Location: Tower of Ruin [Southwest], State: Lamp, Event: Thunderbird Defeated, Attack: Chest
