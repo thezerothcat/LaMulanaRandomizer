@@ -44,12 +44,12 @@ public class BacksideDoorRandomizer {
             randomizeDoorDestinations(random);
         }
         else {
-            String fronstideDoor;
+            String frontsideDoor;
             String backsideDoor;
             for(int i = 1; i <= 7; i++) {
-                fronstideDoor = "Door: F" + i;
+                frontsideDoor = "Door: F" + i;
                 backsideDoor = "Door: B" + i;
-                backsideDoorLocationMap.put(fronstideDoor, getDoorLocation(fronstideDoor));
+                backsideDoorLocationMap.put(frontsideDoor, getDoorLocation(frontsideDoor));
                 backsideDoorLocationMap.put(backsideDoor, getDoorLocation(backsideDoor));
             }
         }
@@ -61,12 +61,12 @@ public class BacksideDoorRandomizer {
             randomizeBosses(random);
         }
         else {
-            String fronstideDoor;
+            String frontsideDoor;
             String backsideDoor;
             for(int i = 1; i <= 7; i++) {
-                fronstideDoor = "Door: F" + i;
+                frontsideDoor = "Door: F" + i;
                 backsideDoor = "Door: B" + i;
-                backsideDoorBossMap.put(fronstideDoor, i);
+                backsideDoorBossMap.put(frontsideDoor, i);
                 backsideDoorBossMap.put(backsideDoor, i);
             }
         }
@@ -231,7 +231,7 @@ public class BacksideDoorRandomizer {
             node = new NodeWithRequirements(doorName);
             mapOfNodeNameToDoorRequirementsObject.put(doorName, node);
         }
-        doorRequirements = new ArrayList<>(1);
+        doorRequirements = new ArrayList<>(2);
         doorRequirements.add(doorLocation);
         doorRequirements.add(requiredBoss);
         node.addRequirementSet(doorRequirements);
@@ -242,7 +242,7 @@ public class BacksideDoorRandomizer {
             node = new NodeWithRequirements(doorExit);
             mapOfNodeNameToDoorRequirementsObject.put(doorExit, node);
         }
-        doorRequirements = new ArrayList<>(1);
+        doorRequirements = new ArrayList<>(2);
         doorRequirements.add(doorLocation.replace("Location:", "Exit:"));
         doorRequirements.add(requiredBoss);
         node.addRequirementSet(doorRequirements);

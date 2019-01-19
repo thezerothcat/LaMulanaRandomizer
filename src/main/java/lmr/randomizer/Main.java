@@ -853,6 +853,7 @@ public class Main {
             if(!initiallyAccessibleItems.isEmpty()) {
                 DataFromFile.clearInitialLocations();
                 AccessChecker initiallyAccessibleLocationFinder = new AccessChecker(accessChecker, true);
+                initiallyAccessibleLocationFinder.computeStartingLocationAccess(false, null);
                 for (String startingNode : startingNodes) {
                     initiallyAccessibleLocationFinder.computeAccessibleNodes(startingNode, false, null);
                 }
@@ -890,6 +891,7 @@ public class Main {
             }
 
             if(!Settings.isSkipValidation(attempt)) {
+                accessChecker.computeStartingLocationAccess(true, attempt);
                 for (String startingNode : startingNodes) {
                     accessChecker.computeAccessibleNodes(startingNode, attempt);
                 }
@@ -1055,8 +1057,6 @@ public class Main {
 
     private static List<String> getStartingNodes() {
         List<String> startingNodes = new ArrayList<>();
-        startingNodes.add("Location: Surface [Main]");
-        startingNodes.add("Exit: Surface [Main]");
         startingNodes.add(Settings.getCurrentStartingWeapon());
         if(ItemRandomizer.ALL_SUBWEAPONS.contains(Settings.getCurrentStartingWeapon())) {
             startingNodes.add(Settings.getCurrentStartingWeapon() + " Ammo");
