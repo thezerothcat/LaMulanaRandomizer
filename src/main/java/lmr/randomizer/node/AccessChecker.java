@@ -234,6 +234,16 @@ public class AccessChecker {
         return Settings.getRemovedItems().isEmpty() && Settings.getCurrentRemovedItems().isEmpty();
     }
 
+    public void computeStartingLocationAccess(boolean fullValidation, Integer attemptNumber) {
+        if(fullValidation) {
+            queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes("Location: Surface [Main]", attemptNumber));
+            queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes("Exit: Surface [Main]", attemptNumber));
+            queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits("Exit: Surface [Main]", attemptNumber));
+        }
+        computeAccessibleNodes("Location: Surface [Main]", fullValidation, attemptNumber);
+        computeAccessibleNodes("Exit: Surface [Main]", fullValidation, attemptNumber);
+    }
+
     public void computeAccessibleNodes(String newState, Integer attemptNumber) {
         computeAccessibleNodes(newState, true, attemptNumber);
     }
@@ -427,7 +437,9 @@ public class AccessChecker {
                 break;
             case EXIT:
                 queuedUpdates.add(nodeName);
-                queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
+                if(fullValidation) {
+                    queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
+                }
                 queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits(nodeName, attemptNumber));
                 break;
             case SHOP:

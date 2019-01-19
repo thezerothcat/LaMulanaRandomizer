@@ -2,6 +2,10 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+2.9
+-----------------------------
+Fixed some logic bugs interfering with seed generation.
+
 2.7
 -----------------------------
 Randomized Shrine of the Mother, Gate of Illusion, and Chamber of Birth.
