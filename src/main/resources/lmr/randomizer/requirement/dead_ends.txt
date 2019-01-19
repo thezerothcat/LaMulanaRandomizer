@@ -1,4 +1,7 @@
-#Exit: Surface [Main] => None
+Exit: Surface [Main] => Holy Grail
+Exit: Surface [Main] => Glitch: Raindrop
+Exit: Surface [Main] => Exit: Surface R1
+Exit: Surface [Main] => Bronze Mirror, Exit: Door B5
 Exit: Surface [Ruin Path Lower] => Holy Grail
 Exit: Surface [Ruin Path Lower] => Glitch: Raindrop
 Exit: Surface [Ruin Path Lower] => Exit: Surface D1

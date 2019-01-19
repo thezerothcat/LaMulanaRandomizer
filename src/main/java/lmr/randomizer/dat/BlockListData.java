@@ -28,6 +28,10 @@ public class BlockListData implements BlockContents {
         return data;
     }
 
+    public void addListSize(int amount) {
+        this.listSize += amount;
+    }
+
     @Override
     public int getSize() {
         return data.size() * 2 + 4; // CMD, list length, then the list itself
