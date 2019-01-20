@@ -138,6 +138,9 @@ public class TransitionGateRandomizer {
 
             transitionGateDestinationMap.put("Transition: Endless U1", "Transition: Shrine D2");
             transitionGateDestinationMap.put("Transition: Shrine D2", "Transition: Endless U1");
+
+            transitionGateDestinationMap.put("Transition: Illusion R1", "Transition: Goddess L1");
+            transitionGateDestinationMap.put("Transition: Goddess L1", "Transition: Illusion R1");
         }
 
         List<String> leftTransitions = new ArrayList<>();
@@ -149,7 +152,6 @@ public class TransitionGateRandomizer {
         leftTransitions.add("Transition: Mausoleum L1");
         leftTransitions.add("Transition: Graveyard L1");
         leftTransitions.add("Transition: Sun L1");
-        leftTransitions.add("Transition: Goddess L1");
         leftTransitions.add("Transition: Goddess L2");
         leftTransitions.add("Transition: Birth L1");
         leftTransitions.add("Transition: Retroguidance L1");
@@ -164,11 +166,14 @@ public class TransitionGateRandomizer {
         rightTransitions.add("Transition: Birth R1");
         rightTransitions.add("Transition: Endless R1");
 
-        if(Settings.getEnabledGlitches().contains("Raindrop")) {
-            rightTransitions.add("Transition: Illusion R1");
-        }
-        else {
-            unsafeRightTransitions.add("Transition: Illusion R1");
+        if(Settings.isRandomizeOneWayTransitions()) {
+            leftTransitions.add("Transition: Goddess L1");
+            if(Settings.getEnabledGlitches().contains("Raindrop")) {
+                rightTransitions.add("Transition: Illusion R1");
+            }
+            else {
+                unsafeRightTransitions.add("Transition: Illusion R1");
+            }
         }
 
         if(Settings.isRequireFullAccess()) {
