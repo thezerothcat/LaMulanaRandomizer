@@ -71,11 +71,15 @@ public class BacksideDoorRandomizer {
             }
         }
 
+        rebuildRequirementsMap();
+        logBosses(attempt);
+    }
+
+    public void rebuildRequirementsMap() {
         mapOfNodeNameToDoorRequirementsObject.clear();
         for(String door : backsideDoorLocationMap.keySet()) {
             addToMap(door, backsideDoorLocationMap.get(door), getBoss(backsideDoorBossMap.get(door)));
         }
-        logBosses(attempt);
     }
 
     private void randomizeDoorDestinations(Random random) {
@@ -222,16 +226,6 @@ public class BacksideDoorRandomizer {
             mapOfNodeNameToDoorRequirementsObject.put(doorName, node);
         }
         List<String> doorRequirements = new ArrayList<>(2);
-        doorRequirements.add(doorLocation);
-        doorRequirements.add(requiredBoss);
-        node.addRequirementSet(doorRequirements);
-
-        node = mapOfNodeNameToDoorRequirementsObject.get(doorName);
-        if(node == null) {
-            node = new NodeWithRequirements(doorName);
-            mapOfNodeNameToDoorRequirementsObject.put(doorName, node);
-        }
-        doorRequirements = new ArrayList<>(2);
         doorRequirements.add(doorLocation);
         doorRequirements.add(requiredBoss);
         node.addRequirementSet(doorRequirements);

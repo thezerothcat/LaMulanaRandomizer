@@ -173,7 +173,7 @@ public class AccessChecker {
 
     private boolean isEscapeSuccess() {
         return !Settings.isRandomizeTransitionGates()
-                || new EscapeChecker(backsideDoorRandomizer, transitionGateRandomizer, accessedNodes).isSuccess();
+                || new EscapeChecker(backsideDoorRandomizer, transitionGateRandomizer, itemRandomizer, shopRandomizer, accessedNodes).isSuccess();
     }
 
     private void logAccess(String requiredNode, List<String> loggedRequirements) {
