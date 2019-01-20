@@ -235,13 +235,13 @@ public class AccessChecker {
     }
 
     public void computeStartingLocationAccess(boolean fullValidation, Integer attemptNumber) {
+        computeAccessibleNodes("Location: Surface [Main]", fullValidation, attemptNumber);
+        computeAccessibleNodes("Exit: Surface [Main]", fullValidation, attemptNumber);
+        queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits("Exit: Surface [Main]", attemptNumber));
         if(fullValidation) {
             queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes("Location: Surface [Main]", attemptNumber));
             queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes("Exit: Surface [Main]", attemptNumber));
-            queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits("Exit: Surface [Main]", attemptNumber));
         }
-        computeAccessibleNodes("Location: Surface [Main]", fullValidation, attemptNumber);
-        computeAccessibleNodes("Exit: Surface [Main]", fullValidation, attemptNumber);
     }
 
     public void computeAccessibleNodes(String newState, Integer attemptNumber) {
