@@ -456,6 +456,7 @@ public final class DataFromFile {
             nonShopItemLocations = null;
             bannedTrapLocations = null;
             mapOfNodeNameToRequirementsObject = null;
+            mapOfRequirementsToNodeNameObject = null;
             winRequirements = null;
         }
     }
