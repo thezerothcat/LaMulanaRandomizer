@@ -350,7 +350,12 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 location = unassignedShopItemLocations.get(shopLocationIndex);
             }
 
-            if(unassignedSubweapons.isEmpty()) {
+            if(availableSubweapons.isEmpty()) {
+                mapOfShopInventoryItemToContents.put(location, "Weight");
+                unassignedShopItemLocations.remove(location);
+                continue;
+            }
+            else if(unassignedSubweapons.isEmpty()) {
                 subweapon = availableSubweapons.get(random.nextInt(availableSubweapons.size()));
             }
             else {
