@@ -924,7 +924,6 @@ public class Main {
                     continue;
                 }
             }
-
             if(Settings.isGenerationComplete(attempt) || accessChecker.isSuccess(attempt)) {
                 dialog.progressBar.setIndeterminate(false);
                 dialog.setSafeClose(false);
