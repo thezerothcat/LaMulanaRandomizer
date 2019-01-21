@@ -827,17 +827,38 @@ public class Main {
         Set<String> initiallyAccessibleItems = getInitiallyAvailableItems();
 
         int attempt = 0;
+        long startTime = System.nanoTime(), uiUpdateTime = startTime - (long)1e9;
+        class ProgressUpdate {
+            public long time;
+            public int attempt;
+            public ProgressUpdate(long time, int attempt) {
+                this.time = time;
+                this.attempt = attempt;
+            }
+        }
+        var updateHistory = new LinkedList<ProgressUpdate>();
+        updateHistory.add(new ProgressUpdate(startTime, 0));
         while(true) {
             ++attempt;
+            long now = System.nanoTime();
 
-            if(totalItemsRemoved > 0) {
-                dialog.updateProgress(20, Translations.getText("progress.shuffling.removing"));
-            }
             determineRemovedItems(totalItemsRemoved, random);
 
-            dialog.updateProgress(25, String.format(Translations.getText("progress.shuffling"), attempt));
-            dialog.setTitle(String.format(Translations.getText("progress.shuffling.title"), attempt));
-            dialog.progressBar.setIndeterminate(true);
+            if (now - uiUpdateTime > (long)100e6) {
+                uiUpdateTime = now;
+                var progressUpdate = new ProgressUpdate(now, attempt);
+                updateHistory.add(progressUpdate);
+                double attemptRate = 0.;
+                int attempts = attempt - updateHistory.getFirst().attempt;
+                long nanosecs = now - updateHistory.getFirst().time;
+                if (nanosecs > 0)
+                    attemptRate = (double)attempts * 1e9 / nanosecs;
+                if (nanosecs > (long)5e9)
+                    updateHistory.removeFirst();
+                dialog.updateProgress(25, String.format(Translations.getText("progress.shuffling"), attempt, attemptRate));
+                dialog.setTitle(String.format(Translations.getText("progress.shuffling.title"), attempt));
+                dialog.progressBar.setIndeterminate(true);
+            }
 
             transitionGateRandomizer.determineGateDestinations(random);
             backsideDoorRandomizer.determineDoorBosses(random, attempt);
