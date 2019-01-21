@@ -19,7 +19,7 @@ public class ProgressDialog extends JDialog {
         //setSize(400, 100);
 
         progressBar = new JProgressBar(0,100);
-        statusText = new JLabel("");
+        statusText = new JLabel(Translations.getText("progress.generating"));
         safeClose = true;
 
         add(statusText, "growx, width 300!");
@@ -27,8 +27,8 @@ public class ProgressDialog extends JDialog {
         pack();
     }
 
-    public void updateProgress(int percentage, String progressTextKey) {
-         statusText.setText(Translations.getText(progressTextKey));
+    public void updateProgress(int percentage, String progressText) {
+         statusText.setText(progressText);
          progressBar.setValue(percentage);
     }
 
