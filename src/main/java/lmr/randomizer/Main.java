@@ -105,7 +105,6 @@ public class Main {
                     }
                 }
             });
-            progressDialog.updateProgress(0, Translations.getText("progress.generating"));
 
             buttonPanel = new ButtonPanel(this);
             add(buttonPanel, "grow");
