@@ -503,7 +503,7 @@ public class TransitionGateRandomizer {
         else if("Location: Temple of Moonlight [Upper]".equals(gateName)) {
             return Arrays.asList("Transition: Moonlight U2");
         }
-        else if("Location: Tower of the Goddess [Grail]".equals(gateName)) {
+        else if("Location: Tower of the Goddess [Spaulder]".equals(gateName)) {
             return Arrays.asList("Transition: Goddess L1");
         }
         else if("Location: Tower of the Goddess [Shield Statue]".equals(gateName)) {
@@ -700,7 +700,7 @@ public class TransitionGateRandomizer {
             return "Location: Temple of Moonlight [Upper]";
         }
         else if("Transition: Goddess L1".equals(gateName)) {
-            return "Location: Tower of the Goddess [Grail]";
+            return "Location: Tower of the Goddess [Spaulder]";
         }
         else if("Transition: Goddess L2".equals(gateName)) {
             return "Location: Tower of the Goddess [Lower]";

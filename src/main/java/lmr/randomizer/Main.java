@@ -1073,7 +1073,6 @@ public class Main {
             ItemRandomizer itemRandomizer = new ItemRandomizer();
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer);
-            accessChecker.initExitRequirements();
 
             List<String> startingNodes = getStartingNodes();
 

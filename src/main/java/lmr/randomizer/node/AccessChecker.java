@@ -608,58 +608,6 @@ public class AccessChecker {
         return numberOfAccessibleAnkhJewels >= accessibleBossNodes.size();
     }
 
-    public void initExitRequirements() {
-//        for(String exitNodeName : mapOfNodeNameToExitRequirementsObject.keySet()) {
-//            NodeWithRequirements exitNode = new NodeWithRequirements(exitNodeName);
-//            for(List<String> requirementSet : mapOfNodeNameToExitRequirementsObject.get(exitNodeName).getAllRequirements()) {
-//                List<String> exitNodeRequirements = new ArrayList<>();
-//                List<String> nodesToExpand = new ArrayList<>();
-//                for(String requirement : requirementSet) {
-//                    if(requirement.equals(exitNodeName)) {
-//                        continue;
-//                    }
-//                    if(DataFromFile.getAllItems().contains(requirement)) {
-//                        String itemLocation = itemRandomizer.findNameOfNodeContainingItem(requirement);
-//                        if(DataFromFile.getMapOfExitRequirementNodeToAccessibleNodes().get(exitNodeName).contains(itemLocation)) {
-//                            nodesToExpand.add(itemLocation);
-//                        }
-//                    } else {
-//                        exitNodeRequirements.add(requirement);
-//                    }
-//                }
-//                List<List<String>> newExitRequirementSets = new ArrayList<>();
-//                for(String nodeName : nodesToExpand) {
-//                    if(newExitRequirementSets.isEmpty()) {
-//                        NodeWithRequirements node = mapOfNodeNameToRequirementsObject.get(nodeName);
-//                        for (List<String> nodeRequirementSet : node.getAllRequirements()) {
-//                            List<String> newList = new ArrayList<>(exitNodeRequirements);
-//                            for(String nodeReq : nodeRequirementSet) {
-//                                if(!nodeReq.equals(exitNodeName.replace("Exit:", "Location:"))) {
-//                                    newList.add(nodeReq);
-//                                }
-//                            }
-//                            newExitRequirementSets.add(newList);
-//                        }
-//                    }
-////                    else {
-////                        NodeWithRequirements node = mapOfNodeNameToRequirementsObject.get(nodeName);
-////                        for (List<String> nodeRequirementSet : node.getAllRequirements()) {
-////                            List<String> newList = new ArrayList<>(nodeRequirementSet);
-////                            newList.addAll(exitNodeRequirements);
-////                            for(List<String> existingRequirementSet : )
-////                            newExitRequirementSets.add(newList);
-////                        }
-////                    }
-//                }
-//
-//                for(List<String> newExitRequirementSet : newExitRequirementSets) {
-//                    exitNode.addRequirementSet(newExitRequirementSet);
-//                }
-//            }
-//            mapOfNodeNameToRequirementsObject.put(exitNodeName, exitNode);
-//        }
-    }
-
     public void setItemRandomizer(ItemRandomizer itemRandomizer) {
         this.itemRandomizer = itemRandomizer;
     }
