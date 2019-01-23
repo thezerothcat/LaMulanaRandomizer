@@ -2,7 +2,6 @@ package lmr.randomizer.dat;
 
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.Settings;
-import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.GameObjectId;
 
@@ -902,11 +901,7 @@ public final class AddObject {
      */
     public static void addStartingItems(ObjectContainer screen) {
         Set<String> startingItems = new HashSet<>(Settings.getStartingItems());
-        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
-            if(customPlacement.isStartingItem()) {
-                startingItems.add(customPlacement.getContents());
-            }
-        }
+        startingItems.addAll(DataFromFile.getCustomPlacementData().getStartingItems());
 
         for(String itemName : startingItems) {
             GameObjectId gameObjectId = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(itemName);

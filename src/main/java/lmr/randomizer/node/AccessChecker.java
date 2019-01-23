@@ -54,14 +54,7 @@ public class AccessChecker {
     }
 
     public void determineCursedChests(Random random) {
-        List<String> cursedChests = new ArrayList<>();
-        if(!DataFromFile.getCustomItemPlacements().isEmpty()) {
-            for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
-                if(customPlacement.isCurseChest()) {
-                    cursedChests.add(customPlacement.getLocation());
-                }
-            }
-        }
+        List<String> cursedChests = new ArrayList<>(DataFromFile.getCustomPlacementData().getCursedChests());
         if(cursedChests.isEmpty()) {
             if(Settings.isRandomizeCursedChests()) {
                 List<String> possibleChests = new ArrayList<>(DataFromFile.getChestOnlyLocations());

@@ -1,6 +1,6 @@
 package lmr.randomizer;
 
-import lmr.randomizer.node.CustomPlacement;
+import lmr.randomizer.node.CustomPlacementData;
 import lmr.randomizer.node.NodeWithRequirements;
 import lmr.randomizer.random.ShopRandomizationEnum;
 import lmr.randomizer.update.GameObjectId;
@@ -74,7 +74,7 @@ public final class DataFromFile {
     private static List<String> winRequirements;
     private static List<String> chestOnlyLocations;
 
-    private static List<CustomPlacement> customItemPlacements;
+    private static CustomPlacementData customPlacementData;
 
     private DataFromFile() { }
 
@@ -344,10 +344,8 @@ public final class DataFromFile {
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject,
                     String.format("requirement/bosses/%s_reqs.txt", Settings.getBossDifficulty().name().toLowerCase()), true);
-            for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
-                if(customPlacement.isRemoveLogic()) {
-                    mapOfNodeNameToRequirementsObject.remove(customPlacement.getLocation());
-                }
+            for(String removeNode : getCustomPlacementData().getRemovedLogicNodes()) {
+                mapOfNodeNameToRequirementsObject.remove(removeNode);
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "custom-reqs.txt", false);
 
@@ -425,18 +423,15 @@ public final class DataFromFile {
         return enabledItems;
     }
 
-    public static List<CustomPlacement> getCustomItemPlacements() {
-        if(customItemPlacements == null) {
-            customItemPlacements = FileUtils.getCustomPlacementData();
+    public static CustomPlacementData getCustomPlacementData() {
+        if(customPlacementData == null) {
+            customPlacementData = FileUtils.getCustomPlacementData();
         }
-        return customItemPlacements;
+        return customPlacementData;
     }
 
-    public static void clearCustomItemPlacements() {
-        customItemPlacements = null;
-        Settings.setAlternateMotherAnkh(false);
-        Settings.setAutomaticMantras(false);
-        Settings.setMedicineColor(null);
+    public static void clearCustomPlacementData() {
+        customPlacementData = null;
     }
 
     public static void clearInitialLocations() {

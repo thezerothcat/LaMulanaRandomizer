@@ -8,7 +8,7 @@ import lmr.randomizer.Translations;
 import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.AccessChecker;
-import lmr.randomizer.node.CustomPlacement;
+import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.node.MoneyChecker;
 import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.GameObjectId;
@@ -114,14 +114,12 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             }
         }
 
-        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
-            String customLocation = customPlacement.getLocation();
-            if(!customPlacement.isRemoveItem() && !customPlacement.isCurseChest()
-                    && !customPlacement.isRemoveLogic()
-                    && customLocation != null && customLocation.startsWith("Shop ")) {
-                mapOfShopInventoryItemToContents.put(customLocation, customPlacement.getContents());
+        for(CustomItemPlacement customItemPlacement : DataFromFile.getCustomPlacementData().getCustomItemPlacements()) {
+            String customLocation = customItemPlacement.getLocation();
+            if(customLocation != null && customLocation.startsWith("Shop ")) {
+                mapOfShopInventoryItemToContents.put(customLocation, customItemPlacement.getContents());
                 unassignedShopItemLocations.remove(customLocation);
-                itemRandomizer.removeItemFromUnplacedItems(customPlacement.getContents());
+                itemRandomizer.removeItemFromUnplacedItems(customItemPlacement.getContents());
             }
         }
     }

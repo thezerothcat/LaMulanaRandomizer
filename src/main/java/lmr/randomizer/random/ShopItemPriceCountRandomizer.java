@@ -3,7 +3,7 @@ package lmr.randomizer.random;
 import javafx.util.Pair;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.Settings;
-import lmr.randomizer.node.CustomPlacement;
+import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.node.MoneyChecker;
 
 import java.util.Arrays;
@@ -85,10 +85,10 @@ public class ShopItemPriceCountRandomizer {
     public Pair<Short, Short> getItemPriceAndCount(String location, String itemName) {
         Short price = null;
         Short count = null;
-        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
-            if(customPlacement.getShopPrice() != null && customPlacement.getLocation().equals(location)) {
-                price = customPlacement.getShopPrice();
-                count = customPlacement.getShopCount();
+        for(CustomItemPlacement customItemPlacement : DataFromFile.getCustomPlacementData().getCustomItemPlacements()) {
+            if(customItemPlacement.getShopPrice() != null && customItemPlacement.getLocation().equals(location)) {
+                price = customItemPlacement.getShopPrice();
+                count = customItemPlacement.getShopCount();
             }
         }
         if(price == null && count == null && !specialAmmoPlaced && !subweaponOnly && "Pistol Ammo".equals(itemName)) {

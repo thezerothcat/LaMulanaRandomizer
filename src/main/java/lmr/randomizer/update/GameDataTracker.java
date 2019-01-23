@@ -8,7 +8,7 @@ import lmr.randomizer.dat.*;
 import lmr.randomizer.dat.conversation.CheckBlock;
 import lmr.randomizer.dat.shop.BlockStringData;
 import lmr.randomizer.dat.shop.ShopBlock;
-import lmr.randomizer.node.CustomPlacement;
+import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.rcd.object.*;
 
 import java.util.*;
@@ -4897,9 +4897,9 @@ public final class GameDataTracker {
     }
 
     private static short getItemGraphic(String itemName) {
-        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
-            if(customPlacement.getItemGraphic() != null && customPlacement.getContents().equals(itemName)) {
-                return DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(customPlacement.getItemGraphic()).getInventoryArg();
+        for(CustomItemPlacement customItemPlacement : DataFromFile.getCustomPlacementData().getCustomItemPlacements()) {
+            if(customItemPlacement.getItemGraphic() != null && customItemPlacement.getContents().equals(itemName)) {
+                return DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(customItemPlacement.getItemGraphic()).getInventoryArg();
             }
         }
         return 0;

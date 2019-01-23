@@ -1,6 +1,5 @@
 package lmr.randomizer;
 
-import lmr.randomizer.node.CustomPlacement;
 import lmr.randomizer.random.BossDifficulty;
 import lmr.randomizer.random.ShopRandomizationEnum;
 
@@ -556,11 +555,7 @@ public final class Settings {
 
     public static Set<String> getStartingItemsIncludingCustom() {
         Set<String> startingItems = new HashSet<>(singleton.startingItems);
-        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
-            if(customPlacement.isStartingItem()) {
-                startingItems.add(customPlacement.getContents());
-            }
-        }
+        startingItems.addAll(DataFromFile.getCustomPlacementData().getStartingItems());
         return startingItems;
     }
 
@@ -650,8 +645,8 @@ public final class Settings {
         singleton.maxRandomRemovedItems = maxRandomRemovedItems;
     }
 
-    public static List<String> getRemovedItems() {
-        List<String> removedItems = new ArrayList<>();
+    public static Set<String> getRemovedItems() {
+        Set<String> removedItems = new HashSet<>();
         if(singleton.removeSpaulder) {
             removedItems.add("Spaulder");
         }
@@ -664,12 +659,7 @@ public final class Settings {
             removedItems.add("Katana");
             removedItems.add("Key Sword");
         }
-        for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
-            if(customPlacement.isRemoveItem()) {
-                // Removed item
-                removedItems.add(customPlacement.getContents());
-            }
-        }
+        removedItems.addAll(DataFromFile.getCustomPlacementData().getRemovedItems());
         return removedItems;
     }
 
@@ -729,15 +719,11 @@ public final class Settings {
     }
 
     public static String getMedicineColor() {
-        return singleton.medicineColor;
-    }
-
-    public static void setMedicineColor(String medicineColor) {
-        singleton.medicineColor = medicineColor;
+        return DataFromFile.getCustomPlacementData().getMedicineColor();
     }
 
     public static boolean isAlternateMotherAnkh() {
-        return singleton.alternateMotherAnkh;
+        return singleton.alternateMotherAnkh || DataFromFile.getCustomPlacementData().isAlternateMotherAnkh();
     }
 
     public static void setAlternateMotherAnkh(boolean alternateMotherAnkh) {
@@ -745,11 +731,7 @@ public final class Settings {
     }
 
     public static boolean isAutomaticMantras() {
-        return singleton.automaticMantras;
-    }
-
-    public static void setAutomaticMantras(boolean automaticMantras) {
-        singleton.automaticMantras = automaticMantras;
+        return singleton.automaticMantras || DataFromFile.getCustomPlacementData().isAutomaticMantras();
     }
 
     public static boolean isGenerationComplete(int attemptNumber) {

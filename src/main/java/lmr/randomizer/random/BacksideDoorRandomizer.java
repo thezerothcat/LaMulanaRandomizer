@@ -1,9 +1,11 @@
 package lmr.randomizer.random;
 
 import javafx.util.Pair;
+import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
 import lmr.randomizer.Translations;
+import lmr.randomizer.node.CustomDoorPlacement;
 import lmr.randomizer.node.NodeWithRequirements;
 import lmr.randomizer.update.GameDataTracker;
 
@@ -12,9 +14,9 @@ import java.io.IOException;
 import java.util.*;
 
 public class BacksideDoorRandomizer {
-    Map<String, String> backsideDoorLocationMap;
-    Map<String, Integer> backsideDoorBossMap;
-    Map<String, String> mapOfDoorToPairDoor;
+    private Map<String, String> backsideDoorLocationMap;
+    private Map<String, Integer> backsideDoorBossMap;
+    private Map<String, String> mapOfDoorToPairDoor;
     private Map<String, NodeWithRequirements> mapOfNodeNameToDoorRequirementsObject;
 
     public BacksideDoorRandomizer() {
@@ -124,6 +126,25 @@ public class BacksideDoorRandomizer {
         String door2;
         String key1;
         String key2;
+        for(CustomDoorPlacement customDoorPlacement : DataFromFile.getCustomPlacementData().getCustomDoorPlacements()) {
+            door1 = customDoorPlacement.getTargetDoor().replace("Door ", "Door: ");
+            door2 = customDoorPlacement.getDestinationDoor().replace("Door ", "Door: ");;
+
+            key1 = swapFrontToBack(door2);
+            key2 = swapFrontToBack(door1);
+
+            backsideDoorLocationMap.put(key1, getDoorLocation(door1));
+            backsideDoorLocationMap.put(key2, getDoorLocation(door2));
+
+            mapOfDoorToPairDoor.put(key1, key2);
+            mapOfDoorToPairDoor.put(key2, key1);
+
+            riskDoors.remove(door1);
+            riskDoors.remove(door2);
+            unassignedDoors.remove(door1);
+            unassignedDoors.remove(door2);
+        }
+
         while(!riskDoors.isEmpty()) {
             door1 = riskDoors.get(random.nextInt(riskDoors.size()));
             riskDoors.remove(door1);
@@ -200,9 +221,23 @@ public class BacksideDoorRandomizer {
         doors.add("Door: B6");
         doors.add("Door: B7");
 
-        int boss;
         String door;
         String reverseDoor;
+        for(CustomDoorPlacement customDoorPlacement : DataFromFile.getCustomPlacementData().getCustomDoorPlacements()) {
+            if(customDoorPlacement.getAssignedBoss() != null) {
+                door = customDoorPlacement.getTargetDoor().replace("Door ", "Door: ");
+                reverseDoor = customDoorPlacement.getDestinationDoor().replace("Door ", "Door: ");
+
+                backsideDoorBossMap.put(door, customDoorPlacement.getAssignedBoss());
+                backsideDoorBossMap.put(reverseDoor, customDoorPlacement.getAssignedBoss());
+
+                bosses.remove(customDoorPlacement.getAssignedBoss());
+                doors.remove(door);
+                doors.remove(reverseDoor);
+            }
+        }
+
+        int boss;
         while(!bosses.isEmpty()) {
             boss = bosses.get(random.nextInt(bosses.size()));
             bosses.remove((Integer)boss);
