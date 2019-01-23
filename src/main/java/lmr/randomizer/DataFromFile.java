@@ -1,6 +1,6 @@
 package lmr.randomizer;
 
-import lmr.randomizer.node.CustomPlacement;
+import lmr.randomizer.node.CustomPlacementData;
 import lmr.randomizer.node.NodeWithRequirements;
 import lmr.randomizer.random.ShopRandomizationEnum;
 import lmr.randomizer.update.GameObjectId;
@@ -68,12 +68,13 @@ public final class DataFromFile {
     private static Map<String, Integer> mapOfShopNameToShopBlock;
     private static Map<String, List<String>> mapOfShopNameToShopOriginalContents;
     private static Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject;
+    private static Map<String, Set<String>> mapOfRequirementsToNodeNameObject;
     private static List<String> initialShops;
     private static List<String> availableGlitches;
     private static List<String> winRequirements;
     private static List<String> chestOnlyLocations;
 
-    private static List<CustomPlacement> customItemPlacements;
+    private static CustomPlacementData customPlacementData;
 
     private DataFromFile() { }
 
@@ -343,10 +344,8 @@ public final class DataFromFile {
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject,
                     String.format("requirement/bosses/%s_reqs.txt", Settings.getBossDifficulty().name().toLowerCase()), true);
-            for(CustomPlacement customPlacement : DataFromFile.getCustomItemPlacements()) {
-                if(customPlacement.isRemoveLogic()) {
-                    mapOfNodeNameToRequirementsObject.remove(customPlacement.getLocation());
-                }
+            for(String removeNode : getCustomPlacementData().getRemovedLogicNodes()) {
+                mapOfNodeNameToRequirementsObject.remove(removeNode);
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "custom-reqs.txt", false);
 
@@ -355,6 +354,31 @@ public final class DataFromFile {
             }
         }
         return mapOfNodeNameToRequirementsObject;
+    }
+
+    //Goes through the map of nodes and their requirements, and makes a reverse map, where the keys are the items/areas/etc
+    // and the value is a set of all nodes that have that item/area as a requirement.  Call this after building the previous map.
+    public static Map<String, Set<String>> getMapOfRequirementsToNodeNameObject() {
+        if(mapOfRequirementsToNodeNameObject == null) {
+            mapOfRequirementsToNodeNameObject = new HashMap<String, Set<String>>();
+            NodeWithRequirements node;
+            List<List<String>> listOfRequirementSets;
+
+            for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
+                node = mapOfNodeNameToRequirementsObject.get(nodeName);
+                listOfRequirementSets = node.getAllRequirements();
+                for(List<String> requirementSet : listOfRequirementSets) {
+                    for(String requirement : requirementSet) {
+                        Set nodeSet = mapOfRequirementsToNodeNameObject.get(requirement);
+                        if(nodeSet == null)
+                            nodeSet = new HashSet<String>();
+                        nodeSet.add(nodeName);
+                        mapOfRequirementsToNodeNameObject.put(requirement, nodeSet);
+                    }
+                }
+            }
+        }
+        return mapOfRequirementsToNodeNameObject;
     }
 
     public static List<String> getWinRequirements() {
@@ -399,18 +423,15 @@ public final class DataFromFile {
         return enabledItems;
     }
 
-    public static List<CustomPlacement> getCustomItemPlacements() {
-        if(customItemPlacements == null) {
-            customItemPlacements = FileUtils.getCustomPlacementData();
+    public static CustomPlacementData getCustomPlacementData() {
+        if(customPlacementData == null) {
+            customPlacementData = FileUtils.getCustomPlacementData();
         }
-        return customItemPlacements;
+        return customPlacementData;
     }
 
-    public static void clearCustomItemPlacements() {
-        customItemPlacements = null;
-        Settings.setAlternateMotherAnkh(false);
-        Settings.setAutomaticMantras(false);
-        Settings.setMedicineColor(null);
+    public static void clearCustomPlacementData() {
+        customPlacementData = null;
     }
 
     public static void clearInitialLocations() {
@@ -430,6 +451,7 @@ public final class DataFromFile {
             nonShopItemLocations = null;
             bannedTrapLocations = null;
             mapOfNodeNameToRequirementsObject = null;
+            mapOfRequirementsToNodeNameObject = null;
             winRequirements = null;
         }
     }

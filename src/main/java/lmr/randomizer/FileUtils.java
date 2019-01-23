@@ -1,7 +1,6 @@
 package lmr.randomizer;
 
-import lmr.randomizer.node.CustomPlacement;
-import lmr.randomizer.node.NodeWithRequirements;
+import lmr.randomizer.node.*;
 import lmr.randomizer.update.GameObjectId;
 
 import javax.imageio.ImageIO;
@@ -19,7 +18,7 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.9.0";
+    public static final String VERSION = "2.10.0";
     private static final int CUSTOM_IMAGE_HEIGHT = 80;
 
     private static BufferedWriter logWriter;
@@ -267,20 +266,17 @@ public class FileUtils {
         return dataString;
     }
 
-    public static List<CustomPlacement> getCustomPlacementData() {
+    public static CustomPlacementData getCustomPlacementData() {
+        CustomPlacementData customPlacementData = new CustomPlacementData();
         if (!(new File("custom-placement.txt").exists())) {
-            return new ArrayList<>(0);
+            return customPlacementData;
         }
         try(BufferedReader reader = getFileReader("custom-placement.txt", false)) {
             if(reader == null) {
-                return new ArrayList<>(0);
+                return customPlacementData;
             }
-            List<CustomPlacement> data = new ArrayList<>();
             String line;
             String[] lineParts;
-            boolean alternateMotherAnkh = false;
-            boolean automaticMantras = false;
-            String medicineColor = null;
             while((line = reader.readLine()) != null) {
                 line = line.split("#", 2)[0].trim(); // remove comments
                 if (line.isEmpty()) {
@@ -290,25 +286,40 @@ public class FileUtils {
                 if (line.contains("=")) {
                     lineParts = line.split("=", 2); // delimiter
                     if (lineParts.length > 1) {
-                        String location = lineParts[0].trim();
-                        String contents = lineParts[1].trim();
-                        if (contents.contains("{") && contents.contains("}")) {
-                            String specialData = contents.substring(contents.indexOf("{") + 1).replace("}", "");
-                            contents = contents.substring(0, contents.indexOf('{')).trim();
-                            if(contents.startsWith("Trap:")) {
-                                data.add(new CustomPlacement(location, contents, specialData, false));
+                        String target = lineParts[0].trim(); // Item location, door, transition gate, etc.
+                        String assignment = lineParts[1].trim(); // Contents, assigned door, assigned gate, etc.
+                        if (assignment.contains("{") && assignment.contains("}")) {
+                            String specialData = assignment.substring(assignment.indexOf("{") + 1).replace("}", "");
+                            assignment = assignment.substring(0, assignment.indexOf('{')).trim();
+                            if(assignment.startsWith("Trap:")) {
+                                customPlacementData.getCustomItemPlacements().add(
+                                        new CustomItemPlacement(target, assignment, specialData));
                             }
-                            else if(location.startsWith("Shop ")) {
+                            else if (line.startsWith("Door ")) {
+                                customPlacementData.getCustomDoorPlacements().add(new CustomDoorPlacement(target, assignment, specialData));
+                            }
+                            else if(target.startsWith("Shop ")) {
                                 lineParts = specialData.split(",");
                                 if (lineParts.length > 1) {
-                                    data.add(new CustomPlacement(location, contents, Short.parseShort(lineParts[1].trim()), Short.parseShort(lineParts[0].trim())));
+                                    customPlacementData.getCustomItemPlacements().add(
+                                            new CustomItemPlacement(target, assignment, Short.parseShort(lineParts[1].trim()), Short.parseShort(lineParts[0].trim())));
                                 }
                                 else {
-                                    data.add(new CustomPlacement(location, contents, Short.parseShort(lineParts[0].trim()), null));
+                                    customPlacementData.getCustomItemPlacements().add(
+                                            new CustomItemPlacement(target, assignment, Short.parseShort(lineParts[0].trim()), null));
                                 }
                             }
                         } else {
-                            data.add(new CustomPlacement(lineParts[0].trim(), contents, null, false));
+                            if(line.startsWith("Door ")) {
+                                customPlacementData.getCustomDoorPlacements().add(new CustomDoorPlacement(target, assignment, null));
+                            }
+                            else if(line.startsWith("Transition")) {
+                                customPlacementData.getCustomTransitionPlacements().add(new CustomTransitionPlacement(target, assignment));
+                            }
+                            else {
+                                customPlacementData.getCustomItemPlacements().add(
+                                        new CustomItemPlacement(lineParts[0].trim(), assignment, null));
+                            }
                         }
                     }
                 }
@@ -316,53 +327,48 @@ public class FileUtils {
                     if(line.startsWith("!")) {
                         String removeItem = line.trim();
                         if(removeItem.startsWith("!")) {
-                            removeItem = removeItem.substring(1);
-                            data.add(new CustomPlacement(removeItem, true, false));
+                            customPlacementData.getRemovedItems().add(removeItem.substring(1).trim());
                         }
                     }
                     else if (line.startsWith("Remove")) {
-                        data.add(new CustomPlacement(line.replace("Remove", "").trim(), true, true));
+                        customPlacementData.getRemovedItems().add(line.replace("Remove", "").trim());
                     }
                     else if (line.startsWith("Curse")) {
-                        data.add(new CustomPlacement(line.replace("Curse", "").trim(), null, null, true));
+                        customPlacementData.getCursedChests().add(line.replace("Curse", "").trim());
                     }
                     else if (line.startsWith("Weapon:")) {
-                        data.add(new CustomPlacement(line.replace("Weapon:", "").trim(), false, true));
+                        customPlacementData.setStartingWeapon(line.replace("Weapon:", "").trim());
                     }
                     else if (line.startsWith("Start:")) {
-                        data.add(new CustomPlacement(line.replace("Start:", "").trim(), false, false));
+                        customPlacementData.getStartingItems().add(line.replace("Start:", "").trim());
                     }
                     else if (line.startsWith("Remove Logic:")) {
-                        data.add(new CustomPlacement(line.replace("Remove Logic:", "").trim()));
+                        customPlacementData.getRemovedLogicNodes().add(line.replace("Remove Logic:", "").trim());
                     }
                     else if (line.equals("Skip Mantras")) {
-                        automaticMantras = true;
+                        customPlacementData.setAutomaticMantras(true);
                     }
                     else if (line.equals("Alternate Mother Ankh")) {
-                        alternateMotherAnkh = true;
+                        customPlacementData.setAlternateMotherAnkh(true);
                     }
                     else if (line.startsWith("Fill Vessel ")) {
                         String color = line.replace("Fill Vessel ", "").trim();
                         if(color.equalsIgnoreCase("red")) {
-                            medicineColor = "Red";
+                            customPlacementData.setMedicineColor("Red");
                         }
                         else if(color.equalsIgnoreCase("green")) {
-                            medicineColor = "Green";
+                            customPlacementData.setMedicineColor("Green");
                         }
                         else if(color.equalsIgnoreCase("yellow")) {
-                            medicineColor = "Yellow";
+                            customPlacementData.setMedicineColor("Yellow");
                         }
                     }
                 }
             }
-            Settings.setAlternateMotherAnkh(alternateMotherAnkh);
-            Settings.setAutomaticMantras(automaticMantras);
-            Settings.setMedicineColor(medicineColor);
-            return data;
         } catch (Exception ex) {
             FileUtils.log("Unable to read file custom-placement.txt, " + ex.getMessage());
         }
-        return new ArrayList<>(0);
+        return customPlacementData;
     }
 
     public static void readSettings() throws IOException {
