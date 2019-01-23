@@ -541,6 +541,18 @@ public class Main {
                 Map<String, String> placedDoorsAndDestinations = new HashMap<>();
                 Map<String, Integer> placedDoorsAndBosses = new HashMap<>();
                 for(CustomDoorPlacement customDoorPlacement : customPlacementData.getCustomDoorPlacements()) {
+                    if(!customDoorPlacement.getTargetDoor().startsWith("Door F") && !customDoorPlacement.getTargetDoor().startsWith("Door B")) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Backside door " + customDoorPlacement.getTargetDoor() + " is invalid",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(!customDoorPlacement.getDestinationDoor().startsWith("Door F") && !customDoorPlacement.getDestinationDoor().startsWith("Door B")) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Backside door " + customDoorPlacement.getDestinationDoor() + " is invalid",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
                     if(placedDoorsAndDestinations.keySet().contains(customDoorPlacement.getTargetDoor())) {
                         JOptionPane.showMessageDialog(randomizerUI,
                                 "Backside door " + customDoorPlacement.getTargetDoor() + " cannot be assigned multiple destinations",
@@ -592,6 +604,86 @@ public class Main {
                     placedDoorsAndDestinations.put(customDoorPlacement.getTargetDoor(), customDoorPlacement.getDestinationDoor());
                     placedDoorsAndBosses.put(customDoorPlacement.getTargetDoor(), customDoorPlacement.getAssignedBoss());
                     placedDoorsAndBosses.put(customDoorPlacement.getDestinationDoor(), customDoorPlacement.getAssignedBoss());
+                }
+            }
+            if(!customPlacementData.getCustomTransitionPlacements().isEmpty()) {
+                if(!Settings.isRandomizeTransitionGates()) {
+                    JOptionPane.showMessageDialog(randomizerUI,
+                            "Please enable the setting \"Randomize transitions between areas\"",
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
+                Map<String, String> placedTargetAndDestination = new HashMap<>();
+                for(CustomTransitionPlacement customTransitionPlacement : customPlacementData.getCustomTransitionPlacements()) {
+                    if(!isValidTransition(customTransitionPlacement.getTargetTransition())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Transition " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", "") + " is invalid",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(!isValidTransition(customTransitionPlacement.getDestinationTransition())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Transition " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", "") + " is invalid",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(!isValidTransitionDirection(customTransitionPlacement.getTargetTransition(), customTransitionPlacement.getDestinationTransition())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Transition " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", "") + " is the wrong direction for " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", ""),
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(!Settings.isRandomizeOneWayTransitions()) {
+                        if(isOneWayTransition(customTransitionPlacement.getTargetTransition())) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Please enable the setting \"Randomize one-way transitions\"",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                        if(isOneWayTransition(customTransitionPlacement.getDestinationTransition())) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Please enable the setting \"Randomize one-way transitions\"",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
+
+                    if(placedTargetAndDestination.keySet().contains(customTransitionPlacement.getTargetTransition())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Transition " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", "") + " cannot be assigned multiple destinations",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(placedTargetAndDestination.values().contains(customTransitionPlacement.getDestinationTransition())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Multiple transitions cannot lead to destination transition " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", ""),
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(customTransitionPlacement.getTargetTransition().equals(customTransitionPlacement.getDestinationTransition())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Transition " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", "") + " cannot lead to itself",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(placedTargetAndDestination.values().contains(customTransitionPlacement.getTargetTransition())) {
+                        if(!customTransitionPlacement.getTargetTransition().equals(placedTargetAndDestination.get(customTransitionPlacement.getDestinationTransition()))) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Support for non-reversible transition placement does not exist at this time; please update assignment for " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", "") + " or " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", ""),
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
+                    if(placedTargetAndDestination.keySet().contains(customTransitionPlacement.getDestinationTransition())) {
+                        if(!customTransitionPlacement.getTargetTransition().equals(placedTargetAndDestination.get(customTransitionPlacement.getDestinationTransition()))) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Support for non-reversible backside door placement does not exist at this time; please update assignment for " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", "") + " or " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", ""),
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
+                    placedTargetAndDestination.put(customTransitionPlacement.getTargetTransition(), customTransitionPlacement.getDestinationTransition());
                 }
             }
             for(String customRemovedItem : customPlacementData.getRemovedItems()) {
@@ -853,6 +945,65 @@ public class Main {
                     || contents.equals("Caltrops Ammo") || contents.equals("Chakram Ammo") || contents.equals("Flare Gun Ammo")
                     || contents.equals("Earth Spear Ammo") || contents.equals("Pistol Ammo") || contents.equals("Bomb Ammo")) {
                 return true;
+            }
+            return false;
+        }
+
+        private boolean isValidTransition(String transition) {
+            String formattedTransition = transition.replace("Transition ", "Transition: ");
+            return TransitionGateRandomizer.getTransitionList().contains(formattedTransition)
+                    && !formattedTransition.startsWith("Transition: Sun R")
+                    && !formattedTransition.startsWith("Transition: Extinction L");
+        }
+
+        private boolean isOneWayTransition(String transition) {
+            String formattedTransition = transition.replace("Transition ", "Transition: ");
+            return !"Transition: Goddess L1".equals(formattedTransition)
+                    && !"Transition: Illusion R1".equals(formattedTransition)
+                    && !"Transition: Twin U3".equals(formattedTransition)
+                    && !"Transition: Dimensional D1".equals(formattedTransition)
+                    && !"Transition: Shrine U1".equals(formattedTransition)
+                    && !"Transition: Endless D1".equals(formattedTransition)
+                    && !"Transition: Extinction U3".equals(formattedTransition)
+                    && !"Transition: Inferno W1".equals(formattedTransition)
+                    && !"Transition: Retromausoleum D1".equals(formattedTransition)
+                    && !"Transition: Goddess W1".equals(formattedTransition)
+                    && !"Transition: Twin U2".equals(formattedTransition)
+                    && !"Transition: Shrine D3".equals(formattedTransition)
+                    && !"Transition: Endless U1".equals(formattedTransition)
+                    && !"Transition: Shrine D2".equals(formattedTransition);
+        }
+
+        private boolean isValidTransitionDirection(String transitionTarget, String transitionDestination) {
+            char transitionDirection1 = transitionTarget.charAt(transitionTarget.length() - 2);
+            char transitionDirection2 = transitionDestination.charAt(transitionDestination.length() - 2);
+
+            // Handle special transitions
+            if(transitionDirection1 == 'W' && transitionTarget.contains("Goddess W1")) {
+                transitionDirection1 = 'U';
+            }
+            if(transitionDirection2 == 'W' && transitionDestination.contains("Goddess W1")) {
+                transitionDirection2 = 'U';
+            }
+            if(transitionDirection1 == 'W' && transitionTarget.contains("Inferno W1")) {
+                transitionDirection1 = 'D';
+            }
+            if(transitionDirection2 == 'W' && transitionDestination.contains("Inferno W1")) {
+                transitionDirection2 = 'D';
+            }
+
+            // Check direction
+            if (transitionDirection1 == 'U') {
+                return transitionDirection2 == 'D';
+            }
+            else if (transitionDirection1 == 'R') {
+                return transitionDirection2 == 'L';
+            }
+            else if (transitionDirection1 == 'D') {
+                return transitionDirection2 == 'U';
+            }
+            else if (transitionDirection1 == 'L') {
+                return transitionDirection2 == 'R';
             }
             return false;
         }

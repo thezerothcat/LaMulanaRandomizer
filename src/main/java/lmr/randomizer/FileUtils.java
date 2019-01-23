@@ -1,9 +1,6 @@
 package lmr.randomizer;
 
-import lmr.randomizer.node.CustomDoorPlacement;
-import lmr.randomizer.node.CustomItemPlacement;
-import lmr.randomizer.node.CustomPlacementData;
-import lmr.randomizer.node.NodeWithRequirements;
+import lmr.randomizer.node.*;
 import lmr.randomizer.update.GameObjectId;
 
 import javax.imageio.ImageIO;
@@ -315,6 +312,9 @@ public class FileUtils {
                         } else {
                             if(line.startsWith("Door ")) {
                                 customPlacementData.getCustomDoorPlacements().add(new CustomDoorPlacement(target, assignment, null));
+                            }
+                            else if(line.startsWith("Transition")) {
+                                customPlacementData.getCustomTransitionPlacements().add(new CustomTransitionPlacement(target, assignment));
                             }
                             else {
                                 customPlacementData.getCustomItemPlacements().add(

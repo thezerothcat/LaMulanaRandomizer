@@ -6,6 +6,7 @@ import java.util.List;
 public class CustomPlacementData {
     private List<CustomItemPlacement> customItemPlacements = new ArrayList<>();
     private List<CustomDoorPlacement> customDoorPlacements = new ArrayList<>();
+    private List<CustomTransitionPlacement> customTransitionPlacements = new ArrayList<>();
     private List<String> removedLogicNodes = new ArrayList<>();
     private List<String> removedItems = new ArrayList<>();
     private List<String> cursedChests = new ArrayList<>();
@@ -23,6 +24,10 @@ public class CustomPlacementData {
 
     public List<CustomDoorPlacement> getCustomDoorPlacements() {
         return customDoorPlacements;
+    }
+
+    public List<CustomTransitionPlacement> getCustomTransitionPlacements() {
+        return customTransitionPlacements;
     }
 
     public List<String> getRemovedLogicNodes() {
