@@ -170,6 +170,23 @@ public class TransitionGateRandomizer {
         String chosenTransitionStart;
         String chosenTransitionEnd;
 
+        for(CustomTransitionPlacement customTransitionPlacement : DataFromFile.getCustomPlacementData().getCustomTransitionPlacements()) {
+            chosenTransitionStart = customTransitionPlacement.getTargetTransition().replace("Transition ", "Transition: ");
+            chosenTransitionEnd = customTransitionPlacement.getDestinationTransition().replace("Transition ", "Transition: ");
+
+            transitionGateDestinationMap.put(chosenTransitionStart, chosenTransitionEnd);
+            transitionGateDestinationMap.put(chosenTransitionEnd, chosenTransitionStart);
+
+            leftTransitions.remove(chosenTransitionStart);
+            leftTransitions.remove(chosenTransitionEnd);
+            unsafeLeftTransitions.remove(chosenTransitionStart);
+            unsafeLeftTransitions.remove(chosenTransitionEnd);
+            rightTransitions.remove(chosenTransitionStart);
+            rightTransitions.remove(chosenTransitionEnd);
+            unsafeRightTransitions.remove(chosenTransitionStart);
+            unsafeRightTransitions.remove(chosenTransitionEnd);
+        }
+
         while(!unsafeLeftTransitions.isEmpty()) {
             chosenTransitionStart = unsafeLeftTransitions.get(random.nextInt(unsafeLeftTransitions.size()));
             chosenTransitionEnd = rightTransitions.get(random.nextInt(rightTransitions.size()));

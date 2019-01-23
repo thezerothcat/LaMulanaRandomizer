@@ -951,9 +951,11 @@ public class Main {
 
         private boolean isValidTransition(String transition) {
             String formattedTransition = transition.replace("Transition ", "Transition: ");
-            return TransitionGateRandomizer.getTransitionList().contains(formattedTransition)
+            return "Transition: Goddess W1".equals(formattedTransition)
+                    || "Transition: Inferno W1".equals(formattedTransition)
+                    || (TransitionGateRandomizer.getTransitionList().contains(formattedTransition)
                     && !formattedTransition.startsWith("Transition: Sun R")
-                    && !formattedTransition.startsWith("Transition: Extinction L");
+                    && !formattedTransition.startsWith("Transition: Extinction L"));
         }
 
         private boolean isOneWayTransition(String transition) {
