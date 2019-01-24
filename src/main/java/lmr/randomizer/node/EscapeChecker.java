@@ -2,7 +2,10 @@ package lmr.randomizer.node;
 
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
+import lmr.randomizer.Settings;
 import lmr.randomizer.random.BacksideDoorRandomizer;
+import lmr.randomizer.random.ItemRandomizer;
+import lmr.randomizer.random.ShopRandomizer;
 import lmr.randomizer.random.TransitionGateRandomizer;
 
 import java.util.*;
@@ -19,12 +22,17 @@ public class EscapeChecker {
 
     private BacksideDoorRandomizer backsideDoorRandomizer;
     private TransitionGateRandomizer transitionGateRandomizer;
+    private ItemRandomizer itemRandomizer;
+    private ShopRandomizer shopRandomizer;
 
     public EscapeChecker(BacksideDoorRandomizer backsideDoorRandomizer, TransitionGateRandomizer transitionGateRandomizer,
+                         ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer,
                          Set<String> accessedNodesFromValidation) {
         this.backsideDoorRandomizer = backsideDoorRandomizer;
         this.transitionGateRandomizer = transitionGateRandomizer;
-        buildFilteredRequirementsMap();
+        this.itemRandomizer = itemRandomizer;
+        this.shopRandomizer = shopRandomizer;
+        mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
 
         queuedUpdates.add("Location: True Shrine of the Mother");
         queuedUpdates.add("State: Escape");
@@ -36,13 +44,23 @@ public class EscapeChecker {
                     && !accessedNodeFromValidation.startsWith("Location:")
                     && !accessedNodeFromValidation.startsWith("Coin:")
                     && !accessedNodeFromValidation.startsWith("Transition:")
-                    && !accessedNodeFromValidation.startsWith("Exit:")) {
+                    && !accessedNodeFromValidation.startsWith("Exit:")
+                    && !accessedNodeFromValidation.startsWith("Door:")) {
                 queuedUpdates.add(accessedNodeFromValidation);
             }
         }
         for(String queuedUpdateNode : queuedUpdates) {
             mapOfNodeNameToRequirementsObject.remove(queuedUpdateNode);
         }
+        if(Settings.getEnabledGlitches().contains("Raindrop")) {
+            NodeWithRequirements nodeWithRequirements = mapOfNodeNameToRequirementsObject.get("Location: Surface [Main]");
+            if(nodeWithRequirements == null) {
+                nodeWithRequirements = new NodeWithRequirements("Location: Surface [Main]");
+                mapOfNodeNameToRequirementsObject.put("Location: Surface [Main]", nodeWithRequirements);
+            }
+            nodeWithRequirements.addRequirementSet(new ArrayList<>(Arrays.asList("Glitch: Raindrop")));
+        }
+        backsideDoorRandomizer.rebuildRequirementsMap();
         FileUtils.log("Nodes accessible at escape start: " + queuedUpdates);
     }
 
@@ -52,18 +70,6 @@ public class EscapeChecker {
             copyMap.put(entry.getKey(), new NodeWithRequirements(entry.getValue()));
         }
         return copyMap;
-    }
-
-    private void buildFilteredRequirementsMap() {
-        mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
-        Set<String> nodeNames = new HashSet<>(mapOfNodeNameToRequirementsObject.keySet());
-        NodeType nodeType;
-        for(String nodeName : nodeNames) {
-            nodeType = mapOfNodeNameToRequirementsObject.get(nodeName).getType();
-            if(NodeType.ITEM_LOCATION.equals(nodeType) || NodeType.SHOP.equals(nodeType)) {
-                mapOfNodeNameToRequirementsObject.remove(nodeName);
-            }
-        }
     }
 
     public boolean isSuccess() {
@@ -100,7 +106,33 @@ public class EscapeChecker {
     private void handleNodeAccess(String nodeName, NodeType nodeType, Integer attemptNumber) {
         switch (nodeType) {
             case ITEM_LOCATION:
+                if(nodeName.startsWith("Coin:") && !Settings.isRandomizeCoinChests()) {
+                    break;
+                }
+                if(nodeName.startsWith("Trap:") && !Settings.isRandomizeTrapItems()) {
+                    break;
+                }
+                String item = itemRandomizer.getItem(nodeName);
+                if (item == null) {
+                    throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
+                }
+                if (!Settings.getCurrentRemovedItems().contains(item) && !Settings.getRemovedItems().contains(item)) {
+                    FileUtils.logDetail("Found item " + item, attemptNumber);
+                    queuedUpdates.add(item);
+                }
+                break;
             case SHOP:
+                for (String shopItem : shopRandomizer.getShopItems(nodeName)) {
+                    if (shopItem == null) {
+                        throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
+                    }
+                    if (!accessedNodes.contains(shopItem) && !queuedUpdates.contains(shopItem)
+                            && !Settings.getRemovedItems().contains(shopItem)
+                            && !Settings.getCurrentRemovedItems().contains(shopItem)) {
+                        FileUtils.logDetail("Found item " + shopItem, attemptNumber);
+                        queuedUpdates.add(shopItem);
+                    }
+                }
                 break;
             case MAP_LOCATION:
                 FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
