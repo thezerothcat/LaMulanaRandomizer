@@ -48,6 +48,12 @@ public class MoneyChecker {
         return queuedUpdates;
     }
 
+    public void computeStartingLocationAccess(Integer attemptNumber) {
+        computeAccessibleNodes("Location: Surface [Main]", attemptNumber);
+        computeAccessibleNodes("Exit: Surface [Main]", attemptNumber);
+        queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits("Exit: Surface [Main]", attemptNumber));
+    }
+
     public void computeAccessibleNodes(String newState, Integer attemptNumber) {
         String stateToUpdate = newState;
         FileUtils.logDetail("Checking progress for node " + newState, attemptNumber);
@@ -100,45 +106,82 @@ public class MoneyChecker {
     }
 
     public Integer getShopPrice(String itemName, String shopName) {
-        if(!accessedNodes.contains("State: Fairy") && availableShops.contains(shopName) && accessedAreas.size() <= 3) {
-            if(accessedMoney <= 80) {
-                if("Plane Model".equals(itemName)
-                        && accessedAreas.contains("Tower of the Goddess")) {
+        if(!accessedNodes.contains("State: Fairy") && !accessedNodes.contains("Location: Dimensional Corridor")
+                && availableShops.contains(shopName) && accessedAreas.size() <= 3) {
+            if("Plane Model".equals(itemName)
+                    && accessedAreas.contains("Tower of the Goddess")) {
+                return accessedMoney < 50 ? accessedMoney : 50;
+            }
+            if("Ankh Jewel".equals(itemName) && accessedAreas.contains("Mausoleum of the Giants")) {
+                return accessedMoney < 40 ? accessedMoney : 40;
+            }
+            if("Bronze Mirror".equals(itemName)
+                    && (accessedAreas.contains("Gate of Guidance") || accessedAreas.contains("Mausoleum of the Giants"))
+                    || accessedAreas.contains("Temple of the Sun")) {
+                return accessedMoney < 50 ? accessedMoney : 50;
+            }
+            if("Helmet".equals(itemName) && accessedAreas.contains("Spring in the Sky")) {
+                return accessedMoney < 50 ? accessedMoney : 50;
+            }
+            if("Feather".equals(itemName)) {
+                if(accessedAreas.contains("Graveyard of the Giants")) {
                     return accessedMoney < 50 ? accessedMoney : 50;
                 }
-                if("Ankh Jewel".equals(itemName) && accessedAreas.contains("Mausoleum of the Giants")) {
-                    return accessedMoney < 40 ? accessedMoney : 40;
-                }
-                if("Bronze Mirror".equals(itemName) && accessedAreas.contains("Mausoleum of the Giants")) {
+                if(accessedAreas.contains("Shrine of the Mother")) {
                     return accessedMoney < 50 ? accessedMoney : 50;
                 }
-                if("Feather".equals(itemName)) {
-                    if(accessedAreas.contains("Graveyard of the Giants")) {
-                        return accessedMoney < 50 ? accessedMoney : 50;
-                    }
-                    if(accessedAreas.contains("Tower of the Goddess")) {
-                        return accessedMoney < 80 ? accessedMoney : 80;
-                    }
-                    if(accessedAreas.contains("Chamber of Birth")) {
-                        return accessedMoney < 30 ? accessedMoney : 30;
-                    }
+                if(accessedAreas.contains("Tower of the Goddess")) {
+                    return accessedMoney < 80 ? accessedMoney : 80;
                 }
-                if("Bomb".equals(itemName) && accessedAreas.contains("Graveyard of the Giants")) {
+                if(accessedAreas.contains("Chamber of Birth")) {
+                    return accessedMoney < 30 ? accessedMoney : 30;
+                }
+                if(accessedAreas.contains("Dimensional Corridor")) {
+                    return accessedMoney < 80 ? accessedMoney : 80;
+                }
+                if(accessedAreas.contains("Tower of Ruin")) {
+                    return accessedMoney < 80 ? accessedMoney : 80;
+                }
+            }
+            if("Fruit of Eden".equals(itemName) && accessedNodes.contains("Location: Gate of Illusion [Eden]")) {
+                return accessedMoney < 50 ? accessedMoney : 50;
+            }
+            if("Hand Scanner".equals(itemName) && accessedAreas.contains("Gate of Illusion")) {
+                return accessedMoney < 50 ? accessedMoney : 50;
+            }
+            if("Bomb".equals(itemName) && accessedAreas.contains("Graveyard of the Giants")) {
+                return accessedMoney < 50 ? accessedMoney : 50;
+            }
+            if("Bomb".equals(itemName) && accessedAreas.contains("Dimensional Corridor") && Settings.getEnabledDamageBoosts().contains("Item")) {
+                return accessedMoney < 20 ? accessedMoney : 20; // Extra cheap because ammo is also needed
+            }
+            if("Ring".equals(itemName) && accessedAreas.contains("Graveyard of the Giants")) {
+                return accessedMoney < 80 ? accessedMoney : 80;
+            }
+            if("Grapple Claw".equals(itemName)
+                    && ((accessedAreas.contains("Graveyard of the Giants") && Settings.getEnabledGlitches().contains("Ice Raindrop"))
+                    || (Settings.getEnabledGlitches().contains("Raindrop")))) {
+                return accessedMoney < 50 ? accessedMoney : 50;
+            }
+            if("Hermes' Boots".equals(itemName)
+                    && (Settings.getEnabledGlitches().contains("Raindrop") || Settings.getEnabledGlitches().contains("Object Zip"))) {
+                return accessedMoney < 80 ? accessedMoney : 80;
+            }
+            if(accessedAreas.contains("Temple of Moonlight")
+                    && ("Shuriken".equals(itemName) || "Rolling Shuriken".equals(itemName)
+                    || "Caltrops".equals(itemName) || "Bomb".equals(itemName)
+                    || "Chakram".equals(itemName) || "Pistol".equals(itemName))) {
+                if(!accessedNodes.contains("Attack: Shuriken") && !accessedNodes.contains("Attack: Rolling Shuriken")
+                        && !accessedNodes.contains("Attack: Caltrops") && !accessedNodes.contains("Attack: Bomb")
+                        && !accessedNodes.contains("Attack: Chakram") && !accessedNodes.contains("Attack: Pistol")) {
                     return accessedMoney < 50 ? accessedMoney : 50;
                 }
-                if(accessedAreas.contains("Temple of Moonlight")
-                        && ("Shuriken".equals(itemName) || "Rolling Shuriken".equals(itemName)
-                        || "Caltrops".equals(itemName) || "Bomb".equals(itemName)
-                        || "Chakram".equals(itemName) || "Pistol".equals(itemName))) {
-                    if(!accessedNodes.contains("Attack: Shuriken") && !accessedNodes.contains("Attack: Rolling Shuriken")
-                            && !accessedNodes.contains("Attack: Caltrops") && !accessedNodes.contains("Attack: Bomb")
-                            && !accessedNodes.contains("Attack: Chakram") && !accessedNodes.contains("Attack: Pistol")) {
-                        return accessedMoney < 50 ? accessedMoney : 50;
-                    }
-                }
-                if("Flare Gun".equals(itemName) && accessedAreas.contains("Chamber of Extinction")) {
-                    return accessedMoney < 50 ? accessedMoney : 50;
-                }
+            }
+            if("Flare Gun".equals(itemName) && accessedAreas.contains("Chamber of Extinction")) {
+                return accessedMoney < 50 ? accessedMoney : 50;
+            }
+            if("Key of Eternity".equals(itemName) && accessedAreas.contains("Endless Corridor")) {
+                return accessedMoney < 50 ? accessedMoney : 50;
             }
         }
         return null;
@@ -186,17 +229,17 @@ public class MoneyChecker {
                 queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits(nodeName, attemptNumber));
                 break;
             case SHOP:
-                for (String shopItem : shopRandomizer.getShopItems(nodeName)) {
-                    availableShops.add(nodeName);
-                    if (shopItem == null) {
-                        throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
-                    }
+                availableShops.add(nodeName);
+//                for (String shopItem : shopRandomizer.getShopItems(nodeName)) {
+//                    if (shopItem == null) {
+//                        throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
+//                    }
 //                    if (!accessedNodes.contains(shopItem) && !queuedUpdates.contains(shopItem)
 //                            && !Settings.getRemovedItems().contains(shopItem)
 //                            && !Settings.getCurrentRemovedItems().contains(shopItem)) {
 //                        availableShopItems.add(shopItem);
 //                    }
-                }
+//                }
                 break;
             case TRANSITION:
                 queuedUpdates.add(nodeName);

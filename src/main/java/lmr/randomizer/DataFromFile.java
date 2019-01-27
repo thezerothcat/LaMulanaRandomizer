@@ -47,7 +47,7 @@ public final class DataFromFile {
             55, 56, 5, 58, 59, 60, 61, 63, 64, 65, 66, 67, 68, 69, 73, 76, 91, 96, 97, 98, 99, 100, 102, 103, 104);
 
     public static List<String> POSSIBLE_GLITCHES = Arrays.asList("Lamp Glitch", "Cat Pause",
-            "Raindrop", "Ice Raindrop", "Pot Clip", "Object Zip");
+            "Raindrop", "Ice Raindrop", "Pot Clip", "Object Zip", "Screen Mash");
     public static List<String> POSSIBLE_DBOOSTS = Arrays.asList("Item", "Environment", "Enemy");
 
     public static String EXPLODING_CHEST_NAME = "Trap: Exploding";

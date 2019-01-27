@@ -2,6 +2,10 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+2.11
+-----------------------------
+Added screen mash to supported glitches. Assorted bugfixes and logic updates.
+
 2.10
 -----------------------------
 Generation performance improvements by N-eil. Progress dialog improvements by Worse Than You. Bugfix for random removed items when all subweapons are removed. Backside door plando added. Assorted logic adjustments.

@@ -4,3 +4,4 @@ Glitch: Raindrop => Hermes' Boots, Grapple Claw, Setting: Raindrop
 Glitch: Ice Raindrop => Grapple Claw, Setting: Ice Raindrop
 Glitch: Pot Clip => Grapple Claw, Setting: Pot Clip
 Glitch: Object Zip => Hermes' Boots, Setting: Object Zip
+Glitch: Screen Mash => Hermes' Boots, Grapple Claw, Setting: Screen Mash

@@ -1166,6 +1166,7 @@ public class Main {
                     FileUtils.logDetail("Placed pipe transitions", attempt);
 
                     moneyChecker = new MoneyChecker(itemRandomizer, shopRandomizer, transitionGateRandomizer);
+                    moneyChecker.computeStartingLocationAccess(attempt);
                     for (String startingNode : startingNodes) {
                         moneyChecker.computeAccessibleNodes(startingNode, attempt);
                     }
