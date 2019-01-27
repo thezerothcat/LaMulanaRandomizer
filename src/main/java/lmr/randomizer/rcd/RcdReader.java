@@ -234,6 +234,7 @@ public final class RcdReader {
                 Screen screen = (Screen)objectContainer;
                 if(screen.getZoneIndex() == 0 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
                     if(Settings.isRandomizeTransitionGates()) {
+                        // Guidance to Surface escape blockage
                         for (TestByteOperation flagTest : obj.getTestByteOperations()) {
                             if(flagTest.getIndex() == 0x0fe && flagTest.getValue() == 3) {
                                 keepObject = false;
@@ -249,6 +250,17 @@ public final class RcdReader {
                     testByteOperation.setOp(ByteOp.FLAG_EQUALS);
                     testByteOperation.setValue((byte)0);
                     obj.getTestByteOperations().add(testByteOperation);
+                }
+                else if(screen.getZoneIndex() == 4 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
+                    if(Settings.isRandomizeTransitionGates()) {
+                        // Spring to Surface escape blockage
+                        for (TestByteOperation flagTest : obj.getTestByteOperations()) {
+                            if (flagTest.getIndex() == 0x0fe && flagTest.getValue() == 3) {
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
                 }
                 else if(screen.getZoneIndex() == 6) {
                     if(screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {

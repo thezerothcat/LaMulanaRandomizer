@@ -775,7 +775,7 @@ public final class GameDataTracker {
                     }
                 }
                 else if(flagTest.getIndex() == 0x14c) {
-                    if(Settings.isRandomizeBacksideDoors()) {
+                    if(Settings.isRandomizeBacksideDoors() || Settings.isRandomizeTransitionGates()) {
                         gameObject.getArgs().set(4, (short)2);
                     }
                 }
@@ -848,172 +848,187 @@ public final class GameDataTracker {
             }
         }
         else if (gameObject.getId() == 0x98) {
-            if(Settings.isRandomizeBacksideDoors() && gameObject.getArgs().get(0) == 0) {
-                Screen screen = (Screen)gameObject.getObjectContainer();
-                String doorName = null;
-                int zone = screen.getZoneIndex();
-                if(zone == 0) {
-                    // Gate of Guidance => Gate of Illusion
-                    if(screen.getRoomIndex() != 1) {
-                        doorName = "Door: F1";
+            if(gameObject.getArgs().get(0) == 0) {
+                if(Settings.isRandomizeBacksideDoors()) {
+                    Screen screen = (Screen)gameObject.getObjectContainer();
+                    String doorName = null;
+                    int zone = screen.getZoneIndex();
+                    if(zone == 0) {
+                        // Gate of Guidance => Gate of Illusion
+                        if(screen.getRoomIndex() != 1) {
+                            doorName = "Door: F1";
+                        }
                     }
-                }
-                else if(zone == 1) {
-                    // Surface => Tower of the Goddess
-                    doorName = "Door: F5";
+                    else if(zone == 1) {
+                        // Surface => Tower of the Goddess
+                        doorName = "Door: F5";
 
-                    GameObject added = AddObject.addMissingBacksideDoorCover(gameObject, 0x153);
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        GameObject added = AddObject.addMissingBacksideDoorCover(gameObject, 0x153);
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(added);
                     }
-                    backsideDoors.add(added);
-                }
-                else if(zone == 2) {
-                    // Mausoleum of the Giants => Graveyard of the Giants
-                    doorName = "Door: F2";
-                }
-                else if(zone == 3) {
-                    // Temple of the Sun => Temple of Moonlight
-                    doorName = "Door: F3";
-                }
-                else if(zone == 5) {
-                    if(screen.getRoomIndex() == 8) {
-                        // Inferno Cavern [Viy] => Tower of Ruin [Southwest]
-                        doorName = "Door: F4";
+                    else if(zone == 2) {
+                        // Mausoleum of the Giants => Graveyard of the Giants
+                        doorName = "Door: F2";
                     }
-                    else {
-                        // Inferno Cavern [Spikes] => Tower of Ruin [Top]
-                        doorName = "Door: F7";
+                    else if(zone == 3) {
+                        // Temple of the Sun => Temple of Moonlight
+                        doorName = "Door: F3";
                     }
-                }
-                else if(zone == 6) {
-                    if(screen.getRoomIndex() == 7) {
-                        if(Settings.isRandomizeTransitionGates()) {
-                            Integer flagIndexToRemove = null;
-                            for(int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
-                                TestByteOperation testByteOperation = gameObject.getTestByteOperations().get(i);
-                                if(testByteOperation.getIndex() == 0x382) {
-                                    flagIndexToRemove = i;
-                                    break;
+                    else if(zone == 5) {
+                        if(screen.getRoomIndex() == 8) {
+                            // Inferno Cavern [Viy] => Tower of Ruin [Southwest]
+                            doorName = "Door: F4";
+                        }
+                        else {
+                            // Inferno Cavern [Spikes] => Tower of Ruin [Top]
+                            doorName = "Door: F7";
+                        }
+                    }
+                    else if(zone == 6) {
+                        if(screen.getRoomIndex() == 7) {
+                            if(Settings.isRandomizeTransitionGates()) {
+                                Integer flagIndexToRemove = null;
+                                for(int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                                    TestByteOperation testByteOperation = gameObject.getTestByteOperations().get(i);
+                                    if(testByteOperation.getIndex() == 0x382) {
+                                        flagIndexToRemove = i;
+                                        break;
+                                    }
+                                }
+                                if(flagIndexToRemove != null) {
+                                    gameObject.getTestByteOperations().remove((int)flagIndexToRemove);
                                 }
                             }
-                            if(flagIndexToRemove != null) {
-                                gameObject.getTestByteOperations().remove((int)flagIndexToRemove);
+                        }
+                        else {
+                            // Chamber of Extinction [Magatama Left] => Chamber of Birth [Northeast]
+                            doorName = "Door: F6";
+                            replaceBacksideDoorFlags(gameObject, 0x0fb, 0x1d0, false);
+
+                            GameObject added = AddObject.addMissingBacksideDoorTimerAndSound(screen, 0x0fb, 0x1d0);
+                            List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                            if(backsideDoors == null) {
+                                backsideDoors = new ArrayList<>();
+                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
                             }
+                            backsideDoors.add(added);
+
+                            added = AddObject.addMissingBacksideDoorCover(gameObject, 0x1d0);
+                            backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                            if(backsideDoors == null) {
+                                backsideDoors = new ArrayList<>();
+                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                            }
+                            backsideDoors.add(added);
+
+                            added = AddObject.addMissingBacksideMirrorTimerAndSound(gameObject.getObjectContainer(), 0x2b9);
+                            backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                            if(backsideDoors == null) {
+                                backsideDoors = new ArrayList<>();
+                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                            }
+                            backsideDoors.add(added);
+
+                            added = AddObject.addMissingBacksideDoorMirrorCoverGraphic(gameObject, 0x2b9, true);
+                            backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                            if(backsideDoors == null) {
+                                backsideDoors = new ArrayList<>();
+                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                            }
+                            backsideDoors.add(added);
                         }
                     }
-                    else {
-                        // Chamber of Extinction [Magatama Left] => Chamber of Birth [Northeast]
-                        doorName = "Door: F6";
-                        replaceBacksideDoorFlags(gameObject, 0x0fb, 0x1d0, false);
+                    else if(zone == 10) {
+                        // Gate of Illusion [Grail] => Gate of Guidance
+                        doorName = "Door: B1";
+                    }
+                    else if(zone == 11) {
+                        // Graveyard of the Giants [West] => Mausoleum of the Giants
+                        doorName = "Door: B2";
+                    }
+                    else if(zone == 12) {
+                        // Temple of Moonlight [Lower] => Temple of the Sun [Main]
+                        doorName = "Door: B3";
+                    }
+                    else if(zone == 13) {
+                        // Tower of the Goddess [Lower] => Surface [Main]
+                        if(screen.getRoomIndex() == 0) {
+                            doorName = "Door: B5";
+                        }
+                    }
+                    else if(zone == 14) {
+                        if(screen.getRoomIndex() == 2) {
+                            // Tower of Ruin [Southwest] => Inferno Cavern [Viy]
+                            doorName = "Door: B4";
+                        }
+                        else {
+                            // Tower of Ruin [Top] => Inferno Cavern [Spikes]
+                            doorName = "Door: B7";
+                            replaceBacksideDoorFlags(gameObject, 0x0fc, 0x1c0, false);
 
-                        GameObject added = AddObject.addMissingBacksideDoorTimerAndSound(screen, 0x0fb, 0x1d0);
+                            GameObject added = AddObject.addMissingBacksideDoorTimerAndSound(screen, 0x0fc, 0x1c0);
+                            List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                            if(backsideDoors == null) {
+                                backsideDoors = new ArrayList<>();
+                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                            }
+                            backsideDoors.add(added);
+
+                            added = AddObject.addMissingBacksideDoorCover(gameObject, 0x1c0);
+                            backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                            if(backsideDoors == null) {
+                                backsideDoors = new ArrayList<>();
+                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                            }
+                            backsideDoors.add(added);
+
+                            added = AddObject.addMissingBacksideMirrorTimerAndSound(gameObject.getObjectContainer(), 0x3b7);
+                            backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                            if(backsideDoors == null) {
+                                backsideDoors = new ArrayList<>();
+                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                            }
+                            backsideDoors.add(added);
+
+                            added = AddObject.addMissingBacksideDoorMirrorCoverGraphic(gameObject, 0x3b7, false);
+                            backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                            if(backsideDoors == null) {
+                                backsideDoors = new ArrayList<>();
+                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                            }
+                            backsideDoors.add(added);
+                        }
+                    }
+                    else if(zone == 15) {
+                        // Chamber of Birth [Northeast] => Chamber of Extinction [Magatama Left]
+                        doorName = "Door: B6";
+                    }
+                    if(doorName != null) {
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
                         if(backsideDoors == null) {
                             backsideDoors = new ArrayList<>();
                             mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
                         }
-                        backsideDoors.add(added);
-
-                        added = AddObject.addMissingBacksideDoorCover(gameObject, 0x1d0);
-                        backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                        }
-                        backsideDoors.add(added);
-
-                        added = AddObject.addMissingBacksideMirrorTimerAndSound(gameObject.getObjectContainer(), 0x2b9);
-                        backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                        }
-                        backsideDoors.add(added);
-
-                        added = AddObject.addMissingBacksideDoorMirrorCoverGraphic(gameObject, 0x2b9, true);
-                        backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                        }
-                        backsideDoors.add(added);
+                        backsideDoors.add(gameObject);
                     }
                 }
-                else if(zone == 10) {
-                    // Gate of Illusion [Grail] => Gate of Guidance
-                    doorName = "Door: B1";
-                }
-                else if(zone == 11) {
-                    // Graveyard of the Giants [West] => Mausoleum of the Giants
-                    doorName = "Door: B2";
-                }
-                else if(zone == 12) {
-                    // Temple of Moonlight [Lower] => Temple of the Sun [Main]
-                    doorName = "Door: B3";
-                }
-                else if(zone == 13) {
-                    // Tower of the Goddess [Lower] => Surface [Main]
-                    if(screen.getRoomIndex() == 0) {
-                        doorName = "Door: B5";
-                    }
-                }
-                else if(zone == 14) {
-                    if(screen.getRoomIndex() == 2) {
-                        // Tower of Ruin [Southwest] => Inferno Cavern [Viy]
-                        doorName = "Door: B4";
-                    }
-                    else {
-                        // Tower of Ruin [Top] => Inferno Cavern [Spikes]
-                        doorName = "Door: B7";
-                        replaceBacksideDoorFlags(gameObject, 0x0fc, 0x1c0, false);
-
-                        GameObject added = AddObject.addMissingBacksideDoorTimerAndSound(screen, 0x0fc, 0x1c0);
-                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                else if(Settings.isRandomizeTransitionGates()) {
+                    // Re-enable backside door during the escape
+                    Integer flagTestToRemove = null;
+                    for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                        if (gameObject.getTestByteOperations().get(i).getIndex() == 0x0fe) {
+                            flagTestToRemove = i;
+                            break;
                         }
-                        backsideDoors.add(added);
-
-                        added = AddObject.addMissingBacksideDoorCover(gameObject, 0x1c0);
-                        backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                        }
-                        backsideDoors.add(added);
-
-                        added = AddObject.addMissingBacksideMirrorTimerAndSound(gameObject.getObjectContainer(), 0x3b7);
-                        backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                        }
-                        backsideDoors.add(added);
-
-                        added = AddObject.addMissingBacksideDoorMirrorCoverGraphic(gameObject, 0x3b7, false);
-                        backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                        }
-                        backsideDoors.add(added);
                     }
-                }
-                else if(zone == 15) {
-                    // Chamber of Birth [Northeast] => Chamber of Extinction [Magatama Left]
-                    doorName = "Door: B6";
-                }
-                if(doorName != null) {
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                    if(flagTestToRemove != null) {
+                        gameObject.getTestByteOperations().remove((int)flagTestToRemove);
                     }
-                    backsideDoors.add(gameObject);
                 }
             }
         }
