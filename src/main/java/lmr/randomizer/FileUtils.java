@@ -18,8 +18,8 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.11.0";
-    private static final int CUSTOM_IMAGE_HEIGHT = 80;
+    public static final String VERSION = "2.11.1";
+    public static final int GRAPHICS_VERSION = 1;
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -764,16 +764,31 @@ public class FileUtils {
                 }
                 File graphicsFile = new File(graphicsPack, "01effect.png");
                 BufferedImage existing = ImageIO.read(graphicsFile);
-                if(existing.getHeight() != (512 + CUSTOM_IMAGE_HEIGHT)) {
+                boolean updateGraphics = false;
+                if(existing.getHeight() < 1024) {
+                    updateGraphics = true;
+                }
+                else {
+                    int version = existing.getRGB(1023, 1023);
+                    if(version < GRAPHICS_VERSION) {
+                        updateGraphics = true;
+                    }
+                }
+                if(updateGraphics) {
                     FileUtils.logFlush("Updating graphics file: " + graphicsFile.getAbsolutePath());
                     // Hasn't been updated yet.
                     BufferedImage newImage = new BufferedImage(existing.getWidth(), existing.getHeight() + custom.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                    BufferedImage backupImage = ImageIO.read(new File(graphicsPack, "01effect.png.bak"));
                     Graphics2D graphics2D = newImage.createGraphics();
-                    graphics2D.drawImage(existing, null, 0, 0);
-                    graphics2D.drawImage(custom, null, 0, existing.getHeight());
+                    graphics2D.drawImage(backupImage, null, 0, 0); // Use backup to ensure no duplication of file
+                    graphics2D.drawImage(custom, null, 0, backupImage.getHeight());
                     graphics2D.dispose();
+                    newImage.setRGB(1023, 1023, GRAPHICS_VERSION);
                     ImageIO.write(newImage, "png", graphicsFile);
                     FileUtils.log("Graphics file successfully updated");
+                }
+                else {
+                    FileUtils.logFlush("Graphics file is already up to date: " + graphicsFile.getAbsolutePath());
                 }
             }
             catch (IOException ex) {

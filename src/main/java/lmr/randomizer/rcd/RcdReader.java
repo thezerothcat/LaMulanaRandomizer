@@ -130,7 +130,18 @@ public final class RcdReader {
                         }
                     }
 
-                    if(zoneIndex == 5) {
+                    if(zoneIndex == 1) {
+                        // Surface timer for resetting HT unlock
+                        for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                            if (testByteOperation.getIndex() == 0x3ba
+                                    && ByteOp.FLAG_GTEQ.equals(testByteOperation.getOp())
+                                    && testByteOperation.getValue() == 3) {
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
+                    else if(zoneIndex == 5) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
                             if (testByteOperation.getIndex() == 0x17a && testByteOperation.getValue() == 1) {
                                 keepObject = false;

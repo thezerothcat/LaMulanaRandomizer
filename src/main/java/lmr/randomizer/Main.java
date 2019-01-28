@@ -1229,9 +1229,7 @@ public class Main {
                     writeSaveFile();
                 }
 
-                if(Settings.isRandomizeBacksideDoors()) {
-                    FileUtils.updateGraphicsFiles();
-                }
+                FileUtils.updateGraphicsFiles(); // Always want to update graphics files, for backup Shrine door and possibly other things.
 
                 FileUtils.logFlush("Copying settings file");
                 File settingsFile = new File("randomizer-config.txt");
