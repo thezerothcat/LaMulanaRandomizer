@@ -41,6 +41,7 @@ public class EscapeChecker {
         }
         for(String accessedNodeFromValidation : accessedNodesFromValidation) {
             if(!"Holy Grail".equals(accessedNodeFromValidation)
+                    && !"State: Pre-Escape".equals(accessedNodeFromValidation)
                     && !accessedNodeFromValidation.startsWith("Location:")
                     && !accessedNodeFromValidation.startsWith("Coin:")
                     && !accessedNodeFromValidation.startsWith("Transition:")
@@ -58,7 +59,7 @@ public class EscapeChecker {
                 nodeWithRequirements = new NodeWithRequirements("Location: Surface [Main]");
                 mapOfNodeNameToRequirementsObject.put("Location: Surface [Main]", nodeWithRequirements);
             }
-            nodeWithRequirements.addRequirementSet(new ArrayList<>(Arrays.asList("Glitch: Raindrop")));
+            nodeWithRequirements.addRequirementSet(new ArrayList<>(Arrays.asList("Glitch: Raindrop", "Exit: Surface [Main]")));
         }
         backsideDoorRandomizer.rebuildRequirementsMap();
         FileUtils.log("Nodes accessible at escape start: " + queuedUpdates);
