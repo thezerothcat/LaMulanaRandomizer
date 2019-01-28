@@ -4,6 +4,7 @@ import lmr.randomizer.DataFromFile;
 import lmr.randomizer.Settings;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.GameObjectId;
+import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -908,12 +909,13 @@ public final class AddObject {
 
             GameObject itemGive = new GameObject(screen);
             itemGive.setId((short) 0xb5);
+            itemGive.setX(LocationCoordinateMapper.getStartingX());
+            itemGive.setY(LocationCoordinateMapper.getStartingY());
+
             itemGive.getArgs().add(gameObjectId.getInventoryArg());
             itemGive.getArgs().add((short)2);
             itemGive.getArgs().add((short)3);
             itemGive.getArgs().add((short)39);
-            itemGive.setX(940);
-            itemGive.setY(160);
 
             TestByteOperation itemGiveTest = new TestByteOperation();
             itemGiveTest.setIndex(gameObjectId.getWorldFlag());
@@ -1577,6 +1579,105 @@ public final class AddObject {
         if(Settings.isAutomaticMantras() && "Key Sword".equals(newContents)) {
             AddObject.addAutomaticMantras(objectContainer);
         }
+    }
+
+    public static void addSurfaceGrailTablet(Screen screen) {
+        GameObject grailTablet = new GameObject(screen);
+        grailTablet.setId((short)0x9e);
+        grailTablet.setX(1120);
+        grailTablet.setY(80);
+
+        grailTablet.getArgs().add((short)38);
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)40);
+        grailTablet.getArgs().add((short)40);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0xad3);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        grailTablet.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0xad3);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(1);
+        grailTablet.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(grailTablet);
+
+        if(Settings.isAutomaticGrailPoints()) {
+            addGrailDetector(grailTablet, 0xad3);
+        }
+    }
+
+    public static void addSpecialGrailTablet(Screen screen) {
+        GameObject grailTablet = new GameObject(screen);
+        grailTablet.setId((short)0x9f);
+        grailTablet.setX(400);
+        grailTablet.setY(160);
+
+        grailTablet.getArgs().add((short)38);
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)40);
+        grailTablet.getArgs().add((short)40);
+
+        screen.getObjects().add(grailTablet);
+
+        GameObject grailGraphic = new GameObject(screen);
+        grailGraphic.setId((short)0x93);
+        grailGraphic.setX(grailTablet.getX());
+        grailGraphic.setY(grailTablet.getY());
+
+        grailGraphic.getArgs().add((short)0); // Layer
+        grailGraphic.getArgs().add((short)0); // 01.effect.png for anything not 0-6?
+        grailGraphic.getArgs().add((short)40); // Imagex
+        grailGraphic.getArgs().add((short)0); // Imagey
+        grailGraphic.getArgs().add((short)40); // dx
+        grailGraphic.getArgs().add((short)40); // dy
+        grailGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        grailGraphic.getArgs().add((short)1); // Animation frames
+        grailGraphic.getArgs().add((short)0); // Pause frames
+        grailGraphic.getArgs().add((short)0); // Repeat count (<1 is forever)
+        grailGraphic.getArgs().add((short)0); // Hittile to fill with
+        grailGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        grailGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        grailGraphic.getArgs().add((short)0); // Cycle colors t/f
+        grailGraphic.getArgs().add((short)0); // Alpha/frame
+        grailGraphic.getArgs().add((short)255); // Max alpha
+        grailGraphic.getArgs().add((short)0); // R/frame
+        grailGraphic.getArgs().add((short)0); // Max R
+        grailGraphic.getArgs().add((short)0); // G/frame
+        grailGraphic.getArgs().add((short)0); // Max G
+        grailGraphic.getArgs().add((short)0); // B/frame
+        grailGraphic.getArgs().add((short)0); // Max B
+        grailGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        grailGraphic.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(grailGraphic);
+
+        GameObject grailSave = new GameObject(screen);
+        grailSave.setId((short)0xb6);
+        grailSave.setX(grailTablet.getX());
+        grailSave.setY(grailTablet.getY());
+
+        grailSave.getArgs().add((short)33);
+
+        screen.getObjects().add(grailSave);
     }
 
     public static void addGrailDetector(GameObject gameObject, int grailFlag) {

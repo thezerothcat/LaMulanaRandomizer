@@ -35,6 +35,7 @@ public class EscapeChecker {
         mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
 
         queuedUpdates.add("Location: True Shrine of the Mother");
+        queuedUpdates.add("Exit: True Shrine of the Mother");
         queuedUpdates.add("State: Escape");
         if(accessedNodesFromValidation.contains("Transition: Moonlight L1")) {
             queuedUpdates.add("State: Phase 1 Moonlight Access");
@@ -56,10 +57,10 @@ public class EscapeChecker {
         if(Settings.getEnabledGlitches().contains("Raindrop")) {
             NodeWithRequirements nodeWithRequirements = mapOfNodeNameToRequirementsObject.get("Location: Surface [Main]");
             if(nodeWithRequirements == null) {
-                nodeWithRequirements = new NodeWithRequirements("Location: Surface [Main]");
-                mapOfNodeNameToRequirementsObject.put("Location: Surface [Main]", nodeWithRequirements);
+                nodeWithRequirements = new NodeWithRequirements(Settings.getStartingLocation());
+                mapOfNodeNameToRequirementsObject.put(Settings.getStartingLocation(), nodeWithRequirements);
             }
-            nodeWithRequirements.addRequirementSet(new ArrayList<>(Arrays.asList("Glitch: Raindrop", "Exit: Surface [Main]")));
+            nodeWithRequirements.addRequirementSet(new ArrayList<>(Arrays.asList("Glitch: Raindrop", Settings.getStartingLocation().replace("Location:", "Exit:"))));
         }
         backsideDoorRandomizer.rebuildRequirementsMap();
         FileUtils.log("Nodes accessible at escape start: " + queuedUpdates);

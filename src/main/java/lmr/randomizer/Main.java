@@ -14,6 +14,7 @@ import lmr.randomizer.ui.MainPanel;
 import lmr.randomizer.ui.ProgressDialog;
 import lmr.randomizer.ui.TabbedPanel;
 import lmr.randomizer.update.GameDataTracker;
+import lmr.randomizer.update.LocationCoordinateMapper;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -1537,13 +1538,13 @@ public class Main {
         saveData[0] = (byte)1;
         saveData[3] = (byte)0;
         saveData[4] = (byte)0;
-        saveData[5] = (byte)1;
-        saveData[6] = (byte)2;
-        saveData[7] = (byte)1;
-        saveData[8] = (byte)1;
-        saveData[9] = (byte)24;
-        saveData[10] = (byte)0;
-        saveData[11] = (byte)-104;
+        saveData[5] = LocationCoordinateMapper.getStartingZone();
+        saveData[6] = LocationCoordinateMapper.getStartingRoom();
+        saveData[7] = LocationCoordinateMapper.getStartingScreen();
+        saveData[8] = (byte)((LocationCoordinateMapper.getStartingX() >> 8) & 0xff);
+        saveData[9] = (byte)(LocationCoordinateMapper.getStartingX() & 0xff);
+        saveData[10] = (byte)((LocationCoordinateMapper.getStartingY() >> 8) & 0xff);
+        saveData[11] = (byte)(LocationCoordinateMapper.getStartingY() & 0xff);
         saveData[12] = (byte)1;
         saveData[13] = (byte)0;
         saveData[14] = (byte)32;
@@ -1552,6 +1553,7 @@ public class Main {
         saveData[4624] = (byte)-1;
         saveData[4625] = (byte)-1;
         saveData[4630] = (byte)46;
+        saveData[0x1011 + 2 * 0x069 + 1] = (byte)41; // Starting weights
 
         int index = 4633;
         for(int i = 0; i < 46; i++) {

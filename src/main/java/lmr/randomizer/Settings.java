@@ -39,6 +39,7 @@ public final class Settings {
     private boolean randomizeCoinChests;
     private boolean randomizeTrapItems;
     private boolean randomizeEscapeChest;
+    private boolean randomizeStartingLocation;
     private boolean allowWhipStart;
     private boolean allowMainWeaponStart;
     private boolean allowSubweaponStart;
@@ -106,6 +107,7 @@ public final class Settings {
         randomizeTransitionGates = false;
         randomizeOneWayTransitions = false;
         randomizeBacksideDoors = false;
+        randomizeStartingLocation = false;
         removeSpaulder = false;
         replaceMapsWithWeights = false;
         automaticHardmode = false;
@@ -466,6 +468,25 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.randomizeBacksideDoors = randomizeBacksideDoors;
+    }
+
+    public static boolean isRandomizeStartingLocation() {
+//        return singleton.randomizeStartingLocation;
+        return true;
+    }
+
+    public static void setRandomizeStartingLocation(boolean randomizeStartingLocation, boolean update) {
+        if(update && randomizeStartingLocation != singleton.randomizeStartingLocation) {
+            singleton.changed = true;
+        }
+        singleton.randomizeStartingLocation = randomizeStartingLocation;
+    }
+
+    public static String getStartingLocation() {
+        if(!singleton.randomizeStartingLocation) {
+            return "Location: Surface [Main]";
+        }
+        return "Location: Gate of Time [Surface]";
     }
 
     public static boolean isReplaceMapsWithWeights() { return singleton.replaceMapsWithWeights; }
