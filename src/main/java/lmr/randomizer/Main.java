@@ -1029,7 +1029,7 @@ public class Main {
 
     protected static void doTheThing(ProgressDialog dialog) throws Exception {
         FileUtils.log(String.format("Shuffling items for seed %s", Settings.getStartingSeed()));
-        FileUtils.log("Settings string: " + Settings.generateShortString());
+        FileUtils.log("Settings string: " + Settings.generateShortString(false));
         if(DataFromFile.getCustomPlacementData().isCustomized()) {
             FileUtils.log("Custom placement data has been found and applied.");
         }

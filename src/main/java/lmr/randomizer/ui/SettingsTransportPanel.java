@@ -36,7 +36,7 @@ public class SettingsTransportPanel extends JPanel {
     private void generateSettingsString() {
         parent.updateSettings();
 
-        stringField.setText(Settings.generateShortString());
+        stringField.setText(Settings.generateShortString(false));
     }
 
     private void importSettings(TabbedPanel tabbedPanel) {

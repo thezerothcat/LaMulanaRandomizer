@@ -820,7 +820,7 @@ public final class Settings {
         }
     }
 
-    public static String generateShortString() {
+    public static String generateShortString(boolean displayFormat) {
         var settingsInt = new SettingsInt();
 
         settingsInt.appendSetting(getStartingSeed(), 1L << 31);
@@ -864,7 +864,10 @@ public final class Settings {
         settingsInt.appendSetting(singleton.minRandomRemovedItems, MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED);
         settingsInt.appendSetting(Math.max(0, singleton.maxRandomRemovedItems - singleton.minRandomRemovedItems), MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED - singleton.minRandomRemovedItems);
 
-        return FileUtils.VERSION + "-" + settingsInt.toBase32();
+        String base32 = settingsInt.toBase32();
+        if (displayFormat)
+            base32 = String.join(" ", base32.split("(?<=^(.{5})+)"));
+        return FileUtils.VERSION + "-" + base32;
     }
 
     public static void importShortString(String text) {
@@ -881,7 +884,7 @@ public final class Settings {
         var settingsInt = new SettingsInt();
 
         try {
-            settingsInt.setFromBase32(text.split("-", 2)[1]);
+            settingsInt.setFromBase32(text.split("-", 2)[1].replaceAll(" ", ""));
         } catch (SettingsInt.SettingsIntValueError ex) {
             JOptionPane.showMessageDialog(null, "Settings string malformed for this version");
             return;
