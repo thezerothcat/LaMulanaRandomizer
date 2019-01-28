@@ -292,31 +292,38 @@ public class FileUtils {
                             String specialData = assignment.substring(assignment.indexOf("{") + 1).replace("}", "");
                             assignment = assignment.substring(0, assignment.indexOf('{')).trim();
                             if(assignment.startsWith("Trap:")) {
+                                customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomItemPlacements().add(
                                         new CustomItemPlacement(target, assignment, specialData));
                             }
                             else if (line.startsWith("Door ")) {
+                                customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomDoorPlacements().add(new CustomDoorPlacement(target, assignment, specialData));
                             }
                             else if(target.startsWith("Shop ")) {
                                 lineParts = specialData.split(",");
                                 if (lineParts.length > 1) {
+                                    customPlacementData.setCustomized(true);
                                     customPlacementData.getCustomItemPlacements().add(
                                             new CustomItemPlacement(target, assignment, Short.parseShort(lineParts[1].trim()), Short.parseShort(lineParts[0].trim())));
                                 }
                                 else {
+                                    customPlacementData.setCustomized(true);
                                     customPlacementData.getCustomItemPlacements().add(
                                             new CustomItemPlacement(target, assignment, Short.parseShort(lineParts[0].trim()), null));
                                 }
                             }
                         } else {
                             if(line.startsWith("Door ")) {
+                                customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomDoorPlacements().add(new CustomDoorPlacement(target, assignment, null));
                             }
                             else if(line.startsWith("Transition")) {
+                                customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomTransitionPlacements().add(new CustomTransitionPlacement(target, assignment));
                             }
                             else {
+                                customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomItemPlacements().add(
                                         new CustomItemPlacement(lineParts[0].trim(), assignment, null));
                             }
@@ -327,31 +334,40 @@ public class FileUtils {
                     if(line.startsWith("!")) {
                         String removeItem = line.trim();
                         if(removeItem.startsWith("!")) {
+                            customPlacementData.setCustomized(true);
                             customPlacementData.getRemovedItems().add(removeItem.substring(1).trim());
                         }
                     }
                     else if (line.startsWith("Remove")) {
+                        customPlacementData.setCustomized(true);
                         customPlacementData.getRemovedItems().add(line.replace("Remove", "").trim());
                     }
                     else if (line.startsWith("Curse")) {
+                        customPlacementData.setCustomized(true);
                         customPlacementData.getCursedChests().add(line.replace("Curse", "").trim());
                     }
                     else if (line.startsWith("Weapon:")) {
+                        customPlacementData.setCustomized(true);
                         customPlacementData.setStartingWeapon(line.replace("Weapon:", "").trim());
                     }
                     else if (line.startsWith("Start:")) {
+                        customPlacementData.setCustomized(true);
                         customPlacementData.getStartingItems().add(line.replace("Start:", "").trim());
                     }
                     else if (line.startsWith("Remove Logic:")) {
+                        customPlacementData.setCustomized(true);
                         customPlacementData.getRemovedLogicNodes().add(line.replace("Remove Logic:", "").trim());
                     }
                     else if (line.equals("Skip Mantras")) {
+                        customPlacementData.setCustomized(true);
                         customPlacementData.setAutomaticMantras(true);
                     }
                     else if (line.equals("Alternate Mother Ankh")) {
+                        customPlacementData.setCustomized(true);
                         customPlacementData.setAlternateMotherAnkh(true);
                     }
                     else if (line.startsWith("Fill Vessel ")) {
+                        customPlacementData.setCustomized(true);
                         String color = line.replace("Fill Vessel ", "").trim();
                         if(color.equalsIgnoreCase("red")) {
                             customPlacementData.setMedicineColor("Red");

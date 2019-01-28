@@ -1029,6 +1029,10 @@ public class Main {
 
     protected static void doTheThing(ProgressDialog dialog) throws Exception {
         FileUtils.log(String.format("Shuffling items for seed %s", Settings.getStartingSeed()));
+        FileUtils.log("Settings string: " + Settings.generateShortString());
+        if(DataFromFile.getCustomPlacementData().isCustomized()) {
+            FileUtils.log("Custom placement data has been found and applied.");
+        }
 
         DataFromFile.clearAllData();
 
@@ -1608,7 +1612,7 @@ public class Main {
         CustomPlacementData customPlacementData = DataFromFile.getCustomPlacementData();
         String customStartingWeapon = customPlacementData.getStartingWeapon();
         if(customStartingWeapon != null) {
-            FileUtils.log("Selected starting weapon: " + customStartingWeapon);
+            FileUtils.log("Selected custom starting weapon: " + customStartingWeapon);
             Settings.setCurrentStartingWeapon(customStartingWeapon);
             return;
         }

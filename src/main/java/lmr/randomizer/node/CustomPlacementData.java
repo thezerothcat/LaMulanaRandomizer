@@ -15,6 +15,7 @@ public class CustomPlacementData {
 
     private String medicineColor;
 
+    private boolean customized;
     private boolean alternateMotherAnkh;
     private boolean automaticMantras;
 
@@ -60,6 +61,14 @@ public class CustomPlacementData {
 
     public void setMedicineColor(String medicineColor) {
         this.medicineColor = medicineColor;
+    }
+
+    public boolean isCustomized() {
+        return customized;
+    }
+
+    public void setCustomized(boolean customized) {
+        this.customized = customized;
     }
 
     public boolean isAlternateMotherAnkh() {
