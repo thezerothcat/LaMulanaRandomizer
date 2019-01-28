@@ -133,6 +133,22 @@ public class Main {
                             "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 }
             }
+            else if("importSeed".equals(e.getActionCommand())) {
+                JFileChooser zipFileChooser = new JFileChooser();
+                if(zipFileChooser.showOpenDialog(this.getParent()) == JFileChooser.APPROVE_OPTION) {
+                    Settings.saveSettings();
+                    if(FileUtils.importExistingSeed(zipFileChooser.getSelectedFile())) {
+                        JOptionPane.showMessageDialog(this,
+                                "La-Mulana has been updated.",
+                                "Import success!", JOptionPane.PLAIN_MESSAGE);
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(this,
+                                "Import failed",
+                                "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
             else if("restore".equals(e.getActionCommand())) {
                 if(!validateInstallDir()) {
                     JOptionPane.showMessageDialog(this,
