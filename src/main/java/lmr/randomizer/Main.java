@@ -1304,6 +1304,7 @@ public class Main {
     private static List<String> getStartingNodes() {
         List<String> startingNodes = new ArrayList<>();
         startingNodes.add(Settings.getCurrentStartingWeapon());
+        startingNodes.add("State: Pre-Escape");
         if(ItemRandomizer.ALL_SUBWEAPONS.contains(Settings.getCurrentStartingWeapon())) {
             startingNodes.add(Settings.getCurrentStartingWeapon() + " Ammo");
             if("Pistol".equals(Settings.getCurrentStartingWeapon())) {
