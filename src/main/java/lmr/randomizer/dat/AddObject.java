@@ -1667,7 +1667,7 @@ public final class AddObject {
         return escapeGate;
     }
 
-    public static GameObject addTrueShrineGate(GameObject basicGate) {
+    public static void addTrueShrineGate(GameObject basicGate) {
         GameObject trueShrineGate = new GameObject(basicGate);
 
         TestByteOperation testByteOperation = trueShrineGate.getTestByteOperations().get(0);
@@ -1675,10 +1675,16 @@ public final class AddObject {
         testByteOperation.setOp(ByteOp.FLAG_EQUALS);
         testByteOperation.setValue((byte)9);
 
+        // Add extra check for not during escape, since escape door is different.
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x382);
+        testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+        testByteOperation.setValue((byte)1);
+        trueShrineGate.getTestByteOperations().add(testByteOperation);
+
         trueShrineGate.getArgs().set(0, (short)18);
         trueShrineGate.getArgs().set(6, (short)0);
         basicGate.getObjectContainer().getObjects().add(trueShrineGate);
-        return trueShrineGate;
     }
 
     public static void addShrineMapSoundEffect(ObjectContainer objectContainer) {

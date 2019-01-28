@@ -3378,13 +3378,15 @@ public final class GameDataTracker {
         if(objectsToModify != null) {
             boolean firstObject = true;
             for (GameObject gameObject : objectsToModify) {
-                replaceTransitionGateArgs(gameObject, gateDestination);
-                replaceTransitionGateFlags(gameObject, gateToUpdate, gateDestination);
+                replaceTransitionGateArgs(gameObject, gateDestination); // First update the transitions so we can make a correct copy of the gate if needed.
                 if(gateDestination.startsWith("Transition: Shrine")
                         && !"Transition: Shrine D3".equals(gateDestination)
                         && gameObject.getTestByteOperations().get(0).getValue() != 1) {
+                    // Copy and add true shrine gate before updating flags, since flag update will complicate escape gate vs not-escape gate.
                     AddObject.addTrueShrineGate(gameObject);
                 }
+                replaceTransitionGateFlags(gameObject, gateToUpdate, gateDestination); // Update flags on the gate, as needed.
+
                 updateScreenTransition(gameObject, gateDestination); // todo: how to handle a case of multiple gates on the same side? good thing sun <> extinction isn't random yet
                 if(firstObject && "Transition: Illusion R2".equals(gateToUpdate)) {
                     AddObject.addIllusionFruitBlockHorizontal(gameObject);
@@ -4013,7 +4015,15 @@ public final class GameDataTracker {
             gameObject.getArgs().set(4, (short)392);
         }
         else if("Transition: Shrine D2".equals(gateDestination)) {
-            gameObject.getArgs().set(0, (short)9);
+            if(gameObject.getTestByteOperations().get(0).getValue() == 1) {
+                // Escape door
+                gameObject.getArgs().set(0, (short)18);
+            }
+            else {
+                // Non-escape door
+                gameObject.getArgs().set(0, (short)9);
+            }
+
             gameObject.getArgs().set(1, (short)9);
             gameObject.getArgs().set(2, (short)0);
             gameObject.getArgs().set(3, (short)300);
@@ -4298,6 +4308,13 @@ public final class GameDataTracker {
                 testByteOperation.setIndex(0x102);
                 testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
                 testByteOperation.setValue((byte)9);
+
+                // Add extra check for not during escape, since escape door is different.
+                testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(0x382);
+                testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+                testByteOperation.setValue((byte)1);
+                gameObject.getTestByteOperations().add(testByteOperation);
             }
         }
         else if(gateDestination.equals("Transition: Illusion R1")

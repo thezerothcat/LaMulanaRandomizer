@@ -133,6 +133,22 @@ public class Main {
                             "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 }
             }
+            else if("importSeed".equals(e.getActionCommand())) {
+                JFileChooser zipFileChooser = new JFileChooser();
+                if(zipFileChooser.showOpenDialog(this.getParent()) == JFileChooser.APPROVE_OPTION) {
+                    Settings.saveSettings();
+                    if(FileUtils.importExistingSeed(zipFileChooser.getSelectedFile())) {
+                        JOptionPane.showMessageDialog(this,
+                                "La-Mulana has been updated.",
+                                "Import success!", JOptionPane.PLAIN_MESSAGE);
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(this,
+                                "Import failed",
+                                "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
             else if("restore".equals(e.getActionCommand())) {
                 if(!validateInstallDir()) {
                     JOptionPane.showMessageDialog(this,
@@ -1013,6 +1029,10 @@ public class Main {
 
     protected static void doTheThing(ProgressDialog dialog) throws Exception {
         FileUtils.log(String.format("Shuffling items for seed %s", Settings.getStartingSeed()));
+        FileUtils.log("Settings string: " + Settings.generateShortString());
+        if(DataFromFile.getCustomPlacementData().isCustomized()) {
+            FileUtils.log("Custom placement data has been found and applied.");
+        }
 
         DataFromFile.clearAllData();
 
@@ -1229,9 +1249,7 @@ public class Main {
                     writeSaveFile();
                 }
 
-                if(Settings.isRandomizeBacksideDoors()) {
-                    FileUtils.updateGraphicsFiles();
-                }
+                FileUtils.updateGraphicsFiles(); // Always want to update graphics files, for backup Shrine door and possibly other things.
 
                 FileUtils.logFlush("Copying settings file");
                 File settingsFile = new File("randomizer-config.txt");
@@ -1594,7 +1612,7 @@ public class Main {
         CustomPlacementData customPlacementData = DataFromFile.getCustomPlacementData();
         String customStartingWeapon = customPlacementData.getStartingWeapon();
         if(customStartingWeapon != null) {
-            FileUtils.log("Selected starting weapon: " + customStartingWeapon);
+            FileUtils.log("Selected custom starting weapon: " + customStartingWeapon);
             Settings.setCurrentStartingWeapon(customStartingWeapon);
             return;
         }

@@ -18,8 +18,8 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.11.0";
-    private static final int CUSTOM_IMAGE_HEIGHT = 80;
+    public static final String VERSION = "2.11.1";
+    public static final int GRAPHICS_VERSION = 1;
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -292,31 +292,38 @@ public class FileUtils {
                             String specialData = assignment.substring(assignment.indexOf("{") + 1).replace("}", "");
                             assignment = assignment.substring(0, assignment.indexOf('{')).trim();
                             if(assignment.startsWith("Trap:")) {
+                                customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomItemPlacements().add(
                                         new CustomItemPlacement(target, assignment, specialData));
                             }
                             else if (line.startsWith("Door ")) {
+                                customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomDoorPlacements().add(new CustomDoorPlacement(target, assignment, specialData));
                             }
                             else if(target.startsWith("Shop ")) {
                                 lineParts = specialData.split(",");
                                 if (lineParts.length > 1) {
+                                    customPlacementData.setCustomized(true);
                                     customPlacementData.getCustomItemPlacements().add(
                                             new CustomItemPlacement(target, assignment, Short.parseShort(lineParts[1].trim()), Short.parseShort(lineParts[0].trim())));
                                 }
                                 else {
+                                    customPlacementData.setCustomized(true);
                                     customPlacementData.getCustomItemPlacements().add(
                                             new CustomItemPlacement(target, assignment, Short.parseShort(lineParts[0].trim()), null));
                                 }
                             }
                         } else {
                             if(line.startsWith("Door ")) {
+                                customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomDoorPlacements().add(new CustomDoorPlacement(target, assignment, null));
                             }
                             else if(line.startsWith("Transition")) {
+                                customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomTransitionPlacements().add(new CustomTransitionPlacement(target, assignment));
                             }
                             else {
+                                customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomItemPlacements().add(
                                         new CustomItemPlacement(lineParts[0].trim(), assignment, null));
                             }
@@ -327,31 +334,40 @@ public class FileUtils {
                     if(line.startsWith("!")) {
                         String removeItem = line.trim();
                         if(removeItem.startsWith("!")) {
+                            customPlacementData.setCustomized(true);
                             customPlacementData.getRemovedItems().add(removeItem.substring(1).trim());
                         }
                     }
                     else if (line.startsWith("Remove")) {
+                        customPlacementData.setCustomized(true);
                         customPlacementData.getRemovedItems().add(line.replace("Remove", "").trim());
                     }
                     else if (line.startsWith("Curse")) {
+                        customPlacementData.setCustomized(true);
                         customPlacementData.getCursedChests().add(line.replace("Curse", "").trim());
                     }
                     else if (line.startsWith("Weapon:")) {
+                        customPlacementData.setCustomized(true);
                         customPlacementData.setStartingWeapon(line.replace("Weapon:", "").trim());
                     }
                     else if (line.startsWith("Start:")) {
+                        customPlacementData.setCustomized(true);
                         customPlacementData.getStartingItems().add(line.replace("Start:", "").trim());
                     }
                     else if (line.startsWith("Remove Logic:")) {
+                        customPlacementData.setCustomized(true);
                         customPlacementData.getRemovedLogicNodes().add(line.replace("Remove Logic:", "").trim());
                     }
                     else if (line.equals("Skip Mantras")) {
+                        customPlacementData.setCustomized(true);
                         customPlacementData.setAutomaticMantras(true);
                     }
                     else if (line.equals("Alternate Mother Ankh")) {
+                        customPlacementData.setCustomized(true);
                         customPlacementData.setAlternateMotherAnkh(true);
                     }
                     else if (line.startsWith("Fill Vessel ")) {
+                        customPlacementData.setCustomized(true);
                         String color = line.replace("Fill Vessel ", "").trim();
                         if(color.equalsIgnoreCase("red")) {
                             customPlacementData.setMedicineColor("Red");
@@ -764,16 +780,31 @@ public class FileUtils {
                 }
                 File graphicsFile = new File(graphicsPack, "01effect.png");
                 BufferedImage existing = ImageIO.read(graphicsFile);
-                if(existing.getHeight() != (512 + CUSTOM_IMAGE_HEIGHT)) {
+                boolean updateGraphics = false;
+                if(existing.getHeight() < 1024) {
+                    updateGraphics = true;
+                }
+                else {
+                    int version = existing.getRGB(1023, 1023);
+                    if(version < GRAPHICS_VERSION) {
+                        updateGraphics = true;
+                    }
+                }
+                if(updateGraphics) {
                     FileUtils.logFlush("Updating graphics file: " + graphicsFile.getAbsolutePath());
                     // Hasn't been updated yet.
                     BufferedImage newImage = new BufferedImage(existing.getWidth(), existing.getHeight() + custom.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                    BufferedImage backupImage = ImageIO.read(new File(graphicsPack, "01effect.png.bak"));
                     Graphics2D graphics2D = newImage.createGraphics();
-                    graphics2D.drawImage(existing, null, 0, 0);
-                    graphics2D.drawImage(custom, null, 0, existing.getHeight());
+                    graphics2D.drawImage(backupImage, null, 0, 0); // Use backup to ensure no duplication of file
+                    graphics2D.drawImage(custom, null, 0, backupImage.getHeight());
                     graphics2D.dispose();
+                    newImage.setRGB(1023, 1023, GRAPHICS_VERSION);
                     ImageIO.write(newImage, "png", graphicsFile);
                     FileUtils.log("Graphics file successfully updated");
+                }
+                else {
+                    FileUtils.logFlush("Graphics file is already up to date: " + graphicsFile.getAbsolutePath());
                 }
             }
             catch (IOException ex) {

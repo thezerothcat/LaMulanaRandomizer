@@ -444,15 +444,15 @@ public final class DataFromFile {
             allNonShopItemsPlusAllRandomizedShopItems = null;
             nonRandomizedItems = null;
             allShops = null;
-            initialShops = null;
-            initialNonShopItemLocations = null;
             randomizedShopItems = null;
             randomRemovableItems = null;
             nonShopItemLocations = null;
-            bannedTrapLocations = null;
             mapOfNodeNameToRequirementsObject = null;
             mapOfRequirementsToNodeNameObject = null;
             winRequirements = null;
         }
+        initialShops = null;
+        initialNonShopItemLocations = null;
+        bannedTrapLocations = null;
     }
 }

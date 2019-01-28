@@ -13,8 +13,6 @@ public class ButtonPanel extends JPanel {
     JButton restoreSavesButton;
     JButton seedImportButton;
 
-    JFileChooser zipFileChooser;
-
     public ButtonPanel(Main.RandomizerUI randomizerUI) {
         super(new FlowLayout());
 
@@ -33,23 +31,9 @@ public class ButtonPanel extends JPanel {
         restoreSavesButton.setActionCommand("restoreSaves");
         add(restoreSavesButton);
 
-        zipFileChooser = new JFileChooser();
-
         seedImportButton = new JButton(Translations.getText("button.importSeed"));
-        seedImportButton.addActionListener(e -> {
-            if(zipFileChooser.showOpenDialog(this.getParent()) == JFileChooser.APPROVE_OPTION) {
-                if(FileUtils.importExistingSeed(zipFileChooser.getSelectedFile())) {
-                    JOptionPane.showMessageDialog(this,
-                            "La-Mulana has been updated.",
-                            "Import success!", JOptionPane.PLAIN_MESSAGE);
-                }
-                else {
-                    JOptionPane.showMessageDialog(this,
-                            "Import failed",
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
+        seedImportButton.addActionListener(randomizerUI);
+        seedImportButton.setActionCommand("importSeed");
         add(seedImportButton);
     }
 
