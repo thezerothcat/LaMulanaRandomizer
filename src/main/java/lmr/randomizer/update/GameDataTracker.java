@@ -4299,6 +4299,13 @@ public final class GameDataTracker {
                 testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
                 testByteOperation.setValue((byte)9);
             }
+
+            // Add extra check for not during escape, since escape door is different.
+            testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(0x382);
+            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+            testByteOperation.setValue((byte)1);
+            gameObject.getTestByteOperations().add(testByteOperation);
         }
         else if(gateDestination.equals("Transition: Illusion R1")
                 || gateDestination.equals("Transition: Illusion R2")) {
