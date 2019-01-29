@@ -813,6 +813,50 @@ public final class AddObject {
     }
 
     /**
+     * Add ankh jewel cover when boss ankh jewel not yet collected
+     * @param ankh the ankh to cover with the graphic
+     */
+    public static void addBossSpecificAnkhCover(GameObject ankh, int ankhFlag) {
+        GameObject ankhCover = new GameObject(ankh.getObjectContainer());
+
+        ankhCover.setId((short) 0x93);
+        ankhCover.setX(ankh.getX() - 20);
+        ankhCover.setY(ankh.getY() - 20);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(ankhFlag);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte) 0);
+        ankhCover.getTestByteOperations().add(testByteOperation);
+
+        ankhCover.getArgs().add((short)1);
+        ankhCover.getArgs().add((short)-1);
+        ankhCover.getArgs().add((short)440);
+        ankhCover.getArgs().add((short)512);
+        ankhCover.getArgs().add((short)60);
+        ankhCover.getArgs().add((short)60);
+        ankhCover.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        ankhCover.getArgs().add((short)1); // Animation frames
+        ankhCover.getArgs().add((short)4); // Pause frames
+        ankhCover.getArgs().add((short)1); // Repeat count (<1 is forever)
+        ankhCover.getArgs().add((short)128); // Hittile to fill with
+        ankhCover.getArgs().add((short)1); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        ankhCover.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        ankhCover.getArgs().add((short)0); // Cycle colors t/f
+        ankhCover.getArgs().add((short)0); // Alpha/frame
+        ankhCover.getArgs().add((short)255); // Max alpha
+        ankhCover.getArgs().add((short)0); // R/frame
+        ankhCover.getArgs().add((short)0); // Max R
+        ankhCover.getArgs().add((short)0); // G/frame
+        ankhCover.getArgs().add((short)0); // Max G
+        ankhCover.getArgs().add((short)0); // B/frame
+        ankhCover.getArgs().add((short)0); // Max B
+        ankhCover.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        ankhCover.getArgs().add((short)1); // not0?
+        ankh.getObjectContainer().getObjects().add(ankhCover);
+    }
+
+    /**
      * Add a timer to automatically start hard mode.
      * @param screen the screen to add the objects to
      */

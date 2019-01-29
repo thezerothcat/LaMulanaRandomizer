@@ -1144,32 +1144,39 @@ public class Main {
                     accessChecker.computeAccessibleNodes(startingNode, attempt);
                 }
 
-                boolean ankhJewelLock = false;
-                if (accessChecker.getQueuedUpdates().isEmpty()) {
-                    if (!accessChecker.updateForBosses()) {
-                        ankhJewelLock = true;
-                    }
-                }
-
-                if (!ankhJewelLock) {
+                if(Settings.isBossSpecificAnkhJewels()) {
                     while (!accessChecker.getQueuedUpdates().isEmpty()) {
                         accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next(), attempt);
-                        if (accessChecker.getQueuedUpdates().isEmpty()) {
-                            if (!accessChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
-                                ankhJewelLock = true;
-                                break;
-                            }
-                            if (!accessChecker.updateForBosses()) {
-                                ankhJewelLock = true;
-                                break;
+                    }
+                }
+                else {
+                    boolean ankhJewelLock = false;
+                    if (accessChecker.getQueuedUpdates().isEmpty()) {
+                        if (!accessChecker.updateForBosses()) {
+                            ankhJewelLock = true;
+                        }
+                    }
+
+                    if (!ankhJewelLock) {
+                        while (!accessChecker.getQueuedUpdates().isEmpty()) {
+                            accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next(), attempt);
+                            if (accessChecker.getQueuedUpdates().isEmpty()) {
+                                if (!accessChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
+                                    ankhJewelLock = true;
+                                    break;
+                                }
+                                if (!accessChecker.updateForBosses()) {
+                                    ankhJewelLock = true;
+                                    break;
+                                }
                             }
                         }
                     }
-                }
 
-                if (ankhJewelLock) {
-                    FileUtils.log(String.format("Detected ankh jewel lock on attempt %s. Re-shuffling items.", attempt));
-                    continue;
+                    if (ankhJewelLock) {
+                        FileUtils.log(String.format("Detected ankh jewel lock on attempt %s. Re-shuffling items.", attempt));
+                        continue;
+                    }
                 }
             }
             if(Settings.isGenerationComplete(attempt) || accessChecker.isSuccess(attempt)) {
@@ -1351,6 +1358,7 @@ public class Main {
             startingNodes.add("Setting: Nonrandom Transitions");
         }
         startingNodes.add(Settings.isAlternateMotherAnkh() ? "Setting: Alternate Mother" : "Setting: Standard Mother");
+        startingNodes.add(Settings.isBossSpecificAnkhJewels() ? "Setting: Fixed Jewels" : "Setting: Variable Jewels");
 
         if(Settings.isSubweaponOnlyLogic() || isSubweaponOnly()) {
             startingNodes.add("Setting: Subweapon Only");

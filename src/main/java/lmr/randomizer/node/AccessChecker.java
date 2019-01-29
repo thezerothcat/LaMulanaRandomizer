@@ -309,6 +309,9 @@ public class AccessChecker {
                 || stateToUpdate.contains("Ellmac Accessible") || stateToUpdate.contains("Bahamut Accessible")
                 || stateToUpdate.contains("Viy Accessible") || stateToUpdate.contains("Baphomet Accessible")
                 || stateToUpdate.contains("Palenque Accessible") || stateToUpdate.contains("Tiamat Accessible")) {
+            if(Settings.isBossSpecificAnkhJewels()) {
+                return stateToUpdate;
+            }
             accessibleBossNodes.add(stateToUpdate);
             mapOfNodeNameToRequirementsObject.remove(stateToUpdate);
             queuedUpdates.remove(stateToUpdate);
@@ -327,6 +330,9 @@ public class AccessChecker {
             return null;
         }
         if(stateToUpdate.contains("Ankh Jewel") && !stateToUpdate.equals("Ankh Jewel: 9")) {
+            if(Settings.isBossSpecificAnkhJewels()) {
+                return stateToUpdate;
+            }
             numberOfAccessibleAnkhJewels += 1;
             numberOfCollectedAnkhJewels += 1;
             if(numberOfCollectedAnkhJewels == 9) {

@@ -146,7 +146,49 @@ public final class GameDataTracker {
                 objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
             }
             objects.add(gameObject);
-        } else if (gameObject.getId() == 0x2f) {
+        }
+        else if (gameObject.getId() == 0x2e) {
+            if(Settings.isBossSpecificAnkhJewels()) {
+                Screen screen = (Screen)gameObject.getObjectContainer();
+                int ankhFlag = 0;
+                if(screen.getZoneIndex() == 0) {
+                    ankhFlag = getAnkhFlag(1);
+                }
+                else if(screen.getZoneIndex() == 2) {
+                    ankhFlag = getAnkhFlag(2);
+                }
+                else if(screen.getZoneIndex() == 3) {
+                    ankhFlag = getAnkhFlag(3);
+                }
+                else if(screen.getZoneIndex() == 4) {
+                    ankhFlag = getAnkhFlag(4);
+                }
+                else if(screen.getZoneIndex() == 5) {
+                    ankhFlag = getAnkhFlag(5);
+                }
+                else if(screen.getZoneIndex() == 6) {
+                    ankhFlag = getAnkhFlag(6);
+                }
+                else if(screen.getZoneIndex() == 7) {
+                    ankhFlag = getAnkhFlag(7);
+                }
+                else if(screen.getZoneIndex() == 17) {
+                    ankhFlag = getAnkhFlag(8);
+                }
+
+                for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                    if(testByteOperation.getIndex() == 0x16a && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())) {
+                        AddObject.addBossSpecificAnkhCover(gameObject, ankhFlag);
+                    }
+                }
+
+                // Don't spawn ankh without jewel collected.
+                TestByteOperation testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(ankhFlag);
+                testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+                testByteOperation.setValue((byte) 0);
+                gameObject.getTestByteOperations().add(testByteOperation);
+            }
             // Floating item
             short chestArg = gameObject.getArgs().get(1);
             int worldFlag = gameObject.getWriteByteOperations().get(0).getIndex();
@@ -170,7 +212,33 @@ public final class GameDataTracker {
                 objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
             }
             objects.add(gameObject);
-        } else if (gameObject.getId() == 0xb5) {
+        }
+        else if (gameObject.getId() == 0x2f) {
+            // Floating item
+            short chestArg = gameObject.getArgs().get(1);
+            int worldFlag = gameObject.getWriteByteOperations().get(0).getIndex();
+            GameObjectId gameObjectId = new GameObjectId(chestArg, worldFlag);
+
+            if(chestArg == 4) {
+                // Remove LAMULANA mantra check on the Key Sword floating item
+                Integer flagToRemoveIndex = null;
+                for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                    if (gameObject.getTestByteOperations().get(i).getIndex() == 292) {
+                        flagToRemoveIndex = i;
+                        break;
+                    }
+                }
+                gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
+            }
+
+            List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+            if (objects == null) {
+                mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+            }
+            objects.add(gameObject);
+        }
+        else if (gameObject.getId() == 0xb5) {
             short itemArg = gameObject.getArgs().get(0);
             if(itemArg == 70) {
                 // Surface map item give
@@ -2366,6 +2434,34 @@ public final class GameDataTracker {
                 gameObject.getObjectContainer().getObjects().add(mantraTimer);
             }
         }
+    }
+
+    private static int getAnkhFlag(int bossNumber) {
+        if(bossNumber == 1) {
+            return 0x08e;
+        }
+        if(bossNumber == 2) {
+            return 0x08f;
+        }
+        if(bossNumber == 3) {
+            return 0x090;
+        }
+        if(bossNumber == 4) {
+            return 0x091;
+        }
+        if(bossNumber == 5) {
+            return 0x092;
+        }
+        if(bossNumber == 6) {
+            return 0x093;
+        }
+        if(bossNumber == 7) {
+            return 0x094;
+        }
+        if(bossNumber == 8) {
+            return 0x095;
+        }
+        return 0;
     }
 
     private static int getGrailFlag(int languageBlock) {

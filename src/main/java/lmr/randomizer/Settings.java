@@ -52,6 +52,7 @@ public final class Settings {
     private boolean automaticGrailPoints;
     private boolean automaticTranslations;
     private boolean ushumgalluAssist;
+    private boolean bossSpecificAnkhJewels;
 
     private boolean alternateMotherAnkh;
     private boolean automaticMantras;
@@ -106,6 +107,7 @@ public final class Settings {
         randomizeTransitionGates = false;
         randomizeOneWayTransitions = false;
         randomizeBacksideDoors = false;
+        bossSpecificAnkhJewels = false;
         removeSpaulder = false;
         replaceMapsWithWeights = false;
         automaticHardmode = false;
@@ -519,6 +521,17 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.ushumgalluAssist = ushumgalluAssist;
+    }
+
+    public static boolean isBossSpecificAnkhJewels() {
+        return singleton.bossSpecificAnkhJewels;
+    }
+
+    public static void setBossSpecificAnkhJewels(boolean bossSpecificAnkhJewels, boolean update) {
+        if(update && bossSpecificAnkhJewels != singleton.bossSpecificAnkhJewels) {
+            singleton.changed = true;
+        }
+        singleton.ushumgalluAssist = bossSpecificAnkhJewels;
     }
 
     public static boolean isCoinChestGraphics() {
