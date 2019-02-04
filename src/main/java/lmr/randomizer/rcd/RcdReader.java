@@ -562,17 +562,40 @@ public final class RcdReader {
                             testByteOperation.setValue((byte)0);
                         }
                     }
+                    else {
+                        // Don't change to true shrine until you have Feather, since the old shrine has more requirement options.
+                        if (obj.getTestByteOperations().get(0).getIndex() == 258) {
+                            if(ByteOp.FLAG_EQUALS.equals(obj.getTestByteOperations().get(0).getOp())) {
+                                keepObject = false;
+                            }
+                            else {
+                                obj.getTestByteOperations().clear();
+                            }
+                        }
+                    }
                 }
                 else if(screen.getZoneIndex() == 8) {
                     if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 3) {
-                        if(obj.getArgs().get(0) == 18) {
-                            keepObject = false;
+                        if(Settings.isRandomizeTransitionGates()) {
+                            if(obj.getArgs().get(0) == 18) {
+                                keepObject = false;
+                            }
+                            else if(obj.getArgs().get(0) == 9) {
+                                TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
+                                testByteOperation.setIndex(0x382);
+                                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                                testByteOperation.setValue((byte)0);
+                            }
                         }
-                        else if(obj.getArgs().get(0) == 9) {
-                            TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
-                            testByteOperation.setIndex(0x382);
-                            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                            testByteOperation.setValue((byte)0);
+                        else {
+                            // Don't change to true shrine until you have Feather, since the old shrine has more requirement options.
+                            if (ByteOp.FLAG_EQUALS.equals(obj.getTestByteOperations().get(0).getOp())) {
+                                TestByteOperation featherCheck = new TestByteOperation();
+                                featherCheck.setIndex(182);
+                                featherCheck.setOp(ByteOp.FLAG_EQUALS);
+                                featherCheck.setValue((byte) 2);
+                                obj.getTestByteOperations().add(featherCheck);
+                            }
                         }
                     }
                     else if(screen.getRoomIndex() == 5 && screen.getScreenIndex() == 3) {

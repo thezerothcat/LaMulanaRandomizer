@@ -531,7 +531,7 @@ public final class Settings {
         if(update && bossSpecificAnkhJewels != singleton.bossSpecificAnkhJewels) {
             singleton.changed = true;
         }
-        singleton.ushumgalluAssist = bossSpecificAnkhJewels;
+        singleton.bossSpecificAnkhJewels = bossSpecificAnkhJewels;
     }
 
     public static boolean isCoinChestGraphics() {
