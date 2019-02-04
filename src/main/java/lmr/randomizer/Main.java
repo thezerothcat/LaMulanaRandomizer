@@ -467,6 +467,12 @@ public class Main {
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
+            if(Settings.isRequireFullAccess() && Settings.isRemoveMainWeapons()) {
+                JOptionPane.showMessageDialog(this,
+                        "The setting \"Require all items to be accessible\" cannot be used when removing Main Weapons",
+                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
             if(!validateCustomPlacements(this)) {
                 // Message created below
                 return false;
@@ -700,6 +706,14 @@ public class Main {
                         }
                     }
                     placedTargetAndDestination.put(customTransitionPlacement.getTargetTransition(), customTransitionPlacement.getDestinationTransition());
+                }
+            }
+            if(Settings.isRequireFullAccess() && !customPlacementData.getRemovedItems().isEmpty()) {
+                if(Settings.isRequireFullAccess()) {
+                    JOptionPane.showMessageDialog(randomizerUI,
+                            "Please disable the setting \"Require all items to be accessible\"",
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
                 }
             }
             for(String customRemovedItem : customPlacementData.getRemovedItems()) {
