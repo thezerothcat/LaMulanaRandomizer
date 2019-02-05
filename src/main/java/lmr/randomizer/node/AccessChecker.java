@@ -237,7 +237,14 @@ public class AccessChecker {
         if(!Settings.isRequireFullAccess()) {
             return false;
         }
-        if(Settings.getCurrentRemovedItems().size() == 1 && "Whip".equals(Settings.getCurrentRemovedItems().iterator().next())) {
+        if(Settings.getCurrentRemovedItems().size() == 1) {
+            String removedItem = Settings.getCurrentRemovedItems().iterator().next();
+            if("Whip".equals(removedItem) || "Spaulder".equals(removedItem)) {
+                return true;
+            }
+        }
+        if(Settings.getCurrentRemovedItems().size() == 2
+                && Settings.getCurrentRemovedItems().contains("Whip") && Settings.getCurrentRemovedItems().contains("Spaulder")) {
             return true;
         }
         return Settings.getRemovedItems().isEmpty() && Settings.getCurrentRemovedItems().isEmpty();

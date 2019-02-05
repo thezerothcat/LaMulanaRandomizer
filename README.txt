@@ -2,6 +2,10 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+2.12
+-----------------------------
+Fixed a bug that disabled "Require all items to be accessible" when Spaulder was removed.
+
 2.11
 -----------------------------
 Added screen mash to supported glitches. Assorted bugfixes and logic updates.
