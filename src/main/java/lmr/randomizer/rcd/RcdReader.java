@@ -887,6 +887,13 @@ public final class RcdReader {
             screenExit.setScreenIndex((byte)-1);
         }
 
+        if(screen.getZoneIndex() == 4 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+            ScreenExit screenExit = screen.getScreenExits().get(2);
+            screenExit.setZoneIndex((byte)25);
+            screenExit.setRoomIndex((byte)0);
+            screenExit.setScreenIndex((byte)0);
+        }
+
         if(Settings.isRandomizeStartingLocation()) {
             for(ScreenExit screenExit : screen.getScreenExits()) {
                 if(screenExit.getZoneIndex() == -1 && screenExit.getRoomIndex() == -1 && screenExit.getScreenIndex() == -1) {

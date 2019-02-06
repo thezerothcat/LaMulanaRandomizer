@@ -54,7 +54,6 @@ Location: Temple of the Sun [Main] => Bronze Mirror, Door: B3
 Location: Temple of the Sun [West] => Location: Temple of the Sun [Main], Event: Buer Defeated, State: Can Reach West Sun
 Location: Temple of the Sun [West] => Transition: Sun L1, Event: Buer Defeated
 Location: Temple of the Sun [East] => Location: Temple of the Sun [Main], State: Can Reach East Sun
-Location: Temple of the Sun [East] => Location: Spring in the Sky, Event: Flooded Temple of the Sun, Exit: Temple of the Sun [East]
 Location: Temple of the Sun [East] => Transition: Sun R1, Glitch: Lamp Glitch # Since we know this is Extinction, we can definitely have a lamp charge coming from the right. If that isn't the case, add Setting: Nonrandom Transitions
 Location: Temple of Moonlight [Pyramid] => Location: Temple of the Sun [Main], State: Can Reach Sun Warp, Exit: Temple of Moonlight [Pyramid]
 Location: Temple of Moonlight [Pyramid] => Location: Temple of Moonlight [Upper], Glitch: Raindrop

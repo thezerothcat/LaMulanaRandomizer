@@ -1237,6 +1237,7 @@ public class Main {
                 if(!availableSubweapons.isEmpty()) {
                     GameDataTracker.updateSubweaponPot(availableSubweapons.get(random.nextInt(availableSubweapons.size())));
                 }
+                GameDataTracker.randomizeBats(random);
                 FileUtils.log("Updated subweapon pot data");
 
                 if(Settings.isRandomizeBacksideDoors()) {

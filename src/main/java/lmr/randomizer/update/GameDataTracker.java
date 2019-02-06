@@ -24,6 +24,7 @@ public final class GameDataTracker {
     private static Map<String, List<GameObject>> mapOfDoorNameToBacksideDoor = new HashMap<>();
     private static Map<String, List<GameObject>> mapOfGateNameToTransitionGate = new HashMap<>();
     private static Map<String, Screen> mapOfTransitionNameToScreen = new HashMap<>();
+    private static List<GameObject> enemyObjects = new ArrayList<>();
 
     private static GameObject subweaponPot;
 
@@ -146,7 +147,11 @@ public final class GameDataTracker {
                 objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
             }
             objects.add(gameObject);
-        } else if (gameObject.getId() == 0x2f) {
+        }
+        else if (gameObject.getId() == 0x02) {
+            enemyObjects.add(gameObject);
+        }
+        else if (gameObject.getId() == 0x2f) {
             // Floating item
             short chestArg = gameObject.getArgs().get(1);
             int worldFlag = gameObject.getWriteByteOperations().get(0).getIndex();
@@ -4925,6 +4930,12 @@ public final class GameDataTracker {
         }
         else if("Pistol".equals(weapon)) {
             subweaponPot.getArgs().set(0, (short)10);
+        }
+    }
+
+    public static void randomizeBats(Random random) {
+        for(GameObject bat : enemyObjects) {
+            bat.getArgs().set(3, (short)random.nextInt(2));
         }
     }
 
