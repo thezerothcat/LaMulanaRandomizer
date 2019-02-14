@@ -119,7 +119,6 @@ Exit: Spring in the Sky => Holy Grail
 Exit: Spring in the Sky => State: Pre-Escape, Glitch: Raindrop
 Exit: Spring in the Sky => Exit: Spring D1
 Exit: Spring in the Sky => Event: Flooded Temple of the Sun, Exit: Temple of the Sun [East]
-Exit: Spring in the Sky => Helmet, Event: Bahamut Defeated
 Exit: Tower of the Goddess [Lamp] => Holy Grail
 Exit: Tower of the Goddess [Lamp] => State: Pre-Escape, Glitch: Raindrop
 Exit: Tower of the Goddess [Lamp] => Attack: Forward, Exit: Tower of the Goddess [Lower]

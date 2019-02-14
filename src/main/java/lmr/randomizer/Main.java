@@ -1058,6 +1058,10 @@ public class Main {
             // the trap item.
             DataFromFile.setBannedTrapLocations(random);
         }
+        if(DataFromFile.getCustomPlacementData().getMedicineColor() == null) {
+            List<String> medicineColors = Arrays.asList("Red", "Green", "Yellow", null);
+            Settings.setMedicineColor(medicineColors.get(random.nextInt(medicineColors.size())));
+        }
 
         int totalItemsRemoved = getTotalItemsRemoved(random);
         determineStartingWeapon(random);
@@ -1226,10 +1230,10 @@ public class Main {
 
                 dialog.updateProgress(95, Translations.getText("progress.write"));
                 itemRandomizer.updateFiles(random);
-                FileUtils.log("Updated item location data");
+                FileUtils.logFlush("Updated item location data");
 
                 shopRandomizer.updateFiles(datInfo, isSubweaponOnly(), moneyChecker, random);
-                FileUtils.log("Updated shop data");
+                FileUtils.logFlush("Updated shop data");
 
                 List<String> availableSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
                 availableSubweapons.removeAll(Settings.getRemovedItems());
@@ -1237,16 +1241,18 @@ public class Main {
                 if(!availableSubweapons.isEmpty()) {
                     GameDataTracker.updateSubweaponPot(availableSubweapons.get(random.nextInt(availableSubweapons.size())));
                 }
-                GameDataTracker.randomizeBats(random);
-                FileUtils.log("Updated subweapon pot data");
+                FileUtils.logFlush("Updated subweapon pot data");
+
+                GameDataTracker.randomizeEnemies(random);
+                FileUtils.logFlush("Updated enemy data");
 
                 if(Settings.isRandomizeBacksideDoors()) {
                     backsideDoorRandomizer.updateBacksideDoors();
-                    FileUtils.log("Updated backside door data");
+                    FileUtils.logFlush("Updated backside door data");
                 }
                 if(Settings.isRandomizeTransitionGates()) {
                     transitionGateRandomizer.updateTransitions();
-                    FileUtils.log("Updated transition gate data");
+                    FileUtils.logFlush("Updated transition gate data");
                 }
 
 //                if(Settings.isRandomizeMantras()) {

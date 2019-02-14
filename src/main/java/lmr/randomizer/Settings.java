@@ -739,10 +739,6 @@ public final class Settings {
         return originalContents;
     }
 
-    public static String getMedicineColor() {
-        return DataFromFile.getCustomPlacementData().getMedicineColor();
-    }
-
     public static boolean isAlternateMotherAnkh() {
         return singleton.alternateMotherAnkh || DataFromFile.getCustomPlacementData().isAlternateMotherAnkh();
     }
@@ -753,6 +749,15 @@ public final class Settings {
 
     public static boolean isAutomaticMantras() {
         return singleton.automaticMantras || DataFromFile.getCustomPlacementData().isAutomaticMantras();
+    }
+
+    public static void setMedicineColor(String medicineColor) {
+        singleton.medicineColor = medicineColor;
+    }
+
+    public static String getMedicineColor() {
+        String customMedicineColor = DataFromFile.getCustomPlacementData().getMedicineColor();
+        return customMedicineColor == null ? singleton.medicineColor : customMedicineColor;
     }
 
     public static boolean isGenerationComplete(int attemptNumber) {

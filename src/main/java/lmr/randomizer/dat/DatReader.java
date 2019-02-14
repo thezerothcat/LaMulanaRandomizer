@@ -192,7 +192,7 @@ public final class DatReader {
         if(Settings.isRandomizeStartingLocation()) {
             // Make Surface grail require a warp
             BlockListData blockListData = (BlockListData)grailPointsBlock.getBlockContents().get(0);
-            blockListData.getData().add(0, (short)2771);
+            blockListData.getData().add(0, (short)0x075);
             blockListData.getData().add(0, (short)0);
             blockListData.addListSize(2);
 

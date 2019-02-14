@@ -150,6 +150,40 @@ public final class GameDataTracker {
         }
         else if (gameObject.getId() == 0x02) {
             enemyObjects.add(gameObject);
+
+            Screen screen = (Screen) gameObject.getObjectContainer();
+            if(screen.getZoneIndex() == 0 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                    if(testByteOperation.getIndex() == 0x133) {
+                        testByteOperation.setIndex(0x1b4);
+                        testByteOperation.setValue((byte)4);
+                    }
+                }
+            }
+        }
+        else if (gameObject.getId() == 0x03) {
+            enemyObjects.add(gameObject);
+
+            Screen screen = (Screen) gameObject.getObjectContainer();
+            if(screen.getZoneIndex() == 5 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                    if(testByteOperation.getIndex() == 0x1b4) {
+                        testByteOperation.setIndex(0x133);
+                        testByteOperation.setValue((byte)5);
+                    }
+                }
+            }
+        }
+        else if (gameObject.getId() == 0x3c) {
+            Screen screen = (Screen) gameObject.getObjectContainer();
+            if(screen.getZoneIndex() == 5 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                    if(testByteOperation.getIndex() == 0x1b4) {
+                        testByteOperation.setIndex(0x133);
+                        testByteOperation.setValue((byte)5);
+                    }
+                }
+            }
         }
         else if (gameObject.getId() == 0x2f) {
             // Floating item
@@ -1166,7 +1200,103 @@ public final class GameDataTracker {
                     }
                 }
             }
+        } else if (gameObject.getId() == 0x2e) {
+            Screen screen = (Screen) gameObject.getObjectContainer();
+            if(screen.getZoneIndex() == 0) {
+                            for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                                if(testByteOperation.getIndex() == 0x133) {
+                                    testByteOperation.setIndex(0x1b4);
+                                    testByteOperation.setValue((byte)4);
+                                }
+                            }
+                            for(WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
+                                if(writeByteOperation.getIndex() == 0x133) {
+                                    writeByteOperation.setIndex(0x1b4);
+                                    writeByteOperation.setValue(5);
+                                }
+                            }
+                        }
+            else if(screen.getZoneIndex() == 5) {
+                for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                    if(testByteOperation.getIndex() == 0x1b4) {
+                        testByteOperation.setIndex(0x133);
+                        testByteOperation.setValue((byte)5);
+                    }
+                }
+                for(WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
+                    if(writeByteOperation.getIndex() == 0x1b4) {
+                        writeByteOperation.setIndex(0x133);
+                        writeByteOperation.setValue(6);
+                    }
+                }
+            }
+            else if(screen.getZoneIndex() == 4) {
+                gameObject.getArgs().set(24, (short)4);
+                gameObject.getArgs().set(25, (short)400);
+                gameObject.getArgs().set(26, (short)2316);
+                gameObject.getArgs().set(27, (short)0);
+                gameObject.getArgs().set(28, (short)4);
+                gameObject.getArgs().set(29, (short)400);
+                gameObject.getArgs().set(30, (short)2316);
+            }
+        } else if (gameObject.getId() == 0x9f) {
+            Screen screen = (Screen) gameObject.getObjectContainer();
+            if(screen.getZoneIndex() == 1) {
+                gameObject.getWriteByteOperations().clear();
+
+                TestByteOperation testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(0x075);
+                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                testByteOperation.setValue((byte)1);
+                gameObject.getTestByteOperations().add(testByteOperation);
+
+                WriteByteOperation writeByteOperation = new WriteByteOperation();
+                writeByteOperation.setIndex(0x075);
+                writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                writeByteOperation.setValue((byte)1);
+                gameObject.getWriteByteOperations().add(writeByteOperation);
+            }
+            else if(screen.getZoneIndex() == 18) {
+                gameObject.getTestByteOperations().clear();
+                gameObject.getWriteByteOperations().clear();
+
+                TestByteOperation testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(0x382);
+                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                testByteOperation.setValue((byte)0);
+                gameObject.getTestByteOperations().add(testByteOperation);
+
+                testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(0xad3);
+                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                testByteOperation.setValue((byte)1);
+                gameObject.getTestByteOperations().add(testByteOperation);
+
+                WriteByteOperation writeByteOperation = new WriteByteOperation();
+                writeByteOperation.setIndex(0xad3);
+                writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                writeByteOperation.setValue((byte)1);
+                gameObject.getWriteByteOperations().add(writeByteOperation);
+            }
         } else if (gameObject.getId() == 0x9e) {
+            Screen screen = (Screen) gameObject.getObjectContainer();
+            if(screen.getZoneIndex() == 18) {
+                gameObject.getTestByteOperations().clear();
+                gameObject.getWriteByteOperations().clear();
+
+                TestByteOperation testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(0xad3);
+                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                testByteOperation.setValue((byte)0);
+                gameObject.getTestByteOperations().add(testByteOperation);
+
+                WriteByteOperation writeByteOperation = new WriteByteOperation();
+                writeByteOperation.setIndex(0xad3);
+                writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                writeByteOperation.setValue((byte)1);
+                gameObject.getWriteByteOperations().add(writeByteOperation);
+            }
+
             int languageBlock = gameObject.getArgs().get(0);
             if(Settings.isAutomaticGrailPoints()) {
                 if(languageBlock == 41 || languageBlock == 75 || languageBlock == 104 || languageBlock == 136
@@ -4598,12 +4728,13 @@ public final class GameDataTracker {
         }
         else if(newChestContentsItemName.startsWith("Trap:")) {
             // Chest graphics (0 = coin chest, 1 = blue chest)
-            if(Settings.isCoinChestGraphics()) {
-                objectToModify.getArgs().set(2, (short)0);
-            }
-            else {
-                objectToModify.getArgs().set(2, (short)1);
-            }
+//            if(Settings.isCoinChestGraphics()) {
+//                objectToModify.getArgs().set(2, (short)0);
+//            }
+//            else {
+//                objectToModify.getArgs().set(2, (short)1);
+//            }
+            objectToModify.getArgs().set(2, (short)random.nextInt(2));
 
             for (TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                 if (flagTest.getIndex() == itemLocationData.getWorldFlag()) {
@@ -4933,9 +5064,23 @@ public final class GameDataTracker {
         }
     }
 
-    public static void randomizeBats(Random random) {
-        for(GameObject bat : enemyObjects) {
-            bat.getArgs().set(3, (short)random.nextInt(2));
+    public static void randomizeEnemies(Random random) {
+        for(GameObject enemy : enemyObjects) {
+            if(enemy.getId() == 0x02) {
+                enemy.getArgs().set(0, (short)random.nextInt(2)); // Start moving
+                enemy.getArgs().set(3, (short)random.nextInt(2)); // Type
+                enemy.getArgs().set(4, (short)(random.nextInt(2) + 2)); // Damage
+            }
+            else {
+                enemy.getArgs().set(0, (short)random.nextInt(2)); // Facing
+                enemy.getArgs().set(2, (short)random.nextInt(4)); // Speed
+                enemy.getArgs().set(3, (short)random.nextInt(2)); // Collapsed or standing
+                enemy.getArgs().set(4, (short)random.nextInt(3)); // Type
+                enemy.getArgs().set(5, (short)(random.nextInt(11) + 3)); // Health
+                enemy.getArgs().set(6, (short)(random.nextInt(5) + 2)); // Contact damage
+                enemy.getArgs().set(7, (short)(random.nextInt(4) + 2)); // Projectile damage
+                enemy.getArgs().set(9, (short)(random.nextInt(2) + 2)); // Projectile speed
+            }
         }
     }
 
