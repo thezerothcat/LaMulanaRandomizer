@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.BiFunction;
-import java.math.BigInteger;
 
 /**
  * Created by thezerothcat on 7/20/2017.
@@ -66,8 +65,8 @@ public final class Settings {
     private List<String> enabledGlitches = new ArrayList<>();
     private List<String> enabledDamageBoosts = new ArrayList<>();
 
-    private static final String[] possibleRandomizedItems = {"Holy Grail", "Hand Scanner", "reader.exe",
-            "Hermes' Boots", "Grapple Claw", "Feather", "Isis' Pendant", "Bronze Mirror", "mirai.exe", "bunemon.exe", "Ring"};
+    private List<String> possibleRandomizedItems = Arrays.asList("Holy Grail", "Hand Scanner", "reader.exe",
+            "Hermes' Boots", "Grapple Claw", "Feather", "Isis' Pendant", "Bronze Mirror", "mirai.exe", "bunemon.exe", "Ring");
 
     private String laMulanaBaseDir;
     private String laMulanaSaveDir;
@@ -776,116 +775,117 @@ public final class Settings {
         }
     }
 
-    private static class SettingsInt {
-        public static class SettingsIntValueError extends RuntimeException {
-            public SettingsIntValueError() { super(); }
-            public SettingsIntValueError(String message) { super(message); }
-        }
-
-        private BigInteger value = BigInteger.ZERO, range = BigInteger.ONE;
-
-        private final String base32Digits = "CFHJKLMNPRTWXYbcdfgjkpqstwxyz349";
-
-        public void appendSetting(long settingValue, long settingRange) {
-            var biRange = BigInteger.valueOf(settingRange);
-            assert(settingRange > 1);
-            if (settingValue > settingRange)
-                throw new SettingsIntValueError("Setting out of range");
-            value = value.add(BigInteger.valueOf(settingValue).multiply(range));
-            range = range.multiply(BigInteger.valueOf(settingRange));
-        }
-
-        public void appendSetting(Enum settingEnum) {
-            appendSetting(settingEnum.ordinal(), settingEnum.getClass().getEnumConstants().length);
-        }
-
-        public long extractSetting(long settingRange) {
-            var biRange = BigInteger.valueOf(settingRange);
-            long ret = value.mod(biRange).longValueExact();
-            value = value.divide(biRange);
-            return ret;
-        }
-
-        public <T extends Enum> T extractSetting(Class<T> enumClass) {
-            T[] enumConsts = enumClass.getEnumConstants();
-            return enumConsts[(int)extractSetting(enumConsts.length)];
-        }
-
-        public String toBase32() {
-            String base32 = "";
-            do {
-                BigInteger bits = value.shiftRight(base32.length() * 5).and(BigInteger.valueOf(31));
-                base32 = base32 + base32Digits.charAt(bits.intValueExact());
-            } while (base32.length() * 5 < value.bitLength());
-            return base32;
-        }
-
-        // static fromBase32 seems like a pain
-        public void setFromBase32(String base32) {
-            value = BigInteger.ZERO;
-            range = null;
-            for (int i = 0; i < base32.length(); i++) {
-                int n = base32Digits.indexOf(base32.charAt(i));
-                if (n < 0)
-                    throw new SettingsIntValueError("Base 32 string contains illegal character");
-                value = value.add(BigInteger.valueOf(n).shiftLeft(i * 5));
+    public static int itemSetToInt(Collection<String> selectedItems, List<String> possibleItems) {
+        int value = 0;
+        for (String s : selectedItems) {
+            int index = possibleItems.indexOf(s);
+            if (index >= 0) {
+                value |= 1 << index;
             }
         }
+        return value;
     }
 
-    public static String generateShortString(boolean displayFormat) {
-        var settingsInt = new SettingsInt();
+    public static Collection<String> intToItemSet(int input, List<String> possibleItems) {
+        Collection<String> items = new ArrayList<>();
 
-        settingsInt.appendSetting(getStartingSeed(), 1L << 31);
-        settingsInt.appendSetting(singleton.randomizeOneWayTransitions ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.randomizeEscapeChest ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.randomizeTransitionGates ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.removeMainWeapons ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.subweaponOnlyLogic ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.allowWhipStart ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.randomizeBacksideDoors ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.ushumgalluAssist ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.allowSubweaponStart ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.requireFullAccess ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.randomizeDracuetShop ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.randomizeXmailer ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.htFullRandom ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.automaticTranslations ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.allowMainWeaponStart ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.randomizeCursedChests ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.automaticHardmode ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.coinChestGraphics ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.requireSoftwareComboForKeyFairy ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.requireIceCapeForLava ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.requireFlaresForExtinction ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.randomizeForbiddenTreasure ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.randomizeCoinChests ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.randomizeTrapItems ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.removeSpaulder ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.replaceMapsWithWeights ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.automaticGrailPoints ? 1 : 0, 2);
-        settingsInt.appendSetting(singleton.shopRandomization);
+        int index = 0;
 
-        for (var item : possibleRandomizedItems)
-            settingsInt.appendSetting(getInitiallyAccessibleItems().contains(item) ? 1 : getStartingItems().contains(item) ? 2 : 0, 3);
-        for (var glitch : DataFromFile.POSSIBLE_GLITCHES)
-            settingsInt.appendSetting(getEnabledGlitches().contains(glitch) ? 1 : 0, 2);
-        for (var dboost : DataFromFile.POSSIBLE_DBOOSTS)
-            settingsInt.appendSetting(getEnabledDamageBoosts().contains(dboost) ? 1 : 0, 2);
+        while(input > 0) {
+            if((input & 1) == 1) {
+                items.add(possibleItems.get(index));
+            }
 
-        settingsInt.appendSetting(singleton.bossDifficulty);
-        settingsInt.appendSetting(singleton.minRandomRemovedItems, MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED);
-        settingsInt.appendSetting(Math.max(0, singleton.maxRandomRemovedItems - singleton.minRandomRemovedItems), MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED - singleton.minRandomRemovedItems);
+            index++;
+            input >>= 1;
+        }
 
-        String base32 = settingsInt.toBase32();
-        if (displayFormat)
-            base32 = String.join(" ", base32.split("(?<=^(.{5})+)"));
-        return FileUtils.VERSION + "-" + base32;
+        return items;
+    }
+
+    public static int boolToInt(boolean b) {
+        return b?1:0;
+    }
+
+    public static boolean intToBool(int i) {
+        return i>0;
+    }
+
+    public static String generateShortString() {
+        String result = FileUtils.VERSION;
+
+        String separator = "-";
+
+        //seed
+
+        //boolean fields + shoprandomization enum
+        BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
+
+        int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeOneWayTransitions, 26);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeEscapeChest, 25);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeTransitionGates, 24);
+        booleanSettings |= processBooleanFlag.apply(singleton.removeMainWeapons, 23);
+        booleanSettings |= processBooleanFlag.apply(singleton.subweaponOnlyLogic, 22);
+        booleanSettings |= processBooleanFlag.apply(singleton.allowWhipStart, 21);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeBacksideDoors, 20);
+        booleanSettings |= processBooleanFlag.apply(singleton.ushumgalluAssist, 19);
+        booleanSettings |= processBooleanFlag.apply(singleton.allowSubweaponStart, 18);
+        booleanSettings |= processBooleanFlag.apply(singleton.requireFullAccess, 17);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeDracuetShop, 16);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeXmailer, 15);
+        booleanSettings |= processBooleanFlag.apply(singleton.htFullRandom, 14);
+        booleanSettings |= processBooleanFlag.apply(singleton.automaticTranslations, 13);
+        booleanSettings |= processBooleanFlag.apply(singleton.allowMainWeaponStart, 12);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeCursedChests, 11);
+        booleanSettings |= processBooleanFlag.apply(singleton.automaticHardmode, 10);
+        booleanSettings |= processBooleanFlag.apply(singleton.coinChestGraphics, 9);
+        booleanSettings |= processBooleanFlag.apply(singleton.requireSoftwareComboForKeyFairy, 8);
+        booleanSettings |= processBooleanFlag.apply(singleton.requireIceCapeForLava, 7);
+        booleanSettings |= processBooleanFlag.apply(singleton.requireFlaresForExtinction, 6);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeForbiddenTreasure, 5);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeCoinChests, 4);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeTrapItems, 3);
+        booleanSettings |= processBooleanFlag.apply(singleton.removeSpaulder, 2);
+        booleanSettings |= processBooleanFlag.apply(singleton.replaceMapsWithWeights, 1);
+        booleanSettings |= processBooleanFlag.apply(singleton.automaticGrailPoints, 0);
+        booleanSettings = booleanSettings << 2 | singleton.shopRandomization.ordinal();
+
+        //glitches
+        int glitches = itemSetToInt(getEnabledGlitches(), DataFromFile.POSSIBLE_GLITCHES);
+
+        //dboosts
+        int dboosts = itemSetToInt(getEnabledDamageBoosts(), DataFromFile.POSSIBLE_DBOOSTS);
+
+        //initially accessible items
+        int initItems = itemSetToInt(getInitiallyAccessibleItems(), singleton.possibleRandomizedItems);
+
+        //starting items
+        int startingItems = itemSetToInt(getStartingItems(), singleton.possibleRandomizedItems);
+
+        // boss difficulty
+        int bossDifficulty = singleton.bossDifficulty.ordinal();
+
+        // combine the results of the settings in a string
+        long startingSeed = getStartingSeed();
+        result += separator + Long.toHexString(startingSeed);
+        result += separator + Integer.toHexString(booleanSettings);
+        result += separator + Integer.toHexString(glitches);
+        result += separator + Integer.toHexString(dboosts);
+        result += separator + Integer.toHexString(initItems);
+        result += separator + Integer.toHexString(startingItems);
+        result += separator + Integer.toHexString(bossDifficulty);
+        result += separator + Integer.toHexString(singleton.minRandomRemovedItems);
+        result += separator + Integer.toHexString(singleton.maxRandomRemovedItems);
+
+        return result;
     }
 
     public static void importShortString(String text) {
+        String[] parts = text.split("-");
+
         // Check version compatibility?
-        if (!text.startsWith(FileUtils.VERSION + "-")) {
+        if(!FileUtils.VERSION.equals(parts[0])) {
             // Show pop up that the version changed
             int version_mismatch = JOptionPane.showConfirmDialog(null, "These settings were generated with a different version of the randomizer. Do you  still want to try loading them?", "Version Mismatch", JOptionPane.YES_NO_OPTION);
 
@@ -894,73 +894,61 @@ public final class Settings {
             }
         }
 
-        var settingsInt = new SettingsInt();
+        // Parse seed from string
+        int seed = Integer.parseInt(parts[1], 16);
 
-        try {
-            settingsInt.setFromBase32(text.split("-", 2)[1].replaceAll(" ", ""));
-        } catch (SettingsInt.SettingsIntValueError ex) {
-            JOptionPane.showMessageDialog(null, "Settings string malformed for this version");
-            return;
-        }
+        // Parse boolean settings from string
+        int booleanSettingsFlag = Integer.parseInt(parts[2], 16);
 
-        setStartingSeed((int)settingsInt.extractSetting(1L << 31));
-        singleton.randomizeOneWayTransitions = settingsInt.extractSetting(2) != 0;
-        singleton.randomizeEscapeChest = settingsInt.extractSetting(2) != 0;
-        singleton.randomizeTransitionGates = settingsInt.extractSetting(2) != 0;
-        singleton.removeMainWeapons = settingsInt.extractSetting(2) != 0;
-        singleton.subweaponOnlyLogic = settingsInt.extractSetting(2) != 0;
-        singleton.allowWhipStart = settingsInt.extractSetting(2) != 0;
-        singleton.randomizeBacksideDoors = settingsInt.extractSetting(2) != 0;
-        singleton.ushumgalluAssist = settingsInt.extractSetting(2) != 0;
-        singleton.allowSubweaponStart = settingsInt.extractSetting(2) != 0;
-        singleton.requireFullAccess = settingsInt.extractSetting(2) != 0;
-        singleton.randomizeDracuetShop = settingsInt.extractSetting(2) != 0;
-        singleton.randomizeXmailer = settingsInt.extractSetting(2) != 0;
-        singleton.htFullRandom = settingsInt.extractSetting(2) != 0;
-        singleton.automaticTranslations = settingsInt.extractSetting(2) != 0;
-        singleton.allowMainWeaponStart = settingsInt.extractSetting(2) != 0;
-        singleton.randomizeCursedChests = settingsInt.extractSetting(2) != 0;
-        singleton.automaticHardmode = settingsInt.extractSetting(2) != 0;
-        singleton.coinChestGraphics = settingsInt.extractSetting(2) != 0;
-        singleton.requireSoftwareComboForKeyFairy = settingsInt.extractSetting(2) != 0;
-        singleton.requireIceCapeForLava = settingsInt.extractSetting(2) != 0;
-        singleton.requireFlaresForExtinction = settingsInt.extractSetting(2) != 0;
-        singleton.randomizeForbiddenTreasure = settingsInt.extractSetting(2) != 0;
-        singleton.randomizeCoinChests = settingsInt.extractSetting(2) != 0;
-        singleton.randomizeTrapItems = settingsInt.extractSetting(2) != 0;
-        singleton.removeSpaulder = settingsInt.extractSetting(2) != 0;
-        singleton.replaceMapsWithWeights = settingsInt.extractSetting(2) != 0;
-        singleton.automaticGrailPoints = settingsInt.extractSetting(2) != 0;
-        singleton.shopRandomization = settingsInt.extractSetting(ShopRandomizationEnum.class);
+        singleton.shopRandomization = ShopRandomizationEnum.values()[booleanSettingsFlag & 0x3];
+        booleanSettingsFlag >>= 2;
 
-        singleton.initiallyAccessibleItems.clear();
-        singleton.startingItems.clear();
-        for (var item : possibleRandomizedItems) {
-            switch ((int)settingsInt.extractSetting(3)) {
-                case 1:
-                    singleton.initiallyAccessibleItems.add(item);
-                    break;
-                case 2:
-                    singleton.startingItems.add(item);
-                    break;
-                default:
-                    break;
-            }
-        }
-        singleton.enabledGlitches.clear();
-        for (var glitch : DataFromFile.POSSIBLE_GLITCHES)
-            if (settingsInt.extractSetting(2) != 0)
-                singleton.enabledGlitches.add(glitch);
-        singleton.enabledDamageBoosts.clear();
-        for (var dboost : DataFromFile.POSSIBLE_DBOOSTS)
-            if (settingsInt.extractSetting(2) != 0)
-                singleton.enabledDamageBoosts.add(dboost);
+        BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
-        singleton.bossDifficulty = settingsInt.extractSetting(BossDifficulty.class);
-        singleton.minRandomRemovedItems = (int)settingsInt.extractSetting(MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED);
-        singleton.maxRandomRemovedItems = singleton.minRandomRemovedItems + (int)settingsInt.extractSetting(MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED - singleton.minRandomRemovedItems);
+        singleton.randomizeOneWayTransitions = getBoolFlagFromInt.apply(booleanSettingsFlag, 26);
+        singleton.randomizeEscapeChest = getBoolFlagFromInt.apply(booleanSettingsFlag, 25);
+        singleton.randomizeTransitionGates = getBoolFlagFromInt.apply(booleanSettingsFlag, 24);
+        singleton.removeMainWeapons = getBoolFlagFromInt.apply(booleanSettingsFlag, 23);
+        singleton.subweaponOnlyLogic = getBoolFlagFromInt.apply(booleanSettingsFlag, 22);
+        singleton.allowWhipStart = getBoolFlagFromInt.apply(booleanSettingsFlag, 21);
+        singleton.randomizeBacksideDoors = getBoolFlagFromInt.apply(booleanSettingsFlag, 20);
+        singleton.ushumgalluAssist = getBoolFlagFromInt.apply(booleanSettingsFlag, 19);
+        singleton.allowSubweaponStart = getBoolFlagFromInt.apply(booleanSettingsFlag, 18);
+        singleton.requireFullAccess = getBoolFlagFromInt.apply(booleanSettingsFlag, 17);
+        singleton.randomizeDracuetShop = getBoolFlagFromInt.apply(booleanSettingsFlag, 16);
+        singleton.randomizeXmailer = getBoolFlagFromInt.apply(booleanSettingsFlag, 15);
+        singleton.htFullRandom = getBoolFlagFromInt.apply(booleanSettingsFlag, 14);
+        singleton.automaticTranslations = getBoolFlagFromInt.apply(booleanSettingsFlag, 13);
+        singleton.allowMainWeaponStart = getBoolFlagFromInt.apply(booleanSettingsFlag, 12);
+        singleton.randomizeCursedChests = getBoolFlagFromInt.apply(booleanSettingsFlag, 11);
+        singleton.automaticHardmode = getBoolFlagFromInt.apply(booleanSettingsFlag, 10);
+        singleton.coinChestGraphics = getBoolFlagFromInt.apply(booleanSettingsFlag, 9);
+        singleton.requireSoftwareComboForKeyFairy = getBoolFlagFromInt.apply(booleanSettingsFlag, 8);
+        singleton.requireIceCapeForLava = getBoolFlagFromInt.apply(booleanSettingsFlag, 7);
+        singleton.requireFlaresForExtinction = getBoolFlagFromInt.apply(booleanSettingsFlag, 6);
+        singleton.randomizeForbiddenTreasure = getBoolFlagFromInt.apply(booleanSettingsFlag, 5);
+        singleton.randomizeCoinChests = getBoolFlagFromInt.apply(booleanSettingsFlag, 4);
+        singleton.randomizeTrapItems = getBoolFlagFromInt.apply(booleanSettingsFlag, 3);
+        singleton.removeSpaulder = getBoolFlagFromInt.apply(booleanSettingsFlag, 2);
+        singleton.replaceMapsWithWeights = getBoolFlagFromInt.apply(booleanSettingsFlag, 1);
+        singleton.automaticGrailPoints = getBoolFlagFromInt.apply(booleanSettingsFlag, 0);
 
-        singleton.changed = true;
+        Collection<String> glitches = intToItemSet(Integer.parseInt(parts[3],16), DataFromFile.POSSIBLE_GLITCHES);
+        Collection<String> dboosts = intToItemSet(Integer.parseInt(parts[4],16), DataFromFile.POSSIBLE_DBOOSTS);
+        Set<String> initItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[5],16), singleton.possibleRandomizedItems));
+        Set<String> startingItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[6],16), singleton.possibleRandomizedItems));
+        BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[7],16)];
+        int minRandomRemovedItems = Integer.parseInt(parts[8],16);
+        int maxRandomRemovedItems = Integer.parseInt(parts[9],16);
+
+        setStartingSeed(seed);
+        setEnabledGlitches((List<String>) glitches, true);
+        setEnabledDamageBoosts((List<String>) dboosts, true);
+        setInitiallyAccessibleItems(initItems, true);
+        setStartingItems(startingItems, true);
+        setBossDifficulty(bossDifficulty.toString(), true);
+        setMinRandomRemovedItems(minRandomRemovedItems, true);
+        setMaxRandomRemovedItems(maxRandomRemovedItems, true);
 
         JOptionPane.showMessageDialog(null, "Settings successfully imported");
     }

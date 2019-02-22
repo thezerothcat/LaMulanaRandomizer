@@ -139,7 +139,7 @@ public final class DatReader {
         int dataIndex = 0;
         Block itemDescriptionBlock = new Block(blockIndex);
         String versionString = " Randomizer version " + FileUtils.VERSION;
-        String settingsString = "Settings " + Settings.generateShortString(true);
+        String settingsString = "Settings " + Settings.generateShortString();
 
         BlockStringData blockStringData;
 
