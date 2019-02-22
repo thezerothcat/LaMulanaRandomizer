@@ -18,7 +18,9 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.12.0";
+    public static final String VERSION = "2.13.0";
+    public static final int EXISTING_FILE_WIDTH = 1024;
+    public static final int EXISTING_FILE_HEIGHT = 512;
     public static final int GRAPHICS_VERSION = 2;
 
     private static BufferedWriter logWriter;
@@ -753,10 +755,13 @@ public class FileUtils {
 
     private static boolean backupGraphicsFile(File graphicsPack) {
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(new File(graphicsPack, "01effect.png.bak"));
-            Files.copy(new File(graphicsPack, "01effect.png").toPath(), fileOutputStream);
-            fileOutputStream.flush();
-            fileOutputStream.close();
+            File backup = new File(graphicsPack, "01effect.png.bak");
+            if(!backup.exists()) {
+                FileOutputStream fileOutputStream = new FileOutputStream(backup);
+                Files.copy(new File(graphicsPack, "01effect.png").toPath(), fileOutputStream);
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            }
             return true;
         }
         catch (IOException ex) {
@@ -793,7 +798,7 @@ public class FileUtils {
                 if(updateGraphics) {
                     FileUtils.logFlush("Updating graphics file: " + graphicsFile.getAbsolutePath());
                     // Hasn't been updated yet.
-                    BufferedImage newImage = new BufferedImage(existing.getWidth(), existing.getHeight() + custom.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                    BufferedImage newImage = new BufferedImage(EXISTING_FILE_WIDTH, EXISTING_FILE_HEIGHT + custom.getHeight(), BufferedImage.TYPE_INT_ARGB);
                     BufferedImage backupImage = ImageIO.read(new File(graphicsPack, "01effect.png.bak"));
                     Graphics2D graphics2D = newImage.createGraphics();
                     graphics2D.drawImage(backupImage, null, 0, 0); // Use backup to ensure no duplication of file
