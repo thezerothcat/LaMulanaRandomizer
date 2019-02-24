@@ -4,7 +4,7 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 2.13
 -----------------------------
-Fixed some HT logic for entrance randomizer.
+HT and other logic fixes. Fixed a bug with Twin Labyrinths poison timer disappearing in entrance rando.
 
 2.12
 -----------------------------

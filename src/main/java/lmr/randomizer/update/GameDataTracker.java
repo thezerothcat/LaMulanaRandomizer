@@ -3514,7 +3514,7 @@ public final class GameDataTracker {
                     AddObject.addSkandaBlock(gameObject);
                     firstObject = false;
                 }
-                if(firstObject && gateDestination.contains("Transition: Twin ")) { //  && !gateToUpdate.contains("Transition: Twin")
+                if(firstObject && gateDestination.contains("Transition: Twin ") && !gateToUpdate.equals("Transition: Twin U2")) {
                     AddObject.addTwinLabsPoisonTimerRemoval(gameObject.getObjectContainer());
                 }
             }
