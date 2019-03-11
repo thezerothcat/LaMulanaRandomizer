@@ -56,6 +56,12 @@ public class CustomDoorPlacement {
         if("Baphomet".equals(bossText)) {
             return 7;
         }
+        if("Tiamat".equals(bossText)) {
+            return 8;
+        }
+        if("Key Fairy".equals(bossText)) {
+            return 9;
+        }
         return -1;
     }
 }

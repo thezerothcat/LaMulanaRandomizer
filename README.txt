@@ -2,6 +2,10 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+2.14
+-----------------------------
+Randomized transitions leading between Temple of the Sun and Gate of Extinction. Added an option to randomize Dimensional Corridor and Key Fairy "backside" doors.
+
 2.13
 -----------------------------
 HT and other logic fixes. Fixed a bug with Twin Labyrinths poison timer disappearing in entrance rando.

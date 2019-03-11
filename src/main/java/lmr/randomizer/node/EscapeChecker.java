@@ -42,6 +42,7 @@ public class EscapeChecker {
         for(String accessedNodeFromValidation : accessedNodesFromValidation) {
             if(!"Holy Grail".equals(accessedNodeFromValidation)
                     && !"State: Pre-Escape".equals(accessedNodeFromValidation)
+                    && !accessedNodeFromValidation.endsWith(" Warp")
                     && !accessedNodeFromValidation.startsWith("Location:")
                     && !accessedNodeFromValidation.startsWith("Coin:")
                     && !accessedNodeFromValidation.startsWith("Transition:")
@@ -143,7 +144,7 @@ public class EscapeChecker {
             case STATE:
             case SETTING:
                 queuedUpdates.add(nodeName);
-                if(DataFromFile.GUARDIAN_DEFEATED_EVENTS.contains(nodeName)) {
+                if(DataFromFile.GUARDIAN_DEFEATED_EVENTS.contains(nodeName) || nodeName.startsWith("Fairy:")) {
                     queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, null));
                 }
                 break;

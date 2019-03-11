@@ -3,6 +3,7 @@ package lmr.randomizer.node;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
+import lmr.randomizer.random.BacksideDoorRandomizer;
 import lmr.randomizer.random.ItemRandomizer;
 import lmr.randomizer.random.ShopRandomizer;
 import lmr.randomizer.random.TransitionGateRandomizer;
@@ -23,16 +24,18 @@ public class MoneyChecker {
 
     private ItemRandomizer itemRandomizer;
     private ShopRandomizer shopRandomizer;
+    private BacksideDoorRandomizer backsideDoorRandomizer;
     private TransitionGateRandomizer transitionGateRandomizer;
 
     private int numberOfAccessibleSacredOrbs;
     private int accessedMoney;
 
-    public MoneyChecker(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, TransitionGateRandomizer transitionGateRandomizer) {
+    public MoneyChecker(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, BacksideDoorRandomizer backsideDoorRandomizer, TransitionGateRandomizer transitionGateRandomizer) {
         accessedMoney = 0;
         mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
         this.itemRandomizer = itemRandomizer;
         this.shopRandomizer = shopRandomizer;
+        this.backsideDoorRandomizer = backsideDoorRandomizer;
         this.transitionGateRandomizer = transitionGateRandomizer;
     }
 
@@ -106,7 +109,7 @@ public class MoneyChecker {
     }
 
     public Integer getShopPrice(String itemName, String shopName) {
-        if(!accessedNodes.contains("State: Fairy") && !accessedNodes.contains("Location: Dimensional Corridor")
+        if(!accessedNodes.contains("State: Fairy") && !accessedNodes.contains("Location: Dimensional Corridor [Grail]")
                 && availableShops.contains(shopName) && accessedAreas.size() <= 3) {
             if("Plane Model".equals(itemName)
                     && accessedAreas.contains("Tower of the Goddess")) {
@@ -217,15 +220,22 @@ public class MoneyChecker {
                 if(area != null) {
                     accessedAreas.add(area);
                 }
+                queuedUpdates.add(nodeName);
+                queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
+                break;
             case STATE:
 //                if(nodeName.endsWith(" Defeated")) {
 //                    accessedMoney += getEnemyMoneyValue(nodeName);
 //                }
             case SETTING:
                 queuedUpdates.add(nodeName);
+                if(nodeName.startsWith("Fairy:")) {
+                    queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
+                }
                 break;
             case EXIT:
                 queuedUpdates.add(nodeName);
+                queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
                 queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits(nodeName, attemptNumber));
                 break;
             case SHOP:
@@ -322,7 +332,7 @@ public class MoneyChecker {
         if(locationNodeName.equals("Location: Endless Corridor [5F]")) {
             return 100;
         }
-        if(locationNodeName.equals("Location: Dimensional Corridor")) {
+        if(locationNodeName.equals("Location: Dimensional Corridor [Grail]")) {
             return 20; // Girtablilu
         }
         return 0;

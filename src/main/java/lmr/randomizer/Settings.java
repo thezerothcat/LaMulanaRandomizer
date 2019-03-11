@@ -48,6 +48,7 @@ public final class Settings {
     private boolean randomizeTransitionGates;
     private boolean randomizeOneWayTransitions;
     private boolean randomizeBacksideDoors;
+    private boolean randomizeNonBossDoors;
     private boolean replaceMapsWithWeights;
     private boolean automaticGrailPoints;
     private boolean automaticTranslations;
@@ -107,6 +108,7 @@ public final class Settings {
         randomizeTransitionGates = false;
         randomizeOneWayTransitions = false;
         randomizeBacksideDoors = false;
+        randomizeNonBossDoors = false;
         bossSpecificAnkhJewels = false;
         removeSpaulder = false;
         replaceMapsWithWeights = false;
@@ -470,6 +472,17 @@ public final class Settings {
         singleton.randomizeBacksideDoors = randomizeBacksideDoors;
     }
 
+    public static boolean isRandomizeNonBossDoors() {
+        return singleton.randomizeNonBossDoors;
+    }
+
+    public static void setRandomizeNonBossDoors(boolean randomizeNonBossDoors, boolean update) {
+        if(update && randomizeNonBossDoors != singleton.randomizeNonBossDoors) {
+            singleton.changed = true;
+        }
+        singleton.randomizeNonBossDoors = randomizeNonBossDoors;
+    }
+
     public static boolean isReplaceMapsWithWeights() { return singleton.replaceMapsWithWeights; }
 
     public static void setReplaceMapsWithWeights(boolean replaceMapsWithWeights, boolean update) {
@@ -822,6 +835,7 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.randomizeNonBossDoors, 27);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeOneWayTransitions, 26);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeEscapeChest, 25);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeTransitionGates, 24);
@@ -905,6 +919,7 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.randomizeNonBossDoors = getBoolFlagFromInt.apply(booleanSettingsFlag, 27);
         singleton.randomizeOneWayTransitions = getBoolFlagFromInt.apply(booleanSettingsFlag, 26);
         singleton.randomizeEscapeChest = getBoolFlagFromInt.apply(booleanSettingsFlag, 25);
         singleton.randomizeTransitionGates = getBoolFlagFromInt.apply(booleanSettingsFlag, 24);

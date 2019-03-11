@@ -160,6 +160,21 @@ public final class RcdReader {
                 }
             }
 
+            if(Settings.isRandomizeNonBossDoors()) {
+                for (WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
+                    if(flagUpdate.getIndex() == 0x15c || flagUpdate.getIndex() == 0x15d
+                            || flagUpdate.getIndex() == 0x16d || flagUpdate.getIndex() == 0x16e
+                            || flagUpdate.getIndex() == 0x175 || flagUpdate.getIndex() == 0x176
+                            || flagUpdate.getIndex() == 0x1bd || flagUpdate.getIndex() == 0x1be
+                            || flagUpdate.getIndex() == 0x152 || flagUpdate.getIndex() == 0x153
+                            || flagUpdate.getIndex() == 0x2b9 || flagUpdate.getIndex() == 0x1d0
+                            || flagUpdate.getIndex() == 0x3b7 || flagUpdate.getIndex() == 0x1c0
+                            || flagUpdate.getIndex() == 0x38c) {
+                        keepObject = false;
+                    }
+                }
+            }
+
             if(!(objectContainer instanceof Zone)) {
                 for (int i = 0; i < obj.getWriteByteOperations().size(); i++) {
                     WriteByteOperation updateFlag = obj.getWriteByteOperations().get(i);
@@ -214,6 +229,14 @@ public final class RcdReader {
                                 break;
                             }
                         }
+                    }
+                }
+            }
+            if(Settings.isRandomizeNonBossDoors()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                        keepObject = false;
                     }
                 }
             }
@@ -288,6 +311,14 @@ public final class RcdReader {
                         if (Settings.isRandomizeTransitionGates()) {
                             for (TestByteOperation flagTest : obj.getTestByteOperations()) {
                                 if (flagTest.getIndex() == 0x382 && flagTest.getValue() == 1) {
+                                    keepObject = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (Settings.isRandomizeNonBossDoors()) {
+                            for (TestByteOperation flagTest : obj.getTestByteOperations()) {
+                                if (flagTest.getIndex() == 0x1c9 && flagTest.getValue() == 1) {
                                     keepObject = false;
                                     break;
                                 }
@@ -389,6 +420,31 @@ public final class RcdReader {
                 obj.getTestByteOperations().remove(0);
             }
         }
+        else if (obj.getId() == 0x91) {
+            if(Settings.isRandomizeNonBossDoors()) {
+                Integer testFlagIndex = null;
+                for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
+                    TestByteOperation flagTest = obj.getTestByteOperations().get(i);
+                    if (flagTest.getIndex() == 0x382) {
+                        // Un-disable fairy points during the escape
+                        testFlagIndex = i;
+                    }
+                }
+                if(testFlagIndex != null) {
+                    obj.getTestByteOperations().remove((int)testFlagIndex);
+                }
+            }
+        }
+        else if (obj.getId() == 0xb7) {
+            if(Settings.isRandomizeNonBossDoors()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if(screen.getZoneIndex() == 8 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        keepObject = false;
+                    }
+                }
+            }
+        }
         else if (obj.getId() == 0xb4) {
             if(Settings.isRandomizeTrapItems()) {
                 if (!obj.getTestByteOperations().isEmpty() && obj.getTestByteOperations().get(0).getIndex() == 522) {
@@ -452,6 +508,35 @@ public final class RcdReader {
         else if (obj.getId() == 0xc5) {
             if(Settings.isRandomizeTransitionGates()) {
                 obj.getArgs().set(2, (short)10);
+            }
+        }
+        else if (obj.getId() == 0x9e) {
+            if(Settings.isRandomizeNonBossDoors()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if (screen.getZoneIndex() == 1 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                        for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                            if (testByteOperation.getIndex() == 0x152) {
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                        for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                            if (testByteOperation.getIndex() == 0x1c9) {
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                    if (testByteOperation.getIndex() == 0x0ae && testByteOperation.getValue() == 0 && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())) {
+                        keepObject = false;
+                        break;
+                    }
+                }
             }
         }
         else if (obj.getId() == 0x93) {
@@ -530,6 +615,39 @@ public final class RcdReader {
                                 break;
                             }
                         }
+                    }
+                }
+            }
+            if(Settings.isRandomizeNonBossDoors()) {
+                for (TestByteOperation flagTest : obj.getTestByteOperations()) {
+                    if(flagTest.getIndex() == 0x15c || flagTest.getIndex() == 0x15d
+                            || flagTest.getIndex() == 0x16d || flagTest.getIndex() == 0x16e
+                            || flagTest.getIndex() == 0x175 || flagTest.getIndex() == 0x176
+                            || flagTest.getIndex() == 0x1bd || flagTest.getIndex() == 0x1be
+                            || flagTest.getIndex() == 0x152 || flagTest.getIndex() == 0x153
+                            || flagTest.getIndex() == 0x2b9 || flagTest.getIndex() == 0x1d0
+                            || flagTest.getIndex() == 0x3b7 || flagTest.getIndex() == 0x1c0) {
+                        keepObject = false;
+                        break;
+                    }
+                }
+                Screen screen = (Screen) objectContainer;
+                if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                    for (TestByteOperation flagTest : obj.getTestByteOperations()) {
+                        if(flagTest.getIndex() == 0x1c9 && flagTest.getValue() == 0) {
+                            keepObject = false;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else if(obj.getId() == 0xa7) {
+            if(Settings.isRandomizeNonBossDoors()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen) objectContainer;
+                    if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                        keepObject = false;
                     }
                 }
             }
@@ -901,6 +1019,11 @@ public final class RcdReader {
         }
         else if(zoneIndex == 2 && roomIndex == 2 && screenIndex == 0) {
             AddObject.addHardmodeToggleWeights(screen);
+        }
+        else if(zoneIndex == 6 && roomIndex == 2 && screenIndex == 0) {
+            if(Settings.isRandomizeTransitionGates()) {
+                AddObject.addExtinctionTorch(screen);
+            }
         }
         else if(zoneIndex == 9 && roomIndex == 8 && screenIndex == 1) {
             GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 0));

@@ -1,6 +1,5 @@
 package lmr.randomizer.random;
 
-import javafx.util.Pair;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
@@ -48,11 +47,13 @@ public class BacksideDoorRandomizer {
         else {
             String frontsideDoor;
             String backsideDoor;
-            for(int i = 1; i <= 7; i++) {
+            for(int i = 1; i <= 9; i++) {
                 frontsideDoor = "Door: F" + i;
                 backsideDoor = "Door: B" + i;
                 backsideDoorLocationMap.put(frontsideDoor, getDoorLocation(frontsideDoor));
                 backsideDoorLocationMap.put(backsideDoor, getDoorLocation(backsideDoor));
+                mapOfDoorToPairDoor.put(frontsideDoor, backsideDoor);
+                mapOfDoorToPairDoor.put(backsideDoor, frontsideDoor);
             }
         }
     }
@@ -71,6 +72,7 @@ public class BacksideDoorRandomizer {
                 backsideDoorBossMap.put(frontsideDoor, i);
                 backsideDoorBossMap.put(backsideDoor, i);
             }
+            backsideDoorBossMap.put("Door: F9", 9);
         }
 
         rebuildRequirementsMap();
@@ -80,7 +82,7 @@ public class BacksideDoorRandomizer {
     public void rebuildRequirementsMap() {
         mapOfNodeNameToDoorRequirementsObject.clear();
         for(String door : backsideDoorLocationMap.keySet()) {
-            addToMap(door, backsideDoorLocationMap.get(door), getBoss(backsideDoorBossMap.get(door)));
+            addToMap(door, backsideDoorLocationMap.get(door), backsideDoorBossMap.get(door));
         }
     }
 
@@ -98,6 +100,23 @@ public class BacksideDoorRandomizer {
         unassignedDoors.add("Door: F2");
         unassignedDoors.add("Door: F3");
         unassignedDoors.add("Door: F5");
+        if(Settings.isRandomizeNonBossDoors()) {
+            riskDoors.add("Door: F8");
+            unassignedDoors.add("Door: B8");
+            unassignedDoors.add("Door: B9");
+            unassignedDoors.add("Door: F9");
+        }
+        else {
+            backsideDoorLocationMap.put("Door: F8", getDoorLocation("Door: F8"));
+            backsideDoorLocationMap.put("Door: B8", getDoorLocation("Door: B8"));
+            backsideDoorLocationMap.put("Door: F9", getDoorLocation("Door: F9"));
+            backsideDoorLocationMap.put("Door: B9", getDoorLocation("Door: B9"));
+
+            mapOfDoorToPairDoor.put("Door: F8", "Door: B8");
+            mapOfDoorToPairDoor.put("Door: B8", "Door: F8");
+            mapOfDoorToPairDoor.put("Door: F9", "Door: B9");
+            mapOfDoorToPairDoor.put("Door: B9", "Door: F9");
+        }
 
         if(Settings.getEnabledGlitches().contains("Lamp Glitch")) {
             unassignedDoors.add("Door: F4");
@@ -131,8 +150,9 @@ public class BacksideDoorRandomizer {
         String key1;
         String key2;
         for(CustomDoorPlacement customDoorPlacement : DataFromFile.getCustomPlacementData().getCustomDoorPlacements()) {
+            // Plando doors are based on their location; Door: F3=Door: B7 means that Sun door goes to Nuwa door
             door1 = customDoorPlacement.getTargetDoor().replace("Door ", "Door: ");
-            door2 = customDoorPlacement.getDestinationDoor().replace("Door ", "Door: ");;
+            door2 = customDoorPlacement.getDestinationDoor().replace("Door ", "Door: ");
 
             key1 = swapFrontToBack(door2);
             key2 = swapFrontToBack(door1);
@@ -208,8 +228,14 @@ public class BacksideDoorRandomizer {
         bosses.add(5);
         bosses.add(6);
         bosses.add(7);
+        if(Settings.isRandomizeNonBossDoors()) {
+            bosses.add(9);
+        }
+        else {
+            backsideDoorBossMap.put("Door: F9", 9);
+        }
 
-        List<String> doors = new ArrayList<>(7);
+        List<String> doors = new ArrayList<>(16);
         doors.add("Door: F1");
         doors.add("Door: F2");
         doors.add("Door: F3");
@@ -224,67 +250,144 @@ public class BacksideDoorRandomizer {
         doors.add("Door: B5");
         doors.add("Door: B6");
         doors.add("Door: B7");
+        if(Settings.isRandomizeNonBossDoors()) {
+            doors.add("Door: F8");
+            doors.add("Door: B8");
+            doors.add("Door: F9");
+            doors.add("Door: B9");
+        }
 
         String door;
         String reverseDoor;
+        String key1;
+        String key2;
         for(CustomDoorPlacement customDoorPlacement : DataFromFile.getCustomPlacementData().getCustomDoorPlacements()) {
             if(customDoorPlacement.getAssignedBoss() != null) {
                 door = customDoorPlacement.getTargetDoor().replace("Door ", "Door: ");
                 reverseDoor = customDoorPlacement.getDestinationDoor().replace("Door ", "Door: ");
 
-                backsideDoorBossMap.put(door, customDoorPlacement.getAssignedBoss());
-                backsideDoorBossMap.put(reverseDoor, customDoorPlacement.getAssignedBoss());
+                key1 = swapFrontToBack(reverseDoor);
+                key2 = swapFrontToBack(door);
+
+                backsideDoorBossMap.put(key1, customDoorPlacement.getAssignedBoss());
+                if(customDoorPlacement.getAssignedBoss() != null && customDoorPlacement.getAssignedBoss() != 9) {
+                    backsideDoorBossMap.put(key2, customDoorPlacement.getAssignedBoss());
+                }
 
                 bosses.remove(customDoorPlacement.getAssignedBoss());
-                doors.remove(door);
-                doors.remove(reverseDoor);
+                doors.remove(key1);
+                doors.remove(key2);
             }
         }
 
         int boss;
+        List<String> availableDoors;
         while(!bosses.isEmpty()) {
             boss = bosses.get(random.nextInt(bosses.size()));
             bosses.remove((Integer)boss);
-            door = doors.get(random.nextInt(doors.size()));
-            reverseDoor = mapOfDoorToPairDoor.get(door);
+
+            availableDoors = new ArrayList<>(doors);
+            do {
+                door = availableDoors.get(random.nextInt(availableDoors.size()));
+                reverseDoor = mapOfDoorToPairDoor.get(door);
+                availableDoors.remove(door);
+                availableDoors.remove(reverseDoor);
+            } while(isInvalidAssignment(door, reverseDoor, boss) && availableDoors.isEmpty());
+
             doors.remove(door);
             doors.remove(reverseDoor);
-            backsideDoorBossMap.put(door, boss);
-            backsideDoorBossMap.put(reverseDoor, boss);
+
+            if(!backsideDoorLocationMap.get(door).contains("Dimensional Corridor")) {
+                if(boss == 9) {
+                    backsideDoorBossMap.put(door, boss);
+                }
+                else if(!backsideDoorLocationMap.get(door).contains("Gate of Time")) {
+                    backsideDoorBossMap.put(door, boss);
+                }
+            }
+
+            if(!backsideDoorLocationMap.get(reverseDoor).contains("Dimensional Corridor")) {
+                if(boss == 9) {
+                    backsideDoorBossMap.put(reverseDoor, boss);
+                }
+                else if(!backsideDoorLocationMap.get(reverseDoor).contains("Gate of Time")) {
+                    backsideDoorBossMap.put(reverseDoor, boss);
+                }
+            }
         }
     }
 
-    private void addToMap(String doorName, String doorLocation, String requiredBoss) {
-        NodeWithRequirements node = mapOfNodeNameToDoorRequirementsObject.get(doorName);
-        if(node == null) {
-            node = new NodeWithRequirements(doorName);
+    private boolean isInvalidAssignment(String door, String reverseDoor, Integer boss) {
+        if(boss != 9) {
+            return backsideDoorLocationMap.get(door).contains("Dimensional Corridor")
+                    || backsideDoorLocationMap.get(reverseDoor).contains("Dimensional Corridor")
+                    || backsideDoorLocationMap.get(door).contains("Gate of Time")
+                    || backsideDoorLocationMap.get(reverseDoor).contains("Gate of Time");
+        }
+        return false;
+    }
+
+    private void addToMap(String doorName, String doorLocation, Integer bossNumber) {
+        NodeWithRequirements node;
+        List<String> doorRequirements;
+
+        if(!doorLocation.contains("Endless Corridor [1F]")) {
+            node = mapOfNodeNameToDoorRequirementsObject.get(doorName);
+            if(node == null) {
+                node = new NodeWithRequirements(doorName);
+            }
+
+            doorRequirements = new ArrayList<>();
+            doorRequirements.add(doorLocation);
+            if(bossNumber != null) {
+                if(bossNumber == 9) {
+                    doorRequirements.add(doorLocation.replace("Location:", "Fairy:"));
+                }
+                else {
+                    doorRequirements.add(getBoss(bossNumber));
+                    doorRequirements.add("Bronze Mirror");
+                }
+            }
+            node.addRequirementSet(doorRequirements);
             mapOfNodeNameToDoorRequirementsObject.put(doorName, node);
         }
-        List<String> doorRequirements = new ArrayList<>(2);
-        doorRequirements.add(doorLocation);
-        doorRequirements.add(requiredBoss);
-        node.addRequirementSet(doorRequirements);
 
         String doorExit = doorName.replace("Door: ", "Exit: Door ");
         node = mapOfNodeNameToDoorRequirementsObject.get(doorExit);
         if(node == null) {
             node = new NodeWithRequirements(doorExit);
-            mapOfNodeNameToDoorRequirementsObject.put(doorExit, node);
         }
-        doorRequirements = new ArrayList<>(2);
+        doorRequirements = new ArrayList<>();
         doorRequirements.add(doorLocation.replace("Location:", "Exit:"));
-        doorRequirements.add(requiredBoss);
+        if(bossNumber != null) {
+            if(bossNumber != 9) {
+                doorRequirements.add(getBoss(bossNumber));
+                doorRequirements.add("Bronze Mirror");
+            }
+        }
+        Integer reverseBossNumber = backsideDoorBossMap.get(mapOfDoorToPairDoor.get(doorName));
+        if(reverseBossNumber != null && reverseBossNumber == 9) {
+            doorRequirements.add(backsideDoorLocationMap.get(mapOfDoorToPairDoor.get(doorName)).replace("Location:", "Fairy:"));
+        }
         node.addRequirementSet(doorRequirements);
+
+        doorRequirements = new ArrayList<>();
+        doorRequirements.add(doorName);
+        node.addRequirementSet(doorRequirements);
+
+        mapOfNodeNameToDoorRequirementsObject.put(doorExit, node);
     }
 
     public boolean isDoorOneWay(String doorName) {
         String doorLocation = backsideDoorLocationMap.get(doorName);
-        return doorLocation.contains("Gate of Guidance") || doorLocation.contains("Tower of Ruin [Top]")
+        return doorLocation.contains("Gate of Guidance") || doorLocation.contains("Tower of Ruin [Top]") || doorLocation.contains("Endless Corridor [1F]")
                 || (!Settings.getEnabledGlitches().contains("Lamp Glitch") && doorLocation.contains("Inferno Cavern [Viy]"));
     }
 
     public List<String> getAvailableNodes(String stateToUpdate, Integer attemptNumber) {
-        if(!stateToUpdate.startsWith("Event:") && !stateToUpdate.startsWith("Location:") && !stateToUpdate.startsWith("Exit:")) {
+        if(!"Bronze Mirror".equals(stateToUpdate)
+                && !stateToUpdate.startsWith("Event:") && !stateToUpdate.startsWith("Location:")
+                && !stateToUpdate.startsWith("Exit:") && !stateToUpdate.startsWith("Fairy:")) {
             return new ArrayList<>(0);
         }
 
@@ -315,8 +418,13 @@ public class BacksideDoorRandomizer {
             else {
                 doorToReplace = doorToReplace.replace("Door: F", "Door: B");
             }
-            int bossNumber = backsideDoorBossMap.get(doorKeyAndLocation.getKey());
-            GameDataTracker.writeBacksideDoor(doorToReplace, doorKeyAndLocation.getKey(), bossNumber);
+
+            if(Settings.isRandomizeNonBossDoors()) {
+                GameDataTracker.writeBacksideDoorV2(doorToReplace, doorKeyAndLocation.getKey(), backsideDoorBossMap.get(doorKeyAndLocation.getKey()));
+            }
+            else if(!doorToReplace.endsWith("8") && !doorToReplace.endsWith("9")) {
+                GameDataTracker.writeBacksideDoor(doorToReplace, doorKeyAndLocation.getKey(), backsideDoorBossMap.get(doorKeyAndLocation.getKey()));
+            }
         }
     }
 
@@ -342,6 +450,12 @@ public class BacksideDoorRandomizer {
         if("Door: F7".equals(door)) {
             return "Location: Inferno Cavern [Spikes]";
         }
+        if("Door: F8".equals(door)) {
+            return "Location: Endless Corridor [1F]";
+        }
+        if("Door: F9".equals(door)) {
+            return "Location: Chamber of Extinction [Main]";
+        }
 
         if("Door: B1".equals(door)) {
             return "Location: Gate of Illusion [Grail]";
@@ -363,6 +477,12 @@ public class BacksideDoorRandomizer {
         }
         if("Door: B7".equals(door)) {
             return "Location: Tower of Ruin [Top]";
+        }
+        if("Door: B8".equals(door)) {
+            return "Location: Dimensional Corridor [Grail]";
+        }
+        if("Door: B9".equals(door)) {
+            return "Location: Gate of Time [Mausoleum Lower]";
         }
         return null;
     }
@@ -389,6 +509,12 @@ public class BacksideDoorRandomizer {
         if("Location: Inferno Cavern [Spikes]".equals(location)) {
             return "Door: B7";
         }
+        if("Location: Endless Corridor [1F]".equals(location)) {
+            return "Door: B8";
+        }
+        if("Location: Chamber of Extinction [Main]".equals(location)) {
+            return "Door: B9";
+        }
 
         if("Location: Gate of Illusion [Grail]".equals(location)) {
             return "Door: F1";
@@ -411,10 +537,19 @@ public class BacksideDoorRandomizer {
         if("Location: Tower of Ruin [Top]".equals(location)) {
             return "Door: F7";
         }
+        if("Location: Dimensional Corridor [Grail]".equals(location)) {
+            return "Door: F8";
+        }
+        if("Location: Gate of Time [Mausoleum Lower]".equals(location)) {
+            return "Door: F9";
+        }
         return null;
     }
 
-    private String getBoss(int bossNumber) {
+    private String getBoss(Integer bossNumber) {
+        if(bossNumber == null) {
+            return null;
+        }
         if(bossNumber == 1) {
             return "Event: Amphisbaena Defeated";
         }
@@ -458,15 +593,22 @@ public class BacksideDoorRandomizer {
 
     public void logBosses(Integer attemptNumber) {
         if(Settings.isRandomizeBacksideDoors() && Settings.isDetailedLoggingAttempt(attemptNumber)) {
-            for(String door : backsideDoorBossMap.keySet()) {
-                FileUtils.log(door + ": " + backsideDoorBossMap.get(door));
+            String doorLocation;
+            for(String door : backsideDoorLocationMap.keySet()) {
+                doorLocation = backsideDoorLocationMap.get(door);
+                if(!doorLocation.contains("Endless Corridor [1F]")) {
+                    FileUtils.log(Translations.getDoorLocation(doorLocation) + ": " + Translations.getText("bosses." + backsideDoorBossMap.get(door)));
+                }
             }
-            FileUtils.flush();
         }
     }
 
     public List<String> getMissingRequirements(String door) {
-        return mapOfNodeNameToDoorRequirementsObject.get(door).getAllRequirements().get(0);
+        NodeWithRequirements nodeWithRequirements = mapOfNodeNameToDoorRequirementsObject.get(door);
+        if(nodeWithRequirements == null) {
+            return new ArrayList<>(0);
+        }
+        return nodeWithRequirements.getAllRequirements().get(0);
     }
 
     public void outputLocations(int attemptNumber) throws IOException {
@@ -475,42 +617,18 @@ public class BacksideDoorRandomizer {
             return;
         }
 
-        Map<Integer, List<String>> mapOfBossToBacksideDoors = new HashMap<>(14);
-        List<String> backsideDoorsForBoss;
-        Pair<String, String> door1AndDoor2;
-        for(Map.Entry<String, Integer> doorNameWithBossNumber : backsideDoorBossMap.entrySet()) {
-            backsideDoorsForBoss = mapOfBossToBacksideDoors.get(doorNameWithBossNumber.getValue());
-            if(backsideDoorsForBoss == null) {
-                backsideDoorsForBoss = new ArrayList<>(2);
-                mapOfBossToBacksideDoors.put(doorNameWithBossNumber.getValue(), backsideDoorsForBoss);
+        String doorLocation;
+        for(String door : backsideDoorLocationMap.keySet()) {
+            doorLocation = backsideDoorLocationMap.get(door);
+            if(!doorLocation.contains("Endless Corridor [1F]")) {
+                writer.write(Translations.getDoorLocation(doorLocation)
+                        + " => " + Translations.getText("bosses." + backsideDoorBossMap.get(door)) + " => "
+                        + Translations.getDoorLocation(backsideDoorLocationMap.get(mapOfDoorToPairDoor.get(door))));
+                writer.newLine();
             }
-            backsideDoorsForBoss.add(doorNameWithBossNumber.getKey());
-        }
-
-        for(int i = 1; i <= 7; i++) {
-            door1AndDoor2 = sortDoors(mapOfBossToBacksideDoors.get(i));
-            writer.write(Translations.getDoorLocation(backsideDoorLocationMap.get(door1AndDoor2.getKey()))
-                    + " <= " + Translations.getText("bosses." + i) + " => "
-                    + Translations.getDoorLocation(backsideDoorLocationMap.get(door1AndDoor2.getValue())));
-            writer.newLine();
         }
 
         writer.flush();
         writer.close();
-    }
-
-    private Pair<String, String> sortDoors(List<String> doors) {
-        String door1 = doors.get(0);
-        String door2 = doors.get(1);
-        if(door1.startsWith("Door: F")) {
-            if(door2.startsWith("Door: B") || door1.compareTo(door2) < 1) {
-                return new Pair<>(door1, door2);
-            }
-            return new Pair<>(door2, door1);
-        }
-        if(door2.startsWith("Door: F") || door2.compareTo(door1) < 1) {
-            return new Pair<>(door2, door1);
-        }
-        return new Pair<>(door1, door2);
     }
 }

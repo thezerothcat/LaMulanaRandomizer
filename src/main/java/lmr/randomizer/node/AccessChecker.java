@@ -120,7 +120,7 @@ public class AccessChecker {
                     FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
                     if(accessedNodes.size() > 500 || Settings.isDetailedLoggingAttempt(attemptNumber)) {
                         List<String> logged = new ArrayList<>();
-                        if (requiredItem.startsWith("Event:") || requiredItem.startsWith("Location:")) {
+                        if (requiredItem.startsWith("Event:")) {
                             logAccess(requiredItem, logged);
                         }
                     }
@@ -199,14 +199,34 @@ public class AccessChecker {
         for (List<String> requirementSet : remainingRequirements.getAllRequirements()) {
             FileUtils.log("Missing requirements for " + requiredNode + " from set: " + requirementSet);
             for (String requirement : requirementSet) {
+                if(!requirement.contains(": ")) {
+                    continue;
+                }
                 if(requirement.startsWith("Transition:")) {
                     FileUtils.log("Missing requirements for " + requirement + ": " + transitionGateRandomizer.getTransitionReverse(requirement));
                     logAccess(transitionGateRandomizer.getTransitionReverse(requirement), loggedRequirements);
                 }
 
-                if(!requirement.contains(": ")) {
+                if(requirement.startsWith("Door:")) {
+                    FileUtils.log("Missing requirements for " + requirement + ": " + backsideDoorRandomizer.getMissingRequirements(requirement));
+                    for (String requirementInner : backsideDoorRandomizer.getMissingRequirements(requirement)) {
+                        if (requirementInner.startsWith("Door:")) {
+                            List<String> missingRequirements = backsideDoorRandomizer.getMissingRequirements(requirementInner);
+                            for(String doorRequirement : missingRequirements) {
+                                logAccess(doorRequirement, loggedRequirements);
+                            }
+                        }
+                        else if (requirementInner.startsWith("Transition:")) {
+                            FileUtils.log("Unable to access " + transitionGateRandomizer.getTransitionReverse(requirementInner));
+                            logAccess(transitionGateRandomizer.getTransitionReverse(requirementInner), loggedRequirements);
+                        }
+                        else if (requirementInner.startsWith("Event:") || requirementInner.startsWith("State:") || requirementInner.startsWith("Location:")) {
+                            logAccess(requirementInner, loggedRequirements);
+                        }
+                    }
                     continue;
                 }
+
                 remainingRequirements = mapOfNodeNameToRequirementsObject.get(requirement);
                 if(remainingRequirements != null) {
                     for (List<String> requirementsForRequirement : remainingRequirements.getAllRequirements()) {
@@ -282,6 +302,9 @@ public class AccessChecker {
         // If nothing requires this state, don't bother checking for newly opened nodes since there will be none.
         // Only use this shortcut during full validation, or you lose some initial nodes which cause different output to previous rando version.
         if (fullValidation) {
+            if("Bronze Mirror".equals(stateToUpdate)) {
+                queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(stateToUpdate, attemptNumber));
+            }
             if(mapOfRequirementsToNodeNameObject.containsKey(stateToUpdate)) {
                 for(String nodeName : mapOfRequirementsToNodeNameObject.get(stateToUpdate)) {
                     node = mapOfNodeNameToRequirementsObject.get(nodeName);
@@ -460,14 +483,14 @@ public class AccessChecker {
                 }
                 break;
             case MAP_LOCATION:
-                if(fullValidation) {
-                    queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
-                }
+                queuedUpdates.add(nodeName);
+                queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
+                break;
             case STATE:
             case SETTING:
                 if(fullValidation) {
                     queuedUpdates.add(nodeName);
-                    if(DataFromFile.GUARDIAN_DEFEATED_EVENTS.contains(nodeName)) {
+                    if(DataFromFile.GUARDIAN_DEFEATED_EVENTS.contains(nodeName) || nodeName.startsWith("Fairy:")) {
                         queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
                     }
                 }
@@ -477,9 +500,7 @@ public class AccessChecker {
                 break;
             case EXIT:
                 queuedUpdates.add(nodeName);
-                if(fullValidation) {
-                    queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
-                }
+                queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
                 queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits(nodeName, attemptNumber));
                 break;
             case SHOP:
@@ -531,7 +552,7 @@ public class AccessChecker {
 
         if(item.equals("Dimensional Key")) {
             if("Angel Shield".equals(location) || "beolamu.exe".equals(location) || "Sacred Orb (Dimensional Corridor)".equals(location)
-                    || "Ankh Jewel (Dimensional Corridor".equals(location) || "Magatama Jewel".equals(location)
+                    || "Ankh Jewel (Dimensional Corridor)".equals(location) || "Magatama Jewel".equals(location)
                     || "Map (Dimensional Corridor)".equals(location) || "Coin: Dimensional".equals(location)) {
                 return false;
             }

@@ -117,12 +117,6 @@ public class TransitionGateRandomizer {
     }
 
     private void randomizeHorizontalTransitions(Random random) {
-        transitionGateDestinationMap.put("Transition: Sun R1", "Transition: Extinction L1");
-        transitionGateDestinationMap.put("Transition: Extinction L1", "Transition: Sun R1");
-
-        transitionGateDestinationMap.put("Transition: Sun R2", "Transition: Extinction L2");
-        transitionGateDestinationMap.put("Transition: Extinction L2", "Transition: Sun R2");
-
         List<String> leftTransitions = new ArrayList<>();
         List<String> unsafeLeftTransitions = new ArrayList<>();
         List<String> rightTransitions = new ArrayList<>();
@@ -133,6 +127,8 @@ public class TransitionGateRandomizer {
         leftTransitions.add("Transition: Graveyard L1");
         leftTransitions.add("Transition: Sun L1");
         leftTransitions.add("Transition: Goddess L2");
+        leftTransitions.add("Transition: Extinction L1");
+        leftTransitions.add("Transition: Extinction L2");
         leftTransitions.add("Transition: Birth L1");
         leftTransitions.add("Transition: Retroguidance L1");
         unsafeLeftTransitions.add("Transition: Moonlight L1");
@@ -140,6 +136,8 @@ public class TransitionGateRandomizer {
         rightTransitions.add("Transition: Surface R1");
         rightTransitions.add("Transition: Illusion R2");
         rightTransitions.add("Transition: Graveyard R1");
+        rightTransitions.add("Transition: Sun R1");
+        rightTransitions.add("Transition: Sun R2");
         rightTransitions.add("Transition: Inferno R1");
         rightTransitions.add("Transition: Ruin R1");
         rightTransitions.add("Transition: Ruin R2");
@@ -553,7 +551,7 @@ public class TransitionGateRandomizer {
         else if("Location: Chamber of Birth [Skanda]".equals(gateName)) {
             return Arrays.asList("Transition: Birth R1");
         }
-        else if("Location: Dimensional Corridor".equals(gateName)) {
+        else if("Location: Dimensional Corridor [Lower]".equals(gateName)) {
             return Arrays.asList("Transition: Dimensional D1");
         }
         else if("Location: Gate of Time [Mausoleum Lower]".equals(gateName)) {
@@ -750,7 +748,7 @@ public class TransitionGateRandomizer {
             return "Location: Chamber of Birth [Skanda]";
         }
         else if("Transition: Dimensional D1".equals(gateName)) {
-            return "Location: Dimensional Corridor";
+            return "Location: Dimensional Corridor [Lower]";
         }
         return null;
     }

@@ -555,7 +555,7 @@ public class Main {
             if(!customPlacementData.getCustomDoorPlacements().isEmpty()) {
                 if(!Settings.isRandomizeBacksideDoors()) {
                     JOptionPane.showMessageDialog(randomizerUI,
-                            "Please enable the setting \"Randomize backside doors\"",
+                            "Please enable the setting \"" + Translations.getText("randomization.randomizeBacksideDoors") + "\"",
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
@@ -574,6 +574,20 @@ public class Main {
                                 "Backside door " + customDoorPlacement.getDestinationDoor() + " is invalid",
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
                         return false;
+                    }
+                    if(!Settings.isRandomizeNonBossDoors()) {
+                        if(isNonBossDoor(customDoorPlacement.getTargetDoor())) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Please enable the setting \"" + Translations.getText("randomization.randomizeNonBossDoors") + "\"",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                        if(isNonBossDoor(customDoorPlacement.getDestinationDoor())) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Please enable the setting \"" + Translations.getText("randomization.randomizeNonBossDoors") + "\"",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
                     }
                     if(placedDoorsAndDestinations.keySet().contains(customDoorPlacement.getTargetDoor())) {
                         JOptionPane.showMessageDialog(randomizerUI,
@@ -594,7 +608,7 @@ public class Main {
                         return false;
                     }
                     if(customDoorPlacement.getAssignedBoss() != null
-                            && (customDoorPlacement.getAssignedBoss() < 1 || customDoorPlacement.getAssignedBoss() > 7)) {
+                            && customDoorPlacement.getAssignedBoss() != 9 && (customDoorPlacement.getAssignedBoss() < 1 || customDoorPlacement.getAssignedBoss() > 7)) {
                         JOptionPane.showMessageDialog(randomizerUI,
                                 "Assigned boss for backside door " + customDoorPlacement.getTargetDoor() + " could not be processed; please use boss name or numbers 1-7",
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
@@ -623,6 +637,20 @@ public class Main {
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
                         return false;
                     }
+                    if((customDoorPlacement.getAssignedBoss() != null && customDoorPlacement.getAssignedBoss() > 0 && customDoorPlacement.getAssignedBoss() < 9)
+                            && (customDoorPlacement.getTargetDoor().endsWith("B8") || customDoorPlacement.getDestinationDoor().endsWith("B8"))) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Dimensional Corridor may not be paired with a Bronze Mirror door",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if((customDoorPlacement.getAssignedBoss() != null && customDoorPlacement.getAssignedBoss() > 0 && customDoorPlacement.getAssignedBoss() < 9)
+                            && (customDoorPlacement.getTargetDoor().endsWith("B9") || customDoorPlacement.getDestinationDoor().endsWith("B9"))) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Gate of Time may not be paired with a Bronze Mirror door",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
                     placedDoorsAndDestinations.put(customDoorPlacement.getTargetDoor(), customDoorPlacement.getDestinationDoor());
                     placedDoorsAndBosses.put(customDoorPlacement.getTargetDoor(), customDoorPlacement.getAssignedBoss());
                     placedDoorsAndBosses.put(customDoorPlacement.getDestinationDoor(), customDoorPlacement.getAssignedBoss());
@@ -631,7 +659,7 @@ public class Main {
             if(!customPlacementData.getCustomTransitionPlacements().isEmpty()) {
                 if(!Settings.isRandomizeTransitionGates()) {
                     JOptionPane.showMessageDialog(randomizerUI,
-                            "Please enable the setting \"Randomize transitions between areas\"",
+                            "Please enable the setting \"" + Translations.getText("randomization.randomizeTransitionGates") + "\"",
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
@@ -659,13 +687,13 @@ public class Main {
                     if(!Settings.isRandomizeOneWayTransitions()) {
                         if(isOneWayTransition(customTransitionPlacement.getTargetTransition())) {
                             JOptionPane.showMessageDialog(randomizerUI,
-                                    "Please enable the setting \"Randomize one-way transitions\"",
+                                    "Please enable the setting \"" + Translations.getText("randomization.randomizeOneWayTransitions") + "\"",
                                     "Custom placement error", JOptionPane.ERROR_MESSAGE);
                             return false;
                         }
                         if(isOneWayTransition(customTransitionPlacement.getDestinationTransition())) {
                             JOptionPane.showMessageDialog(randomizerUI,
-                                    "Please enable the setting \"Randomize one-way transitions\"",
+                                    "Please enable the setting \"" + Translations.getText("randomization.randomizeOneWayTransitions") + "\"",
                                     "Custom placement error", JOptionPane.ERROR_MESSAGE);
                             return false;
                         }
@@ -1006,6 +1034,10 @@ public class Main {
                     && !"Transition: Shrine D2".equals(formattedTransition);
         }
 
+        private boolean isNonBossDoor(String door) {
+            return !door.endsWith("8") && !door.endsWith("9");
+        }
+
         private boolean isValidTransitionDirection(String transitionTarget, String transitionDestination) {
             char transitionDirection1 = transitionTarget.charAt(transitionTarget.length() - 2);
             char transitionDirection2 = transitionDestination.charAt(transitionDestination.length() - 2);
@@ -1203,10 +1235,8 @@ public class Main {
 
                 MoneyChecker moneyChecker;
                 if(Settings.isRandomizeTransitionGates()) {
-                    transitionGateRandomizer.placeTowerOfTheGoddessPassthroughPipe(random);
-                    FileUtils.logDetail("Placed pipe transitions", attempt);
-
-                    moneyChecker = new MoneyChecker(itemRandomizer, shopRandomizer, transitionGateRandomizer);
+                    moneyChecker = new MoneyChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer);
+                    backsideDoorRandomizer.rebuildRequirementsMap();
                     moneyChecker.computeStartingLocationAccess(attempt);
                     for (String startingNode : startingNodes) {
                         moneyChecker.computeAccessibleNodes(startingNode, attempt);
@@ -1214,6 +1244,9 @@ public class Main {
                     while(!moneyChecker.getQueuedUpdates().isEmpty()) {
                         moneyChecker.computeAccessibleNodes(moneyChecker.getQueuedUpdates().iterator().next(), attempt);
                     }
+
+                    transitionGateRandomizer.placeTowerOfTheGoddessPassthroughPipe(random);
+                    FileUtils.logDetail("Placed pipe transitions", attempt);
                 }
                 else {
                     moneyChecker = null;

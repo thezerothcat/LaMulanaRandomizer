@@ -1,12 +1,4 @@
 Holy Grail
-Feather
-Origin Seal
-Birth Seal
-Life Seal
-Death Seal
-Event: Fobos Visited
 Event: Medicine of the Mind (Yellow)
 Event: All Grails Read
 Event: Mother Ankh
-Location: True Shrine of the Mother
-Event: Remove True Shrine Fairy Block

@@ -344,10 +344,14 @@ public final class GameDataTracker {
                     else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
                         gateName = "Transition: Sun L1";
                     }
-//                else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
-//                    // todo: compare position for R1 vs R2
-//                    gateName = "Transition: Sun R1";
-//                }
+                    else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
+                        if(gameObject.getY() == 80) {
+                            gateName = "Transition: Sun R1";
+                        }
+                        else {
+                            gateName = "Transition: Sun R2";
+                        }
+                    }
                 }
                 else if(screen.getZoneIndex() == 4) {
                     // Spring
@@ -377,10 +381,14 @@ public final class GameDataTracker {
                         gateName = "Transition: Extinction U1";
                         needEscapeDoor = true;
                     }
-//                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 0) {
-//                        // todo: compare position for L1 vs L2
-//                        gateName = "Transition: Extinction L1";
-//                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 0) {
+                        if(gameObject.getY() == 80) {
+                            gateName = "Transition: Extinction L1";
+                        }
+                        else {
+                            gateName = "Transition: Extinction L2";
+                        }
+                    }
                     else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
                         gateName = "Transition: Extinction U3";
                     }
@@ -931,13 +939,15 @@ public final class GameDataTracker {
                         // Surface => Tower of the Goddess
                         doorName = "Door: F5";
 
-                        GameObject added = AddObject.addMissingBacksideDoorCover(gameObject, 0x153);
-                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        if(!Settings.isRandomizeNonBossDoors()) {
+                            GameObject added = AddObject.addMissingBacksideDoorCover(gameObject, 0x153);
+                            List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                            if(backsideDoors == null) {
+                                backsideDoors = new ArrayList<>();
+                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                            }
+                            backsideDoors.add(added);
                         }
-                        backsideDoors.add(added);
                     }
                     else if(zone == 2) {
                         // Mausoleum of the Giants => Graveyard of the Giants
@@ -972,43 +982,49 @@ public final class GameDataTracker {
                                     gameObject.getTestByteOperations().remove((int)flagIndexToRemove);
                                 }
                             }
+                            if(Settings.isRandomizeNonBossDoors()) {
+                                doorName = "Door: F9";
+                                replaceBacksideDoorFlags(gameObject, 0x0fb, 0x1d0, false);
+                            }
                         }
                         else {
                             // Chamber of Extinction [Magatama Left] => Chamber of Birth [Northeast]
                             doorName = "Door: F6";
                             replaceBacksideDoorFlags(gameObject, 0x0fb, 0x1d0, false);
 
-                            GameObject added = AddObject.addMissingBacksideDoorTimerAndSound(screen, 0x0fb, 0x1d0);
-                            List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                            if(backsideDoors == null) {
-                                backsideDoors = new ArrayList<>();
-                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                            }
-                            backsideDoors.add(added);
+                            if(!Settings.isRandomizeNonBossDoors()) {
+                                GameObject added = AddObject.addMissingBacksideDoorTimerAndSound(screen, 0x0fb, 0x1d0);
+                                List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                                if(backsideDoors == null) {
+                                    backsideDoors = new ArrayList<>();
+                                    mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                                }
+                                backsideDoors.add(added);
 
-                            added = AddObject.addMissingBacksideDoorCover(gameObject, 0x1d0);
-                            backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                            if(backsideDoors == null) {
-                                backsideDoors = new ArrayList<>();
-                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                            }
-                            backsideDoors.add(added);
+                                added = AddObject.addMissingBacksideDoorCover(gameObject, 0x1d0);
+                                backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                                if(backsideDoors == null) {
+                                    backsideDoors = new ArrayList<>();
+                                    mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                                }
+                                backsideDoors.add(added);
 
-                            added = AddObject.addMissingBacksideMirrorTimerAndSound(gameObject.getObjectContainer(), 0x2b9);
-                            backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                            if(backsideDoors == null) {
-                                backsideDoors = new ArrayList<>();
-                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                            }
-                            backsideDoors.add(added);
+                                added = AddObject.addMissingBacksideMirrorTimerAndSound(gameObject.getObjectContainer(), 0x2b9);
+                                backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                                if(backsideDoors == null) {
+                                    backsideDoors = new ArrayList<>();
+                                    mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                                }
+                                backsideDoors.add(added);
 
-                            added = AddObject.addMissingBacksideDoorMirrorCoverGraphic(gameObject, 0x2b9, true);
-                            backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                            if(backsideDoors == null) {
-                                backsideDoors = new ArrayList<>();
-                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                                added = AddObject.addMissingBacksideDoorMirrorCoverGraphic(gameObject, 0x2b9, true);
+                                backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                                if(backsideDoors == null) {
+                                    backsideDoors = new ArrayList<>();
+                                    mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                                }
+                                backsideDoors.add(added);
                             }
-                            backsideDoors.add(added);
                         }
                     }
                     else if(zone == 10) {
@@ -1039,42 +1055,54 @@ public final class GameDataTracker {
                             doorName = "Door: B7";
                             replaceBacksideDoorFlags(gameObject, 0x0fc, 0x1c0, false);
 
-                            GameObject added = AddObject.addMissingBacksideDoorTimerAndSound(screen, 0x0fc, 0x1c0);
-                            List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                            if(backsideDoors == null) {
-                                backsideDoors = new ArrayList<>();
-                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                            }
-                            backsideDoors.add(added);
+                            if(!Settings.isRandomizeNonBossDoors()) {
+                                GameObject added = AddObject.addMissingBacksideDoorTimerAndSound(screen, 0x0fc, 0x1c0);
+                                List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                                if(backsideDoors == null) {
+                                    backsideDoors = new ArrayList<>();
+                                    mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                                }
+                                backsideDoors.add(added);
 
-                            added = AddObject.addMissingBacksideDoorCover(gameObject, 0x1c0);
-                            backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                            if(backsideDoors == null) {
-                                backsideDoors = new ArrayList<>();
-                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                            }
-                            backsideDoors.add(added);
+                                added = AddObject.addMissingBacksideDoorCover(gameObject, 0x1c0);
+                                backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                                if(backsideDoors == null) {
+                                    backsideDoors = new ArrayList<>();
+                                    mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                                }
+                                backsideDoors.add(added);
 
-                            added = AddObject.addMissingBacksideMirrorTimerAndSound(gameObject.getObjectContainer(), 0x3b7);
-                            backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                            if(backsideDoors == null) {
-                                backsideDoors = new ArrayList<>();
-                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                            }
-                            backsideDoors.add(added);
+                                added = AddObject.addMissingBacksideMirrorTimerAndSound(gameObject.getObjectContainer(), 0x3b7);
+                                backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                                if(backsideDoors == null) {
+                                    backsideDoors = new ArrayList<>();
+                                    mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                                }
+                                backsideDoors.add(added);
 
-                            added = AddObject.addMissingBacksideDoorMirrorCoverGraphic(gameObject, 0x3b7, false);
-                            backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                            if(backsideDoors == null) {
-                                backsideDoors = new ArrayList<>();
-                                mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                                added = AddObject.addMissingBacksideDoorMirrorCoverGraphic(gameObject, 0x3b7, false);
+                                backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                                if(backsideDoors == null) {
+                                    backsideDoors = new ArrayList<>();
+                                    mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                                }
+                                backsideDoors.add(added);
                             }
-                            backsideDoors.add(added);
                         }
                     }
                     else if(zone == 15) {
                         // Chamber of Birth [Northeast] => Chamber of Extinction [Magatama Left]
                         doorName = "Door: B6";
+                    }
+                    else if(Settings.isRandomizeNonBossDoors()) {
+                        if(zone == 17) {
+                            // Dimensional Corridor [Grail] => Endless Corridor [1F]
+                            doorName = "Door: B8";
+                        }
+                        else if(zone == 19) {
+                            // Gate of Time [Mausoleum] =>
+                            doorName = "Door: B9";
+                        }
                     }
                     if(doorName != null) {
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -1796,75 +1824,77 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 0x15c || flagTest.getIndex() == 0x15d) {
-                    String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0
-                            ? "Door: F1" : "Door: B1";
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                else if(!Settings.isRandomizeNonBossDoors()) {
+                    if(flagTest.getIndex() == 0x15c || flagTest.getIndex() == 0x15d) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0
+                                ? "Door: F1" : "Door: B1";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
                     }
-                    backsideDoors.add(gameObject);
-                }
-                else if(flagTest.getIndex() == 0x16d || flagTest.getIndex() == 0x16e) {
-                    String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 2
-                            ? "Door: F2" : "Door: B2";
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                    else if(flagTest.getIndex() == 0x16d || flagTest.getIndex() == 0x16e) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 2
+                                ? "Door: F2" : "Door: B2";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
                     }
-                    backsideDoors.add(gameObject);
-                }
-                else if(flagTest.getIndex() == 0x175 || flagTest.getIndex() == 0x176) {
-                    String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3
-                            ? "Door: F3" : "Door: B3";
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                    else if(flagTest.getIndex() == 0x175 || flagTest.getIndex() == 0x176) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3
+                                ? "Door: F3" : "Door: B3";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
                     }
-                    backsideDoors.add(gameObject);
-                }
-                else if(flagTest.getIndex() == 0x1bd || flagTest.getIndex() == 0x1be) {
-                    String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
-                            ? "Door: F4" : "Door: B4";
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                    else if(flagTest.getIndex() == 0x1bd || flagTest.getIndex() == 0x1be) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
+                                ? "Door: F4" : "Door: B4";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
                     }
-                    backsideDoors.add(gameObject);
-                }
-                else if(flagTest.getIndex() == 0x152 || flagTest.getIndex() == 0x153) {
-                    String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 1
-                            ? "Door: F5" : "Door: B5";
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                    else if(flagTest.getIndex() == 0x152 || flagTest.getIndex() == 0x153) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 1
+                                ? "Door: F5" : "Door: B5";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
                     }
-                    backsideDoors.add(gameObject);
-                }
-                else if(flagTest.getIndex() == 0x2b9 || flagTest.getIndex() == 0x1d0) {
-                    String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6
-                            ? "Door: F6" : "Door: B6";
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                    else if(flagTest.getIndex() == 0x2b9 || flagTest.getIndex() == 0x1d0) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6
+                                ? "Door: F6" : "Door: B6";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
                     }
-                    backsideDoors.add(gameObject);
-                }
-                else if(flagTest.getIndex() == 0x3b7 || flagTest.getIndex() == 0x1c0) {
-                    String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
-                            ? "Door: F7" : "Door: B7";
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                    else if(flagTest.getIndex() == 0x3b7 || flagTest.getIndex() == 0x1c0) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
+                                ? "Door: F7" : "Door: B7";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
                     }
-                    backsideDoors.add(gameObject);
                 }
             }
         } else if (gameObject.getId() == 0x0b) {
@@ -1878,76 +1908,6 @@ public final class GameDataTracker {
                             return;
                         }
                     }
-                }
-                else if(flagUpdate.getIndex() == 0x15c || flagUpdate.getIndex() == 0x15d) {
-                    String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0
-                            ? "Door: F1" : "Door: B1";
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                    }
-                    backsideDoors.add(gameObject);
-                }
-                else if(flagUpdate.getIndex() == 0x16d || flagUpdate.getIndex() == 0x16e) {
-                    String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 2
-                            ? "Door: F2" : "Door: B2";
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                    }
-                    backsideDoors.add(gameObject);
-                }
-                else if(flagUpdate.getIndex() == 0x175 || flagUpdate.getIndex() == 0x176) {
-                    String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3
-                            ? "Door: F3" : "Door: B3";
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                    }
-                    backsideDoors.add(gameObject);
-                }
-                else if(flagUpdate.getIndex() == 0x1bd || flagUpdate.getIndex() == 0x1be) {
-                    String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
-                            ? "Door: F4" : "Door: B4";
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                    }
-                    backsideDoors.add(gameObject);
-                }
-                else if(flagUpdate.getIndex() == 0x152 || flagUpdate.getIndex() == 0x153) {
-                    String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 1
-                            ? "Door: F5" : "Door: B5";
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                    }
-                    backsideDoors.add(gameObject);
-                }
-                else if(flagUpdate.getIndex() == 0x2b9 || flagUpdate.getIndex() == 0x1d0) {
-                    String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6
-                            ? "Door: F6" : "Door: B6";
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                    }
-                    backsideDoors.add(gameObject);
-                }
-                else if(flagUpdate.getIndex() == 0x3b7 || flagUpdate.getIndex() == 0x1c0) {
-                    String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
-                            ? "Door: F7" : "Door: B7";
-                    List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                    if(backsideDoors == null) {
-                        backsideDoors = new ArrayList<>();
-                        mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                    }
-                    backsideDoors.add(gameObject);
                 }
                 else if(flagUpdate.getIndex() == 844) {
                     if(flagUpdate.getValue() == 8) {
@@ -1977,6 +1937,78 @@ public final class GameDataTracker {
                             }
                             return;
                         }
+                    }
+                }
+                else if(!Settings.isRandomizeNonBossDoors()) {
+                    if(flagUpdate.getIndex() == 0x15c || flagUpdate.getIndex() == 0x15d) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0
+                                ? "Door: F1" : "Door: B1";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagUpdate.getIndex() == 0x16d || flagUpdate.getIndex() == 0x16e) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 2
+                                ? "Door: F2" : "Door: B2";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagUpdate.getIndex() == 0x175 || flagUpdate.getIndex() == 0x176) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3
+                                ? "Door: F3" : "Door: B3";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagUpdate.getIndex() == 0x1bd || flagUpdate.getIndex() == 0x1be) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
+                                ? "Door: F4" : "Door: B4";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagUpdate.getIndex() == 0x152 || flagUpdate.getIndex() == 0x153) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 1
+                                ? "Door: F5" : "Door: B5";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagUpdate.getIndex() == 0x2b9 || flagUpdate.getIndex() == 0x1d0) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6
+                                ? "Door: F6" : "Door: B6";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagUpdate.getIndex() == 0x3b7 || flagUpdate.getIndex() == 0x1c0) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
+                                ? "Door: F7" : "Door: B7";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
                     }
                 }
             }
@@ -2870,20 +2902,27 @@ public final class GameDataTracker {
         }
     }
 
-    private static void replaceBacksideDoorFlags(GameObject gameObject, int bossFlag, int gateFlag, boolean motherCheck) {
+    private static void replaceBacksideDoorFlags(GameObject gameObject, Integer bossNumber, Integer gateFlag, boolean motherCheck) {
         gameObject.getTestByteOperations().clear();
 
-        TestByteOperation testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(bossFlag);
-        testByteOperation.setValue((byte)3);
-        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-        gameObject.getTestByteOperations().add(testByteOperation);
+        TestByteOperation testByteOperation;
 
-        testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(gateFlag);
-        testByteOperation.setValue((byte)1);
-        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-        gameObject.getTestByteOperations().add(testByteOperation);
+        Integer bossFlag = getBossFlag(bossNumber);
+        if(bossFlag != null) {
+            testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(bossFlag);
+            testByteOperation.setValue((byte)(bossNumber == 9 ? 1 : 3));
+            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+            gameObject.getTestByteOperations().add(testByteOperation);
+        }
+
+        if(gateFlag != null) {
+            testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(gateFlag);
+            testByteOperation.setValue((byte)1);
+            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+            gameObject.getTestByteOperations().add(testByteOperation);
+        }
 
         if(motherCheck && !Settings.isRandomizeTransitionGates()) {
             testByteOperation = new TestByteOperation();
@@ -2947,6 +2986,20 @@ public final class GameDataTracker {
             gameObject.getArgs().add((short)300);
             gameObject.getArgs().add((short)120);
         }
+        else if("Door: F8".equals(doorWithCoordinatesData)) {
+            gameObject.getArgs().add((short)17);
+            gameObject.getArgs().add((short)0);
+            gameObject.getArgs().add((short)0);
+            gameObject.getArgs().add((short)300);
+            gameObject.getArgs().add((short)320);
+        }
+        else if("Door: F9".equals(doorWithCoordinatesData)) {
+            gameObject.getArgs().add((short)19);
+            gameObject.getArgs().add((short)0);
+            gameObject.getArgs().add((short)1);
+            gameObject.getArgs().add((short)300);
+            gameObject.getArgs().add((short)320);
+        }
         else if("Door: B1".equals(doorWithCoordinatesData)) {
             gameObject.getArgs().add((short)0);
             gameObject.getArgs().add((short)5);
@@ -2994,6 +3047,20 @@ public final class GameDataTracker {
             gameObject.getArgs().add((short)9);
             gameObject.getArgs().add((short)0);
             gameObject.getArgs().add((short)60);
+            gameObject.getArgs().add((short)80);
+        }
+        else if("Door: B8".equals(doorWithCoordinatesData)) {
+            gameObject.getArgs().add((short)8);
+            gameObject.getArgs().add((short)0);
+            gameObject.getArgs().add((short)1);
+            gameObject.getArgs().add((short)400);
+            gameObject.getArgs().add((short)180);
+        }
+        else if("Door: B9".equals(doorWithCoordinatesData)) {
+            gameObject.getArgs().add((short)6);
+            gameObject.getArgs().add((short)7);
+            gameObject.getArgs().add((short)0);
+            gameObject.getArgs().add((short)300);
             gameObject.getArgs().add((short)80);
         }
     }
@@ -3483,15 +3550,17 @@ public final class GameDataTracker {
                 }
                 replaceTransitionGateFlags(gameObject, gateToUpdate, gateDestination); // Update flags on the gate, as needed.
 
-                updateScreenTransition(gameObject, gateDestination); // todo: how to handle a case of multiple gates on the same side? good thing sun <> extinction isn't random yet
+                if(!"Transition: Sun R2".equals(gateToUpdate) && !"Transition: Extinction L2".equals(gateToUpdate)) {
+                    updateScreenTransition(gameObject, gateDestination);
+                }
                 if(firstObject && "Transition: Illusion R2".equals(gateToUpdate)) {
-                    AddObject.addIllusionFruitBlockHorizontal(gameObject);
+                    AddObject.addIllusionFruitBlockHorizontal(gameObject, true);
                     firstObject = false;
                 }
                 if(firstObject
                         && ("Transition: Illusion R1".equals(gateDestination)
                         || "Transition: Illusion R2".equals(gateDestination))) {
-                    AddObject.addIllusionFruitBlockHorizontal(gameObject);
+                    AddObject.addIllusionFruitBlockHorizontal(gameObject, "Transition: Illusion R2".equals(gateDestination));
                     firstObject = false;
                 }
                 if(firstObject && "Transition: Illusion D1".equals(gateDestination)) {
@@ -4490,7 +4559,41 @@ public final class GameDataTracker {
         return false;
     }
 
-    private static int getBossFlag(int bossNumber) {
+    public static void writeBacksideDoorV2(String doorToReplace, String doorWithCoordinateData, Integer bossNumber) {
+        Integer gateFlag = getGateFlag(bossNumber);
+        List<GameObject> objectsToModify = mapOfDoorNameToBacksideDoor.get(doorToReplace);
+        if(objectsToModify != null) {
+            for(GameObject gameObject : objectsToModify) {
+                replaceBacksideDoorFlags(gameObject, bossNumber, gateFlag, isDoorDisabledForEscape(doorToReplace));
+                replaceBacksideDoorArgs(gameObject, doorWithCoordinateData);
+                if("Door: F8".equals(doorWithCoordinateData)) {
+                    AddObject.addGrailToggle(gameObject.getObjectContainer());
+                }
+                AddObject.addNumberlessBacksideDoorGraphic(gameObject);
+                if(bossNumber != null) {
+                    if(bossNumber == 9) {
+                        AddObject.addKeyFairyDoorTimerAndSounds(gameObject.getObjectContainer());
+                        AddObject.addBacksideDoorKeyFairyPoint(gameObject);
+                        AddObject.addAnimatedDoorCover(gameObject, 0x1c9, false);
+    //                    AddObject.addBossNumberGraphic(gameObject, bossNumber, null);
+                    }
+                    else {
+                        int mirrorCoverFlag = getMirrorCoverFlag(bossNumber);
+                        AddObject.addAnimatedDoorTimerAndSound(gameObject.getObjectContainer(), getBossFlag(bossNumber), gateFlag);
+                        AddObject.addMirrorCoverTimerAndSound(gameObject.getObjectContainer(), mirrorCoverFlag);
+                        AddObject.addMirrorCoverGraphic(gameObject, mirrorCoverFlag);
+                        AddObject.addAnimatedDoorCover(gameObject, gateFlag, true);
+                        AddObject.addBossNumberGraphicV2(gameObject, bossNumber, mirrorCoverFlag);
+                    }
+                }
+            }
+        }
+    }
+
+    private static Integer getBossFlag(Integer bossNumber) {
+        if(bossNumber == null) {
+            return null;
+        }
         if(bossNumber == 1) {
             return 0x0f6;
         }
@@ -4512,10 +4615,19 @@ public final class GameDataTracker {
         if(bossNumber == 7) {
             return 0x0fc;
         }
-        return 0;
+//        if(bossNumber == 8) {
+//            return 0x0fd;
+//        }
+        if(bossNumber == 9) {
+            return 0x1c9;
+        }
+        return null;
     }
 
-    private static int getGateFlag(int bossNumber) {
+    private static Integer getGateFlag(Integer bossNumber) {
+        if(bossNumber == null) {
+            return null;
+        }
         if(bossNumber == 1) {
             return 0x15d;
         }
@@ -4537,10 +4649,10 @@ public final class GameDataTracker {
         if(bossNumber == 7) {
             return 0x1c0;
         }
-        return 0;
+        return null;
     }
 
-    private static int getMirrorCoverFlag(int bossNumber) {
+    private static int getMirrorCoverFlag(Integer bossNumber) {
         if(bossNumber == 1) {
             return 0x15c;
         }
@@ -4563,6 +4675,10 @@ public final class GameDataTracker {
             return 0x3b7;
         }
         return 0;
+    }
+
+    private static boolean isDoorDisabledForEscape(String doorToReplace) {
+        return "Door: B5".equals(doorToReplace) || "Door: F9".equals(doorToReplace);
     }
 
     private static short getInventoryItemArg(String item) {

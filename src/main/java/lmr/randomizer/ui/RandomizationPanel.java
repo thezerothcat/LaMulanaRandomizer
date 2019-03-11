@@ -17,6 +17,7 @@ public class RandomizationPanel extends JPanel {
     private JCheckBox randomizeCursedChests;
     private JCheckBox randomizeDracuetShop;
     private JCheckBox randomizeBacksideDoors;
+    private JCheckBox randomizeNonBossDoors;
     private JCheckBox randomizeTransitionGates;
     private JCheckBox randomizeOneWayTransitions;
 
@@ -57,6 +58,19 @@ public class RandomizationPanel extends JPanel {
         randomizeBacksideDoors = new JCheckBox();
         randomizeBacksideDoors.setSelected(Settings.isRandomizeBacksideDoors());
 
+        randomizeNonBossDoors = new JCheckBox();
+        randomizeNonBossDoors.setSelected(Settings.isRandomizeNonBossDoors());
+        randomizeNonBossDoors.setEnabled(Settings.isRandomizeBacksideDoors());
+
+        randomizeBacksideDoors.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource() instanceof JCheckBox) {
+                    randomizeNonBossDoors.setEnabled(((JCheckBox)e.getSource()).isSelected());
+                }
+            }
+        });
+
         randomizeTransitionGates = new JCheckBox();
         randomizeTransitionGates.setSelected(Settings.isRandomizeTransitionGates());
 
@@ -80,6 +94,7 @@ public class RandomizationPanel extends JPanel {
         checkboxContainer.add(randomizeCursedChests);
         checkboxContainer.add(randomizeDracuetShop);
         checkboxContainer.add(randomizeBacksideDoors);
+        checkboxContainer.add(randomizeNonBossDoors);
         checkboxContainer.add(randomizeTransitionGates);
         checkboxContainer.add(randomizeOneWayTransitions);
         add(checkboxContainer, "growx, wrap");
@@ -95,6 +110,7 @@ public class RandomizationPanel extends JPanel {
         randomizeCursedChests.setText(Translations.getText("randomization.randomizeCursedChests"));
         randomizeDracuetShop.setText(Translations.getText("randomization.randomizeDracuetShop"));
         randomizeBacksideDoors.setText(Translations.getText("randomization.randomizeBacksideDoors"));
+        randomizeNonBossDoors.setText(Translations.getText("randomization.randomizeNonBossDoors"));
         randomizeTransitionGates.setText(Translations.getText("randomization.randomizeTransitionGates"));
         randomizeOneWayTransitions.setText(Translations.getText("randomization.randomizeOneWayTransitions"));
         weaponRandomization.updateTranslations();
@@ -112,6 +128,7 @@ public class RandomizationPanel extends JPanel {
         Settings.setRandomizeBacksideDoors(randomizeBacksideDoors.isSelected(), true);
         Settings.setRandomizeTransitionGates(randomizeTransitionGates.isSelected(), true);
         Settings.setRandomizeOneWayTransitions(randomizeOneWayTransitions.isEnabled() && randomizeOneWayTransitions.isSelected(), true);
+        Settings.setRandomizeNonBossDoors(randomizeNonBossDoors.isEnabled() && randomizeNonBossDoors.isSelected(), true);
         weaponRandomization.updateSettings();
         shopRandomization.updateSettings();
         swimsuitRandomization.updateSettings();
@@ -132,5 +149,7 @@ public class RandomizationPanel extends JPanel {
         randomizeTransitionGates.setSelected(Settings.isRandomizeTransitionGates());
         randomizeOneWayTransitions.setSelected(Settings.isRandomizeOneWayTransitions());
         randomizeOneWayTransitions.setEnabled(Settings.isRandomizeTransitionGates());
+        randomizeNonBossDoors.setSelected(Settings.isRandomizeNonBossDoors());
+        randomizeNonBossDoors.setEnabled(Settings.isRandomizeBacksideDoors());
     }
 }

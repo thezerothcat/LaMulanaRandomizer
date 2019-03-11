@@ -18,10 +18,10 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.13.0";
+    public static final String VERSION = "2.14.0";
     public static final int EXISTING_FILE_WIDTH = 1024;
     public static final int EXISTING_FILE_HEIGHT = 512;
-    public static final int GRAPHICS_VERSION = 2;
+    public static final int GRAPHICS_VERSION = 3;
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -503,6 +503,9 @@ public class FileUtils {
             else if(line.startsWith("randomizeBacksideDoors")) {
                 Settings.setRandomizeBacksideDoors(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("randomizeNonBossDoors")) {
+                Settings.setRandomizeNonBossDoors(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("replaceMapsWithWeights")) {
                 Settings.setReplaceMapsWithWeights(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -620,6 +623,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("randomizeBacksideDoors=%s", Settings.isRandomizeBacksideDoors()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeNonBossDoors=%s", Settings.isRandomizeNonBossDoors()));
         writer.newLine();
 
         writer.write(String.format("replaceMapsWithWeights=%s", Settings.isReplaceMapsWithWeights()));
@@ -791,7 +797,7 @@ public class FileUtils {
                 }
                 else {
                     int version = existing.getRGB(1023, 1023);
-                    if(version < GRAPHICS_VERSION) {
+                    if(version != GRAPHICS_VERSION) {
                         updateGraphics = true;
                     }
                 }
@@ -802,7 +808,7 @@ public class FileUtils {
                     BufferedImage backupImage = ImageIO.read(new File(graphicsPack, "01effect.png.bak"));
                     Graphics2D graphics2D = newImage.createGraphics();
                     graphics2D.drawImage(backupImage, null, 0, 0); // Use backup to ensure no duplication of file
-                    graphics2D.drawImage(custom, null, 0, backupImage.getHeight());
+                    graphics2D.drawImage(custom, null, 0, EXISTING_FILE_HEIGHT);
                     graphics2D.dispose();
                     newImage.setRGB(1023, 1023, GRAPHICS_VERSION);
                     ImageIO.write(newImage, "png", graphicsFile);
