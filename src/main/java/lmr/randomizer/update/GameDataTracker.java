@@ -408,6 +408,7 @@ public final class GameDataTracker {
                     }
                     else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
                         gateName = "Transition: Twin U2";
+                        needEscapeDoor = true;
                     }
                     else if (screen.getRoomIndex() == 10 && screen.getScreenIndex() == 1) {
                         gateName = "Transition: Twin U3";
