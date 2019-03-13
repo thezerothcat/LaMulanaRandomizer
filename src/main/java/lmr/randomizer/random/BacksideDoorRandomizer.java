@@ -292,27 +292,21 @@ public class BacksideDoorRandomizer {
                 reverseDoor = mapOfDoorToPairDoor.get(door);
                 availableDoors.remove(door);
                 availableDoors.remove(reverseDoor);
-            } while(isInvalidAssignment(door, reverseDoor, boss) && availableDoors.isEmpty());
+            } while(isInvalidAssignment(door, reverseDoor, boss) && !availableDoors.isEmpty());
 
             doors.remove(door);
             doors.remove(reverseDoor);
 
+            if(boss != 9 && isInvalidAssignment(door, reverseDoor, boss)) {
+                continue; // This boss couldn't be assigned to doors and will instead be skipped for now.
+            }
+
             if(!backsideDoorLocationMap.get(door).contains("Dimensional Corridor")) {
-                if(boss == 9) {
-                    backsideDoorBossMap.put(door, boss);
-                }
-                else if(!backsideDoorLocationMap.get(door).contains("Gate of Time")) {
-                    backsideDoorBossMap.put(door, boss);
-                }
+                backsideDoorBossMap.put(door, boss);
             }
 
             if(!backsideDoorLocationMap.get(reverseDoor).contains("Dimensional Corridor")) {
-                if(boss == 9) {
-                    backsideDoorBossMap.put(reverseDoor, boss);
-                }
-                else if(!backsideDoorLocationMap.get(reverseDoor).contains("Gate of Time")) {
-                    backsideDoorBossMap.put(reverseDoor, boss);
-                }
+                backsideDoorBossMap.put(reverseDoor, boss);
             }
         }
     }
