@@ -1173,14 +1173,19 @@ public final class AddObject {
      * @param backsideDoor the object we're decorating with graphics
      * @param bossNumber 1=Amphisbaena, 7=Baphomet, etc.
      */
-    public static void addBossNumberGraphicV2(GameObject backsideDoor, int bossNumber, int mirrorCoverFlag) {
+    public static void addBossNumberGraphicV2(GameObject backsideDoor, int bossNumber, Integer mirrorCoverFlag) {
         GameObject doorNumberGraphic = new GameObject(backsideDoor.getObjectContainer());
         doorNumberGraphic.setId((short) 0x93);
         doorNumberGraphic.setX(backsideDoor.getX() - 20);
         doorNumberGraphic.setY(backsideDoor.getY() - 40);
         doorNumberGraphic.getArgs().add((short)0); // Layer
         doorNumberGraphic.getArgs().add((short)7); // 01.effect.png for anything not 0-6?
-        doorNumberGraphic.getArgs().add((short)(50 * (bossNumber - 1))); // Imagex
+        if(bossNumber == 9) {
+            doorNumberGraphic.getArgs().add((short)(50 * 9)); // Imagex
+        }
+        else {
+            doorNumberGraphic.getArgs().add((short)(50 * (bossNumber - 1))); // Imagex
+        }
         doorNumberGraphic.getArgs().add((short)592); // Imagey
         doorNumberGraphic.getArgs().add((short)50); // dx
         doorNumberGraphic.getArgs().add((short)36); // dy
@@ -1203,11 +1208,13 @@ public final class AddObject {
         doorNumberGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
         doorNumberGraphic.getArgs().add((short)0); // not0?
 
-        TestByteOperation testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(mirrorCoverFlag);
-        testByteOperation.setOp(ByteOp.FLAG_GT);
-        testByteOperation.setValue((byte)0);
-        doorNumberGraphic.getTestByteOperations().add(testByteOperation);
+        if(mirrorCoverFlag != null) {
+            TestByteOperation testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(mirrorCoverFlag);
+            testByteOperation.setOp(ByteOp.FLAG_GT);
+            testByteOperation.setValue((byte)0);
+            doorNumberGraphic.getTestByteOperations().add(testByteOperation);
+        }
 
         backsideDoor.getObjectContainer().getObjects().add(doorNumberGraphic);
     }

@@ -4575,7 +4575,7 @@ public final class GameDataTracker {
                         AddObject.addKeyFairyDoorTimerAndSounds(gameObject.getObjectContainer());
                         AddObject.addBacksideDoorKeyFairyPoint(gameObject);
                         AddObject.addAnimatedDoorCover(gameObject, 0x1c9, false);
-    //                    AddObject.addBossNumberGraphic(gameObject, bossNumber, null);
+                        AddObject.addBossNumberGraphicV2(gameObject, bossNumber, null);
                     }
                     else {
                         int mirrorCoverFlag = getMirrorCoverFlag(bossNumber);
