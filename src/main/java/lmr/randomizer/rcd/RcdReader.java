@@ -763,11 +763,8 @@ public final class RcdReader {
             if(Settings.isAlternateMotherAnkh()) {
                 obj.setId((short)0x2e);
                 obj.getArgs().set(0, (short)8);
-                for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                    if(testByteOperation.getIndex() == 254) {
-                        testByteOperation.setValue((byte) 2);
-                    }
-                }
+                obj.getWriteByteOperations().get(0).setValue((byte) 1);
+                obj.getWriteByteOperations().get(1).setValue((byte) 2);
                 obj.setY(obj.getY() + 60);
             }
 
@@ -1016,6 +1013,11 @@ public final class RcdReader {
                     AddObject.addSurfaceCoverDetector(screen);
                 }
             }
+            else if(roomIndex == 11 && screenIndex == 0) {
+                if(Settings.isAlternateMotherAnkh()) {
+                    AddObject.addMotherAnkhJewelItemGive(screen);
+                }
+            }
         }
         else if(zoneIndex == 2 && roomIndex == 2 && screenIndex == 0) {
             AddObject.addHardmodeToggleWeights(screen);
@@ -1079,6 +1081,11 @@ public final class RcdReader {
             else if(roomIndex == 3 && screenIndex == 0) {
                 if (!"Whip".equals(Settings.getCurrentStartingWeapon())) {
                     AddObject.addRandomWeaponKillTimer(screen, false);
+                }
+            }
+            else if(roomIndex == 11 && screenIndex == 0) {
+                if(Settings.isAlternateMotherAnkh()) {
+                    AddObject.addMotherAnkhJewelRecoveryTimer(screen);
                 }
             }
         }
