@@ -1265,10 +1265,10 @@ public class Main {
 
                 dialog.updateProgress(95, Translations.getText("progress.write"));
                 itemRandomizer.updateFiles(random);
-                FileUtils.log("Updated item location data");
+                FileUtils.logFlush("Updated item location data");
 
                 shopRandomizer.updateFiles(datInfo, isSubweaponOnly(), moneyChecker, random);
-                FileUtils.log("Updated shop data");
+                FileUtils.logFlush("Updated shop data");
 
                 List<String> availableSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
                 availableSubweapons.removeAll(Settings.getRemovedItems());
@@ -1276,15 +1276,15 @@ public class Main {
                 if(!availableSubweapons.isEmpty()) {
                     GameDataTracker.updateSubweaponPot(availableSubweapons.get(random.nextInt(availableSubweapons.size())));
                 }
-                FileUtils.log("Updated subweapon pot data");
+                FileUtils.logFlush("Updated subweapon pot data");
 
                 if(Settings.isRandomizeBacksideDoors()) {
                     backsideDoorRandomizer.updateBacksideDoors();
-                    FileUtils.log("Updated backside door data");
+                    FileUtils.logFlush("Updated backside door data");
                 }
                 if(Settings.isRandomizeTransitionGates()) {
                     transitionGateRandomizer.updateTransitions();
-                    FileUtils.log("Updated transition gate data");
+                    FileUtils.logFlush("Updated transition gate data");
                 }
 
 //                if(Settings.isRandomizeMantras()) {

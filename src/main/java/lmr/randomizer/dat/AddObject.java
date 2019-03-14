@@ -2372,6 +2372,73 @@ public final class AddObject {
         objectContainer.getObjects().add(0, shrineMapSoundEffectRemovalTimer);
     }
 
+    public static void addMotherAnkhJewelRecoveryTimer(Screen screen) {
+        GameObject jewelRecoveryTimer = new GameObject(screen);
+        jewelRecoveryTimer.setId((short) 0x0b);
+        jewelRecoveryTimer.getArgs().add((short) 0);
+        jewelRecoveryTimer.getArgs().add((short) 0);
+        jewelRecoveryTimer.setX(-1);
+        jewelRecoveryTimer.setY(-1);
+
+        TestByteOperation flagTest = new TestByteOperation();
+        flagTest.setIndex(0x0fe);
+        flagTest.setOp(ByteOp.FLAG_EQUALS);
+        flagTest.setValue((byte) 2);
+        jewelRecoveryTimer.getTestByteOperations().add(flagTest);
+
+        flagTest = new TestByteOperation();
+        flagTest.setIndex(0x382);
+        flagTest.setOp(ByteOp.FLAG_EQUALS);
+        flagTest.setValue((byte) 0);
+        jewelRecoveryTimer.getTestByteOperations().add(flagTest);
+
+        flagTest = new TestByteOperation();
+        flagTest.setIndex(0xad2);
+        flagTest.setOp(ByteOp.FLAG_EQUALS);
+        flagTest.setValue((byte) 0);
+        jewelRecoveryTimer.getTestByteOperations().add(flagTest);
+
+        WriteByteOperation flagUpdate = new WriteByteOperation();
+        flagUpdate.setIndex(0xad2);
+        flagUpdate.setValue((byte) 1);
+        flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        jewelRecoveryTimer.getWriteByteOperations().add(flagUpdate);
+
+        screen.getObjects().add(0, jewelRecoveryTimer);
+    }
+
+    public static void addMotherAnkhJewelItemGive(Screen screen) {
+        GameObject itemGive = new GameObject(screen);
+        itemGive.setId((short) 0xb5);
+        itemGive.setX(100);
+        itemGive.setY(60);
+
+        itemGive.getArgs().add((short)19);
+        itemGive.getArgs().add((short)12);
+        itemGive.getArgs().add((short)16);
+        itemGive.getArgs().add((short)39);
+
+        TestByteOperation itemGiveTest = new TestByteOperation();
+        itemGiveTest.setIndex(0xad2);
+        itemGiveTest.setValue((byte) 1);
+        itemGiveTest.setOp(ByteOp.FLAG_EQUALS);
+        itemGive.getTestByteOperations().add(itemGiveTest);
+
+        WriteByteOperation itemGiveUpdate = new WriteByteOperation();
+        itemGiveUpdate.setIndex(0xad2);
+        itemGiveUpdate.setValue((byte) 0);
+        itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        itemGive.getWriteByteOperations().add(itemGiveUpdate);
+
+        itemGiveUpdate = new WriteByteOperation();
+        itemGiveUpdate.setIndex(0x0fe);
+        itemGiveUpdate.setValue((byte) 1);
+        itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        itemGive.getWriteByteOperations().add(itemGiveUpdate);
+
+        screen.getObjects().add(itemGive);
+    }
+
     public static GameObject addMissingBacksideDoorCover(GameObject backsideDoor, int gateFlag) {
         GameObject doorCoverGraphic = new GameObject(backsideDoor.getObjectContainer());
         doorCoverGraphic.setId((short)0x93);
