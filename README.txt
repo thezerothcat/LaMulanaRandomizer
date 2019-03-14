@@ -2,6 +2,10 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+2.16
+-----------------------------
+Logic fix, and fix for alternate mother ankh lost ankh jewel.
+
 2.15
 -----------------------------
 Logic fixes.
