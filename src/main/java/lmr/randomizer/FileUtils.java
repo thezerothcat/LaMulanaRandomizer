@@ -506,6 +506,18 @@ public class FileUtils {
             else if(line.startsWith("randomizeNonBossDoors")) {
                 Settings.setRandomizeNonBossDoors(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("randomize1")) {
+                Settings.setRandomize1(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("randomize2")) {
+                Settings.setRandomize2(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("randomize3")) {
+                Settings.setRandomize3(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("randomize4")) {
+                Settings.setRandomize4(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("replaceMapsWithWeights")) {
                 Settings.setReplaceMapsWithWeights(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -626,6 +638,18 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("randomizeNonBossDoors=%s", Settings.isRandomizeNonBossDoors()));
+        writer.newLine();
+
+        writer.write(String.format("randomize1=%s", Settings.isRandomize1()));
+        writer.newLine();
+
+        writer.write(String.format("randomize2=%s", Settings.isRandomize2()));
+        writer.newLine();
+
+        writer.write(String.format("randomize3=%s", Settings.isRandomize3()));
+        writer.newLine();
+
+        writer.write(String.format("randomize4=%s", Settings.isRandomize4()));
         writer.newLine();
 
         writer.write(String.format("replaceMapsWithWeights=%s", Settings.isReplaceMapsWithWeights()));

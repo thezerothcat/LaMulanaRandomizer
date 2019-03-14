@@ -59,6 +59,11 @@ public final class Settings {
     private boolean automaticMantras;
     private String medicineColor;
 
+    private boolean randomize1;
+    private boolean randomize2;
+    private boolean randomize3;
+    private boolean randomize4;
+
     private boolean removeSpaulder;
 
     private Integer skipValidation;
@@ -121,6 +126,11 @@ public final class Settings {
         alternateMotherAnkh = false;
         automaticMantras = false;
         medicineColor = null;
+
+        randomize1 = true;
+        randomize2 = true;
+        randomize3 = true;
+        randomize4 = true;
 
         skipValidation = null;
 
@@ -756,6 +766,50 @@ public final class Settings {
         singleton.alternateMotherAnkh = alternateMotherAnkh;
     }
 
+    public static boolean isRandomize1() {
+        return singleton.randomize1;
+    }
+
+    public static void setRandomize1(boolean randomize1, boolean update) {
+        if(update && randomize1 != singleton.randomize1) {
+            singleton.changed = true;
+        }
+        singleton.randomize1 = randomize1;
+    }
+
+    public static boolean isRandomize2() {
+        return singleton.randomize2;
+    }
+
+    public static void setRandomize2(boolean randomize2, boolean update) {
+        if(update && randomize2 != singleton.randomize2) {
+            singleton.changed = true;
+        }
+        singleton.randomize2 = randomize2;
+    }
+
+    public static boolean isRandomize3() {
+        return singleton.randomize3;
+    }
+
+    public static void setRandomize3(boolean randomize3, boolean update) {
+        if(update && randomize3 != singleton.randomize3) {
+            singleton.changed = true;
+        }
+        singleton.randomize3 = randomize3;
+    }
+
+    public static boolean isRandomize4() {
+        return singleton.randomize4;
+    }
+
+    public static void setRandomize4(boolean randomize4, boolean update) {
+        if(update && randomize4 != singleton.randomize4) {
+            singleton.changed = true;
+        }
+        singleton.randomize4 = randomize4;
+    }
+
     public static boolean isAutomaticMantras() {
         return singleton.automaticMantras || DataFromFile.getCustomPlacementData().isAutomaticMantras();
     }
@@ -835,6 +889,10 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.randomize4, 31);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomize3, 30);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomize2, 29);
+        booleanSettings |= processBooleanFlag.apply(singleton.randomize1, 28);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeNonBossDoors, 27);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeOneWayTransitions, 26);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeEscapeChest, 25);
@@ -919,6 +977,10 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.randomize4 = getBoolFlagFromInt.apply(booleanSettingsFlag, 31);
+        singleton.randomize3 = getBoolFlagFromInt.apply(booleanSettingsFlag, 30);
+        singleton.randomize2 = getBoolFlagFromInt.apply(booleanSettingsFlag, 29);
+        singleton.randomize1 = getBoolFlagFromInt.apply(booleanSettingsFlag, 28);
         singleton.randomizeNonBossDoors = getBoolFlagFromInt.apply(booleanSettingsFlag, 27);
         singleton.randomizeOneWayTransitions = getBoolFlagFromInt.apply(booleanSettingsFlag, 26);
         singleton.randomizeEscapeChest = getBoolFlagFromInt.apply(booleanSettingsFlag, 25);

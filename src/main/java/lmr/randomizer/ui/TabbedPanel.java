@@ -5,6 +5,7 @@ import lmr.randomizer.Translations;
 import javax.swing.*;
 
 public class TabbedPanel extends JTabbedPane {
+    private FoolsPanel foolsPanel;
     private RandomizationPanel randomizationPanel;
     private LogicPanel logicPanel;
     private ChallengePanel challengePanel;
@@ -15,6 +16,9 @@ public class TabbedPanel extends JTabbedPane {
 
     public TabbedPanel(MainPanel _mainPanel) {
         mainPanel = _mainPanel;
+
+        foolsPanel = new FoolsPanel();
+        addTab(Translations.getText("fools.randomization"), foolsPanel);
 
         randomizationPanel = new RandomizationPanel();
         addTab(Translations.getText("settings.randomization"), randomizationPanel);
@@ -37,6 +41,7 @@ public class TabbedPanel extends JTabbedPane {
 
     public void reloadSettings() {
         mainPanel.reloadSettings();
+        foolsPanel.reloadSettings();
         randomizationPanel.reloadSettings();
         logicPanel.reloadSettings();
         challengePanel.reloadSettings();
@@ -46,6 +51,7 @@ public class TabbedPanel extends JTabbedPane {
 
     public void updateSettings() {
         mainPanel.updateSettings();
+        foolsPanel.updateSettings();
         randomizationPanel.updateSettings();
         logicPanel.updateSettings();
         challengePanel.updateSettings();
@@ -54,6 +60,7 @@ public class TabbedPanel extends JTabbedPane {
     }
 
     public void updateTranslations() {
+        foolsPanel.updateTranslations();
         randomizationPanel.updateTranslations();
         logicPanel.updateTranslations();
         challengePanel.updateTranslations();
