@@ -161,7 +161,7 @@ public final class RcdReader {
                 }
             }
 
-            if(Settings.isRandomizeNonBossDoors()) {
+            if(Settings.isRandomizeNonBossDoors() || Settings.isRandomize2()) {
                 for (WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
                     if(flagUpdate.getIndex() == 0x15c || flagUpdate.getIndex() == 0x15d
                             || flagUpdate.getIndex() == 0x16d || flagUpdate.getIndex() == 0x16e
@@ -233,7 +233,7 @@ public final class RcdReader {
                     }
                 }
             }
-            if(Settings.isRandomizeNonBossDoors()) {
+            if(Settings.isRandomizeNonBossDoors() || Settings.isRandomize2()) {
                 if(objectContainer instanceof Screen) {
                     Screen screen = (Screen)objectContainer;
                     if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
@@ -317,7 +317,7 @@ public final class RcdReader {
                                 }
                             }
                         }
-                        if (Settings.isRandomizeNonBossDoors()) {
+                        if (Settings.isRandomizeNonBossDoors() || Settings.isRandomize2()) {
                             for (TestByteOperation flagTest : obj.getTestByteOperations()) {
                                 if (flagTest.getIndex() == 0x1c9 && flagTest.getValue() == 1) {
                                     keepObject = false;
@@ -422,7 +422,7 @@ public final class RcdReader {
             }
         }
         else if (obj.getId() == 0x91) {
-            if(Settings.isRandomizeNonBossDoors()) {
+            if(Settings.isRandomizeNonBossDoors() || Settings.isRandomize2()) {
                 Integer testFlagIndex = null;
                 for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
                     TestByteOperation flagTest = obj.getTestByteOperations().get(i);
@@ -437,7 +437,7 @@ public final class RcdReader {
             }
         }
         else if (obj.getId() == 0xb7) {
-            if(Settings.isRandomizeNonBossDoors()) {
+            if(Settings.isRandomizeNonBossDoors() || Settings.isRandomize2()) {
                 if(objectContainer instanceof Screen) {
                     Screen screen = (Screen)objectContainer;
                     if(screen.getZoneIndex() == 8 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
@@ -512,7 +512,7 @@ public final class RcdReader {
             }
         }
         else if (obj.getId() == 0x9e) {
-            if(Settings.isRandomizeNonBossDoors()) {
+            if(Settings.isRandomizeNonBossDoors() || Settings.isRandomize2()) {
                 if(objectContainer instanceof Screen) {
                     Screen screen = (Screen)objectContainer;
                     if (screen.getZoneIndex() == 1 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
@@ -619,7 +619,7 @@ public final class RcdReader {
                     }
                 }
             }
-            if(Settings.isRandomizeNonBossDoors()) {
+            if(Settings.isRandomizeNonBossDoors() || Settings.isRandomize2()) {
                 for (TestByteOperation flagTest : obj.getTestByteOperations()) {
                     if(flagTest.getIndex() == 0x15c || flagTest.getIndex() == 0x15d
                             || flagTest.getIndex() == 0x16d || flagTest.getIndex() == 0x16e
@@ -644,7 +644,7 @@ public final class RcdReader {
             }
         }
         else if(obj.getId() == 0xa7) {
-            if(Settings.isRandomizeNonBossDoors()) {
+            if(Settings.isRandomizeNonBossDoors() || Settings.isRandomize2()) {
                 if(objectContainer instanceof Screen) {
                     Screen screen = (Screen) objectContainer;
                     if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
@@ -1030,7 +1030,7 @@ public final class RcdReader {
             }
 
             if(roomIndex == 4 && screenIndex == 2) {
-                if(Settings.isRandomizeBacksideDoors()) {
+                if(Settings.isRandomizeBacksideDoors() || Settings.isRandomize1()) {
                     AddObject.addSurfaceCoverDetector(screen);
                 }
             }

@@ -1794,6 +1794,10 @@ public final class AddObject {
         littleBrotherShopScreen.getObjects().add(0, littleBrotherShopItemTimer);
     }
 
+    /**
+     * Detect Lemeza entering the lower surface area and get rid of the cover so you can see.
+     * @param screen
+     */
     public static void addSurfaceCoverDetector(ObjectContainer screen) {
         GameObject surfaceCoverDetector = new GameObject(screen);
         surfaceCoverDetector.setId((short)0x14);

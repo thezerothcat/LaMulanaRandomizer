@@ -853,7 +853,7 @@ public final class GameDataTracker {
                     }
                 }
                 else if(flagTest.getIndex() == 0x14c) {
-                    if(Settings.isRandomizeBacksideDoors() || Settings.isRandomizeTransitionGates()) {
+                    if(Settings.isRandomizeBacksideDoors() || Settings.isRandomizeTransitionGates() || Settings.isRandomize1()) {
                         gameObject.getArgs().set(4, (short)2);
                     }
                 }
@@ -927,7 +927,7 @@ public final class GameDataTracker {
         }
         else if (gameObject.getId() == 0x98) {
             if(gameObject.getArgs().get(0) == 0) {
-                if(Settings.isRandomizeBacksideDoors()) {
+                if(Settings.isRandomizeBacksideDoors() || Settings.isRandomize2()) {
                     Screen screen = (Screen)gameObject.getObjectContainer();
                     String doorName = null;
                     int zone = screen.getZoneIndex();
@@ -941,7 +941,7 @@ public final class GameDataTracker {
                         // Surface => Tower of the Goddess
                         doorName = "Door: F5";
 
-                        if(!Settings.isRandomizeNonBossDoors()) {
+                        if(!Settings.isRandomizeNonBossDoors() && !Settings.isRandomize2()) {
                             GameObject added = AddObject.addMissingBacksideDoorCover(gameObject, 0x153);
                             List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
                             if(backsideDoors == null) {
@@ -984,7 +984,7 @@ public final class GameDataTracker {
                                     gameObject.getTestByteOperations().remove((int)flagIndexToRemove);
                                 }
                             }
-                            if(Settings.isRandomizeNonBossDoors()) {
+                            if(Settings.isRandomizeNonBossDoors() || Settings.isRandomize2()) {
                                 doorName = "Door: F9";
                                 replaceBacksideDoorFlags(gameObject, 0x0fb, 0x1d0, false);
                             }
@@ -994,7 +994,7 @@ public final class GameDataTracker {
                             doorName = "Door: F6";
                             replaceBacksideDoorFlags(gameObject, 0x0fb, 0x1d0, false);
 
-                            if(!Settings.isRandomizeNonBossDoors()) {
+                            if(!Settings.isRandomizeNonBossDoors() && !Settings.isRandomize2()) {
                                 GameObject added = AddObject.addMissingBacksideDoorTimerAndSound(screen, 0x0fb, 0x1d0);
                                 List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
                                 if(backsideDoors == null) {
@@ -1057,7 +1057,7 @@ public final class GameDataTracker {
                             doorName = "Door: B7";
                             replaceBacksideDoorFlags(gameObject, 0x0fc, 0x1c0, false);
 
-                            if(!Settings.isRandomizeNonBossDoors()) {
+                            if(!Settings.isRandomizeNonBossDoors() && !Settings.isRandomize2()) {
                                 GameObject added = AddObject.addMissingBacksideDoorTimerAndSound(screen, 0x0fc, 0x1c0);
                                 List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
                                 if(backsideDoors == null) {
@@ -1096,7 +1096,7 @@ public final class GameDataTracker {
                         // Chamber of Birth [Northeast] => Chamber of Extinction [Magatama Left]
                         doorName = "Door: B6";
                     }
-                    else if(Settings.isRandomizeNonBossDoors()) {
+                    else if(Settings.isRandomizeNonBossDoors() || Settings.isRandomize2()) {
                         if(zone == 17) {
                             // Dimensional Corridor [Grail] => Endless Corridor [1F]
                             doorName = "Door: B8";
@@ -1890,7 +1890,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(!Settings.isRandomizeNonBossDoors()) {
+                else if(!Settings.isRandomizeNonBossDoors() && !Settings.isRandomize2()) {
                     if(flagTest.getIndex() == 0x15c || flagTest.getIndex() == 0x15d) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0
                                 ? "Door: F1" : "Door: B1";
@@ -2005,7 +2005,7 @@ public final class GameDataTracker {
                         }
                     }
                 }
-                else if(!Settings.isRandomizeNonBossDoors()) {
+                else if(!Settings.isRandomizeNonBossDoors() && !Settings.isRandomize2()) {
                     if(flagUpdate.getIndex() == 0x15c || flagUpdate.getIndex() == 0x15d) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0
                                 ? "Door: F1" : "Door: B1";
@@ -3567,6 +3567,7 @@ public final class GameDataTracker {
                                         null, null, null, false, false, false);
                                 shopBlock.getInventoryItemArgsList().getData().set(2, (short)0x06a);
                                 shopBlock.getInventoryPriceList().getData().set(2, (short)0);
+                                shopBlock.getInventoryCountList().getData().set(2, (short)50);
                                 shopBlock.getExitFlagList().getData().set(2, (short)0xad1);
                                 break;
                             }

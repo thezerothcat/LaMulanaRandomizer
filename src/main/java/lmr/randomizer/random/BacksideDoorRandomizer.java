@@ -55,6 +55,17 @@ public class BacksideDoorRandomizer {
                 mapOfDoorToPairDoor.put(frontsideDoor, backsideDoor);
                 mapOfDoorToPairDoor.put(backsideDoor, frontsideDoor);
             }
+            if(Settings.isRandomize2()) {
+                backsideDoorLocationMap.put("Door: B8", getDoorLocation("Door: F5"));
+                backsideDoorLocationMap.put("Door: B5", getDoorLocation("Door: F8"));
+                mapOfDoorToPairDoor.put("Door: B8", "Door: B5");
+                mapOfDoorToPairDoor.put("Door: B5", "Door: B8");
+
+                backsideDoorLocationMap.put("Door: F8", getDoorLocation("Door: B5"));
+                backsideDoorLocationMap.put("Door: F5", getDoorLocation("Door: B8"));
+                mapOfDoorToPairDoor.put("Door: F8", "Door: F5");
+                mapOfDoorToPairDoor.put("Door: F5", "Door: F8");
+            }
         }
     }
 
@@ -73,6 +84,9 @@ public class BacksideDoorRandomizer {
                 backsideDoorBossMap.put(backsideDoor, i);
             }
             backsideDoorBossMap.put("Door: F9", 9);
+            if(Settings.isRandomize2()) {
+                backsideDoorBossMap.remove("Door: B5");
+            }
         }
 
         rebuildRequirementsMap();
@@ -101,10 +115,42 @@ public class BacksideDoorRandomizer {
         unassignedDoors.add("Door: F3");
         unassignedDoors.add("Door: F5");
         if(Settings.isRandomizeNonBossDoors()) {
-            riskDoors.add("Door: F8");
-            unassignedDoors.add("Door: B8");
-            unassignedDoors.add("Door: B9");
-            unassignedDoors.add("Door: F9");
+            if(Settings.isRandomize2()) {
+                backsideDoorLocationMap.put("Door: B8", getDoorLocation("Door: F5"));
+                backsideDoorLocationMap.put("Door: B5", getDoorLocation("Door: F8"));
+                mapOfDoorToPairDoor.put("Door: B8", "Door: B5");
+                mapOfDoorToPairDoor.put("Door: B5", "Door: B8");
+
+                unassignedDoors.remove("Door: F5");
+
+                unassignedDoors.add("Door: B8");
+                unassignedDoors.add("Door: B9");
+                unassignedDoors.add("Door: F9");
+            }
+            else {
+                riskDoors.add("Door: F8");
+                unassignedDoors.add("Door: B8");
+                unassignedDoors.add("Door: B9");
+                unassignedDoors.add("Door: F9");
+            }
+        }
+        else if(Settings.isRandomize2()) {
+            backsideDoorLocationMap.put("Door: F5", getDoorLocation("Door: B8"));
+            backsideDoorLocationMap.put("Door: B5", getDoorLocation("Door: F8"));
+            backsideDoorLocationMap.put("Door: F8", getDoorLocation("Door: B5"));
+            backsideDoorLocationMap.put("Door: B8", getDoorLocation("Door: F5"));
+            backsideDoorLocationMap.put("Door: F9", getDoorLocation("Door: F9"));
+            backsideDoorLocationMap.put("Door: B9", getDoorLocation("Door: B9"));
+
+            mapOfDoorToPairDoor.put("Door: F5", "Door: F8");
+            mapOfDoorToPairDoor.put("Door: B5", "Door: B8");
+            mapOfDoorToPairDoor.put("Door: F8", "Door: F5");
+            mapOfDoorToPairDoor.put("Door: B8", "Door: B5");
+            mapOfDoorToPairDoor.put("Door: F9", "Door: B9");
+            mapOfDoorToPairDoor.put("Door: B9", "Door: F9");
+
+            unassignedDoors.remove("Door: F5");
+            unassignedDoors.remove("Door: B5");
         }
         else {
             backsideDoorLocationMap.put("Door: F8", getDoorLocation("Door: F8"));
@@ -413,7 +459,7 @@ public class BacksideDoorRandomizer {
                 doorToReplace = doorToReplace.replace("Door: F", "Door: B");
             }
 
-            if(Settings.isRandomizeNonBossDoors()) {
+            if(Settings.isRandomizeNonBossDoors() || Settings.isRandomize2()) {
                 GameDataTracker.writeBacksideDoorV2(doorToReplace, doorKeyAndLocation.getKey(), backsideDoorBossMap.get(doorKeyAndLocation.getKey()));
             }
             else if(!doorToReplace.endsWith("8") && !doorToReplace.endsWith("9")) {
@@ -575,7 +621,7 @@ public class BacksideDoorRandomizer {
     }
 
     public void logLocations() {
-        if(Settings.isRandomizeBacksideDoors()) {
+        if(Settings.isRandomizeBacksideDoors() || Settings.isRandomize2()) {
             for (String door : backsideDoorLocationMap.keySet()) {
                 FileUtils.log(Translations.getDoorLocation(backsideDoorLocationMap.get(getDoorToLocation(backsideDoorLocationMap.get(door))))
                         + " <==> "
@@ -586,7 +632,7 @@ public class BacksideDoorRandomizer {
     }
 
     public void logBosses(Integer attemptNumber) {
-        if(Settings.isRandomizeBacksideDoors() && Settings.isDetailedLoggingAttempt(attemptNumber)) {
+        if((Settings.isRandomizeBacksideDoors() || Settings.isRandomize2()) && Settings.isDetailedLoggingAttempt(attemptNumber)) {
             String doorLocation;
             for(String door : backsideDoorLocationMap.keySet()) {
                 doorLocation = backsideDoorLocationMap.get(door);

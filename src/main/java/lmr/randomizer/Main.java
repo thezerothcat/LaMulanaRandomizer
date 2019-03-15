@@ -1283,7 +1283,7 @@ public class Main {
                 }
                 FileUtils.logFlush("Updated subweapon pot data");
 
-                if(Settings.isRandomizeBacksideDoors()) {
+                if(Settings.isRandomizeBacksideDoors() || Settings.isRandomize2()) {
                     backsideDoorRandomizer.updateBacksideDoors();
                     FileUtils.logFlush("Updated backside door data");
                 }
