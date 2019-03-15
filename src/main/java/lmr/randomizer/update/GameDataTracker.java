@@ -190,6 +190,18 @@ public final class GameDataTracker {
                 testByteOperation.setValue((byte) 0);
                 gameObject.getTestByteOperations().add(testByteOperation);
             }
+            if(Settings.isRandomize2()) {
+                Screen screen = (Screen) gameObject.getObjectContainer();
+                if(screen.getZoneIndex() == 4) {
+                    gameObject.getArgs().set(24, (short)4);
+                    gameObject.getArgs().set(25, (short)400);
+                    gameObject.getArgs().set(26, (short)2316);
+                    gameObject.getArgs().set(27, (short)0);
+                    gameObject.getArgs().set(28, (short)4);
+                    gameObject.getArgs().set(29, (short)400);
+                    gameObject.getArgs().set(30, (short)2316);
+                }
+            }
         }
         else if (gameObject.getId() == 0x2f) {
             // Floating item

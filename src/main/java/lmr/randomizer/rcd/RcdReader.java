@@ -541,6 +541,20 @@ public final class RcdReader {
             }
         }
         else if (obj.getId() == 0x93) {
+            if(Settings.isRandomize2()) {
+                Screen screen = (Screen)objectContainer;
+                if(screen.getZoneIndex() == 4 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                    if(obj.getTestByteOperations().size() == 1) {
+                        TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
+                        if(testByteOperation.getIndex() == 0x0f9 && ByteOp.FLAG_LTEQ.equals(testByteOperation.getOp())
+                            && testByteOperation.getValue() == (byte)1) {
+                            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+                            testByteOperation.setValue((byte)2);
+                        }
+                    }
+                }
+            }
+
             if(Settings.isRandomizeTrapItems()) {
                 if(objectContainer instanceof Screen) {
                     Screen screen = (Screen)objectContainer;
@@ -1002,11 +1016,21 @@ public final class RcdReader {
             screenExit.setScreenIndex((byte)-1);
         }
 
-        if(screen.getZoneIndex() == 4 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
-            ScreenExit screenExit = screen.getScreenExits().get(2);
-            screenExit.setZoneIndex((byte)25);
-            screenExit.setRoomIndex((byte)0);
-            screenExit.setScreenIndex((byte)0);
+        if(screen.getZoneIndex() == 4) {
+            if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                ScreenExit screenExit = screen.getScreenExits().get(2);
+                screenExit.setZoneIndex((byte)25);
+                screenExit.setRoomIndex((byte)0);
+                screenExit.setScreenIndex((byte)0);
+            }
+            else if(screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                if(Settings.isRandomize2()) {
+                    ScreenExit screenExit = screen.getScreenExits().get(3);
+                    screenExit.setZoneIndex((byte)-1);
+                    screenExit.setRoomIndex((byte)-1);
+                    screenExit.setScreenIndex((byte)-1);
+                }
+            }
         }
 
         if(Settings.isRandomize1()) {

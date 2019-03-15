@@ -1411,6 +1411,9 @@ public class Main {
         else {
             startingNodes.add("Setting: Nonrandom Transitions");
         }
+        if(!Settings.isRandomize2()) {
+            startingNodes.add("Setting: Normal Surface");
+        }
         startingNodes.add(Settings.isAlternateMotherAnkh() ? "Setting: Alternate Mother" : "Setting: Standard Mother");
         startingNodes.add(Settings.isBossSpecificAnkhJewels() ? "Setting: Fixed Jewels" : "Setting: Variable Jewels");
 
