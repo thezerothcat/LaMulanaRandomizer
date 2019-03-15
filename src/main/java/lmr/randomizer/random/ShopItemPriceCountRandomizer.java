@@ -115,18 +115,18 @@ public class ShopItemPriceCountRandomizer {
             return 0;
         }
         if("Weights".equals(itemName)) {
-            if(!normalPriceWeightsPlaced) {
-                normalPriceWeightsPlaced = true;
-                return 10;
-            }
-            int priceRoll = random.nextInt(20);
-            if(priceRoll == 0 || priceRoll == 1) {
-                return 15;
-            }
-            if(priceRoll == 2) {
-                return 20;
-            }
-            return 10;
+//            if(!normalPriceWeightsPlaced) {
+//                normalPriceWeightsPlaced = true;
+//                return 10;
+//            }
+//            int priceRoll = random.nextInt(20);
+//            if(priceRoll == 0 || priceRoll == 1) {
+//                return 15;
+//            }
+//            if(priceRoll == 2) {
+//                return 20;
+//            }
+            return 1;
         }
         if("Shuriken Ammo".equals(itemName)) {
             return 10;
@@ -220,7 +220,7 @@ public class ShopItemPriceCountRandomizer {
 
     private short getCount(String item) {
         if("Weights".equals(item)) {
-            return 5;
+            return (short)(random.nextInt(10) + 1);
         }
         if("Shuriken Ammo".equals(item)) {
             return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Shuriken") ? (short)150 : 10;

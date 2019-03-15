@@ -507,9 +507,9 @@ public final class RcdReader {
             }
         }
         else if (obj.getId() == 0xc5) {
-            if(Settings.isRandomizeTransitionGates()) {
-                obj.getArgs().set(2, (short)10);
-            }
+//            if(Settings.isRandomizeTransitionGates()) {
+                obj.getArgs().set(2, (short)101);
+//            }
         }
         else if (obj.getId() == 0x9e) {
             if(Settings.isRandomizeNonBossDoors() || Settings.isRandomize2()) {

@@ -467,14 +467,14 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                         shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 1", shopName), shopItem1),
                         itemPriceCountMsxShop2,
                         itemPriceCountMsxShop3,
-                        false, MSX_SHOP_NAME.equals(shopName), false);
+                        false, MSX_SHOP_NAME.equals(shopName), false, random);
             }
             else {
                 GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks,
                         shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 1", shopName), shopItem1),
                         shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 2", shopName), shopItem2),
                         shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 3", shopName), shopItem3),
-                        "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName), false);
+                        "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName), false, random);
             }
         }
     }

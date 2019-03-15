@@ -3279,7 +3279,7 @@ public final class GameDataTracker {
 
     public static void writeShopInventory(ShopBlock shopBlock, String shopItem1, String shopItem2, String shopItem3, List<Block> blocks,
                                           Pair<Short, Short> itemPriceAndCount1, Pair<Short, Short> itemPriceAndCount2, Pair<Short, Short> itemPriceAndCount3,
-                                          boolean littleBrotherShop, boolean msxShop, boolean recursive) {
+                                          boolean littleBrotherShop, boolean msxShop, boolean recursive, Random random) {
         short shopItem1Flag = getFlag(shopItem1);
         short shopItem2Flag = getFlag(shopItem2);
         short shopItem3Flag = getFlag(shopItem3);
@@ -3289,7 +3289,7 @@ public final class GameDataTracker {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
             writeShopInventory(noOrbShopBlock, "Weights", shopItem2, shopItem3, blocks,
-                    new Pair<>((short)10, (short)5), itemPriceAndCount2, itemPriceAndCount3, littleBrotherShop, msxShop, true);
+                    new Pair<>((short)1, (short)(random.nextInt(10) + 1)), itemPriceAndCount2, itemPriceAndCount3, littleBrotherShop, msxShop, true, random);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -3315,7 +3315,7 @@ public final class GameDataTracker {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
             writeShopInventory(noOrbShopBlock, shopItem1, "Weights", shopItem3, blocks,
-                    itemPriceAndCount1, new Pair<>((short)10, (short)5), itemPriceAndCount3, littleBrotherShop, msxShop, true);
+                    itemPriceAndCount1, new Pair<>((short)1, (short)(random.nextInt(10) + 1)), itemPriceAndCount3, littleBrotherShop, msxShop, true, random);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -3341,7 +3341,7 @@ public final class GameDataTracker {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
             writeShopInventory(noOrbShopBlock, shopItem1, shopItem2, "Weights", blocks,
-                    itemPriceAndCount1, itemPriceAndCount2, new Pair<>((short)10, (short)5), littleBrotherShop, msxShop, true);
+                    itemPriceAndCount1, itemPriceAndCount2, new Pair<>((short)1, (short)(random.nextInt(10) + 1)), littleBrotherShop, msxShop, true, random);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -3372,13 +3372,15 @@ public final class GameDataTracker {
         List<Short> newCounts  = new ArrayList<>();
         List<Short> newPrices  = new ArrayList<>();
         if(itemPriceAndCount1 == null) {
-            newPrices.add(shopBlock.getInventoryPriceList().getData().get(0));
             if ("Weights".equals(shopItem1)) {
-                newCounts.add((short) 5);
+                newCounts.add((short)(random.nextInt(10) + 1));
+                newPrices.add((short)1);
             } else if (shopItem1.endsWith("Ammo")) {
                 newCounts.add(shopBlock.getInventoryCountList().getData().get(0));
+                newPrices.add(shopBlock.getInventoryPriceList().getData().get(0));
             } else {
                 newCounts.add((short) 1);
+                newPrices.add(shopBlock.getInventoryPriceList().getData().get(0));
             }
         }
         else {
@@ -3398,13 +3400,15 @@ public final class GameDataTracker {
         }
 
         if(itemPriceAndCount2 == null) {
-            newPrices.add(shopBlock.getInventoryPriceList().getData().get(1));
             if ("Weights".equals(shopItem2)) {
-                newCounts.add((short) 5);
+                newCounts.add((short)(random.nextInt(10) + 1));
+                newPrices.add((short)1);
             } else if (shopItem2.endsWith("Ammo")) {
                 newCounts.add(shopBlock.getInventoryCountList().getData().get(1));
+                newPrices.add(shopBlock.getInventoryPriceList().getData().get(1));
             } else {
                 newCounts.add((short) 1);
+                newPrices.add(shopBlock.getInventoryPriceList().getData().get(1));
             }
         }
         else {
@@ -3424,13 +3428,15 @@ public final class GameDataTracker {
         }
 
         if(itemPriceAndCount3 == null) {
-            newPrices.add(shopBlock.getInventoryPriceList().getData().get(2));
             if ("Weights".equals(shopItem3)) {
-                newCounts.add((short) 5);
+                newCounts.add((short)(random.nextInt(10) + 1));
+                newPrices.add((short)1);
             } else if (shopItem3.endsWith("Ammo")) {
                 newCounts.add(shopBlock.getInventoryCountList().getData().get(2));
+                newPrices.add(shopBlock.getInventoryPriceList().getData().get(2));
             } else {
                 newCounts.add((short) 1);
+                newPrices.add(shopBlock.getInventoryPriceList().getData().get(2));
             }
         }
         else {
@@ -3560,7 +3566,7 @@ public final class GameDataTracker {
                                     }
                                 }
                                 GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks,
-                                        null, null, null, false, false, false);
+                                        null, null, null, false, false, false, random);
                                 shopBlock.getInventoryItemArgsList().getData().set(2, (short)0x06a);
                                 shopBlock.getInventoryPriceList().getData().set(2, (short)0);
                                 shopBlock.getInventoryCountList().getData().set(2, (short)50);
@@ -4934,12 +4940,13 @@ public final class GameDataTracker {
         }
         else if(newChestContentsItemName.startsWith("Trap:")) {
             // Chest graphics (0 = coin chest, 1 = blue chest)
-            if(Settings.isCoinChestGraphics()) {
-                objectToModify.getArgs().set(2, (short)0);
-            }
-            else {
-                objectToModify.getArgs().set(2, (short)1);
-            }
+//            if(Settings.isCoinChestGraphics()) {
+//                objectToModify.getArgs().set(2, (short)0);
+//            }
+//            else {
+//                objectToModify.getArgs().set(2, (short)1);
+//            }
+            objectToModify.getArgs().set(2, (short)random.nextInt(2));
 
             for (TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                 if (flagTest.getIndex() == itemLocationData.getWorldFlag()) {

@@ -1093,6 +1093,10 @@ public class Main {
             // the trap item.
             DataFromFile.setBannedTrapLocations(random);
         }
+        if(DataFromFile.getCustomPlacementData().getMedicineColor() == null) {
+            List<String> medicineColors = Arrays.asList("Red", "Green", "Yellow", null);
+            Settings.setMedicineColor(medicineColors.get(random.nextInt(medicineColors.size())));
+        }
 
         int totalItemsRemoved = getTotalItemsRemoved(random);
         determineStartingWeapon(random);

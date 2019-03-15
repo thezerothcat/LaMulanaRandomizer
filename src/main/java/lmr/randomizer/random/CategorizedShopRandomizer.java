@@ -304,13 +304,16 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                     getItemPriceCount(subweaponOnly, shopItem1, String.format("%s Item 1", shopName), moneyChecker, random),
                     getItemPriceCount(subweaponOnly, shopItem2, String.format("%s Item 2", shopName), moneyChecker, random),
                     getItemPriceCount(subweaponOnly, shopItem3, String.format("%s Item 3", shopName), moneyChecker, random),
-                    "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName), false);
+                    "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName), false, random);
         }
     }
 
     private Pair<Short, Short> getItemPriceCount(boolean subweaponOnly, String itemName, String shopInventoryLocation, MoneyChecker moneyChecker, Random random) {
         String startingWeapon = Settings.getCurrentStartingWeapon();
         if((subweaponOnly && itemName.endsWith(" Ammo")) || itemName.equals(startingWeapon + " Ammo")) {
+            if("Weights".equals(startingWeapon)) {
+                return new Pair<>((short)1, (short)(random.nextInt(10) + 1));
+            }
             if("Shuriken".equals(startingWeapon)) {
                 return new Pair<>((short)0, (short)150);
             }
