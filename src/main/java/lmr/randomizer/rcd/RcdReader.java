@@ -405,6 +405,14 @@ public final class RcdReader {
                         GameDataTracker.setSubweaponPot(obj);
                     }
                 }
+
+                if(Settings.isRandomize1()
+                        && screen.getZoneIndex() == 21 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                    obj.getArgs().set(0, (short)1);
+                    obj.getArgs().set(1, (short)10);
+                    obj.getArgs().set(2, (short)277);
+                    obj.getArgs().set(3, (short)16);
+                }
             }
 
             if(obj.getTestByteOperations().isEmpty() || obj.getTestByteOperations().get(0).getIndex() != 524) {
