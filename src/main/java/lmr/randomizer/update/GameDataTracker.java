@@ -25,6 +25,7 @@ public final class GameDataTracker {
     private static Map<String, List<GameObject>> mapOfDoorNameToBacksideDoor = new HashMap<>();
     private static Map<String, List<GameObject>> mapOfGateNameToTransitionGate = new HashMap<>();
     private static Map<String, Screen> mapOfTransitionNameToScreen = new HashMap<>();
+    private static List<GameObject> enemyObjects = new ArrayList<>();
 
     private static GameObject subweaponPot;
 
@@ -202,6 +203,12 @@ public final class GameDataTracker {
                     gameObject.getArgs().set(30, (short)2316);
                 }
             }
+        }
+        else if (gameObject.getId() == 0x02) {
+            enemyObjects.add(gameObject);
+        }
+        else if (gameObject.getId() == 0x03) {
+            enemyObjects.add(gameObject);
         }
         else if (gameObject.getId() == 0x2f) {
             // Floating item
@@ -5260,6 +5267,27 @@ public final class GameDataTracker {
         else if("Pistol".equals(weapon)) {
             subweaponPot.getArgs().set(0, (short)10);
         }
+    }
+
+    public static void randomizeEnemies(Random random) {
+        for(GameObject enemy : enemyObjects) {
+            if(enemy.getId() == 0x02) {
+                enemy.getArgs().set(0, (short)random.nextInt(2)); // Start moving
+                enemy.getArgs().set(3, (short)random.nextInt(2)); // Type
+                enemy.getArgs().set(4, (short)(random.nextInt(2) + 2)); // Damage
+            }
+            else {
+                enemy.getArgs().set(0, (short)random.nextInt(2)); // Facing
+                enemy.getArgs().set(2, (short)random.nextInt(4)); // Speed
+                enemy.getArgs().set(3, (short)random.nextInt(2)); // Collapsed or standing
+                enemy.getArgs().set(4, (short)random.nextInt(3)); // Type
+                enemy.getArgs().set(5, (short)(random.nextInt(11) + 3)); // Health
+                enemy.getArgs().set(6, (short)(random.nextInt(5) + 2)); // Contact damage
+                enemy.getArgs().set(7, (short)(random.nextInt(4) + 2)); // Projectile damage
+                enemy.getArgs().set(9, (short)(random.nextInt(2) + 2)); // Projectile speed
+            }
+        }
+        FileUtils.logFlush("Updated enemy data");
     }
 
     private static short getItemGraphic(String itemName) {
