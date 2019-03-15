@@ -810,6 +810,13 @@ public final class Settings {
         singleton.randomize4 = randomize4;
     }
 
+    public static String getStartingLocation() {
+        if(!singleton.randomize1) {
+            return "Location: Surface [Main]";
+        }
+        return "Location: Gate of Time [Surface]";
+    }
+
     public static boolean isAutomaticMantras() {
         return singleton.automaticMantras || DataFromFile.getCustomPlacementData().isAutomaticMantras();
     }

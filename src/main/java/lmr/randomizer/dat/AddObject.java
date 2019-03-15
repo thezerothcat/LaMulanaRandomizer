@@ -2,11 +2,14 @@ package lmr.randomizer.dat;
 
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.Settings;
+import lmr.randomizer.dat.shop.BlockCmdSingle;
+import lmr.randomizer.dat.shop.BlockStringData;
+import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.GameObjectId;
+import lmr.randomizer.update.LocationCoordinateMapper;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public final class AddObject {
     private AddObject() { }
@@ -956,8 +959,8 @@ public final class AddObject {
             itemGive.getArgs().add((short)2);
             itemGive.getArgs().add((short)3);
             itemGive.getArgs().add((short)39);
-            itemGive.setX(940);
-            itemGive.setY(160);
+            itemGive.setX(LocationCoordinateMapper.getStartingX());
+            itemGive.setY(LocationCoordinateMapper.getStartingY());
 
             TestByteOperation itemGiveTest = new TestByteOperation();
             itemGiveTest.setIndex(gameObjectId.getWorldFlag());
@@ -2196,6 +2199,143 @@ public final class AddObject {
         }
     }
 
+    public static void addSurfaceGrailTablet(Screen screen) {
+        GameObject grailTablet = new GameObject(screen);
+        grailTablet.setId((short)0x9e);
+        grailTablet.setX(1120);
+        grailTablet.setY(80);
+
+        grailTablet.getArgs().add((short)38);
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)40);
+        grailTablet.getArgs().add((short)40);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(Settings.isRandomize2() ? 0x075 : 0x0ad3);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        grailTablet.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(Settings.isRandomize2() ? 0x075 : 0x0ad3);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(1);
+        grailTablet.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(grailTablet);
+
+        if(Settings.isAutomaticGrailPoints()) {
+            addGrailDetector(grailTablet, Settings.isRandomize2() ? 0x075 : 0x0ad3);
+        }
+    }
+
+    public static void addSpecialGrailTablet(Screen screen) {
+        GameObject grailTablet = new GameObject(screen);
+        grailTablet.setId((short)0x9f);
+        grailTablet.setX(400);
+        grailTablet.setY(160);
+
+        grailTablet.getArgs().add((short)38);
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)40);
+        grailTablet.getArgs().add((short)40);
+
+        screen.getObjects().add(grailTablet);
+
+        GameObject grailGraphic = new GameObject(screen);
+        grailGraphic.setId((short)0x93);
+        grailGraphic.setX(grailTablet.getX());
+        grailGraphic.setY(grailTablet.getY());
+
+        grailGraphic.getArgs().add((short)0); // Layer
+        grailGraphic.getArgs().add((short)0); // 01.effect.png for anything not 0-6?
+        grailGraphic.getArgs().add((short)40); // Imagex
+        grailGraphic.getArgs().add((short)0); // Imagey
+        grailGraphic.getArgs().add((short)40); // dx
+        grailGraphic.getArgs().add((short)40); // dy
+        grailGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        grailGraphic.getArgs().add((short)1); // Animation frames
+        grailGraphic.getArgs().add((short)0); // Pause frames
+        grailGraphic.getArgs().add((short)0); // Repeat count (<1 is forever)
+        grailGraphic.getArgs().add((short)0); // Hittile to fill with
+        grailGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        grailGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        grailGraphic.getArgs().add((short)0); // Cycle colors t/f
+        grailGraphic.getArgs().add((short)0); // Alpha/frame
+        grailGraphic.getArgs().add((short)255); // Max alpha
+        grailGraphic.getArgs().add((short)0); // R/frame
+        grailGraphic.getArgs().add((short)0); // Max R
+        grailGraphic.getArgs().add((short)0); // G/frame
+        grailGraphic.getArgs().add((short)0); // Max G
+        grailGraphic.getArgs().add((short)0); // B/frame
+        grailGraphic.getArgs().add((short)0); // Max B
+        grailGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        grailGraphic.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(grailGraphic);
+
+        GameObject grailSave = new GameObject(screen);
+        grailSave.setId((short)0xb6);
+        grailSave.setX(grailTablet.getX());
+        grailSave.setY(grailTablet.getY());
+
+        grailSave.getArgs().add((short)33);
+
+        screen.getObjects().add(grailSave);
+    }
+
+    public static void addSpaulderGive(Screen screen, int x, int y) {
+        GameObject itemGive = new GameObject(screen);
+        itemGive.setId((short) 0xb5);
+        itemGive.setX(x / 640); // intentional int division
+        itemGive.setY(y / 480);
+
+        itemGive.getArgs().add((short)62);
+        itemGive.getArgs().add((short)32);
+        itemGive.getArgs().add((short)24);
+        itemGive.getArgs().add((short)39);
+
+        TestByteOperation itemGiveTest = new TestByteOperation();
+        itemGiveTest.setIndex(0xad1);
+        itemGiveTest.setValue((byte) 1);
+        itemGiveTest.setOp(ByteOp.FLAG_EQUALS);
+        itemGive.getTestByteOperations().add(itemGiveTest);
+
+        itemGiveTest = new TestByteOperation();
+        itemGiveTest.setIndex(0x0bf);
+        itemGiveTest.setValue((byte) 2);
+        itemGiveTest.setOp(ByteOp.FLAG_LT);
+        itemGive.getTestByteOperations().add(itemGiveTest);
+
+        WriteByteOperation itemGiveUpdate = new WriteByteOperation();
+        itemGiveUpdate.setIndex(0xad1);
+        itemGiveUpdate.setValue((byte) 2);
+        itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        itemGive.getWriteByteOperations().add(itemGiveUpdate);
+
+        itemGiveUpdate = new WriteByteOperation();
+        itemGiveUpdate.setIndex(0x0bf);
+        itemGiveUpdate.setValue((byte) 2);
+        itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        itemGive.getWriteByteOperations().add(itemGiveUpdate);
+
+        screen.getObjects().add(itemGive);
+    }
+
     public static void addGrailDetector(GameObject gameObject, int grailFlag) {
         GameObject grailDetector = new GameObject(gameObject.getObjectContainer());
         grailDetector.setId((short)0x14);
@@ -2795,5 +2935,93 @@ public final class AddObject {
         obj.getTestByteOperations().add(testByteOperation);
 
         screen.getObjects().add(obj);
+    }
+
+    public static ShopBlock addShopBlock(List<Block> blocks, Random random) {
+        ShopBlock shopBlock = new ShopBlock(blocks.size());
+        List<Integer> shopBlocks = new ArrayList<>(DataFromFile.getMapOfShopNameToShopBlock().values());
+
+        BlockListData shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add((short)105); // Weights
+        shopBlockData.getData().add((short)105);
+        shopBlockData.getData().add((short)105);
+        shopBlockData.getData().add((short)0x000a);
+        shopBlock.setInventoryItemArgsList(shopBlockData);
+
+        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add((short)10); // Weights
+        shopBlockData.getData().add((short)10);
+        shopBlockData.getData().add((short)10);
+        shopBlockData.getData().add((short)0x000a);
+        shopBlock.setInventoryPriceList(shopBlockData);
+
+        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add((short)5); // Weights
+        shopBlockData.getData().add((short)5);
+        shopBlockData.getData().add((short)5);
+        shopBlockData.getData().add((short)0x000a);
+        shopBlock.setInventoryCountList(shopBlockData);
+
+        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add((short)0); // Weights
+        shopBlockData.getData().add((short)0);
+        shopBlockData.getData().add((short)0);
+        shopBlockData.getData().add((short)0x000a);
+        shopBlock.setFlagList(shopBlockData);
+
+        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add((short)0); // Weights
+        shopBlockData.getData().add((short)0);
+        shopBlockData.getData().add((short)0);
+        shopBlockData.getData().add((short)0x000a);
+        shopBlock.setExitFlagList(shopBlockData);
+
+        shopBlock.setBackground(new BlockCmdSingle(((ShopBlock)blocks.get(shopBlocks.get(random.nextInt(shopBlocks.size())))).getBackground()));
+        shopBlock.setSprite(new BlockCmdSingle(((ShopBlock)blocks.get(shopBlocks.get(random.nextInt(shopBlocks.size())))).getSprite()));
+        shopBlock.setMusic(new BlockCmdSingle(((ShopBlock)blocks.get(shopBlocks.get(random.nextInt(shopBlocks.size())))).getMusic()));
+
+        BlockStringData existingBlockData = ((ShopBlock)blocks.get(shopBlocks.get(random.nextInt(shopBlocks.size())))).getBunemonText();
+        BlockStringData blockStringData = new BlockStringData(existingBlockData);
+        shopBlock.setBunemonText(blockStringData);
+
+        existingBlockData = ((ShopBlock)blocks.get(shopBlocks.get(random.nextInt(shopBlocks.size())))).getBunemonLocation();
+        blockStringData = new BlockStringData(existingBlockData);
+        shopBlock.setBunemonLocation(blockStringData);
+
+        ShopBlock foolShop = (ShopBlock)blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get("Shop 2 (Surface)"));
+        for(int i = 0; i < 18; i++) {
+            if(i == 15 || i == 16 || i == 17) {
+                existingBlockData = foolShop.getString(i);
+                shopBlock.setString(new BlockStringData(existingBlockData), i);
+            }
+            else {
+                existingBlockData = ((ShopBlock)blocks.get(shopBlocks.get(random.nextInt(shopBlocks.size())))).getString(i);
+                shopBlock.setString(new BlockStringData(existingBlockData), i);
+            }
+            shopBlock.getString(i).setItemNameStartIndex(null);
+            shopBlock.getString(i).setItemNameEndIndex(null);
+
+            // Remove poses so the game won't crash.
+            List<Short> cleanData = new ArrayList<>();
+            boolean useNextData = true;
+            blockStringData = shopBlock.getString(i);
+            for(int j = 0; j < blockStringData.getData().size(); j++) {
+                if(useNextData) {
+                    if(blockStringData.getData().get(j) == 0x0046) {
+                        useNextData = false;
+                    }
+                    else {
+                        cleanData.add(blockStringData.getData().get(j));
+                    }
+                }
+                else {
+                    useNextData = true;
+                }
+            }
+            shopBlock.getString(i).getData().clear();
+            shopBlock.getString(i).getData().addAll(cleanData);
+        }
+        blocks.add(shopBlock);
+        return shopBlock;
     }
 }

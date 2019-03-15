@@ -9,6 +9,7 @@ import lmr.randomizer.dat.conversation.CheckBlock;
 import lmr.randomizer.dat.shop.BlockStringData;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.CustomItemPlacement;
+import lmr.randomizer.random.ItemRandomizer;
 import lmr.randomizer.rcd.object.*;
 
 import java.util.*;
@@ -1258,7 +1259,71 @@ public final class GameDataTracker {
                     }
                 }
             }
+        } else if (gameObject.getId() == 0x9f) {
+            if(Settings.isRandomize1()) {
+                Screen screen = (Screen) gameObject.getObjectContainer();
+                if(screen.getZoneIndex() == 1) {
+                    gameObject.getWriteByteOperations().clear();
+
+                    TestByteOperation testByteOperation = new TestByteOperation();
+                    testByteOperation.setIndex(Settings.isRandomize2() ? 0x075 : 0xad3);
+                    testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                    testByteOperation.setValue((byte)1);
+                    gameObject.getTestByteOperations().add(testByteOperation);
+
+                    WriteByteOperation writeByteOperation = new WriteByteOperation();
+                    writeByteOperation.setIndex(Settings.isRandomize2() ? 0x075 : 0xad3);
+                    writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                    writeByteOperation.setValue((byte)1);
+                    gameObject.getWriteByteOperations().add(writeByteOperation);
+                }
+
+                if(Settings.isRandomize2()) {
+                    if(screen.getZoneIndex() == 18) {
+                        gameObject.getTestByteOperations().clear();
+                        gameObject.getWriteByteOperations().clear();
+
+                        TestByteOperation testByteOperation = new TestByteOperation();
+                        testByteOperation.setIndex(0x382);
+                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                        testByteOperation.setValue((byte)0);
+                        gameObject.getTestByteOperations().add(testByteOperation);
+
+                        testByteOperation = new TestByteOperation();
+                        testByteOperation.setIndex(0xad3);
+                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                        testByteOperation.setValue((byte)1);
+                        gameObject.getTestByteOperations().add(testByteOperation);
+
+                        WriteByteOperation writeByteOperation = new WriteByteOperation();
+                        writeByteOperation.setIndex(0xad3);
+                        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                        writeByteOperation.setValue((byte)1);
+                        gameObject.getWriteByteOperations().add(writeByteOperation);
+                    }
+                }
+            }
         } else if (gameObject.getId() == 0x9e) {
+            if(Settings.isRandomize1()) {
+                Screen screen = (Screen) gameObject.getObjectContainer();
+                if(screen.getZoneIndex() == 18) {
+                    gameObject.getTestByteOperations().clear();
+                    gameObject.getWriteByteOperations().clear();
+
+                    TestByteOperation testByteOperation = new TestByteOperation();
+                    testByteOperation.setIndex(Settings.isRandomize2() ? 0x075 : 0xad3);
+                    testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                    testByteOperation.setValue((byte)0);
+                    gameObject.getTestByteOperations().add(testByteOperation);
+
+                    WriteByteOperation writeByteOperation = new WriteByteOperation();
+                    writeByteOperation.setIndex(Settings.isRandomize2() ? 0x075 : 0xad3);
+                    writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                    writeByteOperation.setValue((byte)1);
+                    gameObject.getWriteByteOperations().add(writeByteOperation);
+                }
+            }
+
             int languageBlock = gameObject.getArgs().get(0);
             if(Settings.isAutomaticGrailPoints()) {
                 if(languageBlock == 41 || languageBlock == 75 || languageBlock == 104 || languageBlock == 136
@@ -3447,6 +3512,72 @@ public final class GameDataTracker {
         bunemonData.add((short)262);
         bunemonData.add((short)32);
         updateBunemonText(bunemonData, shopItem3, shopBlock.getInventoryPriceList().getData().get(2));
+    }
+
+    public static void makeShop(List<Zone> zones, List<Block> blocks, boolean subweaponOnly, Random random) {
+        String shopItem1 = "Weights";
+        String shopItem2 = "Weights";
+        String shopItem3 = "Weights";
+
+        List<String> availableSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
+        availableSubweapons.removeAll(Settings.getRemovedItems());
+        availableSubweapons.removeAll(Settings.getCurrentRemovedItems());
+        if(!availableSubweapons.isEmpty()) {
+            if(subweaponOnly) {
+                shopItem1 = Settings.getCurrentStartingWeapon() + " Ammo";
+                shopItem3 = availableSubweapons.get(random.nextInt(availableSubweapons.size())) + " Ammo";
+            }
+            else {
+                shopItem2 = availableSubweapons.get(random.nextInt(availableSubweapons.size())) + " Ammo";
+                shopItem3 = availableSubweapons.get(random.nextInt(availableSubweapons.size())) + " Ammo";
+            }
+        }
+
+        ShopBlock shopBlock = AddObject.addShopBlock(blocks, random);
+
+        GameObject shopObject = null;
+        for(Zone zone : zones) {
+            if(zone.getZoneIndex() == LocationCoordinateMapper.getStartingZone()) {
+                for(Room room : zone.getRooms()) {
+                    if(room.getRoomIndex() == LocationCoordinateMapper.getStartingRoom()) {
+                        for(Screen screen : room.getScreens()) {
+                            if(screen.getScreenIndex() == LocationCoordinateMapper.getStartingScreen()) {
+                                for(GameObject gameObject : screen.getObjects()) {
+                                    if(gameObject.getId() == 0xa0) {
+                                        Integer flagIndexToRemove = null;
+                                        for(int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                                            TestByteOperation testByteOperation = gameObject.getTestByteOperations().get(i);
+                                            if(testByteOperation.getIndex() == 0x2e3) {
+                                                flagIndexToRemove = i;
+                                                break;
+                                            }
+                                        }
+                                        if(flagIndexToRemove != null) {
+                                            gameObject.getTestByteOperations().remove((int)flagIndexToRemove);
+                                        }
+                                        gameObject.getWriteByteOperations().clear();
+                                        gameObject.getArgs().set(3, (short)1);
+                                        gameObject.getArgs().set(4, (short)shopBlock.getBlockNumber());
+                                        gameObject.getArgs().set(6, (short)0);
+                                        mapOfShopBlockToShopObjects.put(shopBlock.getBlockNumber(), new ArrayList<>(Arrays.asList(gameObject)));
+                                        shopObject = gameObject;
+                                    }
+                                }
+                                GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks,
+                                        null, null, null, false, false, false);
+                                shopBlock.getInventoryItemArgsList().getData().set(2, (short)0x06a);
+                                shopBlock.getInventoryPriceList().getData().set(2, (short)0);
+                                shopBlock.getExitFlagList().getData().set(2, (short)0xad1);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(shopObject != null) {
+            AddObject.addSpaulderGive((Screen)shopObject.getObjectContainer(), shopObject.getX(), shopObject.getY());
+        }
     }
 
     private static void updateAskItemName(BlockStringData blockStringData, String shopItem) {

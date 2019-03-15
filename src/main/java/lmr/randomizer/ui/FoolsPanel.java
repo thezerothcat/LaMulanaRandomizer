@@ -5,6 +5,8 @@ import lmr.randomizer.Translations;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class FoolsPanel extends JPanel {
     private JCheckBox randomize1;
@@ -20,6 +22,16 @@ public class FoolsPanel extends JPanel {
 
         randomize2 = new JCheckBox();
         randomize2.setSelected(Settings.isRandomize2());
+        randomize2.setEnabled(Settings.isRandomize1());
+
+        randomize1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource() instanceof JCheckBox) {
+                    randomize2.setEnabled(((JCheckBox)e.getSource()).isSelected());
+                }
+            }
+        });
 
         randomize3 = new JCheckBox();
         randomize3.setSelected(Settings.isRandomize3());
@@ -46,7 +58,7 @@ public class FoolsPanel extends JPanel {
 
     public void updateSettings() {
         Settings.setRandomize1(randomize1.isSelected(), true);
-        Settings.setRandomize2(randomize2.isSelected(), true);
+        Settings.setRandomize2(randomize2.isEnabled() && randomize2.isSelected(), true);
         Settings.setRandomize3(randomize3.isSelected(), true);
         Settings.setRandomize4(randomize4.isSelected(), true);
     }
@@ -54,6 +66,7 @@ public class FoolsPanel extends JPanel {
     public void reloadSettings() {
         randomize1.setSelected(Settings.isRandomize1());
         randomize2.setSelected(Settings.isRandomize2());
+        randomize2.setEnabled(Settings.isRandomize1());
         randomize3.setSelected(Settings.isRandomize3());
         randomize4.setSelected(Settings.isRandomize4());
     }

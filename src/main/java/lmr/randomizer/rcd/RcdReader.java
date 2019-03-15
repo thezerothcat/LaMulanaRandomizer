@@ -7,6 +7,7 @@ import lmr.randomizer.dat.AddObject;
 import lmr.randomizer.random.ShopRandomizationEnum;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.GameDataTracker;
+import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -751,7 +752,7 @@ public final class RcdReader {
         else if (obj.getId() == 0xa3) {
             if(Settings.isAlternateMotherAnkh()) {
                 for (TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                    if (testByteOperation.getIndex() == 254) {
+                    if (testByteOperation.getIndex() == 0x0fe) {
                         keepObject = false;
                         break;
                     }
@@ -956,9 +957,7 @@ public final class RcdReader {
 
                         screen.getScreenExits().add(screenExit);
                     }
-                    if(Settings.isRandomizeTransitionGates()) {
-                        updateScreenExits(screen);
-                    }
+                    updateScreenExits(screen);
 
                     if(zoneIndex == 1) {
                         if(roomIndex == 2 && screenIndex == 1) {
@@ -994,21 +993,43 @@ public final class RcdReader {
     }
 
     private static void updateScreenExits(Screen screen) {
-        if(screen.getZoneIndex() == 2 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 2
-                || screen.getZoneIndex() == 19 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 1) {
+        if(Settings.isRandomizeTransitionGates()
+                && (screen.getZoneIndex() == 2 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 2
+                || screen.getZoneIndex() == 19 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 1)) {
             ScreenExit screenExit = screen.getScreenExits().get(2);
             screenExit.setZoneIndex((byte)-1);
             screenExit.setRoomIndex((byte)-1);
             screenExit.setScreenIndex((byte)-1);
         }
+
+        if(Settings.isRandomize1()) {
+            for(ScreenExit screenExit : screen.getScreenExits()) {
+                if(screenExit.getZoneIndex() == -1 && screenExit.getRoomIndex() == -1 && screenExit.getScreenIndex() == -1) {
+                    screenExit.setZoneIndex(LocationCoordinateMapper.getStartingZone());
+                    screenExit.setRoomIndex(LocationCoordinateMapper.getStartingRoom());
+                    screenExit.setScreenIndex(LocationCoordinateMapper.getStartingScreen());
+                }
+            }
+        }
     }
 
     private static void addCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
-        if(zoneIndex == 1) {
-            if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addStartingItems(screen);
+        if(zoneIndex == LocationCoordinateMapper.getStartingZone()
+                && roomIndex == LocationCoordinateMapper.getStartingRoom()
+                && screenIndex == LocationCoordinateMapper.getStartingScreen()) {
+            if(zoneIndex == 21) {
+                // randomize1
+                AddObject.addSpecialGrailTablet(screen);
             }
-            else if(roomIndex == 4 && screenIndex == 2) {
+            AddObject.addStartingItems(screen);
+        }
+
+        if(zoneIndex == 1) {
+            if(Settings.isRandomize1() && roomIndex == 2 && screenIndex == 1) {
+                AddObject.addSurfaceGrailTablet(screen);
+            }
+
+            if(roomIndex == 4 && screenIndex == 2) {
                 if(Settings.isRandomizeBacksideDoors()) {
                     AddObject.addSurfaceCoverDetector(screen);
                 }

@@ -14,15 +14,19 @@ import lmr.randomizer.ui.MainPanel;
 import lmr.randomizer.ui.ProgressDialog;
 import lmr.randomizer.ui.TabbedPanel;
 import lmr.randomizer.update.GameDataTracker;
+import lmr.randomizer.update.LocationCoordinateMapper;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.nio.file.Files;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * Created by thezerothcat on 7/9/2017.
@@ -1267,7 +1271,8 @@ public class Main {
                 itemRandomizer.updateFiles(random);
                 FileUtils.logFlush("Updated item location data");
 
-                shopRandomizer.updateFiles(datInfo, isSubweaponOnly(), moneyChecker, random);
+                boolean subweaponOnly = isSubweaponOnly();
+                shopRandomizer.updateFiles(datInfo, subweaponOnly, moneyChecker, random);
                 FileUtils.logFlush("Updated shop data");
 
                 List<String> availableSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
@@ -1286,7 +1291,9 @@ public class Main {
                     transitionGateRandomizer.updateTransitions();
                     FileUtils.logFlush("Updated transition gate data");
                 }
-
+                if(Settings.isRandomize1()) {
+                    GameDataTracker.makeShop(rcdData, datInfo, subweaponOnly, random);
+                }
 //                if(Settings.isRandomizeMantras()) {
 //                    GameDataTracker.randomizeMantras(random);
 //                }
@@ -1592,13 +1599,13 @@ public class Main {
         saveData[0] = (byte)1;
         saveData[3] = (byte)0;
         saveData[4] = (byte)0;
-        saveData[5] = (byte)1;
-        saveData[6] = (byte)2;
-        saveData[7] = (byte)1;
-        saveData[8] = (byte)1;
-        saveData[9] = (byte)24;
-        saveData[10] = (byte)0;
-        saveData[11] = (byte)-104;
+        saveData[5] = LocationCoordinateMapper.getStartingZone();
+        saveData[6] = LocationCoordinateMapper.getStartingRoom();
+        saveData[7] = LocationCoordinateMapper.getStartingScreen();
+        saveData[8] = (byte)((LocationCoordinateMapper.getStartingX() >> 8) & 0xff);
+        saveData[9] = (byte)(LocationCoordinateMapper.getStartingX() & 0xff);
+        saveData[10] = (byte)((LocationCoordinateMapper.getStartingY() >> 8) & 0xff);
+        saveData[11] = (byte)(LocationCoordinateMapper.getStartingY() & 0xff);
         saveData[12] = (byte)1;
         saveData[13] = (byte)0;
         saveData[14] = (byte)32;
