@@ -189,29 +189,6 @@ public final class GameDataTracker {
                 testByteOperation.setValue((byte) 0);
                 gameObject.getTestByteOperations().add(testByteOperation);
             }
-            // Floating item
-            short chestArg = gameObject.getArgs().get(1);
-            int worldFlag = gameObject.getWriteByteOperations().get(0).getIndex();
-            GameObjectId gameObjectId = new GameObjectId(chestArg, worldFlag);
-
-            if(chestArg == 4) {
-                // Remove LAMULANA mantra check on the Key Sword floating item
-                Integer flagToRemoveIndex = null;
-                for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
-                    if (gameObject.getTestByteOperations().get(i).getIndex() == 292) {
-                        flagToRemoveIndex = i;
-                        break;
-                    }
-                }
-                gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
-            }
-
-            List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-            if (objects == null) {
-                mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-            }
-            objects.add(gameObject);
         }
         else if (gameObject.getId() == 0x2f) {
             // Floating item
