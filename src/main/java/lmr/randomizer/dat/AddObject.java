@@ -2415,6 +2415,129 @@ public final class AddObject {
         return obj;
     }
 
+    /**
+     * Add exit to untrue shrine so it doesn't break during the escape
+     * @param screen the screen to add the object to
+     */
+    public static GameObject addSpecialTransitionGate(Screen screen, int zoneIndex, int screenIndex) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0xc4);
+
+        obj.getArgs().add((short) zoneIndex);
+        obj.getArgs().add((short) 8);
+        obj.getArgs().add((short) screenIndex);
+
+        if(zoneIndex == 0) {
+            if(screenIndex == 0) {
+                obj.setX(140);
+                obj.setY(460);
+
+                obj.getArgs().add((short)300);
+                obj.getArgs().add((short)392);
+                obj.getArgs().add((short)0);
+            }
+            else if(screenIndex == 1) {
+                obj.setX(140);
+                obj.setY(460);
+
+                obj.getArgs().add((short)300);
+                obj.getArgs().add((short)20);
+                obj.getArgs().add((short)1);
+
+                GameObject floor = new GameObject(screen);
+                floor.setId((short)0x93);
+                floor.setX(obj.getX());
+                floor.setY(obj.getY());
+                floor.getArgs().add((short)-1); // Layer
+                floor.getArgs().add((short)7); // 01.effect.png for anything not 0-6?
+                floor.getArgs().add((short)0); // Imagex
+                floor.getArgs().add((short)700); // Imagey
+                floor.getArgs().add((short)40); // dx
+                floor.getArgs().add((short)40); // dy
+                floor.getArgs().add((short)1); // 0: act as if animation already played; 1: allow animation; 2: ..?
+                floor.getArgs().add((short)1); // Animation frames
+                floor.getArgs().add((short)1); // Pause frames
+                floor.getArgs().add((short)1); // Repeat count (<1 is forever)
+                floor.getArgs().add((short)128); // Hittile to fill with
+                floor.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+                floor.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+                floor.getArgs().add((short)0); // Cycle colors t/f
+                floor.getArgs().add((short)0); // Alpha/frame
+                floor.getArgs().add((short)255); // Max alpha
+                floor.getArgs().add((short)0); // R/frame
+                floor.getArgs().add((short)0); // Max R
+                floor.getArgs().add((short)0); // G/frame
+                floor.getArgs().add((short)0); // Max G
+                floor.getArgs().add((short)0); // B/frame
+                floor.getArgs().add((short)0); // Max B
+                floor.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+                floor.getArgs().add((short)1); // not0?
+
+                screen.getObjects().add(floor);
+            }
+        }
+        else if(zoneIndex == 5){
+            if(screenIndex == 0) {
+                obj.setX(300);
+                obj.setY(460);
+
+                obj.getArgs().add((short)140);
+                obj.getArgs().add((short)392);
+                obj.getArgs().add((short)0);
+            }
+            else if(screenIndex == 1) {
+                obj.setX(300);
+                obj.setY(460);
+
+                obj.getArgs().add((short)140);
+                obj.getArgs().add((short)20);
+                obj.getArgs().add((short)1);
+
+                GameObject floor = new GameObject(screen);
+                floor.setId((short)0x93);
+                floor.setX(obj.getX());
+                floor.setY(obj.getY());
+                floor.getArgs().add((short)-1); // Layer
+                floor.getArgs().add((short)7); // 01.effect.png for anything not 0-6?
+                floor.getArgs().add((short)0); // Imagex
+                floor.getArgs().add((short)700); // Imagey
+                floor.getArgs().add((short)40); // dx
+                floor.getArgs().add((short)40); // dy
+                floor.getArgs().add((short)1); // 0: act as if animation already played; 1: allow animation; 2: ..?
+                floor.getArgs().add((short)1); // Animation frames
+                floor.getArgs().add((short)1); // Pause frames
+                floor.getArgs().add((short)1); // Repeat count (<1 is forever)
+                floor.getArgs().add((short)128); // Hittile to fill with
+                floor.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+                floor.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+                floor.getArgs().add((short)0); // Cycle colors t/f
+                floor.getArgs().add((short)0); // Alpha/frame
+                floor.getArgs().add((short)255); // Max alpha
+                floor.getArgs().add((short)0); // R/frame
+                floor.getArgs().add((short)0); // Max R
+                floor.getArgs().add((short)0); // G/frame
+                floor.getArgs().add((short)0); // Max G
+                floor.getArgs().add((short)0); // B/frame
+                floor.getArgs().add((short)0); // Max B
+                floor.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+                floor.getArgs().add((short)1); // not0?
+
+                screen.getObjects().add(floor);
+            }
+        }
+        obj.getArgs().add((short)0);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x382);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        screen.getObjects().add(obj);
+        addEscapeGate(obj);
+        return obj;
+    }
+
     public static GameObject addEscapeGate(GameObject nonEscapeGate) {
         GameObject escapeGate = new GameObject(nonEscapeGate);
         for(TestByteOperation testByteOperation : escapeGate.getTestByteOperations()) {

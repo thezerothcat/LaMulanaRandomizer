@@ -203,12 +203,80 @@ public final class GameDataTracker {
                     gameObject.getArgs().set(30, (short)2316);
                 }
             }
+            if(Settings.isRandomize3()) {
+                Screen screen = (Screen) gameObject.getObjectContainer();
+                if(screen.getZoneIndex() == 0) {
+                    for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                        if(testByteOperation.getIndex() == 0x133) {
+                            testByteOperation.setIndex(0x1b4);
+                            testByteOperation.setValue((byte)4);
+                        }
+                    }
+                    for(WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
+                        if(writeByteOperation.getIndex() == 0x133) {
+                            writeByteOperation.setIndex(0x1b4);
+                            writeByteOperation.setValue(5);
+                        }
+                    }
+                }
+                else if(screen.getZoneIndex() == 5) {
+                    for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                        if(testByteOperation.getIndex() == 0x1b4) {
+                            testByteOperation.setIndex(0x133);
+                            testByteOperation.setValue((byte)5);
+                        }
+                    }
+                    for(WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
+                        if(writeByteOperation.getIndex() == 0x1b4) {
+                            writeByteOperation.setIndex(0x133);
+                            writeByteOperation.setValue(6);
+                        }
+                    }
+                }
+            }
         }
         else if (gameObject.getId() == 0x02) {
             enemyObjects.add(gameObject);
+
+            if(Settings.isRandomize3()) {
+                Screen screen = (Screen) gameObject.getObjectContainer();
+                if(screen.getZoneIndex() == 0 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                    for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                        if(testByteOperation.getIndex() == 0x133) {
+                            testByteOperation.setIndex(0x1b4);
+                            testByteOperation.setValue((byte)4);
+                        }
+                    }
+                }
+            }
         }
         else if (gameObject.getId() == 0x03) {
             enemyObjects.add(gameObject);
+
+            if(Settings.isRandomize3()) {
+                Screen screen = (Screen) gameObject.getObjectContainer();
+                if(screen.getZoneIndex() == 5 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                    for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                        if(testByteOperation.getIndex() == 0x1b4) {
+                            testByteOperation.setIndex(0x133);
+                            testByteOperation.setValue((byte)5);
+                        }
+                    }
+                }
+            }
+        }
+        else if (gameObject.getId() == 0x3c) {
+            if(Settings.isRandomize3()) {
+                Screen screen = (Screen) gameObject.getObjectContainer();
+                if(screen.getZoneIndex() == 5 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                    for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                        if(testByteOperation.getIndex() == 0x1b4) {
+                            testByteOperation.setIndex(0x133);
+                            testByteOperation.setValue((byte)5);
+                        }
+                    }
+                }
+            }
         }
         else if (gameObject.getId() == 0x2f) {
             // Floating item

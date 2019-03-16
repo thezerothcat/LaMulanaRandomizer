@@ -1,11 +1,14 @@
-Event: Amphisbaena Accessible => Location: Gate of Guidance [Main], Attack: Chest, State: Amphisbaena Jewel
+Event: Amphisbaena Accessible => Setting: Normal Boss, Location: Gate of Guidance [Main], Attack: Chest, State: Amphisbaena Jewel
+Event: Amphisbaena Accessible => Setting: Abnormal Boss, Location: Inferno Cavern [Viy], Ice Cape
+Event: Amphisbaena Accessible => Setting: Abnormal Boss, Location: Inferno Cavern [Viy], Setting: Lava HP, State: 5-Orb HP, Holy Grail
 Event: Sakit Accessible => Location: Mausoleum of the Giants, State: Sakit Jewel
 Event: Ellmac Accessible => Location: Temple of the Sun [Main], Holy Grail, State: Ellmac Jewel
 Event: Ellmac Accessible => Location: Temple of the Sun [Main], Glitch: Raindrop, State: Ellmac Jewel
 Event: Ellmac Accessible => Location: Temple of the Sun [Main], Twin Statue, Exit: Twin Labyrinths [Poison 2], State: Ellmac Jewel
 Event: Bahamut Accessible => Location: Spring in the Sky, Helmet, Origin Seal, Attack: Chest, State: Bahamut Jewel
-Event: Viy Accessible => Location: Inferno Cavern [Viy], Ice Cape, Exit: Chamber of Extinction [Ankh Upper], State: Viy Jewel
-Event: Viy Accessible => Location: Inferno Cavern [Viy], Setting: Lava HP, State: 5-Orb HP, Holy Grail, State: Viy Jewel
+Event: Viy Accessible => Setting: Normal Boss, Location: Inferno Cavern [Viy], Ice Cape, Exit: Chamber of Extinction [Ankh Upper], State: Viy Jewel
+Event: Viy Accessible => Setting: Normal Boss, Location: Inferno Cavern [Viy], Setting: Lava HP, State: 5-Orb HP, Holy Grail, State: Viy Jewel
+Event: Viy Accessible => Setting: Abnormal Boss, Location: Gate of Guidance [Main], Attack: Chest, Exit: Chamber of Extinction [Ankh Upper]
 Event: Palenque Accessible => Location: Chamber of Extinction [Ankh Lower], Location: Chamber of Extinction [Teleport], Pochette Key, Location: Chamber of Extinction [Left Main], State: Palenque Jewel
 Event: Baphomet Accessible => Location: Twin Labyrinths [Lower], State: Baphomet Jewel
 Event: Tiamat Accessible => Location: Dimensional Corridor [Upper], Dimensional Key, State: Tiamat Jewel

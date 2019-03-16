@@ -1041,6 +1041,37 @@ public final class RcdReader {
             }
         }
 
+        if(Settings.isRandomize3()) {
+            if(screen.getZoneIndex() == 0) {
+                if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                    ScreenExit screenExit = screen.getScreenExits().get(2);
+                    screenExit.setZoneIndex((byte)5);
+                    screenExit.setRoomIndex((byte)8);
+                    screenExit.setScreenIndex((byte)1);
+                }
+                else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                    ScreenExit screenExit = screen.getScreenExits().get(0);
+                    screenExit.setZoneIndex((byte)5);
+                    screenExit.setRoomIndex((byte)8);
+                    screenExit.setScreenIndex((byte)0);
+                }
+            }
+            else if(screen.getZoneIndex() == 5) {
+                if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                    ScreenExit screenExit = screen.getScreenExits().get(2);
+                    screenExit.setZoneIndex((byte)0);
+                    screenExit.setRoomIndex((byte)8);
+                    screenExit.setScreenIndex((byte)1);
+                }
+                else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                    ScreenExit screenExit = screen.getScreenExits().get(0);
+                    screenExit.setZoneIndex((byte)0);
+                    screenExit.setRoomIndex((byte)8);
+                    screenExit.setScreenIndex((byte)0);
+                }
+            }
+        }
+
         if(Settings.isRandomize1()) {
             for(ScreenExit screenExit : screen.getScreenExits()) {
                 if(screenExit.getZoneIndex() == -1 && screenExit.getRoomIndex() == -1 && screenExit.getScreenIndex() == -1) {
@@ -1063,7 +1094,17 @@ public final class RcdReader {
             AddObject.addStartingItems(screen);
         }
 
-        if(zoneIndex == 1) {
+        if(zoneIndex == 0) {
+            if(Settings.isRandomize3()) {
+                if(roomIndex == 8 && screenIndex == 0) {
+                    AddObject.addSpecialTransitionGate(screen, 5, 1);
+                }
+                else if(roomIndex == 8 && screenIndex == 1) {
+                    AddObject.addSpecialTransitionGate(screen, 5, 0);
+                }
+            }
+        }
+        else if(zoneIndex == 1) {
             if(Settings.isRandomize1() && roomIndex == 2 && screenIndex == 1) {
                 AddObject.addSurfaceGrailTablet(screen);
             }
@@ -1081,6 +1122,16 @@ public final class RcdReader {
         }
         else if(zoneIndex == 2 && roomIndex == 2 && screenIndex == 0) {
             AddObject.addHardmodeToggleWeights(screen);
+        }
+        else if(zoneIndex == 5) {
+            if(Settings.isRandomize3()) {
+                if(roomIndex == 8 && screenIndex == 0) {
+                    AddObject.addSpecialTransitionGate(screen, 0, 1);
+                }
+                else if(roomIndex == 8 && screenIndex == 1) {
+                    AddObject.addSpecialTransitionGate(screen, 0, 0);
+                }
+            }
         }
         else if(zoneIndex == 6 && roomIndex == 2 && screenIndex == 0) {
             if(Settings.isRandomizeTransitionGates()) {

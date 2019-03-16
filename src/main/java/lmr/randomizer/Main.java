@@ -1421,6 +1421,7 @@ public class Main {
         if(!Settings.isRandomize2()) {
             startingNodes.add("Setting: Normal Surface");
         }
+        startingNodes.add(Settings.isRandomize3() ? "Setting: Abnormal Boss" : "Setting: Normal Boss");
         startingNodes.add(Settings.isAlternateMotherAnkh() ? "Setting: Alternate Mother" : "Setting: Standard Mother");
         startingNodes.add(Settings.isBossSpecificAnkhJewels() ? "Setting: Fixed Jewels" : "Setting: Variable Jewels");
 
