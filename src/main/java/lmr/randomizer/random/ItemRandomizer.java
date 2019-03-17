@@ -46,7 +46,7 @@ public class ItemRandomizer {
         unassignedNonShopItemLocations = new ArrayList<>(DataFromFile.getNonShopItemLocations());
 
         mapOfWorldFlagToAssignedReplacementFlag = new HashMap<>();
-        nextReplacedItemFlag = 2724;
+        nextReplacedItemFlag = 2699;
     }
 
     public ItemRandomizer(ItemRandomizer itemRandomizer) {
@@ -450,7 +450,7 @@ public class ItemRandomizer {
                 || Settings.getStartingItemsIncludingCustom().contains(newContents)) {
             Integer newChestWorldFlag = mapOfWorldFlagToAssignedReplacementFlag.get(itemLocationData.getWorldFlag());
             if (newChestWorldFlag == null) {
-                newChestWorldFlag = nextReplacedItemFlag++;
+                newChestWorldFlag = nextReplacedItemFlag--;
                 mapOfWorldFlagToAssignedReplacementFlag.put(itemLocationData.getWorldFlag(), newChestWorldFlag);
             }
             return newChestWorldFlag;

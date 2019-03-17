@@ -249,10 +249,13 @@ public final class DataFromFile {
                 if(itemName.startsWith("Ankh Jewel")) {
                     continue; // Never remove an ankh jewel.
                 }
-                if(getWinRequirements().contains(itemName) || "Dimensional Key".equals(itemName)
+                if("Holy Grail".equals(itemName) || "Dimensional Key".equals(itemName)
                         || "Crystal Skull".equals(itemName) || "Pochette Key".equals(itemName)
-                        || "Philosopher's Ocarina".equals(itemName) || "Isis' Pendant".equals(itemName)
-                        || "Helmet".equals(itemName) || "Vessel".equals(itemName)) {
+                        || "Philosopher's Ocarina".equals(itemName)
+                        || "Helmet".equals(itemName) || "Vessel".equals(itemName)
+                        || "Feather".equals(itemName) || "Isis' Pendant".equals(itemName)
+                        || "Origin Seal".equals(itemName) || "Birth Seal".equals(itemName)
+                        || "Life Seal".equals(itemName) || "Death Seal".equals(itemName)) {
                     continue; // Things that should never be removed.
                 }
                 if(Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
@@ -299,6 +302,9 @@ public final class DataFromFile {
                     if(!Settings.isAlternateMotherAnkh() || !"Yellow".equals(Settings.getMedicineColor())) {
                         continue; // Don't remove mantra or Djed Pillar if they're needed for reciting mantras to fight mother.
                     }
+                }
+                if("Lamp of Time".equals(itemName) && !"Yellow".equals(Settings.getMedicineColor())) {
+                    continue; // Don't remove mantra or Djed Pillar if they're needed for reciting mantras to fight mother.
                 }
                 if("Hand Scanner".equals(itemName) || "reader.exe".equals(itemName)) {
                     if(requirePlaneModelAndTwinStatueAndLiteracy || !Settings.isAutomaticGrailPoints()

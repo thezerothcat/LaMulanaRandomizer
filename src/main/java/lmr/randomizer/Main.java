@@ -485,17 +485,17 @@ public class Main {
 
                 Settings.setAlternateMotherAnkh(true); // Required to clear the game without Key Sword.
             }
-            if((Settings.getMinRandomRemovedItems() + manuallyRemovedItems.size() > 48)) {
+            if((Settings.getMinRandomRemovedItems() + manuallyRemovedItems.size() > 99)) {
                 JOptionPane.showMessageDialog(this,
-                        "Minimum removed item count is too high with custom placement settings. A minimum of " + (48 - manuallyRemovedItems.size()) + " will be used instead.",
+                        "Minimum removed item count is too high with custom placement settings. A minimum of " + (99 - manuallyRemovedItems.size()) + " will be used instead.",
                         "Randomizer error", JOptionPane.WARNING_MESSAGE);
-                Settings.setMinRandomRemovedItems(48 - manuallyRemovedItems.size(), false);
+                Settings.setMinRandomRemovedItems(99 - manuallyRemovedItems.size(), false);
             }
-            if((Settings.getMaxRandomRemovedItems() + manuallyRemovedItems.size() > 48)) {
+            if((Settings.getMaxRandomRemovedItems() + manuallyRemovedItems.size() > 99)) {
                 JOptionPane.showMessageDialog(this,
-                        "Maximum removed item count is too high with custom placement settings. A maximum of " + (48 - manuallyRemovedItems.size()) + " will be used instead.",
+                        "Maximum removed item count is too high with custom placement settings. A maximum of " + (99 - manuallyRemovedItems.size()) + " will be used instead.",
                         "Randomizer error", JOptionPane.WARNING_MESSAGE);
-                Settings.setMaxRandomRemovedItems(48 - manuallyRemovedItems.size(), false);
+                Settings.setMaxRandomRemovedItems(99 - manuallyRemovedItems.size(), false);
             }
             return true;
         }
