@@ -29,6 +29,9 @@ public final class GameDataTracker {
 
     private static GameObject subweaponPot;
 
+    private static Map<Integer, Integer> mapOfWorldFlagToAssignedReplacementFlag = new HashMap<>();
+    private static int randomize5Flag = 2730;
+
     private GameDataTracker() {
     }
 
@@ -40,6 +43,9 @@ public final class GameDataTracker {
         mapOfGateNameToTransitionGate.clear();
         mapOfTransitionNameToScreen.clear();
         mantraTablets.clear();
+
+        mapOfWorldFlagToAssignedReplacementFlag.clear();
+        randomize5Flag = 2730;
     }
 
     public static void setSubweaponPot(GameObject subweaponPot) {
@@ -4927,7 +4933,7 @@ public final class GameDataTracker {
 
     public static void writeLocationContents(String chestLocation, String chestContents,
                                              GameObjectId itemLocationData, GameObjectId itemNewContentsData,
-                                             int newWorldFlag, Random random) {
+                                             int newWorldFlag, Random random, boolean isRandomize5Allowed) {
         List<GameObject> objectsToModify = mapOfChestIdentifyingInfoToGameObject.get(itemLocationData);
         if(objectsToModify == null) {
             if(!AddObject.addSpecialItemObjects(chestLocation, chestContents)) {
@@ -4935,15 +4941,21 @@ public final class GameDataTracker {
             }
             return;
         }
+        boolean isRemovedItem = itemNewContentsData.getWorldFlag() != newWorldFlag;
+        boolean isTrapItem = Settings.isRandomizeTrapItems() && (newWorldFlag == 2777 || newWorldFlag == 2779 || newWorldFlag == 2780);
+        boolean randomize5 = isRandomize5Allowed && !isRemovedItem && !isTrapItem && !chestContents.startsWith("Coin:")
+                && isRandomize5Available() && random.nextBoolean();
+        Integer itemRandomize5Flag = randomize5 ? getRandomize5Flag(newWorldFlag) : null;
+
         for(GameObject objectToModify : objectsToModify) {
             if(objectToModify.getId() == 0x2c) {
                 updateChestContents(objectToModify, itemLocationData, itemNewContentsData, chestContents, newWorldFlag,
-                        Settings.getCurrentCursedChests().contains(chestLocation), random);
+                        itemRandomize5Flag, Settings.getCurrentCursedChests().contains(chestLocation), random);
                 AddObject.addSpecialItemObjects(objectToModify.getObjectContainer(), chestContents);
             }
             else if(objectToModify.getId() == 0x2f) {
                 // Note: Floating maps don't get removed.
-                updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData, chestContents, newWorldFlag, random);
+                updateFloatingItemContents(objectToModify, itemLocationData, itemNewContentsData, chestContents, newWorldFlag, itemRandomize5Flag, random);
                 AddObject.addSpecialItemObjects(objectToModify.getObjectContainer(), chestContents);
             }
             else if(objectToModify.getId() == 0xc3) {
@@ -4955,7 +4967,7 @@ public final class GameDataTracker {
                 AddObject.addSpecialItemObjects(objectToModify.getObjectContainer(), chestContents);
             }
             else if(objectToModify.getId() == 0xa0) {
-                updateRelatedObject(objectToModify, itemLocationData, newWorldFlag);
+                updateRelatedObject(objectToModify, itemLocationData, randomize5 ? itemRandomize5Flag : newWorldFlag);
                 short blockRef = objectToModify.getArgs().get(4);
                 if(blockRef == 673 || blockRef == 689 || blockRef == 691 || blockRef == 693) {
                     // 673 = mekuri.exe
@@ -4966,13 +4978,13 @@ public final class GameDataTracker {
                 }
             }
             else {
-                updateRelatedObject(objectToModify, itemLocationData, newWorldFlag);
+                updateRelatedObject(objectToModify, itemLocationData, randomize5 ? itemRandomize5Flag : newWorldFlag);
             }
         }
     }
 
     private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData,
-                                            String newChestContentsItemName, int newWorldFlag, boolean cursed, Random random) {
+                                            String newChestContentsItemName, int newWorldFlag, Integer itemRandomize5Flag, boolean cursed, Random random) {
         WriteByteOperation puzzleFlag = objectToModify.getWriteByteOperations().get(1);
         objectToModify.getWriteByteOperations().clear();
 
@@ -5088,48 +5100,102 @@ public final class GameDataTracker {
         else {
             if(itemNewContentsData.getWorldFlag() == newWorldFlag) {
                 // Actual items
-                objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11)); // Item arg to indicate what the chest drops
+                short inventoryArg = (short)(itemNewContentsData.getInventoryArg() + 11);
 
-                objectToModify.getArgs().set(1, (short)1); // Real item, not fake (or 1 weight, because the game won't allow multiple)
+                if(itemRandomize5Flag == null) {
+                    objectToModify.getArgs().set(0, inventoryArg); // Item arg to indicate what the chest drops
+                    objectToModify.getArgs().set(1, (short)1); // Real item, not fake (or 1 weight, because the game won't allow multiple)
 
-//                if(Settings.isCoinChestGraphics()) {
-//                    objectToModify.getArgs().set(2, (short)0);
-//                }
-//                else {
-//                    objectToModify.getArgs().set(2, (short)1);
-//                }
-                objectToModify.getArgs().set(2, (short)random.nextInt(2));
+//                    if(Settings.isCoinChestGraphics()) {
+//                        objectToModify.getArgs().set(2, (short)0);
+//                    }
+//                    else {
+//                        objectToModify.getArgs().set(2, (short)1);
+//                    }
+                    objectToModify.getArgs().set(2, (short)random.nextInt(2));
 
-                for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
-                    if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
-                        flagTest.setIndex(newWorldFlag);
+                    for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+                        if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                            flagTest.setIndex(newWorldFlag);
+                        }
                     }
-                }
 
-                WriteByteOperation updateFlag = new WriteByteOperation();
-                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-                updateFlag.setIndex(newWorldFlag);
-                updateFlag.setValue(2);
-                objectToModify.getWriteByteOperations().add(updateFlag);
+                    WriteByteOperation updateFlag = new WriteByteOperation();
+                    updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                    updateFlag.setIndex(newWorldFlag);
+                    updateFlag.setValue(2);
+                    objectToModify.getWriteByteOperations().add(updateFlag);
 
-                objectToModify.getWriteByteOperations().add(puzzleFlag);
+                    objectToModify.getWriteByteOperations().add(puzzleFlag);
 
-                updateFlag = new WriteByteOperation();
-                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-                updateFlag.setIndex(newWorldFlag);
-                if(itemNewContentsData.getWorldFlag() == newWorldFlag) {
-                    updateFlag.setValue(1);
+                    updateFlag = new WriteByteOperation();
+                    updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                    updateFlag.setIndex(newWorldFlag);
+                    if(itemNewContentsData.getWorldFlag() == newWorldFlag) {
+                        updateFlag.setValue(1);
+                    }
+                    else {
+                        updateFlag.setValue(2);
+                    }
+                    objectToModify.getWriteByteOperations().add(updateFlag);
+
+                    updateFlag = new WriteByteOperation();
+                    updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                    updateFlag.setIndex(newWorldFlag);
+                    updateFlag.setValue(2);
+                    objectToModify.getWriteByteOperations().add(updateFlag);
                 }
                 else {
-                    updateFlag.setValue(2);
-                }
-                objectToModify.getWriteByteOperations().add(updateFlag);
+                    short graphic = getItemGraphic(newChestContentsItemName);
+                    if(graphic == 0) {
+                        // No custom graphic
+                        graphic = getRandomItemGraphic(random);
+                    }
+                    objectToModify.getArgs().set(0, graphic); // Item arg to indicate what the chest drops
+                    objectToModify.getArgs().set(1, (short)0); // Real item, not fake (or 1 weight, because the game won't allow multiple)
 
-                updateFlag = new WriteByteOperation();
-                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-                updateFlag.setIndex(newWorldFlag);
-                updateFlag.setValue(2);
-                objectToModify.getWriteByteOperations().add(updateFlag);
+//                    if(Settings.isCoinChestGraphics()) {
+//                        objectToModify.getArgs().set(2, (short)0);
+//                    }
+//                    else {
+//                        objectToModify.getArgs().set(2, (short)1);
+//                    }
+                    objectToModify.getArgs().set(2, (short)random.nextInt(2));
+
+                    for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+                        if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                            flagTest.setIndex(itemRandomize5Flag);
+                        }
+                    }
+
+                    WriteByteOperation updateFlag = new WriteByteOperation();
+                    updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                    updateFlag.setIndex(itemRandomize5Flag);
+                    updateFlag.setValue(2);
+                    objectToModify.getWriteByteOperations().add(updateFlag);
+
+                    objectToModify.getWriteByteOperations().add(puzzleFlag);
+
+                    updateFlag = new WriteByteOperation();
+                    updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                    updateFlag.setIndex(itemRandomize5Flag);
+//                    if(itemNewContentsData.getWorldFlag() == newWorldFlag) {
+//                        updateFlag.setValue(1);
+//                    }
+//                    else {
+//                        updateFlag.setValue(2);
+//                    }
+                        updateFlag.setValue(1);
+                    objectToModify.getWriteByteOperations().add(updateFlag);
+
+                    updateFlag = new WriteByteOperation();
+                    updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                    updateFlag.setIndex(itemRandomize5Flag);
+                    updateFlag.setValue(2);
+                    objectToModify.getWriteByteOperations().add(updateFlag);
+
+                    AddObject.addItemGive(objectToModify, inventoryArg, itemRandomize5Flag, newWorldFlag);
+                }
             }
             else {
                 // Removed items
@@ -5239,33 +5305,37 @@ public final class GameDataTracker {
     }
 
     private static void updateFloatingItemContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData,
-                                                   String newChestContentsItemName, int newWorldFlag, Random random) {
-        objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg());
-        objectToModify.getArgs().set(2, (short)1); // Real item until determined otherwise.
-        for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
-            if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
-                flagTest.setIndex(newWorldFlag);
-            }
-        }
-        int lastWorldFlagUpdateIndex = -1;
-        for(int i = 0; i < objectToModify.getWriteByteOperations().size(); i++) {
-            WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(i);
-            if(flagUpdate.getIndex() == itemLocationData.getWorldFlag()) {
-                lastWorldFlagUpdateIndex = i;
-                flagUpdate.setIndex(newWorldFlag);
-            }
-        }
-
-        if(lastWorldFlagUpdateIndex != -1) {
-            WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(lastWorldFlagUpdateIndex);
-            if(flagUpdate.getValue() != 2) {
-                flagUpdate.setValue(2);
-            }
-        }
-
-        if(itemNewContentsData.getWorldFlag() != newWorldFlag) {
+                                                   String newChestContentsItemName, int newWorldFlag, Integer itemRandomize5Flag, Random random) {
+        short inventoryArg = itemNewContentsData.getInventoryArg();
+        boolean isRemovedItem = itemNewContentsData.getWorldFlag() != newWorldFlag;
+        boolean isTrapItem = !isRemovedItem && Settings.isRandomizeTrapItems()
+                && (newWorldFlag == 2777 || newWorldFlag == 2779 || newWorldFlag == 2780);
+        if(isRemovedItem) {
             // Add handling for removed items.
+            objectToModify.getArgs().set(1, inventoryArg);
             objectToModify.getArgs().set(2, (short)0);
+
+            for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+                if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                    flagTest.setIndex(newWorldFlag);
+                }
+            }
+
+            int lastWorldFlagUpdateIndex = -1;
+            for(int i = 0; i < objectToModify.getWriteByteOperations().size(); i++) {
+                WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(i);
+                if(flagUpdate.getIndex() == itemLocationData.getWorldFlag()) {
+                    lastWorldFlagUpdateIndex = i;
+                    flagUpdate.setIndex(newWorldFlag);
+                }
+            }
+
+            if(lastWorldFlagUpdateIndex != -1) {
+                WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(lastWorldFlagUpdateIndex);
+                if(flagUpdate.getValue() != 2) {
+                    flagUpdate.setValue(2);
+                }
+            }
 
             WriteByteOperation updateFlag = new WriteByteOperation();
             updateFlag.setIndex(43);
@@ -5275,7 +5345,7 @@ public final class GameDataTracker {
 
             AddObject.addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, 43);
         }
-        else if(Settings.isRandomizeTrapItems() && (newWorldFlag == 2777 || newWorldFlag == 2779 || newWorldFlag == 2780)) {
+        else if(isTrapItem) {
             // Trap items
             short graphic = getItemGraphic(newChestContentsItemName);
             if(graphic == 0) {
@@ -5284,6 +5354,28 @@ public final class GameDataTracker {
             }
             objectToModify.getArgs().set(1, graphic);
             objectToModify.getArgs().set(2, (short)0);
+
+            for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+                if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                    flagTest.setIndex(newWorldFlag);
+                }
+            }
+
+            int lastWorldFlagUpdateIndex = -1;
+            for(int i = 0; i < objectToModify.getWriteByteOperations().size(); i++) {
+                WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(i);
+                if(flagUpdate.getIndex() == itemLocationData.getWorldFlag()) {
+                    lastWorldFlagUpdateIndex = i;
+                    flagUpdate.setIndex(newWorldFlag);
+                }
+            }
+
+            if(lastWorldFlagUpdateIndex != -1) {
+                WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(lastWorldFlagUpdateIndex);
+                if(flagUpdate.getValue() != 2) {
+                    flagUpdate.setValue(2);
+                }
+            }
 
             WriteByteOperation writeByteOperation;
             if(objectToModify.getWriteByteOperations().size() > 1) {
@@ -5306,6 +5398,65 @@ public final class GameDataTracker {
 
             AddObject.addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, 43);
         }
+        else if(itemRandomize5Flag == null) {
+            objectToModify.getArgs().set(1, inventoryArg);
+            objectToModify.getArgs().set(2, (short)1); // Real item until determined otherwise.
+
+            for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+                if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                    flagTest.setIndex(newWorldFlag);
+                }
+            }
+
+            int lastWorldFlagUpdateIndex = -1;
+            for(int i = 0; i < objectToModify.getWriteByteOperations().size(); i++) {
+                WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(i);
+                if(flagUpdate.getIndex() == itemLocationData.getWorldFlag()) {
+                    lastWorldFlagUpdateIndex = i;
+                    flagUpdate.setIndex(newWorldFlag);
+                }
+            }
+
+            if(lastWorldFlagUpdateIndex != -1) {
+                WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(lastWorldFlagUpdateIndex);
+                if(flagUpdate.getValue() != 2) {
+                    flagUpdate.setValue(2);
+                }
+            }
+        }
+        else {
+            short graphic = getItemGraphic(newChestContentsItemName);
+            if(graphic == 0) {
+                // No custom graphic
+                graphic = getRandomItemGraphic(random);
+            }
+            objectToModify.getArgs().set(1, graphic);
+            objectToModify.getArgs().set(2, (short)0);
+
+            for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
+                if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
+                    flagTest.setIndex(itemRandomize5Flag);
+                }
+            }
+
+            int lastWorldFlagUpdateIndex = -1;
+            for(int i = 0; i < objectToModify.getWriteByteOperations().size(); i++) {
+                WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(i);
+                if(flagUpdate.getIndex() == itemLocationData.getWorldFlag()) {
+                    lastWorldFlagUpdateIndex = i;
+                    flagUpdate.setIndex(itemRandomize5Flag);
+                }
+            }
+
+            if(lastWorldFlagUpdateIndex != -1) {
+                WriteByteOperation flagUpdate = objectToModify.getWriteByteOperations().get(lastWorldFlagUpdateIndex);
+                if(flagUpdate.getValue() != 2) {
+                    flagUpdate.setValue(2);
+                }
+            }
+
+            AddObject.addItemGive(objectToModify, inventoryArg, itemRandomize5Flag, newWorldFlag);
+        }
     }
 
     private static void updateRelatedObject(GameObject objectToModify, GameObjectId itemLocationData, int newWorldFlag) {
@@ -5319,6 +5470,19 @@ public final class GameDataTracker {
                 flagUpdate.setIndex(newWorldFlag);
             }
         }
+    }
+
+    private static boolean isRandomize5Available() {
+        return Settings.isRandomize5() && randomize5Flag < 2760;
+    }
+
+    private static int getRandomize5Flag(int newWorldFlag) {
+        Integer newItemWorldFlag = mapOfWorldFlagToAssignedReplacementFlag.get(newWorldFlag);
+        if (newItemWorldFlag == null) {
+            newItemWorldFlag = randomize5Flag++;
+            mapOfWorldFlagToAssignedReplacementFlag.put(newWorldFlag, newItemWorldFlag);
+        }
+        return newItemWorldFlag;
     }
 
     public static void updateSubweaponPot(String weapon) {

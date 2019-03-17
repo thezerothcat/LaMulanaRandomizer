@@ -202,7 +202,7 @@ public final class DatReader {
             blockListData.getData().add((short)LocationCoordinateMapper.getStartingZone());
             blockListData.getData().add((short)LocationCoordinateMapper.getStartingRoom());
             blockListData.getData().add((short)LocationCoordinateMapper.getStartingScreen());
-            blockListData.getData().add(LocationCoordinateMapper.getStartingX());
+            blockListData.getData().add((short)(LocationCoordinateMapper.getStartingX() % 640));
             blockListData.getData().add(LocationCoordinateMapper.getStartingY());
             grailPointsBlock.getBlockContents().add(0, new BlockSingleData((short)0x000a));
             grailPointsBlock.getBlockContents().add(0, blockListData);

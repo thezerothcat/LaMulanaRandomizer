@@ -429,7 +429,7 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 Map<String, GameObjectId> nameToDataMap = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData();
                 GameObjectId itemNewContentsData = nameToDataMap.get(shopItem1);
                 GameDataTracker.writeLocationContents("Mobile Super X2", shopItem1,
-                        nameToDataMap.get("Mobile Super X2"), itemNewContentsData, itemNewContentsData.getWorldFlag(), random);
+                        nameToDataMap.get("Mobile Super X2"), itemNewContentsData, itemNewContentsData.getWorldFlag(), random, false);
             }
             else {
                 shopItem1 = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(String.format("%s Item 1", shopName)));

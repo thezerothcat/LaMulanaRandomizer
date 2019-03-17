@@ -1613,8 +1613,8 @@ public class Main {
         saveData[5] = LocationCoordinateMapper.getStartingZone();
         saveData[6] = LocationCoordinateMapper.getStartingRoom();
         saveData[7] = LocationCoordinateMapper.getStartingScreen();
-        saveData[8] = (byte)((LocationCoordinateMapper.getStartingX() >> 8) & 0xff);
-        saveData[9] = (byte)(LocationCoordinateMapper.getStartingX() & 0xff);
+        saveData[8] = (byte)(((LocationCoordinateMapper.getStartingX() % 640) >> 8) & 0xff);
+        saveData[9] = (byte)((LocationCoordinateMapper.getStartingX() % 640) & 0xff);
         saveData[10] = (byte)((LocationCoordinateMapper.getStartingY() >> 8) & 0xff);
         saveData[11] = (byte)(LocationCoordinateMapper.getStartingY() & 0xff);
         saveData[12] = (byte)1;

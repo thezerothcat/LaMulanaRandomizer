@@ -31,8 +31,7 @@ public final class LocationCoordinateMapper {
         if(Settings.isRandomize1()) {
             return 400;
         }
-//        return 940;
-        return 300;
+        return 940;
     }
 
     public static short getStartingY() {

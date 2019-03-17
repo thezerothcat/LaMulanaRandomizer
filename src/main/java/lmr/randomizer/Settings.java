@@ -63,6 +63,7 @@ public final class Settings {
     private boolean randomize2;
     private boolean randomize3;
     private boolean randomize4;
+    private boolean randomize5;
 
     private boolean removeSpaulder;
 
@@ -131,6 +132,7 @@ public final class Settings {
         randomize2 = true;
         randomize3 = true;
         randomize4 = true;
+        randomize5 = true;
 
         skipValidation = null;
 
@@ -815,6 +817,17 @@ public final class Settings {
         singleton.randomize4 = randomize4;
     }
 
+    public static boolean isRandomize5() {
+        return singleton.randomize5;
+    }
+
+    public static void setRandomize5(boolean randomize5, boolean update) {
+        if(update && randomize5 != singleton.randomize5) {
+            singleton.changed = true;
+        }
+        singleton.randomize5 = randomize5;
+    }
+
     public static String getStartingLocation() {
         if(!singleton.randomize1) {
             return "Location: Surface [Main]";
@@ -901,6 +914,7 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.randomize5, 32);
         booleanSettings |= processBooleanFlag.apply(singleton.randomize4, 31);
         booleanSettings |= processBooleanFlag.apply(singleton.randomize3, 30);
         booleanSettings |= processBooleanFlag.apply(singleton.randomize2, 29);
@@ -989,6 +1003,7 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.randomize5 = getBoolFlagFromInt.apply(booleanSettingsFlag, 32);
         singleton.randomize4 = getBoolFlagFromInt.apply(booleanSettingsFlag, 31);
         singleton.randomize3 = getBoolFlagFromInt.apply(booleanSettingsFlag, 30);
         singleton.randomize2 = getBoolFlagFromInt.apply(booleanSettingsFlag, 29);

@@ -2340,6 +2340,40 @@ public final class AddObject {
         screen.getObjects().add(itemGive);
     }
 
+    public static void addItemGive(GameObject referenceObj, int inventoryArg, int randomize5Flag, int worldFlag) {
+        GameObject itemGive = new GameObject(referenceObj.getObjectContainer());
+        itemGive.setId((short) 0xb5);
+        int x = referenceObj.getX();
+        int y = referenceObj.getY();
+        itemGive.setX(x % 640 == 0 ? x : x - 20); // intentional int division
+        itemGive.setY(y % 480 == 0 ? y : y - 20);
+
+        itemGive.getArgs().add((short)inventoryArg);
+        itemGive.getArgs().add((short)4);
+        itemGive.getArgs().add((short)4);
+        itemGive.getArgs().add((short)39);
+
+        TestByteOperation itemGiveTest = new TestByteOperation();
+        itemGiveTest.setIndex(randomize5Flag);
+        itemGiveTest.setValue((byte) 2);
+        itemGiveTest.setOp(ByteOp.FLAG_EQUALS);
+        itemGive.getTestByteOperations().add(itemGiveTest);
+
+        itemGiveTest = new TestByteOperation();
+        itemGiveTest.setIndex(worldFlag);
+        itemGiveTest.setValue((byte) 2);
+        itemGiveTest.setOp(ByteOp.FLAG_NOT_EQUAL);
+        itemGive.getTestByteOperations().add(itemGiveTest);
+
+        WriteByteOperation itemGiveUpdate = new WriteByteOperation();
+        itemGiveUpdate.setIndex(worldFlag);
+        itemGiveUpdate.setValue((byte) 2);
+        itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        itemGive.getWriteByteOperations().add(itemGiveUpdate);
+
+        referenceObj.getObjectContainer().getObjects().add(itemGive);
+    }
+
     public static void addGrailDetector(GameObject gameObject, int grailFlag) {
         GameObject grailDetector = new GameObject(gameObject.getObjectContainer());
         grailDetector.setId((short)0x14);

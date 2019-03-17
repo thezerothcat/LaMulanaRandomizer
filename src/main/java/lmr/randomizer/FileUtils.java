@@ -518,6 +518,9 @@ public class FileUtils {
             else if(line.startsWith("randomize4")) {
                 Settings.setRandomize4(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("randomize5")) {
+                Settings.setRandomize5(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("replaceMapsWithWeights")) {
                 Settings.setReplaceMapsWithWeights(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -650,6 +653,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("randomize4=%s", Settings.isRandomize4()));
+        writer.newLine();
+
+        writer.write(String.format("randomize5=%s", Settings.isRandomize5()));
         writer.newLine();
 
         writer.write(String.format("replaceMapsWithWeights=%s", Settings.isReplaceMapsWithWeights()));
