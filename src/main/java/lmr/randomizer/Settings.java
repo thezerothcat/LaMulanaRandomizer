@@ -14,7 +14,7 @@ import java.util.function.BiFunction;
  * Created by thezerothcat on 7/20/2017.
  */
 public final class Settings {
-    public static final int MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED = 40;
+    public static final int MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED = 99;
 
     public static Set<String> currentRemovedItems;
     public static List<String> currentCursedChests;
