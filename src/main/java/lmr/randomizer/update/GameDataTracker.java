@@ -4979,7 +4979,8 @@ public final class GameDataTracker {
         if(newChestContentsItemName.startsWith("Coin:")) {
             objectToModify.getArgs().set(0, (short)1); // Coins
             objectToModify.getArgs().set(1, itemNewContentsData.getInventoryArg()); // Re-purposing inventory arg to track coin amount
-            objectToModify.getArgs().set(2, (short)0); // Brown chest
+//            objectToModify.getArgs().set(2, (short)0); // Brown chest
+            objectToModify.getArgs().set(2, (short)random.nextInt(2));
             for (TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                 if (flagTest.getIndex() == itemLocationData.getWorldFlag()) {
                     flagTest.setIndex(itemNewContentsData.getWorldFlag());
@@ -5091,12 +5092,13 @@ public final class GameDataTracker {
 
                 objectToModify.getArgs().set(1, (short)1); // Real item, not fake (or 1 weight, because the game won't allow multiple)
 
-                if(Settings.isCoinChestGraphics()) {
-                    objectToModify.getArgs().set(2, (short)0);
-                }
-                else {
-                    objectToModify.getArgs().set(2, (short)1);
-                }
+//                if(Settings.isCoinChestGraphics()) {
+//                    objectToModify.getArgs().set(2, (short)0);
+//                }
+//                else {
+//                    objectToModify.getArgs().set(2, (short)1);
+//                }
+                objectToModify.getArgs().set(2, (short)random.nextInt(2));
 
                 for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
                     if(flagTest.getIndex() == itemLocationData.getWorldFlag()) {
@@ -5134,12 +5136,14 @@ public final class GameDataTracker {
                 if(random.nextBoolean()) {
                     objectToModify.getArgs().set(0, (short)1); // Coins
                     objectToModify.getArgs().set(1, (short)10); // 10 coins, the equivalent of a pot
-                    objectToModify.getArgs().set(2, (short)0); // Removed items use coin chest graphics.
+//                    objectToModify.getArgs().set(2, (short)0); // Removed items use coin chest graphics.
+                    objectToModify.getArgs().set(2, (short)random.nextInt(2));
                 }
                 else {
                     objectToModify.getArgs().set(0, (short)2); // Weights
                     objectToModify.getArgs().set(1, (short)1); // The game won't allow multiple weights, so just give 1
-                    objectToModify.getArgs().set(2, (short)0); // Removed items use coin chest graphics.
+//                    objectToModify.getArgs().set(2, (short)0); // Removed items use coin chest graphics.
+                    objectToModify.getArgs().set(2, (short)random.nextInt(2));
                 }
 
                 for(TestByteOperation flagTest : objectToModify.getTestByteOperations()) {
