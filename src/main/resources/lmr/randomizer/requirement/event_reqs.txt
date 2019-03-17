@@ -115,6 +115,7 @@ State: 5-Orb HP => Sacred Orb: 5
 State: 5-Orb HP => Sacred Orb: 4, Combo: Revive
 State: 6-Orb HP => Sacred Orb: 6
 State: 6-Orb HP => Sacred Orb: 5, Combo: Revive
+State: 7-Orb HP => Sacred Orb: 7
 State: 7-Orb HP => Sacred Orb: 6, Combo: Revive
 State: 8-Orb HP => Sacred Orb: 8
 State: 8-Orb HP => Sacred Orb: 7, Combo: Revive
