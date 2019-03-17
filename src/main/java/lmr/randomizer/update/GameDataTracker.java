@@ -43,6 +43,7 @@ public final class GameDataTracker {
         mapOfGateNameToTransitionGate.clear();
         mapOfTransitionNameToScreen.clear();
         mantraTablets.clear();
+        enemyObjects.clear();
 
         mapOfWorldFlagToAssignedReplacementFlag.clear();
         randomize5Flag = 2730;
