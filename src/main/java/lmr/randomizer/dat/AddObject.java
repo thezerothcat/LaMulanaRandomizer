@@ -2304,8 +2304,8 @@ public final class AddObject {
     public static void addSpaulderGive(Screen screen, int x, int y) {
         GameObject itemGive = new GameObject(screen);
         itemGive.setId((short) 0xb5);
-        itemGive.setX(x / 640); // intentional int division
-        itemGive.setY(y / 480);
+        itemGive.setX((x / 640) * 640);
+        itemGive.setY((y / 480) * 480);
 
         itemGive.getArgs().add((short)62);
         itemGive.getArgs().add((short)32);
@@ -2316,12 +2316,6 @@ public final class AddObject {
         itemGiveTest.setIndex(0xad1);
         itemGiveTest.setValue((byte) 1);
         itemGiveTest.setOp(ByteOp.FLAG_EQUALS);
-        itemGive.getTestByteOperations().add(itemGiveTest);
-
-        itemGiveTest = new TestByteOperation();
-        itemGiveTest.setIndex(0x0bf);
-        itemGiveTest.setValue((byte) 2);
-        itemGiveTest.setOp(ByteOp.FLAG_LT);
         itemGive.getTestByteOperations().add(itemGiveTest);
 
         WriteByteOperation itemGiveUpdate = new WriteByteOperation();
