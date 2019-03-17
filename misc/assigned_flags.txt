@@ -9,6 +9,8 @@ Surface coin chest world flag: a93 (2707)
 Misc replaced map world flags: a94-aa3 (2708-2723)
 Misc replaced random item world flags: aa4+ (2724+)
 
+Surface no-kill flag: aa4 (2724)
+
 Fools: 2730-2760
 Bit flags for floating items?: 2767-2775
 

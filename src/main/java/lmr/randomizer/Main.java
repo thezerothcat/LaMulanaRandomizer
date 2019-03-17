@@ -365,7 +365,7 @@ public class Main {
                 fileOutputStream.close();
                 FileUtils.logFlush("dat copy complete");
 
-                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart()) {
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomize1()) {
                     FileUtils.logFlush("Copying save file from seed folder to La-Mulana save directory");
                     File saveFile = new File(String.format("%s/lm_00.sav", Settings.getStartingSeed()));
                     if(saveFile.exists()) {
@@ -1312,7 +1312,7 @@ public class Main {
 
                 DatWriter.writeDat(datInfo);
                 FileUtils.logFlush("dat file successfully written");
-                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart()) {
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomize1()) {
                     backupSaves();
                     writeSaveFile();
                 }
@@ -1491,7 +1491,7 @@ public class Main {
                 saveData[4626] = (byte)2; // Held main weapon slot number
 
                 if(Settings.isAutomaticMantras()) {
-                    saveData[0x11 + 0x124] = (byte)4; // Held main weapon slot number
+                    saveData[0x11 + 0x124] = (byte)4;
                 }
             }
             else if("Axe".equals(startingWeapon)) {
@@ -1569,6 +1569,8 @@ public class Main {
                 }
             }
         }
+        saveData[0x11 + 0xaa4] = (byte)1;
+
 //        saveData[0x11 + 0x064] = 1;
 //        saveData[0x11 + 0x065] = 1;
 //        saveData[0x11 + 0x066] = 1;

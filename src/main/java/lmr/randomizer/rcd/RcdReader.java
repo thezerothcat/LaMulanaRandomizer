@@ -1172,8 +1172,8 @@ public final class RcdReader {
         else if(zoneIndex == 1) {
             if(roomIndex == 2) {
                 if(screenIndex == 0) {
-                    if (!"Whip".equals(Settings.getCurrentStartingWeapon())) {
-                        AddObject.addRandomWeaponKillTimer(screen, false);
+                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomize1()) {
+                        AddObject.addSurfaceKillTimer(screen, false);
                     }
                 }
                 if(screenIndex == 1) {
@@ -1184,14 +1184,14 @@ public final class RcdReader {
                     if (Settings.isAutomaticTranslations()) {
                         AddObject.addAutomaticTranslations(screen);
                     }
-                    if (!"Whip".equals(Settings.getCurrentStartingWeapon())) {
-                        AddObject.addRandomWeaponKillTimer(screen, true);
+                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomize1()) {
+                        AddObject.addSurfaceKillTimer(screen, true);
                     }
                 }
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                if (!"Whip".equals(Settings.getCurrentStartingWeapon())) {
-                    AddObject.addRandomWeaponKillTimer(screen, false);
+                if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomize1()) {
+                    AddObject.addSurfaceKillTimer(screen, false);
                 }
             }
             else if(roomIndex == 11 && screenIndex == 0) {

@@ -3024,6 +3024,24 @@ public final class GameDataTracker {
             xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // 64
             xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 2900, (short) 1)); // 64
         }
+        else if(Settings.isRandomize1()) {
+            xelpudBlockContents.clear();
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1)); // 64
+            List<Short> stringCharacters = FileUtils.stringToData("If you did not load the provided save file, please do so.");
+            for (Short shortCharacter : stringCharacters) {
+                xelpudBlockContents.add(new BlockSingleData(shortCharacter));
+            }
+            xelpudBlockContents.add(new BlockPoseData((short) 0x0046, (short) 25)); // 70
+            xelpudBlockContents.add(new BlockItemData((short) 0x0042, (short) 86)); // 66
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 227, (short) 2)); // 64
+            xelpudBlockContents.add(new BlockSingleData((short) 0x0044)); // {CLS}
+            for (Short shortCharacter : stringCharacters) {
+                xelpudBlockContents.add(new BlockSingleData(shortCharacter));
+            }
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 124, (short) 1)); // 64
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // 64
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 2900, (short) 1)); // 64
+        }
         else {
             // Set value of world flag to 2 instead of 1
             for(int i = 0; i < xelpudBlockContents.size(); i++) {
