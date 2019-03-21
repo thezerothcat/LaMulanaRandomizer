@@ -489,6 +489,10 @@ public final class RcdReader {
                     }
                 }
             }
+            Screen screen = (Screen) objectContainer;
+            if (screen.getZoneIndex() == 9 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                obj.getArgs().set(1, (short)5);
+            }
         }
         else if(obj.getId() == 0x34) {
             if(objectContainer instanceof Screen) {
@@ -1167,6 +1171,10 @@ public final class RcdReader {
             if(Settings.isRandomizeTransitionGates()) {
                 AddObject.addExtinctionTorch(screen);
             }
+        }
+        else if(zoneIndex == 9 && roomIndex == 0 && screenIndex == 0) {
+            AddObject.addDisguisedSpaulder(screen, 20, 240, 19, 0xad0);
+            AddObject.addLaserWall(screen, 80, 280, 0xad0);
         }
         else if(zoneIndex == 9 && roomIndex == 8 && screenIndex == 1) {
             GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 0));

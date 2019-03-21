@@ -2367,17 +2367,109 @@ public final class AddObject {
         screen.getObjects().add(itemGive);
     }
 
+    public static void addDisguisedSpaulder(Screen screen, int x, int y, int inventoryArg, int fakeFlag) {
+        GameObject fakeItem = new GameObject(screen);
+        fakeItem.setId((short) 0x2f);
+        fakeItem.setX(x);
+        fakeItem.setY(y);
+
+        fakeItem.getArgs().add((short)0);
+        fakeItem.getArgs().add((short)inventoryArg);
+        fakeItem.getArgs().add((short)0);
+
+        TestByteOperation fakeItemTest = new TestByteOperation();
+        fakeItemTest.setIndex(fakeFlag);
+        fakeItemTest.setValue((byte) 0);
+        fakeItemTest.setOp(ByteOp.FLAG_EQUALS);
+        fakeItem.getTestByteOperations().add(fakeItemTest);
+
+        WriteByteOperation fakeItemUpdate = new WriteByteOperation();
+        fakeItemUpdate.setIndex(fakeFlag);
+        fakeItemUpdate.setValue((byte) 1);
+        fakeItemUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        fakeItem.getWriteByteOperations().add(fakeItemUpdate);
+
+        screen.getObjects().add(fakeItem);
+
+        GameObject itemGive = new GameObject(screen);
+        itemGive.setId((short) 0xb5);
+        itemGive.setX(0);
+        itemGive.setY(0);
+
+        itemGive.getArgs().add((short)62);
+        itemGive.getArgs().add((short)32);
+        itemGive.getArgs().add((short)24);
+        itemGive.getArgs().add((short)39);
+
+        TestByteOperation itemGiveTest = new TestByteOperation();
+        itemGiveTest.setIndex(fakeFlag);
+        itemGiveTest.setValue((byte) 1);
+        itemGiveTest.setOp(ByteOp.FLAG_EQUALS);
+        itemGive.getTestByteOperations().add(itemGiveTest);
+
+        WriteByteOperation itemGiveUpdate = new WriteByteOperation();
+        itemGiveUpdate.setIndex(fakeFlag);
+        itemGiveUpdate.setValue((byte) 2);
+        itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        itemGive.getWriteByteOperations().add(itemGiveUpdate);
+
+        screen.getObjects().add(itemGive);
+    }
+
+    public static void addLaserWall(Screen screen, int x, int y, int flag) {
+        GameObject laserWall = new GameObject(screen);
+        laserWall.setId((short) 0xab);
+        laserWall.setX(x);
+        laserWall.setY(y);
+
+        laserWall.getArgs().add((short)1);
+        laserWall.getArgs().add((short)1); // drop type
+
+        TestByteOperation laserWallTest = new TestByteOperation();
+        laserWallTest.setIndex(flag);
+        laserWallTest.setValue((byte) 0);
+        laserWallTest.setOp(ByteOp.FLAG_GT);
+        laserWall.getTestByteOperations().add(laserWallTest);
+
+        screen.getObjects().add(laserWall);
+    }
+
+    public static void addObviousSpaulder(Screen screen, int x, int y, int fakeFlag) {
+        GameObject fakeItem = new GameObject(screen);
+        fakeItem.setId((short) 0x2f);
+        fakeItem.setX(x);
+        fakeItem.setY(y);
+
+        fakeItem.getArgs().add((short)0);
+        fakeItem.getArgs().add((short)62);
+        fakeItem.getArgs().add((short)1);
+
+        TestByteOperation fakeItemTest = new TestByteOperation();
+        fakeItemTest.setIndex(fakeFlag);
+        fakeItemTest.setValue((byte) 0);
+        fakeItemTest.setOp(ByteOp.FLAG_EQUALS);
+        fakeItem.getTestByteOperations().add(fakeItemTest);
+
+        WriteByteOperation fakeItemUpdate = new WriteByteOperation();
+        fakeItemUpdate.setIndex(fakeFlag);
+        fakeItemUpdate.setValue((byte) 2);
+        fakeItemUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        fakeItem.getWriteByteOperations().add(fakeItemUpdate);
+
+        screen.getObjects().add(fakeItem);
+    }
+
     public static void addItemGive(GameObject referenceObj, int inventoryArg, int randomize5Flag, int worldFlag) {
         GameObject itemGive = new GameObject(referenceObj.getObjectContainer());
         itemGive.setId((short) 0xb5);
         int x = referenceObj.getX();
         int y = referenceObj.getY();
-        itemGive.setX(x % 640 == 0 ? x : x - 20); // intentional int division
-        itemGive.setY(y % 480 == 0 ? y : y - 20);
+        itemGive.setX((x / 640) * 640);
+        itemGive.setY((y / 480) * 480);
 
         itemGive.getArgs().add((short)inventoryArg);
-        itemGive.getArgs().add((short)4);
-        itemGive.getArgs().add((short)4);
+        itemGive.getArgs().add((short)32);
+        itemGive.getArgs().add((short)24);
         itemGive.getArgs().add((short)39);
 
         TestByteOperation itemGiveTest = new TestByteOperation();
