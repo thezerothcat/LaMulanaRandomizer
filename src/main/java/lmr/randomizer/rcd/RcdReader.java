@@ -1173,8 +1173,8 @@ public final class RcdReader {
             }
         }
         else if(zoneIndex == 9 && roomIndex == 0 && screenIndex == 0) {
-            AddObject.addDisguisedSpaulder(screen, 20, 240, 19, 0xad0);
-            AddObject.addLaserWall(screen, 80, 280, 0xad0);
+            AddObject.addDisguisedSpaulder(screen, 20, 240, 19, 0xacf);
+            AddObject.addLaserWall(screen, 80, 280, 0xacf);
         }
         else if(zoneIndex == 9 && roomIndex == 8 && screenIndex == 1) {
             GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 0));

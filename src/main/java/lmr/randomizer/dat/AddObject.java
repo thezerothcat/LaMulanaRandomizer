@@ -2347,19 +2347,19 @@ public final class AddObject {
         itemGive.getArgs().add((short)39);
 
         TestByteOperation itemGiveTest = new TestByteOperation();
-        itemGiveTest.setIndex(0xad1);
-        itemGiveTest.setValue((byte) 1);
+        itemGiveTest.setIndex(0xad0);
+        itemGiveTest.setValue((byte) 0);
         itemGiveTest.setOp(ByteOp.FLAG_EQUALS);
         itemGive.getTestByteOperations().add(itemGiveTest);
 
-        WriteByteOperation itemGiveUpdate = new WriteByteOperation();
-        itemGiveUpdate.setIndex(0xad1);
-        itemGiveUpdate.setValue((byte) 2);
-        itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
-        itemGive.getWriteByteOperations().add(itemGiveUpdate);
+        itemGiveTest = new TestByteOperation();
+        itemGiveTest.setIndex(0xad1);
+        itemGiveTest.setValue((byte) 0);
+        itemGiveTest.setOp(ByteOp.FLAG_GT);
+        itemGive.getTestByteOperations().add(itemGiveTest);
 
-        itemGiveUpdate = new WriteByteOperation();
-        itemGiveUpdate.setIndex(0x0bf);
+        WriteByteOperation itemGiveUpdate = new WriteByteOperation();
+        itemGiveUpdate.setIndex(0xad0);
         itemGiveUpdate.setValue((byte) 2);
         itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
         itemGive.getWriteByteOperations().add(itemGiveUpdate);
