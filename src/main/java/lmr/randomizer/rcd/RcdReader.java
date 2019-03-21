@@ -1176,6 +1176,9 @@ public final class RcdReader {
             AddObject.addDisguisedSpaulder(screen, 20, 240, 19, 0xacf);
             AddObject.addLaserWall(screen, 80, 280, 0xacf);
         }
+        else if(zoneIndex == 8 && roomIndex == 4 && screenIndex == 0) {
+            AddObject.addObviousSpaulder(screen, 100, 254, 0xacc);
+        }
         else if(zoneIndex == 9 && roomIndex == 8 && screenIndex == 1) {
             GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 0));
         }
@@ -1184,6 +1187,12 @@ public final class RcdReader {
         }
         else if(zoneIndex == 9 && roomIndex == 9 && screenIndex == 1) {
             GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 2));
+        }
+        else if(zoneIndex == 13 && roomIndex == 0 && screenIndex == 1) {
+            AddObject.addObviousSpaulder(screen, 140, 520, 0xacd);
+        }
+        else if(zoneIndex == 17 && roomIndex == 10 && screenIndex == 0) {
+            AddObject.addObviousSpaulder(screen, 140, 340, 0xace);
         }
         else if(zoneIndex == 17 && roomIndex == 10 && screenIndex == 1) {
             if(Settings.isUshumgalluAssist()) {
