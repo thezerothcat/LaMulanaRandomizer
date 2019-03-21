@@ -226,6 +226,14 @@ public final class GameDataTracker {
                         }
                     }
                 }
+                else if(screen.getZoneIndex() == 3) {
+                    gameObject.getArgs().set(24, (short)3);
+                    gameObject.getArgs().set(25, (short)402);
+                    gameObject.getArgs().set(26, (short)508);
+                    gameObject.getArgs().set(28, (short)3);
+                    gameObject.getArgs().set(29, (short)402);
+                    gameObject.getArgs().set(30, (short)508);
+                }
                 else if(screen.getZoneIndex() == 5) {
                     for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
                         if(testByteOperation.getIndex() == 0x1b4) {
@@ -239,6 +247,12 @@ public final class GameDataTracker {
                             writeByteOperation.setValue(6);
                         }
                     }
+                }
+                else if(screen.getZoneIndex() == 6) {
+                    gameObject.getArgs().set(24, (short)7);
+                    gameObject.getArgs().set(25, (short)0);
+                    gameObject.getArgs().set(26, (short)1500);
+                    gameObject.getArgs().set(27, (short)2);
                 }
             }
         }

@@ -691,26 +691,37 @@ public final class RcdReader {
                         }
                     }
                 }
-                else if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
-                    if(Settings.isRandomizeTransitionGates()) {
-                        if(obj.getArgs().get(0) == 18) {
-                            keepObject = false;
-                        }
-                        else if(obj.getArgs().get(0) == 9) {
-                            TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
-                            testByteOperation.setIndex(0x382);
-                            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                            testByteOperation.setValue((byte)0);
+                else if (screen.getZoneIndex() == 7) {
+                    if(screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        if(Settings.isRandomize3()) {
+                            obj.getArgs().set(0, (short)6);
+                            obj.getArgs().set(1, (short)9);
+                            obj.getArgs().set(2, (short)1);
+                            obj.getArgs().set(3, (short)300);
+                            obj.getArgs().set(4, (short)380);
                         }
                     }
-                    else {
-                        // Don't change to true shrine until you have Feather, since the old shrine has more requirement options.
-                        if (obj.getTestByteOperations().get(0).getIndex() == 258) {
-                            if(ByteOp.FLAG_EQUALS.equals(obj.getTestByteOperations().get(0).getOp())) {
+                    else if(screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        if(Settings.isRandomizeTransitionGates()) {
+                            if(obj.getArgs().get(0) == 18) {
                                 keepObject = false;
                             }
-                            else {
-                                obj.getTestByteOperations().clear();
+                            else if(obj.getArgs().get(0) == 9) {
+                                TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
+                                testByteOperation.setIndex(0x382);
+                                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                                testByteOperation.setValue((byte)0);
+                            }
+                        }
+                        else {
+                            // Don't change to true shrine until you have Feather, since the old shrine has more requirement options.
+                            if (obj.getTestByteOperations().get(0).getIndex() == 258) {
+                                if(ByteOp.FLAG_EQUALS.equals(obj.getTestByteOperations().get(0).getOp())) {
+                                    keepObject = false;
+                                }
+                                else {
+                                    obj.getTestByteOperations().clear();
+                                }
                             }
                         }
                     }
@@ -1056,6 +1067,18 @@ public final class RcdReader {
                     screenExit.setScreenIndex((byte)0);
                 }
             }
+            else if(screen.getZoneIndex() == 3 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                ScreenExit screenExit = screen.getScreenExits().get(2);
+                screenExit.setZoneIndex((byte)3);
+                screenExit.setRoomIndex((byte)4);
+                screenExit.setScreenIndex((byte)2);
+            }
+            else if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                ScreenExit screenExit = screen.getScreenExits().get(0);
+                screenExit.setZoneIndex((byte)6);
+                screenExit.setRoomIndex((byte)9);
+                screenExit.setScreenIndex((byte)1);
+            }
             else if(screen.getZoneIndex() == 5) {
                 if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
                     ScreenExit screenExit = screen.getScreenExits().get(2);
@@ -1124,6 +1147,11 @@ public final class RcdReader {
         }
         else if(zoneIndex == 2 && roomIndex == 2 && screenIndex == 0) {
             AddObject.addHardmodeToggleWeights(screen);
+        }
+        else if(zoneIndex == 3 && roomIndex == 8 && screenIndex == 0) {
+            if(Settings.isRandomize3()) {
+                AddObject.addWarp(screen, 0, 420, 3, 4, 2, 100, 160);
+            }
         }
         else if(zoneIndex == 5) {
             if(Settings.isRandomize3()) {

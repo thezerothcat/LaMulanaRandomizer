@@ -2317,6 +2317,24 @@ public final class AddObject {
         screen.getObjects().add(snouter);
     }
 
+    public static void addWarp(Screen screen, int warpX, int warpY, int destZone, int destRoom, int destScreen, int destX, int destY) {
+        GameObject warp = new GameObject(screen);
+        warp.setId((short) 0x97);
+        warp.setX(warpX);
+        warp.setY(warpY);
+
+        warp.getArgs().add((short)destZone);
+        warp.getArgs().add((short)destRoom);
+        warp.getArgs().add((short)destScreen);
+        warp.getArgs().add((short)destX);
+        warp.getArgs().add((short)destY);
+        warp.getArgs().add((short)destY);
+        warp.getArgs().add((short)4);
+        warp.getArgs().add((short)4);
+
+        screen.getObjects().add(warp);
+    }
+
     public static void addSpaulderGive(Screen screen, int x, int y) {
         GameObject itemGive = new GameObject(screen);
         itemGive.setId((short) 0xb5);
