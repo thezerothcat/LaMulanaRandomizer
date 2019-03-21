@@ -2301,6 +2301,22 @@ public final class AddObject {
         screen.getObjects().add(grailSave);
     }
 
+    public static void addSnouter(Screen screen, int x, int y, boolean faceRight) {
+        GameObject snouter = new GameObject(screen);
+        snouter.setId((short) 0x05);
+        snouter.setX(x);
+        snouter.setY(y);
+
+        snouter.getArgs().add((short)(faceRight ? 0 : 1));
+        snouter.getArgs().add((short)1); // drop type
+        snouter.getArgs().add((short)18); // bounce rate
+        snouter.getArgs().add((short)200); // hp
+        snouter.getArgs().add((short)1); // damage
+        snouter.getArgs().add((short)3); // soul
+
+        screen.getObjects().add(snouter);
+    }
+
     public static void addSpaulderGive(Screen screen, int x, int y) {
         GameObject itemGive = new GameObject(screen);
         itemGive.setId((short) 0xb5);
