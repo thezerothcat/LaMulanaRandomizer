@@ -4540,7 +4540,12 @@ public final class GameDataTracker {
     public static void writeBacksideDoorV2(String doorToReplace, String doorWithCoordinateData, Integer bossNumber) {
         Integer gateFlag = getGateFlag(bossNumber);
         List<GameObject> objectsToModify = mapOfDoorNameToBacksideDoor.get(doorToReplace);
-        if(objectsToModify != null) {
+        if(objectsToModify == null) {
+            if("Door: F8".equals(doorWithCoordinateData)) {
+                AddObject.addGrailToggle(null);
+            }
+        }
+        else {
             for(GameObject gameObject : objectsToModify) {
                 replaceBacksideDoorFlags(gameObject, bossNumber, gateFlag, isDoorDisabledForEscape(doorToReplace));
                 replaceBacksideDoorArgs(gameObject, doorWithCoordinateData);
