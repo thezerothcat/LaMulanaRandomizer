@@ -4,6 +4,7 @@ import javafx.util.Pair;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
+import lmr.randomizer.Translations;
 import lmr.randomizer.dat.*;
 import lmr.randomizer.dat.conversation.CheckBlock;
 import lmr.randomizer.dat.shop.BlockStringData;
@@ -3056,7 +3057,7 @@ public final class GameDataTracker {
         else if(Settings.isRandomize1()) {
             xelpudBlockContents.clear();
             xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1)); // 64
-            List<Short> stringCharacters = FileUtils.stringToData("If you did not load the provided save file, please do so.");
+            List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("fools.xelpudText"));
             for (Short shortCharacter : stringCharacters) {
                 xelpudBlockContents.add(new BlockSingleData(shortCharacter));
             }
