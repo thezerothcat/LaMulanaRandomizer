@@ -95,7 +95,7 @@ public final class Settings {
         language = "en";
 
         requireSoftwareComboForKeyFairy = true;
-        requireFullAccess = true;
+        requireFullAccess = false;
         requireIceCapeForLava = true;
         requireFlaresForExtinction = true;
         randomizeXmailer = true;

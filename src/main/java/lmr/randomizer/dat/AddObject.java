@@ -17,6 +17,7 @@ public final class AddObject {
     private static ObjectContainer xelpudScreen;
     private static ObjectContainer mulbrukScreen;
     private static ObjectContainer littleBrotherShopScreen;
+    private static ObjectContainer dimensionalExitScreen;
 
     public static void setXelpudScreen(ObjectContainer xelpudScreen) {
         AddObject.xelpudScreen = xelpudScreen;
@@ -30,10 +31,15 @@ public final class AddObject {
         AddObject.littleBrotherShopScreen = littleBrotherShopScreen;
     }
 
+    public static void setDimensionalExitScreen(ObjectContainer dimensionalExitScreen) {
+        AddObject.dimensionalExitScreen = dimensionalExitScreen;
+    }
+
     public static void clearObjects() {
         xelpudScreen = null;
         mulbrukScreen = null;
         littleBrotherShopScreen = null;
+        dimensionalExitScreen = null;
     }
 
     /**
@@ -1728,6 +1734,9 @@ public final class AddObject {
     }
 
     public static void addGrailToggle(ObjectContainer objectContainer) {
+        if(objectContainer == null) {
+            objectContainer = dimensionalExitScreen;
+        }
         GameObject grailToggle = new GameObject(objectContainer);
         grailToggle.setId((short)0xb7);
         grailToggle.setX(-1);

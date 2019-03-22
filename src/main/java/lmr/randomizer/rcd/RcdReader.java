@@ -1011,6 +1011,11 @@ public final class RcdReader {
                             AddObject.setLittleBrotherShopScreen(screen);
                         }
                     }
+                    else if(zoneIndex == 8) {
+                        if(roomIndex == 0 && screenIndex == 1) {
+                            AddObject.setDimensionalExitScreen(screen);
+                        }
+                    }
 
                     room.getScreens().add(screen);
                 }
