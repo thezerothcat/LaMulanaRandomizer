@@ -286,6 +286,20 @@ public final class GameDataTracker {
                 }
             }
         }
+        else if (gameObject.getId() == 0x35) {
+            Screen screen = (Screen) gameObject.getObjectContainer();
+            if(screen.getZoneIndex() == 4 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0 && gameObject.getY() == 80) {
+                WriteByteOperation writeByteOperation = new WriteByteOperation();
+                writeByteOperation.setIndex(0xacb);
+                writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                writeByteOperation.setValue(1);
+                gameObject.getWriteByteOperations().add(writeByteOperation);
+                AddObject.addSpaulderGive2(screen, 0, 0, 0xacb);
+            }
+            else if(Settings.isRandomize3()) {
+                enemyObjects.add(gameObject);
+            }
+        }
         else if (gameObject.getId() == 0x3c) {
             if(Settings.isRandomize3()) {
                 Screen screen = (Screen) gameObject.getObjectContainer();
@@ -5556,6 +5570,11 @@ public final class GameDataTracker {
                 enemy.getArgs().set(0, (short)random.nextInt(2)); // Start moving
                 enemy.getArgs().set(3, (short)random.nextInt(2)); // Type
                 enemy.getArgs().set(4, (short)(random.nextInt(2) + 2)); // Damage
+            }
+            else if(enemy.getId() == 0x35) {
+                enemy.getArgs().set(0, (short)random.nextInt(2)); // 0 = Standard, 1 = IRON PIPE
+                enemy.getArgs().set(3, (short)random.nextInt(2)); // Speed
+                enemy.getArgs().set(4, (short)(random.nextInt(2) + 1)); // Health
             }
             else {
                 enemy.getArgs().set(0, (short)random.nextInt(2)); // Facing
