@@ -1139,8 +1139,11 @@ public final class RcdReader {
             }
         }
         else if(zoneIndex == 1) {
-            if(Settings.isRandomize1() && roomIndex == 2 && screenIndex == 1) {
-                AddObject.addSurfaceGrailTablet(screen);
+            if(roomIndex == 2 && screenIndex == 1) {
+                AddObject.addSpaulderGive3(screen, 880, 160, 0xaa5);
+                if(Settings.isRandomize1()) {
+                    AddObject.addSurfaceGrailTablet(screen);
+                }
             }
 
             if(roomIndex == 4 && screenIndex == 2) {
@@ -1195,6 +1198,9 @@ public final class RcdReader {
         }
         else if(zoneIndex == 13 && roomIndex == 0 && screenIndex == 1) {
             AddObject.addObviousSpaulder(screen, 140, 520, 0xacd);
+        }
+        else if(zoneIndex == 15 && roomIndex == 2 && screenIndex == 0) {
+            AddObject.addSpaulderGive3(screen, 580, 400, 0xaca);
         }
         else if(zoneIndex == 17 && roomIndex == 10 && screenIndex == 0) {
             AddObject.addObviousSpaulder(screen, 140, 340, 0xace);

@@ -2402,6 +2402,32 @@ public final class AddObject {
         screen.getObjects().add(itemGive);
     }
 
+    public static void addSpaulderGive3(Screen screen, int x, int y, int flag) {
+        GameObject itemGive = new GameObject(screen);
+        itemGive.setId((short) 0xb5);
+        itemGive.setX(x);
+        itemGive.setY(y);
+
+        itemGive.getArgs().add((short)62);
+        itemGive.getArgs().add((short)2);
+        itemGive.getArgs().add((short)3);
+        itemGive.getArgs().add((short)39);
+
+        TestByteOperation itemGiveTest = new TestByteOperation();
+        itemGiveTest.setIndex(flag);
+        itemGiveTest.setValue((byte) 0);
+        itemGiveTest.setOp(ByteOp.FLAG_EQUALS);
+        itemGive.getTestByteOperations().add(itemGiveTest);
+
+        WriteByteOperation itemGiveUpdate = new WriteByteOperation();
+        itemGiveUpdate.setIndex(flag);
+        itemGiveUpdate.setValue((byte) 2);
+        itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        itemGive.getWriteByteOperations().add(itemGiveUpdate);
+
+        screen.getObjects().add(itemGive);
+    }
+
     public static void addDisguisedSpaulder(Screen screen, int x, int y, int inventoryArg, int fakeFlag) {
         GameObject fakeItem = new GameObject(screen);
         fakeItem.setId((short) 0x2f);
