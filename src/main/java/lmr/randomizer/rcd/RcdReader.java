@@ -378,6 +378,17 @@ public final class RcdReader {
                     // Get rid of alternate Graveyard shop (with the Angel Shield)
                     keepObject = false;
                 }
+
+                if(Settings.isRandomize1()) {
+                    if(obj.getArgs().get(4) == 35) {
+                        obj.getArgs().set(3, (short)0);
+                        obj.getArgs().set(4, (short)706);
+                    }
+                    else if(obj.getArgs().get(4) == 36) {
+                        obj.getArgs().set(3, (short)0);
+                        obj.getArgs().set(4, (short)706);
+                    }
+                }
             }
             else if(obj.getArgs().get(4) == 719) {
                 // Low-score version of Mulbruk which could interfere with getting Book of the Dead.
@@ -1122,6 +1133,7 @@ public final class RcdReader {
             if(zoneIndex == 21) {
                 // randomize1
                 AddObject.addSpecialGrailTablet(screen);
+                AddObject.addSurfaceShop3(screen);
             }
             AddObject.addStartingItems(screen);
         }
@@ -1260,6 +1272,9 @@ public final class RcdReader {
         }
         else if(zoneIndex == 6 && roomIndex == 9 && screenIndex == 1) {
             AddObject.addPalenqueMSX2Timer(screen);
+            if(Settings.isRandomize3()) {
+                AddObject.addTwinLabsPoisonTimerRemoval(screen, true);
+            }
         }
         else if(zoneIndex == 9 && roomIndex == 2 && screenIndex == 0) {
             AddObject.addDiaryChestConditionTimer(screen);

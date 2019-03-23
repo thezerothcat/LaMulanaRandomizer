@@ -1,4 +1,4 @@
-Holy Grail
-Event: Medicine of the Mind (Yellow)
-Event: All Grails Read
 Event: Mother Ankh
+Event: All Grails Read
+Event: Medicine of the Mind (Yellow)
+Holy Grail

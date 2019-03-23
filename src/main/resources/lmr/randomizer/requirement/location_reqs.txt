@@ -1,7 +1,7 @@
-Location: Surface [Main] => Event: Mother Ankh
+Location: Surface [Main] => Event: Mother Ankh, Attack: Forward
 Location: Surface [Main] => Event: Bahamut Defeated, Setting: Normal Surface
 Location: Surface [Main] => Door: B5, Exit: Surface [Main], Setting: Normal Surface
-#Location: Surface [Main] => Transition: Surface R1
+Location: Surface [Main] => State: Phase 1 Surface Access, Transition: Surface R1
 Location: Surface [Ruin Path Upper] => Location: Surface [Ruin Path Lower], Feather
 Location: Surface [Ruin Path Upper] => Transition: Surface D2
 Location: Surface [Ruin Path Lower] => Location: Surface [Ruin Path Upper], Exit: Surface [Ruin Path Lower]

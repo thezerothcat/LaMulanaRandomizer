@@ -35,10 +35,17 @@ public class EscapeChecker {
         mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
 
         queuedUpdates.add("Location: True Shrine of the Mother");
-        queuedUpdates.add("Exit: True Shrine of the Mother");
+        queuedUpdates.add("Exit: Shrine of the Mother [Main]");
         queuedUpdates.add("State: Escape");
         if(accessedNodesFromValidation.contains("Transition: Moonlight L1")) {
             queuedUpdates.add("State: Phase 1 Moonlight Access");
+        }
+        if(accessedNodesFromValidation.contains("Transition: Moonlight L1")) {
+            queuedUpdates.add("State: Phase 1 Surface Access");
+        }
+        if(accessedNodesFromValidation.contains("Location: Tower of the Goddess [Grail]")
+                && accessedNodesFromValidation.contains("Plane Model")) {
+            queuedUpdates.add("State: Phase 1 Shield Statue Access");
         }
         for(String accessedNodeFromValidation : accessedNodesFromValidation) {
             if(!"Holy Grail".equals(accessedNodeFromValidation)
@@ -62,6 +69,14 @@ public class EscapeChecker {
                 mapOfNodeNameToRequirementsObject.put(Settings.getStartingLocation(), nodeWithRequirements);
             }
             nodeWithRequirements.addRequirementSet(new ArrayList<>(Arrays.asList("Glitch: Raindrop", Settings.getStartingLocation().replace("Location:", "Exit:"))));
+        }
+        if(Settings.isRandomize2() && accessedNodesFromValidation.contains("Location: Surface [Main]")) {
+            NodeWithRequirements nodeWithRequirements = mapOfNodeNameToRequirementsObject.get("Location: Surface [Main]");
+            if(nodeWithRequirements == null) {
+                nodeWithRequirements = new NodeWithRequirements("Location: Surface [Main]");
+                mapOfNodeNameToRequirementsObject.put("Location: Surface [Main]", nodeWithRequirements);
+            }
+            nodeWithRequirements.addRequirementSet(new ArrayList<>(Arrays.asList("Transition: Surface R1")));
         }
         backsideDoorRandomizer.rebuildRequirementsMap();
         FileUtils.log("Nodes accessible at escape start: " + queuedUpdates);
@@ -119,7 +134,7 @@ public class EscapeChecker {
                 if (item == null) {
                     throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
                 }
-                if (!Settings.getCurrentRemovedItems().contains(item) && !Settings.getRemovedItems().contains(item)) {
+                if (!Settings.getCurrentRemovedItems().contains(item) && !Settings.getRemovedItems().contains(item) && !"Holy Grail".equals(item)) {
                     FileUtils.logDetail("Found item " + item, attemptNumber);
                     queuedUpdates.add(item);
                 }

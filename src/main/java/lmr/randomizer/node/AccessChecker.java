@@ -181,7 +181,7 @@ public class AccessChecker {
     }
 
     private boolean isEscapeSuccess() {
-        return !Settings.isRandomizeTransitionGates()
+        return (!Settings.isRandomizeTransitionGates() && !Settings.isRandomize1())
                 || new EscapeChecker(backsideDoorRandomizer, transitionGateRandomizer, itemRandomizer, shopRandomizer, accessedNodes).isSuccess();
     }
 
@@ -225,6 +225,9 @@ public class AccessChecker {
                         }
                     }
                     continue;
+                }
+                if(requirement.equals("Ankh Jewel: 9")) {
+                    FileUtils.log("Total number of ankh jewels found: " + numberOfCollectedAnkhJewels);
                 }
 
                 remainingRequirements = mapOfNodeNameToRequirementsObject.get(requirement);
@@ -273,6 +276,8 @@ public class AccessChecker {
     public void computeStartingLocationAccess(boolean fullValidation, Integer attemptNumber) {
         String startingLocation = Settings.getStartingLocation();
         String startingExit = startingLocation.replace("Location:", "Exit:");
+        computeAccessibleNodes(startingLocation, fullValidation, attemptNumber);
+        computeAccessibleNodes(startingExit, fullValidation, attemptNumber);
         queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits(startingExit, attemptNumber));
         if(fullValidation) {
             queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(startingLocation, attemptNumber));
@@ -389,9 +394,6 @@ public class AccessChecker {
                 || stateToUpdate.contains("Viy Defeated") || stateToUpdate.contains("Baphomet Defeated")
                 || stateToUpdate.contains("Palenque Defeated") || stateToUpdate.contains("Tiamat Defeated")) {
             bossesDefeated += 1;
-            if(bossesDefeated == 8 && !accessedNodes.contains("Event: All Bosses Defeated")) {
-                computeAccessibleNodes("Event: All Bosses Defeated", null);
-            }
         }
         return stateToUpdate;
     }
@@ -421,26 +423,6 @@ public class AccessChecker {
         markBossAccessed(bossEventNodeName);
 
         bossesDefeated += 1;
-        if(bossesDefeated == 8) {
-            // Handle special event for all bosses defeated. This must happen before we mark the final boss as defeated
-            // to ensure that items in Shrine of the Mother are recognized as no longer available.
-            mapOfNodeNameToRequirementsObject.remove("Event: All Bosses Defeated");
-
-            accessedNodes.add("Event: All Bosses Defeated");
-            NodeWithRequirements node;
-            Set<String> nodesToRemove = new HashSet<>();
-            for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
-                node = mapOfNodeNameToRequirementsObject.get(nodeName);
-                if(node.updateRequirements("Event: All Bosses Defeated")) {
-                    handleNodeAccess(nodeName, node.getType(), true, null);
-                    nodesToRemove.add(nodeName);
-                }
-            }
-            for(String nodeToRemove : nodesToRemove) {
-                mapOfNodeNameToRequirementsObject.remove(nodeToRemove);
-            }
-        }
-
         String bossDefeatedNodeName = bossEventNodeName.replace("Accessible", "Defeated");
         mapOfNodeNameToRequirementsObject.remove(bossDefeatedNodeName);
 

@@ -1,3 +1,4 @@
+Event: All Bosses Defeated => Event: Amphisbaena Defeated, Event: Sakit Defeated, Event: Ellmac Defeated, Event: Bahamut Defeated, Event: Viy Defeated, Event: Palenque Defeated, Event: Baphomet Defeated, Event: Tiamat Defeated
 Event: Amphisbaena Accessible => Setting: Normal Boss, Location: Gate of Guidance [Main], Attack: Chest, State: Amphisbaena Jewel
 Event: Amphisbaena Accessible => Setting: Abnormal Boss, Location: Inferno Cavern [Viy], Ice Cape
 Event: Amphisbaena Accessible => Setting: Abnormal Boss, Location: Inferno Cavern [Viy], Setting: Lava HP, State: 5-Orb HP, Holy Grail

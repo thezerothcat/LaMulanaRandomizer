@@ -163,7 +163,7 @@ public final class AddObject {
      * Add a timer to set the flag that resets the Twin Labyrinths poison timer
      * @param screen the screen to add the timers to
      */
-    public static void addTwinLabsPoisonTimerRemoval(ObjectContainer screen) {
+    public static void addTwinLabsPoisonTimerRemoval(ObjectContainer screen, boolean resetPuzzle) {
         GameObject obj = new GameObject(screen);
         obj.setId((short)0x0b);
         obj.getArgs().add((short)0);
@@ -188,6 +188,14 @@ public final class AddObject {
         writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
         writeByteOperation.setValue((byte)0);
         obj.getWriteByteOperations().add(writeByteOperation);
+
+        if(resetPuzzle) {
+            writeByteOperation = new WriteByteOperation();
+            writeByteOperation.setIndex(0x1dc);
+            writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+            writeByteOperation.setValue((byte)0);
+            obj.getWriteByteOperations().add(writeByteOperation);
+        }
 
         screen.getObjects().add(0, obj);
     }
@@ -2428,6 +2436,166 @@ public final class AddObject {
         screen.getObjects().add(itemGive);
     }
 
+    public static void addSurfaceShop3(Screen screen) {
+        GameObject tent = new GameObject(screen);
+        tent.setId((short) 0x93);
+        tent.setX(220);
+        tent.setY(280);
+
+        tent.getArgs().add((short)0); // Layer
+        tent.getArgs().add((short)0); // 01.effect.png for anything not 0-6?
+        tent.getArgs().add((short)0); // Imagex
+        tent.getArgs().add((short)120); // Imagey
+        tent.getArgs().add((short)80); // dx
+        tent.getArgs().add((short)40); // dy
+        tent.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        tent.getArgs().add((short)0); // Animation frames
+        tent.getArgs().add((short)1); // Pause frames
+        tent.getArgs().add((short)0); // Repeat count (<1 is forever)
+        tent.getArgs().add((short)0); // Hittile to fill with
+        tent.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        tent.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        tent.getArgs().add((short)0); // Cycle colors t/f
+        tent.getArgs().add((short)0); // Alpha/frame
+        tent.getArgs().add((short)255); // Max alpha
+        tent.getArgs().add((short)0); // R/frame
+        tent.getArgs().add((short)0); // Max R
+        tent.getArgs().add((short)0); // G/frame
+        tent.getArgs().add((short)0); // Max G
+        tent.getArgs().add((short)0); // B/frame
+        tent.getArgs().add((short)0); // Max B
+        tent.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        tent.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(tent);
+
+        tent = new GameObject(screen);
+        tent.setId((short) 0x93);
+        tent.setX(480);
+        tent.setY(200);
+
+        tent.getArgs().add((short)0); // Layer
+        tent.getArgs().add((short)0); // 01.effect.png for anything not 0-6?
+        tent.getArgs().add((short)0); // Imagex
+        tent.getArgs().add((short)120); // Imagey
+        tent.getArgs().add((short)80); // dx
+        tent.getArgs().add((short)40); // dy
+        tent.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        tent.getArgs().add((short)0); // Animation frames
+        tent.getArgs().add((short)1); // Pause frames
+        tent.getArgs().add((short)0); // Repeat count (<1 is forever)
+        tent.getArgs().add((short)0); // Hittile to fill with
+        tent.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        tent.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        tent.getArgs().add((short)0); // Cycle colors t/f
+        tent.getArgs().add((short)0); // Alpha/frame
+        tent.getArgs().add((short)255); // Max alpha
+        tent.getArgs().add((short)0); // R/frame
+        tent.getArgs().add((short)0); // Max R
+        tent.getArgs().add((short)0); // G/frame
+        tent.getArgs().add((short)0); // Max G
+        tent.getArgs().add((short)0); // B/frame
+        tent.getArgs().add((short)0); // Max B
+        tent.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        tent.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(tent);
+
+        GameObject tent2 = new GameObject(screen);
+        tent2.setId((short) 0x93);
+        tent2.setX(220);
+        tent2.setY(320);
+
+        tent2.getArgs().add((short)0); // Layer
+        tent2.getArgs().add((short)0); // 01.effect.png for anything not 0-6?
+        tent2.getArgs().add((short)80); // Imagex
+        tent2.getArgs().add((short)120); // Imagey
+        tent2.getArgs().add((short)80); // dx
+        tent2.getArgs().add((short)40); // dy
+        tent2.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        tent2.getArgs().add((short)0); // Animation frames
+        tent2.getArgs().add((short)1); // Pause frames
+        tent2.getArgs().add((short)0); // Repeat count (<1 is forever)
+        tent2.getArgs().add((short)0); // Hittile to fill with
+        tent2.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        tent2.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        tent2.getArgs().add((short)0); // Cycle colors t/f
+        tent2.getArgs().add((short)0); // Alpha/frame
+        tent2.getArgs().add((short)255); // Max alpha
+        tent2.getArgs().add((short)0); // R/frame
+        tent2.getArgs().add((short)0); // Max R
+        tent2.getArgs().add((short)0); // G/frame
+        tent2.getArgs().add((short)0); // Max G
+        tent2.getArgs().add((short)0); // B/frame
+        tent2.getArgs().add((short)0); // Max B
+        tent2.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        tent2.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(tent2);
+
+        tent2 = new GameObject(screen);
+        tent2.setId((short) 0x93);
+        tent2.setX(480);
+        tent2.setY(240);
+
+        tent2.getArgs().add((short)0); // Layer
+        tent2.getArgs().add((short)0); // 01.effect.png for anything not 0-6?
+        tent2.getArgs().add((short)80); // Imagex
+        tent2.getArgs().add((short)120); // Imagey
+        tent2.getArgs().add((short)80); // dx
+        tent2.getArgs().add((short)40); // dy
+        tent2.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        tent2.getArgs().add((short)0); // Animation frames
+        tent2.getArgs().add((short)1); // Pause frames
+        tent2.getArgs().add((short)0); // Repeat count (<1 is forever)
+        tent2.getArgs().add((short)0); // Hittile to fill with
+        tent2.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        tent2.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        tent2.getArgs().add((short)0); // Cycle colors t/f
+        tent2.getArgs().add((short)0); // Alpha/frame
+        tent2.getArgs().add((short)255); // Max alpha
+        tent2.getArgs().add((short)0); // R/frame
+        tent2.getArgs().add((short)0); // Max R
+        tent2.getArgs().add((short)0); // G/frame
+        tent2.getArgs().add((short)0); // Max G
+        tent2.getArgs().add((short)0); // B/frame
+        tent2.getArgs().add((short)0); // Max B
+        tent2.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        tent2.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(tent2);
+
+        GameObject shop = new GameObject(screen);
+        shop.setId((short) 0xa0);
+        shop.setX(240);
+        shop.setY(320);
+
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)1);
+        shop.getArgs().add((short)35);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+
+        screen.getObjects().add(shop);
+
+        shop = new GameObject(screen);
+        shop.setId((short) 0xa0);
+        shop.setX(500);
+        shop.setY(240);
+
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)1);
+        shop.getArgs().add((short)36);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+
+        screen.getObjects().add(shop);
+    }
+
     public static void addDisguisedSpaulder(Screen screen, int x, int y, int inventoryArg, int fakeFlag) {
         GameObject fakeItem = new GameObject(screen);
         fakeItem.setId((short) 0x2f);
@@ -3364,5 +3532,65 @@ public final class AddObject {
         }
         blocks.add(shopBlock);
         return shopBlock;
+    }
+
+    public static void addTwinLabsDoor(GameObject reference) {
+        GameObject doorGraphic = new GameObject(reference.getObjectContainer());
+        doorGraphic.setId((short)0x93);
+        doorGraphic.setX(reference.getX() - 20);
+        doorGraphic.setY(reference.getY() - 40);
+        doorGraphic.getArgs().add((short)0); // Layer
+        doorGraphic.getArgs().add((short)7); // 01.effect.png for anything not 0-6?
+        doorGraphic.getArgs().add((short)80); // Imagex
+        doorGraphic.getArgs().add((short)512); // Imagey
+        doorGraphic.getArgs().add((short)80); // dx
+        doorGraphic.getArgs().add((short)80); // dy
+        doorGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        doorGraphic.getArgs().add((short)0); // Animation frames
+        doorGraphic.getArgs().add((short)1); // Pause frames
+        doorGraphic.getArgs().add((short)0); // Repeat count (<1 is forever)
+        doorGraphic.getArgs().add((short)0); // Hittile to fill with
+        doorGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        doorGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        doorGraphic.getArgs().add((short)0); // Cycle colors t/f
+        doorGraphic.getArgs().add((short)0); // Alpha/frame
+        doorGraphic.getArgs().add((short)255); // Max alpha
+        doorGraphic.getArgs().add((short)0); // R/frame
+        doorGraphic.getArgs().add((short)0); // Max R
+        doorGraphic.getArgs().add((short)0); // G/frame
+        doorGraphic.getArgs().add((short)0); // Max G
+        doorGraphic.getArgs().add((short)0); // B/frame
+        doorGraphic.getArgs().add((short)0); // Max B
+        doorGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        doorGraphic.getArgs().add((short)1); // not0?
+
+        reference.getObjectContainer().getObjects().add(doorGraphic);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x0fb);
+        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+        testByteOperation.setValue((byte)3);
+        doorGraphic.getTestByteOperations().add(testByteOperation);
+
+        GameObject door = new GameObject(reference.getObjectContainer());
+        door.setId((short)0x98);
+        door.setX(reference.getX());
+        door.setY(reference.getY());
+
+        door.getArgs().add((short)0);
+        door.getArgs().add((short)7);
+        door.getArgs().add((short)0);
+        door.getArgs().add((short)0);
+        door.getArgs().add((short)300);
+        door.getArgs().add((short)0);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x0fb);
+        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+        testByteOperation.setValue((byte)3);
+        door.getTestByteOperations().add(testByteOperation);
+
+        reference.getObjectContainer().getObjects().add(doorGraphic);
+        reference.getObjectContainer().getObjects().add(door);
     }
 }

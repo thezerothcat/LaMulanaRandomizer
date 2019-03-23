@@ -254,6 +254,12 @@ public final class GameDataTracker {
                     gameObject.getArgs().set(25, (short)0);
                     gameObject.getArgs().set(26, (short)1500);
                     gameObject.getArgs().set(27, (short)2);
+
+                    for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                        if(testByteOperation.getIndex() == 0x16a && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())) {
+                            AddObject.addTwinLabsDoor(gameObject);
+                        }
+                    }
                 }
             }
         }
@@ -3667,7 +3673,7 @@ public final class GameDataTracker {
                         for(Screen screen : room.getScreens()) {
                             if(screen.getScreenIndex() == LocationCoordinateMapper.getStartingScreen()) {
                                 for(GameObject gameObject : screen.getObjects()) {
-                                    if(gameObject.getId() == 0xa0) {
+                                    if(gameObject.getId() == 0xa0 && gameObject.getArgs().get(4) != 35 && gameObject.getArgs().get(4) != 36) {
                                         Integer flagIndexToRemove = null;
                                         for(int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
                                             TestByteOperation testByteOperation = gameObject.getTestByteOperations().get(i);
@@ -3841,7 +3847,7 @@ public final class GameDataTracker {
                     firstObject = false;
                 }
                 if(firstObject && gateDestination.contains("Transition: Twin ") && !gateToUpdate.equals("Transition: Twin U2")) {
-                    AddObject.addTwinLabsPoisonTimerRemoval(gameObject.getObjectContainer());
+                    AddObject.addTwinLabsPoisonTimerRemoval(gameObject.getObjectContainer(), false);
                 }
             }
         }

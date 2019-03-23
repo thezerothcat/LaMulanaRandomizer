@@ -1,4 +1,5 @@
-Shop 1 (Surface) => Location: Surface [Main]
+Shop 1 (Surface) => Location: Surface [Main], Setting: Surface Start
+Shop 1 (Surface) => Location: Gate of Time [Surface], Setting: Alternate Start
 Shop 2 (Surface) => Location: Surface [Main]
 Shop 2 Alt (Surface) => Location: Surface [Main], Event: Amphisbaena Defeated, Event: Sakit Defeated, Event: Ellmac Defeated, Event: Bahamut Defeated
 Shop 2 Alt (Surface) => Location: Surface [Main], Event: Amphisbaena Defeated, Event: Sakit Defeated, Event: Ellmac Defeated, Event: Viy Defeated
@@ -70,7 +71,8 @@ Shop 2 Alt (Surface) => Location: Surface [Main], Event: Bahamut Defeated, Event
 Shop 2 Alt (Surface) => Location: Surface [Main], Event: Bahamut Defeated, Event: Viy Defeated, Event: Baphomet Defeated, Event: Tiamat Defeated
 Shop 2 Alt (Surface) => Location: Surface [Main], Event: Bahamut Defeated, Event: Palenque Defeated, Event: Baphomet Defeated, Event: Tiamat Defeated
 Shop 2 Alt (Surface) => Location: Surface [Main], Event: Viy Defeated, Event: Palenque Defeated, Event: Baphomet Defeated, Event: Tiamat Defeated
-Shop 3 (Surface) => Location: Surface [Main]
+Shop 3 (Surface) => Location: Surface [Main], Setting: Surface Start
+Shop 3 (Surface) => Location: Gate of Time [Surface], Setting: Alternate Start
 Shop 4 (Guidance) => Location: Gate of Guidance [Main]
 Shop 5 (Illusion) => Location: Gate of Illusion [Middle]
 Shop 6 (Mausoleum) => Location: Mausoleum of the Giants, Attack: Chest-Any
