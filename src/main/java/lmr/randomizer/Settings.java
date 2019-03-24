@@ -914,11 +914,6 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
-        booleanSettings |= processBooleanFlag.apply(singleton.randomize5, 32);
-        booleanSettings |= processBooleanFlag.apply(singleton.randomize4, 31);
-        booleanSettings |= processBooleanFlag.apply(singleton.randomize3, 30);
-        booleanSettings |= processBooleanFlag.apply(singleton.randomize2, 29);
-        booleanSettings |= processBooleanFlag.apply(singleton.randomize1, 28);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeNonBossDoors, 27);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeOneWayTransitions, 26);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeEscapeChest, 25);
@@ -964,6 +959,13 @@ public final class Settings {
         // boss difficulty
         int bossDifficulty = singleton.bossDifficulty.ordinal();
 
+        int booleanSettings2 = 0;
+        booleanSettings2 |= processBooleanFlag.apply(singleton.randomize5, 4);
+        booleanSettings2 |= processBooleanFlag.apply(singleton.randomize4, 3);
+        booleanSettings2 |= processBooleanFlag.apply(singleton.randomize3, 2);
+        booleanSettings2 |= processBooleanFlag.apply(singleton.randomize2, 1);
+        booleanSettings2 |= processBooleanFlag.apply(singleton.randomize1, 0);
+
         // combine the results of the settings in a string
         long startingSeed = getStartingSeed();
         result += separator + Long.toHexString(startingSeed);
@@ -975,6 +977,7 @@ public final class Settings {
         result += separator + Integer.toHexString(bossDifficulty);
         result += separator + Integer.toHexString(singleton.minRandomRemovedItems);
         result += separator + Integer.toHexString(singleton.maxRandomRemovedItems);
+        result += separator + Integer.toHexString(booleanSettings2);
 
         return result;
     }
@@ -1003,11 +1006,6 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
-        singleton.randomize5 = getBoolFlagFromInt.apply(booleanSettingsFlag, 32);
-        singleton.randomize4 = getBoolFlagFromInt.apply(booleanSettingsFlag, 31);
-        singleton.randomize3 = getBoolFlagFromInt.apply(booleanSettingsFlag, 30);
-        singleton.randomize2 = getBoolFlagFromInt.apply(booleanSettingsFlag, 29);
-        singleton.randomize1 = getBoolFlagFromInt.apply(booleanSettingsFlag, 28);
         singleton.randomizeNonBossDoors = getBoolFlagFromInt.apply(booleanSettingsFlag, 27);
         singleton.randomizeOneWayTransitions = getBoolFlagFromInt.apply(booleanSettingsFlag, 26);
         singleton.randomizeEscapeChest = getBoolFlagFromInt.apply(booleanSettingsFlag, 25);
@@ -1044,6 +1042,13 @@ public final class Settings {
         BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[7],16)];
         int minRandomRemovedItems = Integer.parseInt(parts[8],16);
         int maxRandomRemovedItems = Integer.parseInt(parts[9],16);
+
+        int booleanSettingsFlag2 = Integer.parseInt(parts[10], 16);
+        singleton.randomize5 = getBoolFlagFromInt.apply(booleanSettingsFlag2, 4);
+        singleton.randomize4 = getBoolFlagFromInt.apply(booleanSettingsFlag2, 3);
+        singleton.randomize3 = getBoolFlagFromInt.apply(booleanSettingsFlag2, 2);
+        singleton.randomize2 = getBoolFlagFromInt.apply(booleanSettingsFlag2, 1);
+        singleton.randomize1 = getBoolFlagFromInt.apply(booleanSettingsFlag2, 0);
 
         setStartingSeed(seed);
         setEnabledGlitches((List<String>) glitches, true);

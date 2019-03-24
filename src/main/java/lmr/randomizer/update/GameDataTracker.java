@@ -1417,13 +1417,13 @@ public final class GameDataTracker {
                     gameObject.getWriteByteOperations().clear();
 
                     TestByteOperation testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(Settings.isRandomize2() ? 0x075 : 0xad3);
+                    testByteOperation.setIndex(Settings.isRandomize2() ? 0xad3 : 0x075);
                     testByteOperation.setOp(ByteOp.FLAG_EQUALS);
                     testByteOperation.setValue((byte)0);
                     gameObject.getTestByteOperations().add(testByteOperation);
 
                     WriteByteOperation writeByteOperation = new WriteByteOperation();
-                    writeByteOperation.setIndex(Settings.isRandomize2() ? 0x075 : 0xad3);
+                    writeByteOperation.setIndex(Settings.isRandomize2() ? 0xad3 : 0x075);
                     writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
                     writeByteOperation.setValue((byte)1);
                     gameObject.getWriteByteOperations().add(writeByteOperation);
@@ -1453,7 +1453,7 @@ public final class GameDataTracker {
                         }
                         else {
                             // Shrine of the Mother (Back)
-                            AddObject.addGrailDetector(gameObject, 117);
+                            AddObject.addGrailDetector(gameObject, Settings.isRandomize2() ? 0xad3 : 0x075);
                             return;
                         }
                     }
@@ -2980,6 +2980,14 @@ public final class GameDataTracker {
             blockListData.getData().add((short)369);
             blockListData.getData().add((short)0);
             checkBlock.getFlagCheckReferences().add(0, blockListData);
+
+            // Changing xmailer conversation to use a custom flag instead of a held item check
+            blockListData = new BlockListData((short)78, (short)4);
+            blockListData.getData().add((short)0xaa6);
+            blockListData.getData().add((short)0);
+            blockListData.getData().add((short)364);
+            blockListData.getData().add((short)0);
+            checkBlock.getFlagCheckReferences().add(0, blockListData);
         }
         else if(block.getBlockNumber() == 482) {
             // Xelpud point check reference block
@@ -3052,6 +3060,8 @@ public final class GameDataTracker {
             xelpudBlockContents.add(new BlockPoseData((short) 0x0046, (short) 25)); // 70
             xelpudBlockContents.add(new BlockItemData((short) 0x0042, (short) 86)); // 66
             xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 227, (short) 2)); // 64
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xaa6, (short) 1)); // 64
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0x145, (short) 1)); // 64
             xelpudBlockContents.add(new BlockSingleData((short) 0x0044)); // {CLS}
             for (Short shortCharacter : stringCharacters) {
                 xelpudBlockContents.add(new BlockSingleData(shortCharacter));
@@ -3070,6 +3080,8 @@ public final class GameDataTracker {
             xelpudBlockContents.add(new BlockPoseData((short) 0x0046, (short) 25)); // 70
             xelpudBlockContents.add(new BlockItemData((short) 0x0042, (short) 86)); // 66
             xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 227, (short) 2)); // 64
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xaa6, (short) 1)); // 64
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0x145, (short) 1)); // 64
             xelpudBlockContents.add(new BlockSingleData((short) 0x0044)); // {CLS}
             for (Short shortCharacter : stringCharacters) {
                 xelpudBlockContents.add(new BlockSingleData(shortCharacter));
@@ -3080,14 +3092,19 @@ public final class GameDataTracker {
         }
         else {
             // Set value of world flag to 2 instead of 1
+            Integer blockContentIndex = null;
             for(int i = 0; i < xelpudBlockContents.size(); i++) {
                 BlockContents blockContents = xelpudBlockContents.get(i);
                 if(blockContents instanceof BlockFlagData) {
                     BlockFlagData blockFlagData = (BlockFlagData) blockContents;
                     if(blockFlagData.getWorldFlag() == 227) {
                         blockFlagData.setFlagValue((short)2);
+                        blockContentIndex = i;
                     }
                 }
+            }
+            if(blockContentIndex != null) {
+                xelpudBlockContents.add(blockContentIndex, new BlockFlagData((short) 0x0040, (short) 0xaa6, (short) 1)); // 64
             }
         }
     }
@@ -5159,10 +5176,8 @@ public final class GameDataTracker {
         else {
             if(itemNewContentsData.getWorldFlag() == newWorldFlag) {
                 // Actual items
-                short inventoryArg = (short)(itemNewContentsData.getInventoryArg() + 11);
-
                 if(itemRandomize5Flag == null) {
-                    objectToModify.getArgs().set(0, inventoryArg); // Item arg to indicate what the chest drops
+                    objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11)); // Item arg to indicate what the chest drops
                     objectToModify.getArgs().set(1, (short)1); // Real item, not fake (or 1 weight, because the game won't allow multiple)
 
 //                    if(Settings.isCoinChestGraphics()) {
@@ -5210,7 +5225,7 @@ public final class GameDataTracker {
                         // No custom graphic
                         graphic = getRandomItemGraphic(random);
                     }
-                    objectToModify.getArgs().set(0, graphic); // Item arg to indicate what the chest drops
+                    objectToModify.getArgs().set(0, (short)(graphic + 11)); // Item arg to indicate what the chest drops
                     objectToModify.getArgs().set(1, (short)0); // Real item, not fake (or 1 weight, because the game won't allow multiple)
 
 //                    if(Settings.isCoinChestGraphics()) {
@@ -5253,7 +5268,7 @@ public final class GameDataTracker {
                     updateFlag.setValue(2);
                     objectToModify.getWriteByteOperations().add(updateFlag);
 
-                    AddObject.addItemGive(objectToModify, inventoryArg, itemRandomize5Flag, newWorldFlag);
+                    AddObject.addItemGive(objectToModify, itemNewContentsData.getInventoryArg(), itemRandomize5Flag, newWorldFlag);
                 }
             }
             else {

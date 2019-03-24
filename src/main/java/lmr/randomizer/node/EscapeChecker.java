@@ -47,6 +47,11 @@ public class EscapeChecker {
                 && accessedNodesFromValidation.contains("Plane Model")) {
             queuedUpdates.add("State: Phase 1 Shield Statue Access");
         }
+        if(accessedNodesFromValidation.contains("Event: Flooded Temple of the Sun")
+                && accessedNodesFromValidation.contains("Origin Seal")
+                && accessedNodesFromValidation.contains("Location: Temple of the Sun [East]")) {
+            queuedUpdates.add("State: Phase 1 Sun Exits Opened");
+        }
         for(String accessedNodeFromValidation : accessedNodesFromValidation) {
             if(!"Holy Grail".equals(accessedNodeFromValidation)
                     && !"State: Pre-Escape".equals(accessedNodeFromValidation)

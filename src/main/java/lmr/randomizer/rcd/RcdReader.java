@@ -1133,7 +1133,7 @@ public final class RcdReader {
             if(zoneIndex == 21) {
                 // randomize1
                 AddObject.addSpecialGrailTablet(screen);
-                AddObject.addSurfaceShop3(screen);
+                AddObject.addSurfaceShops(screen);
             }
             AddObject.addStartingItems(screen);
         }
@@ -1270,10 +1270,29 @@ public final class RcdReader {
                 }
             }
         }
+        else if(zoneIndex == 3 && roomIndex == 4 && screenIndex == 2) {
+            if(Settings.isRandomize3()) {
+                if(Settings.isRandomize3()) {
+                    AddObject.addBossTimer(screen, 0x0f8, 0x2d8);
+                }
+            }
+        }
+        else if(zoneIndex == 4 && roomIndex == 4 && screenIndex == 0) {
+            if(Settings.isRandomize3()) {
+                if(Settings.isRandomize3()) {
+                    AddObject.addBossTimer(screen, 0x0f9, 0x2d9);
+                }
+            }
+        }
         else if(zoneIndex == 6 && roomIndex == 9 && screenIndex == 1) {
             AddObject.addPalenqueMSX2Timer(screen);
             if(Settings.isRandomize3()) {
                 AddObject.addTwinLabsPoisonTimerRemoval(screen, true);
+            }
+        }
+        else if(zoneIndex == 7 && roomIndex == 0 && screenIndex == 0) {
+            if(Settings.isRandomize3()) {
+                AddObject.addBossTimer(screen, 0x0fb, 0x2db);
             }
         }
         else if(zoneIndex == 9 && roomIndex == 2 && screenIndex == 0) {

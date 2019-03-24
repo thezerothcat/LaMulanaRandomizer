@@ -2349,6 +2349,12 @@ public final class AddObject {
         warp.getArgs().add((short)4);
         warp.getArgs().add((short)4);
 
+        TestByteOperation warpTest = new TestByteOperation();
+        warpTest.setIndex(0x0f8);
+        warpTest.setValue((byte) 2);
+        warpTest.setOp(ByteOp.FLAG_NOT_EQUAL);
+        warp.getTestByteOperations().add(warpTest);
+
         screen.getObjects().add(warp);
     }
 
@@ -2436,7 +2442,7 @@ public final class AddObject {
         screen.getObjects().add(itemGive);
     }
 
-    public static void addSurfaceShop3(Screen screen) {
+    public static void addSurfaceShops(Screen screen) {
         GameObject tent = new GameObject(screen);
         tent.setId((short) 0x93);
         tent.setX(220);
@@ -3592,5 +3598,95 @@ public final class AddObject {
 
         reference.getObjectContainer().getObjects().add(doorGraphic);
         reference.getObjectContainer().getObjects().add(door);
+    }
+
+    public static void addBossTimer(Screen screen, int bossFlag, int otherFlag) {
+        GameObject bossTimer1 = new GameObject(screen);
+        bossTimer1.setId((short)0x0b);
+        bossTimer1.setX(-1);
+        bossTimer1.setY(-1);
+
+        bossTimer1.getArgs().add((short)0);
+        bossTimer1.getArgs().add((short)0);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(bossFlag);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)3);
+        bossTimer1.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(otherFlag);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        bossTimer1.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x102);
+        writeByteOperation.setOp(ByteOp.ADD_FLAG);
+        writeByteOperation.setValue(1);
+        bossTimer1.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(otherFlag);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(1);
+        bossTimer1.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x07b);
+        writeByteOperation.setOp(ByteOp.ADD_FLAG);
+        writeByteOperation.setValue(8);
+        bossTimer1.getWriteByteOperations().add(writeByteOperation);
+
+        if(bossFlag == 0x0fb) {
+            writeByteOperation = new WriteByteOperation();
+            writeByteOperation.setIndex(0x3b8);
+            writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+            writeByteOperation.setValue(3);
+            bossTimer1.getWriteByteOperations().add(writeByteOperation);
+        }
+
+        screen.getObjects().add(0, bossTimer1);
+
+        GameObject bossTimer2 = new GameObject(screen);
+        bossTimer2.setId((short)0x0b);
+        bossTimer2.setX(-1);
+        bossTimer2.setY(-1);
+
+        bossTimer2.getArgs().add((short)0);
+        bossTimer2.getArgs().add((short)0);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x102);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)8);
+        bossTimer2.getTestByteOperations().add(testByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x102);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(9);
+        bossTimer2.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x07b);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(200);
+        bossTimer2.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x06c);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(0);
+        bossTimer2.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x2e1);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(1);
+        bossTimer2.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(0, bossTimer2);
     }
 }

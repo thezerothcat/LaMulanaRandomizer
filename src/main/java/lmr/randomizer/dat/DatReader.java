@@ -206,6 +206,11 @@ public final class DatReader {
             blockListData.getData().add(LocationCoordinateMapper.getStartingY());
             grailPointsBlock.getBlockContents().add(0, new BlockSingleData((short)0x000a));
             grailPointsBlock.getBlockContents().add(0, blockListData);
+
+            if(Settings.isRandomize2()) {
+                blockListData = (BlockListData)grailPointsBlock.getBlockContents().get(38);
+                blockListData.getData().set(1, (short)0xad3);
+            }
         }
         return grailPointsBlock;
     }
