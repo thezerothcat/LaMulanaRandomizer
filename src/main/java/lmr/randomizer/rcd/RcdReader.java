@@ -1142,10 +1142,10 @@ public final class RcdReader {
         if(zoneIndex == 0) {
             if(Settings.isRandomize3()) {
                 if(roomIndex == 8 && screenIndex == 0) {
-                    AddObject.addSpecialTransitionGate(screen, 5, 1);
+                    AddObject.addSpecialTransitionWarp(screen, 5);
                 }
                 else if(roomIndex == 8 && screenIndex == 1) {
-                    AddObject.addSpecialTransitionGate(screen, 5, 0);
+                    AddObject.addSpecialTransitionGate(screen, 5);
                     AddObject.addSnouter(screen, 140, 880, true);
                     AddObject.addSnouter(screen, 460, 880, false);
                 }
@@ -1181,10 +1181,10 @@ public final class RcdReader {
         else if(zoneIndex == 5) {
             if(Settings.isRandomize3()) {
                 if(roomIndex == 8 && screenIndex == 0) {
-                    AddObject.addSpecialTransitionGate(screen, 0, 1);
+                    AddObject.addSpecialTransitionWarp(screen, 0);
                 }
                 else if(roomIndex == 8 && screenIndex == 1) {
-                    AddObject.addSpecialTransitionGate(screen, 0, 0);
+                    AddObject.addSpecialTransitionGate(screen, 0);
                 }
             }
         }
