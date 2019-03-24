@@ -876,7 +876,7 @@ public final class AddObject {
      * Add a timer to automatically start hard mode.
      * @param screen the screen to add the objects to
      */
-    public static void addAutomaticHardmode(Screen screen) {
+    public static void addAutomaticHardmodeTimer(Screen screen) {
         GameObject automaticHardmodeTimer = new GameObject(screen);
         automaticHardmodeTimer.setId((short) 0x0b);
         automaticHardmodeTimer.getArgs().add((short) 0);
@@ -903,7 +903,7 @@ public final class AddObject {
      * Add a timer to automatically learn ancient La-Mulanese.
      * @param screen the screen to add the objects to
      */
-    public static void addAutomaticTranslations(Screen screen) {
+    public static void addAutomaticTranslationsTimer(Screen screen) {
         GameObject automaticTranslationTimer = new GameObject(screen);
         automaticTranslationTimer.setId((short) 0x0b);
         automaticTranslationTimer.getArgs().add((short) 0);
@@ -932,7 +932,7 @@ public final class AddObject {
         screen.getObjects().add(0, automaticTranslationTimer);
     }
 
-    public static void addAutomaticMantras(ObjectContainer screen) {
+    public static void addAutomaticMantrasTimer(ObjectContainer screen) {
         GameObject mantraTimer = new GameObject(screen);
         mantraTimer.setId((short)0x0b);
         mantraTimer.getArgs().add((short) 0);
@@ -2215,7 +2215,7 @@ public final class AddObject {
             AddObject.addMedicineStatueTimer(objectContainer);
         }
         if(Settings.isAutomaticMantras() && "Key Sword".equals(newContents)) {
-            AddObject.addAutomaticMantras(objectContainer);
+            AddObject.addAutomaticMantrasTimer(objectContainer);
         }
     }
 

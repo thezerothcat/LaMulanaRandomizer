@@ -3640,7 +3640,7 @@ public final class GameDataTracker {
 
         if(!recursive && Settings.isAutomaticMantras()) {
             if("Key Sword".equals(shopItem1) || "Key Sword".equals(shopItem2) || "Key Sword".equals(shopItem3)) {
-                AddObject.addAutomaticMantras(mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber()).get(0).getObjectContainer());
+                AddObject.addAutomaticMantrasTimer(mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber()).get(0).getObjectContainer());
             }
         }
 

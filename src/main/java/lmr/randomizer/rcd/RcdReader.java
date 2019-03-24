@@ -1237,6 +1237,17 @@ public final class RcdReader {
     }
 
     private static void addCustomNoPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
+        if(zoneIndex == LocationCoordinateMapper.getStartingZone()
+                && roomIndex == LocationCoordinateMapper.getStartingRoom()
+                && screenIndex == LocationCoordinateMapper.getStartingScreen()) {
+            if (Settings.isAutomaticHardmode()) {
+                AddObject.addAutomaticHardmodeTimer(screen);
+            }
+            if (Settings.isAutomaticTranslations()) {
+                AddObject.addAutomaticTranslationsTimer(screen);
+            }
+        }
+
         if(zoneIndex == 1 && roomIndex == 1 && screenIndex == 1) {
             AddObject.addSacredOrbCountTimers(screen);
         }
@@ -1249,12 +1260,6 @@ public final class RcdReader {
                 }
                 if(screenIndex == 1) {
                     AddObject.addDiaryTalismanConversationTimers(screen);
-                    if (Settings.isAutomaticHardmode()) {
-                        AddObject.addAutomaticHardmode(screen);
-                    }
-                    if (Settings.isAutomaticTranslations()) {
-                        AddObject.addAutomaticTranslations(screen);
-                    }
                     if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomize1()) {
                         AddObject.addSurfaceKillTimer(screen, true);
                     }
@@ -1285,9 +1290,7 @@ public final class RcdReader {
         }
         else if(zoneIndex == 4 && roomIndex == 4 && screenIndex == 0) {
             if(Settings.isRandomize3()) {
-                if(Settings.isRandomize3()) {
-                    AddObject.addBossTimer(screen, 0x0f9, 0x2d9);
-                }
+                AddObject.addBossTimer(screen, 0x0f9, 0x2d9);
             }
         }
         else if(zoneIndex == 6 && roomIndex == 9 && screenIndex == 1) {
