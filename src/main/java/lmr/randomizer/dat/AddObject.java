@@ -2219,6 +2219,20 @@ public final class AddObject {
         }
     }
 
+    public static void addHotspring(GameObject reference) {
+        GameObject hotspring = new GameObject(reference.getObjectContainer());
+        hotspring.setId((short)0xad);
+        hotspring.setX(reference.getX() - 20);
+        hotspring.setY(reference.getY() + 20);
+
+        hotspring.getArgs().add((short)4);
+        hotspring.getArgs().add((short)2);
+        hotspring.getArgs().add((short)8);
+        hotspring.getArgs().add((short)4);
+
+        reference.getObjectContainer().getObjects().add(hotspring);
+    }
+
     public static void addSurfaceGrailTablet(Screen screen) {
         GameObject grailTablet = new GameObject(screen);
         grailTablet.setId((short)0x9e);
@@ -2256,7 +2270,7 @@ public final class AddObject {
         }
     }
 
-    public static void addSpecialGrailTablet(Screen screen) {
+    public static GameObject addSpecialGrailTablet(Screen screen) {
         GameObject grailTablet = new GameObject(screen);
         grailTablet.setId((short)0x9f);
         grailTablet.setX(400);
@@ -2316,6 +2330,8 @@ public final class AddObject {
         grailSave.getArgs().add((short)33);
 
         screen.getObjects().add(grailSave);
+
+        return grailTablet;
     }
 
     public static void addSnouter(Screen screen, int x, int y, boolean faceRight) {
@@ -3688,5 +3704,34 @@ public final class AddObject {
         bossTimer2.getWriteByteOperations().add(writeByteOperation);
 
         screen.getObjects().add(0, bossTimer2);
+    }
+
+    public static void addSphinxRemovalTimer(Screen screen) {
+        GameObject sphinxRemovalTimer = new GameObject(screen);
+        sphinxRemovalTimer.setId((short)0x0b);
+        sphinxRemovalTimer.setX(-1);
+        sphinxRemovalTimer.setY(-1);
+
+        sphinxRemovalTimer.getArgs().add((short)4);
+        sphinxRemovalTimer.getArgs().add((short)0);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x173);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)3);
+        sphinxRemovalTimer.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x173);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(4);
+        sphinxRemovalTimer.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x17d);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(1);
+        sphinxRemovalTimer.getWriteByteOperations().add(writeByteOperation);
+        screen.getObjects().add(0, sphinxRemovalTimer);
     }
 }

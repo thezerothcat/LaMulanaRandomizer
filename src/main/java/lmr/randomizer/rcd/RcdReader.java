@@ -1132,7 +1132,8 @@ public final class RcdReader {
                 && screenIndex == LocationCoordinateMapper.getStartingScreen()) {
             if(zoneIndex == 21) {
                 // randomize1
-                AddObject.addSpecialGrailTablet(screen);
+                GameObject grailTablet = AddObject.addSpecialGrailTablet(screen);
+                AddObject.addHotspring(grailTablet);
                 AddObject.addSurfaceShops(screen);
             }
             AddObject.addStartingItems(screen);
@@ -1270,10 +1271,15 @@ public final class RcdReader {
                 }
             }
         }
-        else if(zoneIndex == 3 && roomIndex == 4 && screenIndex == 2) {
-            if(Settings.isRandomize3()) {
+        else if(zoneIndex == 3) {
+            if(roomIndex == 4 && screenIndex == 2) {
                 if(Settings.isRandomize3()) {
-                    AddObject.addBossTimer(screen, 0x0f8, 0x2d8);
+                        AddObject.addBossTimer(screen, 0x0f8, 0x2d8);
+                }
+            }
+            else if(roomIndex == 8 && screenIndex == 0) {
+                if(Settings.isRandomize3()) {
+                    AddObject.addSphinxRemovalTimer(screen);
                 }
             }
         }

@@ -547,8 +547,10 @@ public class AccessChecker {
         }
         else if(item.contains("Sacred Orb")) {
             item = "Sacred Orb";
-            if(location.contains("Shop") && shopRandomizer.shopHasTransformation(location)) {
-                return false;
+            if(location.contains("Shop")) {
+                if(shopRandomizer.shopHasTransformation(location) || (Settings.isRandomize1() && location.contains("(Surface)"))) {
+                    return false;
+                }
             }
             if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
                 return false;
