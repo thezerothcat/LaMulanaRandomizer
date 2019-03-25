@@ -544,19 +544,24 @@ public final class RcdReader {
                 if(objectContainer instanceof Screen) {
                     Screen screen = (Screen)objectContainer;
                     if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
-                        // Graphical part of Inferno Cavern fake Sacred Orb trap
-                        obj.setId((short)0x2f);
-                        obj.getArgs().clear();
-                        obj.getArgs().add((short)0); // Interactable any time?
-                        obj.getArgs().add((short)69); // Sacred Orb item
-                        obj.getArgs().add((short)0); // Fake item
-                        obj.getTestByteOperations().get(0).setIndex(2779);
+                        for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                            if(testByteOperation.getIndex() == 0x1ac) {
+                                // Graphical part of Inferno Cavern fake Sacred Orb trap
+                                obj.setId((short)0x2f);
+                                obj.getArgs().clear();
+                                obj.getArgs().add((short)0); // Interactable any time?
+                                obj.getArgs().add((short)69); // Sacred Orb item
+                                obj.getArgs().add((short)0); // Fake item
+                                obj.getTestByteOperations().get(0).setIndex(2779);
 
-                        WriteByteOperation writeByteOperation = new WriteByteOperation();
-                        writeByteOperation.setIndex(2779);
-                        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
-                        writeByteOperation.setValue((byte)1);
-                        obj.getWriteByteOperations().add(writeByteOperation);
+                                WriteByteOperation writeByteOperation = new WriteByteOperation();
+                                writeByteOperation.setIndex(2779);
+                                writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                                writeByteOperation.setValue((byte)1);
+                                obj.getWriteByteOperations().add(writeByteOperation);
+                                break;
+                            }
+                        }
                     }
                     else if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 12 && screen.getScreenIndex() == 0) {
                         if(!obj.getTestByteOperations().isEmpty() && obj.getTestByteOperations().get(0).getIndex() == 53) {
