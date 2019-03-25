@@ -2228,7 +2228,7 @@ public final class AddObject {
         hotspring.getArgs().add((short)4);
         hotspring.getArgs().add((short)2);
         hotspring.getArgs().add((short)8);
-        hotspring.getArgs().add((short)4);
+        hotspring.getArgs().add((short)2);
 
         reference.getObjectContainer().getObjects().add(hotspring);
     }
