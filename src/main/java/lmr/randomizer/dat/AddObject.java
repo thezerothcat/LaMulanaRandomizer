@@ -3473,8 +3473,13 @@ public final class AddObject {
         shopBlock.setBunemonLocation(blockStringData);
 
         ShopBlock foolShop = (ShopBlock)blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get("Shop 2 (Surface)"));
+        ShopBlock infernoShop = (ShopBlock)blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get("Shop 14 (Inferno)"));
         for(int i = 0; i < 18; i++) {
-            if(i == 15 || i == 16 || i == 17) {
+            if(i == 2) {
+                existingBlockData = infernoShop.getString(i);
+                shopBlock.setString(new BlockStringData(existingBlockData), i);
+            }
+            else if(i == 15 || i == 16 || i == 17) {
                 existingBlockData = foolShop.getString(i);
                 shopBlock.setString(new BlockStringData(existingBlockData), i);
             }
