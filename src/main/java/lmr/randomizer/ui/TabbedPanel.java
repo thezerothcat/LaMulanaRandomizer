@@ -67,11 +67,12 @@ public class TabbedPanel extends JTabbedPane {
         speedPanel.updateTranslations();
         removedItemsPanel.updateTranslations();
 
-        setTitleAt(0, Translations.getText("settings.randomization"));
-        setTitleAt(1, Translations.getText("settings.logic"));
-        setTitleAt(2, Translations.getText("settings.challenge"));
-        setTitleAt(3, Translations.getText("settings.speed"));
-        setTitleAt(4, Translations.getText("settings.removal"));
-        setTitleAt(5, Translations.getText("settings.share"));
+        setTitleAt(0, Translations.getText("fools.randomization"));
+        setTitleAt(1, Translations.getText("settings.randomization"));
+        setTitleAt(2, Translations.getText("settings.logic"));
+        setTitleAt(3, Translations.getText("settings.challenge"));
+        setTitleAt(4, Translations.getText("settings.speed"));
+        setTitleAt(5, Translations.getText("settings.removal"));
+        setTitleAt(6, Translations.getText("settings.share"));
     }
 }

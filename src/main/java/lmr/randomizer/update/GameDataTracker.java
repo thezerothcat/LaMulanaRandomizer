@@ -5614,8 +5614,14 @@ public final class GameDataTracker {
     public static void randomizeEnemies(Random random) {
         for(GameObject enemy : enemyObjects) {
             if(enemy.getId() == 0x02) {
+                int zoneIndex = ((Screen)enemy.getObjectContainer()).getZoneIndex();
                 enemy.getArgs().set(0, (short)random.nextInt(2)); // Start moving
-                enemy.getArgs().set(3, (short)random.nextInt(2)); // Type
+                if(zoneIndex == 19 || zoneIndex == 20) {
+                    enemy.getArgs().set(3, (short)0); // Type
+                }
+                else {
+                    enemy.getArgs().set(3, (short)random.nextInt(2)); // Type
+                }
                 enemy.getArgs().set(4, (short)(random.nextInt(2) + 2)); // Damage
             }
             else if(enemy.getId() == 0x35) {
