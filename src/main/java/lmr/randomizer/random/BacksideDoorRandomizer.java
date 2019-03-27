@@ -369,6 +369,15 @@ public class BacksideDoorRandomizer {
         doorRequirements.add(doorName);
         node.addRequirementSet(doorRequirements);
 
+        doorRequirements = new ArrayList<>();
+        doorRequirements.add("Holy Grail");
+        node.addRequirementSet(doorRequirements);
+
+        doorRequirements = new ArrayList<>();
+        doorRequirements.add("Glitch: Raindrop");
+        doorRequirements.add("State: Pre-Escape");
+        node.addRequirementSet(doorRequirements);
+
         mapOfNodeNameToDoorRequirementsObject.put(doorExit, node);
     }
 
