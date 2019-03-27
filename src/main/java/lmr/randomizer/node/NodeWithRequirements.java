@@ -70,7 +70,7 @@ public class NodeWithRequirements {
             if(requirementSet.contains("State: Extinction Light") && Settings.isRequireFlaresForExtinction()) {
                 requirementSet.add("Flare Gun");
             }
-            if(requirementSet.contains("Event: Key Fairy")) {
+            if(requirementSet.contains("State: Key Fairy Access")) {
                 requirementSet.add("Isis' Pendant");
             }
             if(requirementSet.contains("State: Lamp")) {
