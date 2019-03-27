@@ -215,6 +215,14 @@ public class ShopItemPriceCountRandomizer {
 //        else if(PRICE_TIER5.contains(itemName)) {
 //            return (short)(250 + 50 * random.nextInt(3));
 //        }
+        if(Settings.isRandomize2()) {
+            if("Coin".equals(itemName)) {
+                return (short)0;
+            }
+            if("Spaulder".equals(itemName) && shopInventoryLocation.contains("Shop 2")) {
+                return (short)4;
+            }
+        }
         return (short)(10 + 10 * random.nextInt(25) + 1);
     }
 
@@ -245,6 +253,11 @@ public class ShopItemPriceCountRandomizer {
         }
         if("Pistol Ammo".equals(item)) {
             return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Pistol") ? (short)3 : 1;
+        }
+        if(Settings.isRandomize2()) {
+            if("Coin".equals(item)) {
+                return (short)0;
+            }
         }
         return 1;
     }

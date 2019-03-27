@@ -417,6 +417,10 @@ public class EverythingShopRandomizer implements ShopRandomizer {
         ShopItemPriceCountRandomizer shopItemPriceCountRandomizer = new ShopItemPriceCountRandomizer(subweaponOnly, moneyChecker, random);
         Pair<Short, Short> itemPriceCountMsxShop2 = null;
         Pair<Short, Short> itemPriceCountMsxShop3 = null;
+        if(Settings.isRandomize2()) {
+            mapOfShopInventoryItemToContents.put(String.format("%s Item 1", NON_MSX_SHOP_NAME), "Spaulder");
+            mapOfShopInventoryItemToContents.put(String.format("%s Item 3", NON_MSX_SHOP_NAME), "Coin");
+        }
         for(String shopName : randomizedShops) {
             shopBlock = (ShopBlock) blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get(shopName));
 

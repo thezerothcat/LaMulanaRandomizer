@@ -4970,6 +4970,9 @@ public final class GameDataTracker {
         if("Weights".equals(item)) {
             return 105;
         }
+        if("Coin".equals(item)) {
+            return 0x06a;
+        }
         if("Shuriken Ammo".equals(item)) {
             return 107;
         }
@@ -4999,6 +5002,9 @@ public final class GameDataTracker {
 
     private static short getFlag(String item) {
         if("Weights".equals(item)) {
+            return 0;
+        }
+        if("Coin".equals(item)) {
             return 0;
         }
         if(item.endsWith("Ammo")) {

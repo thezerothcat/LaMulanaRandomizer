@@ -234,6 +234,59 @@ public class Main {
 
             Settings.saveSettings();
 
+            if(Settings.isRandomize2()) {
+                CustomItemPlacement customItemPlacement = new CustomItemPlacement("Shell Horn", "Coin: Guidance (Two)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Birth Seal", "Coin: Mausoleum", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Sacred Orb (Surface)", "Coin: Sun (Pyramid)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Feather", "Coin: Guidance (One)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Coin: Surface (Waterfall)", "Coin: Surface (Waterfall)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Coin: Surface (Seal)", "Coin: Inferno (Lava)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("xmailer.exe", "Talisman", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Diary", "Diary", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Mulana Talisman", "guild.exe", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("deathv.exe", "emusic.exe", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("mekuri.exe", "beolamu.exe", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 2 Alt (Surface) Item 1", "xmailer.exe", (short)4, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 1", "Weights", null); // Actually Spaulder
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 2", "Pistol Ammo", (short)1, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 3", "Weights", null); // Actually money
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 18 (Lil Bro) Item 1", "Weights", (short)1, (short)20);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 18 (Lil Bro) Item 2", "Weights", (short)20, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+            }
+
             progressDialog.updateProgress(10, Translations.getText("setup.backup"));
 
             if(!backupRcd()) {
@@ -946,6 +999,43 @@ public class Main {
                             || customItemPlacement.getContents().endsWith(" Ammo")) {
                         JOptionPane.showMessageDialog(randomizerUI,
                                 "Custom placement of " + customItemPlacement.getContents() + " not valid with current settings for shop randomization",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                }
+
+                if(Settings.isRandomize2()) {
+                    if(customItemPlacement.getLocation().contains("Shop 2 (Surface)")
+                            || customItemPlacement.getLocation().contains("Shop 2 Alt (Surface)")
+                            || "xmailer.exe".equals(customItemPlacement.getLocation())
+                            || "deathv.exe".equals(customItemPlacement.getLocation())
+                            || "mekuri.exe".equals(customItemPlacement.getLocation())
+                            || "Feather".equals(customItemPlacement.getLocation())
+                            || "Shell Horn".equals(customItemPlacement.getLocation())
+                            || "Coin: Surface (Waterfall)".equals(customItemPlacement.getLocation())
+                            || "Coin: Surface (Seal)".equals(customItemPlacement.getLocation())
+                            || "Sacred Orb (Surface)".equals(customItemPlacement.getLocation())
+                            || "Birth Seal".equals(customItemPlacement.getLocation())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Custom placement at location " + customItemPlacement.getLocation() + " not valid with setting \"" + Translations.getText("fools.randomize2") + "\"",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+
+                    if("Coin: Surface (Waterfall)".equals(customItemPlacement.getContents())
+                            || "Coin: Guidance (One)".equals(customItemPlacement.getContents())
+                            || "Coin: Guidance (Two)".equals(customItemPlacement.getContents())
+                            || "Coin: Mausoleum".equals(customItemPlacement.getContents())
+                            || "Coin: Sun (Pyramid)".equals(customItemPlacement.getContents())
+                            || "Coin: Inferno (Lava)".equals(customItemPlacement.getContents())
+                            || "Talisman".equals(customItemPlacement.getContents())
+                            || "Diary".equals(customItemPlacement.getContents())
+                            || "xmailer.exe".equals(customItemPlacement.getContents())
+                            || "guild.exe".equals(customItemPlacement.getContents())
+                            || "emusic.exe".equals(customItemPlacement.getContents())
+                            || "beolamu.exe".equals(customItemPlacement.getContents())) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Custom placement of " + customItemPlacement.getContents() + " not valid with setting \"" + Translations.getText("fools.randomize2") + "\"",
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
                         return false;
                     }

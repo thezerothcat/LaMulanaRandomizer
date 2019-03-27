@@ -253,6 +253,11 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         String shopItem2;
         String shopItem3;
         ShopBlock shopBlock;
+
+        if(Settings.isRandomize2()) {
+            mapOfShopInventoryItemToContents.put(String.format("%s Item 1", NON_MSX_SHOP_NAME), "Spaulder");
+            mapOfShopInventoryItemToContents.put(String.format("%s Item 3", NON_MSX_SHOP_NAME), "Coin");
+        }
         for(String shopName : randomizedShops) {
             shopBlock = (ShopBlock) blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get(shopName));
 
@@ -333,6 +338,15 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             }
             if("Pistol".equals(startingWeapon)) {
                 return new Pair<>((short)0, (short)3);
+            }
+        }
+
+        if(Settings.isRandomize2()) {
+            if("Coin".equals(itemName)) {
+                return new Pair<>((short)0, (short)0);
+            }
+            if("Spaulder".equals(itemName) && shopInventoryLocation.contains("Shop 2")) {
+                return new Pair<>((short)4, (short)1);
             }
         }
 
