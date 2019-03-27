@@ -3675,14 +3675,20 @@ public final class AddObject {
 
         TestByteOperation testByteOperation = new TestByteOperation();
         testByteOperation.setIndex(0x173);
-        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-        testByteOperation.setValue((byte)3);
+        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+        testByteOperation.setValue((byte)1);
+        sphinxRemovalTimer.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x173);
+        testByteOperation.setOp(ByteOp.FLAG_LT);
+        testByteOperation.setValue((byte)5);
         sphinxRemovalTimer.getTestByteOperations().add(testByteOperation);
 
         WriteByteOperation writeByteOperation = new WriteByteOperation();
         writeByteOperation.setIndex(0x173);
         writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
-        writeByteOperation.setValue(4);
+        writeByteOperation.setValue(5);
         sphinxRemovalTimer.getWriteByteOperations().add(writeByteOperation);
 
         writeByteOperation = new WriteByteOperation();
