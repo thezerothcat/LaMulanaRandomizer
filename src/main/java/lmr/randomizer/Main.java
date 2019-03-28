@@ -540,7 +540,18 @@ public class Main {
                 manuallyRemovedItems.addAll(DataFromFile.MAIN_WEAPONS);
                 manuallyRemovedItems.remove("Whip"); // Whip gets special treatment.
 
-                Settings.setAlternateMotherAnkh(true); // Required to clear the game without Key Sword.
+                if(!Settings.isAlternateMotherAnkh()) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("The setting \"%s \" is required when removing Main Weapons", Translations.getText("randomization.alternateMotherAnkh")),
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(!Settings.isAllowSubweaponStart()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Starting with subweapon is required when removing Main Weapons",
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
             }
             if((Settings.getMinRandomRemovedItems() + manuallyRemovedItems.size() > 99)) {
                 JOptionPane.showMessageDialog(this,

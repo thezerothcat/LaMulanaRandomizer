@@ -506,6 +506,9 @@ public class FileUtils {
             else if(line.startsWith("randomizeNonBossDoors")) {
                 Settings.setRandomizeNonBossDoors(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("alternateMotherAnkh")) {
+                Settings.setAlternateMotherAnkh(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("randomize1")) {
                 Settings.setRandomize1(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -641,6 +644,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("randomizeNonBossDoors=%s", Settings.isRandomizeNonBossDoors()));
+        writer.newLine();
+
+        writer.write(String.format("alternateMotherAnkh=%s", Settings.isAlternateMotherAnkh()));
         writer.newLine();
 
         writer.write(String.format("randomize1=%s", Settings.isRandomize1()));

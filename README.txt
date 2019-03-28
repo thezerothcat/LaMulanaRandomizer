@@ -2,6 +2,14 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+2.19
+-----------------------------
+Alternate Mother Ankh is now a proper setting.
+
+2.18
+-----------------------------
+Logic fixes.
+
 2.17
 -----------------------------
 Random removed items can now support a higher maximum.

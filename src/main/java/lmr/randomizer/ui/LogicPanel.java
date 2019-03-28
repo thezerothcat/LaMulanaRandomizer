@@ -15,8 +15,8 @@ public class LogicPanel extends JPanel {
     private JCheckBox requireSoftwareComboForKeyFairy;
     private JCheckBox requireIceCapeForLava;
     private JCheckBox requireFlaresForExtinction;
-    private JCheckBox ushumgalluAssist;
     private JCheckBox subweaponOnlyLogic;
+    private JCheckBox requireFullAccess;
 
     public LogicPanel() {
         super(new MigLayout("fillx, wrap"));
@@ -36,9 +36,6 @@ public class LogicPanel extends JPanel {
         requireSoftwareComboForKeyFairy = new JCheckBox();
         requireSoftwareComboForKeyFairy.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
 
-        ushumgalluAssist = new JCheckBox();
-        ushumgalluAssist.setSelected(Settings.isUshumgalluAssist());
-
         subweaponOnlyLogic = new JCheckBox();
         subweaponOnlyLogic.setSelected(Settings.isSubweaponOnlyLogic());
 
@@ -46,12 +43,17 @@ public class LogicPanel extends JPanel {
         checkboxContainer.add(requireIceCapeForLava);
         checkboxContainer.add(requireFlaresForExtinction);
         checkboxContainer.add(requireSoftwareComboForKeyFairy);
-        checkboxContainer.add(ushumgalluAssist);
         checkboxContainer.add(subweaponOnlyLogic);
         add(checkboxContainer, "growx, wrap");
 
         difficultyPanel = new DifficultyPanel();
         add(difficultyPanel, "growx, aligny, wrap");
+
+        requireFullAccess = new JCheckBox();
+        requireFullAccess.setSelected(Settings.isRequireFullAccess());
+        checkboxContainer = new CheckboxContainer(1);
+        checkboxContainer.add(requireFullAccess);
+        add(checkboxContainer, "growx, wrap");
 
         updateTranslations();
     }
@@ -63,8 +65,8 @@ public class LogicPanel extends JPanel {
         requireIceCapeForLava.setText(Translations.getText("logic.requireIceCapeForLava"));
         requireFlaresForExtinction.setText(Translations.getText("logic.requireFlaresForExtinction"));
         requireSoftwareComboForKeyFairy.setText(Translations.getText("logic.requireSoftwareComboForKeyFairy"));
-        ushumgalluAssist.setText(Translations.getText("logic.ushumgalluAssist"));
         subweaponOnlyLogic.setText(Translations.getText("logic.subweaponOnlyLogic"));
+        requireFullAccess.setText(Translations.getText("logic.requireFullAccess"));
     }
 
     public void updateSettings() {
@@ -74,8 +76,8 @@ public class LogicPanel extends JPanel {
         Settings.setRequireIceCapeForLava(requireIceCapeForLava.isSelected(), true);
         Settings.setRequireFlaresForExtinction(requireFlaresForExtinction.isSelected(), true);
         Settings.setRequireSoftwareComboForKeyFairy(requireSoftwareComboForKeyFairy.isSelected(), true);
-        Settings.setUshumgalluAssist(ushumgalluAssist.isSelected(), true);
         Settings.setSubweaponOnlyLogic(subweaponOnlyLogic.isSelected(), true);
+        Settings.setRequireFullAccess(requireFullAccess.isSelected(), true);
     }
 
     public void reloadSettings() {
@@ -85,7 +87,7 @@ public class LogicPanel extends JPanel {
         requireIceCapeForLava.setSelected(Settings.isRequireIceCapeForLava());
         requireFlaresForExtinction.setSelected(Settings.isRequireFlaresForExtinction());
         requireSoftwareComboForKeyFairy.setSelected(Settings.isRequireSoftwareComboForKeyFairy());
-        ushumgalluAssist.setSelected(Settings.isUshumgalluAssist());
         subweaponOnlyLogic.setSelected(Settings.isSubweaponOnlyLogic());
+        requireFullAccess.setSelected(Settings.isRequireFullAccess());
     }
 }
