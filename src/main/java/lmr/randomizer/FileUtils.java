@@ -18,7 +18,7 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.18.0";
+    public static final String VERSION = "2.19.0";
     public static final int EXISTING_FILE_WIDTH = 1024;
     public static final int EXISTING_FILE_HEIGHT = 512;
     public static final int GRAPHICS_VERSION = 4;
@@ -506,6 +506,9 @@ public class FileUtils {
             else if(line.startsWith("randomizeNonBossDoors")) {
                 Settings.setRandomizeNonBossDoors(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("alternateMotherAnkh")) {
+                Settings.setAlternateMotherAnkh(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("replaceMapsWithWeights")) {
                 Settings.setReplaceMapsWithWeights(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -626,6 +629,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("randomizeNonBossDoors=%s", Settings.isRandomizeNonBossDoors()));
+        writer.newLine();
+
+        writer.write(String.format("alternateMotherAnkh=%s", Settings.isAlternateMotherAnkh()));
         writer.newLine();
 
         writer.write(String.format("replaceMapsWithWeights=%s", Settings.isReplaceMapsWithWeights()));

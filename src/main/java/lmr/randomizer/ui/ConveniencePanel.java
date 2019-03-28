@@ -6,12 +6,14 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 
-public class SpeedPanel extends JPanel {
+public class ConveniencePanel extends JPanel {
     private JCheckBox automaticGrailPoints;
     private JCheckBox automaticTranslations;
+    private JCheckBox ushumgalluAssist;
 
-    public SpeedPanel() {
-        super(new MigLayout("fillx, wrap"));
+    public ConveniencePanel() {
+        super(new MigLayout("fillx"));
+        setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.convenience")));
 
         automaticGrailPoints = new JCheckBox();
         automaticGrailPoints.setSelected(Settings.isAutomaticGrailPoints());
@@ -19,26 +21,34 @@ public class SpeedPanel extends JPanel {
         automaticTranslations = new JCheckBox();
         automaticTranslations.setSelected(Settings.isAutomaticTranslations());
 
+        ushumgalluAssist = new JCheckBox();
+        ushumgalluAssist.setSelected(Settings.isUshumgalluAssist());
+
         CheckboxContainer checkboxContainer = new CheckboxContainer(1);
         checkboxContainer.add(automaticGrailPoints);
         checkboxContainer.add(automaticTranslations);
+        checkboxContainer.add(ushumgalluAssist);
         add(checkboxContainer, "growx, wrap");
 
         updateTranslations();
     }
 
-    public void updateTranslations() {
-        automaticGrailPoints.setText(Translations.getText("speed.automaticGrailPoints"));
-        automaticTranslations.setText(Translations.getText("speed.automaticTranslations"));
-    }
-
     public void updateSettings() {
         Settings.setAutomaticGrailPoints(automaticGrailPoints.isSelected(), true);
         Settings.setAutomaticTranslations(automaticTranslations.isSelected(), true);
+        Settings.setUshumgalluAssist(ushumgalluAssist.isSelected(), true);
+    }
+
+    public void updateTranslations() {
+        setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.convenience")));
+        automaticGrailPoints.setText(Translations.getText("gameplay.automaticGrailPoints"));
+        automaticTranslations.setText(Translations.getText("gameplay.automaticTranslations"));
+        ushumgalluAssist.setText(Translations.getText("gameplay.ushumgalluAssist"));
     }
 
     public void reloadSettings() {
         automaticGrailPoints.setSelected(Settings.isAutomaticGrailPoints());
         automaticTranslations.setSelected(Settings.isAutomaticTranslations());
+        ushumgalluAssist.setSelected(Settings.isUshumgalluAssist());
     }
 }

@@ -8,7 +8,7 @@ public class TabbedPanel extends JTabbedPane {
     private RandomizationPanel randomizationPanel;
     private LogicPanel logicPanel;
     private ChallengePanel challengePanel;
-    private SpeedPanel speedPanel;
+    private GameplayChangesPanel gameplayChangesPanel;
     private RemovedItemsPanel removedItemsPanel;
     private SettingsTransportPanel settingsTransportPanel;
     private MainPanel mainPanel;
@@ -25,8 +25,8 @@ public class TabbedPanel extends JTabbedPane {
         challengePanel = new ChallengePanel();
         addTab(Translations.getText("settings.challenge"), challengePanel);
 
-        speedPanel = new SpeedPanel();
-        addTab(Translations.getText("settings.speed"), speedPanel);
+        gameplayChangesPanel = new GameplayChangesPanel();
+        addTab(Translations.getText("settings.gameplay"), gameplayChangesPanel);
 
         removedItemsPanel = new RemovedItemsPanel();
         addTab(Translations.getText("settings.removal"), removedItemsPanel);
@@ -40,7 +40,7 @@ public class TabbedPanel extends JTabbedPane {
         randomizationPanel.reloadSettings();
         logicPanel.reloadSettings();
         challengePanel.reloadSettings();
-        speedPanel.reloadSettings();
+        gameplayChangesPanel.reloadSettings();
         removedItemsPanel.reloadSettings();
     }
 
@@ -49,7 +49,7 @@ public class TabbedPanel extends JTabbedPane {
         randomizationPanel.updateSettings();
         logicPanel.updateSettings();
         challengePanel.updateSettings();
-        speedPanel.updateSettings();
+        gameplayChangesPanel.updateSettings();
         removedItemsPanel.updateSettings();
     }
 
@@ -57,13 +57,13 @@ public class TabbedPanel extends JTabbedPane {
         randomizationPanel.updateTranslations();
         logicPanel.updateTranslations();
         challengePanel.updateTranslations();
-        speedPanel.updateTranslations();
+        gameplayChangesPanel.updateTranslations();
         removedItemsPanel.updateTranslations();
 
         setTitleAt(0, Translations.getText("settings.randomization"));
         setTitleAt(1, Translations.getText("settings.logic"));
         setTitleAt(2, Translations.getText("settings.challenge"));
-        setTitleAt(3, Translations.getText("settings.speed"));
+        setTitleAt(3, Translations.getText("settings.gameplay"));
         setTitleAt(4, Translations.getText("settings.removal"));
         setTitleAt(5, Translations.getText("settings.share"));
     }

@@ -752,7 +752,10 @@ public final class Settings {
         return singleton.alternateMotherAnkh || DataFromFile.getCustomPlacementData().isAlternateMotherAnkh();
     }
 
-    public static void setAlternateMotherAnkh(boolean alternateMotherAnkh) {
+    public static void setAlternateMotherAnkh(boolean alternateMotherAnkh, boolean update) {
+        if(update && alternateMotherAnkh != singleton.alternateMotherAnkh) {
+            singleton.changed = true;
+        }
         singleton.alternateMotherAnkh = alternateMotherAnkh;
     }
 
