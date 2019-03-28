@@ -2350,7 +2350,7 @@ public final class AddObject {
         screen.getObjects().add(snouter);
     }
 
-    public static void addWarp(Screen screen, int warpX, int warpY, int destZone, int destRoom, int destScreen, int destX, int destY) {
+    public static GameObject addWarp(Screen screen, int warpX, int warpY, int width, int height, int destZone, int destRoom, int destScreen, int destX, int destY) {
         GameObject warp = new GameObject(screen);
         warp.setId((short) 0x97);
         warp.setX(warpX);
@@ -2361,17 +2361,14 @@ public final class AddObject {
         warp.getArgs().add((short)destScreen);
         warp.getArgs().add((short)destX);
         warp.getArgs().add((short)destY);
-        warp.getArgs().add((short)destY);
+        warp.getArgs().add((short)width);
+        warp.getArgs().add((short)height);
         warp.getArgs().add((short)4);
         warp.getArgs().add((short)4);
-
-        TestByteOperation warpTest = new TestByteOperation();
-        warpTest.setIndex(0x0f8);
-        warpTest.setValue((byte) 2);
-        warpTest.setOp(ByteOp.FLAG_NOT_EQUAL);
-        warp.getTestByteOperations().add(warpTest);
 
         screen.getObjects().add(warp);
+
+        return warp;
     }
 
     public static void addSpaulderGive(Screen screen, int x, int y) {

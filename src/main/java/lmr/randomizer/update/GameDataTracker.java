@@ -3865,6 +3865,18 @@ public final class GameDataTracker {
                 }
                 if(firstObject && gateDestination.contains("Transition: Twin ") && !gateToUpdate.equals("Transition: Twin U2")) {
                     AddObject.addTwinLabsPoisonTimerRemoval(gameObject.getObjectContainer(), false);
+                    firstObject = false;
+                }
+                if(firstObject && Settings.isRandomize2() && "Transition: Surface R1".equals(gateToUpdate)) {
+                    GameObject warp = AddObject.addWarp((Screen)gameObject.getObjectContainer(), 1220, 340, 4, 7, 0, 0, 0, 20, 312);
+                    replaceTransitionGateArgs(warp, gateDestination); // First update the transitions so we can make a correct copy of the gate if needed.
+
+                    TestByteOperation warpTest = new TestByteOperation();
+                    warpTest.setIndex(0x414);
+                    warpTest.setValue((byte) 0);
+                    warpTest.setOp(ByteOp.FLAG_EQUALS);
+                    warp.getTestByteOperations().add(warpTest);
+                    firstObject = false;
                 }
             }
         }

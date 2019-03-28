@@ -1174,13 +1174,30 @@ public final class RcdReader {
                     AddObject.addMotherAnkhJewelItemGive(screen);
                 }
             }
+            else if(roomIndex == 11 && screenIndex == 1) {
+                if(Settings.isRandomize2() && !Settings.isRandomizeTransitionGates()) {
+                    GameObject warp = AddObject.addWarp(screen, 1220, 340, 4, 7, 0, 0, 0, 20, 312);
+
+                    TestByteOperation warpTest = new TestByteOperation();
+                    warpTest.setIndex(0x414);
+                    warpTest.setValue((byte) 0);
+                    warpTest.setOp(ByteOp.FLAG_EQUALS);
+                    warp.getTestByteOperations().add(warpTest);
+                }
+            }
         }
         else if(zoneIndex == 2 && roomIndex == 2 && screenIndex == 0) {
             AddObject.addHardmodeToggleWeights(screen);
         }
         else if(zoneIndex == 3 && roomIndex == 8 && screenIndex == 0) {
             if(Settings.isRandomize3()) {
-                AddObject.addWarp(screen, 0, 420, 3, 4, 2, 100, 160);
+                GameObject warp = AddObject.addWarp(screen, 0, 420, 32, 4, 3, 4, 2, 100, 160);
+
+                TestByteOperation warpTest = new TestByteOperation();
+                warpTest.setIndex(0x0f8);
+                warpTest.setValue((byte) 2);
+                warpTest.setOp(ByteOp.FLAG_NOT_EQUAL);
+                warp.getTestByteOperations().add(warpTest);
             }
         }
         else if(zoneIndex == 5) {
