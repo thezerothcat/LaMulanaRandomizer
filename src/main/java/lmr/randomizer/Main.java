@@ -1015,6 +1015,14 @@ public class Main {
                     }
                 }
 
+                if(Settings.isRandomize1()) {
+                    if(!customItemPlacement.getLocation().startsWith("Shop 1")) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Custom placement of item at " + customItemPlacement.getLocation() + " not valid with current settings",
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                }
                 if(Settings.isRandomize2()) {
                     if(customItemPlacement.getLocation().contains("Shop 2 (Surface)")
                             || customItemPlacement.getLocation().contains("Shop 2 Alt (Surface)")
@@ -1201,6 +1209,26 @@ public class Main {
 
         int totalItemsRemoved = getTotalItemsRemoved(random);
         determineStartingWeapon(random);
+
+        if(Settings.isRandomize1()) {
+            if(ItemRandomizer.ALL_SUBWEAPONS.contains(Settings.getCurrentStartingWeapon())) {
+                CustomItemPlacement customItemPlacement = new CustomItemPlacement("Shop 1 (Surface) Item 1", Settings.getCurrentStartingWeapon() + " Ammo", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 1 (Surface) Item 2", "Weights", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 1 (Surface) Item 3", "Coin", (short)0, (short)50);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+            }
+            else {
+                CustomItemPlacement customItemPlacement = new CustomItemPlacement("Shop 1 (Surface) Item 1", "Weights", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 1 (Surface) Item 3", "Coin", (short)0, (short)50);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+            }
+        }
 
         BacksideDoorRandomizer backsideDoorRandomizer = new BacksideDoorRandomizer();
         backsideDoorRandomizer.determineDoorDestinations(random);
@@ -1400,7 +1428,7 @@ public class Main {
                     FileUtils.logFlush("Updated transition gate data");
                 }
                 if(Settings.isRandomize1()) {
-                    GameDataTracker.makeShop(rcdData, datInfo, subweaponOnly, random);
+                    GameDataTracker.updateShop(datInfo);
                 }
 //                if(Settings.isRandomizeMantras()) {
 //                    GameDataTracker.randomizeMantras(random);

@@ -2371,11 +2371,11 @@ public final class AddObject {
         return warp;
     }
 
-    public static void addSpaulderGive(Screen screen, int x, int y) {
+    public static void addSpaulderGive(Screen screen) {
         GameObject itemGive = new GameObject(screen);
         itemGive.setId((short) 0xb5);
-        itemGive.setX((x / 640) * 640);
-        itemGive.setY((y / 480) * 480);
+        itemGive.setX(0);
+        itemGive.setY(0);
 
         itemGive.getArgs().add((short)62);
         itemGive.getArgs().add((short)32);

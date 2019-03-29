@@ -56,6 +56,9 @@ public class EverythingShopRandomizer implements ShopRandomizer {
         shopsWithTransformations = new ArrayList<>();
         shopsWithTransformations.add(NON_MSX_SHOP_NAME);
         shopsWithTransformations.add(MSX_SHOP_NAME);
+        if(Settings.isRandomize1()) {
+            shopsWithTransformations.add("Shop 1 (Surface)");
+        }
     }
 
     public ShopRandomizer copy() {

@@ -3661,6 +3661,15 @@ public final class GameDataTracker {
         updateBunemonText(bunemonData, shopItem3, shopBlock.getInventoryPriceList().getData().get(2));
     }
 
+    public static void updateShop(List<Block> blocks) {
+        ShopBlock shop1Surface = (ShopBlock)blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get("Shop 1 (Surface)"));
+        ShopBlock infernoShop = (ShopBlock)blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get("Shop 14 (Inferno)"));
+        ShopBlock sunShop = (ShopBlock)blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get("Shop 10 (Sun)"));
+        shop1Surface.setString(sunShop.getString(8), 8);
+        shop1Surface.setString(infernoShop.getString(1), 1);
+        shop1Surface.getExitFlagList().getData().set(2, (short)0xad1);
+    }
+
     public static void makeShop(List<Zone> zones, List<Block> blocks, boolean subweaponOnly, Random random) {
         String shopItem1 = "Weights";
         String shopItem2 = "Weights";
@@ -3724,7 +3733,7 @@ public final class GameDataTracker {
             }
         }
         if(shopObject != null) {
-            AddObject.addSpaulderGive((Screen)shopObject.getObjectContainer(), shopObject.getX(), shopObject.getY());
+            AddObject.addSpaulderGive((Screen)shopObject.getObjectContainer());
         }
     }
 

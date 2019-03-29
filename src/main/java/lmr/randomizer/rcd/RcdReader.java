@@ -1140,6 +1140,7 @@ public final class RcdReader {
                 GameObject grailTablet = AddObject.addSpecialGrailTablet(screen);
                 AddObject.addHotspring(grailTablet);
                 AddObject.addSurfaceShops(screen);
+                AddObject.addSpaulderGive(screen);
             }
             AddObject.addStartingItems(screen);
         }
