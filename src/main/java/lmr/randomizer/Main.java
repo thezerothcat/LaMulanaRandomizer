@@ -1297,7 +1297,9 @@ public class Main {
             itemRandomizer.placeNonRandomizedItems();
             shopRandomizer.placeNonRandomizedItems();
             if(ItemRandomizer.ALL_SUBWEAPONS.contains(Settings.getCurrentStartingWeapon())) {
-                shopRandomizer.placeSpecialSubweaponAmmo(random);
+                if(!Settings.isRandomize1()) {
+                    shopRandomizer.placeSpecialSubweaponAmmo(random);
+                }
             }
             if(ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
                 ((EverythingShopRandomizer)shopRandomizer).placeGuaranteedWeights(random);

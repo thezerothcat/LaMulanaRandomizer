@@ -3021,6 +3021,48 @@ public final class GameDataTracker {
             checkBlock.getFlagCheckReferences().clear();
             checkBlock.getFlagCheckReferences().addAll(flagChecks);
         }
+        else if(block.getBlockNumber() == 514) {
+            if(Settings.isRandomize1()) {
+                block.getBlockContents().clear();
+                block.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
+                block.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 0xaa7, (short) 1));
+                List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("fools.intro1"));
+                for (Short shortCharacter : stringCharacters) {
+                    block.getBlockContents().add(new BlockSingleData(shortCharacter));
+                }
+                block.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+                stringCharacters = FileUtils.stringToData(Translations.getText("fools.intro2.1"));
+                for (Short shortCharacter : stringCharacters) {
+                    block.getBlockContents().add(new BlockSingleData(shortCharacter));
+                }
+                block.getBlockContents().add(new BlockColorsData((short)0x004a, (short)96, (short)0, (short)64));
+                stringCharacters = FileUtils.stringToData(Translations.getText("fools.intro2.spaulder"));
+                for (Short shortCharacter : stringCharacters) {
+                    block.getBlockContents().add(new BlockSingleData(shortCharacter));
+                }
+                block.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+                stringCharacters = FileUtils.stringToData(Translations.getText("fools.intro2.2"));
+                for (Short shortCharacter : stringCharacters) {
+                    block.getBlockContents().add(new BlockSingleData(shortCharacter));
+                }
+                block.getBlockContents().add(new BlockItemData((short) 0x0042, (short) 62)); // 66
+                block.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+                stringCharacters = FileUtils.stringToData(Translations.getText("fools.intro3"));
+                for (Short shortCharacter : stringCharacters) {
+                    block.getBlockContents().add(new BlockSingleData(shortCharacter));
+                }
+                block.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+                stringCharacters = FileUtils.stringToData(Translations.getText("fools.intro4"));
+                for (Short shortCharacter : stringCharacters) {
+                    block.getBlockContents().add(new BlockSingleData(shortCharacter));
+                }
+
+                block.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // 64
+            }
+        }
         else if(block.getBlockNumber() == 716) {
             // Surface map
             short inventoryArg = (short) (70);
