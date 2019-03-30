@@ -1272,6 +1272,11 @@ public final class GameDataTracker {
                     flagUpdate.setIndex(47);
                     break;
                 }
+                else if(flagUpdate.getIndex() == 0x1cc) {
+                    // Fake ankh trap
+                    flagUpdate.setValue(2);
+                    break;
+                }
             }
         }
         else if (gameObject.getId() == 0x14) {
@@ -1289,6 +1294,15 @@ public final class GameDataTracker {
                         writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
                         writeByteOperation.setValue(1);
                         gameObject.getWriteByteOperations().add(writeByteOperation);
+                    }
+                }
+                else if(screen.getZoneIndex() == 6 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                    for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                        if (flagTest.getIndex() == 0x1cc) {
+                            flagTest.setValue((byte)2);
+                            break;
+
+                        }
                     }
                 }
             }
@@ -2761,6 +2775,9 @@ public final class GameDataTracker {
                 blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
             }
             blocks.add(block);
+        }
+        else if(block.getBlockNumber() == 148) {
+            block.getBlockContents().add(0, new BlockFlagData((short)0x0040, (short)0xaa8, (short)1));
         }
         else if(block.getBlockNumber() == 247) {
             // Conversation to give Treasures and receive Anchor

@@ -2707,6 +2707,31 @@ public final class AddObject {
         screen.getObjects().add(fakeItem);
     }
 
+    public static void addSecretTreasureOfLife(Screen screen, int x, int y, int fakeFlag) {
+        GameObject fakeItem = new GameObject(screen);
+        fakeItem.setId((short) 0x2f);
+        fakeItem.setX(x);
+        fakeItem.setY(y);
+
+        fakeItem.getArgs().add((short)0);
+        fakeItem.getArgs().add((short)84);
+        fakeItem.getArgs().add((short)1);
+
+        TestByteOperation fakeItemTest = new TestByteOperation();
+        fakeItemTest.setIndex(fakeFlag);
+        fakeItemTest.setValue((byte) 0);
+        fakeItemTest.setOp(ByteOp.FLAG_EQUALS);
+        fakeItem.getTestByteOperations().add(fakeItemTest);
+
+        WriteByteOperation fakeItemUpdate = new WriteByteOperation();
+        fakeItemUpdate.setIndex(fakeFlag);
+        fakeItemUpdate.setValue((byte) 2);
+        fakeItemUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        fakeItem.getWriteByteOperations().add(fakeItemUpdate);
+
+        screen.getObjects().add(fakeItem);
+    }
+
     public static void addItemGive(GameObject referenceObj, int inventoryArg, int randomize5Flag, int worldFlag) {
         GameObject itemGive = new GameObject(referenceObj.getObjectContainer());
         itemGive.setId((short) 0xb5);

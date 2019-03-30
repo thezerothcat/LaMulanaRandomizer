@@ -510,6 +510,15 @@ public final class RcdReader {
             if (screen.getZoneIndex() == 9 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
                 obj.getArgs().set(1, (short)5);
             }
+            else if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
+                    TestByteOperation flagTest = obj.getTestByteOperations().get(i);
+                    if (flagTest.getIndex() == 0x1cc) {
+                        keepObject = false;
+                        break;
+                    }
+                }
+            }
         }
         else if(obj.getId() == 0x34) {
             if(objectContainer instanceof Screen) {
@@ -583,6 +592,15 @@ public final class RcdReader {
                                 // Swap Xelpud first-conversation flag with custom
                                 flagTest.setIndex(0xaa6);
                             }
+                        }
+                    }
+                }
+                else if(screen.getZoneIndex() == 6 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                    for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
+                        TestByteOperation flagTest = obj.getTestByteOperations().get(i);
+                        if (flagTest.getIndex() == 0x1cc) {
+                            keepObject = false;
+                            break;
                         }
                     }
                 }
@@ -1194,6 +1212,9 @@ public final class RcdReader {
                     AddObject.addSurfaceCoverDetector(screen);
                 }
             }
+            else if(roomIndex == 5 && screenIndex == 0) {
+                AddObject.addObviousSpaulder(screen, 580, 440, 0xaa9);
+            }
             else if(roomIndex == 11 && screenIndex == 0) {
                 if(Settings.isAlternateMotherAnkh()) {
                     AddObject.addMotherAnkhJewelItemGive(screen);
@@ -1234,14 +1255,22 @@ public final class RcdReader {
                     AddObject.addSpecialTransitionGate(screen, 0);
                 }
             }
+            if(roomIndex == 2 && screenIndex == 1) {
+                AddObject.addSpaulderGive2(screen, 0, 640, 0xaa8);
+            }
         }
-        else if(zoneIndex == 6 && roomIndex == 2 && screenIndex == 0) {
-            if(Settings.isRandomizeTransitionGates()) {
-                AddObject.addExtinctionTorch(screen);
+        else if(zoneIndex == 6) {
+            if(roomIndex == 0 && screenIndex == 0) {
+                AddObject.addDisguisedSpaulder(screen, 440, 80, 19, 0x1cc);
+            }
+            else if(roomIndex == 2 && screenIndex == 0) {
+                if(Settings.isRandomizeTransitionGates()) {
+                    AddObject.addExtinctionTorch(screen);
+                }
             }
         }
         else if(zoneIndex == 9 && roomIndex == 0 && screenIndex == 0) {
-            AddObject.addDisguisedSpaulder(screen, 20, 240, 19, 0xacf);
+            AddObject.addSecretTreasureOfLife(screen, 20, 240, 0xacf);
             AddObject.addLaserWall(screen, 80, 280, 0xacf);
         }
         else if(zoneIndex == 8 && roomIndex == 4 && screenIndex == 0) {
