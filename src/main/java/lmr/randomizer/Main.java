@@ -253,6 +253,9 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Coin: Surface (Seal)", "Coin: Inferno (Lava)", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
+                customItemPlacement = new CustomItemPlacement("Map (Surface)", "Map (Surface)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
                 customItemPlacement = new CustomItemPlacement("xmailer.exe", "Talisman", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
@@ -1045,6 +1048,7 @@ public class Main {
                             || "Shell Horn".equals(customItemPlacement.getLocation())
                             || "Coin: Surface (Waterfall)".equals(customItemPlacement.getLocation())
                             || "Coin: Surface (Seal)".equals(customItemPlacement.getLocation())
+                            || "Map (Surface)".equals(customItemPlacement.getLocation())
                             || "Sacred Orb (Surface)".equals(customItemPlacement.getLocation())
                             || "Birth Seal".equals(customItemPlacement.getLocation())) {
                         JOptionPane.showMessageDialog(randomizerUI,
@@ -1064,7 +1068,8 @@ public class Main {
                             || "xmailer.exe".equals(customItemPlacement.getContents())
                             || "guild.exe".equals(customItemPlacement.getContents())
                             || "emusic.exe".equals(customItemPlacement.getContents())
-                            || "beolamu.exe".equals(customItemPlacement.getContents())) {
+                            || "beolamu.exe".equals(customItemPlacement.getContents())
+                            || "Map (Surface)".equals(customItemPlacement.getContents())) {
                         JOptionPane.showMessageDialog(randomizerUI,
                                 "Custom placement of " + customItemPlacement.getContents() + " not valid with setting \"" + Translations.getText("fools.randomize2") + "\"",
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);

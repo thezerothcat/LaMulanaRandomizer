@@ -5363,7 +5363,9 @@ public final class GameDataTracker {
                     updateFlag.setValue(2);
                     objectToModify.getWriteByteOperations().add(updateFlag);
 
-                    AddObject.addItemGive(objectToModify, itemNewContentsData.getInventoryArg(), itemRandomize5Flag, newWorldFlag);
+                    if(puzzleFlag.getIndex() != 0x032) {
+                        AddObject.addItemGive(objectToModify, itemNewContentsData.getInventoryArg(), itemRandomize5Flag, newWorldFlag);
+                    }
                 }
             }
             else {
