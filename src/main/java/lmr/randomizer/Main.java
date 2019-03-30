@@ -530,6 +530,18 @@ public class Main {
                         "Custom placement error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
+            if(Settings.isRandomize2() && !Settings.isRandomizeCoinChests()) {
+                JOptionPane.showMessageDialog(this,
+                        "Please enable the setting \"" + Translations.getText("randomization.randomizeCoinChests") + "\"",
+                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(Settings.isRandomize1() && !ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
+                JOptionPane.showMessageDialog(this,
+                        String.format("Please enable %s %s", Translations.getText("randomization.randomizeShops"), Translations.getText("randomization.randomizeShops.everything")),
+                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
             if(!validateCustomPlacements(this)) {
                 // Message created below
                 return false;
@@ -1431,6 +1443,9 @@ public class Main {
                 }
                 if(Settings.isRandomize1()) {
                     GameDataTracker.updateShop(datInfo);
+                }
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomize1()) {
+                    GameDataTracker.updateXelpudIntro(datInfo);
                 }
 //                if(Settings.isRandomizeMantras()) {
 //                    GameDataTracker.randomizeMantras(random);

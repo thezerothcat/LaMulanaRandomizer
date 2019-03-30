@@ -378,17 +378,6 @@ public final class RcdReader {
                     // Get rid of alternate Graveyard shop (with the Angel Shield)
                     keepObject = false;
                 }
-
-                if(Settings.isRandomize1()) {
-                    if(obj.getArgs().get(4) == 35) {
-                        obj.getArgs().set(3, (short)0);
-                        obj.getArgs().set(4, (short)706);
-                    }
-                    else if(obj.getArgs().get(4) == 36) {
-                        obj.getArgs().set(3, (short)0);
-                        obj.getArgs().set(4, (short)706);
-                    }
-                }
             }
             else if(obj.getArgs().get(4) == 719) {
                 // Low-score version of Mulbruk which could interfere with getting Book of the Dead.
@@ -405,6 +394,23 @@ public final class RcdReader {
             else if(obj.getArgs().get(4) == 1014) {
                 // Mulbruk conversation after she runs away from the Provocative Bathing Suit.
                 keepObject = false;
+            }
+
+            if(objectContainer instanceof Screen) {
+                Screen screen = (Screen)objectContainer;
+                if(screen.getZoneIndex() == 1) {
+                    if(screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2
+                            || screen.getRoomIndex() == 2 && screen.getScreenIndex() == 0
+                            || screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
+                            TestByteOperation flagTest = obj.getTestByteOperations().get(i);
+                            if (flagTest.getIndex() == 0x145) {
+                                // Swap Xelpud first-conversation flag with custom
+                                flagTest.setIndex(0xaa6);
+                            }
+                        }
+                    }
+                }
             }
         }
         else if (obj.getId() == 0x00) {
@@ -564,6 +570,24 @@ public final class RcdReader {
             }
         }
         else if (obj.getId() == 0x93) {
+            if(objectContainer instanceof Screen) {
+                Screen screen = (Screen)objectContainer;
+                if(screen.getZoneIndex() == 1) {
+                    if(screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2
+                            || screen.getRoomIndex() == 2 && screen.getScreenIndex() == 0
+                            || screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1
+                            || screen.getRoomIndex() == 10 && screen.getScreenIndex() == 3) {
+                        for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
+                            TestByteOperation flagTest = obj.getTestByteOperations().get(i);
+                            if (flagTest.getIndex() == 0x145) {
+                                // Swap Xelpud first-conversation flag with custom
+                                flagTest.setIndex(0xaa6);
+                            }
+                        }
+                    }
+                }
+            }
+
             if(Settings.isRandomize2()) {
                 Screen screen = (Screen)objectContainer;
                 if(screen.getZoneIndex() == 4 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {

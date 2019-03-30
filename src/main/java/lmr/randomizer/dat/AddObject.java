@@ -489,7 +489,7 @@ public final class AddObject {
 
         if(isXelpudScreen) {
             flagTest = new TestByteOperation();
-            flagTest.setIndex(0x07c);
+            flagTest.setIndex(0xaa6);
             flagTest.setValue((byte) 1);
             flagTest.setOp(ByteOp.FLAG_EQUALS);
             killTimer.getTestByteOperations().add(flagTest);

@@ -2958,6 +2958,16 @@ public final class GameDataTracker {
             }
             checkBlock.getFlagCheckReferences().remove((int)cmdToRemoveIndex3);
 
+            // Remove this conversation and re-build it at the front.
+            Integer cmdToRemoveIndex4 = null;
+            for(int i = 0; i < checkBlock.getFlagCheckReferences().size(); i++) {
+                BlockListData blockListData = checkBlock.getFlagCheckReferences().get(i);
+                if(blockListData.getData().get(2) == 364) {
+                    cmdToRemoveIndex4 = i;
+                }
+            }
+            checkBlock.getFlagCheckReferences().remove((int)cmdToRemoveIndex4);
+
             BlockListData blockListData = new BlockListData((short)78, (short)4);
             blockListData.getData().add((short)2797);
             blockListData.getData().add((short)1);
@@ -2981,7 +2991,7 @@ public final class GameDataTracker {
             blockListData.getData().add((short)0);
             checkBlock.getFlagCheckReferences().add(0, blockListData);
 
-            // Changing xmailer conversation to use a custom flag instead of a held item check
+            // Changing xmailer conversation to use a custom flag
             blockListData = new BlockListData((short)78, (short)4);
             blockListData.getData().add((short)0xaa6);
             blockListData.getData().add((short)0);
@@ -3092,61 +3102,18 @@ public final class GameDataTracker {
     }
 
     public static void updateXmailerBlock(List<BlockContents> xelpudBlockContents) {
-        if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
-            xelpudBlockContents.clear();
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1)); // 64
-            List<Short> stringCharacters = FileUtils.stringToData("Did you know that randomized starting weapon requires you to load the provided save file?");
-            for (Short shortCharacter : stringCharacters) {
-                xelpudBlockContents.add(new BlockSingleData(shortCharacter));
-            }
-            xelpudBlockContents.add(new BlockPoseData((short) 0x0046, (short) 25)); // 70
-            xelpudBlockContents.add(new BlockItemData((short) 0x0042, (short) 86)); // 66
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 227, (short) 2)); // 64
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xaa6, (short) 1)); // 64
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0x145, (short) 1)); // 64
-            xelpudBlockContents.add(new BlockSingleData((short) 0x0044)); // {CLS}
-            for (Short shortCharacter : stringCharacters) {
-                xelpudBlockContents.add(new BlockSingleData(shortCharacter));
-            }
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 124, (short) 1)); // 64
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // 64
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 2900, (short) 1)); // 64
-        }
-        else if(Settings.isRandomize1()) {
-            xelpudBlockContents.clear();
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1)); // 64
-            List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("fools.xelpudText"));
-            for (Short shortCharacter : stringCharacters) {
-                xelpudBlockContents.add(new BlockSingleData(shortCharacter));
-            }
-            xelpudBlockContents.add(new BlockPoseData((short) 0x0046, (short) 25)); // 70
-            xelpudBlockContents.add(new BlockItemData((short) 0x0042, (short) 86)); // 66
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 227, (short) 2)); // 64
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xaa6, (short) 1)); // 64
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0x145, (short) 1)); // 64
-            xelpudBlockContents.add(new BlockSingleData((short) 0x0044)); // {CLS}
-            for (Short shortCharacter : stringCharacters) {
-                xelpudBlockContents.add(new BlockSingleData(shortCharacter));
-            }
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 124, (short) 1)); // 64
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // 64
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 2900, (short) 1)); // 64
-        }
-        else {
-            // Set value of world flag to 2 instead of 1
-            Integer blockContentIndex = null;
-            for(int i = 0; i < xelpudBlockContents.size(); i++) {
-                BlockContents blockContents = xelpudBlockContents.get(i);
-                if(blockContents instanceof BlockFlagData) {
-                    BlockFlagData blockFlagData = (BlockFlagData) blockContents;
-                    if(blockFlagData.getWorldFlag() == 227) {
-                        blockFlagData.setFlagValue((short)2);
-                        blockContentIndex = i;
-                    }
+        // Set value of world flag to 2 instead of 1
+        for(int i = 0; i < xelpudBlockContents.size(); i++) {
+            BlockContents blockContents = xelpudBlockContents.get(i);
+            if(blockContents instanceof BlockFlagData) {
+                BlockFlagData blockFlagData = (BlockFlagData) blockContents;
+                if(blockFlagData.getWorldFlag() == 0x0e3) {
+                    blockFlagData.setFlagValue((short)2);
                 }
-            }
-            if(blockContentIndex != null) {
-                xelpudBlockContents.add(blockContentIndex, new BlockFlagData((short) 0x0040, (short) 0xaa6, (short) 1)); // 64
+                else if(blockFlagData.getWorldFlag() == 0x07c) {
+                    blockFlagData.setWorldFlag((short)0xaa6);
+                    blockFlagData.setFlagValue((short)1);
+                }
             }
         }
     }
@@ -3710,6 +3677,31 @@ public final class GameDataTracker {
         shop1Surface.setString(sunShop.getString(8), 8);
         shop1Surface.setString(infernoShop.getString(1), 1);
         shop1Surface.getExitFlagList().getData().set(2, (short)0xad1);
+    }
+
+    public static void updateXelpudIntro(List<Block> blocks) {
+        Block introBlock = new Block(blocks.size());
+        introBlock.getBlockContents().clear();
+        introBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
+        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("fools.xelpudText"));
+        for (Short shortCharacter : stringCharacters) {
+            introBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        introBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 0xaa4, (short)2));
+        introBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 0xaa6, (short)1));
+        introBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0));
+
+        blocks.add(introBlock);
+
+        CheckBlock checkBlock = (CheckBlock)blocks.get(480);
+
+        // Changing xmailer conversation to use a custom flag instead of a held item check
+        BlockListData blockListData = new BlockListData((short)78, (short)4);
+        blockListData.getData().add((short)0xaa4);
+        blockListData.getData().add((short)0);
+        blockListData.getData().add((short)introBlock.getBlockNumber());
+        blockListData.getData().add((short)0);
+        checkBlock.getFlagCheckReferences().add(0, blockListData);
     }
 
     public static void makeShop(List<Zone> zones, List<Block> blocks, boolean subweaponOnly, Random random) {
