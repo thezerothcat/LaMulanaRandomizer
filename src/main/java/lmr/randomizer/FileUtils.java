@@ -260,6 +260,9 @@ public class FileUtils {
             if (charAtIndex == ' ') {
                 dataString.add((short)32);
             }
+            else if (charAtIndex == '\n') {
+                dataString.add((short)0x0045);
+            }
             else {
                 data = (short)(CHAR_TO_SHORT_CONVERSION.indexOf(charAtIndex) + 0x0100);
                 dataString.add(data);
