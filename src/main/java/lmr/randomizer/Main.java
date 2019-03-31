@@ -658,6 +658,20 @@ public class Main {
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
                         return false;
                     }
+                    if(Settings.isRandomize2()) {
+                        if(customDoorPlacement.getTargetDoor().equals("Door F5") || customDoorPlacement.getTargetDoor().equals("Door F8")) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom placement for " + customDoorPlacement.getTargetDoor() + " is not valid",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                        if(customDoorPlacement.getDestinationDoor().equals("Door F5") || customDoorPlacement.getDestinationDoor().equals("Door F8")) {
+                            JOptionPane.showMessageDialog(randomizerUI,
+                                    "Custom placement for " + customDoorPlacement.getDestinationDoor() + " is not valid",
+                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
                     if(!Settings.isRandomizeNonBossDoors()) {
                         if(isNonBossDoor(customDoorPlacement.getTargetDoor())) {
                             JOptionPane.showMessageDialog(randomizerUI,

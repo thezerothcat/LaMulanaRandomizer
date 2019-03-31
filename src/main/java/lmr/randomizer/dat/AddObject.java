@@ -2682,6 +2682,32 @@ public final class AddObject {
         screen.getObjects().add(laserWall);
     }
 
+    public static void addEnemy(Screen screen, int x, int y) {
+        GameObject enemy = new GameObject(screen);
+        enemy.setId((short)0x62);
+        enemy.setX(x);
+        enemy.setY(y);
+
+        enemy.getArgs().add((short)0); // Facing
+        enemy.getArgs().add((short)11); // Drop type
+        enemy.getArgs().add((short)3); // Speed
+        enemy.getArgs().add((short)24); // Health
+        enemy.getArgs().add((short)16); // Contact damage
+        enemy.getArgs().add((short)11); // Soul
+        enemy.getArgs().add((short)3); // Proj Speed
+        enemy.getArgs().add((short)5); // Projectiles per volley
+        enemy.getArgs().add((short)10); // Delay between shots
+        enemy.getArgs().add((short)16); // Projectile damage
+
+        TestByteOperation enemyTest = new TestByteOperation();
+        enemyTest.setIndex(0x1cf);
+        enemyTest.setValue((byte) 2);
+        enemyTest.setOp(ByteOp.FLAG_EQUALS);
+        enemy.getTestByteOperations().add(enemyTest);
+
+        screen.getObjects().add(enemy);
+    }
+
     public static void addObviousSpaulder(Screen screen, int x, int y, int fakeFlag) {
         GameObject fakeItem = new GameObject(screen);
         fakeItem.setId((short) 0x2f);

@@ -1263,6 +1263,9 @@ public final class RcdReader {
             if(roomIndex == 0 && screenIndex == 0) {
                 AddObject.addDisguisedSpaulder(screen, 440, 80, 19, 0x1cc);
             }
+            else if(roomIndex == 0 && screenIndex == 1) {
+                AddObject.addEnemy(screen, 740, 80);
+            }
             else if(roomIndex == 2 && screenIndex == 0) {
                 if(Settings.isRandomizeTransitionGates()) {
                     AddObject.addExtinctionTorch(screen);
@@ -1302,6 +1305,9 @@ public final class RcdReader {
         else if(zoneIndex == 18) {
             if (roomIndex == 0 && screenIndex == 0) {
                 AddObject.addUpperUntrueShrineBackupDoor(screen);
+            }
+            else if (roomIndex == 3 && screenIndex == 0) {
+                AddObject.addWarp(screen, 600, 440, 32, 3, 18, 3, 1, 150, 72);
             }
             else if (roomIndex == 8 && screenIndex == 1) {
                 AddObject.addLowerUntrueShrineBackupDoor(screen);
