@@ -3083,7 +3083,7 @@ public final class GameDataTracker {
                 block.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
 
                 if(Settings.isRandomize1() && !Settings.isRandomizeTransitionGates() && !Settings.isRandomizeBacksideDoors()) {
-                    stringCharacters = FileUtils.stringToData(Translations.getText("fools.intro.doors"));
+                    stringCharacters = FileUtils.stringToData(String.format(Translations.getText("fools.intro.doors"), Translations.getText("randomization.randomizeBacksideDoors")));
                     for (Short shortCharacter : stringCharacters) {
                         block.getBlockContents().add(new BlockSingleData(shortCharacter));
                     }

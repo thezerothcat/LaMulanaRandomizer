@@ -539,6 +539,11 @@ public class AccessChecker {
                 return false;
             }
         }
+        if(item.equals("Spaulder")) {
+            if(location.contains("Shop")) {
+                return false;
+            }
+        }
         else if(item.contains("Ankh Jewel")) {
             item = "Ankh Jewel";
             if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
