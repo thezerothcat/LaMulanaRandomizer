@@ -135,22 +135,48 @@ public class BacksideDoorRandomizer {
             }
         }
         else if(Settings.isRandomize2()) {
-            backsideDoorLocationMap.put("Door: F5", getDoorLocation("Door: B8"));
-            backsideDoorLocationMap.put("Door: B5", getDoorLocation("Door: F8"));
-            backsideDoorLocationMap.put("Door: F8", getDoorLocation("Door: B5"));
-            backsideDoorLocationMap.put("Door: B8", getDoorLocation("Door: F5"));
-            backsideDoorLocationMap.put("Door: F9", getDoorLocation("Door: F9"));
-            backsideDoorLocationMap.put("Door: B9", getDoorLocation("Door: B9"));
+            if(Settings.isRandomizeTransitionGates()) {
+                backsideDoorLocationMap.put("Door: F5", getDoorLocation("Door: B8"));
+                backsideDoorLocationMap.put("Door: B5", getDoorLocation("Door: F8"));
+                backsideDoorLocationMap.put("Door: F8", getDoorLocation("Door: B5"));
+                backsideDoorLocationMap.put("Door: B8", getDoorLocation("Door: F5"));
+                backsideDoorLocationMap.put("Door: F9", getDoorLocation("Door: F9"));
+                backsideDoorLocationMap.put("Door: B9", getDoorLocation("Door: B9"));
 
-            mapOfDoorToPairDoor.put("Door: F5", "Door: F8");
-            mapOfDoorToPairDoor.put("Door: B5", "Door: B8");
-            mapOfDoorToPairDoor.put("Door: F8", "Door: F5");
-            mapOfDoorToPairDoor.put("Door: B8", "Door: B5");
-            mapOfDoorToPairDoor.put("Door: F9", "Door: B9");
-            mapOfDoorToPairDoor.put("Door: B9", "Door: F9");
+                mapOfDoorToPairDoor.put("Door: F5", "Door: F8");
+                mapOfDoorToPairDoor.put("Door: B5", "Door: B8");
+                mapOfDoorToPairDoor.put("Door: F8", "Door: F5");
+                mapOfDoorToPairDoor.put("Door: B8", "Door: B5");
+                mapOfDoorToPairDoor.put("Door: F9", "Door: B9");
+                mapOfDoorToPairDoor.put("Door: B9", "Door: F9");
 
-            unassignedDoors.remove("Door: F5");
-            unassignedDoors.remove("Door: B5");
+                unassignedDoors.remove("Door: F5");
+                unassignedDoors.remove("Door: B5");
+            }
+            else {
+                backsideDoorLocationMap.put("Door: F2", getDoorLocation("Door: F9"));
+                backsideDoorLocationMap.put("Door: B2", getDoorLocation("Door: B9"));
+                backsideDoorLocationMap.put("Door: F5", getDoorLocation("Door: B8"));
+                backsideDoorLocationMap.put("Door: B5", getDoorLocation("Door: F8"));
+                backsideDoorLocationMap.put("Door: F8", getDoorLocation("Door: B5"));
+                backsideDoorLocationMap.put("Door: B8", getDoorLocation("Door: F5"));
+                backsideDoorLocationMap.put("Door: F9", getDoorLocation("Door: F2"));
+                backsideDoorLocationMap.put("Door: B9", getDoorLocation("Door: B2"));
+
+                mapOfDoorToPairDoor.put("Door: F2", "Door: B9");
+                mapOfDoorToPairDoor.put("Door: B2", "Door: F9");
+                mapOfDoorToPairDoor.put("Door: F5", "Door: F8");
+                mapOfDoorToPairDoor.put("Door: B5", "Door: B8");
+                mapOfDoorToPairDoor.put("Door: F8", "Door: F5");
+                mapOfDoorToPairDoor.put("Door: B8", "Door: B5");
+                mapOfDoorToPairDoor.put("Door: F9", "Door: B2");
+                mapOfDoorToPairDoor.put("Door: B9", "Door: F2");
+
+                unassignedDoors.remove("Door: F2");
+                unassignedDoors.remove("Door: B2");
+                unassignedDoors.remove("Door: F5");
+                unassignedDoors.remove("Door: B5");
+            }
         }
         else {
             backsideDoorLocationMap.put("Door: F8", getDoorLocation("Door: F8"));

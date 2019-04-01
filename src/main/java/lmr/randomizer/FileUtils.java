@@ -296,12 +296,7 @@ public class FileUtils {
                         if (assignment.contains("{") && assignment.contains("}")) {
                             String specialData = assignment.substring(assignment.indexOf("{") + 1).replace("}", "");
                             assignment = assignment.substring(0, assignment.indexOf('{')).trim();
-                            if(assignment.startsWith("Trap:")) {
-                                customPlacementData.setCustomized(true);
-                                customPlacementData.getCustomItemPlacements().add(
-                                        new CustomItemPlacement(target, assignment, specialData));
-                            }
-                            else if (line.startsWith("Door ")) {
+                            if (line.startsWith("Door ")) {
                                 customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomDoorPlacements().add(new CustomDoorPlacement(target, assignment, specialData));
                             }
@@ -317,6 +312,11 @@ public class FileUtils {
                                     customPlacementData.getCustomItemPlacements().add(
                                             new CustomItemPlacement(target, assignment, Short.parseShort(lineParts[0].trim()), null));
                                 }
+                            }
+                            else {
+                                customPlacementData.setCustomized(true);
+                                customPlacementData.getCustomItemPlacements().add(
+                                        new CustomItemPlacement(target, assignment, specialData));
                             }
                         } else {
                             if(line.startsWith("Door ")) {

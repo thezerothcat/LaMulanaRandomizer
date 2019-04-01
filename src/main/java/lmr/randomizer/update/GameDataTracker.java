@@ -3082,6 +3082,12 @@ public final class GameDataTracker {
                 }
                 block.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
 
+                stringCharacters = FileUtils.stringToData(Translations.getText("fools.intro.doors"));
+                for (Short shortCharacter : stringCharacters) {
+                    block.getBlockContents().add(new BlockSingleData(shortCharacter));
+                }
+                block.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
                 stringCharacters = FileUtils.stringToData(Translations.getText("fools.intro4"));
                 for (Short shortCharacter : stringCharacters) {
                     block.getBlockContents().add(new BlockSingleData(shortCharacter));
@@ -3927,7 +3933,7 @@ public final class GameDataTracker {
                     AddObject.addTwinLabsPoisonTimerRemoval(gameObject.getObjectContainer(), false);
                     firstObject = false;
                 }
-                if(firstObject && Settings.isRandomize2() && "Transition: Surface R1".equals(gateToUpdate)) {
+                if(firstObject && Settings.isRandomize1() && "Transition: Surface R1".equals(gateToUpdate)) {
                     GameObject warp = AddObject.addWarp((Screen)gameObject.getObjectContainer(), 1220, 340, 4, 7, 0, 0, 0, 20, 312);
                     replaceTransitionGateArgs(warp, gateDestination); // First update the transitions so we can make a correct copy of the gate if needed.
 
@@ -5098,7 +5104,7 @@ public final class GameDataTracker {
         boolean isRemovedItem = itemNewContentsData.getWorldFlag() != newWorldFlag;
         boolean isTrapItem = Settings.isRandomizeTrapItems() && (newWorldFlag == 2777 || newWorldFlag == 2779 || newWorldFlag == 2780);
         boolean randomize5 = isRandomize5Allowed && !isRemovedItem && !isTrapItem && !chestContents.startsWith("Coin:")
-                && isRandomize5Available() && random.nextBoolean();
+                && isRandomize5Available() && (getItemGraphic(chestContents) != 0 || random.nextBoolean());
         Integer itemRandomize5Flag = randomize5 ? getRandomize5Flag(newWorldFlag) : null;
 
         for(GameObject objectToModify : objectsToModify) {

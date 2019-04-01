@@ -1194,9 +1194,11 @@ public final class RcdReader {
                 }
                 else if(roomIndex == 8 && screenIndex == 1) {
                     AddObject.addSpecialTransitionGate(screen, 5);
-                    AddObject.addSnouter(screen, 140, 880, true);
-                    AddObject.addSnouter(screen, 460, 880, false);
                 }
+            }
+            if(roomIndex == 8 && screenIndex == 1) {
+                AddObject.addSnouter(screen, 140, 880, true);
+                AddObject.addSnouter(screen, 460, 880, false);
             }
         }
         else if(zoneIndex == 1) {

@@ -539,6 +539,12 @@ public class Main {
                         "Custom placement error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
+            if(Settings.isRandomize2() && !Settings.isRandomizeTransitionGates() && !Settings.isRandomizeBacksideDoors() && !Settings.getStartingItems().contains("Holy Grail")) {
+                JOptionPane.showMessageDialog(this,
+                        "Please randomize transitions or enable starting with " + Translations.getText("items.HolyGrail"),
+                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
             if(Settings.isRandomize1() && !ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
                 JOptionPane.showMessageDialog(this,
                         String.format("Please enable %s %s", Translations.getText("randomization.randomizeShops"), Translations.getText("randomization.randomizeShops.everything")),
@@ -557,7 +563,7 @@ public class Main {
 
                 if(!Settings.isAlternateMotherAnkh()) {
                     JOptionPane.showMessageDialog(this,
-                            String.format("The setting \"%s \" is required when removing Main Weapons", Translations.getText("randomization.alternateMotherAnkh")),
+                            String.format("The setting \"%s \" is required when removing Main Weapons", Translations.getText("gameplay.alternateMotherAnkh")),
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
@@ -1045,7 +1051,7 @@ public class Main {
                 }
 
                 if(Settings.isRandomize1()) {
-                    if(!customItemPlacement.getLocation().startsWith("Shop 1")) {
+                    if(customItemPlacement.getLocation().startsWith("Shop 1")) {
                         JOptionPane.showMessageDialog(randomizerUI,
                                 "Custom placement of item at " + customItemPlacement.getLocation() + " not valid with current settings",
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
