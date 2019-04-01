@@ -539,7 +539,7 @@ public class Main {
                         "Custom placement error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            if(Settings.isRandomize2() && !Settings.isRandomizeTransitionGates() && !Settings.isRandomizeBacksideDoors() && !Settings.getStartingItems().contains("Holy Grail")) {
+            if(Settings.isRandomize1() && !Settings.isRandomizeTransitionGates() && !Settings.isRandomizeBacksideDoors() && !Settings.getStartingItems().contains("Holy Grail")) {
                 JOptionPane.showMessageDialog(this,
                         "Please randomize transitions or enable starting with " + Translations.getText("items.HolyGrail"),
                         "Custom placement error", JOptionPane.ERROR_MESSAGE);

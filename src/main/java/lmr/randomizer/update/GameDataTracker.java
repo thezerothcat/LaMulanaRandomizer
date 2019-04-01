@@ -3082,11 +3082,13 @@ public final class GameDataTracker {
                 }
                 block.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
 
-                stringCharacters = FileUtils.stringToData(Translations.getText("fools.intro.doors"));
-                for (Short shortCharacter : stringCharacters) {
-                    block.getBlockContents().add(new BlockSingleData(shortCharacter));
+                if(Settings.isRandomize1() && !Settings.isRandomizeTransitionGates() && !Settings.isRandomizeBacksideDoors()) {
+                    stringCharacters = FileUtils.stringToData(Translations.getText("fools.intro.doors"));
+                    for (Short shortCharacter : stringCharacters) {
+                        block.getBlockContents().add(new BlockSingleData(shortCharacter));
+                    }
+                    block.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
                 }
-                block.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
 
                 stringCharacters = FileUtils.stringToData(Translations.getText("fools.intro4"));
                 for (Short shortCharacter : stringCharacters) {
