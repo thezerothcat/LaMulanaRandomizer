@@ -96,6 +96,8 @@ public class BacksideDoorRandomizer {
             backsideDoorBossMap.put("Door: F9", 9);
             if(Settings.isRandomize2()) {
                 backsideDoorBossMap.remove("Door: B5");
+                backsideDoorBossMap.remove("Door: B2");
+                backsideDoorBossMap.put("Door: B9", 2);
             }
         }
 
