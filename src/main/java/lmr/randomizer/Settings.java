@@ -917,6 +917,7 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.alternateMotherAnkh, 28);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeNonBossDoors, 27);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeOneWayTransitions, 26);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeEscapeChest, 25);
@@ -1009,6 +1010,7 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.alternateMotherAnkh = getBoolFlagFromInt.apply(booleanSettingsFlag, 28);
         singleton.randomizeNonBossDoors = getBoolFlagFromInt.apply(booleanSettingsFlag, 27);
         singleton.randomizeOneWayTransitions = getBoolFlagFromInt.apply(booleanSettingsFlag, 26);
         singleton.randomizeEscapeChest = getBoolFlagFromInt.apply(booleanSettingsFlag, 25);
