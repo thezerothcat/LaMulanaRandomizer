@@ -65,6 +65,16 @@ public class BacksideDoorRandomizer {
                 backsideDoorLocationMap.put("Door: F5", getDoorLocation("Door: B8"));
                 mapOfDoorToPairDoor.put("Door: F8", "Door: F5");
                 mapOfDoorToPairDoor.put("Door: F5", "Door: F8");
+
+                backsideDoorLocationMap.put("Door: F2", getDoorLocation("Door: F9"));
+                backsideDoorLocationMap.put("Door: B2", getDoorLocation("Door: B9"));
+                backsideDoorLocationMap.put("Door: F9", getDoorLocation("Door: F2"));
+                backsideDoorLocationMap.put("Door: B9", getDoorLocation("Door: B2"));
+
+                mapOfDoorToPairDoor.put("Door: F2", "Door: B9");
+                mapOfDoorToPairDoor.put("Door: B2", "Door: F9");
+                mapOfDoorToPairDoor.put("Door: F9", "Door: B2");
+                mapOfDoorToPairDoor.put("Door: B9", "Door: F2");
             }
         }
     }

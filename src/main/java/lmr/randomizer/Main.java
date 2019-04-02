@@ -288,6 +288,9 @@ public class Main {
 
                 customItemPlacement = new CustomItemPlacement("Shop 18 (Lil Bro) Item 2", "Weights", (short)20, (short)1);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 18 (Lil Bro) Item 3", "Weights", (short)1, (short)20);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
             }
 
             progressDialog.updateProgress(10, Translations.getText("setup.backup"));
