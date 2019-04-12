@@ -121,16 +121,41 @@ public class EverythingShopRandomizer implements ShopRandomizer {
 
     @Override
     public void placeSpecialSubweaponAmmo(Random random) {
-        List<String> guaranteedAmmoShopLocations = new ArrayList<>();
-        for(String location : unassignedShopItemLocations) {
-            if(location.contains("Surface") && !location.equals(MSX_SHOP_NAME + " Item 1")) {
-                guaranteedAmmoShopLocations.add(location);
+        if(Settings.isRandomizeStartingLocation()) {
+            String shopItem = DataFromFile.CUSTOM_SHOP_NAME + " Item 1";
+            String shopContents = mapOfShopInventoryItemToContents.get(shopItem);
+            if(shopContents == null) {
+                mapOfShopInventoryItemToContents.put(shopItem, Settings.getCurrentStartingWeapon() + " Ammo");
+                unassignedShopItemLocations.remove(shopItem);
+                return;
+            }
+            shopItem = DataFromFile.CUSTOM_SHOP_NAME + " Item 2";
+            shopContents = mapOfShopInventoryItemToContents.get(shopItem);
+            if(shopContents == null) {
+                mapOfShopInventoryItemToContents.put(shopItem, Settings.getCurrentStartingWeapon() + " Ammo");
+                unassignedShopItemLocations.remove(shopItem);
+                return;
+            }
+            shopItem = DataFromFile.CUSTOM_SHOP_NAME + " Item 3";
+            shopContents = mapOfShopInventoryItemToContents.get(shopItem);
+            if(shopContents == null) {
+                mapOfShopInventoryItemToContents.put(shopItem, Settings.getCurrentStartingWeapon() + " Ammo");
+                unassignedShopItemLocations.remove(shopItem);
+                return;
             }
         }
-        if(!guaranteedAmmoShopLocations.isEmpty()) {
-            String specialAmmoLocation = guaranteedAmmoShopLocations.get(random.nextInt(guaranteedAmmoShopLocations.size()));
-            mapOfShopInventoryItemToContents.put(specialAmmoLocation, Settings.getCurrentStartingWeapon() + " Ammo");
-            unassignedShopItemLocations.remove(specialAmmoLocation);
+        else {
+            List<String> guaranteedAmmoShopLocations = new ArrayList<>();
+            for(String location : unassignedShopItemLocations) {
+                if(location.contains("Surface") && !location.equals(MSX_SHOP_NAME + " Item 1")) {
+                    guaranteedAmmoShopLocations.add(location);
+                }
+            }
+            if(!guaranteedAmmoShopLocations.isEmpty()) {
+                String specialAmmoLocation = guaranteedAmmoShopLocations.get(random.nextInt(guaranteedAmmoShopLocations.size()));
+                mapOfShopInventoryItemToContents.put(specialAmmoLocation, Settings.getCurrentStartingWeapon() + " Ammo");
+                unassignedShopItemLocations.remove(specialAmmoLocation);
+            }
         }
     }
 
@@ -282,15 +307,42 @@ public class EverythingShopRandomizer implements ShopRandomizer {
     public void placeGuaranteedWeights(Random random) {
         // Guarantee weight shop on the Surface
         List<String> guaranteedWeightShopLocations = new ArrayList<>();
-        for(String location : unassignedShopItemLocations) {
-            if(location.contains("Surface") && !location.contains(MSX_SHOP_NAME)) {
-                guaranteedWeightShopLocations.add(location);
+        if(Settings.isRandomizeStartingLocation()) {
+            String shopItem = DataFromFile.CUSTOM_SHOP_NAME + " Item 1";
+            String shopContents = mapOfShopInventoryItemToContents.get(shopItem);
+            if(shopContents == null) {
+                mapOfShopInventoryItemToContents.put(shopItem, "Weights");
+                unassignedShopItemLocations.remove(shopItem);
+            }
+            else {
+                shopItem = DataFromFile.CUSTOM_SHOP_NAME + " Item 2";
+                shopContents = mapOfShopInventoryItemToContents.get(shopItem);
+                if(shopContents == null) {
+                    mapOfShopInventoryItemToContents.put(shopItem, "Weights");
+                    unassignedShopItemLocations.remove(shopItem);
+                }
+                else {
+                    shopItem = DataFromFile.CUSTOM_SHOP_NAME + " Item 3";
+                    shopContents = mapOfShopInventoryItemToContents.get(shopItem);
+                    if(shopContents == null) {
+                        mapOfShopInventoryItemToContents.put(shopItem, "Weights");
+                        unassignedShopItemLocations.remove(shopItem);
+                        return;
+                    }
+                }
             }
         }
-        if(!guaranteedWeightShopLocations.isEmpty()) {
-            String surfaceWeightsLocation = guaranteedWeightShopLocations.get(random.nextInt(guaranteedWeightShopLocations.size()));
-            mapOfShopInventoryItemToContents.put(surfaceWeightsLocation, "Weights");
-            unassignedShopItemLocations.remove(surfaceWeightsLocation);
+        else {
+            for(String location : unassignedShopItemLocations) {
+                if(location.contains("Surface") && !location.contains(MSX_SHOP_NAME)) {
+                    guaranteedWeightShopLocations.add(location);
+                }
+            }
+            if(!guaranteedWeightShopLocations.isEmpty()) {
+                String surfaceWeightsLocation = guaranteedWeightShopLocations.get(random.nextInt(guaranteedWeightShopLocations.size()));
+                mapOfShopInventoryItemToContents.put(surfaceWeightsLocation, "Weights");
+                unassignedShopItemLocations.remove(surfaceWeightsLocation);
+            }
         }
 
         // Guarantee weights at Little Brother's shop so there's a guaranteed way to unlock Big Brother's shop.
@@ -429,7 +481,7 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 Map<String, GameObjectId> nameToDataMap = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData();
                 GameObjectId itemNewContentsData = nameToDataMap.get(shopItem1);
                 GameDataTracker.writeLocationContents("Mobile Super X2", shopItem1,
-                        nameToDataMap.get("Mobile Super X2"), itemNewContentsData, itemNewContentsData.getWorldFlag(), random);
+                        nameToDataMap.get("Mobile Super X2"), itemNewContentsData, itemNewContentsData.getWorldFlag(), random, false);
             }
             else {
                 shopItem1 = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(String.format("%s Item 1", shopName)));
@@ -467,14 +519,14 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                         shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 1", shopName), shopItem1),
                         itemPriceCountMsxShop2,
                         itemPriceCountMsxShop3,
-                        false, MSX_SHOP_NAME.equals(shopName), false);
+                        false, MSX_SHOP_NAME.equals(shopName), false, random);
             }
             else {
                 GameDataTracker.writeShopInventory(shopBlock, shopItem1, shopItem2, shopItem3, blocks,
                         shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 1", shopName), shopItem1),
                         shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 2", shopName), shopItem2),
                         shopItemPriceCountRandomizer.getItemPriceAndCount(String.format("%s Item 3", shopName), shopItem3),
-                        "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName), false);
+                        "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName), false, random);
             }
         }
     }

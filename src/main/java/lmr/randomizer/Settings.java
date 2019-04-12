@@ -59,6 +59,11 @@ public final class Settings {
     private boolean automaticMantras;
     private String medicineColor;
 
+    private boolean randomizeStartingLocation;
+    private boolean randomizeBosses;
+    private boolean randomizeEnemies;
+    private boolean randomizeGraphics;
+
     private boolean removeSpaulder;
 
     private Integer skipValidation;
@@ -121,6 +126,11 @@ public final class Settings {
         alternateMotherAnkh = false;
         automaticMantras = false;
         medicineColor = null;
+
+        randomizeStartingLocation = false;
+        randomizeBosses = false;
+        randomizeEnemies = false;
+        randomizeGraphics = false;
 
         skipValidation = null;
 
@@ -744,9 +754,9 @@ public final class Settings {
         return originalContents;
     }
 
-    public static String getMedicineColor() {
-        return DataFromFile.getCustomPlacementData().getMedicineColor();
-    }
+//    public static boolean isFoolsMode() {
+//        return false;
+//    }
 
     public static boolean isAlternateMotherAnkh() {
         return singleton.alternateMotherAnkh || DataFromFile.getCustomPlacementData().isAlternateMotherAnkh();
@@ -757,6 +767,66 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.alternateMotherAnkh = alternateMotherAnkh;
+    }
+
+    public static String getMedicineColor() {
+        String customMedicineColor = DataFromFile.getCustomPlacementData().getMedicineColor();
+        return customMedicineColor == null ? singleton.medicineColor : customMedicineColor;
+    }
+
+    public static void setMedicineColor(String medicineColor) {
+        singleton.medicineColor = medicineColor;
+    }
+
+    public static boolean isRandomizeStartingLocation() {
+        return singleton.randomizeStartingLocation;
+    }
+
+    public static void setRandomizeStartingLocation(boolean randomizeStartingLocation, boolean update) {
+        if(update && randomizeStartingLocation != singleton.randomizeStartingLocation) {
+            singleton.changed = true;
+        }
+        singleton.randomizeStartingLocation = randomizeStartingLocation;
+    }
+
+    public static boolean isRandomizeBosses() {
+        return singleton.randomizeBosses;
+    }
+
+    public static void setRandomizeBosses(boolean randomizeBosses, boolean update) {
+        if(update && randomizeBosses != singleton.randomizeBosses) {
+            singleton.changed = true;
+        }
+        singleton.randomizeBosses = randomizeBosses;
+    }
+
+    public static boolean isRandomizeEnemies() {
+        return singleton.randomizeEnemies;
+    }
+
+    public static void setRandomizeEnemies(boolean randomizeEnemies, boolean update) {
+        if(update && randomizeEnemies != singleton.randomizeEnemies) {
+            singleton.changed = true;
+        }
+        singleton.randomizeEnemies = randomizeEnemies;
+    }
+
+    public static boolean isRandomizeGraphics() {
+        return singleton.randomizeGraphics;
+    }
+
+    public static void setRandomizeGraphics(boolean randomizeGraphics, boolean update) {
+        if(update && randomizeGraphics != singleton.randomizeGraphics) {
+            singleton.changed = true;
+        }
+        singleton.randomizeGraphics = randomizeGraphics;
+    }
+
+    public static String getStartingLocation() {
+        if(!singleton.randomizeStartingLocation) {
+            return "Location: Surface [Main]";
+        }
+        return "Location: Gate of Time [Surface]";
     }
 
     public static boolean isAutomaticMantras() {
@@ -838,6 +908,7 @@ public final class Settings {
         BiFunction<Boolean, Integer, Integer> processBooleanFlag = (Boolean b, Integer flagIndex) -> boolToInt(b) << flagIndex;
 
         int booleanSettings = 0;
+        booleanSettings |= processBooleanFlag.apply(singleton.alternateMotherAnkh, 28);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeNonBossDoors, 27);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeOneWayTransitions, 26);
         booleanSettings |= processBooleanFlag.apply(singleton.randomizeEscapeChest, 25);
@@ -883,6 +954,12 @@ public final class Settings {
         // boss difficulty
         int bossDifficulty = singleton.bossDifficulty.ordinal();
 
+        int booleanSettings2 = 0;
+        booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeGraphics, 3);
+        booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeEnemies, 2);
+        booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeBosses, 1);
+        booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeStartingLocation, 0);
+
         // combine the results of the settings in a string
         long startingSeed = getStartingSeed();
         result += separator + Long.toHexString(startingSeed);
@@ -894,6 +971,7 @@ public final class Settings {
         result += separator + Integer.toHexString(bossDifficulty);
         result += separator + Integer.toHexString(singleton.minRandomRemovedItems);
         result += separator + Integer.toHexString(singleton.maxRandomRemovedItems);
+        result += separator + Integer.toHexString(booleanSettings2);
 
         return result;
     }
@@ -922,6 +1000,7 @@ public final class Settings {
 
         BiFunction<Integer, Integer, Boolean> getBoolFlagFromInt = (startingVal, flagIdx) -> intToBool((startingVal >> flagIdx) & 0x1);
 
+        singleton.alternateMotherAnkh = getBoolFlagFromInt.apply(booleanSettingsFlag, 28);
         singleton.randomizeNonBossDoors = getBoolFlagFromInt.apply(booleanSettingsFlag, 27);
         singleton.randomizeOneWayTransitions = getBoolFlagFromInt.apply(booleanSettingsFlag, 26);
         singleton.randomizeEscapeChest = getBoolFlagFromInt.apply(booleanSettingsFlag, 25);
@@ -958,6 +1037,12 @@ public final class Settings {
         BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[7],16)];
         int minRandomRemovedItems = Integer.parseInt(parts[8],16);
         int maxRandomRemovedItems = Integer.parseInt(parts[9],16);
+
+        int booleanSettingsFlag2 = Integer.parseInt(parts[10], 16);
+        singleton.randomizeGraphics = getBoolFlagFromInt.apply(booleanSettingsFlag2, 3);
+        singleton.randomizeEnemies = getBoolFlagFromInt.apply(booleanSettingsFlag2, 2);
+        singleton.randomizeBosses = getBoolFlagFromInt.apply(booleanSettingsFlag2, 1);
+        singleton.randomizeStartingLocation = getBoolFlagFromInt.apply(booleanSettingsFlag2, 0);
 
         setStartingSeed(seed);
         setEnabledGlitches((List<String>) glitches, true);

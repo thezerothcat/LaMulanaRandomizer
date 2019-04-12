@@ -2,6 +2,14 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+2.20
+-----------------------------
+Merged Fools' Randomizer changes into the main project; making some things actually random will need a bit more work.
+
+FOOL
+-----------------------------
+Fools' Randomizer in honor of April 1. Thank you to Neil and blasteg for testing and Smurfton for technical help, and thank you to those those who helped with translations.
+
 2.19
 -----------------------------
 Alternate Mother Ankh is now a proper setting.

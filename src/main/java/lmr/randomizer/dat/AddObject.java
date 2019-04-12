@@ -1,12 +1,17 @@
 package lmr.randomizer.dat;
 
 import lmr.randomizer.DataFromFile;
+import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
+import lmr.randomizer.Translations;
+import lmr.randomizer.dat.shop.BlockCmdSingle;
+import lmr.randomizer.dat.shop.BlockStringData;
+import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.GameObjectId;
+import lmr.randomizer.update.LocationCoordinateMapper;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public final class AddObject {
     private AddObject() { }
@@ -160,7 +165,7 @@ public final class AddObject {
      * Add a timer to set the flag that resets the Twin Labyrinths poison timer
      * @param screen the screen to add the timers to
      */
-    public static void addTwinLabsPoisonTimerRemoval(ObjectContainer screen) {
+    public static void addTwinLabsPoisonTimerRemoval(ObjectContainer screen, boolean resetPuzzle) {
         GameObject obj = new GameObject(screen);
         obj.setId((short)0x0b);
         obj.getArgs().add((short)0);
@@ -185,6 +190,14 @@ public final class AddObject {
         writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
         writeByteOperation.setValue((byte)0);
         obj.getWriteByteOperations().add(writeByteOperation);
+
+        if(resetPuzzle) {
+            writeByteOperation = new WriteByteOperation();
+            writeByteOperation.setIndex(0x1dc);
+            writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+            writeByteOperation.setValue((byte)0);
+            obj.getWriteByteOperations().add(writeByteOperation);
+        }
 
         screen.getObjects().add(0, obj);
     }
@@ -462,36 +475,68 @@ public final class AddObject {
      * @param screen the screen to add the objects to
      * @param isXelpudScreen true if this is Xelpud's screen, where the kill timer should not activate until after you talk to him
      */
-    public static void addRandomWeaponKillTimer(Screen screen, boolean isXelpudScreen) {
-        GameObject randomWeaponKillTimer = new GameObject(screen);
-        randomWeaponKillTimer.setId((short) 0x0b);
-        randomWeaponKillTimer.getArgs().add((short) 0);
-        randomWeaponKillTimer.getArgs().add((short) 0);
-        randomWeaponKillTimer.setX(-1);
-        randomWeaponKillTimer.setY(-1);
+    public static void addSurfaceKillTimer(Screen screen, boolean isXelpudScreen) {
+        GameObject killTimer = new GameObject(screen);
+        killTimer.setId((short) 0x0b);
+        killTimer.getArgs().add((short) 0);
+        killTimer.getArgs().add((short) 0);
+        killTimer.setX(-1);
+        killTimer.setY(-1);
 
         TestByteOperation flagTest = new TestByteOperation();
-        GameObjectId randomWeaponInfo = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(Settings.getCurrentStartingWeapon());
-        flagTest.setIndex(randomWeaponInfo.getWorldFlag());
-        flagTest.setValue((byte) 2);
+        flagTest.setIndex(0xad1);
+        flagTest.setValue((byte) 1);
         flagTest.setOp(ByteOp.FLAG_NOT_EQUAL);
-        randomWeaponKillTimer.getTestByteOperations().add(flagTest);
+        killTimer.getTestByteOperations().add(flagTest);
 
         if(isXelpudScreen) {
             flagTest = new TestByteOperation();
-            flagTest.setIndex(0x07c);
+            flagTest.setIndex(0xad0);
             flagTest.setValue((byte) 1);
             flagTest.setOp(ByteOp.FLAG_EQUALS);
-            randomWeaponKillTimer.getTestByteOperations().add(flagTest);
+            killTimer.getTestByteOperations().add(flagTest);
         }
 
         WriteByteOperation flagUpdate = new WriteByteOperation();
         flagUpdate.setIndex(0x3e9);
         flagUpdate.setValue((byte) 1);
         flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
-        randomWeaponKillTimer.getWriteByteOperations().add(flagUpdate);
+        killTimer.getWriteByteOperations().add(flagUpdate);
 
-        screen.getObjects().add(0, randomWeaponKillTimer);
+        screen.getObjects().add(0, killTimer);
+    }
+
+    /**
+     * Add replacement timer for Xelpud dialogue state to compensate for removed 0x07c flag in intro conversation
+     * @param screen the screen to add the objects to
+     */
+    public static void addXelpudIntroTimer(Screen screen) {
+        GameObject timer = new GameObject(screen);
+        timer.setId((short) 0x0b);
+        timer.getArgs().add((short) 0);
+        timer.getArgs().add((short) 0);
+        timer.setX(-1);
+        timer.setY(-1);
+
+        TestByteOperation flagTest = new TestByteOperation();
+        flagTest.setIndex(0xad0);
+        flagTest.setValue((byte) 1);
+        flagTest.setOp(ByteOp.FLAG_EQUALS);
+        timer.getTestByteOperations().add(flagTest);
+
+        flagTest = new TestByteOperation();
+        flagTest.setIndex(0x07c);
+        flagTest.setValue((byte) 0);
+        flagTest.setOp(ByteOp.FLAG_EQUALS);
+        timer.getTestByteOperations().add(flagTest);
+
+        WriteByteOperation flagUpdate = new WriteByteOperation();
+        flagUpdate.setIndex(0x07c);
+        flagUpdate.setValue((byte) 1);
+        flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        timer.getWriteByteOperations().add(flagUpdate);
+
+        screen.getObjects().add(0, timer);
     }
 
     /**
@@ -866,7 +911,7 @@ public final class AddObject {
      * Add a timer to automatically start hard mode.
      * @param screen the screen to add the objects to
      */
-    public static void addAutomaticHardmode(Screen screen) {
+    public static void addAutomaticHardmodeTimer(Screen screen) {
         GameObject automaticHardmodeTimer = new GameObject(screen);
         automaticHardmodeTimer.setId((short) 0x0b);
         automaticHardmodeTimer.getArgs().add((short) 0);
@@ -893,7 +938,7 @@ public final class AddObject {
      * Add a timer to automatically learn ancient La-Mulanese.
      * @param screen the screen to add the objects to
      */
-    public static void addAutomaticTranslations(Screen screen) {
+    public static void addAutomaticTranslationsTimer(Screen screen) {
         GameObject automaticTranslationTimer = new GameObject(screen);
         automaticTranslationTimer.setId((short) 0x0b);
         automaticTranslationTimer.getArgs().add((short) 0);
@@ -922,7 +967,7 @@ public final class AddObject {
         screen.getObjects().add(0, automaticTranslationTimer);
     }
 
-    public static void addAutomaticMantras(ObjectContainer screen) {
+    public static void addAutomaticMantrasTimer(ObjectContainer screen) {
         GameObject mantraTimer = new GameObject(screen);
         mantraTimer.setId((short)0x0b);
         mantraTimer.getArgs().add((short) 0);
@@ -962,8 +1007,8 @@ public final class AddObject {
             itemGive.getArgs().add((short)2);
             itemGive.getArgs().add((short)3);
             itemGive.getArgs().add((short)39);
-            itemGive.setX(940);
-            itemGive.setY(160);
+            itemGive.setX(LocationCoordinateMapper.getStartingX());
+            itemGive.setY(LocationCoordinateMapper.getStartingY());
 
             TestByteOperation itemGiveTest = new TestByteOperation();
             itemGiveTest.setIndex(gameObjectId.getWorldFlag());
@@ -1800,6 +1845,10 @@ public final class AddObject {
         littleBrotherShopScreen.getObjects().add(0, littleBrotherShopItemTimer);
     }
 
+    /**
+     * Detect Lemeza entering the lower surface area and get rid of the cover so you can see.
+     * @param screen
+     */
     public static void addSurfaceCoverDetector(ObjectContainer screen) {
         GameObject surfaceCoverDetector = new GameObject(screen);
         surfaceCoverDetector.setId((short)0x14);
@@ -2201,8 +2250,286 @@ public final class AddObject {
             AddObject.addMedicineStatueTimer(objectContainer);
         }
         if(Settings.isAutomaticMantras() && "Key Sword".equals(newContents)) {
-            AddObject.addAutomaticMantras(objectContainer);
+            AddObject.addAutomaticMantrasTimer(objectContainer);
         }
+    }
+
+    public static void addHotspring(GameObject reference) {
+        GameObject hotspring = new GameObject(reference.getObjectContainer());
+        hotspring.setId((short)0xad);
+        hotspring.setX(reference.getX() - 20);
+        hotspring.setY(reference.getY() + 20);
+
+        hotspring.getArgs().add((short)4);
+        hotspring.getArgs().add((short)2);
+        hotspring.getArgs().add((short)8);
+        hotspring.getArgs().add((short)2);
+
+        reference.getObjectContainer().getObjects().add(hotspring);
+    }
+
+    public static void addSurfaceGrailTablet(Screen screen) {
+        GameObject grailTablet = new GameObject(screen);
+        grailTablet.setId((short)0x9e);
+        grailTablet.setX(1120);
+        grailTablet.setY(80);
+
+        grailTablet.getArgs().add((short)38);
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)40);
+        grailTablet.getArgs().add((short)40);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0xad3);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        grailTablet.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0xad3);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(1);
+        grailTablet.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(grailTablet);
+
+        if(Settings.isAutomaticGrailPoints()) {
+            addGrailDetector(grailTablet, 0x0ad3);
+        }
+    }
+
+    public static GameObject addSpecialGrailTablet(Screen screen) {
+        GameObject grailTablet = new GameObject(screen);
+        grailTablet.setId((short)0x9f);
+        grailTablet.setX(400);
+        grailTablet.setY(160);
+
+        grailTablet.getArgs().add((short)38);
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+        grailTablet.getArgs().add((short)1);
+
+        grailTablet.getArgs().add((short)0);
+        grailTablet.getArgs().add((short)40);
+        grailTablet.getArgs().add((short)40);
+
+        screen.getObjects().add(grailTablet);
+
+        GameObject grailGraphic = new GameObject(screen);
+        grailGraphic.setId((short)0x93);
+        grailGraphic.setX(grailTablet.getX());
+        grailGraphic.setY(grailTablet.getY());
+
+        grailGraphic.getArgs().add((short)0); // Layer
+        grailGraphic.getArgs().add((short)0); // 01.effect.png for anything not 0-6?
+        grailGraphic.getArgs().add((short)40); // Imagex
+        grailGraphic.getArgs().add((short)0); // Imagey
+        grailGraphic.getArgs().add((short)40); // dx
+        grailGraphic.getArgs().add((short)40); // dy
+        grailGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        grailGraphic.getArgs().add((short)1); // Animation frames
+        grailGraphic.getArgs().add((short)0); // Pause frames
+        grailGraphic.getArgs().add((short)0); // Repeat count (<1 is forever)
+        grailGraphic.getArgs().add((short)0); // Hittile to fill with
+        grailGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        grailGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        grailGraphic.getArgs().add((short)0); // Cycle colors t/f
+        grailGraphic.getArgs().add((short)0); // Alpha/frame
+        grailGraphic.getArgs().add((short)255); // Max alpha
+        grailGraphic.getArgs().add((short)0); // R/frame
+        grailGraphic.getArgs().add((short)0); // Max R
+        grailGraphic.getArgs().add((short)0); // G/frame
+        grailGraphic.getArgs().add((short)0); // Max G
+        grailGraphic.getArgs().add((short)0); // B/frame
+        grailGraphic.getArgs().add((short)0); // Max B
+        grailGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        grailGraphic.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(grailGraphic);
+
+        GameObject grailSave = new GameObject(screen);
+        grailSave.setId((short)0xb6);
+        grailSave.setX(grailTablet.getX());
+        grailSave.setY(grailTablet.getY());
+
+        grailSave.getArgs().add((short)33);
+
+        screen.getObjects().add(grailSave);
+
+        return grailTablet;
+    }
+
+    public static GameObject addWarp(Screen screen, int warpX, int warpY, int width, int height, int destZone, int destRoom, int destScreen, int destX, int destY) {
+        GameObject warp = new GameObject(screen);
+        warp.setId((short) 0x97);
+        warp.setX(warpX);
+        warp.setY(warpY);
+
+        warp.getArgs().add((short)destZone);
+        warp.getArgs().add((short)destRoom);
+        warp.getArgs().add((short)destScreen);
+        warp.getArgs().add((short)destX);
+        warp.getArgs().add((short)destY);
+        warp.getArgs().add((short)width);
+        warp.getArgs().add((short)height);
+        warp.getArgs().add((short)4);
+        warp.getArgs().add((short)4);
+
+        screen.getObjects().add(warp);
+
+        return warp;
+    }
+
+//    public static void addHadoukenTurtle(Screen screen, int x, int y) {
+//        GameObject enemy = new GameObject(screen);
+//        enemy.setId((short)0x62);
+//        enemy.setX(x);
+//        enemy.setY(y);
+//
+//        enemy.getArgs().add((short)0); // Facing
+//        enemy.getArgs().add((short)11); // Drop type
+//        enemy.getArgs().add((short)3); // Speed
+//        enemy.getArgs().add((short)24); // Health
+//        enemy.getArgs().add((short)16); // Contact damage
+//        enemy.getArgs().add((short)11); // Soul
+//        enemy.getArgs().add((short)3); // Proj Speed
+//        enemy.getArgs().add((short)5); // Projectiles per volley
+//        enemy.getArgs().add((short)10); // Delay between shots
+//        enemy.getArgs().add((short)16); // Projectile damage
+//
+//        TestByteOperation enemyTest = new TestByteOperation();
+//        enemyTest.setIndex(0x1cf);
+//        enemyTest.setValue((byte) 2);
+//        enemyTest.setOp(ByteOp.FLAG_EQUALS);
+//        enemy.getTestByteOperations().add(enemyTest);
+//
+//        screen.getObjects().add(enemy);
+//    }
+
+    public static GameObject addSurfaceShop(Screen screen) {
+        GameObject tent = new GameObject(screen);
+        tent.setId((short) 0x93);
+        tent.setX(480);
+        tent.setY(200);
+
+        tent.getArgs().add((short)0); // Layer
+        tent.getArgs().add((short)0); // 01.effect.png for anything not 0-6?
+        tent.getArgs().add((short)0); // Imagex
+        tent.getArgs().add((short)120); // Imagey
+        tent.getArgs().add((short)80); // dx
+        tent.getArgs().add((short)40); // dy
+        tent.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        tent.getArgs().add((short)0); // Animation frames
+        tent.getArgs().add((short)1); // Pause frames
+        tent.getArgs().add((short)0); // Repeat count (<1 is forever)
+        tent.getArgs().add((short)0); // Hittile to fill with
+        tent.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        tent.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        tent.getArgs().add((short)0); // Cycle colors t/f
+        tent.getArgs().add((short)0); // Alpha/frame
+        tent.getArgs().add((short)255); // Max alpha
+        tent.getArgs().add((short)0); // R/frame
+        tent.getArgs().add((short)0); // Max R
+        tent.getArgs().add((short)0); // G/frame
+        tent.getArgs().add((short)0); // Max G
+        tent.getArgs().add((short)0); // B/frame
+        tent.getArgs().add((short)0); // Max B
+        tent.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        tent.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(tent);
+
+        GameObject tent2 = new GameObject(screen);
+        tent2.setId((short) 0x93);
+        tent2.setX(480);
+        tent2.setY(240);
+
+        tent2.getArgs().add((short)0); // Layer
+        tent2.getArgs().add((short)0); // 01.effect.png for anything not 0-6?
+        tent2.getArgs().add((short)80); // Imagex
+        tent2.getArgs().add((short)120); // Imagey
+        tent2.getArgs().add((short)80); // dx
+        tent2.getArgs().add((short)40); // dy
+        tent2.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        tent2.getArgs().add((short)0); // Animation frames
+        tent2.getArgs().add((short)1); // Pause frames
+        tent2.getArgs().add((short)0); // Repeat count (<1 is forever)
+        tent2.getArgs().add((short)0); // Hittile to fill with
+        tent2.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        tent2.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        tent2.getArgs().add((short)0); // Cycle colors t/f
+        tent2.getArgs().add((short)0); // Alpha/frame
+        tent2.getArgs().add((short)255); // Max alpha
+        tent2.getArgs().add((short)0); // R/frame
+        tent2.getArgs().add((short)0); // Max R
+        tent2.getArgs().add((short)0); // G/frame
+        tent2.getArgs().add((short)0); // Max G
+        tent2.getArgs().add((short)0); // B/frame
+        tent2.getArgs().add((short)0); // Max B
+        tent2.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        tent2.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(tent2);
+
+        GameObject shop = new GameObject(screen);
+        shop.setId((short) 0xa0);
+        shop.setX(500);
+        shop.setY(240);
+
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)1);
+        shop.getArgs().add((short)36);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+
+        screen.getObjects().add(shop);
+        return shop;
+    }
+
+    public static void addItemGive(GameObject referenceObj, int inventoryArg, int randomizeGraphicsFlag, int worldFlag) {
+        GameObject itemGive = new GameObject(referenceObj.getObjectContainer());
+        itemGive.setId((short) 0xb5);
+        int x = referenceObj.getX();
+        int y = referenceObj.getY();
+        itemGive.setX((x / 640) * 640);
+        itemGive.setY((y / 480) * 480);
+
+        itemGive.getArgs().add((short)inventoryArg);
+        itemGive.getArgs().add((short)32);
+        itemGive.getArgs().add((short)24);
+        itemGive.getArgs().add((short)39);
+
+        TestByteOperation itemGiveTest = new TestByteOperation();
+        itemGiveTest.setIndex(randomizeGraphicsFlag);
+        itemGiveTest.setValue((byte) 2);
+        itemGiveTest.setOp(ByteOp.FLAG_EQUALS);
+        itemGive.getTestByteOperations().add(itemGiveTest);
+
+        itemGiveTest = new TestByteOperation();
+        itemGiveTest.setIndex(worldFlag);
+        itemGiveTest.setValue((byte) 2);
+        itemGiveTest.setOp(ByteOp.FLAG_NOT_EQUAL);
+        itemGive.getTestByteOperations().add(itemGiveTest);
+
+        WriteByteOperation itemGiveUpdate = new WriteByteOperation();
+        itemGiveUpdate.setIndex(worldFlag);
+        itemGiveUpdate.setValue((byte) 2);
+        itemGiveUpdate.setOp(ByteOp.ASSIGN_FLAG);
+        itemGive.getWriteByteOperations().add(itemGiveUpdate);
+
+        referenceObj.getObjectContainer().getObjects().add(itemGive);
     }
 
     public static void addGrailDetector(GameObject gameObject, int grailFlag) {
@@ -2277,6 +2604,82 @@ public final class AddObject {
         obj.getTestByteOperations().add(testByteOperation);
 
         screen.getObjects().add(obj);
+        return obj;
+    }
+
+    /**
+     * Add exit to untrue shrine so it doesn't break during the escape
+     * @param screen the screen to add the object to
+     */
+    public static GameObject addSpecialTransitionWarp(Screen screen, int zoneIndex) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x97);
+
+        obj.getArgs().add((short) zoneIndex);
+        obj.getArgs().add((short) 8);
+        obj.getArgs().add((short) 1);
+
+        if(zoneIndex == 0) {
+            obj.setX(140);
+            obj.setY(440);
+
+            obj.getArgs().add((short)300);
+            obj.getArgs().add((short)20);
+        }
+        else if(zoneIndex == 5){
+            obj.setX(300);
+            obj.setY(440);
+
+            obj.getArgs().add((short)140);
+            obj.getArgs().add((short)20);
+        }
+        obj.getArgs().add((short)4);
+        obj.getArgs().add((short)4);
+        obj.getArgs().add((short)4);
+        obj.getArgs().add((short)4);
+
+        screen.getObjects().add(obj);
+        return obj;
+    }
+
+    /**
+     * Add exit to untrue shrine so it doesn't break during the escape
+     * @param screen the screen to add the object to
+     */
+    public static GameObject addSpecialTransitionGate(Screen screen, int zoneIndex) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0xc4);
+
+        obj.getArgs().add((short) zoneIndex);
+        obj.getArgs().add((short) 8);
+        obj.getArgs().add((short) 0);
+
+        if(zoneIndex == 0) {
+            obj.setX(140);
+            obj.setY(460);
+
+            obj.getArgs().add((short)300);
+            obj.getArgs().add((short)392);
+            obj.getArgs().add((short)0);
+        }
+        else if(zoneIndex == 5){
+            obj.setX(300);
+            obj.setY(460);
+
+            obj.getArgs().add((short)140);
+            obj.getArgs().add((short)392);
+            obj.getArgs().add((short)0);
+        }
+        obj.getArgs().add((short)0);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x382);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        obj.getTestByteOperations().add(testByteOperation);
+
+        screen.getObjects().add(obj);
+        addEscapeGate(obj);
         return obj;
     }
 
@@ -2804,5 +3207,372 @@ public final class AddObject {
         obj.getTestByteOperations().add(testByteOperation);
 
         screen.getObjects().add(obj);
+    }
+
+    public static ShopBlock addShopBlock(List<Block> blocks) {
+        ShopBlock shopBlock = new ShopBlock(blocks.size());
+
+        BlockListData shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add((short)105);
+        shopBlockData.getData().add((short)105);
+        shopBlockData.getData().add((short)105);
+        shopBlockData.getData().add((short)0x000a);
+        shopBlock.setInventoryItemArgsList(shopBlockData);
+
+        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add((short)10);
+        shopBlockData.getData().add((short)10);
+        shopBlockData.getData().add((short)10);
+        shopBlockData.getData().add((short)0x000a);
+        shopBlock.setInventoryPriceList(shopBlockData);
+
+        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add((short)5);
+        shopBlockData.getData().add((short)5);
+        shopBlockData.getData().add((short)5);
+        shopBlockData.getData().add((short)0x000a);
+        shopBlock.setInventoryCountList(shopBlockData);
+
+        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add((short)0);
+        shopBlockData.getData().add((short)0);
+        shopBlockData.getData().add((short)0);
+        shopBlockData.getData().add((short)0x000a);
+        shopBlock.setFlagList(shopBlockData);
+
+        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add((short)0);
+        shopBlockData.getData().add((short)0);
+        shopBlockData.getData().add((short)0);
+        shopBlockData.getData().add((short)0x000a);
+        shopBlock.setExitFlagList(shopBlockData);
+
+        shopBlock.setBackground(new BlockCmdSingle((short)1));
+        shopBlock.setSprite(new BlockCmdSingle((short)1));
+        shopBlock.setMusic(new BlockCmdSingle((short)1));
+
+        BlockStringData blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData("Weight , Weight , Weight"));
+        shopBlock.setBunemonText(blockStringData);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(LocationCoordinateMapper.getStartingScreenName()));
+        shopBlock.setBunemonLocation(blockStringData);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.yesPurchaseString")));
+        shopBlock.setString(blockStringData, 0);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.noPurchaseString")));
+        shopBlock.setString(blockStringData, 1);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("text.intro")));
+        shopBlock.setString(blockStringData, 2);
+
+        blockStringData = new BlockStringData();
+        List<Short> data = FileUtils.stringToData(Translations.getText("shop0.askItem1String.1"));
+        data.add((short)0x004a);
+        data.add((short)0x96);
+        data.add((short)0);
+        data.add((short)0x64);
+        blockStringData.setItemNameStartIndex(data.size());
+        blockStringData.setItemNameEndIndex(blockStringData.getItemNameStartIndex() + 2);
+        data.add((short)77);
+        data.add((short)105);
+        data.add((short)0x004a);
+        data.add((short)0);
+        data.add((short)0);
+        data.add((short)0);
+        blockStringData.getData().addAll(data);
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.askItem1String.2")));
+        shopBlock.setString(blockStringData, 3);
+
+        blockStringData = new BlockStringData();
+        data = FileUtils.stringToData(Translations.getText("shop0.askItem2String.1"));
+        data.add((short)0x004a);
+        data.add((short)0x96);
+        data.add((short)0);
+        data.add((short)0x64);
+        blockStringData.setItemNameStartIndex(data.size());
+        blockStringData.setItemNameEndIndex(blockStringData.getItemNameStartIndex() + 2);
+        data.add((short)77);
+        data.add((short)105);
+        data.add((short)0x004a);
+        data.add((short)0);
+        data.add((short)0);
+        data.add((short)0);
+        blockStringData.getData().addAll(data);
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.askItem2String.2")));
+        shopBlock.setString(blockStringData, 4);
+
+        blockStringData = new BlockStringData();
+        data = FileUtils.stringToData(Translations.getText("shop0.askItem3String.1"));
+        data.add((short)0x004a);
+        data.add((short)0x96);
+        data.add((short)0);
+        data.add((short)0x64);
+        blockStringData.setItemNameStartIndex(data.size());
+        blockStringData.setItemNameEndIndex(blockStringData.getItemNameStartIndex() + 2);
+        data.add((short)77);
+        data.add((short)105);
+        data.add((short)0x004a);
+        data.add((short)0);
+        data.add((short)0);
+        data.add((short)0);
+        blockStringData.getData().addAll(data);
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.askItem3String.2")));
+        shopBlock.setString(blockStringData, 5);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.boughtItem1String")));
+        shopBlock.setString(blockStringData, 6);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.boughtItem2String")));
+        shopBlock.setString(blockStringData, 7);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.boughtItem3String")));
+        shopBlock.setString(blockStringData, 8);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.soldOutItem1String")));
+        shopBlock.setString(blockStringData, 9);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.soldOutItem2String")));
+        shopBlock.setString(blockStringData, 10);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.soldOutItem3String")));
+        shopBlock.setString(blockStringData, 11);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.cancelItem1String")));
+        shopBlock.setString(blockStringData, 12);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.cancelItem2String")));
+        shopBlock.setString(blockStringData, 13);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.cancelItem3String")));
+        shopBlock.setString(blockStringData, 14);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.noMoneyItem1String")));
+        shopBlock.setString(blockStringData, 15);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.noMoneyItem2String")));
+        shopBlock.setString(blockStringData, 16);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.noMoneyItem3String")));
+        shopBlock.setString(blockStringData, 17);
+        blocks.add(shopBlock);
+        return shopBlock;
+    }
+
+    /**
+     * Add a door to twin labs (replacing Ellmac fall), using boss ankh as a reference object)
+     * @param reference boss ankh to use for determining coordinates/screen for adding the door
+     */
+    public static void addTwinLabsDoor(GameObject reference) {
+        GameObject doorGraphic = new GameObject(reference.getObjectContainer());
+        doorGraphic.setId((short)0x93);
+        doorGraphic.setX(reference.getX() - 20);
+        doorGraphic.setY(reference.getY() - 40);
+        doorGraphic.getArgs().add((short)0); // Layer
+        doorGraphic.getArgs().add((short)7); // 01.effect.png for anything not 0-6?
+        doorGraphic.getArgs().add((short)80); // Imagex
+        doorGraphic.getArgs().add((short)512); // Imagey
+        doorGraphic.getArgs().add((short)80); // dx
+        doorGraphic.getArgs().add((short)80); // dy
+        doorGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        doorGraphic.getArgs().add((short)0); // Animation frames
+        doorGraphic.getArgs().add((short)1); // Pause frames
+        doorGraphic.getArgs().add((short)0); // Repeat count (<1 is forever)
+        doorGraphic.getArgs().add((short)0); // Hittile to fill with
+        doorGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        doorGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        doorGraphic.getArgs().add((short)0); // Cycle colors t/f
+        doorGraphic.getArgs().add((short)0); // Alpha/frame
+        doorGraphic.getArgs().add((short)255); // Max alpha
+        doorGraphic.getArgs().add((short)0); // R/frame
+        doorGraphic.getArgs().add((short)0); // Max R
+        doorGraphic.getArgs().add((short)0); // G/frame
+        doorGraphic.getArgs().add((short)0); // Max G
+        doorGraphic.getArgs().add((short)0); // B/frame
+        doorGraphic.getArgs().add((short)0); // Max B
+        doorGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        doorGraphic.getArgs().add((short)1); // not0?
+
+        reference.getObjectContainer().getObjects().add(doorGraphic);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x0fb);
+        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+        testByteOperation.setValue((byte)3);
+        doorGraphic.getTestByteOperations().add(testByteOperation);
+
+        GameObject door = new GameObject(reference.getObjectContainer());
+        door.setId((short)0x98);
+        door.setX(reference.getX());
+        door.setY(reference.getY());
+
+        door.getArgs().add((short)0);
+        door.getArgs().add((short)7);
+        door.getArgs().add((short)0);
+        door.getArgs().add((short)0);
+        door.getArgs().add((short)300);
+        door.getArgs().add((short)0);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x0fb);
+        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+        testByteOperation.setValue((byte)3);
+        door.getTestByteOperations().add(testByteOperation);
+
+        reference.getObjectContainer().getObjects().add(doorGraphic);
+        reference.getObjectContainer().getObjects().add(door);
+    }
+
+    /**
+     * Timers important for marking a boss defeated. Relevant for random boss exits since
+     * some bosses have these timers on a different screen.
+     * @param screen
+     * @param bossFlag
+     * @param otherFlag
+     */
+    public static void addBossTimer(Screen screen, int bossFlag, int otherFlag) {
+        GameObject bossTimer1 = new GameObject(screen);
+        bossTimer1.setId((short)0x0b);
+        bossTimer1.setX(-1);
+        bossTimer1.setY(-1);
+
+        bossTimer1.getArgs().add((short)0);
+        bossTimer1.getArgs().add((short)0);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(bossFlag);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)3);
+        bossTimer1.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(otherFlag);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        bossTimer1.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x102);
+        writeByteOperation.setOp(ByteOp.ADD_FLAG);
+        writeByteOperation.setValue(1);
+        bossTimer1.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(otherFlag);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(1);
+        bossTimer1.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x07b);
+        writeByteOperation.setOp(ByteOp.ADD_FLAG);
+        writeByteOperation.setValue(8);
+        bossTimer1.getWriteByteOperations().add(writeByteOperation);
+
+        if(bossFlag == 0x0fb) {
+            writeByteOperation = new WriteByteOperation();
+            writeByteOperation.setIndex(0x3b8);
+            writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+            writeByteOperation.setValue(3);
+            bossTimer1.getWriteByteOperations().add(writeByteOperation);
+        }
+
+        screen.getObjects().add(0, bossTimer1);
+
+        GameObject bossTimer2 = new GameObject(screen);
+        bossTimer2.setId((short)0x0b);
+        bossTimer2.setX(-1);
+        bossTimer2.setY(-1);
+
+        bossTimer2.getArgs().add((short)0);
+        bossTimer2.getArgs().add((short)0);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x102);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)8);
+        bossTimer2.getTestByteOperations().add(testByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x102);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(9);
+        bossTimer2.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x07b);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(200);
+        bossTimer2.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x06c);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(0);
+        bossTimer2.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x2e1);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(1);
+        bossTimer2.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(0, bossTimer2);
+    }
+
+    /**
+     * For marking sphinx defeated when coming from an unusual path (random transitions).
+     * @param screen
+     */
+    public static void addSphinxRemovalTimer(Screen screen) {
+        GameObject sphinxRemovalTimer = new GameObject(screen);
+        sphinxRemovalTimer.setId((short)0x0b);
+        sphinxRemovalTimer.setX(-1);
+        sphinxRemovalTimer.setY(-1);
+
+        sphinxRemovalTimer.getArgs().add((short)4);
+        sphinxRemovalTimer.getArgs().add((short)0);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x173);
+        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+        testByteOperation.setValue((byte)1);
+        sphinxRemovalTimer.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x173);
+        testByteOperation.setOp(ByteOp.FLAG_LT);
+        testByteOperation.setValue((byte)5);
+        sphinxRemovalTimer.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x173);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(5);
+        sphinxRemovalTimer.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x17d);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(1);
+        sphinxRemovalTimer.getWriteByteOperations().add(writeByteOperation);
+        screen.getObjects().add(0, sphinxRemovalTimer);
     }
 }

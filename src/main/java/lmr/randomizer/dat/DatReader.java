@@ -8,6 +8,7 @@ import lmr.randomizer.dat.shop.BlockCmdSingle;
 import lmr.randomizer.dat.shop.BlockStringData;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.update.GameDataTracker;
+import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -188,29 +189,24 @@ public final class DatReader {
     private static Block buildGrailPointBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         Block grailPointsBlock = new Block(blockIndex);
         addBlockContentsToBlock(grailPointsBlock, dataInputStream, numberOfShortsInThisBlock);
-        BlockListData blockListData;
-//        for(BlockContents blockContents : grailPointsBlock.getBlockContents()) {
-//            if(blockContents instanceof BlockListData) {
-//                blockListData = (BlockListData)blockContents;
-//                if(blockListData.getData().get(1).equals((short)108)) {
-//                    blockListData.getData().set(1, (short)2783);
-//                    blockListData.getData().set(2, (short)18);
-//                }
-//            }
-//        }
+        if(Settings.isRandomizeStartingLocation()) {
+            // Make Surface grail require a warp
+            BlockListData blockListData = (BlockListData)grailPointsBlock.getBlockContents().get(0);
+            blockListData.getData().add(0, (short)0xad3);
+            blockListData.getData().add(0, (short)0);
+            blockListData.addListSize(2);
 
-
-//        blockListData = new BlockListData((short)0x004e, (short)8);
-//        blockListData.getData().add((short)0);
-//        blockListData.getData().add((short)2782);
-//        blockListData.getData().add((short)18);
-//        blockListData.getData().add((short)9);
-//        blockListData.getData().add((short)7);
-//        blockListData.getData().add((short)0);
-//        blockListData.getData().add((short)420);
-//        blockListData.getData().add((short)72);
-//        grailPointsBlock.getBlockContents().add(19, blockListData);
-//        grailPointsBlock.getBlockContents().add(19, new BlockSingleData((short)0x000a));
+            // Build a new warp for actual starting area
+            blockListData = new BlockListData((short)0x004e, (short)6);
+            blockListData.getData().add((short)31);
+            blockListData.getData().add((short)19);
+            blockListData.getData().add((short)LocationCoordinateMapper.getStartingRoom());
+            blockListData.getData().add((short)LocationCoordinateMapper.getStartingScreen());
+            blockListData.getData().add((short)(LocationCoordinateMapper.getStartingX() % 640));
+            blockListData.getData().add((short)(LocationCoordinateMapper.getStartingY() % 480));
+            grailPointsBlock.getBlockContents().add(0, new BlockSingleData((short)0x000a));
+            grailPointsBlock.getBlockContents().add(0, blockListData);
+        }
         return grailPointsBlock;
     }
 
@@ -490,6 +486,13 @@ public final class DatReader {
             }
             datBlocks.add(block);
             GameDataTracker.addBlock(block);
+        }
+        if(Settings.isRandomizeStartingLocation()) {
+            block = AddObject.addShopBlock(datBlocks);
+            if(!DataFromFile.getMapOfShopNameToShopBlock().containsKey(DataFromFile.CUSTOM_SHOP_NAME)) {
+                DataFromFile.getMapOfShopNameToShopBlock().put(DataFromFile.CUSTOM_SHOP_NAME, block.getBlockNumber());
+            }
+            GameDataTracker.setCustomShopBlock(block.getBlockNumber());
         }
         return datBlocks;
     }

@@ -14,15 +14,19 @@ import lmr.randomizer.ui.MainPanel;
 import lmr.randomizer.ui.ProgressDialog;
 import lmr.randomizer.ui.TabbedPanel;
 import lmr.randomizer.update.GameDataTracker;
+import lmr.randomizer.update.LocationCoordinateMapper;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.nio.file.Files;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * Created by thezerothcat on 7/9/2017.
@@ -361,7 +365,7 @@ public class Main {
                 fileOutputStream.close();
                 FileUtils.logFlush("dat copy complete");
 
-                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart()) {
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation()) {
                     FileUtils.logFlush("Copying save file from seed folder to La-Mulana save directory");
                     File saveFile = new File(String.format("%s/lm_00.sav", Settings.getStartingSeed()));
                     if(saveFile.exists()) {
@@ -473,6 +477,18 @@ public class Main {
                         "Custom placement error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
+            if(Settings.isRandomizeStartingLocation() && !Settings.isRandomizeTransitionGates() && !Settings.getStartingItems().contains("Holy Grail")) {
+                JOptionPane.showMessageDialog(this,
+                        "Please randomize transitions or enable starting with " + Translations.getText("items.HolyGrail"),
+                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(Settings.isRandomizeStartingLocation() && !ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
+                JOptionPane.showMessageDialog(this,
+                        String.format("Please enable %s %s when using %s", Translations.getText("randomization.randomizeShops"), Translations.getText("randomization.randomizeShops.everything"), Translations.getText("fools.randomizeStartingLocation")),
+                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
             if(!validateCustomPlacements(this)) {
                 // Message created below
                 return false;
@@ -485,7 +501,7 @@ public class Main {
 
                 if(!Settings.isAlternateMotherAnkh()) {
                     JOptionPane.showMessageDialog(this,
-                            String.format("The setting \"%s \" is required when removing Main Weapons", Translations.getText("randomization.alternateMotherAnkh")),
+                            String.format("The setting \"%s \" is required when removing Main Weapons", Translations.getText("gameplay.alternateMotherAnkh")),
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
@@ -958,6 +974,13 @@ public class Main {
                     }
                 }
 
+                if(!Settings.isRandomizeStartingLocation() && customItemPlacement.getLocation().startsWith("Shop 0")) {
+                    JOptionPane.showMessageDialog(randomizerUI,
+                            String.format("Please enable the setting \"%s\"", Translations.getText("fools.randomizeStartingLocation")),
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
                 locations.add(customItemPlacement.getLocation());
                 items.add(customItemPlacement.getContents());
             }
@@ -1100,6 +1123,10 @@ public class Main {
             // the trap item.
             DataFromFile.setBannedTrapLocations(random);
         }
+//        if(Settings.isFoolsMode() && DataFromFile.getCustomPlacementData().getMedicineColor() == null) {
+//            List<String> medicineColors = Arrays.asList("Red", "Green", "Yellow", null);
+//            Settings.setMedicineColor(medicineColors.get(random.nextInt(medicineColors.size())));
+//        }
 
         int totalItemsRemoved = getTotalItemsRemoved(random);
         determineStartingWeapon(random);
@@ -1278,7 +1305,8 @@ public class Main {
                 itemRandomizer.updateFiles(random);
                 FileUtils.logFlush("Updated item location data");
 
-                shopRandomizer.updateFiles(datInfo, isSubweaponOnly(), moneyChecker, random);
+                boolean subweaponOnly = isSubweaponOnly();
+                shopRandomizer.updateFiles(datInfo, subweaponOnly, moneyChecker, random);
                 FileUtils.logFlush("Updated shop data");
 
                 List<String> availableSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
@@ -1288,6 +1316,10 @@ public class Main {
                     GameDataTracker.updateSubweaponPot(availableSubweapons.get(random.nextInt(availableSubweapons.size())));
                 }
                 FileUtils.logFlush("Updated subweapon pot data");
+                if(Settings.isRandomizeEnemies()) {
+                    GameDataTracker.randomizeEnemies(random);
+                    FileUtils.logFlush("Updated enemy data");
+                }
 
                 if(Settings.isRandomizeBacksideDoors()) {
                     backsideDoorRandomizer.updateBacksideDoors();
@@ -1297,7 +1329,9 @@ public class Main {
                     transitionGateRandomizer.updateTransitions();
                     FileUtils.logFlush("Updated transition gate data");
                 }
-
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation()) {
+                    GameDataTracker.updateXelpudIntro(datInfo);
+                }
 //                if(Settings.isRandomizeMantras()) {
 //                    GameDataTracker.randomizeMantras(random);
 //                }
@@ -1309,7 +1343,7 @@ public class Main {
 
                 DatWriter.writeDat(datInfo);
                 FileUtils.logFlush("dat file successfully written");
-                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart()) {
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation()) {
                     backupSaves();
                     writeSaveFile();
                 }
@@ -1415,6 +1449,10 @@ public class Main {
         else {
             startingNodes.add("Setting: Nonrandom Transitions");
         }
+        if(Settings.isRandomizeStartingLocation()) {
+            startingNodes.add("Setting: Alternate Start");
+        }
+        startingNodes.add(Settings.isRandomizeBosses() ? "Setting: Abnormal Boss" : "Setting: Normal Boss");
         startingNodes.add(Settings.isAlternateMotherAnkh() ? "Setting: Alternate Mother" : "Setting: Standard Mother");
         startingNodes.add(Settings.isBossSpecificAnkhJewels() ? "Setting: Fixed Jewels" : "Setting: Variable Jewels");
 
@@ -1484,7 +1522,7 @@ public class Main {
                 saveData[4626] = (byte)2; // Held main weapon slot number
 
                 if(Settings.isAutomaticMantras()) {
-                    saveData[0x11 + 0x124] = (byte)4; // Held main weapon slot number
+                    saveData[0x11 + 0x124] = (byte)4;
                 }
             }
             else if("Axe".equals(startingWeapon)) {
@@ -1562,6 +1600,8 @@ public class Main {
                 }
             }
         }
+        saveData[0x11 + 0xad1] = (byte)1;
+
 //        saveData[0x11 + 0x064] = 1;
 //        saveData[0x11 + 0x065] = 1;
 //        saveData[0x11 + 0x066] = 1;
@@ -1603,13 +1643,13 @@ public class Main {
         saveData[0] = (byte)1;
         saveData[3] = (byte)0;
         saveData[4] = (byte)0;
-        saveData[5] = (byte)1;
-        saveData[6] = (byte)2;
-        saveData[7] = (byte)1;
-        saveData[8] = (byte)1;
-        saveData[9] = (byte)24;
-        saveData[10] = (byte)0;
-        saveData[11] = (byte)-104;
+        saveData[5] = LocationCoordinateMapper.getStartingZone();
+        saveData[6] = LocationCoordinateMapper.getStartingRoom();
+        saveData[7] = LocationCoordinateMapper.getStartingScreen();
+        saveData[8] = (byte)(((LocationCoordinateMapper.getStartingX() % 640) >> 8) & 0xff);
+        saveData[9] = (byte)((LocationCoordinateMapper.getStartingX() % 640) & 0xff);
+        saveData[10] = (byte)(((LocationCoordinateMapper.getStartingY() % 480) >> 8) & 0xff);
+        saveData[11] = (byte)((LocationCoordinateMapper.getStartingY() % 480) & 0xff);
         saveData[12] = (byte)1;
         saveData[13] = (byte)0;
         saveData[14] = (byte)32;

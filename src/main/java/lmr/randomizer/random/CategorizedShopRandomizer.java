@@ -265,7 +265,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                 Map<String, GameObjectId> nameToDataMap = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData();
                 GameObjectId itemNewContentsData = nameToDataMap.get(shopItem1);
                 GameDataTracker.writeLocationContents("Mobile Super X2", shopItem1,
-                        nameToDataMap.get("Mobile Super X2"), itemNewContentsData, itemNewContentsData.getWorldFlag(), random);
+                        nameToDataMap.get("Mobile Super X2"), itemNewContentsData, itemNewContentsData.getWorldFlag(), random, false);
             }
             else if(FISH_FAIRY_SHOP_NAME.equals(shopName)) {
                 shopItem1 = "Shell Horn";
@@ -304,7 +304,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                     getItemPriceCount(subweaponOnly, shopItem1, String.format("%s Item 1", shopName), moneyChecker, random),
                     getItemPriceCount(subweaponOnly, shopItem2, String.format("%s Item 2", shopName), moneyChecker, random),
                     getItemPriceCount(subweaponOnly, shopItem3, String.format("%s Item 3", shopName), moneyChecker, random),
-                    "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName), false);
+                    "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName), false, random);
         }
     }
 

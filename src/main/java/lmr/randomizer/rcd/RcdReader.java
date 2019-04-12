@@ -7,6 +7,7 @@ import lmr.randomizer.dat.AddObject;
 import lmr.randomizer.random.ShopRandomizationEnum;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.GameDataTracker;
+import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -394,6 +395,23 @@ public final class RcdReader {
                 // Mulbruk conversation after she runs away from the Provocative Bathing Suit.
                 keepObject = false;
             }
+
+            if(objectContainer instanceof Screen) {
+                Screen screen = (Screen)objectContainer;
+                if(screen.getZoneIndex() == 1) {
+                    if(screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2
+                            || screen.getRoomIndex() == 2 && screen.getScreenIndex() == 0
+                            || screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
+                            TestByteOperation flagTest = obj.getTestByteOperations().get(i);
+                            if (flagTest.getIndex() == 0x145) {
+                                // Swap Xelpud first-conversation flag with custom
+                                flagTest.setIndex(0xad0);
+                            }
+                        }
+                    }
+                }
+            }
         }
         else if (obj.getId() == 0x00) {
             if(objectContainer instanceof Screen) {
@@ -403,6 +421,15 @@ public final class RcdReader {
                         // Shuriken pot
                         GameDataTracker.setSubweaponPot(obj);
                     }
+                }
+
+                if(Settings.isRandomizeStartingLocation()
+                        && screen.getZoneIndex() == 21 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                    // Pot in retro surface now has coins
+                    obj.getArgs().set(0, (short)1);
+                    obj.getArgs().set(1, (short)10);
+                    obj.getArgs().set(2, (short)277);
+                    obj.getArgs().set(3, (short)16);
                 }
             }
 
@@ -540,6 +567,36 @@ public final class RcdReader {
             }
         }
         else if (obj.getId() == 0x93) {
+            if(objectContainer instanceof Screen) {
+                Screen screen = (Screen)objectContainer;
+                if(screen.getZoneIndex() == 1) {
+                    // Graphics for closed surface tents before talking to Xelpud
+                    if(screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2
+                            || screen.getRoomIndex() == 2 && screen.getScreenIndex() == 0
+                            || screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1
+                            || screen.getRoomIndex() == 10 && screen.getScreenIndex() == 3) {
+                        for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
+                            TestByteOperation flagTest = obj.getTestByteOperations().get(i);
+                            if (flagTest.getIndex() == 0x145) {
+                                // Swap Xelpud first-conversation flag with custom
+                                flagTest.setIndex(0xad0);
+                            }
+                        }
+                    }
+                }
+//                else if(Settings.isFoolsMode() && screen.getZoneIndex() == 4 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+//                    // Bahamut wall graphic that gets removed after the fight.
+//                    if(obj.getTestByteOperations().size() == 1) {
+//                        TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
+//                        if(testByteOperation.getIndex() == 0x0f9 && ByteOp.FLAG_LTEQ.equals(testByteOperation.getOp())
+//                            && testByteOperation.getValue() == (byte)1) {
+//                            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+//                            testByteOperation.setValue((byte)2);
+//                        }
+//                    }
+//                }
+            }
+
             if(Settings.isRandomizeTrapItems()) {
                 if(objectContainer instanceof Screen) {
                     Screen screen = (Screen)objectContainer;
@@ -673,26 +730,38 @@ public final class RcdReader {
                         }
                     }
                 }
-                else if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
-                    if(Settings.isRandomizeTransitionGates()) {
-                        if(obj.getArgs().get(0) == 18) {
-                            keepObject = false;
-                        }
-                        else if(obj.getArgs().get(0) == 9) {
-                            TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
-                            testByteOperation.setIndex(0x382);
-                            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                            testByteOperation.setValue((byte)0);
+                else if (screen.getZoneIndex() == 7) {
+                    if(screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        // Twin Labyrinths ladder that normally goes to Ellmac's room
+                        if(Settings.isRandomizeBosses()) {
+                            obj.getArgs().set(0, (short)6);
+                            obj.getArgs().set(1, (short)9);
+                            obj.getArgs().set(2, (short)1);
+                            obj.getArgs().set(3, (short)300);
+                            obj.getArgs().set(4, (short)380);
                         }
                     }
-                    else {
-                        // Don't change to true shrine until you have Feather, since the old shrine has more requirement options.
-                        if (obj.getTestByteOperations().get(0).getIndex() == 258) {
-                            if(ByteOp.FLAG_EQUALS.equals(obj.getTestByteOperations().get(0).getOp())) {
+                    else if(screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        if(Settings.isRandomizeTransitionGates()) {
+                            if(obj.getArgs().get(0) == 18) {
                                 keepObject = false;
                             }
-                            else {
-                                obj.getTestByteOperations().clear();
+                            else if(obj.getArgs().get(0) == 9) {
+                                TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
+                                testByteOperation.setIndex(0x382);
+                                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+                                testByteOperation.setValue((byte)0);
+                            }
+                        }
+                        else {
+                            // Don't change to true shrine until you have Feather, since the old shrine has more requirement options.
+                            if (obj.getTestByteOperations().get(0).getIndex() == 258) {
+                                if(ByteOp.FLAG_EQUALS.equals(obj.getTestByteOperations().get(0).getOp())) {
+                                    keepObject = false;
+                                }
+                                else {
+                                    obj.getTestByteOperations().clear();
+                                }
                             }
                         }
                     }
@@ -756,7 +825,7 @@ public final class RcdReader {
         else if (obj.getId() == 0xa3) {
             if(Settings.isAlternateMotherAnkh()) {
                 for (TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                    if (testByteOperation.getIndex() == 254) {
+                    if (testByteOperation.getIndex() == 0x0fe) {
                         keepObject = false;
                         break;
                     }
@@ -961,9 +1030,7 @@ public final class RcdReader {
 
                         screen.getScreenExits().add(screenExit);
                     }
-                    if(Settings.isRandomizeTransitionGates()) {
-                        updateScreenExits(screen);
-                    }
+                    updateScreenExits(screen);
 
                     if(zoneIndex == 1) {
                         if(roomIndex == 2 && screenIndex == 1) {
@@ -1004,22 +1071,110 @@ public final class RcdReader {
     }
 
     private static void updateScreenExits(Screen screen) {
-        if(screen.getZoneIndex() == 2 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 2
-                || screen.getZoneIndex() == 19 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 1) {
+        if(Settings.isRandomizeTransitionGates()
+                && (screen.getZoneIndex() == 2 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 2
+                || screen.getZoneIndex() == 19 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 1)) {
             ScreenExit screenExit = screen.getScreenExits().get(2);
             screenExit.setZoneIndex((byte)-1);
             screenExit.setRoomIndex((byte)-1);
             screenExit.setScreenIndex((byte)-1);
         }
+
+//        if(Settings.isFoolsMode()) {
+//            if(screen.getZoneIndex() == 4 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+//                ScreenExit screenExit = screen.getScreenExits().get(3);
+//                screenExit.setZoneIndex((byte)-1);
+//                screenExit.setRoomIndex((byte)-1);
+//                screenExit.setScreenIndex((byte)-1);
+//            }
+//        }
+
+        if(Settings.isRandomizeBosses()) {
+            if(screen.getZoneIndex() == 0) {
+                if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                    ScreenExit screenExit = screen.getScreenExits().get(2);
+                    screenExit.setZoneIndex((byte)5);
+                    screenExit.setRoomIndex((byte)8);
+                    screenExit.setScreenIndex((byte)1);
+                }
+                else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                    ScreenExit screenExit = screen.getScreenExits().get(0);
+                    screenExit.setZoneIndex((byte)5);
+                    screenExit.setRoomIndex((byte)8);
+                    screenExit.setScreenIndex((byte)0);
+                }
+            }
+            else if(screen.getZoneIndex() == 3 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                ScreenExit screenExit = screen.getScreenExits().get(2);
+                screenExit.setZoneIndex((byte)3);
+                screenExit.setRoomIndex((byte)4);
+                screenExit.setScreenIndex((byte)2);
+            }
+            else if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                ScreenExit screenExit = screen.getScreenExits().get(0);
+                screenExit.setZoneIndex((byte)6);
+                screenExit.setRoomIndex((byte)9);
+                screenExit.setScreenIndex((byte)1);
+            }
+            else if(screen.getZoneIndex() == 5) {
+                if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                    ScreenExit screenExit = screen.getScreenExits().get(2);
+                    screenExit.setZoneIndex((byte)0);
+                    screenExit.setRoomIndex((byte)8);
+                    screenExit.setScreenIndex((byte)1);
+                }
+                else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                    ScreenExit screenExit = screen.getScreenExits().get(0);
+                    screenExit.setZoneIndex((byte)0);
+                    screenExit.setRoomIndex((byte)8);
+                    screenExit.setScreenIndex((byte)0);
+                }
+            }
+        }
+
+        if(Settings.isRandomizeStartingLocation()) {
+            for(ScreenExit screenExit : screen.getScreenExits()) {
+                if(screenExit.getZoneIndex() == -1 && screenExit.getRoomIndex() == -1 && screenExit.getScreenIndex() == -1) {
+                    screenExit.setZoneIndex(LocationCoordinateMapper.getStartingZone());
+                    screenExit.setRoomIndex(LocationCoordinateMapper.getStartingRoom());
+                    screenExit.setScreenIndex(LocationCoordinateMapper.getStartingScreen());
+                }
+            }
+        }
     }
 
     private static void addCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
-        if(zoneIndex == 1) {
-            if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addStartingItems(screen);
+        if(zoneIndex == LocationCoordinateMapper.getStartingZone()
+                && roomIndex == LocationCoordinateMapper.getStartingRoom()
+                && screenIndex == LocationCoordinateMapper.getStartingScreen()) {
+            if(zoneIndex == 21) {
+                // Retro Surface start.
+                GameObject grailTablet = AddObject.addSpecialGrailTablet(screen);
+                AddObject.addHotspring(grailTablet);
+                GameDataTracker.setCustomShop(AddObject.addSurfaceShop(screen));
             }
-            else if(roomIndex == 4 && screenIndex == 2) {
-                if(Settings.isRandomizeBacksideDoors()) {
+            AddObject.addStartingItems(screen);
+        }
+
+        if(zoneIndex == 0) {
+            if(Settings.isRandomizeBosses()) {
+                if(roomIndex == 8 && screenIndex == 0) {
+                    AddObject.addSpecialTransitionWarp(screen, 5);
+                }
+                else if(roomIndex == 8 && screenIndex == 1) {
+                    AddObject.addSpecialTransitionGate(screen, 5);
+                }
+            }
+        }
+        else if(zoneIndex == 1) {
+            if(roomIndex == 2 && screenIndex == 1) {
+                if(Settings.isRandomizeStartingLocation()) {
+                    AddObject.addSurfaceGrailTablet(screen);
+                }
+            }
+
+            if(roomIndex == 4 && screenIndex == 2) {
+                if(Settings.isRandomizeBacksideDoors() || Settings.isRandomizeStartingLocation()) {
                     AddObject.addSurfaceCoverDetector(screen);
                 }
             }
@@ -1028,13 +1183,47 @@ public final class RcdReader {
                     AddObject.addMotherAnkhJewelItemGive(screen);
                 }
             }
+            else if(roomIndex == 11 && screenIndex == 1) {
+                if(Settings.isRandomizeStartingLocation() && !Settings.isRandomizeTransitionGates()) {
+                    GameObject warp = AddObject.addWarp(screen, 1220, 340, 4, 7, 0, 0, 0, 20, 312);
+
+                    TestByteOperation warpTest = new TestByteOperation();
+                    warpTest.setIndex(0x414);
+                    warpTest.setValue((byte) 0);
+                    warpTest.setOp(ByteOp.FLAG_EQUALS);
+                    warp.getTestByteOperations().add(warpTest);
+                }
+            }
         }
         else if(zoneIndex == 2 && roomIndex == 2 && screenIndex == 0) {
             AddObject.addHardmodeToggleWeights(screen);
         }
-        else if(zoneIndex == 6 && roomIndex == 2 && screenIndex == 0) {
-            if(Settings.isRandomizeTransitionGates()) {
-                AddObject.addExtinctionTorch(screen);
+        else if(zoneIndex == 3 && roomIndex == 8 && screenIndex == 0) {
+            if(Settings.isRandomizeBosses()) {
+                GameObject warp = AddObject.addWarp(screen, 0, 420, 32, 4, 3, 4, 2, 100, 160);
+
+                TestByteOperation warpTest = new TestByteOperation();
+                warpTest.setIndex(0x0f8);
+                warpTest.setValue((byte) 2);
+                warpTest.setOp(ByteOp.FLAG_NOT_EQUAL);
+                warp.getTestByteOperations().add(warpTest);
+            }
+        }
+        else if(zoneIndex == 5) {
+            if(Settings.isRandomizeBosses()) {
+                if(roomIndex == 8 && screenIndex == 0) {
+                    AddObject.addSpecialTransitionWarp(screen, 0);
+                }
+                else if(roomIndex == 8 && screenIndex == 1) {
+                    AddObject.addSpecialTransitionGate(screen, 0);
+                }
+            }
+        }
+        else if(zoneIndex == 6) {
+            if(roomIndex == 2 && screenIndex == 0) {
+                if(Settings.isRandomizeTransitionGates()) {
+                    AddObject.addExtinctionTorch(screen);
+                }
             }
         }
         else if(zoneIndex == 9 && roomIndex == 8 && screenIndex == 1) {
@@ -1055,6 +1244,11 @@ public final class RcdReader {
             if (roomIndex == 0 && screenIndex == 0) {
                 AddObject.addUpperUntrueShrineBackupDoor(screen);
             }
+//            else if (roomIndex == 3 && screenIndex == 0) {
+//                if(Settings.isFoolsMode()) {
+//                    AddObject.addWarp(screen, 600, 440, 32, 3, 18, 3, 1, 150, 72);
+//                }
+//            }
             else if (roomIndex == 8 && screenIndex == 1) {
                 AddObject.addLowerUntrueShrineBackupDoor(screen);
             }
@@ -1065,32 +1259,38 @@ public final class RcdReader {
     }
 
     private static void addCustomNoPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
+        if(zoneIndex == LocationCoordinateMapper.getStartingZone()
+                && roomIndex == LocationCoordinateMapper.getStartingRoom()
+                && screenIndex == LocationCoordinateMapper.getStartingScreen()) {
+            if (Settings.isAutomaticHardmode()) {
+                AddObject.addAutomaticHardmodeTimer(screen);
+            }
+            if (Settings.isAutomaticTranslations()) {
+                AddObject.addAutomaticTranslationsTimer(screen);
+            }
+        }
+
         if(zoneIndex == 1 && roomIndex == 1 && screenIndex == 1) {
             AddObject.addSacredOrbCountTimers(screen);
         }
         else if(zoneIndex == 1) {
             if(roomIndex == 2) {
                 if(screenIndex == 0) {
-                    if (!"Whip".equals(Settings.getCurrentStartingWeapon())) {
-                        AddObject.addRandomWeaponKillTimer(screen, false);
+                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
+                        AddObject.addSurfaceKillTimer(screen, false);
                     }
                 }
                 if(screenIndex == 1) {
+                    AddObject.addXelpudIntroTimer(screen);
                     AddObject.addDiaryTalismanConversationTimers(screen);
-                    if (Settings.isAutomaticHardmode()) {
-                        AddObject.addAutomaticHardmode(screen);
-                    }
-                    if (Settings.isAutomaticTranslations()) {
-                        AddObject.addAutomaticTranslations(screen);
-                    }
-                    if (!"Whip".equals(Settings.getCurrentStartingWeapon())) {
-                        AddObject.addRandomWeaponKillTimer(screen, true);
+                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
+                        AddObject.addSurfaceKillTimer(screen, true);
                     }
                 }
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                if (!"Whip".equals(Settings.getCurrentStartingWeapon())) {
-                    AddObject.addRandomWeaponKillTimer(screen, false);
+                if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
+                    AddObject.addSurfaceKillTimer(screen, false);
                 }
             }
             else if(roomIndex == 11 && screenIndex == 0) {
@@ -1099,8 +1299,31 @@ public final class RcdReader {
                 }
             }
         }
+        else if(zoneIndex == 3) {
+            if(Settings.isRandomizeBosses()) {
+                if(roomIndex == 4 && screenIndex == 2) {
+                    AddObject.addBossTimer(screen, 0x0f8, 0x2d8);
+                }
+                else if(roomIndex == 8 && screenIndex == 0) {
+                    AddObject.addSphinxRemovalTimer(screen);
+                }
+            }
+        }
+//        else if(zoneIndex == 4 && roomIndex == 4 && screenIndex == 0) {
+//            if(Settings.isFoolsMode()) {
+//                AddObject.addBossTimer(screen, 0x0f9, 0x2d9);
+//            }
+//        }
         else if(zoneIndex == 6 && roomIndex == 9 && screenIndex == 1) {
             AddObject.addPalenqueMSX2Timer(screen);
+            if(Settings.isRandomizeBosses()) {
+                AddObject.addTwinLabsPoisonTimerRemoval(screen, true);
+            }
+        }
+        else if(zoneIndex == 7 && roomIndex == 0 && screenIndex == 0) {
+            if(Settings.isRandomizeBosses()) {
+                AddObject.addBossTimer(screen, 0x0fb, 0x2db);
+            }
         }
         else if(zoneIndex == 9 && roomIndex == 2 && screenIndex == 0) {
             AddObject.addDiaryChestConditionTimer(screen);

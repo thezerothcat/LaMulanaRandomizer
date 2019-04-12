@@ -6,39 +6,39 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 
-public class ChallengePanel extends JPanel {
-    private JCheckBox automaticHardmode;
+public class AppearancePanel extends JPanel {
     private JCheckBox coinChestGraphics;
+    private JCheckBox randomizeGraphics;
 
-    public ChallengePanel() {
+    public AppearancePanel() {
         super(new MigLayout("fillx, wrap"));
-
-        automaticHardmode = new JCheckBox();
-        automaticHardmode.setSelected(Settings.isAutomaticHardmode());
 
         coinChestGraphics = new JCheckBox();
         coinChestGraphics.setSelected(Settings.isCoinChestGraphics());
 
+        randomizeGraphics = new JCheckBox();
+        randomizeGraphics.setSelected(Settings.isRandomizeGraphics());
+
         CheckboxContainer checkboxContainer = new CheckboxContainer(1);
-        checkboxContainer.add(automaticHardmode);
         checkboxContainer.add(coinChestGraphics);
+        checkboxContainer.add(randomizeGraphics);
         add(checkboxContainer, "growx, wrap");
 
         updateTranslations();
     }
 
     public void updateTranslations() {
-        automaticHardmode.setText(Translations.getText("challenge.automaticHardmode"));
         coinChestGraphics.setText(Translations.getText("challenge.coinChestGraphics"));
+        randomizeGraphics.setText(Translations.getText("fools.randomizeGraphics"));
     }
 
     public void updateSettings() {
-        Settings.setAutomaticHardmode(automaticHardmode.isSelected(), true);
         Settings.setCoinChestGraphics(coinChestGraphics.isSelected(), true);
+        Settings.setRandomizeGraphics(randomizeGraphics.isSelected(), true);
     }
 
     public void reloadSettings() {
-        automaticHardmode.setSelected(Settings.isAutomaticHardmode());
         coinChestGraphics.setSelected(Settings.isCoinChestGraphics());
+        randomizeGraphics.setSelected(Settings.isRandomizeGraphics());
     }
 }

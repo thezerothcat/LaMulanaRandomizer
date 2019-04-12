@@ -18,7 +18,7 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.19.0";
+    public static final String VERSION = "2.20.0";
     public static final int EXISTING_FILE_WIDTH = 1024;
     public static final int EXISTING_FILE_HEIGHT = 512;
     public static final int GRAPHICS_VERSION = 4;
@@ -260,6 +260,9 @@ public class FileUtils {
             if (charAtIndex == ' ') {
                 dataString.add((short)32);
             }
+            else if (charAtIndex == '\n') {
+                dataString.add((short)0x0045);
+            }
             else {
                 data = (short)(CHAR_TO_SHORT_CONVERSION.indexOf(charAtIndex) + 0x0100);
                 dataString.add(data);
@@ -293,12 +296,7 @@ public class FileUtils {
                         if (assignment.contains("{") && assignment.contains("}")) {
                             String specialData = assignment.substring(assignment.indexOf("{") + 1).replace("}", "");
                             assignment = assignment.substring(0, assignment.indexOf('{')).trim();
-                            if(assignment.startsWith("Trap:")) {
-                                customPlacementData.setCustomized(true);
-                                customPlacementData.getCustomItemPlacements().add(
-                                        new CustomItemPlacement(target, assignment, specialData));
-                            }
-                            else if (line.startsWith("Door ")) {
+                            if (line.startsWith("Door ")) {
                                 customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomDoorPlacements().add(new CustomDoorPlacement(target, assignment, specialData));
                             }
@@ -314,6 +312,11 @@ public class FileUtils {
                                     customPlacementData.getCustomItemPlacements().add(
                                             new CustomItemPlacement(target, assignment, Short.parseShort(lineParts[0].trim()), null));
                                 }
+                            }
+                            else {
+                                customPlacementData.setCustomized(true);
+                                customPlacementData.getCustomItemPlacements().add(
+                                        new CustomItemPlacement(target, assignment, specialData));
                             }
                         } else {
                             if(line.startsWith("Door ")) {
@@ -509,6 +512,18 @@ public class FileUtils {
             else if(line.startsWith("alternateMotherAnkh")) {
                 Settings.setAlternateMotherAnkh(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("randomizeStartingLocation")) {
+                Settings.setRandomizeStartingLocation(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("randomizeBosses")) {
+                Settings.setRandomizeBosses(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("randomizeEnemies")) {
+                Settings.setRandomizeEnemies(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("randomizeGraphics")) {
+                Settings.setRandomizeGraphics(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("replaceMapsWithWeights")) {
                 Settings.setReplaceMapsWithWeights(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -632,6 +647,18 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("alternateMotherAnkh=%s", Settings.isAlternateMotherAnkh()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeStartingLocation=%s", Settings.isRandomizeStartingLocation()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeBosses=%s", Settings.isRandomizeBosses()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeEnemies=%s", Settings.isRandomizeEnemies()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeGraphics=%s", Settings.isRandomizeGraphics()));
         writer.newLine();
 
         writer.write(String.format("replaceMapsWithWeights=%s", Settings.isReplaceMapsWithWeights()));

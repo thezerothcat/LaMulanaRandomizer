@@ -6,8 +6,10 @@ import javax.swing.*;
 
 public class TabbedPanel extends JTabbedPane {
     private RandomizationPanel randomizationPanel;
+    private LocationPanel locationPanel;
+    private EnemiesPanel enemiesPanel;
     private LogicPanel logicPanel;
-    private ChallengePanel challengePanel;
+    private AppearancePanel appearancePanel;
     private GameplayChangesPanel gameplayChangesPanel;
     private RemovedItemsPanel removedItemsPanel;
     private SettingsTransportPanel settingsTransportPanel;
@@ -17,13 +19,19 @@ public class TabbedPanel extends JTabbedPane {
         mainPanel = _mainPanel;
 
         randomizationPanel = new RandomizationPanel();
-        addTab(Translations.getText("settings.randomization"), randomizationPanel);
+        addTab(Translations.getText("settings.items"), randomizationPanel);
+
+        locationPanel = new LocationPanel();
+        addTab(Translations.getText("settings.locations"), locationPanel);
+
+        enemiesPanel = new EnemiesPanel();
+        addTab(Translations.getText("settings.enemies"), enemiesPanel);
 
         logicPanel = new LogicPanel();
         addTab(Translations.getText("settings.logic"), logicPanel);
 
-        challengePanel = new ChallengePanel();
-        addTab(Translations.getText("settings.challenge"), challengePanel);
+        appearancePanel = new AppearancePanel();
+        addTab(Translations.getText("settings.appearance"), appearancePanel);
 
         gameplayChangesPanel = new GameplayChangesPanel();
         addTab(Translations.getText("settings.gameplay"), gameplayChangesPanel);
@@ -38,8 +46,10 @@ public class TabbedPanel extends JTabbedPane {
     public void reloadSettings() {
         mainPanel.reloadSettings();
         randomizationPanel.reloadSettings();
+        locationPanel.reloadSettings();
+        enemiesPanel.reloadSettings();
         logicPanel.reloadSettings();
-        challengePanel.reloadSettings();
+        appearancePanel.reloadSettings();
         gameplayChangesPanel.reloadSettings();
         removedItemsPanel.reloadSettings();
     }
@@ -47,24 +57,30 @@ public class TabbedPanel extends JTabbedPane {
     public void updateSettings() {
         mainPanel.updateSettings();
         randomizationPanel.updateSettings();
+        locationPanel.updateSettings();
+        enemiesPanel.updateSettings();
         logicPanel.updateSettings();
-        challengePanel.updateSettings();
+        appearancePanel.updateSettings();
         gameplayChangesPanel.updateSettings();
         removedItemsPanel.updateSettings();
     }
 
     public void updateTranslations() {
         randomizationPanel.updateTranslations();
+        locationPanel.updateTranslations();
+        enemiesPanel.updateTranslations();
         logicPanel.updateTranslations();
-        challengePanel.updateTranslations();
+        appearancePanel.updateTranslations();
         gameplayChangesPanel.updateTranslations();
         removedItemsPanel.updateTranslations();
 
-        setTitleAt(0, Translations.getText("settings.randomization"));
-        setTitleAt(1, Translations.getText("settings.logic"));
-        setTitleAt(2, Translations.getText("settings.challenge"));
-        setTitleAt(3, Translations.getText("settings.gameplay"));
-        setTitleAt(4, Translations.getText("settings.removal"));
-        setTitleAt(5, Translations.getText("settings.share"));
+        setTitleAt(0, Translations.getText("settings.items"));
+        setTitleAt(1, Translations.getText("settings.locations"));
+        setTitleAt(2, Translations.getText("settings.enemies"));
+        setTitleAt(3, Translations.getText("settings.logic"));
+        setTitleAt(4, Translations.getText("settings.appearance"));
+        setTitleAt(5, Translations.getText("settings.gameplay"));
+        setTitleAt(6, Translations.getText("settings.removal"));
+        setTitleAt(7, Translations.getText("settings.share"));
     }
 }

@@ -2,3 +2,11 @@
 *.ipr
 .idea/*
 target/*
+script.rcd.bak
+script_code.dat.bak
+script_code_jp.dat.bak
+custom-placement.txt
+misc/rcdout-safe.txt
+misc/rcdType1.1.txt
+randomizer-config.txt
+log.txt

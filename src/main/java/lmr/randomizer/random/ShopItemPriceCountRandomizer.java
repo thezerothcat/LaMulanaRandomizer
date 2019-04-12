@@ -68,7 +68,8 @@ public class ShopItemPriceCountRandomizer {
             "Ice Cape", "Fake Silver Shield", "Silver Shield", "Vessel", "Whip",
             "Isis' Pendant", "Bracelet", "Crucifix", "miracle.exe", "torude.exe", "Mobile Super X2", "Sacred Orb",
             "mantra.exe", "Djed Pillar", "Plane Model", "Philosopher's Ocarina", "Mulana Talisman", "Book of the Dead",
-            "Caltrops", "Pistol", "Katana", "Chain Whip", "Chakram",  "Bomb", "Axe", "Ring", "Crystal Skull");
+            "Caltrops", "Pistol", "Katana", "Chain Whip", "Chakram",  "Bomb", "Axe", "Ring", "Crystal Skull",
+            "Medicine of the Mind (Green)", "Medicine of the Mind (Red)", "Medicine of the Mind (Yellow)");
 
     // 170-210
     private List<String> PRICE_TIER4 = Arrays.asList(
@@ -211,6 +212,9 @@ public class ShopItemPriceCountRandomizer {
         }
         else if(PRICE_TIER4.contains(itemName)) {
             return (short)(170 + 10 * random.nextInt(5));
+        }
+        else if("Coin".equals(itemName)) {
+            return (short)0;
         }
 //        else if(PRICE_TIER5.contains(itemName)) {
 //            return (short)(250 + 50 * random.nextInt(3));

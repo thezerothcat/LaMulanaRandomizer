@@ -1,3 +1,4 @@
+Shop 0 (Default) => Location: Gate of Time [Surface], Setting: Alternate Start
 Shop 1 (Surface) => Location: Surface [Main]
 Shop 2 (Surface) => Location: Surface [Main]
 Shop 2 Alt (Surface) => Location: Surface [Main], Event: Amphisbaena Defeated, Event: Sakit Defeated, Event: Ellmac Defeated, Event: Bahamut Defeated

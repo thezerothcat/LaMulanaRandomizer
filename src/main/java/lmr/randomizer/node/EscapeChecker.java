@@ -47,6 +47,11 @@ public class EscapeChecker {
                 && accessedNodesFromValidation.contains("Plane Model")) {
             queuedUpdates.add("State: Phase 1 Shield Statue Access");
         }
+        if(accessedNodesFromValidation.contains("Event: Flooded Temple of the Sun")
+                && accessedNodesFromValidation.contains("Origin Seal")
+                && accessedNodesFromValidation.contains("Location: Temple of the Sun [East]")) {
+            queuedUpdates.add("State: Phase 1 Sun Exits Opened");
+        }
         for(String accessedNodeFromValidation : accessedNodesFromValidation) {
             if(!"Holy Grail".equals(accessedNodeFromValidation)
                     && !"State: Pre-Escape".equals(accessedNodeFromValidation)
@@ -63,12 +68,20 @@ public class EscapeChecker {
             mapOfNodeNameToRequirementsObject.remove(queuedUpdateNode);
         }
         if(Settings.getEnabledGlitches().contains("Raindrop")) {
+            NodeWithRequirements nodeWithRequirements = mapOfNodeNameToRequirementsObject.get(Settings.getStartingLocation());
+            if(nodeWithRequirements == null) {
+                nodeWithRequirements = new NodeWithRequirements(Settings.getStartingLocation());
+                mapOfNodeNameToRequirementsObject.put(Settings.getStartingLocation(), nodeWithRequirements);
+            }
+            nodeWithRequirements.addRequirementSet(new ArrayList<>(Arrays.asList("Glitch: Raindrop", Settings.getStartingLocation().replace("Location:", "Exit:"))));
+        }
+        if(Settings.isRandomizeStartingLocation() && accessedNodesFromValidation.contains("Location: Surface [Main]")) {
             NodeWithRequirements nodeWithRequirements = mapOfNodeNameToRequirementsObject.get("Location: Surface [Main]");
             if(nodeWithRequirements == null) {
                 nodeWithRequirements = new NodeWithRequirements("Location: Surface [Main]");
                 mapOfNodeNameToRequirementsObject.put("Location: Surface [Main]", nodeWithRequirements);
             }
-            nodeWithRequirements.addRequirementSet(new ArrayList<>(Arrays.asList("Glitch: Raindrop", "Exit: Surface [Main]")));
+            nodeWithRequirements.addRequirementSet(new ArrayList<>(Arrays.asList("Transition: Surface R1")));
         }
         backsideDoorRandomizer.rebuildRequirementsMap();
         FileUtils.log("Nodes accessible at escape start: " + queuedUpdates);

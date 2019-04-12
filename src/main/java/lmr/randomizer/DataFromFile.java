@@ -54,6 +54,8 @@ public final class DataFromFile {
     public static String GRAVEYARD_TRAP_CHEST_NAME = "Trap: Graveyard";
     public static String ESCAPE_CHEST_NAME = "Coin: Twin (Escape)";
 
+    public static String CUSTOM_SHOP_NAME = "Shop 0 (Default)";
+
     private static List<String> allShops;
     private static List<String> allItems;
     private static List<String> allCoinChests;
@@ -83,6 +85,9 @@ public final class DataFromFile {
             allShops = FileUtils.getList("all/all_shops.txt");
             if(Settings.isRandomizeDracuetShop()) {
                 allShops.add("Shop 23 (HT)");
+            }
+            if(Settings.isRandomizeStartingLocation()) {
+                allShops.add(CUSTOM_SHOP_NAME);
             }
             if(allShops == null) {
                 allShops = new ArrayList<>(0);
@@ -352,6 +357,9 @@ public final class DataFromFile {
                     String.format("requirement/bosses/%s_reqs.txt", Settings.getBossDifficulty().name().toLowerCase()), true);
             for(String removeNode : getCustomPlacementData().getRemovedLogicNodes()) {
                 mapOfNodeNameToRequirementsObject.remove(removeNode);
+            }
+            if(!Settings.isRandomizeStartingLocation()) {
+                mapOfNodeNameToRequirementsObject.remove(DataFromFile.CUSTOM_SHOP_NAME);
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "custom-reqs.txt", false);
 

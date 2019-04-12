@@ -52,9 +52,11 @@ public class MoneyChecker {
     }
 
     public void computeStartingLocationAccess(Integer attemptNumber) {
-        computeAccessibleNodes("Location: Surface [Main]", attemptNumber);
-        computeAccessibleNodes("Exit: Surface [Main]", attemptNumber);
-        queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits("Exit: Surface [Main]", attemptNumber));
+        String startingLocation = Settings.getStartingLocation();
+        String startingExit = startingLocation.replace("Location:", "Exit:");
+        computeAccessibleNodes(startingLocation, attemptNumber);
+        computeAccessibleNodes(startingExit, attemptNumber);
+        queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits(startingExit, attemptNumber));
     }
 
     public void computeAccessibleNodes(String newState, Integer attemptNumber) {

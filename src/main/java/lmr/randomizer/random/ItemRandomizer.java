@@ -365,23 +365,35 @@ public class ItemRandomizer {
         this.accessChecker = accessChecker;
     }
 
-    public void updateFiles(Random random) throws Exception{
-        String itemLocation;
+    public void updateFiles(Random random) throws Exception {
         String newContents;
         int newWorldFlag;
         Map<String, GameObjectId> nameToDataMap = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData();
         GameObjectId itemNewContentsData;
         GameObjectId itemLocationData;
-        for(Map.Entry<String, String> locationAndItem : mapOfItemLocationToItem.entrySet()) {
-            itemLocation = locationAndItem.getKey();
-            newContents = Settings.getUpdatedContents(locationAndItem.getValue());
+        boolean isLocationRelatedToBlock;
+
+        // Randomize the order in which locations are assigned, to avoid bias for which items
+        // will be fake if item graphics are randomized
+        List<String> itemLocations = new ArrayList<>(mapOfItemLocationToItem.keySet());
+        List<String> shuffledLocations = new ArrayList<>(itemLocations.size());
+        String location;
+        while(!itemLocations.isEmpty()) {
+            location = itemLocations.get(random.nextInt(itemLocations.size()));
+            shuffledLocations.add(location);
+            itemLocations.remove(location);
+        }
+
+        for(String itemLocation : shuffledLocations) {
+            newContents = Settings.getUpdatedContents(mapOfItemLocationToItem.get(itemLocation));
             itemLocationData = nameToDataMap.get(itemLocation);
             itemNewContentsData = nameToDataMap.get(newContents);
             newWorldFlag = getNewWorldFlag(itemLocation, newContents, itemLocationData, itemNewContentsData);
-            if(DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(locationAndItem.getKey())) {
+            isLocationRelatedToBlock = DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(itemLocation);
+            if(isLocationRelatedToBlock) {
                 GameDataTracker.updateBlock(itemLocationData, itemNewContentsData);
             }
-            GameDataTracker.writeLocationContents(itemLocation, newContents, itemLocationData, itemNewContentsData, newWorldFlag, random);
+            GameDataTracker.writeLocationContents(itemLocation, newContents, itemLocationData, itemNewContentsData, newWorldFlag, random, !isLocationRelatedToBlock);
         }
     }
 
