@@ -4,7 +4,7 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 2.20
 -----------------------------
-Merged Fools' Randomizer changes into the main project. Random starting location is now available, with Inferno Cavern, Gate of Illusion, and Gate of Time Surface as possible options.
+Merged Fools' Randomizer changes into the main project. Random starting location is now available, with Inferno Cavern, Gate of Illusion, and Gate of Time Surface as possible options. Software cost of mirai rebalanced to 200MB.
 
 FOOL
 -----------------------------

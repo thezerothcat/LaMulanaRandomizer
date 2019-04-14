@@ -513,6 +513,22 @@ public final class DatReader {
             else {
                 block = new Block(blockIndex);
                 addBlockContentsToBlock(block, dataInputStream, numberOfBytesInThisBlock / 2);
+                if(blockIndex == 5) {
+                    // Software costs
+                    int softwareIndex = 0;
+                    BlockContents blockContents;
+                    for(int i = 0; i < block.getBlockContents().size(); i++) {
+                        blockContents = block.getBlockContents().get(i);
+                        if(blockContents instanceof BlockListData) {
+                            if(++softwareIndex == 19) {
+                                // mirai
+                                ((BlockListData)blockContents).getData().set(0, (short)0x0c8);
+                                block.getBlockContents().set(i + 16, new BlockSingleData(FileUtils.stringToData("2").get(0)));
+                                break;
+                            }
+                        }
+                    }
+                }
                 if(blockIndex == 249) {
                     // Remove Mini Doll's becoming small flag from conversation.
                     Integer becomingSmallFlagIndex = null;
