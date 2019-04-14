@@ -7,6 +7,7 @@ import lmr.randomizer.random.BacksideDoorRandomizer;
 import lmr.randomizer.random.ItemRandomizer;
 import lmr.randomizer.random.ShopRandomizer;
 import lmr.randomizer.random.TransitionGateRandomizer;
+import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.util.*;
 
@@ -181,7 +182,7 @@ public class AccessChecker {
     }
 
     private boolean isEscapeSuccess() {
-        return (!Settings.isRandomizeTransitionGates() && !Settings.isRandomizeStartingLocation())
+        return (!Settings.isRandomizeTransitionGates() && LocationCoordinateMapper.isSurfaceStart())
                 || new EscapeChecker(backsideDoorRandomizer, transitionGateRandomizer, itemRandomizer, shopRandomizer, accessedNodes).isSuccess();
     }
 
@@ -274,7 +275,7 @@ public class AccessChecker {
     }
 
     public void computeStartingLocationAccess(boolean fullValidation, Integer attemptNumber) {
-        String startingLocation = Settings.getStartingLocation();
+        String startingLocation = LocationCoordinateMapper.getStartingLocation();
         String startingExit = startingLocation.replace("Location:", "Exit:");
         computeAccessibleNodes(startingLocation, fullValidation, attemptNumber);
         computeAccessibleNodes(startingExit, fullValidation, attemptNumber);

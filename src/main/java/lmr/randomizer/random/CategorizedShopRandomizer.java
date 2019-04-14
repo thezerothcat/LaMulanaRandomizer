@@ -12,6 +12,7 @@ import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.node.MoneyChecker;
 import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.GameObjectId;
+import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -113,13 +114,23 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                 }
             }
         }
+        if(LocationCoordinateMapper.isSurfaceStart()) {
+            int i = 1;
+            for(String shopContents : DataFromFile.getMapOfShopNameToShopOriginalContents().get(DataFromFile.CUSTOM_SHOP_NAME)) {
+                shopItemLocation = String.format("%s Item %d", DataFromFile.CUSTOM_SHOP_NAME, i++);
+                mapOfShopInventoryItemToContents.put(shopItemLocation, shopContents);
+                unassignedShopItemLocations.remove(shopItemLocation);
+            }
+        }
 
         for(CustomItemPlacement customItemPlacement : DataFromFile.getCustomPlacementData().getCustomItemPlacements()) {
             String customLocation = customItemPlacement.getLocation();
             if(customLocation != null && customLocation.startsWith("Shop ")) {
-                mapOfShopInventoryItemToContents.put(customLocation, customItemPlacement.getContents());
-                unassignedShopItemLocations.remove(customLocation);
-                itemRandomizer.removeItemFromUnplacedItems(customItemPlacement.getContents());
+                if(!customLocation.startsWith(DataFromFile.CUSTOM_SHOP_NAME) || !LocationCoordinateMapper.isSurfaceStart()) {
+                    mapOfShopInventoryItemToContents.put(customLocation, customItemPlacement.getContents());
+                    unassignedShopItemLocations.remove(customLocation);
+                    itemRandomizer.removeItemFromUnplacedItems(customItemPlacement.getContents());
+                }
             }
         }
     }

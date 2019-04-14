@@ -189,25 +189,69 @@ public final class DatReader {
     private static Block buildGrailPointBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         Block grailPointsBlock = new Block(blockIndex);
         addBlockContentsToBlock(grailPointsBlock, dataInputStream, numberOfShortsInThisBlock);
-        if(Settings.isRandomizeStartingLocation()) {
-            // Make Surface grail require a warp
-            BlockListData blockListData = (BlockListData)grailPointsBlock.getBlockContents().get(0);
-            blockListData.getData().add(0, (short)0xad3);
-            blockListData.getData().add(0, (short)0);
-            blockListData.addListSize(2);
+        if(!LocationCoordinateMapper.isSurfaceStart()) {
+            grailPointsBlock.getBlockContents().clear();
+
+            boolean front = LocationCoordinateMapper.isFrontsideStart();
 
             // Build a new warp for actual starting area
-            blockListData = new BlockListData((short)0x004e, (short)6);
-            blockListData.getData().add((short)31);
-            blockListData.getData().add((short)19);
+            BlockListData blockListData = new BlockListData((short)0x004e, (short)6);
+            blockListData.getData().add(LocationCoordinateMapper.getImageIndex(LocationCoordinateMapper.getStartingZone(), front));
+            blockListData.getData().add((short)LocationCoordinateMapper.getStartingZone());
             blockListData.getData().add((short)LocationCoordinateMapper.getStartingRoom());
             blockListData.getData().add((short)LocationCoordinateMapper.getStartingScreen());
             blockListData.getData().add((short)(LocationCoordinateMapper.getStartingX() % 640));
             blockListData.getData().add((short)(LocationCoordinateMapper.getStartingY() % 480));
-            grailPointsBlock.getBlockContents().add(0, new BlockSingleData((short)0x000a));
-            grailPointsBlock.getBlockContents().add(0, blockListData);
+            grailPointsBlock.getBlockContents().add(blockListData);
+            grailPointsBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+            List<Short> warpsAdded = new ArrayList<>();
+            warpsAdded.add((short)LocationCoordinateMapper.getStartingZone());
+            short nextWarp = LocationCoordinateMapper.getNextWarpZone(LocationCoordinateMapper.getStartingZone(), front);
+            while(!warpsAdded.contains(nextWarp)) {
+                blockListData = new BlockListData((short)0x004e, (short)8);
+                blockListData.getData().add((short)0); // No mirai needed
+                blockListData.getData().add(LocationCoordinateMapper.getGrailFlag(nextWarp, front));
+                blockListData.getData().add(LocationCoordinateMapper.getImageIndex(nextWarp, front));
+                blockListData.getData().add(nextWarp);
+                blockListData.getData().add((short)LocationCoordinateMapper.getStartingRoom(nextWarp, front));
+                blockListData.getData().add((short)LocationCoordinateMapper.getStartingScreen(nextWarp, front));
+                blockListData.getData().add((short)(LocationCoordinateMapper.getStartingX(nextWarp, front) % 640));
+                blockListData.getData().add((short)(LocationCoordinateMapper.getStartingY(nextWarp, front) % 480));
+                grailPointsBlock.getBlockContents().add(blockListData);
+                grailPointsBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+                warpsAdded.add(nextWarp);
+                nextWarp = LocationCoordinateMapper.getNextWarpZone(nextWarp, front);
+            }
+            front = !front;
+            nextWarp = LocationCoordinateMapper.getNextWarpZone(-1, front);
+            warpsAdded.clear(); // Necessary since Twin Labyrinths is on both sides.
+            while(!warpsAdded.contains(nextWarp)) {
+                blockListData = new BlockListData((short)0x004e, (short)8);
+                blockListData.getData().add((short)1); // Require mirai
+                blockListData.getData().add(LocationCoordinateMapper.getGrailFlag(nextWarp, front));
+                blockListData.getData().add(LocationCoordinateMapper.getImageIndex(nextWarp, front));
+                blockListData.getData().add(nextWarp);
+                blockListData.getData().add((short)LocationCoordinateMapper.getStartingRoom(nextWarp, front));
+                blockListData.getData().add((short)LocationCoordinateMapper.getStartingScreen(nextWarp, front));
+                blockListData.getData().add((short)(LocationCoordinateMapper.getStartingX(nextWarp, front) % 640));
+                blockListData.getData().add((short)(LocationCoordinateMapper.getStartingY(nextWarp, front) % 480));
+                grailPointsBlock.getBlockContents().add(blockListData);
+                grailPointsBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+                warpsAdded.add(nextWarp);
+                nextWarp = LocationCoordinateMapper.getNextWarpZone(nextWarp, front);
+            }
         }
         return grailPointsBlock;
+    }
+
+    private static short getNextZone(int startingZone) {
+        if(startingZone == 21) {
+            return 19;
+        }
+        return 1;
     }
 
     private static int populateBlockStringData(BlockStringData blockStringData, DataInputStream dataInputStream) throws IOException{
@@ -487,7 +531,7 @@ public final class DatReader {
             datBlocks.add(block);
             GameDataTracker.addBlock(block);
         }
-        if(Settings.isRandomizeStartingLocation()) {
+        if(!LocationCoordinateMapper.isSurfaceStart()) {
             block = AddObject.addShopBlock(datBlocks);
             if(!DataFromFile.getMapOfShopNameToShopBlock().containsKey(DataFromFile.CUSTOM_SHOP_NAME)) {
                 DataFromFile.getMapOfShopNameToShopBlock().put(DataFromFile.CUSTOM_SHOP_NAME, block.getBlockNumber());

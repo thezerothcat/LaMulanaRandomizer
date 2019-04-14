@@ -485,7 +485,7 @@ public class Main {
             }
             if(Settings.isRandomizeStartingLocation() && !ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
                 JOptionPane.showMessageDialog(this,
-                        String.format("Please enable %s %s when using %s", Translations.getText("randomization.randomizeShops"), Translations.getText("randomization.randomizeShops.everything"), Translations.getText("fools.randomizeStartingLocation")),
+                        String.format("Please enable %s %s when using %s", Translations.getText("randomization.randomizeShops"), Translations.getText("randomization.randomizeShops.everything"), Translations.getText("randomization.randomizeStartingLocation")),
                         "Custom placement error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
@@ -575,6 +575,26 @@ public class Main {
                 else {
                     JOptionPane.showMessageDialog(randomizerUI,
                             "Invalid starting weapon: " + customPlacementData.getStartingWeapon(),
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }
+            if(customPlacementData.getStartingLocation() != null) {
+                if(!Settings.isRandomizeStartingLocation()) {
+                    JOptionPane.showMessageDialog(randomizerUI,
+                            String.format("Please enable \"%s\"", Translations.getText("randomization.randomizeStartingLocation")),
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(!DataFromFile.STARTING_LOCATIONS.contains(customPlacementData.getStartingLocation())) {
+                    JOptionPane.showMessageDialog(randomizerUI,
+                            "Invalid starting location: " + LocationCoordinateMapper.getStartingZoneName(customPlacementData.getStartingLocation()),
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(!Settings.isRandomizeTransitionGates() && customPlacementData.getStartingLocation() == 21) {
+                    JOptionPane.showMessageDialog(randomizerUI,
+                            String.format("Please enable \"%s\"", Translations.getText("randomization.randomizeTransitionGates")),
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
@@ -976,7 +996,7 @@ public class Main {
 
                 if(!Settings.isRandomizeStartingLocation() && customItemPlacement.getLocation().startsWith("Shop 0")) {
                     JOptionPane.showMessageDialog(randomizerUI,
-                            String.format("Please enable the setting \"%s\"", Translations.getText("fools.randomizeStartingLocation")),
+                            String.format("Please enable the setting \"%s\"", Translations.getText("randomization.randomizeStartingLocation")),
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
@@ -1015,6 +1035,9 @@ public class Main {
                     if(location.startsWith(shopName)) {
                         return !location.startsWith("Shop 2 Alt (Surface)") || location.endsWith("1");
                     }
+                }
+                if(Settings.isRandomizeStartingLocation() && location.startsWith(DataFromFile.CUSTOM_SHOP_NAME)) {
+                    return true;
                 }
             }
             return false;
@@ -1129,6 +1152,7 @@ public class Main {
 //        }
 
         int totalItemsRemoved = getTotalItemsRemoved(random);
+        determineStartingLocation(random);
         determineStartingWeapon(random);
 
         BacksideDoorRandomizer backsideDoorRandomizer = new BacksideDoorRandomizer();
@@ -1449,7 +1473,7 @@ public class Main {
         else {
             startingNodes.add("Setting: Nonrandom Transitions");
         }
-        if(Settings.isRandomizeStartingLocation()) {
+        if(!LocationCoordinateMapper.isSurfaceStart()) {
             startingNodes.add("Setting: Alternate Start");
         }
         startingNodes.add(Settings.isRandomizeBosses() ? "Setting: Abnormal Boss" : "Setting: Normal Boss");
@@ -1601,6 +1625,14 @@ public class Main {
             }
         }
         saveData[0x11 + 0xad1] = (byte)1;
+        if(!LocationCoordinateMapper.isSurfaceStart()) {
+            short grailFlag = LocationCoordinateMapper.getGrailFlag(LocationCoordinateMapper.getStartingZone(), LocationCoordinateMapper.isFrontsideStart());
+            if(0x064 <= grailFlag && 0x075 >= grailFlag) {
+                saveData[0x11 + grailFlag] = (byte)1;
+            }
+            saveData[0x069 * 2 + 0x1011 + 1] = (byte)10;
+        }
+
 
 //        saveData[0x11 + 0x064] = 1;
 //        saveData[0x11 + 0x065] = 1;
@@ -1719,8 +1751,8 @@ public class Main {
         CustomPlacementData customPlacementData = DataFromFile.getCustomPlacementData();
         String customStartingWeapon = customPlacementData.getStartingWeapon();
         if(customStartingWeapon != null) {
-            FileUtils.log("Selected custom starting weapon: " + customStartingWeapon);
             Settings.setCurrentStartingWeapon(customStartingWeapon);
+            FileUtils.logFlush("Selected custom starting weapon: " + customStartingWeapon);
             return;
         }
 
@@ -1743,6 +1775,28 @@ public class Main {
         startingWeapons.removeAll(Settings.getRemovedItems());
         Settings.setCurrentStartingWeapon(startingWeapons.get(random.nextInt(startingWeapons.size())));
         FileUtils.logFlush("Selected starting weapon: " + Settings.getCurrentStartingWeapon());
+    }
+
+    private static void determineStartingLocation(Random random) {
+        if(!Settings.isRandomizeStartingLocation()) {
+            Settings.setCurrentStartingLocation(1);
+            FileUtils.logFlush("Selected starting location: " + LocationCoordinateMapper.getStartingZoneName(1));
+        }
+
+        CustomPlacementData customPlacementData = DataFromFile.getCustomPlacementData();
+        Integer customStartingLocation = customPlacementData.getStartingLocation();
+        if(customStartingLocation != null) {
+            Settings.setCurrentStartingLocation(customStartingLocation);
+            FileUtils.logFlush("Selected custom starting location: " + LocationCoordinateMapper.getStartingZoneName(customStartingLocation));
+            return;
+        }
+
+        List<Integer> possibleStartingLocations = new ArrayList<>(DataFromFile.STARTING_LOCATIONS);
+        if(!Settings.isRandomizeTransitionGates()) {
+            possibleStartingLocations.remove(21);
+        }
+        Settings.setCurrentStartingLocation(possibleStartingLocations.get(random.nextInt(possibleStartingLocations.size())));
+        FileUtils.logFlush("Selected starting location: " + LocationCoordinateMapper.getStartingZoneName(Settings.getCurrentStartingLocation()));
     }
 
     private static void determineRemovedItems(int totalItemsRemoved, Random random) {

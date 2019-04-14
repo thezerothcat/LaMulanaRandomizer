@@ -2,6 +2,7 @@ package lmr.randomizer;
 
 import lmr.randomizer.node.*;
 import lmr.randomizer.update.GameObjectId;
+import lmr.randomizer.update.LocationCoordinateMapper;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -358,6 +359,13 @@ public class FileUtils {
                     else if (line.startsWith("Start:")) {
                         customPlacementData.setCustomized(true);
                         customPlacementData.getStartingItems().add(line.replace("Start:", "").trim());
+                    }
+                    else if (line.startsWith("Location:")) {
+                        Integer startingLocation = LocationCoordinateMapper.getStartingZoneFromName(line.replace("Location:", "").trim());
+                        if(startingLocation != null) {
+                            customPlacementData.setCustomized(true);
+                            customPlacementData.setStartingLocation(startingLocation);
+                        }
                     }
                     else if (line.startsWith("Remove Logic:")) {
                         customPlacementData.setCustomized(true);

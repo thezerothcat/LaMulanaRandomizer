@@ -4,6 +4,7 @@ import lmr.randomizer.node.CustomPlacementData;
 import lmr.randomizer.node.NodeWithRequirements;
 import lmr.randomizer.random.ShopRandomizationEnum;
 import lmr.randomizer.update.GameObjectId;
+import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.util.*;
 
@@ -45,6 +46,7 @@ public final class DataFromFile {
     public static List<Integer> RANDOM_ITEM_GRAPHICS = Arrays.asList(1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15,
             18, 19, 20, 21, 24, 25, 26, 27, 28, 29, 32, 33, 38, 39, 41, 42, 43, 44, 45, 47, 48, 49, 51, 52, 53, 54,
             55, 56, 5, 58, 59, 60, 61, 63, 64, 65, 66, 67, 68, 69, 73, 76, 91, 96, 97, 98, 99, 100, 102, 103, 104);
+    public static List<Integer> STARTING_LOCATIONS = Arrays.asList(5, 10, 21);
 
     public static List<String> POSSIBLE_GLITCHES = Arrays.asList("Lamp Glitch", "Cat Pause",
             "Raindrop", "Ice Raindrop", "Pot Clip", "Object Zip", "Screen Mash");
@@ -85,9 +87,6 @@ public final class DataFromFile {
             allShops = FileUtils.getList("all/all_shops.txt");
             if(Settings.isRandomizeDracuetShop()) {
                 allShops.add("Shop 23 (HT)");
-            }
-            if(Settings.isRandomizeStartingLocation()) {
-                allShops.add(CUSTOM_SHOP_NAME);
             }
             if(allShops == null) {
                 allShops = new ArrayList<>(0);
@@ -235,6 +234,15 @@ public final class DataFromFile {
                         }
                     }
                 }
+                if(!LocationCoordinateMapper.isSurfaceStart()) {
+                    for(String shopItem : getMapOfShopNameToShopOriginalContents().get(CUSTOM_SHOP_NAME)) {
+                        if(!shopItem.equals("Weights") && !shopItem.endsWith("Ammo") && !"Shell Horn".equals(shopItem)
+                                && !randomizedShopItems.contains(shopItem)) {
+                            // Don't count weights, ammo, or the backup copies of Shell Horn or guild.exe
+                            randomizedShopItems.add(shopItem);
+                        }
+                    }
+                }
             }
             else {
                 randomizedShopItems = new ArrayList<>(0);
@@ -358,7 +366,7 @@ public final class DataFromFile {
             for(String removeNode : getCustomPlacementData().getRemovedLogicNodes()) {
                 mapOfNodeNameToRequirementsObject.remove(removeNode);
             }
-            if(!Settings.isRandomizeStartingLocation()) {
+            if(LocationCoordinateMapper.isSurfaceStart()) {
                 mapOfNodeNameToRequirementsObject.remove(DataFromFile.CUSTOM_SHOP_NAME);
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "custom-reqs.txt", false);

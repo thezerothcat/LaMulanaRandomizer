@@ -12,6 +12,7 @@ public class CustomPlacementData {
     private List<String> cursedChests = new ArrayList<>();
     private List<String> startingItems = new ArrayList<>();
     private String startingWeapon;
+    private Integer startingLocation;
 
     private String medicineColor;
 
@@ -53,6 +54,14 @@ public class CustomPlacementData {
 
     public void setStartingWeapon(String startingWeapon) {
         this.startingWeapon = startingWeapon;
+    }
+
+    public Integer getStartingLocation() {
+        return startingLocation;
+    }
+
+    public void setStartingLocation(Integer startingLocation) {
+        this.startingLocation = startingLocation;
     }
 
     public String getMedicineColor() {

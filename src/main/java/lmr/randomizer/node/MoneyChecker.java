@@ -7,6 +7,7 @@ import lmr.randomizer.random.BacksideDoorRandomizer;
 import lmr.randomizer.random.ItemRandomizer;
 import lmr.randomizer.random.ShopRandomizer;
 import lmr.randomizer.random.TransitionGateRandomizer;
+import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.util.*;
 
@@ -52,7 +53,7 @@ public class MoneyChecker {
     }
 
     public void computeStartingLocationAccess(Integer attemptNumber) {
-        String startingLocation = Settings.getStartingLocation();
+        String startingLocation = LocationCoordinateMapper.getStartingLocation();
         String startingExit = startingLocation.replace("Location:", "Exit:");
         computeAccessibleNodes(startingLocation, attemptNumber);
         computeAccessibleNodes(startingExit, attemptNumber);

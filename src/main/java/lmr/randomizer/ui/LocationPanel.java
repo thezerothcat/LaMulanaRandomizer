@@ -69,7 +69,7 @@ public class LocationPanel extends JPanel {
         randomizeNonBossDoors.setText(Translations.getText("randomization.randomizeNonBossDoors"));
         randomizeTransitionGates.setText(Translations.getText("randomization.randomizeTransitionGates"));
         randomizeOneWayTransitions.setText(Translations.getText("randomization.randomizeOneWayTransitions"));
-        randomizeStartingLocation.setText(Translations.getText("fools.randomizeStartingLocation"));
+        randomizeStartingLocation.setText(Translations.getText("randomization.randomizeStartingLocation"));
     }
 
     public void updateSettings() {

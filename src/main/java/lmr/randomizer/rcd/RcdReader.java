@@ -423,8 +423,7 @@ public final class RcdReader {
                     }
                 }
 
-                if(Settings.isRandomizeStartingLocation()
-                        && screen.getZoneIndex() == 21 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                if(screen.getZoneIndex() == 21 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
                     // Pot in retro surface now has coins
                     obj.getArgs().set(0, (short)1);
                     obj.getArgs().set(1, (short)10);
@@ -1132,7 +1131,7 @@ public final class RcdReader {
             }
         }
 
-        if(Settings.isRandomizeStartingLocation()) {
+        if(!LocationCoordinateMapper.isSurfaceStart()) {
             for(ScreenExit screenExit : screen.getScreenExits()) {
                 if(screenExit.getZoneIndex() == -1 && screenExit.getRoomIndex() == -1 && screenExit.getScreenIndex() == -1) {
                     screenExit.setZoneIndex(LocationCoordinateMapper.getStartingZone());
@@ -1147,11 +1146,17 @@ public final class RcdReader {
         if(zoneIndex == LocationCoordinateMapper.getStartingZone()
                 && roomIndex == LocationCoordinateMapper.getStartingRoom()
                 && screenIndex == LocationCoordinateMapper.getStartingScreen()) {
-            if(zoneIndex == 21) {
+            if(zoneIndex == 5) {
+                GameDataTracker.setCustomShop(AddObject.addInfernoShop(screen));
+            }
+            else if(zoneIndex == 10) {
+                GameDataTracker.setCustomShop(AddObject.addIllusionShop(screen));
+            }
+            else if(zoneIndex == 21) {
                 // Retro Surface start.
                 GameObject grailTablet = AddObject.addSpecialGrailTablet(screen);
                 AddObject.addHotspring(grailTablet);
-                GameDataTracker.setCustomShop(AddObject.addSurfaceShop(screen));
+                GameDataTracker.setCustomShop(AddObject.addRetroSurfaceShop(screen));
             }
             AddObject.addStartingItems(screen);
         }
@@ -1168,15 +1173,13 @@ public final class RcdReader {
         }
         else if(zoneIndex == 1) {
             if(roomIndex == 2 && screenIndex == 1) {
-                if(Settings.isRandomizeStartingLocation()) {
+                if(!LocationCoordinateMapper.isSurfaceStart()) {
                     AddObject.addSurfaceGrailTablet(screen);
                 }
             }
 
             if(roomIndex == 4 && screenIndex == 2) {
-                if(Settings.isRandomizeBacksideDoors() || Settings.isRandomizeStartingLocation()) {
-                    AddObject.addSurfaceCoverDetector(screen);
-                }
+                AddObject.addSurfaceCoverDetector(screen);
             }
             else if(roomIndex == 11 && screenIndex == 0) {
                 if(Settings.isAlternateMotherAnkh()) {
@@ -1184,7 +1187,7 @@ public final class RcdReader {
                 }
             }
             else if(roomIndex == 11 && screenIndex == 1) {
-                if(Settings.isRandomizeStartingLocation() && !Settings.isRandomizeTransitionGates()) {
+                if(!LocationCoordinateMapper.isSurfaceStart() && !Settings.isRandomizeTransitionGates()) {
                     GameObject warp = AddObject.addWarp(screen, 1220, 340, 4, 7, 0, 0, 0, 20, 312);
 
                     TestByteOperation warpTest = new TestByteOperation();

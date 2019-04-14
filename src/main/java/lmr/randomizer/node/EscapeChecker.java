@@ -7,6 +7,7 @@ import lmr.randomizer.random.BacksideDoorRandomizer;
 import lmr.randomizer.random.ItemRandomizer;
 import lmr.randomizer.random.ShopRandomizer;
 import lmr.randomizer.random.TransitionGateRandomizer;
+import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.util.*;
 
@@ -68,14 +69,14 @@ public class EscapeChecker {
             mapOfNodeNameToRequirementsObject.remove(queuedUpdateNode);
         }
         if(Settings.getEnabledGlitches().contains("Raindrop")) {
-            NodeWithRequirements nodeWithRequirements = mapOfNodeNameToRequirementsObject.get(Settings.getStartingLocation());
+            NodeWithRequirements nodeWithRequirements = mapOfNodeNameToRequirementsObject.get(LocationCoordinateMapper.getStartingLocation());
             if(nodeWithRequirements == null) {
-                nodeWithRequirements = new NodeWithRequirements(Settings.getStartingLocation());
-                mapOfNodeNameToRequirementsObject.put(Settings.getStartingLocation(), nodeWithRequirements);
+                nodeWithRequirements = new NodeWithRequirements(LocationCoordinateMapper.getStartingLocation());
+                mapOfNodeNameToRequirementsObject.put(LocationCoordinateMapper.getStartingLocation(), nodeWithRequirements);
             }
-            nodeWithRequirements.addRequirementSet(new ArrayList<>(Arrays.asList("Glitch: Raindrop", Settings.getStartingLocation().replace("Location:", "Exit:"))));
+            nodeWithRequirements.addRequirementSet(new ArrayList<>(Arrays.asList("Glitch: Raindrop", LocationCoordinateMapper.getStartingLocation().replace("Location:", "Exit:"))));
         }
-        if(Settings.isRandomizeStartingLocation() && accessedNodesFromValidation.contains("Location: Surface [Main]")) {
+        if(!LocationCoordinateMapper.isSurfaceStart() && accessedNodesFromValidation.contains("Location: Surface [Main]")) {
             NodeWithRequirements nodeWithRequirements = mapOfNodeNameToRequirementsObject.get("Location: Surface [Main]");
             if(nodeWithRequirements == null) {
                 nodeWithRequirements = new NodeWithRequirements("Location: Surface [Main]");

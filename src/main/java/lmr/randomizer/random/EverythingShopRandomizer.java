@@ -12,6 +12,7 @@ import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.node.MoneyChecker;
 import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.GameObjectId;
+import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -105,15 +106,25 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 }
             }
         }
+        if(LocationCoordinateMapper.isSurfaceStart()) {
+            int i = 1;
+            for(String shopContents : DataFromFile.getMapOfShopNameToShopOriginalContents().get(DataFromFile.CUSTOM_SHOP_NAME)) {
+                shopItemLocation = String.format("%s Item %d", DataFromFile.CUSTOM_SHOP_NAME, i++);
+                mapOfShopInventoryItemToContents.put(shopItemLocation, shopContents);
+                unassignedShopItemLocations.remove(shopItemLocation);
+            }
+        }
 
         for(CustomItemPlacement customItemPlacement : DataFromFile.getCustomPlacementData().getCustomItemPlacements()) {
             String customLocation = customItemPlacement.getLocation();
             if(customLocation != null && customLocation.startsWith("Shop ")) {
-                mapOfShopInventoryItemToContents.put(customLocation, customItemPlacement.getContents());
-                unassignedShopItemLocations.remove(customLocation);
-                itemRandomizer.removeItemFromUnplacedItems(customItemPlacement.getContents());
-                if(customItemPlacement.getContents().contains("Sacred Orb")) {
-                    shopsWithTransformations.add(customLocation.substring(0, customLocation.indexOf(')') + 1));
+                if(!customLocation.startsWith(DataFromFile.CUSTOM_SHOP_NAME) || !LocationCoordinateMapper.isSurfaceStart()) {
+                    mapOfShopInventoryItemToContents.put(customLocation, customItemPlacement.getContents());
+                    unassignedShopItemLocations.remove(customLocation);
+                    itemRandomizer.removeItemFromUnplacedItems(customItemPlacement.getContents());
+                    if(customItemPlacement.getContents().contains("Sacred Orb")) {
+                        shopsWithTransformations.add(customLocation.substring(0, customLocation.indexOf(')') + 1));
+                    }
                 }
             }
         }
@@ -121,7 +132,20 @@ public class EverythingShopRandomizer implements ShopRandomizer {
 
     @Override
     public void placeSpecialSubweaponAmmo(Random random) {
-        if(Settings.isRandomizeStartingLocation()) {
+        if(LocationCoordinateMapper.isSurfaceStart()) {
+            List<String> guaranteedAmmoShopLocations = new ArrayList<>();
+            for(String location : unassignedShopItemLocations) {
+                if(location.contains("Surface") && !location.equals(MSX_SHOP_NAME + " Item 1")) {
+                    guaranteedAmmoShopLocations.add(location);
+                }
+            }
+            if(!guaranteedAmmoShopLocations.isEmpty()) {
+                String specialAmmoLocation = guaranteedAmmoShopLocations.get(random.nextInt(guaranteedAmmoShopLocations.size()));
+                mapOfShopInventoryItemToContents.put(specialAmmoLocation, Settings.getCurrentStartingWeapon() + " Ammo");
+                unassignedShopItemLocations.remove(specialAmmoLocation);
+            }
+        }
+        else {
             String shopItem = DataFromFile.CUSTOM_SHOP_NAME + " Item 1";
             String shopContents = mapOfShopInventoryItemToContents.get(shopItem);
             if(shopContents == null) {
@@ -142,19 +166,6 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 mapOfShopInventoryItemToContents.put(shopItem, Settings.getCurrentStartingWeapon() + " Ammo");
                 unassignedShopItemLocations.remove(shopItem);
                 return;
-            }
-        }
-        else {
-            List<String> guaranteedAmmoShopLocations = new ArrayList<>();
-            for(String location : unassignedShopItemLocations) {
-                if(location.contains("Surface") && !location.equals(MSX_SHOP_NAME + " Item 1")) {
-                    guaranteedAmmoShopLocations.add(location);
-                }
-            }
-            if(!guaranteedAmmoShopLocations.isEmpty()) {
-                String specialAmmoLocation = guaranteedAmmoShopLocations.get(random.nextInt(guaranteedAmmoShopLocations.size()));
-                mapOfShopInventoryItemToContents.put(specialAmmoLocation, Settings.getCurrentStartingWeapon() + " Ammo");
-                unassignedShopItemLocations.remove(specialAmmoLocation);
             }
         }
     }
@@ -307,7 +318,19 @@ public class EverythingShopRandomizer implements ShopRandomizer {
     public void placeGuaranteedWeights(Random random) {
         // Guarantee weight shop on the Surface
         List<String> guaranteedWeightShopLocations = new ArrayList<>();
-        if(Settings.isRandomizeStartingLocation()) {
+        if(LocationCoordinateMapper.isSurfaceStart()) {
+            for(String location : unassignedShopItemLocations) {
+                if(location.contains("Surface") && !location.contains(MSX_SHOP_NAME)) {
+                    guaranteedWeightShopLocations.add(location);
+                }
+            }
+            if(!guaranteedWeightShopLocations.isEmpty()) {
+                String surfaceWeightsLocation = guaranteedWeightShopLocations.get(random.nextInt(guaranteedWeightShopLocations.size()));
+                mapOfShopInventoryItemToContents.put(surfaceWeightsLocation, "Weights");
+                unassignedShopItemLocations.remove(surfaceWeightsLocation);
+            }
+        }
+        else {
             String shopItem = DataFromFile.CUSTOM_SHOP_NAME + " Item 1";
             String shopContents = mapOfShopInventoryItemToContents.get(shopItem);
             if(shopContents == null) {
@@ -330,18 +353,6 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                         return;
                     }
                 }
-            }
-        }
-        else {
-            for(String location : unassignedShopItemLocations) {
-                if(location.contains("Surface") && !location.contains(MSX_SHOP_NAME)) {
-                    guaranteedWeightShopLocations.add(location);
-                }
-            }
-            if(!guaranteedWeightShopLocations.isEmpty()) {
-                String surfaceWeightsLocation = guaranteedWeightShopLocations.get(random.nextInt(guaranteedWeightShopLocations.size()));
-                mapOfShopInventoryItemToContents.put(surfaceWeightsLocation, "Weights");
-                unassignedShopItemLocations.remove(surfaceWeightsLocation);
             }
         }
 
@@ -470,6 +481,9 @@ public class EverythingShopRandomizer implements ShopRandomizer {
         Pair<Short, Short> itemPriceCountMsxShop2 = null;
         Pair<Short, Short> itemPriceCountMsxShop3 = null;
         for(String shopName : randomizedShops) {
+            if(DataFromFile.CUSTOM_SHOP_NAME.equals(shopName) && LocationCoordinateMapper.isSurfaceStart()) {
+                continue;
+            }
             shopBlock = (ShopBlock) blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get(shopName));
 
             if(MSX_SHOP_NAME.equals(shopName)) {

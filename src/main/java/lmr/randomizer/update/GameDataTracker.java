@@ -966,9 +966,7 @@ public final class GameDataTracker {
                     }
                 }
                 else if(flagTest.getIndex() == 0x14c) {
-                    if(Settings.isRandomizeBacksideDoors() || Settings.isRandomizeTransitionGates() || Settings.isRandomizeStartingLocation()) {
-                        gameObject.getArgs().set(4, (short)2);
-                    }
+                    gameObject.getArgs().set(4, (short)2);
                 }
             }
         } else if (gameObject.getId() == 0x9b) {
@@ -1373,9 +1371,10 @@ public final class GameDataTracker {
                 }
             }
         } else if (gameObject.getId() == 0x9f) {
-            if(Settings.isRandomizeStartingLocation()) {
+            if(!LocationCoordinateMapper.isSurfaceStart()) {
                 Screen screen = (Screen) gameObject.getObjectContainer();
-                if(screen.getZoneIndex() == 1) {
+                int zoneIndex = screen.getZoneIndex();
+                if(zoneIndex == 1) {
                     gameObject.getWriteByteOperations().clear();
 
                     TestByteOperation testByteOperation = new TestByteOperation();
@@ -1389,6 +1388,12 @@ public final class GameDataTracker {
                     writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
                     writeByteOperation.setValue((byte)1);
                     gameObject.getWriteByteOperations().add(writeByteOperation);
+                }
+                if(zoneIndex <= 18
+                        && LocationCoordinateMapper.getStartingZone() == zoneIndex
+                        && LocationCoordinateMapper.getStartingRoom() == screen.getRoomIndex()
+                        && LocationCoordinateMapper.getStartingScreen() == screen.getScreenIndex()) {
+                    AddObject.addHotspring(gameObject);
                 }
             }
         } else if (gameObject.getId() == 0x9e) {
@@ -3630,7 +3635,6 @@ public final class GameDataTracker {
 
     public static void updateXelpudIntro(List<Block> blocks) {
         Block introBlock = new Block(blocks.size());
-        introBlock.getBlockContents().clear();
         introBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
         List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("text.xelpudWarn"));
         for (Short shortCharacter : stringCharacters) {
@@ -3792,7 +3796,7 @@ public final class GameDataTracker {
                     AddObject.addTwinLabsPoisonTimerRemoval(gameObject.getObjectContainer(), false);
                     firstObject = false;
                 }
-                if(firstObject && Settings.isRandomizeStartingLocation() && "Transition: Surface R1".equals(gateToUpdate)) {
+                if(firstObject && !LocationCoordinateMapper.isSurfaceStart() && "Transition: Surface R1".equals(gateToUpdate)) {
                     GameObject warp = AddObject.addWarp((Screen)gameObject.getObjectContainer(), 1220, 340, 4, 7, 0, 0, 0, 20, 312);
                     replaceTransitionGateArgs(warp, gateDestination); // First update the transitions so we can make a correct copy of the gate if needed.
 

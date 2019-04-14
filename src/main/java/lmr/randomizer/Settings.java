@@ -5,8 +5,8 @@ import lmr.randomizer.random.ShopRandomizationEnum;
 
 import javax.swing.*;
 import java.io.File;
-import java.nio.file.Files;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.function.BiFunction;
 
@@ -19,6 +19,7 @@ public final class Settings {
     public static Set<String> currentRemovedItems;
     public static List<String> currentCursedChests;
     public static String currentStartingWeapon;
+    public static Integer currentStartingLocation;
 
     private static Settings singleton = new Settings();
 
@@ -731,6 +732,14 @@ public final class Settings {
         singleton.currentStartingWeapon = currentStartingItem;
     }
 
+    public static int getCurrentStartingLocation() {
+        return singleton.currentStartingLocation == null ? 1 : singleton.currentStartingLocation;
+    }
+
+    public static void setCurrentStartingLocation(int currentStartingLocation) {
+        singleton.currentStartingLocation = currentStartingLocation;
+    }
+
     public static List<String> getCurrentCursedChests() {
         if(singleton.randomizeCursedChests) {
             return singleton.currentCursedChests;
@@ -820,13 +829,6 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.randomizeGraphics = randomizeGraphics;
-    }
-
-    public static String getStartingLocation() {
-        if(!singleton.randomizeStartingLocation) {
-            return "Location: Surface [Main]";
-        }
-        return "Location: Gate of Time [Surface]";
     }
 
     public static boolean isAutomaticMantras() {
