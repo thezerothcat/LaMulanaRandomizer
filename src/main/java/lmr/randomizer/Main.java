@@ -1782,6 +1782,7 @@ public class Main {
         if(!Settings.isRandomizeStartingLocation()) {
             Settings.setCurrentStartingLocation(1);
             FileUtils.logFlush("Selected starting location: " + LocationCoordinateMapper.getStartingZoneName(1));
+            return;
         }
 
         CustomPlacementData customPlacementData = DataFromFile.getCustomPlacementData();

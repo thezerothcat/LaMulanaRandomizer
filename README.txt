@@ -2,6 +2,10 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+2.22
+-----------------------------
+Fixed some bugs with non-random starting location and Surface starting items.
+
 2.21
 -----------------------------
 Fixed warping logic for random starting location. Fixed a bug preventing seed generation with random starting location and non-random transitions.

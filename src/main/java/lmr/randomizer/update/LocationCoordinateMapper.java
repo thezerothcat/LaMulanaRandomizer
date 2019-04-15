@@ -165,7 +165,10 @@ public final class LocationCoordinateMapper {
             return 140;
         }
         if(zone == 1) {
-            return 1120;
+            if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation()) {
+                return 1120;
+            }
+            return 940;
         }
         if(zone == 2) {
             return 160;
@@ -230,7 +233,10 @@ public final class LocationCoordinateMapper {
             return 392;
         }
         if(zone == 1) {
-            return 72;
+            if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation()) {
+                return 72;
+            }
+            return 160;
         }
         if(zone == 2) {
             return 312;
