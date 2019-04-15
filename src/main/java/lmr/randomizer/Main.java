@@ -1793,7 +1793,7 @@ public class Main {
 
         List<Integer> possibleStartingLocations = new ArrayList<>(DataFromFile.STARTING_LOCATIONS);
         if(!Settings.isRandomizeTransitionGates()) {
-            possibleStartingLocations.remove(21);
+            possibleStartingLocations.remove((Integer)21);
         }
         Settings.setCurrentStartingLocation(possibleStartingLocations.get(random.nextInt(possibleStartingLocations.size())));
         FileUtils.logFlush("Selected starting location: " + LocationCoordinateMapper.getStartingZoneName(Settings.getCurrentStartingLocation()));
