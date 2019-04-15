@@ -2,6 +2,10 @@ Please see the wiki page on github for information on how to use the randomizer,
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 
+2.21
+-----------------------------
+Fixed warping logic for random starting location. Fixed a bug preventing seed generation with random starting location and non-random transitions.
+
 2.20
 -----------------------------
 Merged Fools' Randomizer changes into the main project. Random starting location is now available, with Inferno Cavern, Gate of Illusion, and Gate of Time Surface as possible options. Software cost of mirai rebalanced to 200MB.
