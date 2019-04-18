@@ -2635,14 +2635,14 @@ public final class AddObject {
     public static void addGrailDetector(GameObject gameObject, int grailFlag) {
         GameObject grailDetector = new GameObject(gameObject.getObjectContainer());
         grailDetector.setId((short)0x14);
-        grailDetector.setX(gameObject.getX());
+        grailDetector.setX(gameObject.getX() - 20);
         grailDetector.setY(gameObject.getY() - 20);
 
         grailDetector.getArgs().add((short)0); // seconds wait
         grailDetector.getArgs().add((short)0); // frames wait
         grailDetector.getArgs().add((short)0); // continuous/total
         grailDetector.getArgs().add((short)0); // interaction type 0 = any time except paused 1 = 2 = 3 = 4 = just be on the ground, ok. default: sleep
-        grailDetector.getArgs().add((short)2); // graphical tile width
+        grailDetector.getArgs().add((short)4); // graphical tile width
         grailDetector.getArgs().add((short)3); // graphical tile height
 
         TestByteOperation testByteOperation = new TestByteOperation();
