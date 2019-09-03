@@ -15,7 +15,6 @@ import java.util.*;
  * Created by thezerothcat on 7/11/2017.
  */
 public class AccessChecker {
-    private static final List<String> NODES_TO_DELAY = Arrays.asList("Anchor");
 
     private Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject = new HashMap<>();
     private Map<String, Set<String>> mapOfRequirementsToNodeNameObject = new HashMap<>();
@@ -24,6 +23,8 @@ public class AccessChecker {
 
     private List<String> queuedUpdates = new ArrayList<>();
     private Set<String> accessibleBossNodes = new HashSet<>();
+
+    private List<String> nodesToDelay;
 
     private ItemRandomizer itemRandomizer;
     private ShopRandomizer shopRandomizer;
@@ -38,6 +39,7 @@ public class AccessChecker {
     public AccessChecker() {
         mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
         mapOfRequirementsToNodeNameObject = copyNodeNameMap(DataFromFile.getMapOfRequirementsToNodeNameObject());
+        nodesToDelay = Settings.isUshumgalluAssist() ? new ArrayList<>(0) : Arrays.asList("Anchor");
     }
 
     public AccessChecker(AccessChecker accessChecker, boolean copyAll) {
@@ -52,6 +54,7 @@ public class AccessChecker {
         this.bossesDefeated = accessChecker.bossesDefeated;
         this.numberOfAccessibleAnkhJewels = accessChecker.numberOfAccessibleAnkhJewels;
         this.numberOfCollectedAnkhJewels = accessChecker.numberOfCollectedAnkhJewels;
+        this.nodesToDelay = new ArrayList<>(accessChecker.nodesToDelay);
     }
 
     public void determineCursedChests(Random random) {
@@ -359,8 +362,8 @@ public class AccessChecker {
             queuedUpdates.remove(stateToUpdate);
             return null;
         }
-        if(NODES_TO_DELAY.contains(stateToUpdate) && queuedUpdates.size() > 1) {
-            // Re-add this update to the end of the queue. // todo: might want a separate queue for these things
+        if(nodesToDelay.contains(stateToUpdate) && queuedUpdates.size() > 1) {
+            // Re-add this update to the end of the queue.
             queuedUpdates.remove(stateToUpdate);
             queuedUpdates.add(stateToUpdate);
             return null;

@@ -10,6 +10,7 @@ import lmr.randomizer.dat.conversation.CheckBlock;
 import lmr.randomizer.dat.shop.BlockStringData;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.CustomItemPlacement;
+import lmr.randomizer.random.EnemyRandomizer;
 import lmr.randomizer.rcd.object.*;
 
 import java.util.*;
@@ -169,6 +170,35 @@ public final class GameDataTracker {
             }
             objects.add(gameObject);
         }
+        else if (gameObject.getId() == 0xa9) {
+            if(Settings.isBlockPushingRequiresGlove()) {
+                Screen screen = (Screen)gameObject.getObjectContainer();
+                if(screen.getZoneIndex() == 5 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                    AddObject.addInfernoPushableBlockReplacements(gameObject);
+                }
+                else if(screen.getZoneIndex() != 12 || screen.getRoomIndex() != 7 || screen.getScreenIndex() != 0) {
+                    AddObject.addPushableBlockBlockage(gameObject);
+                }
+            }
+        }
+        else if (gameObject.getId() == 0xb9) {
+            if(Settings.isBlockPushingRequiresGlove()) {
+                Screen screen = (Screen)gameObject.getObjectContainer();
+                int zone = screen.getZoneIndex();
+                if(zone == 1) {
+                    AddObject.addPushableBlockBlockage(gameObject);
+                }
+                else if(zone == 3 || zone == 10) {
+                    AddObject.addPushableBlockBlockage(gameObject);
+                }
+                else if(zone == 14 && screen.getRoomIndex() == 2) {
+                    TestByteOperation pushableBlockTest = gameObject.getTestByteOperations().get(0);
+                    pushableBlockTest.setIndex(0xacc);
+
+                    AddObject.addRuinGloveTimer(gameObject.getObjectContainer());
+                }
+            }
+        }
         else if (gameObject.getId() == 0x2e) {
             if(Settings.isBossSpecificAnkhJewels()) {
                 Screen screen = (Screen)gameObject.getObjectContainer();
@@ -275,6 +305,11 @@ public final class GameDataTracker {
                 }
             }
         }
+        else if (gameObject.getId() == 0x01) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
         else if (gameObject.getId() == 0x02) {
             if(Settings.isRandomizeEnemies()) {
                 enemyObjects.add(gameObject);
@@ -309,22 +344,74 @@ public final class GameDataTracker {
                 }
             }
         }
-        else if (gameObject.getId() == 0x35) {
+        else if (gameObject.getId() == 0x05) {
             if(Settings.isRandomizeEnemies()) {
                 enemyObjects.add(gameObject);
             }
         }
-        else if (gameObject.getId() == 0x3c) {
-            if(Settings.isRandomizeBosses()) {
-                Screen screen = (Screen) gameObject.getObjectContainer();
-                if(screen.getZoneIndex() == 5 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
-                    for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-                        if(testByteOperation.getIndex() == 0x1b4) {
-                            testByteOperation.setIndex(0x133);
-                            testByteOperation.setValue((byte)5);
-                        }
-                    }
-                }
+        else if (gameObject.getId() == 0x06) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x16) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x17) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x18) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x1b) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x1c) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x1d) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x1e) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x21) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x26) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x27) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x28) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x29) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
             }
         }
         else if (gameObject.getId() == 0x2f) {
@@ -351,6 +438,261 @@ public final class GameDataTracker {
                 objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
             }
             objects.add(gameObject);
+        }
+        else if (gameObject.getId() == 0x35) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x37) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x38) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x3b) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x3c) {
+            if(Settings.isRandomizeBosses()) {
+                Screen screen = (Screen) gameObject.getObjectContainer();
+                if(screen.getZoneIndex() == 5 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                    for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                        if(testByteOperation.getIndex() == 0x1b4) {
+                            testByteOperation.setIndex(0x133);
+                            testByteOperation.setValue((byte)5);
+                        }
+                    }
+                }
+            }
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x3e) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x41) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x42) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x43) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+//        else if (gameObject.getId() == 0x44) {
+//            if(Settings.isRandomizeEnemies()) {
+//                enemyObjects.add(gameObject);
+//            }
+//        }
+        else if (gameObject.getId() == 0x48) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x49) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x4a) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x4b) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x4c) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+//        else if (gameObject.getId() == 0x4f) {
+//            if(Settings.isRandomizeEnemies()) {
+//                enemyObjects.add(gameObject);
+//            }
+//        }
+        else if (gameObject.getId() == 0x50) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x51) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x52) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x53) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x55) {
+            // Twin labs - witch
+//            Screen screen = (Screen)gameObject.getObjectContainer();
+//            if(!(screen.getZoneIndex() == 7
+//                    && ((screen.getRoomIndex() == 13 && screen.getScreenIndex() == 0) || (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 1)))) {
+//                // All witches except the ones connected to Baphomet
+//                enemyObjects.add(gameObject);
+//            }
+            enemyObjects.add(gameObject);
+        }
+        else if (gameObject.getId() == 0x56) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x57) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x58) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x59) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x5c) {
+            if(Settings.isRandomizeEnemies()) {
+                Screen screen = (Screen)gameObject.getObjectContainer();
+                if(screen.getZoneIndex() != 10 || screen.getRoomIndex() != 5 || screen.getScreenIndex() != 1) {
+                    // All lizards except lizard puzzle guy
+                    enemyObjects.add(gameObject);
+                }
+            }
+        }
+        else if (gameObject.getId() == 0x5d) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x5e) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x62) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x63) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x64) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x65) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x66) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x68) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x69) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x6a) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x6d) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x6e) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x70) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x73) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x74) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x7d) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x7e) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x81) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x82) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x83) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == 0x8f) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
         }
         else if (gameObject.getId() == 0xb5) {
             short itemArg = gameObject.getArgs().get(0);
@@ -805,6 +1147,19 @@ public final class GameDataTracker {
             }
             if(flagIndexToRemove != null) {
                 gameObject.getTestByteOperations().remove((int)flagIndexToRemove);
+            }
+
+            if(Settings.isBlockPushingRequiresGlove()) {
+                Screen screen = (Screen)gameObject.getObjectContainer();
+                if (screen.getZoneIndex() == 14 && screen.getRoomIndex() == 2 && screen.getScreenIndex() == 0) {
+                    for(WriteByteOperation writeByteOperation: gameObject.getWriteByteOperations()) {
+                        if (writeByteOperation.getIndex() == 0x28d) {
+                            AddObject.addWallCopy(gameObject, 2);
+                            AddObject.addWallCopy(gameObject, 3);
+                            break;
+                        }
+                    }
+                }
             }
         } else if (gameObject.getId() == 0x0e) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
@@ -1370,6 +1725,15 @@ public final class GameDataTracker {
                     }
                 }
             }
+        } else if (gameObject.getId() == 0xb6) {
+            if(LocationCoordinateMapper.getStartingZone() == 16) {
+                // Move Chamber of Birth grail point when starting in that area.
+                Screen screen = (Screen) gameObject.getObjectContainer();
+                if(screen.getZoneIndex() == 16) {
+                    gameObject.setX(200);
+                    gameObject.setY(380);
+                }
+            }
         } else if (gameObject.getId() == 0x9f) {
             if(!LocationCoordinateMapper.isSurfaceStart()) {
                 Screen screen = (Screen) gameObject.getObjectContainer();
@@ -1389,6 +1753,11 @@ public final class GameDataTracker {
                     writeByteOperation.setValue((byte)1);
                     gameObject.getWriteByteOperations().add(writeByteOperation);
                 }
+                if(zoneIndex == 16 && LocationCoordinateMapper.getStartingZone() == 16) {
+                    // Move Chamber of Birth grail point when starting in that area.
+                    gameObject.setX(200);
+                    gameObject.setY(380);
+                }
                 if(zoneIndex <= 18
                         && LocationCoordinateMapper.getStartingZone() == zoneIndex
                         && LocationCoordinateMapper.getStartingRoom() == screen.getRoomIndex()
@@ -1397,6 +1766,18 @@ public final class GameDataTracker {
                 }
             }
         } else if (gameObject.getId() == 0x9e) {
+            if(LocationCoordinateMapper.getStartingZone() == 16) {
+                Screen screen = (Screen) gameObject.getObjectContainer();
+                if(screen.getZoneIndex() == 16
+                        && screen.getRoomIndex() == LocationCoordinateMapper.getStartingRoom()
+                        && screen.getScreenIndex() == LocationCoordinateMapper.getStartingScreen()
+                        && gameObject.getX() == 340 && gameObject.getY() == 320) {
+                    // Move Chamber of Birth grail point when starting in that area.
+                    gameObject.setX(200);
+                    gameObject.setY(380);
+                }
+            }
+
             int languageBlock = gameObject.getArgs().get(0);
             if(Settings.isAutomaticGrailPoints()) {
                 if(languageBlock == 41 || languageBlock == 75 || languageBlock == 104 || languageBlock == 136
@@ -1802,6 +2183,90 @@ public final class GameDataTracker {
             }
         } else if (gameObject.getId() == 0x93) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if(!Settings.isRandomizeNonBossDoors()) {
+                    if(flagTest.getIndex() == 0x15c || flagTest.getIndex() == 0x15d) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0
+                                ? "Door: F1" : "Door: B1";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == 0x16d || flagTest.getIndex() == 0x16e) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 2
+                                ? "Door: F2" : "Door: B2";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == 0x175 || flagTest.getIndex() == 0x176) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3
+                                ? "Door: F3" : "Door: B3";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == 0x1bd || flagTest.getIndex() == 0x1be) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
+                                ? "Door: F4" : "Door: B4";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == 0x152 || flagTest.getIndex() == 0x153) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 1
+                                ? "Door: F5" : "Door: B5";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == 0x2b9 || flagTest.getIndex() == 0x1d0) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6
+                                ? "Door: F6" : "Door: B6";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == 0x3b7 || flagTest.getIndex() == 0x1c0) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
+                                ? "Door: F7" : "Door: B7";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                }
+
+                if(Settings.isBlockPushingRequiresGlove()) {
+                    if(flagTest.getIndex() == 0x28d) {
+                        if (gameObject.getArgs().get(2) != 360 || gameObject.getArgs().get(3) != 520) {
+                            // The blockage on the Ruin pushblock can disappear as normal, but the pushability needs to be modified.
+                            if(flagTest.getValue() == 0 || flagTest.getValue() == 2) {
+                                flagTest.setIndex(0xacc);
+                            }
+                        }
+                    }
+                }
+
                 if (flagTest.getIndex() == 241) {
                     // mekuri tent-closing effect
                     GameObjectId gameObjectId = new GameObjectId((short) 100, 241);
@@ -1963,78 +2428,6 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(!Settings.isRandomizeNonBossDoors()) {
-                    if(flagTest.getIndex() == 0x15c || flagTest.getIndex() == 0x15d) {
-                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0
-                                ? "Door: F1" : "Door: B1";
-                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                        }
-                        backsideDoors.add(gameObject);
-                    }
-                    else if(flagTest.getIndex() == 0x16d || flagTest.getIndex() == 0x16e) {
-                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 2
-                                ? "Door: F2" : "Door: B2";
-                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                        }
-                        backsideDoors.add(gameObject);
-                    }
-                    else if(flagTest.getIndex() == 0x175 || flagTest.getIndex() == 0x176) {
-                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3
-                                ? "Door: F3" : "Door: B3";
-                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                        }
-                        backsideDoors.add(gameObject);
-                    }
-                    else if(flagTest.getIndex() == 0x1bd || flagTest.getIndex() == 0x1be) {
-                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
-                                ? "Door: F4" : "Door: B4";
-                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                        }
-                        backsideDoors.add(gameObject);
-                    }
-                    else if(flagTest.getIndex() == 0x152 || flagTest.getIndex() == 0x153) {
-                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 1
-                                ? "Door: F5" : "Door: B5";
-                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                        }
-                        backsideDoors.add(gameObject);
-                    }
-                    else if(flagTest.getIndex() == 0x2b9 || flagTest.getIndex() == 0x1d0) {
-                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6
-                                ? "Door: F6" : "Door: B6";
-                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                        }
-                        backsideDoors.add(gameObject);
-                    }
-                    else if(flagTest.getIndex() == 0x3b7 || flagTest.getIndex() == 0x1c0) {
-                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
-                                ? "Door: F7" : "Door: B7";
-                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
-                        if(backsideDoors == null) {
-                            backsideDoors = new ArrayList<>();
-                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
-                        }
-                        backsideDoors.add(gameObject);
-                    }
-                }
             }
         } else if (gameObject.getId() == 0x0b) {
             // Timer objects
@@ -2148,6 +2541,11 @@ public final class GameDataTracker {
                             mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
                         }
                         backsideDoors.add(gameObject);
+                    }
+                }
+                else if(Settings.isBlockPushingRequiresGlove()) {
+                    if(flagUpdate.getIndex() == 0x28d) {
+                        flagUpdate.setIndex(0xacc);
                     }
                 }
             }
@@ -2379,6 +2777,11 @@ public final class GameDataTracker {
                         }
                     }
                     break;
+                }
+                else if(Settings.isBlockPushingRequiresGlove()) {
+                    if(flagTest.getIndex() == 0x28d) {
+                        flagTest.setIndex(0xacc);
+                    }
                 }
 //                else if(flagTest.getIndex() == 267 && flagTest.getValue() == 1) {
 //                    // Timer to track wait time with Woman Statue and give Maternity Statue
@@ -5561,36 +5964,9 @@ public final class GameDataTracker {
     }
 
     public static void randomizeEnemies(Random random) {
+        EnemyRandomizer enemyRandomizer = new EnemyRandomizer(random);
         for(GameObject enemy : enemyObjects) {
-            if(enemy.getId() == 0x02) {
-                // Bats
-                int zoneIndex = ((Screen)enemy.getObjectContainer()).getZoneIndex();
-                enemy.getArgs().set(0, (short)random.nextInt(2)); // Start moving
-                if(zoneIndex == 19 || zoneIndex == 20) {
-                    enemy.getArgs().set(3, (short)0); // Type
-                }
-                else {
-                    enemy.getArgs().set(3, (short)random.nextInt(2)); // Type
-                }
-                enemy.getArgs().set(4, (short)(random.nextInt(2) + 2)); // Damage
-            }
-            else if(enemy.getId() == 0x35) {
-                // Gyonin
-                enemy.getArgs().set(0, (short)random.nextInt(2)); // 0 = Standard, 1 = IRON PIPE
-                enemy.getArgs().set(3, (short)random.nextInt(2)); // Speed
-                enemy.getArgs().set(4, (short)(random.nextInt(2) + 1)); // Health
-            }
-            else {
-                // Skeletons
-                enemy.getArgs().set(0, (short)random.nextInt(2)); // Facing
-                enemy.getArgs().set(2, (short)random.nextInt(4)); // Speed
-                enemy.getArgs().set(3, (short)random.nextInt(2)); // Collapsed or standing
-                enemy.getArgs().set(4, (short)random.nextInt(3)); // Type
-                enemy.getArgs().set(5, (short)(random.nextInt(11) + 3)); // Health
-                enemy.getArgs().set(6, (short)(random.nextInt(5) + 2)); // Contact damage
-                enemy.getArgs().set(7, (short)(random.nextInt(4) + 2)); // Projectile damage
-                enemy.getArgs().set(9, (short)(random.nextInt(2) + 2)); // Projectile speed
-            }
+            enemyRandomizer.randomizeEnemy(enemy);
         }
     }
 

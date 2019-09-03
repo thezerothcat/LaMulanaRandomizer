@@ -225,6 +225,7 @@ public class Main {
 
         private boolean generateSeed() {
             if(!validateSettings()) {
+                Settings.setCurrentStartingLocation(1);
                 DataFromFile.clearCustomPlacementData();
                 DataFromFile.clearAllData();
                 return false;
@@ -471,23 +472,27 @@ public class Main {
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
+            if(Settings.isRandomizeEnemies() && Settings.getEnabledDamageBoosts().contains("Enemy")) {
+                JOptionPane.showMessageDialog(this,
+                        String.format("The setting \"%s\" cannot be used with the setting \"%s\"",
+                                Translations.getText("enemies.randomizeEnemies"),
+                                Translations.getText("dboost.Enemy")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
             if(Settings.isRequireFullAccess() && Settings.isRemoveMainWeapons()) {
                 JOptionPane.showMessageDialog(this,
                         "The setting \"Require all items to be accessible\" cannot be used when removing Main Weapons",
-                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            if(Settings.isRandomizeStartingLocation() && !Settings.isRandomizeTransitionGates() && !Settings.getStartingItems().contains("Holy Grail")) {
-                JOptionPane.showMessageDialog(this,
-                        "Please randomize transitions or enable starting with " + Translations.getText("items.HolyGrail"),
-                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            if(Settings.isRandomizeStartingLocation() && !ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
-                JOptionPane.showMessageDialog(this,
-                        String.format("Please enable %s %s when using %s", Translations.getText("randomization.randomizeShops"), Translations.getText("randomization.randomizeShops.everything"), Translations.getText("randomization.randomizeStartingLocation")),
-                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                return false;
+            if(Settings.isRandomizeStartingLocation()) {
+                if(!ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("Please enable %s %s when using %s", Translations.getText("randomization.randomizeShops"), Translations.getText("randomization.randomizeShops.everything"), Translations.getText("randomization.randomizeStartingLocation")),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
             }
             if(!validateCustomPlacements(this)) {
                 // Message created below
@@ -592,11 +597,16 @@ public class Main {
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
-                if(!Settings.isRandomizeTransitionGates() && customPlacementData.getStartingLocation() == 21) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            String.format("Please enable \"%s\"", Translations.getText("randomization.randomizeTransitionGates")),
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
+                if(!Settings.isRandomizeTransitionGates()) {
+                    if(customPlacementData.getStartingLocation() == 11
+                            || customPlacementData.getStartingLocation() == 14
+                            || customPlacementData.getStartingLocation() == 16
+                            || customPlacementData.getStartingLocation() == 21) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                String.format("Please enable \"%s\"", Translations.getText("randomization.randomizeTransitionGates")),
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
                 }
             }
             if(!customPlacementData.getCustomDoorPlacements().isEmpty()) {
@@ -1467,6 +1477,9 @@ public class Main {
         if(!Settings.isRequireFlaresForExtinction()) {
             startingNodes.add("Setting: Flareless Extinction");
         }
+        if(!Settings.isBlockPushingRequiresGlove()) {
+            startingNodes.add("Setting: Normal Pushing");
+        }
         if(Settings.isRandomizeTransitionGates()) {
             startingNodes.add("Setting: Random Transitions");
         }
@@ -1632,6 +1645,11 @@ public class Main {
                 saveData[0x11 + grailFlag] = (byte)1;
             }
             saveData[0x069 * 2 + 0x1011 + 1] = (byte)10;
+
+            if(Settings.getCurrentStartingLocation() == 7) {
+                // Twin labs front, auto-solve the elevator puzzle
+                saveData[0x11 + 0x1db] = (byte)2;
+            }
         }
 
 
@@ -1794,7 +1812,16 @@ public class Main {
         }
 
         List<Integer> possibleStartingLocations = new ArrayList<>(DataFromFile.STARTING_LOCATIONS);
+        if(!Settings.getStartingItemsIncludingCustom().contains("Holy Grail")) {
+            // Tower of Ruin will be unable to get back to the grail tablet easily/will have very limited options without grail/feather/boots/ice cape, so just ban it.
+            possibleStartingLocations.remove((Integer)14);
+        }
         if(!Settings.isRandomizeTransitionGates()) {
+            // Most backside fields aren't an option unless random transitions help keep you from getting stuck on one side of the ruins.
+            possibleStartingLocations.remove((Integer)11);
+            possibleStartingLocations.remove((Integer)13);
+            possibleStartingLocations.remove((Integer)14);
+            possibleStartingLocations.remove((Integer)16);
             possibleStartingLocations.remove((Integer)21);
         }
         Settings.setCurrentStartingLocation(possibleStartingLocations.get(random.nextInt(possibleStartingLocations.size())));

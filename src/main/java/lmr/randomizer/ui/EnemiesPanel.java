@@ -7,38 +7,38 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 
 public class EnemiesPanel extends JPanel {
-    private JCheckBox randomizeBosses;
     private JCheckBox randomizeEnemies;
+//    private JCheckBox randomizeBosses;
 
     public EnemiesPanel() {
         super(new MigLayout("fillx, wrap"));
 
-        randomizeBosses = new JCheckBox();
-        randomizeBosses.setSelected(Settings.isRandomizeBosses());
-
         randomizeEnemies = new JCheckBox();
         randomizeEnemies.setSelected(Settings.isRandomizeEnemies());
 
+//        randomizeBosses = new JCheckBox();
+//        randomizeBosses.setSelected(Settings.isRandomizeBosses());
+
         CheckboxContainer checkboxContainer = new CheckboxContainer(1);
-        checkboxContainer.add(randomizeBosses);
         checkboxContainer.add(randomizeEnemies);
+//        checkboxContainer.add(randomizeBosses);
         add(checkboxContainer, "growx, wrap");
 
         updateTranslations();
     }
 
     public void updateTranslations() {
-        randomizeBosses.setText(Translations.getText("fools.randomizeBosses"));
-        randomizeEnemies.setText(Translations.getText("fools.randomizeEnemies"));
+        randomizeEnemies.setText(Translations.getText("enemies.randomizeEnemies"));
+//        randomizeBosses.setText(Translations.getText("fools.randomizeBosses"));
     }
 
     public void updateSettings() {
-        Settings.setRandomizeBosses(randomizeBosses.isSelected(), true);
         Settings.setRandomizeEnemies(randomizeEnemies.isSelected(), true);
+//        Settings.setRandomizeBosses(randomizeBosses.isSelected(), true);
     }
 
     public void reloadSettings() {
-        randomizeBosses.setSelected(Settings.isRandomizeBosses());
         randomizeEnemies.setSelected(Settings.isRandomizeEnemies());
+//        randomizeBosses.setSelected(Settings.isRandomizeBosses());
     }
 }

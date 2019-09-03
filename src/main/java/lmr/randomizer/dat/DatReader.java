@@ -215,7 +215,7 @@ public final class DatReader {
                 blockListData.getData().add(LocationCoordinateMapper.getImageIndex(nextWarp, front));
                 blockListData.getData().add(nextWarp);
                 blockListData.getData().add((short)LocationCoordinateMapper.getStartingRoom(nextWarp, front));
-                blockListData.getData().add((short)LocationCoordinateMapper.getStartingScreen(nextWarp, front));
+                blockListData.getData().add((short)LocationCoordinateMapper.getStartingScreen(nextWarp));
                 blockListData.getData().add((short)(LocationCoordinateMapper.getStartingX(nextWarp, front) % 640));
                 blockListData.getData().add((short)(LocationCoordinateMapper.getStartingY(nextWarp, front) % 480));
                 grailPointsBlock.getBlockContents().add(blockListData);
@@ -234,7 +234,7 @@ public final class DatReader {
                 blockListData.getData().add(LocationCoordinateMapper.getImageIndex(nextWarp, front));
                 blockListData.getData().add(nextWarp);
                 blockListData.getData().add((short)LocationCoordinateMapper.getStartingRoom(nextWarp, front));
-                blockListData.getData().add((short)LocationCoordinateMapper.getStartingScreen(nextWarp, front));
+                blockListData.getData().add((short)LocationCoordinateMapper.getStartingScreen(nextWarp));
                 blockListData.getData().add((short)(LocationCoordinateMapper.getStartingX(nextWarp, front) % 640));
                 blockListData.getData().add((short)(LocationCoordinateMapper.getStartingY(nextWarp, front) % 480));
                 grailPointsBlock.getBlockContents().add(blockListData);

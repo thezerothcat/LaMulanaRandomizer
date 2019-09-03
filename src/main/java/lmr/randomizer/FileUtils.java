@@ -544,6 +544,9 @@ public class FileUtils {
             else if(line.startsWith("ushumgalluAssist")) {
                 Settings.setUshumgalluAssist(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("blockPushingRequiresGlove")) {
+                Settings.setBlockPushingRequiresGlove(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("quickStartItemsEnabled")) {
                 // Upgrade legacy settings
                 if(Boolean.valueOf(line.split("=")[1])) {
@@ -682,6 +685,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("ushumgalluAssist=%s", Settings.isUshumgalluAssist()));
+        writer.newLine();
+
+        writer.write(String.format("blockPushingRequiresGlove=%s", Settings.isBlockPushingRequiresGlove()));
         writer.newLine();
 
         writer.write(String.format("laMulanaBaseDir=%s", Settings.getLaMulanaBaseDir()));

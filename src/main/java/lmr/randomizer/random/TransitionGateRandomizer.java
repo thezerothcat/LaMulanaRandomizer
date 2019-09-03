@@ -428,7 +428,7 @@ public class TransitionGateRandomizer {
         else if("Location: Temple of the Sun [East]".equals(gateName)) {
             return Arrays.asList("Transition: Sun R1", "Transition: Sun R2");
         }
-        else if("Location: Spring in the Sky".equals(gateName)) {
+        else if("Location: Spring in the Sky [Main]".equals(gateName)) {
             return Arrays.asList("Transition: Spring D1");
         }
         else if("Location: Inferno Cavern [Main]".equals(gateName)) {
@@ -545,7 +545,7 @@ public class TransitionGateRandomizer {
         else if("Location: Chamber of Birth [Southeast]".equals(gateName)) {
             return Arrays.asList("Transition: Birth L1");
         }
-        else if("Location: Chamber of Birth [West]".equals(gateName)) {
+        else if("Location: Chamber of Birth [West Entrance]".equals(gateName)) {
             return Arrays.asList("Transition: Birth D1");
         }
         else if("Location: Chamber of Birth [Skanda]".equals(gateName)) {
@@ -613,7 +613,7 @@ public class TransitionGateRandomizer {
             return "Location: Temple of the Sun [East]";
         }
         else if("Transition: Spring D1".equals(gateName)) {
-            return "Location: Spring in the Sky";
+            return "Location: Spring in the Sky [Main]";
         }
         else if("Transition: Inferno R1".equals(gateName)) {
             return "Location: Inferno Cavern [Main]";
@@ -742,7 +742,7 @@ public class TransitionGateRandomizer {
             return "Location: Chamber of Birth [Southeast]";
         }
         else if("Transition: Birth D1".equals(gateName)) {
-            return "Location: Chamber of Birth [West]";
+            return "Location: Chamber of Birth [West Entrance]";
         }
         else if("Transition: Birth R1".equals(gateName)) {
             return "Location: Chamber of Birth [Skanda]";

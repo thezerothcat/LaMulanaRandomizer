@@ -1146,11 +1146,40 @@ public final class RcdReader {
         if(zoneIndex == LocationCoordinateMapper.getStartingZone()
                 && roomIndex == LocationCoordinateMapper.getStartingRoom()
                 && screenIndex == LocationCoordinateMapper.getStartingScreen()) {
-            if(zoneIndex == 5) {
+            if(zoneIndex == 0) {
+                GameDataTracker.setCustomShop(AddObject.addGuidanceShop(screen));
+            }
+            else if(zoneIndex == 2) {
+                GameDataTracker.setCustomShop(AddObject.addMausoleumShop(screen));
+            }
+            else if(zoneIndex == 5) {
                 GameDataTracker.setCustomShop(AddObject.addInfernoShop(screen));
+            }
+            else if(zoneIndex == 7) {
+                if(Settings.getCurrentStartingLocation() == -7) {
+                    GameDataTracker.setCustomShop(AddObject.addTwinLabsBackShop(screen));
+                }
+                else {
+                    GameDataTracker.setCustomShop(AddObject.addTwinLabsFrontShop(screen));
+                }
+            }
+            else if(zoneIndex == 8) {
+                GameDataTracker.setCustomShop(AddObject.addEndlessShop(screen));
             }
             else if(zoneIndex == 10) {
                 GameDataTracker.setCustomShop(AddObject.addIllusionShop(screen));
+            }
+            else if(zoneIndex == 11) {
+                GameDataTracker.setCustomShop(AddObject.addGraveyardShop(screen));
+            }
+            else if(zoneIndex == 13) {
+                GameDataTracker.setCustomShop(AddObject.addGoddessShop(screen));
+            }
+            else if(zoneIndex == 14) {
+                GameDataTracker.setCustomShop(AddObject.addRuinShop(screen));
+            }
+            else if(zoneIndex == 16) {
+                GameDataTracker.setCustomShop(AddObject.addBirthStartStuff(screen));
             }
             else if(zoneIndex == 21) {
                 // Retro Surface start.

@@ -299,7 +299,7 @@ public class MoneyChecker {
         if(locationNodeName.equals("Location: Temple of Moonlight [Pyramid]")) {
             return 50;
         }
-        if(locationNodeName.equals("Location: Spring in the Sky")) {
+        if(locationNodeName.equals("Location: Spring in the Sky [Main]")) {
             return 30;
         }
         if(locationNodeName.equals("Location: Tower of the Goddess [Lower]")) {

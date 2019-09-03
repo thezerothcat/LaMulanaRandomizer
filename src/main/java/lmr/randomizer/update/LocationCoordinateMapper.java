@@ -8,17 +8,14 @@ public final class LocationCoordinateMapper {
 
     public static byte getStartingZone() {
         int zone = Settings.getCurrentStartingLocation();
-        if(zone == 1) {
-            return 1;
+        if(zone >= 0 && zone <= 14) {
+            return (byte)zone;
         }
-        if(zone == 4) {
-            return 4;
+        if(zone == -7) {
+            return 7;
         }
-        if(zone == 5) {
-            return 5;
-        }
-        if(zone == 10) {
-            return 10;
+        if(zone == 16) {
+            return 16;
         }
         if(zone == 21) {
             return 21;
@@ -27,7 +24,7 @@ public final class LocationCoordinateMapper {
     }
 
     public static byte getStartingRoom() {
-        return getStartingRoom(Settings.getCurrentStartingLocation(), isFrontsideStart());
+        return getStartingRoom(LocationCoordinateMapper.getStartingZone(), isFrontsideStart());
     }
 
     public static byte getStartingRoom(int zone, boolean front) {
@@ -53,7 +50,7 @@ public final class LocationCoordinateMapper {
             return 6;
         }
         if(zone == 7) {
-            return front ? (byte)0 : 15;
+            return front ? (byte)0 : (byte)15;
         }
         if(zone == 8) {
             return 1;
@@ -92,10 +89,10 @@ public final class LocationCoordinateMapper {
     }
 
     public static byte getStartingScreen() {
-        return getStartingScreen(Settings.getCurrentStartingLocation(), isFrontsideStart());
+        return getStartingScreen(LocationCoordinateMapper.getStartingZone());
     }
 
-    public static byte getStartingScreen(int zone, boolean front) {
+    public static byte getStartingScreen(int zone) {
         if(zone == 0) {
             return 0;
         }
@@ -157,7 +154,7 @@ public final class LocationCoordinateMapper {
     }
 
     public static short getStartingX() {
-        return getStartingX(Settings.getCurrentStartingLocation(), isFrontsideStart());
+        return getStartingX(LocationCoordinateMapper.getStartingZone(), isFrontsideStart());
     }
 
     public static short getStartingX(int zone, boolean front) {
@@ -186,7 +183,7 @@ public final class LocationCoordinateMapper {
             return 40;
         }
         if(zone == 7) {
-            return front ? (short)100 : 180;
+            return front ? (short)740 : 820;
         }
         if(zone == 8) {
             return 440;
@@ -198,18 +195,21 @@ public final class LocationCoordinateMapper {
             return 300;
         }
         if(zone == 11) {
-            return 160;
+            return 800;
         }
         if(zone == 12) {
             return 220;
         }
         if(zone == 13) {
-            return 300;
+            return 940;
         }
         if(zone == 14) {
             return 140;
         }
         if(zone == 15 || zone == 16) {
+            if(LocationCoordinateMapper.getStartingZone() == 16) {
+                return 200;
+            }
             return 340;
         }
         if(zone == 17) {
@@ -225,7 +225,7 @@ public final class LocationCoordinateMapper {
     }
 
     public static short getStartingY() {
-        return getStartingY(Settings.getCurrentStartingLocation(), isFrontsideStart());
+        return getStartingY(LocationCoordinateMapper.getStartingZone(), isFrontsideStart());
     }
 
     public static short getStartingY(int zone, boolean front) {
@@ -278,6 +278,9 @@ public final class LocationCoordinateMapper {
             return 392;
         }
         if(zone == 15 || zone == 16) {
+            if(LocationCoordinateMapper.getStartingZone() == 16) {
+                return 392;
+            }
             return 312;
         }
         if(zone == 17) {
@@ -365,10 +368,7 @@ public final class LocationCoordinateMapper {
 
     public static boolean isFrontsideStart() {
         int zone = Settings.getCurrentStartingLocation();
-        if(zone >= 0 && zone <= 6) {
-            return true;
-        }
-        if(zone == 8 || zone == 9) {
+        if(zone >= 0 && zone <= 9) {
             return true;
         }
         if(zone == 21) {
@@ -448,24 +448,10 @@ public final class LocationCoordinateMapper {
         }
     }
 
-    public static String getStartingScreenName() {
-        int zone = Settings.getCurrentStartingLocation();
-        if(zone == 1) {
-            return "Village of Departure";
-        }
-        if(zone == 5) {
-            return "Hall of Worship";
-        }
-        if(zone == 10) {
-            return "Chapel";
-        }
-        if(zone == 21) {
-            return "Gate of Time (Surface)";
-        }
-        return "Village of Departure";
-    }
-
     public static String getStartingZoneName(int zone) {
+        if(zone == 0) {
+            return "Gate of Guidance";
+        }
         if(zone == 1) {
             return "Surface";
         }
@@ -521,14 +507,44 @@ public final class LocationCoordinateMapper {
     }
 
     public static Integer getStartingZoneFromName(String name) {
+        if("Gate of Guidance".equals(name) || "Guidance".equals(name)) {
+            return 0;
+        }
         if("Surface".equals(name)) {
             return 1;
+        }
+        if("Mausoleum of the Giants".equals(name) || "Mausoleum".equals(name)) {
+            return 2;
         }
         if("Inferno Cavern".equals(name) || "Inferno".equals(name)) {
             return 5;
         }
+        if(name.contains("Twin ")) {
+            if(name.toLowerCase().contains("back")) {
+                return -7;
+            }
+            return 7;
+        }
+        if("Twin Labyrinths (Front)".equals(name) || "Twin Labyrinths Front".equals(name) || "Twin Labs".equals(name)) {
+            return 7;
+        }
+        if("Endless Corridor".equals(name) || "Endless".equals(name)) {
+            return 8;
+        }
         if("Gate of Illusion".equals(name) || "Illusion".equals(name)) {
             return 10;
+        }
+        if("Graveyard of the Giants".equals(name) || "Graveyard".equals(name)) {
+            return 11;
+        }
+        if("Tower of the Goddess".equals(name) || "Goddess".equals(name)) {
+            return 13;
+        }
+        if("Tower of Ruin".equals(name) || "Ruin".equals(name)) {
+            return 14;
+        }
+        if("Chamber of Birth".equals(name) || "Birth".equals(name)) {
+            return 16;
         }
         if("Gate of Time (Surface)".equals(name) || "Gate of Time Surface".equals(name) || "Surface of Time".equals(name) || "Retro Surface".equals(name) || "Retrosurface".equals(name)) {
             return 21;
@@ -601,18 +617,45 @@ public final class LocationCoordinateMapper {
     }
 
     public static String getStartingLocation() {
-        int zone = getStartingZone();
+        int zone = Settings.getCurrentStartingLocation();
+        if(zone == 0) {
+            return "Location: Gate of Guidance [Main]";
+        }
         if(zone == 1) {
             return "Location: Surface [Main]";
         }
+        if(zone == 2) {
+            return "Location: Mausoleum of the Giants";
+        }
         if(zone == 4) {
-            return "Location: Spring in the Sky";
+            return "Location: Spring in the Sky [Main]";
         }
         if(zone == 5) {
             return "Location: Inferno Cavern [Main]";
         }
+        if(zone == 7) {
+            return "Location: Twin Labyrinths [Poison 1]";
+        }
+        if(zone == -7) {
+            return "Location: Twin Labyrinths [Lower]";
+        }
+        if(zone == 8) {
+            return "Location: Endless Corridor [1F]";
+        }
         if(zone == 10) {
             return "Location: Gate of Illusion [Grail]";
+        }
+        if(zone == 11) {
+            return "Location: Graveyard of the Giants [Grail]";
+        }
+        if(zone == 13) {
+            return "Location: Tower of the Goddess [Grail]";
+        }
+        if(zone == 14) {
+            return "Location: Tower of Ruin [Grail]";
+        }
+        if(zone == 16) {
+            return "Location: Chamber of Birth [West Entrance]";
         }
         if(zone == 21) {
             return "Location: Gate of Time [Surface]";

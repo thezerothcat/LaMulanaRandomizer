@@ -2,6 +2,7 @@ package lmr.randomizer;
 
 import lmr.randomizer.random.BossDifficulty;
 import lmr.randomizer.random.ShopRandomizationEnum;
+import lmr.randomizer.update.LocationCoordinateMapper;
 
 import javax.swing.*;
 import java.io.File;
@@ -55,6 +56,7 @@ public final class Settings {
     private boolean automaticTranslations;
     private boolean ushumgalluAssist;
     private boolean bossSpecificAnkhJewels;
+    private boolean blockPushingRequiresGlove;
 
     private boolean alternateMotherAnkh;
     private boolean automaticMantras;
@@ -116,6 +118,7 @@ public final class Settings {
         randomizeBacksideDoors = false;
         randomizeNonBossDoors = false;
         bossSpecificAnkhJewels = false;
+        blockPushingRequiresGlove = false;
         removeSpaulder = false;
         replaceMapsWithWeights = false;
         automaticHardmode = false;
@@ -558,6 +561,17 @@ public final class Settings {
         singleton.bossSpecificAnkhJewels = bossSpecificAnkhJewels;
     }
 
+    public static boolean isBlockPushingRequiresGlove() {
+        return singleton.blockPushingRequiresGlove;
+    }
+
+    public static void setBlockPushingRequiresGlove(boolean blockPushingRequiresGlove, boolean update) {
+        if(update && blockPushingRequiresGlove != singleton.blockPushingRequiresGlove) {
+            singleton.changed = true;
+        }
+        singleton.blockPushingRequiresGlove = blockPushingRequiresGlove;
+    }
+
     public static boolean isCoinChestGraphics() {
         return singleton.coinChestGraphics;
     }
@@ -593,6 +607,12 @@ public final class Settings {
     public static Set<String> getStartingItemsIncludingCustom() {
         Set<String> startingItems = new HashSet<>(singleton.startingItems);
         startingItems.addAll(DataFromFile.getCustomPlacementData().getStartingItems());
+        if(Settings.getCurrentStartingLocation() == 7) {
+            startingItems.add("Twin Statue");
+        }
+        if(LocationCoordinateMapper.getStartingZone() == 13) {
+            startingItems.add("Plane Model");
+        }
         return startingItems;
     }
 
@@ -957,6 +977,7 @@ public final class Settings {
         int bossDifficulty = singleton.bossDifficulty.ordinal();
 
         int booleanSettings2 = 0;
+        booleanSettings2 |= processBooleanFlag.apply(singleton.blockPushingRequiresGlove, 4);
         booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeGraphics, 3);
         booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeEnemies, 2);
         booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeBosses, 1);
@@ -1041,6 +1062,7 @@ public final class Settings {
         int maxRandomRemovedItems = Integer.parseInt(parts[9],16);
 
         int booleanSettingsFlag2 = Integer.parseInt(parts[10], 16);
+        singleton.blockPushingRequiresGlove = getBoolFlagFromInt.apply(booleanSettingsFlag2, 4);
         singleton.randomizeGraphics = getBoolFlagFromInt.apply(booleanSettingsFlag2, 3);
         singleton.randomizeEnemies = getBoolFlagFromInt.apply(booleanSettingsFlag2, 2);
         singleton.randomizeBosses = getBoolFlagFromInt.apply(booleanSettingsFlag2, 1);
