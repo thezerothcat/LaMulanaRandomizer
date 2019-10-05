@@ -51,8 +51,14 @@ public class SwimsuitRandomizationPanel extends JPanel {
 
     public void updateSettings() {
         if("NONRANDOM".equals(swimsuitItem.getSelection().getActionCommand())) {
-            Settings.setRandomizeForbiddenTreasure(false, true);
-            Settings.setHTFullRandom(false, true);
+            if(Settings.isHalloweenMode()) {
+                Settings.setRandomizeForbiddenTreasure(true, false);
+                Settings.setHTFullRandom(false, false);
+            }
+            else {
+                Settings.setRandomizeForbiddenTreasure(false, true);
+                Settings.setHTFullRandom(false, true);
+            }
         }
         else if("MAPONLY".equals(swimsuitItem.getSelection().getActionCommand())) {
             Settings.setRandomizeForbiddenTreasure(true, true);

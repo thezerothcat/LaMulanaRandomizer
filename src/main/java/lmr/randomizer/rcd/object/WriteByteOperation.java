@@ -8,6 +8,15 @@ public class WriteByteOperation {
     private int value;
     private ByteOp op;
 
+    public WriteByteOperation() {
+    }
+
+    public WriteByteOperation(int index, ByteOp op, int value) {
+        this.index = index;
+        this.op = op;
+        this.value = value;
+    }
+
     public int getIndex() {
         return index;
     }

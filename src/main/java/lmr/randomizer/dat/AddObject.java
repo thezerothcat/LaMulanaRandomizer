@@ -6,12 +6,13 @@ import lmr.randomizer.Settings;
 import lmr.randomizer.Translations;
 import lmr.randomizer.dat.shop.BlockCmdSingle;
 import lmr.randomizer.dat.shop.BlockStringData;
+import lmr.randomizer.dat.shop.MasterNpcBlock;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.GameObjectId;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
-import java.util.*;
+import java.util.List;
 
 public final class AddObject {
     private AddObject() { }
@@ -42,6 +43,54 @@ public final class AddObject {
         mulbrukScreen = null;
         littleBrotherShopScreen = null;
         dimensionalExitScreen = null;
+    }
+
+    /**
+     * Convenience for adding a timer object to any screen.
+     * @param screen to add the timer object to
+     * @param tests tests to put on the timer object
+     * @param updates updates the timer object should make when all of its tests pass
+     */
+    public static void addTimer(Screen screen, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x0b);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.setX(-1);
+        obj.setY(-1);
+
+        obj.getTestByteOperations().addAll(tests);
+        obj.getWriteByteOperations().addAll(updates);
+        screen.getObjects().add(0, obj);
+    }
+
+    /**
+     * Add a quicksave object (not active during the escape, and not if you don't have grail)
+     * @param screen to add the object to
+     * @param x position of the quicksave object
+     * @param y position of the quicksave object
+     * @param test existence test for the quicksave
+     * @param update update to make when the quicksave happens
+     */
+    public static void addAutosave(Screen screen, int x, int y, TestByteOperation test, WriteByteOperation update) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x9f);
+        obj.getArgs().add((short)918);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)1);
+        obj.getArgs().add((short)1);
+        obj.getArgs().add((short)1);
+        obj.getArgs().add((short)1);
+        obj.getArgs().add((short)506);
+        obj.getArgs().add((short)280);
+        obj.setX(x);
+        obj.setY(y);
+
+        obj.getTestByteOperations().add(test);
+        obj.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0));
+        obj.getWriteByteOperations().add(update);
+        screen.getObjects().add(obj);
     }
 
     /**
@@ -2358,13 +2407,13 @@ public final class AddObject {
         obj.getTestByteOperations().add(testByteOperation);
 
         testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(847);
+        testByteOperation.setIndex(0x34f);
         testByteOperation.setOp(ByteOp.FLAG_EQUALS);
         testByteOperation.setValue((byte)0);
         obj.getTestByteOperations().add(testByteOperation);
 
         WriteByteOperation writeByteOperation = new WriteByteOperation();
-        writeByteOperation.setIndex(847);
+        writeByteOperation.setIndex(0x34f);
         writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
         writeByteOperation.setValue((byte)1);
         obj.getWriteByteOperations().add(writeByteOperation);
@@ -2604,6 +2653,291 @@ public final class AddObject {
         screen.getObjects().add(warp);
 
         return warp;
+    }
+
+    public static void addEscapeTimer(Screen screen, int beginConditionFlag, int beginConditionValue) {
+        // The escape timer itself
+        GameObject escapeTimer = new GameObject(screen);
+        escapeTimer.setId((short) 0xc5);
+        escapeTimer.setX(-1);
+        escapeTimer.setY(-1);
+
+        int timerMinutes;
+        int timerSeconds;
+        if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+            timerMinutes = 10;
+            timerSeconds = 31;
+        }
+        else {
+            timerMinutes = Settings.isRandomizeTransitionGates() ? 10 : 5;
+            timerSeconds = 0;
+        }
+
+        escapeTimer.getArgs().add((short)264);
+        escapeTimer.getArgs().add((short)20);
+        escapeTimer.getArgs().add((short)timerMinutes);
+        escapeTimer.getArgs().add((short)timerSeconds);
+        escapeTimer.getArgs().add((short)0);
+        escapeTimer.getArgs().add((short)10);
+        escapeTimer.getArgs().add((short)-1);
+        escapeTimer.getArgs().add((short)-1);
+        escapeTimer.getArgs().add((short)-1);
+        escapeTimer.getArgs().add((short)1000);
+        escapeTimer.getArgs().add((short)1001);
+        escapeTimer.getArgs().add((short)1002);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x382);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)1);
+        escapeTimer.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x403);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        escapeTimer.getTestByteOperations().add(testByteOperation);
+
+        screen.getObjects().add(0, escapeTimer);
+
+        // Escape screen shake
+        GameObject escapeScreenShake = new GameObject(screen);
+        escapeScreenShake.setId((short) 0xc7);
+        escapeScreenShake.setX(-1);
+        escapeScreenShake.setY(-1);
+
+        escapeScreenShake.getArgs().add((short)-1);
+        escapeScreenShake.getArgs().add((short)0);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x382);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)1);
+        escapeScreenShake.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x403);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        escapeScreenShake.getTestByteOperations().add(testByteOperation);
+
+        screen.getObjects().add(0, escapeScreenShake);
+
+        // Disable grail for escape
+        GameObject grailToggle = new GameObject(screen);
+        grailToggle.setId((short)0xb7);
+        grailToggle.setX(-1);
+        grailToggle.setY(-1);
+        grailToggle.getArgs().add((short)0);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x382);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)1);
+        grailToggle.getTestByteOperations().add(testByteOperation);
+
+        screen.getObjects().add(0, grailToggle);
+
+        GameObject beginEscapeTestTimer = new GameObject(screen);
+        beginEscapeTestTimer.setId((short)0x0b);
+        beginEscapeTestTimer.setX(-1);
+        beginEscapeTestTimer.setY(-1);
+        beginEscapeTestTimer.getArgs().add((short)0);
+        beginEscapeTestTimer.getArgs().add((short)0);
+
+        // Count number of NPCs visited
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(beginConditionFlag);
+        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+        testByteOperation.setValue((byte)beginConditionValue);
+        beginEscapeTestTimer.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x382);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        beginEscapeTestTimer.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x382);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)1);
+        beginEscapeTestTimer.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(0, beginEscapeTestTimer);
+
+        GameObject testTimer = new GameObject(screen);
+        testTimer.setId((short)0x0b);
+        testTimer.setX(-1);
+        testTimer.setY(-1);
+        testTimer.getArgs().add((short)0);
+        testTimer.getArgs().add((short)2);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x382);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)1);
+        testTimer.getTestByteOperations().add(testByteOperation);
+
+        testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(0x403);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)0);
+        testTimer.getTestByteOperations().add(testByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0x403);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)1);
+        testTimer.getWriteByteOperations().add(writeByteOperation);
+
+        screen.getObjects().add(0, testTimer);
+    }
+
+    public static void addNpcConversationTimer(Screen screen, int flag) {
+        GameObject conversationTimer = new GameObject(screen);
+        conversationTimer.setId((short)0x0b);
+        conversationTimer.setX(-1);
+        conversationTimer.setY(-1);
+        conversationTimer.getArgs().add((short)0);
+        conversationTimer.getArgs().add((short)0);
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(flag);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)1);
+        conversationTimer.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(flag);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue((byte)2);
+        conversationTimer.getWriteByteOperations().add(writeByteOperation);
+
+        writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(0xaca);
+        writeByteOperation.setOp(ByteOp.ADD_FLAG);
+        writeByteOperation.setValue((byte)1);
+        conversationTimer.getWriteByteOperations().add(writeByteOperation);
+
+        if(flag == 0xabe) {
+            // Mr. Slushfund
+            writeByteOperation = new WriteByteOperation();
+            writeByteOperation.setIndex(46);
+            writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+            writeByteOperation.setValue((byte)1);
+            conversationTimer.getWriteByteOperations().add(writeByteOperation);
+        }
+
+        screen.getObjects().add(0, conversationTimer);
+    }
+
+    public static void addGhostSpawner(Screen screen) {
+        GameObject ghostSpawner = new GameObject(screen);
+        ghostSpawner.setId((short)0x1f);
+        ghostSpawner.setX((short)-1);
+        ghostSpawner.setY((short)-1);
+        ghostSpawner.getArgs().add((short)((screen.getZoneIndex() == 23 || screen.getZoneIndex() == 24) ? 240 : 120)); // Spawning period
+        ghostSpawner.getArgs().add((short)3); // Maximum Ghosts
+        ghostSpawner.getArgs().add((short)0); // UNKNOWN - bugged?
+        if(screen.getZoneIndex() == 23) {
+            ghostSpawner.getArgs().add((short)0); // Speed AND Drop-type
+        }
+        else {
+            ghostSpawner.getArgs().add((short)1); // Speed AND Drop-type
+        }
+        ghostSpawner.getArgs().add((short)1); // Health
+        ghostSpawner.getArgs().add((short)2); // Damage AND Soul
+        ghostSpawner.getArgs().add((short)3); // UNKNOWN - bugged?
+        screen.getObjects().add(ghostSpawner);
+    }
+
+    public static void addGhostLord(Screen screen) {
+        GameObject ghostLord = new GameObject(screen);
+        ghostLord.setId((short)0x20);
+        ghostLord.setX((short)300);
+        ghostLord.setY((short)220);
+
+//        enemy.getArgs().add((short)1); // Drop type - coins
+//        enemy.getArgs().add((short)(random.nextInt(10) + 1)); // Amount
+//        enemy.getArgs().add((short)(random.nextInt(4) + 1)); // Speed (up to 4 is allowed for this mode)
+//        enemy.getArgs().add((short)(random.nextInt(4) + 5)); // Health
+//        enemy.getArgs().add((short)(random.nextInt(8) + 3)); // Damage
+//        enemy.getArgs().add((short)5); // Soul
+        ghostLord.getArgs().add((short)1); // Drop type - coins
+        ghostLord.getArgs().add((short)30); // Amount
+        ghostLord.getArgs().add((short)0); // Speed (up to 4 is allowed for this mode)
+        ghostLord.getArgs().add((short)400); // Health
+        ghostLord.getArgs().add((short)5); // Damage
+        ghostLord.getArgs().add((short)20); // Soul
+        screen.getObjects().add(ghostLord);
+    }
+
+    public static void addHTExitDoor(Screen screen, int x, int y) {
+        GameObject htExitDoor = new GameObject(screen);
+
+        htExitDoor.setId((short) 0x98);
+        htExitDoor.setX(220);
+        htExitDoor.setY(80);
+
+        htExitDoor.getArgs().add((short)0);
+        htExitDoor.getArgs().add((short)23);
+        htExitDoor.getArgs().add((short)0);
+        htExitDoor.getArgs().add((short)0);
+        htExitDoor.getArgs().add((short)300);
+        htExitDoor.getArgs().add((short)332);
+
+        htExitDoor.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+
+        screen.getObjects().add(htExitDoor);
+
+        GameObject htExitDoorGraphic = new GameObject(screen);
+        htExitDoorGraphic.setId((short) 0x93);
+        htExitDoorGraphic.setX(200);
+        htExitDoorGraphic.setY(40);
+
+        htExitDoorGraphic.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+
+        htExitDoorGraphic.getArgs().add((short)-1);
+        htExitDoorGraphic.getArgs().add((short)0); // 0=mapxx_1.png 1=evegxx.png 2=00prof.png 3=02comenemy.png 4=6=00item.png 5=01menu.png 6=4=00item.png Default:01effect.png
+        htExitDoorGraphic.getArgs().add((short)560);
+        htExitDoorGraphic.getArgs().add((short)40);
+        htExitDoorGraphic.getArgs().add((short)80);
+        htExitDoorGraphic.getArgs().add((short)80);
+        htExitDoorGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        htExitDoorGraphic.getArgs().add((short)0); // Animation frames
+        htExitDoorGraphic.getArgs().add((short)1); // Pause frames
+        htExitDoorGraphic.getArgs().add((short)0); // Repeat count (<1 is forever)
+        htExitDoorGraphic.getArgs().add((short)0); // Hittile to fill with
+        htExitDoorGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        htExitDoorGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        htExitDoorGraphic.getArgs().add((short)0); // Cycle colors t/f
+        htExitDoorGraphic.getArgs().add((short)0); // Alpha/frame
+        htExitDoorGraphic.getArgs().add((short)255); // Max alpha
+        htExitDoorGraphic.getArgs().add((short)0); // R/frame
+        htExitDoorGraphic.getArgs().add((short)0); // Max R
+        htExitDoorGraphic.getArgs().add((short)0); // G/frame
+        htExitDoorGraphic.getArgs().add((short)0); // Max G
+        htExitDoorGraphic.getArgs().add((short)0); // B/frame
+        htExitDoorGraphic.getArgs().add((short)0); // Max B
+        htExitDoorGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        htExitDoorGraphic.getArgs().add((short)1); // not0?
+        screen.getObjects().add(htExitDoorGraphic);
+    }
+
+    public static void addLaserWall(Screen screen, int x, int y) {
+        GameObject laserWall = new GameObject(screen);
+        laserWall.setId((short) 0xab);
+        laserWall.setX(x);
+        laserWall.setY(y);
+
+        laserWall.getArgs().add((short)1); // % or hp
+        laserWall.getArgs().add((short)1); // damage
+
+        laserWall.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+        laserWall.getTestByteOperations().add(new TestByteOperation(0x7f4, ByteOp.FLAG_GT, 0));
+
+        screen.getObjects().add(laserWall);
     }
 
 //    public static void addHadoukenTurtle(Screen screen, int x, int y) {
@@ -4243,6 +4577,344 @@ public final class AddObject {
         shopBlock.setString(blockStringData, 17);
         blocks.add(shopBlock);
         return shopBlock;
+    }
+
+    public static int addNpcBlock(List<Block> blocks, int templateBlockIndex, int conversationFlagIndex) {
+        Block templateBlock = blocks.get(templateBlockIndex);
+        if(templateBlock instanceof MasterNpcBlock) {
+            Block halloweenBlock = new Block(blocks.size());
+            halloweenBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
+            List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.text1"));
+            for (Short shortCharacter : stringCharacters) {
+                halloweenBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            }
+            halloweenBlock.getBlockContents().add(new BlockItemData((short)0x0042, (short)84)); // Secret Treasure of Life
+            halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)conversationFlagIndex, (short)1));
+            halloweenBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+            stringCharacters = FileUtils.stringToData(Translations.getText(templateBlockIndex == 689 ? "event.halloween.fraud" : "event.halloween.text2"));
+            for (Short shortCharacter : stringCharacters) {
+                halloweenBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            }
+
+            halloweenBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
+
+            blocks.add(halloweenBlock);
+
+            // Build master block referencing this
+            MasterNpcBlock masterNpcBlock = new MasterNpcBlock((MasterNpcBlock)templateBlock, blocks.size());
+            masterNpcBlock.setTextCard(new BlockCmdSingle((short)halloweenBlock.getBlockNumber()));
+            blocks.add(masterNpcBlock);
+            return masterNpcBlock.getBlockNumber();
+        }
+        return 0;
+    }
+
+    public static int addNpcCountBlock(List<Block> blocks, int currentNpcs, int maxNpcs) {
+        Block npcCountBlock = new Block(blocks.size());
+        List<Short> stringCharacters = FileUtils.stringToData(String.format(Translations.getText("event.halloween.npcCount"), currentNpcs, maxNpcs));
+        for (Short shortCharacter : stringCharacters) {
+            npcCountBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        blocks.add(npcCountBlock);
+        return npcCountBlock.getBlockNumber();
+    }
+
+    public static int addNpcHintBlock(List<Block> blocks, int hintNumber) {
+        Block npcCountBlock = new Block(blocks.size());
+        String hintText = getHintText(hintNumber);
+        String[] hintTexts = hintText.split("%s");
+        List<Short> stringCharacters;
+        if(hintTexts.length > 0) {
+            stringCharacters = FileUtils.stringToData(hintTexts[0]);
+            for (Short shortCharacter : stringCharacters) {
+                npcCountBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            }
+        }
+        npcCountBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0x32, (short)0));
+        stringCharacters = FileUtils.stringToData(getLocationText(hintNumber));
+        for (Short shortCharacter : stringCharacters) {
+            npcCountBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        npcCountBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+
+        stringCharacters = FileUtils.stringToData(hintTexts[hintTexts.length > 0 ? 1 : 0]);
+        for (Short shortCharacter : stringCharacters) {
+            npcCountBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+
+        blocks.add(npcCountBlock);
+        return npcCountBlock.getBlockNumber();
+    }
+
+    public static int addMulbrukHTBlock(List<Block> blocks) {
+        Block mulbrukHTBlock = new Block(blocks.size());
+        mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
+
+        List<Short> stringCharacters = FileUtils.stringToData("event.halloween.htMulbruk1");
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)0x3bb, (short)1)); // Unlock HT
+        mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)0xaac, (short)3)); // Update flag so the conversation doesn't repeat.
+        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        String textLine = Translations.getText("event.halloween.htMulbruk2");
+        String[] textParts = textLine.split("%s");
+        if(textParts.length > 0) {
+            stringCharacters = FileUtils.stringToData(textParts[0]);
+            for (Short shortCharacter : stringCharacters) {
+                mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            }
+        }
+        mulbrukHTBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x150, (short)0, (short)0x100));
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.halloweenCostume"));
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukHTBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+        stringCharacters = FileUtils.stringToData(textParts[textParts.length > 0 ? 1 : 0]);
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        textLine = Translations.getText("event.halloween.htMulbruk3");
+        textParts = textLine.split("%s");
+        if(textParts.length > 0) {
+            stringCharacters = FileUtils.stringToData(textParts[0]);
+            for (Short shortCharacter : stringCharacters) {
+                mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            }
+        }
+        mulbrukHTBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0x32, (short)0));
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.helloweenTemple"));
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukHTBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+        stringCharacters = FileUtils.stringToData(textParts[textParts.length > 0 ? 1 : 0]);
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        stringCharacters = FileUtils.stringToData("event.halloween.htMulbruk4");
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+        mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0));
+
+        // Allow repeat
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.repeat"));
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        BlockListData repeatCmd = new BlockListData((short)0x004e, (short)1);
+        repeatCmd.getData().add((short)mulbrukHTBlock.getBlockNumber()); // Re-use the same block, since this doesn't really affect much.
+        mulbrukHTBlock.getBlockContents().add(repeatCmd);
+        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.repeat.yes"));
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.repeat.no"));
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        textLine = Translations.getText("event.halloween.htMulbruk5");
+        textParts = textLine.split("%s");
+        if(textParts.length > 0) {
+            stringCharacters = FileUtils.stringToData(textParts[0]);
+            for (Short shortCharacter : stringCharacters) {
+                mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            }
+        }
+        mulbrukHTBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0x32, (short)0));
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.helloweenTemple"));
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukHTBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+        stringCharacters = FileUtils.stringToData(textParts[textParts.length > 0 ? 1 : 0]);
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        blocks.add(mulbrukHTBlock);
+        return mulbrukHTBlock.getBlockNumber();
+    }
+
+    private static String getHintText(int hintNumber) {
+        String peopleText = "";
+        if(hintNumber == 1) {
+            peopleText = String.format(Translations.getText("event.halloween.hintPlural"), Settings.isIncludeHellTempleNPCs() ? 4 : 3);
+        }
+        else if(hintNumber == 2 || hintNumber == 3 || hintNumber == 4
+                || hintNumber == 8 || hintNumber == 9 || hintNumber == 11
+                || hintNumber == 14 || hintNumber == 15 || hintNumber == 16) {
+            peopleText = Translations.getText("event.halloween.hintSingular");
+        }
+        else if(hintNumber == 5 || hintNumber == 6 || hintNumber == 7
+                || hintNumber == 12 || hintNumber == 13 || hintNumber == 17) {
+            peopleText = String.format(Translations.getText("event.halloween.hintPlural"), 2);
+        }
+        else if(hintNumber == 10) {
+            peopleText = String.format(Translations.getText("event.halloween.hintPlural"), 4);
+        }
+
+        return String.format(Translations.getText("event.halloween.hintTemplateMain"), "%s", peopleText);
+    }
+
+    private static String getLocationText(int hintNumber) {
+        if(hintNumber == 1) {
+            return Translations.getText("locations.Surface");
+        }
+        else if(hintNumber == 2) {
+            return Translations.getText("locations.GateofGuidance");
+        }
+        else if(hintNumber == 3) {
+            return Translations.getText("locations.MausoleumoftheGiants");
+        }
+        else if(hintNumber == 4) {
+            return Translations.getText("locations.TempleoftheSun");
+        }
+        else if(hintNumber == 5) {
+            return Translations.getText("locations.SpringintheSky");
+        }
+        else if(hintNumber == 6) {
+            return Translations.getText("locations.InfernoCavern");
+        }
+        else if(hintNumber == 7) {
+            return Translations.getText("locations.ChamberofExtinction");
+        }
+        else if(hintNumber == 8) {
+            return Translations.getText("locations.TwinLabyrinths");
+        }
+        else if(hintNumber == 9) {
+            return Translations.getText("locations.EndlessCorridor");
+        }
+        else if(hintNumber == 10) {
+            return Translations.getText("locations.GateofIllusion");
+        }
+        else if(hintNumber == 11) {
+            return Translations.getText("locations.GraveyardoftheGiants");
+        }
+        else if(hintNumber == 12) {
+            return Translations.getText("locations.TempleofMoonlight");
+        }
+        else if(hintNumber == 13) {
+            return Translations.getText("locations.ToweroftheGoddess");
+        }
+        else if(hintNumber == 14) {
+            return Translations.getText("locations.TowerofRuin");
+        }
+        else if(hintNumber == 15) {
+            return Translations.getText("locations.ChamberofBirth");
+        }
+        else if(hintNumber == 16) {
+            return Translations.getText("locations.DimensionalCorridor");
+        }
+        else if(hintNumber == 17) {
+            return Translations.getText("locations.GateofTime");
+        }
+        return "";
+    }
+
+    public static void addHTSkip(Screen screen, List<Block> blocks) {
+        Block htExplanation = new Block(blocks.size());
+        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.htSkip"));
+        for (Short shortCharacter : stringCharacters) {
+            htExplanation.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        htExplanation.getBlockContents().add(new BlockSingleData((short)0x000a)); // End record
+        BlockListData tabletData = new BlockListData((short)0x004e, (short)2);
+        tabletData.getData().add((short)0); // Language: 0 = English; 1 = La-Mulanese; 2 = Ancient La-Mulanese; 3 = Rosetta Stone
+        tabletData.getData().add((short)0); // Slate: 0 = No image; 1 = use slate00.png; 1 = use slate01.png
+
+        blocks.add(htExplanation);
+
+        GameObject tabletReadable = new GameObject(screen);
+        tabletReadable.setId((short)0x9e);
+        tabletReadable.setX(60);
+        tabletReadable.setY(400);
+
+        tabletReadable.getArgs().add((short)htExplanation.getBlockNumber());
+        tabletReadable.getArgs().add((short)0);
+        tabletReadable.getArgs().add((short)0);
+        tabletReadable.getArgs().add((short)1);
+        tabletReadable.getArgs().add((short)1);
+        tabletReadable.getArgs().add((short)1);
+        tabletReadable.getArgs().add((short)1);
+
+        tabletReadable.getArgs().add((short)1);
+        tabletReadable.getArgs().add((short)1);
+        tabletReadable.getArgs().add((short)0);
+
+        tabletReadable.getArgs().add((short)40);
+        tabletReadable.getArgs().add((short)40);
+
+        screen.getObjects().add(tabletReadable);
+
+        GameObject tabletGraphic = new GameObject(screen);
+        tabletGraphic.setId((short)0x93);
+        tabletGraphic.setX(60);
+        tabletGraphic.setY(400);
+
+        tabletGraphic.getArgs().add((short)-1);
+        tabletGraphic.getArgs().add((short)0); // 0=mapxx_1.png 1=evegxx.png 2=00prof.png 3=02comenemy.png 4=6=00item.png 5=01menu.png 6=4=00item.png Default:01effect.png
+        tabletGraphic.getArgs().add((short)0);
+        tabletGraphic.getArgs().add((short)0);
+        tabletGraphic.getArgs().add((short)40); // dx
+        tabletGraphic.getArgs().add((short)40); // dy
+        tabletGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        tabletGraphic.getArgs().add((short)0); // Animation frames
+        tabletGraphic.getArgs().add((short)1); // Pause frames
+        tabletGraphic.getArgs().add((short)0); // Repeat count (<1 is forever)
+        tabletGraphic.getArgs().add((short)0); // Hittile to fill with
+        tabletGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        tabletGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        tabletGraphic.getArgs().add((short)0); // Cycle colors t/f
+        tabletGraphic.getArgs().add((short)0); // Alpha/frame
+        tabletGraphic.getArgs().add((short)255); // Max alpha
+        tabletGraphic.getArgs().add((short)0); // R/frame
+        tabletGraphic.getArgs().add((short)0); // Max R
+        tabletGraphic.getArgs().add((short)0); // G/frame
+        tabletGraphic.getArgs().add((short)0); // Max G
+        tabletGraphic.getArgs().add((short)0); // B/frame
+        tabletGraphic.getArgs().add((short)0); // Max B
+        tabletGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        tabletGraphic.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(tabletGraphic);
+
+        GameObject htSkipDais = new GameObject(screen);
+        htSkipDais.setId((short)0x08);
+        htSkipDais.setX(60);
+        htSkipDais.setY(420);
+
+        htSkipDais.getArgs().add((short)0); // (0-1) Light red dust or pink dust
+        htSkipDais.getArgs().add((short)60); // (1-270) Falling time (in frames?)
+        htSkipDais.getArgs().add((short)-1); // (-1-50) RiseFlag -1 Never Rise. 0 Always Rise
+        htSkipDais.getArgs().add((short)2); // (0-2) Image
+        htSkipDais.getArgs().add((short)0); // (0) (unused?)
+        htSkipDais.getArgs().add((short)860); // (180-860) ImageX
+        htSkipDais.getArgs().add((short)60); // (0-100) ImageY
+        htSkipDais.getArgs().add((short)1); // (0-1) Width 0 = Half-width, 1 = Full-width
+        htSkipDais.getArgs().add((short)10); // (0-10) (probably unused height)
+        htSkipDais.getArgs().add((short)60); // (0-60) RiseSpeed
+
+        htSkipDais.getTestByteOperations().add(new TestByteOperation(0x70d, ByteOp.FLAG_EQUALS, 0));
+        htSkipDais.getWriteByteOperations().add(new WriteByteOperation(0x70d, ByteOp.ASSIGN_FLAG, 1));
+
+        screen.getObjects().add(htSkipDais);
     }
 
     /**

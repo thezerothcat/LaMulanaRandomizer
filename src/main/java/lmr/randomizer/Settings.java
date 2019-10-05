@@ -38,6 +38,7 @@ public final class Settings {
     private boolean randomizeForbiddenTreasure;
     private boolean htFullRandom;
     private boolean randomizeDracuetShop;
+    private boolean includeHellTempleNPCs;
     private boolean randomizeCoinChests;
     private boolean randomizeTrapItems;
     private boolean randomizeEscapeChest;
@@ -66,6 +67,7 @@ public final class Settings {
     private boolean randomizeBosses;
     private boolean randomizeEnemies;
     private boolean randomizeGraphics;
+
 
     private boolean removeSpaulder;
 
@@ -104,6 +106,7 @@ public final class Settings {
         randomizeForbiddenTreasure = false;
         htFullRandom = false;
         randomizeDracuetShop = false;
+        includeHellTempleNPCs = false;
         randomizeCoinChests = true;
         randomizeTrapItems = true;
         randomizeEscapeChest = false;
@@ -787,6 +790,21 @@ public final class Settings {
 //        return false;
 //    }
 
+    public static boolean isHalloweenMode() {
+        return true;
+    }
+
+    public static boolean isIncludeHellTempleNPCs() {
+        return singleton.includeHellTempleNPCs;
+    }
+
+    public static void setIncludeHellTempleNPCs(boolean includeHellTempleNPCs, boolean update) {
+        if(update && includeHellTempleNPCs != singleton.includeHellTempleNPCs) {
+            singleton.changed = true;
+        }
+        singleton.includeHellTempleNPCs = includeHellTempleNPCs;
+    }
+
     public static boolean isAlternateMotherAnkh() {
         return singleton.alternateMotherAnkh || DataFromFile.getCustomPlacementData().isAlternateMotherAnkh();
     }
@@ -977,6 +995,7 @@ public final class Settings {
         int bossDifficulty = singleton.bossDifficulty.ordinal();
 
         int booleanSettings2 = 0;
+        booleanSettings2 |= processBooleanFlag.apply(singleton.includeHellTempleNPCs, 5);
         booleanSettings2 |= processBooleanFlag.apply(singleton.blockPushingRequiresGlove, 4);
         booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeGraphics, 3);
         booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeEnemies, 2);
@@ -1062,6 +1081,7 @@ public final class Settings {
         int maxRandomRemovedItems = Integer.parseInt(parts[9],16);
 
         int booleanSettingsFlag2 = Integer.parseInt(parts[10], 16);
+        singleton.includeHellTempleNPCs = getBoolFlagFromInt.apply(booleanSettingsFlag2, 5);
         singleton.blockPushingRequiresGlove = getBoolFlagFromInt.apply(booleanSettingsFlag2, 4);
         singleton.randomizeGraphics = getBoolFlagFromInt.apply(booleanSettingsFlag2, 3);
         singleton.randomizeEnemies = getBoolFlagFromInt.apply(booleanSettingsFlag2, 2);

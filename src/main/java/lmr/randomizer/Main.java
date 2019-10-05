@@ -235,6 +235,11 @@ public class Main {
 
             Settings.saveSettings();
 
+            if(Settings.isHalloweenMode()) {
+                CustomItemPlacement customItemPlacement = new CustomItemPlacement("xmailer.exe", "Provocative Bathing Suit", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+            }
+
             progressDialog.updateProgress(10, Translations.getText("setup.backup"));
 
             if(!backupRcd()) {
@@ -256,7 +261,7 @@ public class Main {
                     protected Void doInBackground() throws Exception {
                         progressDialog.setLocationRelativeTo(f);
                         try {
-                            doTheThing(progressDialog);
+                            doTheThing(progressDialog, f);
                             mainPanel.rerollRandomSeed();
                         }
                         catch (Exception ex) {
@@ -471,6 +476,36 @@ public class Main {
                         "Starting without a weapon is not currently enabled",
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
+            }
+            if(Settings.isHalloweenMode()){
+                if(Settings.isRequireFullAccess()) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("The setting \"%s\" cannot be used with this mode",
+                                    Translations.getText("logic.requireFullAccess.short")),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(!Settings.isRandomizeEnemies()) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("The setting \"%s\" is required for this mode",
+                                    Translations.getText("enemies.randomizeEnemies")),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(!Settings.isRandomizeStartingLocation()) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("The setting \"%s\" is required for this mode",
+                                    Translations.getText("randomization.randomizeStartingLocation")),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(Settings.getEnabledDamageBoosts().contains("Enemy")) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("The setting \"%s\" cannot be used with this mode",
+                                    Translations.getText("dboost.Enemy")),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
             }
             if(Settings.isRandomizeEnemies() && Settings.getEnabledDamageBoosts().contains("Enemy")) {
                 JOptionPane.showMessageDialog(this,
@@ -840,6 +875,15 @@ public class Main {
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
+
+                if(Settings.isHalloweenMode() && customRemovedItem.equals("Provocative Bathing Suit")) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("Custom placement of \"%s\" cannot be used with this mode",
+                                    Translations.getText("items.ProvocativeBathingSuit")),
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
                 if(!isValidContents(customRemovedItem)) {
                     JOptionPane.showMessageDialog(randomizerUI,
                             "Removed item not valid: " + customRemovedItem,
@@ -851,6 +895,14 @@ public class Main {
                 if (!isValidContents(customStartingItem)) {
                     JOptionPane.showMessageDialog(randomizerUI,
                             "Starting item not valid: " + customStartingItem,
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
+                if(Settings.isHalloweenMode() && customStartingItem.equals("Provocative Bathing Suit")) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("Custom placement of \"%s\" cannot be used with this mode",
+                                    Translations.getText("items.ProvocativeBathingSuit")),
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
@@ -892,6 +944,13 @@ public class Main {
                         && !customItemPlacement.getContents().endsWith(" Ammo")) {
                     JOptionPane.showMessageDialog(randomizerUI,
                             "Item placed in multiple locations: " + customItemPlacement.getContents(),
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(Settings.isHalloweenMode() && customItemPlacement.getContents().equals("Provocative Bathing Suit")) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("Custom placement of \"%s\" cannot be used with this mode",
+                                    Translations.getText("items.ProvocativeBathingSuit")),
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
@@ -1047,6 +1106,7 @@ public class Main {
                     }
                 }
                 if(Settings.isRandomizeStartingLocation() && location.startsWith(DataFromFile.CUSTOM_SHOP_NAME)) {
+                    // Assumes random starting location that isn't the Surface. // todo: should probably just ban this in general
                     return true;
                 }
             }
@@ -1102,7 +1162,7 @@ public class Main {
         }
 
         private boolean isNonBossDoor(String door) {
-            return !door.endsWith("8") && !door.endsWith("9");
+            return door.endsWith("8") || door.endsWith("9");
         }
 
         private boolean isValidTransitionDirection(String transitionTarget, String transitionDestination) {
@@ -1140,7 +1200,7 @@ public class Main {
         }
     }
 
-    protected static void doTheThing(ProgressDialog dialog) throws Exception {
+    protected static void doTheThing(ProgressDialog dialog, Frame f) throws Exception {
         FileUtils.log(String.format("Shuffling items for seed %s", Settings.getStartingSeed()));
         FileUtils.log("Settings string: " + Settings.generateShortString());
         if(DataFromFile.getCustomPlacementData().isCustomized()) {
@@ -1369,6 +1429,13 @@ public class Main {
 //                if(Settings.isRandomizeMantras()) {
 //                    GameDataTracker.randomizeMantras(random);
 //                }
+                if(Settings.isHalloweenMode()) {
+                    GameDataTracker.replaceNightSurfaceWithSurface(rcdData);
+                    if(Settings.isIncludeHellTempleNPCs()) {
+                        GameDataTracker.addHTSkip(rcdData, datInfo);
+                    }
+                }
+
                 FileUtils.logFlush("Writing rcd file");
                 RcdWriter.writeRcd(rcdData);
 
@@ -1383,6 +1450,13 @@ public class Main {
                 }
 
                 FileUtils.updateGraphicsFiles(); // Always want to update graphics files, for backup Shrine door and possibly other things.
+                if(Settings.isHalloweenMode()) {
+                    if(!FileUtils.updateGraphicsFilesForHalloween()) {
+                        JOptionPane.showMessageDialog(f,
+                                Translations.getText("Unable to create Halloween graphics"),
+                                "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
 
                 FileUtils.logFlush("Copying settings file");
                 File settingsFile = new File("randomizer-config.txt");
@@ -1486,7 +1560,7 @@ public class Main {
         else {
             startingNodes.add("Setting: Nonrandom Transitions");
         }
-        if(!LocationCoordinateMapper.isSurfaceStart()) {
+        if(!LocationCoordinateMapper.isSurfaceStart() && Settings.getCurrentStartingLocation() != 23 && Settings.getCurrentStartingLocation() != 24) {
             startingNodes.add("Setting: Alternate Start");
         }
         startingNodes.add(LocationCoordinateMapper.isFrontsideStart() ? "Setting: Frontside Start" : "Setting: Backside Start");
@@ -1496,6 +1570,15 @@ public class Main {
 
         if(Settings.isSubweaponOnlyLogic() || isSubweaponOnly()) {
             startingNodes.add("Setting: Subweapon Only");
+        }
+        if(Settings.isHalloweenMode()) {
+            startingNodes.add("Setting: Halloween");
+            if(!Settings.isIncludeHellTempleNPCs()) {
+                startingNodes.add("Setting: No HT");
+            }
+        }
+        else {
+            startingNodes.add("Setting: Not Halloween");
         }
         return startingNodes;
     }
@@ -1642,16 +1725,46 @@ public class Main {
         if(!LocationCoordinateMapper.isSurfaceStart()) {
             short grailFlag = LocationCoordinateMapper.getGrailFlag(LocationCoordinateMapper.getStartingZone(), LocationCoordinateMapper.isFrontsideStart());
             if(0x064 <= grailFlag && 0x075 >= grailFlag) {
-                saveData[0x11 + grailFlag] = (byte)1;
+                saveData[0x11 + grailFlag] = (byte)1; // Set starting grail flag if this is a traditional starting location, so your grail will be empowered.
             }
-            saveData[0x069 * 2 + 0x1011 + 1] = (byte)10;
+            saveData[0x069 * 2 + 0x1011 + 1] = (byte)10; // Start with 10 weights
 
             if(Settings.getCurrentStartingLocation() == 7) {
                 // Twin labs front, auto-solve the elevator puzzle
                 saveData[0x11 + 0x1db] = (byte)2;
             }
         }
+        if(Settings.isHalloweenMode()) {
+            // Unlock Mulbruk so you can get Halloween hints.
+            saveData[0x11 + 0x079] = (byte)1;
+            saveData[0x11 + 0x18e] = (byte)2;
+            saveData[0x11 + 0x391] = (byte)1;
 
+
+//            saveData[0x11 + 0x70e] = (byte)1; // room 20 floor
+//            saveData[0x11 + 0x7d1] = (byte)1; // room 2
+//            saveData[0x11 + 0x7d4] = (byte)1; // room 5
+//            saveData[0x11 + 0x7d5] = (byte)1; // room 6
+//            saveData[0x11 + 0x7d6] = (byte)1; // room 7
+//            saveData[0x11 + 0x7d7] = (byte)2; // room 8
+//            saveData[0x11 + 0x7d8] = (byte)1; // room 9
+//            saveData[0x11 + 0x7d9] = (byte)1; // room 10
+//            saveData[0x11 + 0x7da] = (byte)1; // room 11
+//            saveData[0x11 + 0x7db] = (byte)1; // room 12
+//            saveData[0x11 + 0x7dc] = (byte)1; // room 13
+//            saveData[0x11 + 0x7de] = (byte)1; // room 15
+//            saveData[0x11 + 0x7e0] = (byte)1; // room 17
+//            saveData[0x11 + 0x7e1] = (byte)1; // room 18
+//            saveData[0x11 + 0x7e2] = (byte)1; // room 19
+//            saveData[0x11 + 0x7e5] = (byte)1; // room 22
+//            saveData[0x11 + 0x7e6] = (byte)1; // room 20
+//            saveData[0x11 + 0x7e7] = (byte)2; // room 24
+//            saveData[0x11 + 0x7f7] = (byte)2; // Key fairy room solved
+////            saveData[0x11 + 0x7e9] = (byte)1; // room 25
+////            saveData[0x11 + 0x7ef] = (byte)1; // room 32
+////            saveData[0x11 + 0x7f0] = (byte)1; // room 33
+//            saveData[0x11 + 0x70c] = (byte)1; // room 34
+        }
 
 //        saveData[0x11 + 0x064] = 1;
 //        saveData[0x11 + 0x065] = 1;
@@ -1811,21 +1924,28 @@ public class Main {
             return;
         }
 
-        List<Integer> possibleStartingLocations = new ArrayList<>(DataFromFile.STARTING_LOCATIONS);
-        if(!Settings.getStartingItemsIncludingCustom().contains("Holy Grail")) {
-            // Tower of Ruin will be unable to get back to the grail tablet easily/will have very limited options without grail/feather/boots/ice cape, so just ban it.
-            possibleStartingLocations.remove((Integer)14);
+        if(Settings.isHalloweenMode()) {
+//            Settings.setCurrentStartingLocation(24);
+//            Settings.setCurrentStartingLocation(23);
+            Settings.setCurrentStartingLocation(22);
         }
-        if(!Settings.isRandomizeTransitionGates()) {
-            // Most backside fields aren't an option unless random transitions help keep you from getting stuck on one side of the ruins.
-            possibleStartingLocations.remove((Integer)11);
-            possibleStartingLocations.remove((Integer)13);
-            possibleStartingLocations.remove((Integer)14);
-            possibleStartingLocations.remove((Integer)16);
-            possibleStartingLocations.remove((Integer)21);
+        else {
+            List<Integer> possibleStartingLocations = new ArrayList<>(DataFromFile.STARTING_LOCATIONS);
+            if(!Settings.getStartingItemsIncludingCustom().contains("Holy Grail")) {
+                // Tower of Ruin will be unable to get back to the grail tablet easily/will have very limited options without grail/feather/boots/ice cape, so just ban it.
+                possibleStartingLocations.remove((Integer)14);
+            }
+            if(!Settings.isRandomizeTransitionGates()) {
+                // Most backside fields aren't an option unless random transitions help keep you from getting stuck on one side of the ruins.
+                possibleStartingLocations.remove((Integer)11);
+                possibleStartingLocations.remove((Integer)13);
+                possibleStartingLocations.remove((Integer)14);
+                possibleStartingLocations.remove((Integer)16);
+                possibleStartingLocations.remove((Integer)21);
+            }
+            Settings.setCurrentStartingLocation(possibleStartingLocations.get(random.nextInt(possibleStartingLocations.size())));
+            FileUtils.logFlush("Selected starting location: " + LocationCoordinateMapper.getStartingZoneName(Settings.getCurrentStartingLocation()));
         }
-        Settings.setCurrentStartingLocation(possibleStartingLocations.get(random.nextInt(possibleStartingLocations.size())));
-        FileUtils.logFlush("Selected starting location: " + LocationCoordinateMapper.getStartingZoneName(Settings.getCurrentStartingLocation()));
     }
 
     private static void determineRemovedItems(int totalItemsRemoved, Random random) {

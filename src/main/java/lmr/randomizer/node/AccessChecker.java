@@ -139,6 +139,9 @@ public class AccessChecker {
                         || NodeType.EXIT.equals(nodeType)|| NodeType.SETTING.equals(nodeType) || NodeType.TRANSITION.equals(nodeType) ) {
                     continue;
                 }
+                else if(!Settings.isHalloweenMode() && NodeType.NPC.equals(nodeType)) {
+                    continue;
+                }
                 else if(NodeType.ITEM_LOCATION.equals(nodeType)) {
                     if(DataFromFile.ESCAPE_CHEST_NAME.equals(nodeName)) {
                         continue;
@@ -185,8 +188,22 @@ public class AccessChecker {
     }
 
     private boolean isEscapeSuccess() {
+        if(Settings.isHalloweenMode()) {
+            if(Settings.isIncludeHellTempleNPCs()) {
+                return true; // Don't have to have a path to Temple of the Sun since the escape ends when you get out.
+            }
+            else {
+                for(String locationToEscape : DataFromFile.NPC_LOCATIONS) {
+                    if(!new EscapeChecker(backsideDoorRandomizer, transitionGateRandomizer, itemRandomizer, shopRandomizer, accessedNodes, locationToEscape).isSuccess()) {
+                        FileUtils.log("Failed escape from " + locationToEscape);
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
         return (!Settings.isRandomizeTransitionGates() && LocationCoordinateMapper.isSurfaceStart())
-                || new EscapeChecker(backsideDoorRandomizer, transitionGateRandomizer, itemRandomizer, shopRandomizer, accessedNodes).isSuccess();
+                || new EscapeChecker(backsideDoorRandomizer, transitionGateRandomizer, itemRandomizer, shopRandomizer, accessedNodes, "Location: True Shrine of the Mother").isSuccess();
     }
 
     private void logAccess(String requiredNode, List<String> loggedRequirements) {
@@ -467,6 +484,9 @@ public class AccessChecker {
                 else {
                     DataFromFile.getInitialNonShopItemLocations().add(nodeName);
                 }
+                break;
+            case NPC:
+                queuedUpdates.add(nodeName);
                 break;
             case MAP_LOCATION:
                 queuedUpdates.add(nodeName);

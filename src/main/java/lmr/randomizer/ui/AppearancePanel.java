@@ -28,8 +28,8 @@ public class AppearancePanel extends JPanel {
     }
 
     public void updateTranslations() {
-        coinChestGraphics.setText(Translations.getText("challenge.coinChestGraphics"));
-        randomizeGraphics.setText(Translations.getText("fools.randomizeGraphics"));
+        coinChestGraphics.setText(Translations.getText("appearance.coinChestGraphics"));
+        randomizeGraphics.setText(Translations.getText("appearance.randomizeGraphics"));
     }
 
     public void updateSettings() {

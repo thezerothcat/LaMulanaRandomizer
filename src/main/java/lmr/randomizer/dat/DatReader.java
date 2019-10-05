@@ -3,9 +3,11 @@ package lmr.randomizer.dat;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
+import lmr.randomizer.Translations;
 import lmr.randomizer.dat.conversation.CheckBlock;
 import lmr.randomizer.dat.shop.BlockCmdSingle;
 import lmr.randomizer.dat.shop.BlockStringData;
+import lmr.randomizer.dat.shop.MasterNpcBlock;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.LocationCoordinateMapper;
@@ -110,6 +112,59 @@ public final class DatReader {
         return shopBlock;
     }
 
+    private static MasterNpcBlock buildMasterNpcBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        int dataIndex = 0;
+        MasterNpcBlock masterNpcBlock = new MasterNpcBlock(blockIndex);
+
+        short cmdShort = dataInputStream.readShort();
+        ++dataIndex;
+        short length1Short = dataInputStream.readShort();
+        ++dataIndex;
+        BlockCmdSingle textCard = new BlockCmdSingle(dataInputStream.readShort());
+        ++dataIndex;
+        dataInputStream.readShort(); // 0x000a
+        ++dataIndex;
+        masterNpcBlock.setTextCard(textCard);
+
+        cmdShort = dataInputStream.readShort();
+        ++dataIndex;
+        length1Short = dataInputStream.readShort();
+        ++dataIndex;
+        BlockCmdSingle background = new BlockCmdSingle(dataInputStream.readShort());
+        ++dataIndex;
+        dataInputStream.readShort(); // 0x000a
+        ++dataIndex;
+        masterNpcBlock.setBackground(background);
+
+        cmdShort = dataInputStream.readShort();
+        ++dataIndex;
+        length1Short = dataInputStream.readShort();
+        ++dataIndex;
+        BlockCmdSingle npcCard = new BlockCmdSingle(dataInputStream.readShort());
+        ++dataIndex;
+        dataInputStream.readShort(); // 0x000a
+        ++dataIndex;
+        masterNpcBlock.setNpcCard(npcCard);
+
+        cmdShort = dataInputStream.readShort();
+        ++dataIndex;
+        length1Short = dataInputStream.readShort();
+        ++dataIndex;
+        BlockCmdSingle music = new BlockCmdSingle(dataInputStream.readShort());
+        ++dataIndex;
+        dataInputStream.readShort(); // 0x000a
+        ++dataIndex;
+        masterNpcBlock.setMusic(music);
+
+        BlockStringData blockStringData = new BlockStringData();
+        while(dataIndex < numberOfShortsInThisBlock) {
+            blockStringData.getData().add(dataInputStream.readShort());
+            ++dataIndex;
+        }
+        masterNpcBlock.setNpcName(blockStringData);
+        return masterNpcBlock;
+    }
+
     private static Block buildCheckBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         int dataIndex = 0;
         CheckBlock checkBlock = new CheckBlock(blockIndex);
@@ -134,6 +189,44 @@ public final class DatReader {
             }
         }
         return checkBlock;
+    }
+
+    private static Block buildItemNameBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        int dataIndex = 0;
+        Block itemNameBlock = new Block(blockIndex);
+
+        BlockStringData blockStringData;
+
+        // Add everything before Mobile Super X
+        for(int i = 0; i < 84; i ++) {
+            blockStringData = new BlockStringData();
+            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
+            blockStringData.getData().add((short)0x000a);
+            itemNameBlock.getBlockContents().add(blockStringData);
+        }
+
+        if(Settings.isHalloweenMode()) {
+            // Get the data for Secret Treasure of Life, but throw it away in favor of custom replacement
+            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
+            blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.halloween.candy.name")));
+            blockStringData.getData().add((short)0x000a);
+            itemNameBlock.getBlockContents().add(blockStringData);
+        }
+        else {
+            // Get Secret Treasure of Life item name
+            blockStringData = new BlockStringData();
+            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
+            blockStringData.getData().add((short)0x000a);
+            itemNameBlock.getBlockContents().add(blockStringData);
+        }
+
+        while(dataIndex < numberOfShortsInThisBlock) {
+            short blockData = dataInputStream.readShort();
+            ++dataIndex;
+            itemNameBlock.getBlockContents().add(new BlockSingleData(blockData));
+        }
+        return itemNameBlock;
     }
 
     private static Block buildItemDescriptionBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
@@ -178,6 +271,30 @@ public final class DatReader {
         blockStringData.getData().add((short)0x000a);
         itemDescriptionBlock.getBlockContents().add(blockStringData);
 
+        // Add everything before Secret Treasure of Life
+        for(int i = 0; i < 7; i ++) {
+            blockStringData = new BlockStringData();
+            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
+            blockStringData.getData().add((short)0x000a);
+            itemDescriptionBlock.getBlockContents().add(blockStringData);
+        }
+
+        if(Settings.isHalloweenMode()) {
+            // Get the data for Secret Treasure of Life, but throw it away in favor of custom replacement
+            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
+            blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.halloween.candy.description")));
+            blockStringData.getData().add((short)0x000a);
+            itemDescriptionBlock.getBlockContents().add(blockStringData);
+        }
+        else {
+            // Get Secret Treasure of Life item description
+            blockStringData = new BlockStringData();
+            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
+            blockStringData.getData().add((short)0x000a);
+            itemDescriptionBlock.getBlockContents().add(blockStringData);
+        }
+
         while(dataIndex < numberOfShortsInThisBlock) {
             short blockData = dataInputStream.readShort();
             ++dataIndex;
@@ -189,7 +306,7 @@ public final class DatReader {
     private static Block buildGrailPointBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         Block grailPointsBlock = new Block(blockIndex);
         addBlockContentsToBlock(grailPointsBlock, dataInputStream, numberOfShortsInThisBlock);
-        if(!LocationCoordinateMapper.isSurfaceStart()) {
+        if(!LocationCoordinateMapper.isSurfaceStart() || Settings.getCurrentStartingLocation() == 22) {
             grailPointsBlock.getBlockContents().clear();
 
             boolean front = LocationCoordinateMapper.isFrontsideStart();
@@ -245,6 +362,67 @@ public final class DatReader {
             }
         }
         return grailPointsBlock;
+    }
+
+    private static Block buildHTMapBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        Block htMapBlock = new Block(blockIndex);
+        addBlockContentsToBlock(htMapBlock, dataInputStream, numberOfShortsInThisBlock);
+        if(Settings.isHalloweenMode()) {
+            List<Short> textToAdd = FileUtils.stringToData(Translations.getText("event.halloween.HTsuffix"));
+            for(int i = textToAdd.size() - 1; i >= 0; i--) {
+                Short character = textToAdd.get(i);
+                htMapBlock.getBlockContents().add(11, new BlockSingleData(character));
+            }
+        }
+        return htMapBlock;
+    }
+
+    private static Block buildFairyQueenFirstConversationBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        // Throw away entire existing block contents in favor of custom
+        int dataIndex = 0;
+        while(dataIndex < numberOfShortsInThisBlock) {
+            short blockData = dataInputStream.readShort();
+            ++dataIndex;
+        }
+
+        Block halloweenBlock = new Block(blockIndex);
+        halloweenBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
+        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.text1"));
+        for (Short shortCharacter : stringCharacters) {
+            halloweenBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        halloweenBlock.getBlockContents().add(new BlockItemData((short)0x0042, (short)84)); // Secret Treasure of Life
+        halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)0x1f5, (short)1));
+        halloweenBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.text2"));
+        for (Short shortCharacter : stringCharacters) {
+            halloweenBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+
+        halloweenBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
+
+        return halloweenBlock;
+    }
+
+    private static Block buildFairyQueenLastConversationBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        // Throw away entire existing block contents in favor of custom
+        int dataIndex = 0;
+        while(dataIndex < numberOfShortsInThisBlock) {
+            short blockData = dataInputStream.readShort();
+            ++dataIndex;
+        }
+
+        Block halloweenBlock = new Block(blockIndex);
+        halloweenBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
+        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.fairyqueen"));
+        for (Short shortCharacter : stringCharacters) {
+            halloweenBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+
+        halloweenBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
+
+        return halloweenBlock;
     }
 
     private static short getNextZone(int startingZone) {
@@ -504,11 +682,33 @@ public final class DatReader {
             else if(blockIndex == 480 || blockIndex == 482 || blockIndex == 486) {
                 block = buildCheckBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
+            else if(blockIndex == 1) {
+                block = buildItemNameBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
             else if(blockIndex == 2) {
                 block = buildItemDescriptionBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             else if(blockIndex == 7) {
                 block = buildGrailPointBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
+            else if(blockIndex == 0x1c) {
+                block = buildHTMapBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
+            else if(blockIndex == 0xd7 && Settings.isHalloweenMode()) {
+                block = buildFairyQueenFirstConversationBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
+            else if(blockIndex == 0xda && Settings.isHalloweenMode()) {
+                block = buildFairyQueenLastConversationBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
+            else if(blockIndex == 671 || blockIndex == 672 || blockIndex == 673 || blockIndex == 674 || blockIndex == 675 || blockIndex == 677 || blockIndex == 678 || blockIndex == 679
+                    || blockIndex == 680 || blockIndex == 681 || blockIndex == 683 || blockIndex == 689
+                    || blockIndex == 693 || blockIndex == 694 || blockIndex == 696 || blockIndex == 698
+                    || blockIndex == 700 || blockIndex == 701 || blockIndex == 702 || blockIndex == 704 || blockIndex == 706 || blockIndex == 707 || blockIndex == 708 || blockIndex == 709
+                    || blockIndex == 710 || blockIndex == 718 || blockIndex == 723) {
+                block = buildMasterNpcBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
+            else if(blockIndex == 998 && Settings.isIncludeHellTempleNPCs()) {
+                block = buildMasterNpcBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             else {
                 block = new Block(blockIndex);
@@ -547,13 +747,14 @@ public final class DatReader {
             datBlocks.add(block);
             GameDataTracker.addBlock(block);
         }
-        if(!LocationCoordinateMapper.isSurfaceStart()) {
+        if(!LocationCoordinateMapper.isSurfaceStart() && Settings.getCurrentStartingLocation() != 23 && Settings.getCurrentStartingLocation() != 24) {
             block = AddObject.addShopBlock(datBlocks);
             if(!DataFromFile.getMapOfShopNameToShopBlock().containsKey(DataFromFile.CUSTOM_SHOP_NAME)) {
                 DataFromFile.getMapOfShopNameToShopBlock().put(DataFromFile.CUSTOM_SHOP_NAME, block.getBlockNumber());
             }
             GameDataTracker.setCustomShopBlock(block.getBlockNumber());
         }
+        GameDataTracker.addCustomBlocks(datBlocks);
         return datBlocks;
     }
 }

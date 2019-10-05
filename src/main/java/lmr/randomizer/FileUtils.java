@@ -10,8 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.security.MessageDigest;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -19,7 +19,7 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.22.0";
+    public static final String VERSION = "HALLOWEEN";
     public static final int EXISTING_FILE_WIDTH = 1024;
     public static final int EXISTING_FILE_HEIGHT = 512;
     public static final int GRAPHICS_VERSION = 4;
@@ -547,6 +547,9 @@ public class FileUtils {
             else if(line.startsWith("blockPushingRequiresGlove")) {
                 Settings.setBlockPushingRequiresGlove(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("includeHellTempleNPCs")) {
+                Settings.setIncludeHellTempleNPCs(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("quickStartItemsEnabled")) {
                 // Upgrade legacy settings
                 if(Boolean.valueOf(line.split("=")[1])) {
@@ -687,7 +690,7 @@ public class FileUtils {
         writer.write(String.format("ushumgalluAssist=%s", Settings.isUshumgalluAssist()));
         writer.newLine();
 
-        writer.write(String.format("blockPushingRequiresGlove=%s", Settings.isBlockPushingRequiresGlove()));
+        writer.write(String.format("includeHellTempleNPCs=%s", Settings.isIncludeHellTempleNPCs()));
         writer.newLine();
 
         writer.write(String.format("laMulanaBaseDir=%s", Settings.getLaMulanaBaseDir()));
@@ -779,14 +782,17 @@ public class FileUtils {
             File saveFile = new File(destinationFolder, "lm_00.sav");
             if(saveFile.exists()) {
                 FileUtils.logFlush("Copying save file from seed folder to La-Mulana save directory");
-                    fileOutputStream = new FileOutputStream(
-                            new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir())));
-                    Files.copy(saveFile.toPath(), fileOutputStream);
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
+                fileOutputStream = new FileOutputStream(
+                        new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir())));
+                Files.copy(saveFile.toPath(), fileOutputStream);
+                fileOutputStream.flush();
+                fileOutputStream.close();
             }
 
             FileUtils.updateGraphicsFiles();
+            if(Settings.isHalloweenMode()) {
+                FileUtils.updateGraphicsFilesForHalloween();
+            }
 
             FileUtils.logFlush("Save file copy complete");
         }
@@ -814,6 +820,23 @@ public class FileUtils {
                 Files.copy(new File(graphicsPack, "01effect.png").toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
+            }
+            return true;
+        }
+        catch (IOException ex) {
+            return false;
+        }
+    }
+
+    private static boolean copyGraphicsFiles(File graphicsPack, File destinationFolder) {
+        try {
+            for(File graphicsFile : graphicsPack.listFiles()) {
+                if(graphicsFile.isFile()) {
+                    FileOutputStream fileOutputStream = new FileOutputStream(new File(destinationFolder, graphicsFile.getName()));
+                    Files.copy(graphicsFile.toPath(), fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                }
             }
             return true;
         }
@@ -869,6 +892,51 @@ public class FileUtils {
                 return false;
             }
         }
+        return true;
+    }
+
+    public static boolean updateGraphicsFilesForHalloween() {
+        String graphicsBase = Settings.getLaMulanaBaseDir() + "/data/graphics";
+        String halloweenFolderPath = graphicsBase + "/HALLOWEEN";
+        File halloweenGraphicsFolder = new File(halloweenFolderPath);
+        File graphicsBaseFolder = new File(graphicsBase + "/00");
+        if(!halloweenGraphicsFolder.exists()) {
+            halloweenGraphicsFolder.mkdir();
+
+            if(!copyGraphicsFiles(graphicsBaseFolder, halloweenGraphicsFolder)) {
+                halloweenGraphicsFolder.delete();
+                return false;
+            }
+
+            final List<String> modifiedFilesToCopy = Arrays.asList("01menu.png", "02comenemy.png", "_banner.png",
+                   "eveg01.png", "eveg03.png", "eveg04.png", "eveg05.png", "eveg06.png", "eveg08.png", "eveg09.png",
+                    "eveg10.png", "eveg11.png", "eveg12.png", "eveg13.png", "eveg14.png", "eveg15.png", "eveg16.png",
+                    "eveg18.png", "eveg19.png", "eveg20.png", "title01.png");
+            for(String file : modifiedFilesToCopy) {
+                try {
+                    File graphicsFileToWrite = new File(halloweenFolderPath, file);
+                    BufferedImage modified;
+                    try {
+                        modified = ImageIO.read(FileUtils.class.getResource("graphics/halloween/modified/" + file));
+                    }
+                    catch (IOException ex) {
+                        return false;
+                    }
+                    BufferedImage existingImage = ImageIO.read(graphicsFileToWrite);
+                    BufferedImage newImage = new BufferedImage(existingImage.getWidth(), existingImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D graphics2D = newImage.createGraphics();
+                    graphics2D.drawImage(modified, null, 0, 0); // Use backup to ensure no duplication of file
+                    graphics2D.dispose();
+
+                    ImageIO.write(newImage, "png", graphicsFileToWrite);
+                }
+                catch(IOException ex) {
+                    FileUtils.logFlush("Problem copying graphics file " + file);
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 

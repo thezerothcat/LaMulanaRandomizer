@@ -226,6 +226,9 @@ public class MoneyChecker {
                 queuedUpdates.add(nodeName);
                 queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
                 break;
+            case NPC:
+                queuedUpdates.add(nodeName);
+                break;
             case STATE:
 //                if(nodeName.endsWith(" Defeated")) {
 //                    accessedMoney += getEnemyMoneyValue(nodeName);

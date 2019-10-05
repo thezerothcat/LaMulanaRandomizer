@@ -28,6 +28,9 @@ public class NodeWithRequirements {
         else if(name.startsWith("Transition:")) {
             type = NodeType.TRANSITION;
         }
+        else if(name.startsWith("NPC:")) {
+            type = NodeType.NPC;
+        }
         else if(name.startsWith("Shop")) {
             type = NodeType.SHOP;
         }
