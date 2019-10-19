@@ -258,4 +258,4 @@ Location: Hell Temple [Entrance] => Event: Hell Temple Unlocked, Location: Gate 
 Location: Hell Temple [Shop] => Location: Hell Temple [Entrance], Hermes' Boots, Attack: Bomb, Ring
 Location: Hell Temple [Shop] => Location: Hell Temple [Entrance], State: Lamp, Attack: Bomb, Ring
 Location: Hell Temple [Dracuet] => Location: Hell Temple [Shop], State: Literacy, Grapple Claw, State: Key Fairy Access, State: Block Pushing, Event: HT Bosses Defeated, guild.exe, Setting: Not Halloween
-Location: Hell Temple [Dracuet] => Location: Hell Temple [Shop], State: Literacy, Grapple Claw, State: Key Fairy Access, State: Block Pushing, Event: HT Bosses Defeated, guild.exe, Setting: Halloween, Hermes' Boots # Boots for the escape
+Location: Hell Temple [Dracuet] => Location: Hell Temple [Shop], State: Literacy, Grapple Claw, State: Key Fairy Access, State: Block Pushing, Event: HT Bosses Defeated, guild.exe, Setting: Halloween, Hermes' Boots, Holy Grail # Boots for the escape

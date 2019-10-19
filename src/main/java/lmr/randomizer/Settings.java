@@ -81,6 +81,7 @@ public final class Settings {
 
     private String laMulanaBaseDir;
     private String laMulanaSaveDir;
+    private String graphicsPack;
     private String language;
 
     private Set<String> nonRandomizedItems = new HashSet<>();
@@ -227,6 +228,20 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.laMulanaSaveDir = laMulanaSaveDir;
+    }
+
+    public static String getGraphicsPack() {
+        if(singleton.graphicsPack == null) {
+            return "00";
+        }
+        return singleton.graphicsPack;
+    }
+
+    public static void setGraphicsPack(String graphicsPack, boolean update) {
+        if(update && !graphicsPack.equals(singleton.graphicsPack)) {
+            singleton.changed = true;
+        }
+        singleton.graphicsPack = graphicsPack;
     }
 
     public static String getLanguage() {

@@ -117,6 +117,11 @@ public class Main {
         public void actionPerformed(ActionEvent e) {
             mainPanel.updateSettings();
             tabbedPanel.updateSettings();
+            if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+                Settings.setRandomizeForbiddenTreasure(true, false);
+                Settings.setHTFullRandom(false, false);
+            }
+
             if("generate".equals(e.getActionCommand())) {
                 try {
                     generateSeed();
@@ -138,20 +143,35 @@ public class Main {
                 }
             }
             else if("importSeed".equals(e.getActionCommand())) {
-                JFileChooser zipFileChooser = new JFileChooser();
-                if(zipFileChooser.showOpenDialog(this.getParent()) == JFileChooser.APPROVE_OPTION) {
-                    Settings.saveSettings();
-                    if(FileUtils.importExistingSeed(zipFileChooser.getSelectedFile())) {
-                        JOptionPane.showMessageDialog(this,
-                                "La-Mulana has been updated.",
-                                "Import success!", JOptionPane.PLAIN_MESSAGE);
-                    }
-                    else {
-                        JOptionPane.showMessageDialog(this,
-                                "Import failed",
-                                "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
+                Settings.saveSettings();
+//                if(validateInstallDir()) {
+//                    if(validateSaveDir()) {
+                        JFileChooser zipFileChooser = new JFileChooser();
+                        if(zipFileChooser.showOpenDialog(this.getParent()) == JFileChooser.APPROVE_OPTION) {
+                            Settings.saveSettings();
+                            if(FileUtils.importExistingSeed(zipFileChooser.getSelectedFile())) {
+                                JOptionPane.showMessageDialog(this,
+                                        "La-Mulana has been updated.",
+                                        "Import success!", JOptionPane.PLAIN_MESSAGE);
+                            }
+                            else {
+                                JOptionPane.showMessageDialog(this,
+                                        "Import failed",
+                                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+//                    }
+//                    else {
+//                        JOptionPane.showMessageDialog(this,
+//                                "Unable to find La-Mulana save directory",
+//                                "Randomizer error", JOptionPane.ERROR_MESSAGE);
+//                    }
+//                }
+//                else {
+//                    JOptionPane.showMessageDialog(this,
+//                            "Unable to find La-Mulana install directory",
+//                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+//                }
             }
             else if("restore".equals(e.getActionCommand())) {
                 if(!validateInstallDir()) {
@@ -237,6 +257,9 @@ public class Main {
 
             if(Settings.isHalloweenMode()) {
                 CustomItemPlacement customItemPlacement = new CustomItemPlacement("xmailer.exe", "Provocative Bathing Suit", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 3", "Buckler", (short)5, (short)1);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
             }
 
@@ -465,7 +488,7 @@ public class Main {
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            if((Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart()) && !validateSaveDir()) {
+            if((Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || Settings.isHalloweenMode()) && !validateSaveDir()) {
                 JOptionPane.showMessageDialog(this,
                         "Unable to find La-Mulana save directory",
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
@@ -1430,7 +1453,9 @@ public class Main {
 //                    GameDataTracker.randomizeMantras(random);
 //                }
                 if(Settings.isHalloweenMode()) {
-                    GameDataTracker.replaceNightSurfaceWithSurface(rcdData);
+                    int shopBlockNumber = AddObject.addSecretShopBlock(datInfo).getBlockNumber();
+                    int danceBlockNumber = AddObject.addDanceBlock(datInfo).getBlockNumber();
+                    GameDataTracker.replaceNightSurfaceWithSurface(rcdData, danceBlockNumber, shopBlockNumber);
                     if(Settings.isIncludeHellTempleNPCs()) {
                         GameDataTracker.addHTSkip(rcdData, datInfo);
                     }
@@ -1444,14 +1469,14 @@ public class Main {
 
                 DatWriter.writeDat(datInfo);
                 FileUtils.logFlush("dat file successfully written");
-                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation()) {
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || Settings.isHalloweenMode()) {
                     backupSaves();
                     writeSaveFile();
                 }
 
                 FileUtils.updateGraphicsFiles(); // Always want to update graphics files, for backup Shrine door and possibly other things.
                 if(Settings.isHalloweenMode()) {
-                    if(!FileUtils.updateGraphicsFilesForHalloween()) {
+                    if(!FileUtils.updateGraphicsFilesForHalloween(Settings.getGraphicsPack())) {
                         JOptionPane.showMessageDialog(f,
                                 Translations.getText("Unable to create Halloween graphics"),
                                 "Randomizer error", JOptionPane.ERROR_MESSAGE);
@@ -1740,7 +1765,6 @@ public class Main {
             saveData[0x11 + 0x18e] = (byte)2;
             saveData[0x11 + 0x391] = (byte)1;
 
-
 //            saveData[0x11 + 0x70e] = (byte)1; // room 20 floor
 //            saveData[0x11 + 0x7d1] = (byte)1; // room 2
 //            saveData[0x11 + 0x7d4] = (byte)1; // room 5
@@ -1927,6 +1951,7 @@ public class Main {
         if(Settings.isHalloweenMode()) {
 //            Settings.setCurrentStartingLocation(24);
 //            Settings.setCurrentStartingLocation(23);
+//            Settings.setCurrentStartingLocation(0);
             Settings.setCurrentStartingLocation(22);
         }
         else {

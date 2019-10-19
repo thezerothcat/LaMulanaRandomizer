@@ -37,6 +37,8 @@ mulbruk:
 924 / ? = escape block, no check for swimsuit status
 926 / ? = escape block if mulbruk has swimsuit
 
+for Halloween, acd = secret shop unlocked
+
 aab (2732): HT unlock fairy npc, should have been with the other group but wasn't, oops
 aac (2733): mulbruk > 0 = not spoken, 1 = did intro, 2 = ready to talk about HT, 3 = HT unlocked
 aad (2734): H4 tracking

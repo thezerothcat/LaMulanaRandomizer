@@ -255,6 +255,14 @@ public final class GameDataTracker {
 //                    gameObject.getArgs().set(30, (short)2316);
 //                }
 //            }
+            if(Settings.isHalloweenMode()) {
+                // Bahamut to Night Surface
+                Screen screen = (Screen) gameObject.getObjectContainer();
+                if(screen.getZoneIndex() == 4) {
+                    gameObject.getArgs().set(24, (short)22);
+                    gameObject.getArgs().set(28, (short)22);
+                }
+            }
             if(Settings.isRandomizeBosses()) {
                 Screen screen = (Screen) gameObject.getObjectContainer();
                 if(screen.getZoneIndex() == 0) {
@@ -510,11 +518,11 @@ public final class GameDataTracker {
                 enemyObjects.add(gameObject);
             }
         }
-//        else if (gameObject.getId() == 0x44) {
-//            if(Settings.isRandomizeEnemies()) {
-//                enemyObjects.add(gameObject);
-//            }
-//        }
+        else if (gameObject.getId() == 0x44) {
+            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
 //        else if (gameObject.getId() == 0x45) {
 //            // Centimani
 //            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
@@ -801,17 +809,6 @@ public final class GameDataTracker {
                             gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
                         }
 
-                        enemyObjects.add(gameObject);
-                    }
-                }
-            }
-        }
-        else if (gameObject.getId() == 0x8e) {
-            // Mushussu
-            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
-                if(gameObject.getObjectContainer() instanceof Screen) {
-                    Screen screen = (Screen) gameObject.getObjectContainer();
-                    if(screen.getZoneIndex() == 24) {
                         enemyObjects.add(gameObject);
                     }
                 }
@@ -2235,6 +2232,21 @@ public final class GameDataTracker {
                 // Priest Jaguarfiv - Twin Labs NPC, 07-10-01
                 npcObjects.add(gameObject);
             }
+            else if(blockNumber == 684) {
+                // Fairy Queen - Endless NPC, 08-01-00
+                if(Settings.isHalloweenMode()) {
+                    Integer flagToRemoveIndex = null;
+                    for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 0x1f5) {
+                            flagToRemoveIndex = i;
+                            break;
+                        }
+                    }
+                    if(flagToRemoveIndex != null) {
+                        gameObject.getWriteByteOperations().remove((int)flagToRemoveIndex);
+                    }
+                }
+            }
             else if(blockNumber == 685) {
                 if(!Settings.isHalloweenMode()) {
                     for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
@@ -2254,7 +2266,7 @@ public final class GameDataTracker {
                     TestByteOperation testByteOperation = new TestByteOperation();
                     testByteOperation.setIndex(0x1f5);
                     testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                    testByteOperation.setValue((byte)1);
+                    testByteOperation.setValue((byte)2);
                     gameObject.getTestByteOperations().add(testByteOperation);
 
                     testByteOperation = new TestByteOperation();
@@ -2268,6 +2280,13 @@ public final class GameDataTracker {
                     testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
                     testByteOperation.setValue((byte)3);
                     gameObject.getTestByteOperations().add(testByteOperation);
+
+                    for(WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
+                        if(writeByteOperation.getIndex() == 0x1f5) {
+                            writeByteOperation.setValue(3);
+                            break;
+                        }
+                    }
                 }
                 else {
                     for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
@@ -2287,7 +2306,7 @@ public final class GameDataTracker {
                     TestByteOperation testByteOperation = new TestByteOperation();
                     testByteOperation.setIndex(0x1f5);
                     testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                    testByteOperation.setValue((byte)1);
+                    testByteOperation.setValue((byte)2);
                     gameObject.getTestByteOperations().add(testByteOperation);
 
                     testByteOperation = new TestByteOperation();
@@ -2311,7 +2330,7 @@ public final class GameDataTracker {
                     TestByteOperation testByteOperation = new TestByteOperation();
                     testByteOperation.setIndex(0x1f5);
                     testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                    testByteOperation.setValue((byte)2);
+                    testByteOperation.setValue((byte)3);
                     gameObject.getTestByteOperations().add(testByteOperation);
 
                     testByteOperation = new TestByteOperation();
@@ -2555,11 +2574,27 @@ public final class GameDataTracker {
                 // Priest Gailious - Inferno NPC, 05-02-01
                 npcObjects.add(gameObject);
             }
+            else if(blockNumber == 726) {
+                // Tailor Dracuet - Guidance NPC, 00-06-00
+                npcObjects.add(gameObject);
+            }
+            else if(blockNumber == 991) {
+                // Tailor Dracuet - Illusion NPC, 10-07-00
+                npcObjects.add(gameObject);
+            }
+            else if(blockNumber == 993) {
+                // Tailor Dracuet - Gate of Time NPC, 20-03-01
+                npcObjects.add(gameObject);
+            }
             else if(blockNumber == 998) {
                 if(Settings.isIncludeHellTempleNPCs()) {
                     // Fairy - Night Surface NPC, 22-07-00
                     npcObjects.add(gameObject);
                 }
+            }
+            else if(blockNumber == 1000) {
+                // Tailor Dracuet - Goddess NPC, 13-01-00
+                npcObjects.add(gameObject);
             }
             else if(blockNumber == 484 || blockNumber == 1019
                     || blockNumber == 1080 || blockNumber == 1081) {
@@ -3301,6 +3336,14 @@ public final class GameDataTracker {
                 }
             }
         }
+//        else if(gameObject.getId() == 0x90) {
+//            // The Boss ankh
+//            if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+//                gameObject.getArgs().set(3, (short)160); // HP
+//                gameObject.getArgs().set(7, (short)1); // Max number of slimes
+//                gameObject.getArgs().set(12, (short)240); // Delay between bombs
+//            }
+//        }
         else if(gameObject.getId() == 0xc2) {
             // Mantra detectors
             short mantraNumber = gameObject.getArgs().get(0);
@@ -3913,10 +3956,32 @@ public final class GameDataTracker {
 
     public static void addCustomBlocks(List<Block> datBlocks) {
         if(Settings.isHalloweenMode()) {
+            int noCandyBlockNum = AddObject.addNoCandyBlock(datBlocks);
             for(GameObject npcObject : npcObjects) {
+                short npcBlock = npcObject.getArgs().get(4);
+                if(npcBlock == 726) {
+                    // Dracuet (Guidance)
+                    npcObject.getArgs().set(4, (short)AddObject.addNoCandyMasterBlock(datBlocks, npcBlock, noCandyBlockNum));
+                    continue;
+                }
+                else if(npcBlock == 991) {
+                    // Dracuet (Illusion)
+                    npcObject.getArgs().set(4, (short)AddObject.addNoCandyMasterBlock(datBlocks, npcBlock, noCandyBlockNum));
+                    continue;
+                }
+                else if(npcBlock == 993) {
+                    // Dracuet (Gate of Time)
+                    npcObject.getArgs().set(4, (short)AddObject.addNoCandyMasterBlock(datBlocks, npcBlock, noCandyBlockNum));
+                    continue;
+                }
+                else if(npcBlock == 1000) {
+                    // Dracuet (Goddess)
+                    npcObject.getArgs().set(4, (short)AddObject.addNoCandyMasterBlock(datBlocks, npcBlock, noCandyBlockNum));
+                    continue;
+                }
+
                 GameObject newNpcObject = new GameObject(npcObject);
 
-                short npcBlock = npcObject.getArgs().get(4);
                 int npcConversationFlag = getNpcConversationFlag(npcBlock);
                 if(npcConversationFlag > 0) {
                     if(npcBlock == 689 || npcBlock == 693) {
@@ -4004,13 +4069,15 @@ public final class GameDataTracker {
 
                     newNpcObject.getArgs().set(4, (short)AddObject.addNpcBlock(datBlocks, npcObject.getArgs().get(4), npcConversationFlag));
 
+                    newNpcObject.getWriteByteOperations().clear();
+
                     npcObject.getObjectContainer().getObjects().add(newNpcObject);
                 }
             }
             // Update Xelpud with conversations for NPC counts
             CheckBlock checkBlock = (CheckBlock)datBlocks.get(480);
-            final int totalNpcCount = 28;
-            for(int i = totalNpcCount; i >= 0; i--) {
+            final int totalNpcCount = Settings.isIncludeHellTempleNPCs() ? 29 : 28;
+            for(int i = 28; i >= 0; i--) {
                 BlockListData blockListData = new BlockListData((short)78, (short)4);
                 blockListData.getData().add((short)0xaca);
                 blockListData.getData().add((short)i);
@@ -4018,47 +4085,55 @@ public final class GameDataTracker {
                 blockListData.getData().add((short)0);
                 checkBlock.getFlagCheckReferences().add(4, blockListData);
             }
-            // Update Mulbruk with Helloween Temple conversation
-            if (Settings.isHalloweenMode()) {
-                checkBlock = (CheckBlock)datBlocks.get(486);
-                List<BlockListData> flagCheckReferences = new ArrayList<>();
-                for(BlockListData blockListData : checkBlock.getFlagCheckReferences()) {
-                    short blockNum = blockListData.getData().get(2);
-                    if(blockNum == 0x18d) {
-                        flagCheckReferences.add(blockListData);
-                    }
-                    else if(blockNum == 0x19e || blockNum == 0x19f || blockNum == 0x1a0 || blockNum == 0x1a1
-                            || blockNum == 0x188 || blockNum == 0x18c || blockNum == 0x18e || blockNum == 0x18f
-                            || blockNum == 0x194 || blockNum == 0x195 || blockNum == 0x196 || blockNum == 0x190
-                            || blockNum == 0x191 || blockNum == 0x193 || blockNum == 0x199) {
-                        // Unnecessary conversations
-                        continue;
-                    }
-                    else if(blockNum == 0x189) {
-                        updateMulbrukIntroBlock(datBlocks.get(0x189).getBlockContents(), 0x189);
-                        BlockListData mulbrukBlockListData = new BlockListData((short)78, (short)4);
-                        mulbrukBlockListData.getData().add((short)0xaac);
-                        mulbrukBlockListData.getData().add((short)0);
-                        mulbrukBlockListData.getData().add((short)0x189);
-                        mulbrukBlockListData.getData().add((short)1);
-                        flagCheckReferences.add(0, mulbrukBlockListData);
-                    }
-                    else {
-                        flagCheckReferences.add(blockListData);
-                    }
-                }
-                checkBlock.getFlagCheckReferences().clear();
-                checkBlock.getFlagCheckReferences().addAll(flagCheckReferences);
+            if(Settings.isIncludeHellTempleNPCs()) {
+                BlockListData blockListData = new BlockListData((short)78, (short)4);
+                blockListData.getData().add((short)0xaca);
+                blockListData.getData().add((short)29);
+                blockListData.getData().add((short)AddObject.addAllNpcsBlock(datBlocks));
+                blockListData.getData().add((short)0);
+                checkBlock.getFlagCheckReferences().add(4, blockListData);
+            }
 
-                if(Settings.isIncludeHellTempleNPCs()) {
-                    BlockListData blockListData = new BlockListData((short)78, (short)4);
-                    blockListData.getData().add((short)0xaac);
-                    blockListData.getData().add((short)2);
-                    blockListData.getData().add((short)AddObject.addMulbrukHTBlock(datBlocks));
-                    blockListData.getData().add((short)1);
-                    checkBlock.getFlagCheckReferences().add(blockListData);
+            // Update Mulbruk with Helloween Temple conversation
+            checkBlock = (CheckBlock)datBlocks.get(486);
+            List<BlockListData> flagCheckReferences = new ArrayList<>();
+            for(BlockListData blockListData : checkBlock.getFlagCheckReferences()) {
+                short blockNum = blockListData.getData().get(2);
+                if(blockNum == 0x18d) {
+                    flagCheckReferences.add(blockListData);
+                }
+                else if(blockNum == 0x19e || blockNum == 0x19f || blockNum == 0x1a0 || blockNum == 0x1a1
+                        || blockNum == 0x188 || blockNum == 0x18c || blockNum == 0x18e || blockNum == 0x18f
+                        || blockNum == 0x194 || blockNum == 0x195 || blockNum == 0x196 || blockNum == 0x190
+                        || blockNum == 0x191 || blockNum == 0x193 || blockNum == 0x199) {
+                    // Unnecessary conversations
+                    continue;
+                }
+                else if(blockNum == 0x189) {
+                    updateMulbrukIntroBlock(datBlocks.get(0x189).getBlockContents(), 0x189);
+                    BlockListData mulbrukBlockListData = new BlockListData((short)78, (short)4);
+                    mulbrukBlockListData.getData().add((short)0xaac);
+                    mulbrukBlockListData.getData().add((short)0);
+                    mulbrukBlockListData.getData().add((short)0x189);
+                    mulbrukBlockListData.getData().add((short)1);
+                    flagCheckReferences.add(0, mulbrukBlockListData);
+                }
+                else {
+                    flagCheckReferences.add(blockListData);
                 }
             }
+            checkBlock.getFlagCheckReferences().clear();
+            checkBlock.getFlagCheckReferences().addAll(flagCheckReferences);
+
+            if(Settings.isIncludeHellTempleNPCs()) {
+                BlockListData blockListData = new BlockListData((short)78, (short)4);
+                blockListData.getData().add((short)0xaac);
+                blockListData.getData().add((short)2);
+                blockListData.getData().add((short)AddObject.addMulbrukHTBlock(datBlocks));
+                blockListData.getData().add((short)0);
+                checkBlock.getFlagCheckReferences().add(blockListData);
+            }
+
             // Update Mulbruk with hints for NPCs
             Block randomBlock1 = datBlocks.get(0x436);
             Block randomBlock2 = datBlocks.get(0x437);
@@ -4075,9 +4150,11 @@ public final class GameDataTracker {
                 randomBlock1.getBlockContents().add(blockListData);
                 randomBlock2.getBlockContents().add(blockListData);
                 randomBlock3.getBlockContents().add(blockListData);
-                randomBlock1.getBlockContents().add(new BlockSingleData((short)10));
-                randomBlock2.getBlockContents().add(new BlockSingleData((short)10));
-                randomBlock3.getBlockContents().add(new BlockSingleData((short)10));
+                if(i != hintCount) {
+                    randomBlock1.getBlockContents().add(new BlockSingleData((short)10));
+                    randomBlock2.getBlockContents().add(new BlockSingleData((short)10));
+                    randomBlock3.getBlockContents().add(new BlockSingleData((short)10));
+                }
             }
 
             // Update Mulbruk to not have score conversations so the random ones will take precedence
@@ -6344,7 +6421,7 @@ public final class GameDataTracker {
         }
     }
 
-    public static void replaceNightSurfaceWithSurface(List<Zone> rcdInfo) {
+    public static void replaceNightSurfaceWithSurface(List<Zone> rcdInfo, int danceBlockNumber, int secretShopBlockNumber) {
         Zone surface = getZone(rcdInfo, 1);
         Zone nightSurface = getZone(rcdInfo, 22);
         for(GameObject gameObject : surface.getObjects()) {
@@ -6367,12 +6444,32 @@ public final class GameDataTracker {
                     }
                 }
                 nightSurfaceScreen.getObjects().clear();
+                boolean isXelpudStatueScreen = surfaceScreen.getRoomIndex() == 4 && surfaceScreen.getScreenIndex() == 2;
                 for(GameObject gameObject : surfaceScreen.getObjects()) {
+                    if(isXelpudStatueScreen && gameObject.getId() == 0x14 && gameObject.getArgs().size() > 3) {
+                        int detectorType = gameObject.getArgs().get(3);
+                        if(detectorType < 0 || detectorType > 4) {
+                            // Sleep detector - exclude this so we don't mess with HT unlock state
+                            continue;
+                        }
+                    }
                     nightSurfaceScreen.getObjects().add(new GameObject(gameObject));
                 }
                 nightSurfaceScreen.getObjects().addAll(positionalObjectsToPreserve);
                 if(nightSurfaceScreen.getRoomIndex() == 2 && nightSurfaceScreen.getScreenIndex() == 1) {
                     AddObject.addStartingItems(nightSurfaceScreen);
+                }
+                if(Settings.isIncludeHellTempleNPCs()) {
+                    if(nightSurfaceScreen.getRoomIndex() == 7 && nightSurfaceScreen.getScreenIndex() == 0) {
+                        // Fairy - 998
+                        // No escape timer since this only happens for HT.
+                        // Not in RcdReader because we need this to happen to Night Surface specifically.
+                        AddObject.addNpcConversationTimer(nightSurfaceScreen, 0xaab);
+                    }
+                }
+                if(nightSurfaceScreen.getRoomIndex() == 9 && nightSurfaceScreen.getScreenIndex() == 0) {
+                    AddObject.addDanceDetector(nightSurfaceScreen, danceBlockNumber);
+                    AddObject.addSecretShop(nightSurfaceScreen, secretShopBlockNumber);
                 }
 
                 nightSurfaceScreen.getScreenExits().clear();
@@ -6392,6 +6489,7 @@ public final class GameDataTracker {
         Room htRoom = getRoom(htZone.getRooms(), 0);
         Screen htScreen = getScreen(htRoom.getScreens(), 0);
         AddObject.addHTSkip(htScreen, datInfo);
+        AddObject.addHTWarning(htScreen, datInfo);
     }
 
     private static Zone getZone(List<Zone> zones, int zoneIndex) {

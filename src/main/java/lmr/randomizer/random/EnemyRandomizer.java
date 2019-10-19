@@ -24,7 +24,7 @@ public final class EnemyRandomizer {
             0x81, 0x82, 0x8f);
     private static final List<Integer> AIR_ENEMIES = Arrays.asList(0x1e, 0x55, 0x56, 0x68, 0x69); // Witch and Siren act more like ground enemies, but are classed as air because other enemies may behave oddly if placed in certain of their locations.
     private static final List<Integer> WATER_ENEMIES = Arrays.asList(0x37, 0x38);
-    private static final List<Integer> NO_COLLISION_ENEMIES = Arrays.asList(0x02, 0x18, 0x1b, 0x21, 0x29, 0x3b, 0x43,
+    private static final List<Integer> NO_COLLISION_ENEMIES = Arrays.asList(0x02, 0x18, 0x1b, 0x21, 0x29, 0x3b, 0x43, 0x44,
             0x65, 0x6d, 0x7d);
     private static final List<Integer> SPAWNER_ENEMIES = Arrays.asList(0x1f, 0x6c, 0x7c);
     private static final List<Integer> NO_FLAG_UPDATE_ENEMIES = Arrays.asList(0x06, 0x3b);
@@ -603,10 +603,7 @@ public final class EnemyRandomizer {
     private List<Integer> getIllusionEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy && includeGround) {
-            if(Settings.isHalloweenMode()) {
-                enemyIds.add(0x55); // Twin Labs - Witch
-            }
-            else {
+            if(!Settings.isHalloweenMode()) {
                 enemyIds.add(0x5c); // Illusion - Lizard
                 enemyIds.add(0x5d); // Illusion - Asp
                 enemyIds.add(0x5e); // Illusion - Kui / Hopper
@@ -1075,19 +1072,51 @@ public final class EnemyRandomizer {
                 ? (random.nextBoolean() ? 2 : 4)
                 : (speedBonus <= 0 ? 2 : 4))); // Speed
         enemy.getArgs().add((short)1); // Drop type - coins
-        enemy.getArgs().add(health == null
-                ? (short)(random.nextInt(9) + 2)
-                : health.shortValue()); // Cat Health
-        enemy.getArgs().add((short)(contactDamage == null
-                ? (random.nextBoolean() ? 2 : 10)
-                : contactDamage)); // Cat Damage
+//        if(health == null) {
+            if(Settings.isAutomaticHardmode()) {
+                enemy.getArgs().add((short)(random.nextBoolean() && random.nextBoolean() ? 10 : 2)); // Cat Health
+            }
+            else {
+                enemy.getArgs().add((short)2); // Cat Health
+            }
+//        }
+//        else {
+//            enemy.getArgs().add(health.shortValue()); // Cat Health
+//        }
+//        if(contactDamage == null) {
+            if(Settings.isAutomaticHardmode()) {
+                enemy.getArgs().add((short)(random.nextBoolean() && random.nextBoolean() ? 8 : 2)); // Cat Damage
+            }
+            else {
+                enemy.getArgs().add((short)2); // Cat Damage
+            }
+//        }
+//        else {
+//            enemy.getArgs().add(contactDamage.shortValue()); // Cat Damage
+//        }
         enemy.getArgs().add((short)3); // Cat Soul
-        enemy.getArgs().add(health == null
-                ? (short)(random.nextInt(15) + 2)
-                : health.shortValue()); // Ball Health
-        enemy.getArgs().add((short)(contactDamage == null
-                ? (random.nextBoolean() ? 4 : 16)
-                : contactDamage)); // Ball Damage
+//        if(health == null) {
+            if(Settings.isAutomaticHardmode()) {
+                enemy.getArgs().add((short)(random.nextBoolean() && random.nextBoolean() ? 16 : 2)); // Ball Health
+            }
+            else {
+                enemy.getArgs().add((short)2); // Ball Health
+            }
+//        }
+//        else {
+//            enemy.getArgs().add(health.shortValue()); // Ball Health
+//        }
+//        if(contactDamage == null) {
+            if(Settings.isAutomaticHardmode()) {
+                enemy.getArgs().add((short)(random.nextBoolean() && random.nextBoolean() ? 16 : 4)); // Ball Damage
+            }
+            else {
+                enemy.getArgs().add((short)4); // Ball Damage
+            }
+//        }
+//        else {
+//            enemy.getArgs().add(contactDamage.shortValue()); // Ball Damage
+//        }
         enemy.getArgs().add((short)2); // UNKNOWN
     }
 
@@ -1535,12 +1564,20 @@ public final class EnemyRandomizer {
         }
         enemy.getArgs().add((short)3); // Contact damage
         enemy.getArgs().add((short)7); // Soul
-        enemy.getArgs().add((short)120); // Time between volleys attacks
         if(zoneIndex == 23) {
+            enemy.getArgs().add((short)120); // Time between volleys attacks
             enemy.getArgs().add((short)2); // Projectiles per volley
             enemy.getArgs().add((short)20); // Delay after shot
         }
+        else if(zoneIndex == 7){
+            enemy.getArgs().add((short)120); // Time between volleys attacks
+            enemy.getArgs().add((short)(isHardmode
+                    ? (random.nextBoolean() && random.nextBoolean() ? 2 : 1)
+                    : 1)); // Projectiles per volley
+            enemy.getArgs().add((short)(enemy.getArgs().get(8) == 2 ? 50 : 20)); // Delay after shot
+        }
         else {
+            enemy.getArgs().add((short)180); // Time between volleys attacks
             enemy.getArgs().add((short)(isHardmode
                     ? (random.nextBoolean() && random.nextBoolean() ? 2 : 1)
                     : 1)); // Projectiles per volley
@@ -1604,7 +1641,7 @@ public final class EnemyRandomizer {
             enemy.getArgs().add((short)12); // Health
         }
         else {
-            enemy.getArgs().add((short)8); // Health
+            enemy.getArgs().add((short)(Settings.isHalloweenMode() ? 4 : 8)); // Health
         }
         enemy.getArgs().add((short)6); // Contact damage
         enemy.getArgs().add((short)8); // Soul
@@ -1614,9 +1651,16 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)2); // Projectile speed
         enemy.getArgs().add((short)2); // Secondary projectile speed (first split for witches)
         enemy.getArgs().add((short)2); // Tertiary projectile speed (first split for witches)
-        enemy.getArgs().add((short)24); // Initial projectile damage
-        enemy.getArgs().add((short)24); // Secondary projectile damage (lingering flame, first split)
-        enemy.getArgs().add((short)24); // Tertiary projectile damage (second split)
+        if(Settings.isHalloweenMode()) {
+            enemy.getArgs().add((short)8); // Initial projectile damage
+            enemy.getArgs().add((short)8); // Secondary projectile damage (lingering flame, first split)
+            enemy.getArgs().add((short)8); // Tertiary projectile damage (second split)
+        }
+        else {
+            enemy.getArgs().add((short)24); // Initial projectile damage
+            enemy.getArgs().add((short)24); // Secondary projectile damage (lingering flame, first split)
+            enemy.getArgs().add((short)24); // Tertiary projectile damage (second split)
+        }
         enemy.getArgs().add((short)2); // Initial projectile duration (time to first split)
         enemy.getArgs().add((short)2); // Secondary projectile duration (flame duration, time to second split)
         enemy.getArgs().add((short)2); // Tertiary projectile duration (flame duration, time to second split)
@@ -1630,7 +1674,7 @@ public final class EnemyRandomizer {
             enemy.getArgs().add((short)(random.nextBoolean() ? 12 : 8)); // Health
         }
         else {
-            enemy.getArgs().add((short)8); // Health
+            enemy.getArgs().add((short)(Settings.isHalloweenMode() ? 4 : 8)); // Health
         }
         enemy.getArgs().add((short)6); // Contact damage
         enemy.getArgs().add((short)8); // Soul
@@ -1640,9 +1684,16 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)2); // Projectile speed
         enemy.getArgs().add((short)2); // Secondary projectile speed (first split for witches)
         enemy.getArgs().add((short)2); // Tertiary projectile speed (first split for witches)
-        enemy.getArgs().add((short)16); // Initial projectile damage
-        enemy.getArgs().add((short)16); // Secondary projectile damage (lingering flame, first split)
-        enemy.getArgs().add((short)16); // Tertiary projectile damage (second split)
+        if(Settings.isHalloweenMode()) {
+            enemy.getArgs().add((short)8); // Initial projectile damage
+            enemy.getArgs().add((short)8); // Secondary projectile damage (lingering flame, first split)
+            enemy.getArgs().add((short)8); // Tertiary projectile damage (second split)
+        }
+        else {
+            enemy.getArgs().add((short)16); // Initial projectile damage
+            enemy.getArgs().add((short)16); // Secondary projectile damage (lingering flame, first split)
+            enemy.getArgs().add((short)16); // Tertiary projectile damage (second split)
+        }
         enemy.getArgs().add((short)2); // Initial projectile duration (time to first split)
         enemy.getArgs().add((short)2); // Secondary projectile duration (flame duration, time to second split)
         enemy.getArgs().add((short)2); // Tertiary projectile duration (flame duration, time to second split)

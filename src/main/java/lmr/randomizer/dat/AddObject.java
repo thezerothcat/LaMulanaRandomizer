@@ -48,13 +48,14 @@ public final class AddObject {
     /**
      * Convenience for adding a timer object to any screen.
      * @param screen to add the timer object to
+     * @param delaySeconds seconds to wait before the timer runs its updates
      * @param tests tests to put on the timer object
      * @param updates updates the timer object should make when all of its tests pass
      */
-    public static void addTimer(Screen screen, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+    public static void addTimer(Screen screen, int delaySeconds, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
         GameObject obj = new GameObject(screen);
         obj.setId((short)0x0b);
-        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)delaySeconds);
         obj.getArgs().add((short)0);
         obj.setX(-1);
         obj.setY(-1);
@@ -2655,6 +2656,27 @@ public final class AddObject {
         return warp;
     }
 
+    public static GameObject addLemezaDetector(Screen screen, int detectorX, int detectorY, int width, int height, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject detector = new GameObject(screen);
+        detector.setId((short) 0x14);
+        detector.setX(detectorX);
+        detector.setY(detectorY);
+
+        detector.getArgs().add((short)0);
+        detector.getArgs().add((short)0);
+        detector.getArgs().add((short)0);
+        detector.getArgs().add((short)0);
+        detector.getArgs().add((short)width);
+        detector.getArgs().add((short)height);
+
+        detector.getTestByteOperations().addAll(tests);
+        detector.getWriteByteOperations().addAll(updates);
+
+        screen.getObjects().add(detector);
+
+        return detector;
+    }
+
     public static void addEscapeTimer(Screen screen, int beginConditionFlag, int beginConditionValue) {
         // The escape timer itself
         GameObject escapeTimer = new GameObject(screen);
@@ -2832,12 +2854,12 @@ public final class AddObject {
         screen.getObjects().add(0, conversationTimer);
     }
 
-    public static void addGhostSpawner(Screen screen) {
+    public static GameObject addGhostSpawner(Screen screen, int spawnRate) {
         GameObject ghostSpawner = new GameObject(screen);
         ghostSpawner.setId((short)0x1f);
         ghostSpawner.setX((short)-1);
         ghostSpawner.setY((short)-1);
-        ghostSpawner.getArgs().add((short)((screen.getZoneIndex() == 23 || screen.getZoneIndex() == 24) ? 240 : 120)); // Spawning period
+        ghostSpawner.getArgs().add((short)spawnRate); // Spawning period
         ghostSpawner.getArgs().add((short)3); // Maximum Ghosts
         ghostSpawner.getArgs().add((short)0); // UNKNOWN - bugged?
         if(screen.getZoneIndex() == 23) {
@@ -2850,30 +2872,26 @@ public final class AddObject {
         ghostSpawner.getArgs().add((short)2); // Damage AND Soul
         ghostSpawner.getArgs().add((short)3); // UNKNOWN - bugged?
         screen.getObjects().add(ghostSpawner);
+        return ghostSpawner;
     }
 
-    public static void addGhostLord(Screen screen) {
+    public static GameObject addGhostLord(Screen screen, int x, int y, int speed, int health, int damage, int soul) {
         GameObject ghostLord = new GameObject(screen);
         ghostLord.setId((short)0x20);
-        ghostLord.setX((short)300);
-        ghostLord.setY((short)220);
+        ghostLord.setX((short)x);
+        ghostLord.setY((short)y);
 
-//        enemy.getArgs().add((short)1); // Drop type - coins
-//        enemy.getArgs().add((short)(random.nextInt(10) + 1)); // Amount
-//        enemy.getArgs().add((short)(random.nextInt(4) + 1)); // Speed (up to 4 is allowed for this mode)
-//        enemy.getArgs().add((short)(random.nextInt(4) + 5)); // Health
-//        enemy.getArgs().add((short)(random.nextInt(8) + 3)); // Damage
-//        enemy.getArgs().add((short)5); // Soul
         ghostLord.getArgs().add((short)1); // Drop type - coins
         ghostLord.getArgs().add((short)30); // Amount
-        ghostLord.getArgs().add((short)0); // Speed (up to 4 is allowed for this mode)
-        ghostLord.getArgs().add((short)400); // Health
-        ghostLord.getArgs().add((short)5); // Damage
-        ghostLord.getArgs().add((short)20); // Soul
+        ghostLord.getArgs().add((short)speed); // Speed (up to 4 is allowed for this mode)
+        ghostLord.getArgs().add((short)health); // Health
+        ghostLord.getArgs().add((short)damage); // Damage
+        ghostLord.getArgs().add((short)soul); // Soul
         screen.getObjects().add(ghostLord);
+        return ghostLord;
     }
 
-    public static void addHTExitDoor(Screen screen, int x, int y) {
+    public static void addHTExitDoor(Screen screen) {
         GameObject htExitDoor = new GameObject(screen);
 
         htExitDoor.setId((short) 0x98);
@@ -2884,7 +2902,7 @@ public final class AddObject {
         htExitDoor.getArgs().add((short)23);
         htExitDoor.getArgs().add((short)0);
         htExitDoor.getArgs().add((short)0);
-        htExitDoor.getArgs().add((short)300);
+        htExitDoor.getArgs().add((short)180);
         htExitDoor.getArgs().add((short)332);
 
         htExitDoor.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
@@ -2925,19 +2943,130 @@ public final class AddObject {
         screen.getObjects().add(htExitDoorGraphic);
     }
 
-    public static void addLaserWall(Screen screen, int x, int y) {
+    public static GameObject addLaserWall(Screen screen, int x, int y, boolean flatDamage, int damage) {
         GameObject laserWall = new GameObject(screen);
         laserWall.setId((short) 0xab);
         laserWall.setX(x);
         laserWall.setY(y);
 
-        laserWall.getArgs().add((short)1); // % or hp
-        laserWall.getArgs().add((short)1); // damage
-
-        laserWall.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
-        laserWall.getTestByteOperations().add(new TestByteOperation(0x7f4, ByteOp.FLAG_GT, 0));
+        laserWall.getArgs().add((short)(flatDamage ? 1 : 0)); // % or hp
+        laserWall.getArgs().add((short)damage); // damage
 
         screen.getObjects().add(laserWall);
+        return laserWall;
+    }
+
+    public static GameObject addStunWitch(Screen screen, int x, int y, boolean faceRight) {
+        GameObject stunWitch = new GameObject(screen);
+        stunWitch.setId((short) 0x55);
+        stunWitch.setX(x);
+        stunWitch.setY(y);
+
+        stunWitch.getArgs().add((short)(faceRight ? 0 : 1));
+        stunWitch.getArgs().add((short)2);
+        stunWitch.getArgs().add((short)0); // Drop type
+        stunWitch.getArgs().add((short)2); // Speed
+        stunWitch.getArgs().add((short)400); // Health
+        stunWitch.getArgs().add((short)5); // Contact damage
+        stunWitch.getArgs().add((short)0); // Soul
+        stunWitch.getArgs().add((short)120); // Time between volleys attacks
+        stunWitch.getArgs().add((short)1); // Projectiles per volley
+        stunWitch.getArgs().add((short)20); // Delay after shot
+        stunWitch.getArgs().add((short)6); // Projectile speed
+        stunWitch.getArgs().add((short)2); // Secondary projectile speed (first split for witches)
+        stunWitch.getArgs().add((short)2); // Tertiary projectile speed (first split for witches)
+        stunWitch.getArgs().add((short)8); // Initial projectile damage
+        stunWitch.getArgs().add((short)8); // Secondary projectile damage (lingering flame, first split)
+        stunWitch.getArgs().add((short)8); // Tertiary projectile damage (second split)
+        stunWitch.getArgs().add((short)2); // Initial projectile duration (time to first split)
+        stunWitch.getArgs().add((short)150); // Secondary projectile duration (flame duration, time to second split)
+        stunWitch.getArgs().add((short)2); // Tertiary projectile duration (flame duration, time to second split)
+        stunWitch.getArgs().add((short)0); // Crashes the game when changed
+
+        screen.getObjects().add(stunWitch);
+        return stunWitch;
+    }
+
+    public static void addMovingPlatforms(Screen screen) {
+        GameObject platform1 = new GameObject(screen);
+        platform1.setId((short) 0xc);
+        platform1.setX(800);
+        platform1.setY(160);
+
+        platform1.getArgs().add((short)0); // 0 - Tile Sheet map=0,1 eveg=2
+        platform1.getArgs().add((short)380); // 1 - (0-980) TileX
+        platform1.getArgs().add((short)120); // 2 - (0-562) TileY
+        platform1.getArgs().add((short)40); // 3 - (20-200) dX
+        platform1.getArgs().add((short)20); // 4 - (20-120) dY
+        platform1.getArgs().add((short)0); // 5 - (0-6) Displaces the platform sprite number of pixels left. Setting too high can break vertical platforms
+        platform1.getArgs().add((short)0); // 6 - (0-20) Displaces the platform sprite num pixels up. Interferes with vert. screen transitioning standing on platform. Setting too high can break horiz platforms
+        platform1.getArgs().add((short)40); // 7 - (20-200) hitbox width
+        platform1.getArgs().add((short)20); // 8 - (20-120) hitbox height
+        platform1.getArgs().add((short)790); // 9 - (-1-1980) Platform left bound in Tile-Block (-1 causes horizontal platforms to wrap around the screen, like the one in hell temple)
+        platform1.getArgs().add((short)150); // 10- (80-1320) Platform upper bound in Tile-Block (-1 causes vertical platforms to wrap)
+        platform1.getArgs().add((short)40); // 11- (0-520) How far the platform moves right. Setting too low can break vertical platforms
+        platform1.getArgs().add((short)220); // 12- (40-1120) How far the platform moves down. Setting too low can break horizontal platforms
+        platform1.getArgs().add((short)270); // 13- (0-270) Platform Direction (angle CW from x direction)
+        platform1.getArgs().add((short)1); // 14- (0-1) 0 = Stops when it reaches the edge on the side, 1 = moves back and forth
+        platform1.getArgs().add((short)1); // 15- (0-1) ??
+        platform1.getArgs().add((short)0); // 16- (0-1) ??
+        platform1.getArgs().add((short)150); // 17- (100-240) Platform Speed
+        screen.getObjects().add(platform1);
+
+//        GameObject platform2 = new GameObject(screen);
+//        platform2.setId((short) 0xc);
+//        platform2.setX(920);
+//        platform2.setY(240);
+//
+//        platform2.getArgs().add((short)0); // 0 - Tile Sheet map=0,1 eveg=2
+//        platform2.getArgs().add((short)380); // 1 - (0-980) TileX
+//        platform2.getArgs().add((short)120); // 2 - (0-562) TileY
+//        platform2.getArgs().add((short)40); // 3 - (20-200) dX
+//        platform2.getArgs().add((short)20); // 4 - (20-120) dY
+//        platform2.getArgs().add((short)0); // 5 - (0-6) Displaces the platform sprite number of pixels left. Setting too high can break vertical platforms
+//        platform2.getArgs().add((short)0); // 6 - (0-20) Displaces the platform sprite num pixels up. Interferes with vert. screen transitioning standing on platform. Setting too high can break horiz platforms
+//        platform2.getArgs().add((short)40); // 7 - (20-200) hitbox width
+//        platform2.getArgs().add((short)20); // 8 - (20-120) hitbox height
+//        platform2.getArgs().add((short)860); // 9 - (-1-1980) Platform left bound in Tile-Block (-1 causes horizontal platforms to wrap around the screen, like the one in hell temple)
+//        platform2.getArgs().add((short)200); // 10- (80-1320) Platform upper bound in Tile-Block (-1 causes vertical platforms to wrap)
+//        platform2.getArgs().add((short)180); // 11- (0-520) How far the platform moves right. Setting too low can break vertical platforms
+//        platform2.getArgs().add((short)180); // 12- (40-1120) How far the platform moves down. Setting too low can break horizontal platforms
+//        platform2.getArgs().add((short)45); // 13- (0-270) Platform Direction (angle CW from x direction)
+//        platform2.getArgs().add((short)1); // 14- (0-1) 0 = Stops when it reaches the edge on the side, 1 = moves back and forth
+//        platform2.getArgs().add((short)1); // 15- (0-1) ??
+//        platform2.getArgs().add((short)0); // 16- (0-1) ??
+//        platform2.getArgs().add((short)150); // 17- (100-240) Platform Speed
+//        screen.getObjects().add(platform2);
+
+        GameObject platform3 = new GameObject(screen);
+        platform3.setId((short) 0xc);
+        platform3.setX(1100);
+        platform3.setY(360);
+
+        platform3.getArgs().add((short)0); // 0 - Tile Sheet map=0,1 eveg=2
+        platform3.getArgs().add((short)380); // 1 - (0-980) TileX
+        platform3.getArgs().add((short)120); // 2 - (0-562) TileY
+        platform3.getArgs().add((short)40); // 3 - (20-200) dX
+        platform3.getArgs().add((short)20); // 4 - (20-120) dY
+        platform3.getArgs().add((short)0); // 5 - (0-6) Displaces the platform sprite number of pixels left. Setting too high can break vertical platforms
+        platform3.getArgs().add((short)0); // 6 - (0-20) Displaces the platform sprite num pixels up. Interferes with vert. screen transitioning standing on platform. Setting too high can break horiz platforms
+        platform3.getArgs().add((short)40); // 7 - (20-200) hitbox width
+        platform3.getArgs().add((short)20); // 8 - (20-120) hitbox height
+        platform3.getArgs().add((short)1090); // 9 - (-1-1980) Platform left bound in Tile-Block (-1 causes horizontal platforms to wrap around the screen, like the one in hell temple)
+        platform3.getArgs().add((short)150); // 10- (80-1320) Platform upper bound in Tile-Block (-1 causes vertical platforms to wrap)
+        platform3.getArgs().add((short)40); // 11- (0-520) How far the platform moves right. Setting too low can break vertical platforms
+        platform3.getArgs().add((short)220); // 12- (40-1120) How far the platform moves down. Setting too low can break horizontal platforms
+        platform3.getArgs().add((short)90); // 13- (0-270) Platform Direction (angle CW from x direction)
+        platform3.getArgs().add((short)1); // 14- (0-1) 0 = Stops when it reaches the edge on the side, 1 = moves back and forth
+        platform3.getArgs().add((short)1); // 15- (0-1) ??
+        platform3.getArgs().add((short)0); // 16- (0-1) ??
+        platform3.getArgs().add((short)150); // 17- (100-240) Platform Speed
+        screen.getObjects().add(platform3);
+
+        TestByteOperation testByteOperation = new TestByteOperation(0x7f1, ByteOp.FLAG_EQUALS, 2);
+        platform1.getTestByteOperations().add(testByteOperation);
+//        platform2.getTestByteOperations().add(testByteOperation);
+        platform3.getTestByteOperations().add(testByteOperation);
     }
 
 //    public static void addHadoukenTurtle(Screen screen, int x, int y) {
@@ -3698,6 +3827,43 @@ public final class AddObject {
 
         screen.getObjects().add(shop);
         return shop;
+    }
+
+    public static GameObject addSecretShop(Screen screen, int secretShopBlock) {
+        GameObject shop = new GameObject(screen);
+        shop.setId((short) 0xa0);
+        shop.setX(0);
+        shop.setY(240);
+
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)1);
+        shop.getArgs().add((short)secretShopBlock);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+
+        shop.getTestByteOperations().add(new TestByteOperation(0xacd, ByteOp.FLAG_GTEQ, 1));
+
+        screen.getObjects().add(shop);
+        return shop;
+    }
+
+    public static GameObject addDanceDetector(Screen screen, int danceBlock) {
+        GameObject dance = new GameObject(screen);
+        dance.setId((short) 0xb8);
+        dance.setX(0);
+        dance.setY(0);
+
+        dance.getArgs().add((short)danceBlock);
+        dance.getArgs().add((short)32);
+        dance.getArgs().add((short)24);
+
+        dance.getTestByteOperations().add(new TestByteOperation(0xacd, ByteOp.FLAG_EQUALS, 0));
+        dance.getWriteByteOperations().add(new WriteByteOperation(0xacd, ByteOp.ASSIGN_FLAG, 1));
+
+        screen.getObjects().add(dance);
+        return dance;
     }
 
     public static void addItemGive(GameObject referenceObj, int inventoryArg, int randomizeGraphicsFlag, int worldFlag) {
@@ -4579,6 +4745,195 @@ public final class AddObject {
         return shopBlock;
     }
 
+    public static ShopBlock addSecretShopBlock(List<Block> blocks) {
+        ShopBlock shopBlock = new ShopBlock(blocks.size());
+
+        BlockListData shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add(DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Scriptures").getInventoryArg());
+        shopBlockData.getData().add(DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Perfume").getInventoryArg());
+        shopBlockData.getData().add((short)0x06a);
+        shopBlock.setInventoryItemArgsList(shopBlockData);
+
+        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add((short)1);
+        shopBlockData.getData().add((short)1);
+        shopBlockData.getData().add((short)0);
+        shopBlock.setInventoryPriceList(shopBlockData);
+
+        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add((short)1);
+        shopBlockData.getData().add((short)1);
+        shopBlockData.getData().add((short)100);
+        shopBlock.setInventoryCountList(shopBlockData);
+
+        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add((short)0);
+        shopBlockData.getData().add((short)0);
+        shopBlockData.getData().add((short)0);
+        shopBlock.setFlagList(shopBlockData);
+
+        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData.getData().add((short)0);
+        shopBlockData.getData().add((short)0);
+        shopBlockData.getData().add((short)0);
+        shopBlock.setExitFlagList(shopBlockData);
+
+        shopBlock.setBackground(new BlockCmdSingle((short)4));
+        shopBlock.setSprite(new BlockCmdSingle((short)0x2dc));
+        shopBlock.setMusic(new BlockCmdSingle((short)4));
+
+        BlockStringData blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(String.format("%s , %s , %s",
+                Translations.getText("items.Scriptures"), Translations.getText("items.Perfume"), Translations.getText("items.Coin"))));
+        shopBlock.setBunemonText(blockStringData);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText(
+                "shop0.screenName.zone" + LocationCoordinateMapper.getStartingZone() + (LocationCoordinateMapper.isFrontsideStart() ? ".front" : ".back"))));
+        shopBlock.setBunemonLocation(blockStringData);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.yesPurchaseString")));
+        shopBlock.setString(blockStringData, 0);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.noPurchaseString")));
+        shopBlock.setString(blockStringData, 1);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("text.secretShop")));
+        shopBlock.setString(blockStringData, 2);
+
+        blockStringData = new BlockStringData();
+        List<Short> data = FileUtils.stringToData(Translations.getText("shop0.askItem1String.1"));
+        data.add((short)0x004a);
+        data.add((short)0x96);
+        data.add((short)0);
+        data.add((short)0x64);
+        blockStringData.setItemNameStartIndex(data.size());
+        blockStringData.setItemNameEndIndex(blockStringData.getItemNameStartIndex() + 2);
+        data.add((short)77);
+        data.add((short)105);
+        data.add((short)0x004a);
+        data.add((short)0);
+        data.add((short)0);
+        data.add((short)0);
+        blockStringData.getData().addAll(data);
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.askItem1String.2")));
+        shopBlock.setString(blockStringData, 3);
+
+        blockStringData = new BlockStringData();
+        data = FileUtils.stringToData(Translations.getText("shop0.askItem2String.1"));
+        data.add((short)0x004a);
+        data.add((short)0x96);
+        data.add((short)0);
+        data.add((short)0x64);
+        blockStringData.setItemNameStartIndex(data.size());
+        blockStringData.setItemNameEndIndex(blockStringData.getItemNameStartIndex() + 2);
+        data.add((short)77);
+        data.add((short)105);
+        data.add((short)0x004a);
+        data.add((short)0);
+        data.add((short)0);
+        data.add((short)0);
+        blockStringData.getData().addAll(data);
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.askItem2String.2")));
+        shopBlock.setString(blockStringData, 4);
+
+        blockStringData = new BlockStringData();
+        data = FileUtils.stringToData(Translations.getText("shop0.askItem3String.1"));
+        data.add((short)0x004a);
+        data.add((short)0x96);
+        data.add((short)0);
+        data.add((short)0x64);
+        blockStringData.setItemNameStartIndex(data.size());
+        blockStringData.setItemNameEndIndex(blockStringData.getItemNameStartIndex() + 2);
+        data.add((short)77);
+        data.add((short)105);
+        data.add((short)0x004a);
+        data.add((short)0);
+        data.add((short)0);
+        data.add((short)0);
+        blockStringData.getData().addAll(data);
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.askItem3String.2")));
+        shopBlock.setString(blockStringData, 5);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.boughtItem1String")));
+        shopBlock.setString(blockStringData, 6);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.boughtItem2String")));
+        shopBlock.setString(blockStringData, 7);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.boughtItem3String")));
+        shopBlock.setString(blockStringData, 8);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.soldOutItem1String")));
+        shopBlock.setString(blockStringData, 9);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.soldOutItem2String")));
+        shopBlock.setString(blockStringData, 10);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.soldOutItem3String")));
+        shopBlock.setString(blockStringData, 11);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.cancelItem1String")));
+        shopBlock.setString(blockStringData, 12);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.cancelItem2String")));
+        shopBlock.setString(blockStringData, 13);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.cancelItem3String")));
+        shopBlock.setString(blockStringData, 14);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.noMoneyItem1String")));
+        shopBlock.setString(blockStringData, 15);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.noMoneyItem2String")));
+        shopBlock.setString(blockStringData, 16);
+
+        blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.noMoneyItem3String")));
+        shopBlock.setString(blockStringData, 17);
+        blocks.add(shopBlock);
+        return shopBlock;
+    }
+
+    public static Block addDanceBlock(List<Block> blocks) {
+        Block danceBlock = new Block(blocks.size());
+        BlockListData danceMove = new BlockListData((short)0x004e, (short)1);
+        danceMove.getData().add((short)1);
+        danceBlock.getBlockContents().add(danceMove);
+        danceBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        danceMove = new BlockListData((short)0x004e, (short)1);
+        danceMove.getData().add((short)3);
+        danceBlock.getBlockContents().add(danceMove);
+        danceBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        danceMove = new BlockListData((short)0x004e, (short)1);
+        danceMove.getData().add((short)1);
+        danceBlock.getBlockContents().add(danceMove);
+        danceBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        danceMove = new BlockListData((short)0x004e, (short)1);
+        danceMove.getData().add((short)2);
+        danceBlock.getBlockContents().add(danceMove);
+
+        blocks.add(danceBlock);
+        return danceBlock;
+    }
+
     public static int addNpcBlock(List<Block> blocks, int templateBlockIndex, int conversationFlagIndex) {
         Block templateBlock = blocks.get(templateBlockIndex);
         if(templateBlock instanceof MasterNpcBlock) {
@@ -4604,6 +4959,17 @@ public final class AddObject {
             // Build master block referencing this
             MasterNpcBlock masterNpcBlock = new MasterNpcBlock((MasterNpcBlock)templateBlock, blocks.size());
             masterNpcBlock.setTextCard(new BlockCmdSingle((short)halloweenBlock.getBlockNumber()));
+            blocks.add(masterNpcBlock);
+            return masterNpcBlock.getBlockNumber();
+        }
+        return 0;
+    }
+
+    public static int addNoCandyMasterBlock(List<Block> blocks, int templateBlockIndex, int noCandyTextBlockIndex) {
+        Block templateBlock = blocks.get(templateBlockIndex);
+        if(templateBlock instanceof MasterNpcBlock) {
+            MasterNpcBlock masterNpcBlock = new MasterNpcBlock((MasterNpcBlock)templateBlock, blocks.size());
+            masterNpcBlock.setTextCard(new BlockCmdSingle((short)noCandyTextBlockIndex));
             blocks.add(masterNpcBlock);
             return masterNpcBlock.getBlockNumber();
         }
@@ -4651,12 +5017,11 @@ public final class AddObject {
         Block mulbrukHTBlock = new Block(blocks.size());
         mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
 
-        List<Short> stringCharacters = FileUtils.stringToData("event.halloween.htMulbruk1");
+        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.htMulbruk1"));
         for (Short shortCharacter : stringCharacters) {
             mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
         mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)0x3bb, (short)1)); // Unlock HT
-        mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)0xaac, (short)3)); // Update flag so the conversation doesn't repeat.
         mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
 
         String textLine = Translations.getText("event.halloween.htMulbruk2");
@@ -4667,7 +5032,7 @@ public final class AddObject {
                 mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
             }
         }
-        mulbrukHTBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x150, (short)0, (short)0x100));
+        mulbrukHTBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0, (short)0x64));
         stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.halloweenCostume"));
         for (Short shortCharacter : stringCharacters) {
             mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
@@ -4699,57 +5064,64 @@ public final class AddObject {
         }
         mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
 
-        stringCharacters = FileUtils.stringToData("event.halloween.htMulbruk4");
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.htMulbruk4"));
         for (Short shortCharacter : stringCharacters) {
             mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
         mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0));
 
-        // Allow repeat
-        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.repeat"));
-        for (Short shortCharacter : stringCharacters) {
-            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
-        }
-        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        blocks.add(mulbrukHTBlock);
+        return mulbrukHTBlock.getBlockNumber();
+    }
 
-        BlockListData repeatCmd = new BlockListData((short)0x004e, (short)1);
-        repeatCmd.getData().add((short)mulbrukHTBlock.getBlockNumber()); // Re-use the same block, since this doesn't really affect much.
-        mulbrukHTBlock.getBlockContents().add(repeatCmd);
-        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
-
-        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.repeat.yes"));
-        for (Short shortCharacter : stringCharacters) {
-            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
-        }
-        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
-
-        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.repeat.no"));
-        for (Short shortCharacter : stringCharacters) {
-            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
-        }
-        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
-
-        textLine = Translations.getText("event.halloween.htMulbruk5");
-        textParts = textLine.split("%s");
+    public static int addAllNpcsBlock(List<Block> blocks) {
+        Block allNpcsBlock = new Block(blocks.size());
+        List<Short> stringCharacters;
+        String textLine = String.format(Translations.getText("event.halloween.xelpudAll"), 29, 29, "%s");
+        String[] textParts = textLine.split("%s");
         if(textParts.length > 0) {
             stringCharacters = FileUtils.stringToData(textParts[0]);
             for (Short shortCharacter : stringCharacters) {
-                mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+                allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
             }
         }
-        mulbrukHTBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0x32, (short)0));
-        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.helloweenTemple"));
+        allNpcsBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0x32, (short)0));
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.mulbruk"));
         for (Short shortCharacter : stringCharacters) {
-            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        mulbrukHTBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+        allNpcsBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
         stringCharacters = FileUtils.stringToData(textParts[textParts.length > 0 ? 1 : 0]);
         for (Short shortCharacter : stringCharacters) {
-            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        blocks.add(mulbrukHTBlock);
-        return mulbrukHTBlock.getBlockNumber();
+        blocks.add(allNpcsBlock);
+        return allNpcsBlock.getBlockNumber();
+    }
+
+    public static int addNoCandyBlock(List<Block> blocks) {
+        Block allNpcsBlock = new Block(blocks.size());
+        List<Short> stringCharacters;
+        String textLine = Translations.getText("event.halloween.noDracuet");
+        String[] textParts = textLine.split("%s");
+        if(textParts.length > 0) {
+            stringCharacters = FileUtils.stringToData(textParts[0]);
+            for (Short shortCharacter : stringCharacters) {
+                allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            }
+        }
+        allNpcsBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0, (short)0x64));
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.halloweenCandy"));
+        for (Short shortCharacter : stringCharacters) {
+            allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        allNpcsBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+        stringCharacters = FileUtils.stringToData(textParts[textParts.length > 0 ? 1 : 0]);
+        for (Short shortCharacter : stringCharacters) {
+            allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        blocks.add(allNpcsBlock);
+        return allNpcsBlock.getBlockNumber();
     }
 
     private static String getHintText(int hintNumber) {
@@ -4915,6 +5287,91 @@ public final class AddObject {
         htSkipDais.getWriteByteOperations().add(new WriteByteOperation(0x70d, ByteOp.ASSIGN_FLAG, 1));
 
         screen.getObjects().add(htSkipDais);
+    }
+
+    public static void addHTWarning(Screen screen, List<Block> blocks) {
+        Block htExplanation = new Block(blocks.size());
+
+        List<Short> stringCharacters;
+        String textLine = Translations.getText("event.halloween.htLogic");
+        String[] textParts = textLine.split("%s");
+        if(textParts.length > 0) {
+            stringCharacters = FileUtils.stringToData(textParts[0]);
+            for (Short shortCharacter : stringCharacters) {
+                htExplanation.getBlockContents().add(new BlockSingleData(shortCharacter));
+            }
+        }
+        htExplanation.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0, (short)0x64));
+        stringCharacters = FileUtils.stringToData(Translations.getText("items.HolyGrail"));
+        for (Short shortCharacter : stringCharacters) {
+            htExplanation.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        htExplanation.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+        stringCharacters = FileUtils.stringToData(textParts[textParts.length > 0 ? 1 : 0]);
+        for (Short shortCharacter : stringCharacters) {
+            htExplanation.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+
+        htExplanation.getBlockContents().add(new BlockSingleData((short)0x000a)); // End record
+        BlockListData tabletData = new BlockListData((short)0x004e, (short)2);
+        tabletData.getData().add((short)0); // Language: 0 = English; 1 = La-Mulanese; 2 = Ancient La-Mulanese; 3 = Rosetta Stone
+        tabletData.getData().add((short)0); // Slate: 0 = No image; 1 = use slate00.png; 1 = use slate01.png
+
+        blocks.add(htExplanation);
+
+        GameObject tabletReadable = new GameObject(screen);
+        tabletReadable.setId((short)0x9e);
+        tabletReadable.setX(120);
+        tabletReadable.setY(400);
+
+        tabletReadable.getArgs().add((short)htExplanation.getBlockNumber());
+        tabletReadable.getArgs().add((short)0);
+        tabletReadable.getArgs().add((short)0);
+        tabletReadable.getArgs().add((short)1);
+        tabletReadable.getArgs().add((short)1);
+        tabletReadable.getArgs().add((short)1);
+        tabletReadable.getArgs().add((short)1);
+
+        tabletReadable.getArgs().add((short)1);
+        tabletReadable.getArgs().add((short)1);
+        tabletReadable.getArgs().add((short)0);
+
+        tabletReadable.getArgs().add((short)40);
+        tabletReadable.getArgs().add((short)40);
+
+        screen.getObjects().add(tabletReadable);
+
+        GameObject tabletGraphic = new GameObject(screen);
+        tabletGraphic.setId((short)0x93);
+        tabletGraphic.setX(120);
+        tabletGraphic.setY(400);
+
+        tabletGraphic.getArgs().add((short)-1);
+        tabletGraphic.getArgs().add((short)0); // 0=mapxx_1.png 1=evegxx.png 2=00prof.png 3=02comenemy.png 4=6=00item.png 5=01menu.png 6=4=00item.png Default:01effect.png
+        tabletGraphic.getArgs().add((short)0);
+        tabletGraphic.getArgs().add((short)0);
+        tabletGraphic.getArgs().add((short)40); // dx
+        tabletGraphic.getArgs().add((short)40); // dy
+        tabletGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        tabletGraphic.getArgs().add((short)0); // Animation frames
+        tabletGraphic.getArgs().add((short)1); // Pause frames
+        tabletGraphic.getArgs().add((short)0); // Repeat count (<1 is forever)
+        tabletGraphic.getArgs().add((short)0); // Hittile to fill with
+        tabletGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        tabletGraphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        tabletGraphic.getArgs().add((short)0); // Cycle colors t/f
+        tabletGraphic.getArgs().add((short)0); // Alpha/frame
+        tabletGraphic.getArgs().add((short)255); // Max alpha
+        tabletGraphic.getArgs().add((short)0); // R/frame
+        tabletGraphic.getArgs().add((short)0); // Max R
+        tabletGraphic.getArgs().add((short)0); // G/frame
+        tabletGraphic.getArgs().add((short)0); // Max G
+        tabletGraphic.getArgs().add((short)0); // B/frame
+        tabletGraphic.getArgs().add((short)0); // Max B
+        tabletGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        tabletGraphic.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(tabletGraphic);
     }
 
     /**

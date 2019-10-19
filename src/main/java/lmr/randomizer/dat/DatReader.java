@@ -704,7 +704,8 @@ public final class DatReader {
                     || blockIndex == 680 || blockIndex == 681 || blockIndex == 683 || blockIndex == 689
                     || blockIndex == 693 || blockIndex == 694 || blockIndex == 696 || blockIndex == 698
                     || blockIndex == 700 || blockIndex == 701 || blockIndex == 702 || blockIndex == 704 || blockIndex == 706 || blockIndex == 707 || blockIndex == 708 || blockIndex == 709
-                    || blockIndex == 710 || blockIndex == 718 || blockIndex == 723) {
+                    || blockIndex == 710 || blockIndex == 718 || blockIndex == 723
+                    || blockIndex == 726 || blockIndex == 991 || blockIndex == 993 || blockIndex == 1000) {
                 block = buildMasterNpcBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             else if(blockIndex == 998 && Settings.isIncludeHellTempleNPCs()) {

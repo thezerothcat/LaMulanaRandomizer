@@ -19,7 +19,7 @@ public class TabbedPanel extends JTabbedPane {
     public TabbedPanel(MainPanel _mainPanel) {
         mainPanel = _mainPanel;
 
-        eventPanel = new EventPanel();
+        eventPanel = new EventPanel(this);
         addTab(Translations.getText("settings.event"), eventPanel);
 
         randomizationPanel = new RandomizationPanel();
