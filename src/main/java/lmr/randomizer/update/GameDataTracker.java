@@ -6489,7 +6489,9 @@ public final class GameDataTracker {
         Room htRoom = getRoom(htZone.getRooms(), 0);
         Screen htScreen = getScreen(htRoom.getScreens(), 0);
         AddObject.addHTSkip(htScreen, datInfo);
-        AddObject.addHTWarning(htScreen, datInfo);
+        if(!Settings.getStartingItemsIncludingCustom().contains("Holy Grail")) {
+            AddObject.addHTWarning(htScreen, datInfo);
+        }
     }
 
     private static Zone getZone(List<Zone> zones, int zoneIndex) {

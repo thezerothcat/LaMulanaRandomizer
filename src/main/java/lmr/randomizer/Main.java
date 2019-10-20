@@ -261,6 +261,11 @@ public class Main {
 
                 customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 3", "Buckler", (short)5, (short)1);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+//                if(Settings.isIncludeHellTempleNPCs() && Settings.isRandomizeDracuetShop()) {
+//                    customItemPlacement = new CustomItemPlacement("Shop 23 (HT) Item 1", "Weights", (short)10, (short)31);
+//                    DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+//                }
             }
 
             progressDialog.updateProgress(10, Translations.getText("setup.backup"));

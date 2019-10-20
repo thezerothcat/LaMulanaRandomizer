@@ -1360,7 +1360,12 @@ public final class RcdReader {
             if(screen.getZoneIndex() == 23) {
                 if(screen.getRoomIndex() == 0) {
                     if(screen.getScreenIndex() == 0) {
-                        // Entrance, no change
+                        // Entrance, ban raindrop skip
+                        // H1
+                        ScreenExit downExit = screen.getScreenExits().get(2);
+                        downExit.setZoneIndex((byte)23);
+                        downExit.setRoomIndex((byte)3);
+                        downExit.setScreenIndex((byte)0);
                     }
                 }
                 else if(screen.getRoomIndex() == 1) {
