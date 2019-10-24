@@ -5052,6 +5052,17 @@ public final class AddObject {
         return npcCountBlock.getBlockNumber();
     }
 
+    public static int addDevRoomHintBlock(List<Block> blocks) {
+        Block devHintBlock = new Block(blocks.size());
+        String hintText = Translations.getText("event.halloween.hintDevs");
+        List<Short> stringCharacters = FileUtils.stringToData(hintText);
+        for (Short shortCharacter : stringCharacters) {
+            devHintBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        blocks.add(devHintBlock);
+        return devHintBlock.getBlockNumber();
+    }
+
     public static int addMulbrukHTBlock(List<Block> blocks) {
         Block mulbrukHTBlock = new Block(blocks.size());
         mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));

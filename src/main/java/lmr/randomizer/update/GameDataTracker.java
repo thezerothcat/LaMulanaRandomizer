@@ -4150,12 +4150,17 @@ public final class GameDataTracker {
                 randomBlock1.getBlockContents().add(blockListData);
                 randomBlock2.getBlockContents().add(blockListData);
                 randomBlock3.getBlockContents().add(blockListData);
-                if(i != hintCount) {
-                    randomBlock1.getBlockContents().add(new BlockSingleData((short)10));
-                    randomBlock2.getBlockContents().add(new BlockSingleData((short)10));
-                    randomBlock3.getBlockContents().add(new BlockSingleData((short)10));
-                }
+                randomBlock1.getBlockContents().add(new BlockSingleData((short)10));
+                randomBlock2.getBlockContents().add(new BlockSingleData((short)10));
+                randomBlock3.getBlockContents().add(new BlockSingleData((short)10));
             }
+            short hintBlock = (short)AddObject.addDevRoomHintBlock(datBlocks);
+            BlockListData blockListData = new BlockListData((short)78, (short)2);
+            blockListData.getData().add(hintBlock);
+            blockListData.getData().add((short)0);
+            randomBlock1.getBlockContents().add(blockListData);
+            randomBlock2.getBlockContents().add(blockListData);
+            randomBlock3.getBlockContents().add(blockListData);
 
             // Update Mulbruk to not have score conversations so the random ones will take precedence
             Block pointsBlock = datBlocks.get(0x1e8);
