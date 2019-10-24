@@ -58,6 +58,7 @@ public final class Settings {
     private boolean ushumgalluAssist;
     private boolean bossSpecificAnkhJewels;
     private boolean blockPushingRequiresGlove;
+    private boolean screenshakeDisabled;
 
     private boolean alternateMotherAnkh;
     private boolean automaticMantras;
@@ -590,6 +591,17 @@ public final class Settings {
         singleton.blockPushingRequiresGlove = blockPushingRequiresGlove;
     }
 
+    public static boolean isScreenshakeDisabled() {
+        return singleton.screenshakeDisabled;
+    }
+
+    public static void setScreenshakeDisabled(boolean screenshakeDisabled, boolean update) {
+        if(update && screenshakeDisabled != singleton.screenshakeDisabled) {
+            singleton.changed = true;
+        }
+        singleton.screenshakeDisabled = screenshakeDisabled;
+    }
+
     public static boolean isCoinChestGraphics() {
         return singleton.coinChestGraphics;
     }
@@ -1010,6 +1022,7 @@ public final class Settings {
         int bossDifficulty = singleton.bossDifficulty.ordinal();
 
         int booleanSettings2 = 0;
+        booleanSettings2 |= processBooleanFlag.apply(singleton.screenshakeDisabled, 6);
         booleanSettings2 |= processBooleanFlag.apply(singleton.includeHellTempleNPCs, 5);
         booleanSettings2 |= processBooleanFlag.apply(singleton.blockPushingRequiresGlove, 4);
         booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeGraphics, 3);
@@ -1096,6 +1109,7 @@ public final class Settings {
         int maxRandomRemovedItems = Integer.parseInt(parts[9],16);
 
         int booleanSettingsFlag2 = Integer.parseInt(parts[10], 16);
+        singleton.screenshakeDisabled = getBoolFlagFromInt.apply(booleanSettingsFlag2, 6);
         singleton.includeHellTempleNPCs = getBoolFlagFromInt.apply(booleanSettingsFlag2, 5);
         singleton.blockPushingRequiresGlove = getBoolFlagFromInt.apply(booleanSettingsFlag2, 4);
         singleton.randomizeGraphics = getBoolFlagFromInt.apply(booleanSettingsFlag2, 3);

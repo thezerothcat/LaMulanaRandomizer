@@ -4352,7 +4352,6 @@ public final class GameDataTracker {
             swimsuitBlockContents.add(new BlockSingleData(shortCharacter));
         }
         swimsuitBlockContents.add(new BlockItemData((short) 0x0042, (short) 74)); // Swimsuit
-        swimsuitBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0x7ed, (short) 1)); // Solve room 30 so you can get out
         swimsuitBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0x7ea, (short) 1)); // Solve room 27 so you can get out
         swimsuitBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0x7f8, (short) 1)); // Solve room 27 so you can get out
         swimsuitBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0x36a, (short) 1)); // Mulbruk Halloween costume

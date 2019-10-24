@@ -2759,28 +2759,30 @@ public final class AddObject {
 
         screen.getObjects().add(0, escapeTimer);
 
-        // Escape screen shake
-        GameObject escapeScreenShake = new GameObject(screen);
-        escapeScreenShake.setId((short) 0xc7);
-        escapeScreenShake.setX(-1);
-        escapeScreenShake.setY(-1);
+        if(!Settings.isScreenshakeDisabled()) {
+            // Escape screen shake
+            GameObject escapeScreenShake = new GameObject(screen);
+            escapeScreenShake.setId((short) 0xc7);
+            escapeScreenShake.setX(-1);
+            escapeScreenShake.setY(-1);
 
-        escapeScreenShake.getArgs().add((short)-1);
-        escapeScreenShake.getArgs().add((short)0);
+            escapeScreenShake.getArgs().add((short)-1);
+            escapeScreenShake.getArgs().add((short)0);
 
-        testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(0x382);
-        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-        testByteOperation.setValue((byte)1);
-        escapeScreenShake.getTestByteOperations().add(testByteOperation);
+            testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(0x382);
+            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+            testByteOperation.setValue((byte)1);
+            escapeScreenShake.getTestByteOperations().add(testByteOperation);
 
-        testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(0x403);
-        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-        testByteOperation.setValue((byte)0);
-        escapeScreenShake.getTestByteOperations().add(testByteOperation);
+            testByteOperation = new TestByteOperation();
+            testByteOperation.setIndex(0x403);
+            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+            testByteOperation.setValue((byte)0);
+            escapeScreenShake.getTestByteOperations().add(testByteOperation);
 
-        screen.getObjects().add(0, escapeScreenShake);
+            screen.getObjects().add(0, escapeScreenShake);
+        }
 
         // Disable grail for escape
         GameObject grailToggle = new GameObject(screen);
