@@ -565,7 +565,34 @@ public final class RcdReader {
                 }
             }
         }
+        else if(obj.getId() == 0x11) {
+            // Crusher object
+            if(Settings.isHalloweenMode()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen) objectContainer;
+                    if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 20 && screen.getScreenIndex() == 0) {
+                        keepObject = false;
+                    }
+                }
+            }
+        }
+        else if(obj.getId() == 0x1f) {
+            // Ghost spawner
+            if(Settings.isHalloweenMode()) {
+                boolean clearFlags = false;
+                for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                    if(testByteOperation.getIndex() == 0x164) {
+                        clearFlags = true;
+                        break;
+                    }
+                }
+                if(clearFlags) {
+                    obj.getTestByteOperations().clear();
+                }
+            }
+        }
         else if(obj.getId() == 0x34) {
+            // Seal
             if(objectContainer instanceof Screen) {
                 Screen screen = (Screen) objectContainer;
                 if (screen.getZoneIndex() == 3 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
@@ -2271,6 +2298,19 @@ public final class RcdReader {
                         AddObject.addWarp(screen, 0, 360, 2, 8, 23, 15, 1, 80, 392);
                     }
                 }
+                else if(roomIndex == 20) {
+                    if(screenIndex == 0) {
+                        // HT room 30
+                        AddObject.addLemezaDetector(screen, 0, 280, 3, 4,
+                                Arrays.asList(new TestByteOperation(0x005, ByteOp.FLAG_EQUALS, 0),
+                                        new TestByteOperation(0x7ed, ByteOp.FLAG_EQUALS, 0),
+                                        new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1)),
+                                Arrays.asList(new WriteByteOperation(0x005, ByteOp.ASSIGN_FLAG, 1)));
+                        AddObject.addPunchyFist(screen, 0, 300,
+                                Arrays.asList(new WriteByteOperation(0x005, ByteOp.ASSIGN_FLAG, 1),
+                                        new WriteByteOperation(0x005, ByteOp.ASSIGN_FLAG, 0)));
+                    }
+                }
                 else if(roomIndex == 22) {
                     if(screenIndex == 0) {
                         // HT room 35
@@ -2431,18 +2471,18 @@ public final class RcdReader {
 //            }
 //            else {
             if(zoneIndex == 2) {
-                if(roomIndex == 3 && screenIndex != 0) {
+//                if(roomIndex == 3 && screenIndex != 0) {
                     AddObject.addGhostSpawner(screen, 120);
-                }
-                else if(roomIndex == 5 && screenIndex != 1) {
-                    AddObject.addGhostSpawner(screen, 120);
-                }
-                else if(roomIndex == 9 && screenIndex != 0) {
-                    AddObject.addGhostSpawner(screen, 120);
-                }
-                else if(roomIndex != 7 && roomIndex != 8) {
-                    AddObject.addGhostSpawner(screen, 120);
-                }
+//                }
+//                else if(roomIndex == 5 && screenIndex != 1) {
+//                    AddObject.addGhostSpawner(screen, 120);
+//                }
+//                else if(roomIndex == 9 && screenIndex != 0) {
+//                    AddObject.addGhostSpawner(screen, 120);
+//                }
+//                else if(roomIndex != 7 && roomIndex != 8) {
+//                    AddObject.addGhostSpawner(screen, 120);
+//                }
             }
             else if(zoneIndex == 19) {
                 if(roomIndex == 0 && screenIndex != 0) {
@@ -2738,7 +2778,7 @@ public final class RcdReader {
                 if(screenIndex == 0) {
                     AddObject.addMoonlightPassageTimer(screen);
                 }
-                else if(screenIndex == 1 && Settings.isRandomizeTransitionGates()) {
+                else if(screenIndex == 1) {
                     AddObject.addWeightDoorTimer(screen, 0x045);
                 }
             }

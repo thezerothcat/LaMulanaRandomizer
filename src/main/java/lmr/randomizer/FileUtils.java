@@ -919,7 +919,7 @@ public class FileUtils {
         final List<String> modifiedFilesToCopy = Arrays.asList("02comenemy.png", "_banner.png",
                "eveg01.png", "eveg03.png", "eveg04.png", "eveg05.png", "eveg06.png", "eveg08.png", "eveg09.png",
                 "eveg10.png", "eveg11.png", "eveg12.png", "eveg13.png", "eveg14.png", "eveg15.png", "eveg16.png",
-                "eveg18.png", "eveg19.png", "eveg20.png", "map18_1.png");
+                "eveg17.png", "eveg18.png", "eveg19.png", "eveg20.png", "map18_1.png");
         for(String file : modifiedFilesToCopy) {
             try {
                 File graphicsFileToWrite = new File(halloweenFolderPath, file);

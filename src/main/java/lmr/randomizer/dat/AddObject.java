@@ -2677,6 +2677,43 @@ public final class AddObject {
         return detector;
     }
 
+    public static GameObject addPunchyFist(Screen screen, int x, int y, List<WriteByteOperation> updates) {
+        GameObject punchyFist = new GameObject(screen);
+        punchyFist.setId((short) 0xa3);
+        punchyFist.setX(x);
+        punchyFist.setY(y);
+
+        punchyFist.getArgs().add((short)0);
+        punchyFist.getArgs().add((short)0);
+        punchyFist.getArgs().add((short)0);
+        punchyFist.getArgs().add((short)63);
+        punchyFist.getArgs().add((short)0);
+        punchyFist.getArgs().add((short)0);
+        punchyFist.getArgs().add((short)0);
+        punchyFist.getArgs().add((short)32);
+        punchyFist.getArgs().add((short)32);
+        punchyFist.getArgs().add((short)-1);
+        punchyFist.getArgs().add((short)-1);
+        punchyFist.getArgs().add((short)-1);
+        punchyFist.getArgs().add((short)-1);
+        punchyFist.getArgs().add((short)-1);
+        punchyFist.getArgs().add((short)-1);
+        punchyFist.getArgs().add((short)-1);
+        punchyFist.getArgs().add((short)-1);
+        punchyFist.getArgs().add((short)-1);
+        punchyFist.getArgs().add((short)0);
+        punchyFist.getArgs().add((short)-160);
+        punchyFist.getArgs().add((short)0);
+        punchyFist.getArgs().add((short)0);
+        punchyFist.getArgs().add((short)1000);
+
+        punchyFist.getWriteByteOperations().addAll(updates);
+
+        screen.getObjects().add(punchyFist);
+
+        return punchyFist;
+    }
+
     public static void addEscapeTimer(Screen screen, int beginConditionFlag, int beginConditionValue) {
         // The escape timer itself
         GameObject escapeTimer = new GameObject(screen);
