@@ -6462,6 +6462,12 @@ public final class GameDataTracker {
                 nightSurfaceScreen.getObjects().addAll(positionalObjectsToPreserve);
                 if(nightSurfaceScreen.getRoomIndex() == 2 && nightSurfaceScreen.getScreenIndex() == 1) {
                     AddObject.addStartingItems(nightSurfaceScreen);
+                    if (Settings.isAutomaticHardmode()) {
+                        AddObject.addAutomaticHardmodeTimer(nightSurfaceScreen);
+                    }
+                    if (Settings.isAutomaticTranslations()) {
+                        AddObject.addAutomaticTranslationsTimer(nightSurfaceScreen);
+                    }
                 }
                 if(Settings.isIncludeHellTempleNPCs()) {
                     if(nightSurfaceScreen.getRoomIndex() == 7 && nightSurfaceScreen.getScreenIndex() == 0) {
