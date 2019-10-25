@@ -117,9 +117,12 @@ public class Main {
         public void actionPerformed(ActionEvent e) {
             mainPanel.updateSettings();
             tabbedPanel.updateSettings();
-            if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-                Settings.setRandomizeForbiddenTreasure(true, false);
-                Settings.setHTFullRandom(false, false);
+            if(Settings.isHalloweenMode()) {
+                Settings.setRandomizeStartingLocation(true, false);
+                if(Settings.isIncludeHellTempleNPCs()) {
+                    Settings.setRandomizeForbiddenTreasure(true, false);
+                    Settings.setHTFullRandom(false, false);
+                }
             }
 
             if("generate".equals(e.getActionCommand())) {
@@ -513,20 +516,20 @@ public class Main {
                             "Randomizer error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
-                if(!Settings.isRandomizeEnemies()) {
-                    JOptionPane.showMessageDialog(this,
-                            String.format("The setting \"%s\" is required for this mode",
-                                    Translations.getText("enemies.randomizeEnemies")),
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(!Settings.isRandomizeStartingLocation()) {
-                    JOptionPane.showMessageDialog(this,
-                            String.format("The setting \"%s\" is required for this mode",
-                                    Translations.getText("randomization.randomizeStartingLocation")),
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
+//                if(!Settings.isRandomizeEnemies()) {
+//                    JOptionPane.showMessageDialog(this,
+//                            String.format("The setting \"%s\" is required for this mode",
+//                                    Translations.getText("enemies.randomizeEnemies")),
+//                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+//                    return false;
+//                }
+//                if(!Settings.isRandomizeStartingLocation()) {
+//                    JOptionPane.showMessageDialog(this,
+//                            String.format("The setting \"%s\" is required for this mode",
+//                                    Translations.getText("randomization.randomizeStartingLocation")),
+//                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+//                    return false;
+//                }
                 if(Settings.getEnabledDamageBoosts().contains("Enemy")) {
                     JOptionPane.showMessageDialog(this,
                             String.format("The setting \"%s\" cannot be used with this mode",
