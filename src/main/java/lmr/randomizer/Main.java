@@ -118,6 +118,7 @@ public class Main {
             mainPanel.updateSettings();
             tabbedPanel.updateSettings();
             if(Settings.isHalloweenMode()) {
+                Settings.setRandomizeEnemies(true, false);
                 Settings.setRandomizeStartingLocation(true, false);
                 if(Settings.isIncludeHellTempleNPCs()) {
                     Settings.setRandomizeForbiddenTreasure(true, false);
