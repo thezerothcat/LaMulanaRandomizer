@@ -301,6 +301,9 @@ public class Main {
                             JOptionPane.showMessageDialog(f,
                                     "Unknown error. Please see logs for more information.",
                                     "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                            Settings.setCurrentStartingLocation(1);
+                            DataFromFile.clearCustomPlacementData();
+                            DataFromFile.clearAllData();
                             SwingUtilities.invokeLater(() -> {
                                 progressDialog.setVisible(false);
                                 progressDialog.setSafeClose(true);
@@ -494,6 +497,12 @@ public class Main {
             if(!validateInstallDir()) {
                 JOptionPane.showMessageDialog(this,
                         "Unable to find La-Mulana install directory",
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(Settings.getGraphicsPack().equals("HALLOWEEN")) {
+                JOptionPane.showMessageDialog(this,
+                        String.format("HALLOWEEN cannot be used as %s. Please select a folder from which the HALLOWEEN graphics should be created.", Translations.getText("settings.graphicsPack")),
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
@@ -1483,7 +1492,6 @@ public class Main {
                     writeSaveFile();
                 }
 
-                FileUtils.updateGraphicsFiles(); // Always want to update graphics files, for backup Shrine door and possibly other things.
                 if(Settings.isHalloweenMode()) {
                     if(!FileUtils.updateGraphicsFilesForHalloween(Settings.getGraphicsPack())) {
                         JOptionPane.showMessageDialog(f,
@@ -1491,6 +1499,7 @@ public class Main {
                                 "Randomizer error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
+                FileUtils.updateGraphicsFiles(); // Always want to update graphics files, for backup Shrine door and possibly other things.
 
                 FileUtils.logFlush("Copying settings file");
                 File settingsFile = new File("randomizer-config.txt");

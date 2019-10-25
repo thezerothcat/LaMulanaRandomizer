@@ -804,10 +804,10 @@ public class FileUtils {
                 fileOutputStream.close();
             }
 
-            FileUtils.updateGraphicsFiles();
             if(Settings.isHalloweenMode()) {
                 FileUtils.updateGraphicsFilesForHalloween(Settings.getGraphicsPack());
             }
+            FileUtils.updateGraphicsFiles();
 
             FileUtils.logFlush("Save file copy complete");
         }
@@ -921,6 +921,7 @@ public class FileUtils {
         halloweenGraphicsFolder.mkdir();
 
         if(!copyGraphicsFiles(graphicsBaseFolder, halloweenGraphicsFolder)) {
+            FileUtils.logFlush("Problem copying graphics from source folder " + graphicsPack);
             halloweenGraphicsFolder.delete();
             return false;
         }
@@ -937,6 +938,8 @@ public class FileUtils {
                     modified = ImageIO.read(FileUtils.class.getResource("graphics/halloween/" + file));
                 }
                 catch (IOException ex) {
+                    FileUtils.logFlush("Problem copying graphics file " + file);
+                    halloweenGraphicsFolder.delete();
                     return false;
                 }
                 BufferedImage existingImage = ImageIO.read(graphicsFileToWrite);
@@ -949,6 +952,7 @@ public class FileUtils {
             }
             catch(IOException ex) {
                 FileUtils.logFlush("Problem copying graphics file " + file);
+                halloweenGraphicsFolder.delete();
                 return false;
             }
         }
