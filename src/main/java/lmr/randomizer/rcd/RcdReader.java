@@ -489,6 +489,12 @@ public final class RcdReader {
                 // Remove broken pot flag check so the warp is just always active.
                 obj.getTestByteOperations().remove(0);
             }
+            if(objectContainer instanceof Screen) {
+                Screen screen = (Screen)objectContainer;
+                if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 21 && screen.getScreenIndex() == 0) {
+                    obj.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0));
+                }
+            }
         }
         else if (obj.getId() == 0x91) {
             if(Settings.isRandomizeNonBossDoors()) {
@@ -1861,6 +1867,25 @@ public final class RcdReader {
                         upExit.setZoneIndex((byte)23);
                         upExit.setRoomIndex((byte)18);
                         upExit.setScreenIndex((byte)0);
+                    }
+                }
+                else if(screen.getRoomIndex() == 19) {
+                    if(screen.getScreenIndex() == 0) {
+                        // Room 29
+                        ScreenExit rightExit = screen.getScreenExits().get(1);
+                        rightExit.setZoneIndex((byte)23);
+                        rightExit.setRoomIndex((byte)19);
+                        rightExit.setScreenIndex((byte)0);
+
+                        ScreenExit downExit = screen.getScreenExits().get(2);
+                        downExit.setZoneIndex((byte)23);
+                        downExit.setRoomIndex((byte)19);
+                        downExit.setScreenIndex((byte)0);
+
+                        ScreenExit leftExit = screen.getScreenExits().get(3);
+                        leftExit.setZoneIndex((byte)23);
+                        leftExit.setRoomIndex((byte)19);
+                        leftExit.setScreenIndex((byte)0);
                     }
                 }
                 else if(screen.getRoomIndex() == 20) {
