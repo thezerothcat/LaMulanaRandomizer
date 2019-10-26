@@ -6494,6 +6494,24 @@ public final class GameDataTracker {
         }
     }
 
+    public static void fixTransitionGates(List<Zone> rcdInfo) {
+        for(Zone zone : rcdInfo) {
+            for(Room room : zone.getRooms()) {
+                for(Screen screen : room.getScreens()) {
+                    for(GameObject gameObject : screen.getObjects()) {
+                        if(gameObject.getId() == 0xc4) {
+                            if(Settings.isHalloweenMode()) {
+                                if(gameObject.getArgs().get(0) == 1) {
+                                    gameObject.getArgs().set(0, (short)22);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public static void addHTSkip(List<Zone> rcdInfo, List<Block> datInfo) {
         Zone htZone = getZone(rcdInfo, 23);
         Room htRoom = getRoom(htZone.getRooms(), 0);

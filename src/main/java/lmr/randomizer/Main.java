@@ -1477,6 +1477,7 @@ public class Main {
                     if(Settings.isIncludeHellTempleNPCs()) {
                         GameDataTracker.addHTSkip(rcdData, datInfo);
                     }
+                    GameDataTracker.fixTransitionGates(rcdData);
                 }
 
                 FileUtils.logFlush("Writing rcd file");
