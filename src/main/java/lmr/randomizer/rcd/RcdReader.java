@@ -2261,6 +2261,11 @@ public final class RcdReader {
                         // HT room 7
                         AddObject.addGhostLord(screen, 300, 220, 0, 400, 5, 20);
                     }
+                    else if(screenIndex == 1) {
+                        // HT room 8
+                        GameObject warp = AddObject.addWarp(screen, 120, 920, 26, 2, 23, 5, 0, 40, 152);
+                        warp.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+                    }
                 }
                 else if(roomIndex == 6) {
                     if(screenIndex == 0) {
