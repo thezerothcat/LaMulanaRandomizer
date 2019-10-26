@@ -3984,7 +3984,22 @@ public final class GameDataTracker {
 
                 int npcConversationFlag = getNpcConversationFlag(npcBlock);
                 if(npcConversationFlag > 0) {
-                    if(npcBlock == 689 || npcBlock == 693) {
+                    if(npcBlock == 673) {
+                        // Former Mekuri Master (Surface)
+                        Integer flagIndexToRemove = null;
+                        for(int i = 0; i < newNpcObject.getTestByteOperations().size(); i++) {
+                            TestByteOperation testByteOperation = newNpcObject.getTestByteOperations().get(i);
+                            if(testByteOperation.getIndex() == 0x0f1) {
+                                flagIndexToRemove = i;
+                                break;
+                            }
+                        }
+                        if(flagIndexToRemove != null) {
+                            newNpcObject.getTestByteOperations().remove((int)flagIndexToRemove);
+                        }
+                        newNpcObject.getWriteByteOperations().clear();
+                    }
+                    else if(npcBlock == 689 || npcBlock == 693) {
                         // Mr. Slushfund, Priest Alest
                         Integer flagIndexToRemove = null;
                         for(int i = 0; i < newNpcObject.getTestByteOperations().size(); i++) {
