@@ -2340,7 +2340,7 @@ public final class RcdReader {
                     if(screenIndex == 0) {
                         // HT room 35
                         AddObject.addGhostLord(screen, 300, 220, 0, 400, 5, 20);
-                        AddObject.addAutosave(screen, 580, 400, new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0),
+                        AddObject.addAutosave(screen, 580, 380, new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0),
                                 new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                     }
                     else if(screenIndex == 1) {
