@@ -4140,11 +4140,13 @@ public final class GameDataTracker {
             checkBlock.getFlagCheckReferences().clear();
             checkBlock.getFlagCheckReferences().addAll(flagCheckReferences);
 
+            final int npcHintCount = 17;
+
             if(Settings.isIncludeHellTempleNPCs()) {
                 BlockListData blockListData = new BlockListData((short)78, (short)4);
                 blockListData.getData().add((short)0xaac);
                 blockListData.getData().add((short)2);
-                blockListData.getData().add((short)AddObject.addMulbrukHTBlock(datBlocks));
+                blockListData.getData().add((short)AddObject.addMulbrukHTBlock(datBlocks, npcHintCount + 1));
                 blockListData.getData().add((short)0);
                 checkBlock.getFlagCheckReferences().add(blockListData);
             }
@@ -4156,10 +4158,19 @@ public final class GameDataTracker {
             randomBlock1.getBlockContents().clear();
             randomBlock2.getBlockContents().clear();
             randomBlock3.getBlockContents().clear();
-            final int hintCount = 17;
-            for(int i = 1; i <= hintCount; i++) {
-                short hintBlock = (short)AddObject.addNpcHintBlock(datBlocks, i);
-                BlockListData blockListData = new BlockListData((short)78, (short)2);
+            for(int i = 1; i <= npcHintCount; i++) {
+                // Add to flag-based.
+                short hintBlock = (short)AddObject.addNpcHintBlock(datBlocks, i, true);
+                BlockListData blockListData = new BlockListData((short)78, (short)4);
+                blockListData.getData().add((short)0xace);
+                blockListData.getData().add((short)(i - 1));
+                blockListData.getData().add(hintBlock);
+                blockListData.getData().add((short)0);
+                checkBlock.getFlagCheckReferences().add(blockListData);
+
+                // Add to random
+                hintBlock = (short)AddObject.addNpcHintBlock(datBlocks, i, false);
+                blockListData = new BlockListData((short)78, (short)2);
                 blockListData.getData().add(hintBlock);
                 blockListData.getData().add((short)0);
                 randomBlock1.getBlockContents().add(blockListData);
@@ -4169,8 +4180,16 @@ public final class GameDataTracker {
                 randomBlock2.getBlockContents().add(new BlockSingleData((short)10));
                 randomBlock3.getBlockContents().add(new BlockSingleData((short)10));
             }
-            short hintBlock = (short)AddObject.addDevRoomHintBlock(datBlocks);
-            BlockListData blockListData = new BlockListData((short)78, (short)2);
+            short hintBlock = (short)AddObject.addDevRoomHintBlock(datBlocks, true);
+            BlockListData blockListData = new BlockListData((short)78, (short)4);
+            blockListData.getData().add((short)0xace);
+            blockListData.getData().add((short)npcHintCount);
+            blockListData.getData().add(hintBlock);
+            blockListData.getData().add((short)0);
+            checkBlock.getFlagCheckReferences().add(blockListData);
+
+            hintBlock = (short)AddObject.addDevRoomHintBlock(datBlocks, false);
+            blockListData = new BlockListData((short)78, (short)2);
             blockListData.getData().add(hintBlock);
             blockListData.getData().add((short)0);
             randomBlock1.getBlockContents().add(blockListData);

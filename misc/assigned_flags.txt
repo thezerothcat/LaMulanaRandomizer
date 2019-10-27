@@ -38,6 +38,7 @@ mulbruk:
 926 / ? = escape block if mulbruk has swimsuit
 
 for Halloween, acd = secret shop unlocked
+for Halloween, ace = mulbruk conversation flag
 
 aab (2732): HT unlock fairy npc, should have been with the other group but wasn't, oops
 aac (2733): mulbruk > 0 = not spoken, 1 = did intro, 2 = ready to talk about HT, 3 = HT unlocked

@@ -5025,8 +5025,12 @@ public final class AddObject {
         return npcCountBlock.getBlockNumber();
     }
 
-    public static int addNpcHintBlock(List<Block> blocks, int hintNumber) {
+    public static int addNpcHintBlock(List<Block> blocks, int hintNumber, boolean updateConversationFlag) {
         Block npcCountBlock = new Block(blocks.size());
+        if(updateConversationFlag) {
+            npcCountBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)0xace, (short)hintNumber));
+        }
+
         String hintText = getHintText(hintNumber);
         String[] hintTexts = hintText.split("%s");
         List<Short> stringCharacters;
@@ -5052,8 +5056,12 @@ public final class AddObject {
         return npcCountBlock.getBlockNumber();
     }
 
-    public static int addDevRoomHintBlock(List<Block> blocks) {
+    public static int addDevRoomHintBlock(List<Block> blocks, boolean updateConversationFlag) {
         Block devHintBlock = new Block(blocks.size());
+        if(updateConversationFlag) {
+            devHintBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)0xace, (short)0));
+        }
+
         String hintText = Translations.getText("event.halloween.hintDevs");
         List<Short> stringCharacters = FileUtils.stringToData(hintText);
         for (Short shortCharacter : stringCharacters) {
@@ -5063,7 +5071,7 @@ public final class AddObject {
         return devHintBlock.getBlockNumber();
     }
 
-    public static int addMulbrukHTBlock(List<Block> blocks) {
+    public static int addMulbrukHTBlock(List<Block> blocks, int totalHints) {
         Block mulbrukHTBlock = new Block(blocks.size());
         mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
 
@@ -5072,6 +5080,7 @@ public final class AddObject {
             mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
         mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)0x3bb, (short)1)); // Unlock HT
+        mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)0xace, (short)totalHints)); // Set 0xace (Mulbruk hints cycle flag) to +1
         mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
 
         String textLine = Translations.getText("event.halloween.htMulbruk2");
