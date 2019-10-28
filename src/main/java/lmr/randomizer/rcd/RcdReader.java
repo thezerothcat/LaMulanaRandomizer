@@ -1767,7 +1767,7 @@ public final class RcdReader {
                         // Room 25
                         ScreenExit upExit = screen.getScreenExits().get(0);
                         upExit.setZoneIndex((byte)23);
-                        upExit.setRoomIndex((byte)17);
+                        upExit.setRoomIndex((byte)21);
                         upExit.setScreenIndex((byte)0);
 
                         ScreenExit rightExit = screen.getScreenExits().get(1);
