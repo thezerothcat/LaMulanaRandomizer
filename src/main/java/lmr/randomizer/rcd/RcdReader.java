@@ -2544,7 +2544,16 @@ public final class RcdReader {
                         AddObject.addEscapeTimer(screen, 0xaca, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xac6);
+
+                    AddObject.addTimer(screen, 0,
+                            Arrays.asList(new TestByteOperation(0x34c, ByteOp.FLAG_GT, 1), new TestByteOperation(0x134, ByteOp.FLAG_EQUALS, 0)),
+                            Arrays.asList(new WriteByteOperation(0x134, ByteOp.ASSIGN_FLAG, 1)));
                 }
+//                else if(roomIndex == 6 && screenIndex == 0) {
+//                    AddObject.addTimer(screen, 0,
+//                            Arrays.asList(new TestByteOperation(0x34c, ByteOp.FLAG_GT, 1), new TestByteOperation(0x134, ByteOp.FLAG_EQUALS, 0)),
+//                            Arrays.asList(new WriteByteOperation(0x134, ByteOp.ASSIGN_FLAG, 1)));
+//                }
             }
         }
         else if(zoneIndex == 1) {
