@@ -28,15 +28,15 @@ public class EscapeChecker {
 
     public EscapeChecker(BacksideDoorRandomizer backsideDoorRandomizer, TransitionGateRandomizer transitionGateRandomizer,
                          ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer,
-                         Set<String> accessedNodesFromValidation) {
+                         Set<String> accessedNodesFromValidation, String startingLocation) {
         this.backsideDoorRandomizer = backsideDoorRandomizer;
         this.transitionGateRandomizer = transitionGateRandomizer;
         this.itemRandomizer = itemRandomizer;
         this.shopRandomizer = shopRandomizer;
         mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
 
-        queuedUpdates.add("Location: True Shrine of the Mother");
-        queuedUpdates.add("Exit: Shrine of the Mother [Main]");
+        queuedUpdates.add(startingLocation);
+        queuedUpdates.add(startingLocation.replace("Location:", "Exit:"));
         queuedUpdates.add("State: Escape");
         if(accessedNodesFromValidation.contains("Transition: Moonlight L1")) {
             queuedUpdates.add("State: Phase 1 Moonlight Access");
@@ -162,6 +162,10 @@ public class EscapeChecker {
                 FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
                 queuedUpdates.add(nodeName);
                 queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, null));
+                break;
+            case NPC:
+                FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
+                queuedUpdates.add(nodeName);
                 break;
             case STATE:
             case SETTING:

@@ -17,6 +17,12 @@ public class TestByteOperation {
         this.op = toCopy.op;
     }
 
+    public TestByteOperation(int index, ByteOp byteOp, int value) {
+        this.index = index;
+        this.value = (byte)value;
+        this.op = byteOp;
+    }
+
     public int getIndex() {
         return index;
     }

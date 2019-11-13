@@ -20,6 +20,15 @@ public final class LocationCoordinateMapper {
         if(zone == 21) {
             return 21;
         }
+        if(zone == 22) {
+            return 22;
+        }
+        if(zone == 23) {
+            return 23;
+        }
+        if(zone == 24) {
+            return 24;
+        }
         return 1;
     }
 
@@ -85,6 +94,19 @@ public final class LocationCoordinateMapper {
         if(zone == 21) {
             return 0;
         }
+        if(zone == 22) {
+            return getStartingRoom(1, front);
+        }
+        if(zone == 23) {
+//            return 18;
+            return 22;
+//            return 14;
+//            return 0;
+        }
+        if(zone == 24) {
+            return 2;
+//            return 1;
+        }
         return 2;
     }
 
@@ -148,6 +170,15 @@ public final class LocationCoordinateMapper {
             return 0;
         }
         if(zone == 21) {
+            return 0;
+        }
+        if(zone == 22) {
+            return getStartingScreen(1);
+        }
+        if(zone == 23) {
+            return 0;
+        }
+        if(zone == 24) {
             return 0;
         }
         return 1;
@@ -221,6 +252,15 @@ public final class LocationCoordinateMapper {
         if(zone == 21) {
             return 400;
         }
+        if(zone == 22) {
+            return 1120;
+        }
+        if(zone == 23) {
+            return 300;
+        }
+        if(zone == 24) {
+            return 300;
+        }
         return 940;
     }
 
@@ -291,6 +331,15 @@ public final class LocationCoordinateMapper {
         }
         if(zone == 21) {
             return 160;
+        }
+        if(zone == 22) {
+            return 72;
+        }
+        if(zone == 23) {
+            return 72;
+        }
+        if(zone == 24) {
+            return 72;
         }
         return 160;
     }
@@ -363,7 +412,7 @@ public final class LocationCoordinateMapper {
     }
 
     public static boolean isSurfaceStart() {
-        return Settings.getCurrentStartingLocation() == 1;
+        return Settings.getCurrentStartingLocation() == 1 || Settings.getCurrentStartingLocation() == 22;
     }
 
     public static boolean isFrontsideStart() {
@@ -372,6 +421,9 @@ public final class LocationCoordinateMapper {
             return true;
         }
         if(zone == 21) {
+            return true;
+        }
+        if(zone == 22) {
             return true;
         }
         return false;
@@ -503,6 +555,9 @@ public final class LocationCoordinateMapper {
         if(zone == 21) {
             return "Gate of Time (Surface)";
         }
+        if(zone == 22) {
+            return getStartingZoneName(1);
+        }
         return "Unknown";
     }
 
@@ -548,6 +603,9 @@ public final class LocationCoordinateMapper {
         }
         if("Gate of Time (Surface)".equals(name) || "Gate of Time Surface".equals(name) || "Surface of Time".equals(name) || "Retro Surface".equals(name) || "Retrosurface".equals(name)) {
             return 21;
+        }
+        if(name.contains("Night") && name.contains("Surface")) {
+            return 22;
         }
         return null;
     }
@@ -613,6 +671,9 @@ public final class LocationCoordinateMapper {
         if(zone == 21) {
             return 19;
         }
+        if(zone == 22) {
+            return getImageIndex(1, front);
+        }
         return 1;
     }
 
@@ -659,6 +720,9 @@ public final class LocationCoordinateMapper {
         }
         if(zone == 21) {
             return "Location: Gate of Time [Surface]";
+        }
+        if(zone == 22) {
+            return "Location: Surface [Main]";
         }
         return "Location: Surface [Main]";
     }

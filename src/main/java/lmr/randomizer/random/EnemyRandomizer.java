@@ -1,8 +1,10 @@
 package lmr.randomizer.random;
 
 import lmr.randomizer.Settings;
+import lmr.randomizer.rcd.object.ByteOp;
 import lmr.randomizer.rcd.object.GameObject;
 import lmr.randomizer.rcd.object.Screen;
+import lmr.randomizer.rcd.object.TestByteOperation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +24,7 @@ public final class EnemyRandomizer {
             0x81, 0x82, 0x8f);
     private static final List<Integer> AIR_ENEMIES = Arrays.asList(0x1e, 0x55, 0x56, 0x68, 0x69); // Witch and Siren act more like ground enemies, but are classed as air because other enemies may behave oddly if placed in certain of their locations.
     private static final List<Integer> WATER_ENEMIES = Arrays.asList(0x37, 0x38);
-    private static final List<Integer> NO_COLLISION_ENEMIES = Arrays.asList(0x02, 0x18, 0x1b, 0x29, 0x3b, 0x43,
+    private static final List<Integer> NO_COLLISION_ENEMIES = Arrays.asList(0x02, 0x18, 0x1b, 0x21, 0x29, 0x3b, 0x43, 0x44,
             0x65, 0x6d, 0x7d);
     private static final List<Integer> SPAWNER_ENEMIES = Arrays.asList(0x1f, 0x6c, 0x7c);
     private static final List<Integer> NO_FLAG_UPDATE_ENEMIES = Arrays.asList(0x06, 0x3b);
@@ -40,6 +42,10 @@ public final class EnemyRandomizer {
 
     private int getEnemyId(GameObject enemyObject, int zoneIndex) {
         int enemyId = (int)enemyObject.getId();
+        if(enemyId == 0x87 || enemyId == 0x88 || enemyId == 0x8d || enemyId == 0x8e || enemyId == 0x45 || enemyId == 0x2a) {
+            return Settings.isHalloweenMode() ? 0x20 : enemyId; // Miniboss swaps
+        }
+
         if(enemyId == 0x69) {
             return enemyId; // Moonlight bugs can only walk in certain places, so they aren't random yet (except params)
         }
@@ -50,6 +56,9 @@ public final class EnemyRandomizer {
         if(WATER_ENEMIES.contains(enemyId)) {
             // Hippocampus / Sea Horse
             // Jelly
+            if(Settings.isHalloweenMode()) {
+                return 0x02;
+            }
             return getSpringWaterEnemyId(!enemyObject.getWriteByteOperations().isEmpty());
         }
 //        else if(enemyId == 0x44) {
@@ -99,6 +108,12 @@ public final class EnemyRandomizer {
         }
         else if(newEnemyId == 0x1e) {
             setFistArgs(enemy);
+        }
+        else if(newEnemyId == 0x1f) {
+            setGhostSpawnerArgs(enemy);
+        }
+        else if(newEnemyId == 0x20) {
+            setGhostLordArgs(enemy);
         }
         else if(newEnemyId == 0x21) {
             setRedSkeletonArgs(enemy);
@@ -285,67 +300,111 @@ public final class EnemyRandomizer {
             return enemyIds.get(random.nextInt(enemyIds.size()));
         }
 
-        List<Integer> enemyIds = getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags);
+        List<Integer> enemyIds = new ArrayList<>();
         if(zoneIndex == 0) {
             enemyIds.addAll(getGuidanceEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 1) {
             enemyIds.addAll(getSurfaceEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSurfaceEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 2) {
             enemyIds.addAll(getMausoleumEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getMausoleumEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 3) {
             enemyIds.addAll(getSunEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSunEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 4) {
             enemyIds.addAll(getSpringEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSpringEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 5) {
             enemyIds.addAll(getInfernoEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getInfernoEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 6) {
             enemyIds.addAll(getExtinctionEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getExtinctionEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 7) {
             enemyIds.addAll(getTwinLabsEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getTwinLabsEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 8) {
             enemyIds.addAll(getEndlessEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getEndlessEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 9) {
             enemyIds.addAll(getShrineEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getShrineEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 10) {
             enemyIds.addAll(getIllusionEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getIllusionEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 11) {
             enemyIds.addAll(getGraveyardEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getGraveyardEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 12) {
             enemyIds.addAll(getMoonlightEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getMoonlightEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 13) {
             enemyIds.addAll(getGoddessEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getGoddessEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 14) {
             enemyIds.addAll(getRuinEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getRuinEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 15 || zoneIndex == 16) {
             enemyIds.addAll(getBirthEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getBirthEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 17) {
             enemyIds.addAll(getDimensionalEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getDimensionalEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 18) {
             enemyIds.addAll(getShrineEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getShrineEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 22) {
             // Night surface
             enemyIds.addAll(getSurfaceEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSurfaceEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         else if(zoneIndex == 23) {
             enemyIds.addAll(getHellTempleEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getHellTempleEnemyIds(includeGround, isNoCollisionEnemy));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
+        }
+        if(enemyIds.isEmpty()) {
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
         return enemyIds.get(random.nextInt(enemyIds.size()));
     }
@@ -353,32 +412,38 @@ public final class EnemyRandomizer {
     private List<Integer> getSharedGroundEnemyIds(boolean hasUpdateFlags) {
         List<Integer> enemyIds = new ArrayList<>();
         enemyIds.add(0x03); // Skeleton
-        enemyIds.add(0x05); // Snouter
-        if(!hasUpdateFlags) {
-            enemyIds.add(0x06); // Kodama Rat / Pink exploding rat pig
+        if(!Settings.isHalloweenMode()) {
+            enemyIds.add(0x05); // Snouter
+            if(!hasUpdateFlags) {
+                enemyIds.add(0x06); // Kodama Rat / Pink exploding rat pig
+            }
+            enemyIds.add(0x1c); // Masked Man
+            enemyIds.add(0x26); // Sonic
+            enemyIds.add(0x3c); // Jump Slime
+            enemyIds.add(0x41); // Mandrake
+            enemyIds.add(0x62); // Toujin / Hadouken turtle
+//            enemyIds.add(0x6c); // Ninja spawner
+//            enemyIds.add(0x7c); // Mudman spawner
         }
-        enemyIds.add(0x1c); // Masked Man
-        enemyIds.add(0x26); // Sonic
-        enemyIds.add(0x3c); // Jump Slime
-        enemyIds.add(0x41); // Mandrake
-        enemyIds.add(0x62); // Toujin / Hadouken turtle
-//        enemyIds.add(0x6c); // Ninja spawner
-//        enemyIds.add(0x7c); // Mudman spawner
         return enemyIds;
     }
 
     private List<Integer> getSharedAirEnemyIds() {
         List<Integer> enemyIds = new ArrayList<>();
-        enemyIds.add(0x68); // Anubis
+        if(!Settings.isHalloweenMode()) {
+            enemyIds.add(0x68); // Anubis
+        }
         return enemyIds;
     }
 
     private List<Integer> getSharedNoCollisionEnemyIds(boolean hasUpdateFlags) {
         List<Integer> enemyIds = new ArrayList<>();
         enemyIds.add(0x02); // Bat
-        enemyIds.add(0x1b); // Mirror Ghost
-        if(!hasUpdateFlags) {
-            enemyIds.add(0x3b); // Explode Rock / Mine
+        if(!Settings.isHalloweenMode()) {
+            enemyIds.add(0x1b); // Mirror Ghost
+            if(!hasUpdateFlags) {
+                enemyIds.add(0x3b); // Explode Rock / Mine
+            }
         }
         return enemyIds;
     }
@@ -397,10 +462,12 @@ public final class EnemyRandomizer {
 
     private List<Integer> getSurfaceEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        enemyIds.add(0x18); // Surface - Vulture
-        if(!isNoCollisionEnemy && includeGround) {
-            enemyIds.add(0x16); // Surface - Snake
-            enemyIds.add(0x17); // Surface - Bird
+        if(!Settings.isHalloweenMode()) {
+            enemyIds.add(0x18); // Surface - Vulture
+            if(!isNoCollisionEnemy && includeGround) {
+                enemyIds.add(0x16); // Surface - Snake
+                enemyIds.add(0x17); // Surface - Bird
+            }
         }
         return enemyIds;
     }
@@ -408,7 +475,9 @@ public final class EnemyRandomizer {
     private List<Integer> getGuidanceEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy && includeGround) {
-            enemyIds.add(0x01); // Guidance - Myrmecoleon
+            if(!Settings.isHalloweenMode()) {
+                enemyIds.add(0x01); // Guidance - Myrmecoleon
+            }
             enemyIds.add(0x21); // Guidance - Red Skeleton
         }
         return enemyIds;
@@ -417,10 +486,13 @@ public final class EnemyRandomizer {
     private List<Integer> getMausoleumEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
 //        enemyIds.add(0x1f); // Mausoleum Ghosts
+//        enemyIds.add(0x20); // Mausoleum - Ghost Lord
         if(!isNoCollisionEnemy) {
-            enemyIds.add(0x1e); // Mausoleum - Fist
-            if(includeGround) {
-                enemyIds.add(0x1d); // Mausoleum - Nozuchi
+            if(!Settings.isHalloweenMode()) {
+                enemyIds.add(0x1e); // Mausoleum - Fist
+                if(includeGround) {
+                    enemyIds.add(0x1d); // Mausoleum - Nozuchi
+                }
             }
         }
         return enemyIds;
@@ -428,9 +500,13 @@ public final class EnemyRandomizer {
 
     private List<Integer> getSunEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        enemyIds.add(0x29); // Sun - Mask
+        if(!Settings.isHalloweenMode()) {
+            enemyIds.add(0x29); // Sun - Mask
+        }
         if(!isNoCollisionEnemy) {
-            enemyIds.add(0x28); // Sun - Bird
+            if(!Settings.isHalloweenMode()) {
+                enemyIds.add(0x28); // Sun - Bird
+            }
             if(includeGround) {
                 enemyIds.add(0x27); // Sun - Cait Sith / CatBall
             }
@@ -441,7 +517,9 @@ public final class EnemyRandomizer {
     private List<Integer> getSpringEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy && includeGround) {
-            enemyIds.add(0x35); // Spring - Gyonin
+            if(!Settings.isHalloweenMode()) {
+                enemyIds.add(0x35); // Spring - Gyonin
+            }
         }
         return enemyIds;
     }
@@ -449,17 +527,26 @@ public final class EnemyRandomizer {
     private List<Integer> getInfernoEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy && includeGround) {
-            enemyIds.add(0x3e); // Inferno - Kakaojuu / Fire Lizard
+            if(!Settings.isHalloweenMode()) {
+                enemyIds.add(0x3e); // Inferno - Kakaojuu / Fire Lizard
+            }
         }
         return enemyIds;
     }
 
     private List<Integer> getExtinctionEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        enemyIds.add(0x43); // Extinction - Garuda
+        if(!Settings.isHalloweenMode()) {
+            enemyIds.add(0x43); // Extinction - Garuda
+        }
         if(!isNoCollisionEnemy && includeGround) {
-            enemyIds.add(0x42); // Extinction - Naga
-//            enemyIds.add(0x44); // Extinction - Blob
+            if(Settings.isHalloweenMode()) {
+                enemyIds.add(0x55); // Twin Labs - Witch
+            }
+            else {
+                enemyIds.add(0x42); // Extinction - Naga
+//                enemyIds.add(0x44); // Extinction - Blob
+            }
         }
         return enemyIds;
     }
@@ -467,12 +554,14 @@ public final class EnemyRandomizer {
     private List<Integer> getTwinLabsEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy) {
-            enemyIds.add(0x55); // Twin Labs - Witch
             if(includeGround) {
-                enemyIds.add(0x56); // Twin Labs - Siren // todo: might not be ground only
-                enemyIds.add(0x57); // Twin Labs - Xingtian
-                enemyIds.add(0x58); // Twin Labs - Zaochi
-                enemyIds.add(0x59); // Twin Labs - Lizard / Leucrotta / gator
+                enemyIds.add(0x55); // Twin Labs - Witch
+                if(!Settings.isHalloweenMode()) {
+                    enemyIds.add(0x56); // Twin Labs - Siren // todo: might not be ground only
+                    enemyIds.add(0x57); // Twin Labs - Xingtian
+                    enemyIds.add(0x58); // Twin Labs - Zaochi
+                    enemyIds.add(0x59); // Twin Labs - Lizard / Leucrotta / gator
+                }
             }
         }
         return enemyIds;
@@ -481,11 +570,16 @@ public final class EnemyRandomizer {
     private List<Integer> getEndlessEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy && includeGround) {
-            enemyIds.add(0x48); // Endless - Bonnacon
-            enemyIds.add(0x49); // Endless - Flower-faced snouter
-            enemyIds.add(0x4a); // Endless - Monocoli / Baby Snowman
-            enemyIds.add(0x4b); // Endless - Jiangshi
-            enemyIds.add(0x4c); // Endless - Rongxuanwangcorpse
+            if(Settings.isHalloweenMode()) {
+                enemyIds.add(0x55); // Twin Labs - Witch
+            }
+            else {
+                enemyIds.add(0x48); // Endless - Bonnacon
+                enemyIds.add(0x49); // Endless - Flower-faced snouter
+                enemyIds.add(0x4a); // Endless - Monocoli / Baby Snowman
+                enemyIds.add(0x4b); // Endless - Jiangshi
+                enemyIds.add(0x4c); // Endless - Rongxuanwangcorpse
+            }
         }
         return enemyIds;
     }
@@ -493,10 +587,15 @@ public final class EnemyRandomizer {
     private List<Integer> getShrineEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy && includeGround) {
-            enemyIds.add(0x50); // Shrine - Pan
-            enemyIds.add(0x51); // Shrine - Hanuman
-            enemyIds.add(0x52); // Shrine - Enkidu
-            enemyIds.add(0x53); // Shrine - Marchosias
+            if(Settings.isHalloweenMode()) {
+                enemyIds.add(0x55); // Twin Labs - Witch
+            }
+            else {
+                enemyIds.add(0x50); // Shrine - Pan
+                enemyIds.add(0x51); // Shrine - Hanuman
+                enemyIds.add(0x52); // Shrine - Enkidu
+                enemyIds.add(0x53); // Shrine - Marchosias
+            }
         }
         return enemyIds;
     }
@@ -504,30 +603,42 @@ public final class EnemyRandomizer {
     private List<Integer> getIllusionEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy && includeGround) {
-            enemyIds.add(0x5c); // Illusion - Lizard
-            enemyIds.add(0x5d); // Illusion - Asp
-            enemyIds.add(0x5e); // Illusion - Kui / Hopper
+            if(!Settings.isHalloweenMode()) {
+                enemyIds.add(0x5c); // Illusion - Lizard
+                enemyIds.add(0x5d); // Illusion - Asp
+                enemyIds.add(0x5e); // Illusion - Kui / Hopper
+            }
         }
         return enemyIds;
     }
 
     private List<Integer> getGraveyardEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        enemyIds.add(0x65); // Graveyard - Cloud / Puffball
+        if(!Settings.isHalloweenMode()) {
+            enemyIds.add(0x65); // Graveyard - Cloud / Puffball
+        }
         if(!isNoCollisionEnemy && includeGround) {
-            enemyIds.add(0x63); // Graveyard - Dijiang / Faceless
-            enemyIds.add(0x64); // Graveyard - Ice Wizard
-            enemyIds.add(0x66); // Graveyard - Baize / Icicle shot / Spiked Dinosaur
+            if(Settings.isHalloweenMode()) {
+                enemyIds.add(0x27); // Sun - Cait Sith / CatBall
+                enemyIds.add(0x55); // Twin Labs - Witch // todo: consider removal
+            }
+            else {
+                enemyIds.add(0x63); // Graveyard - Dijiang / Faceless
+                enemyIds.add(0x64); // Graveyard - Ice Wizard
+                enemyIds.add(0x66); // Graveyard - Baize / Icicle shot / Spiked Dinosaur
+            }
         }
         return enemyIds;
     }
 
     private List<Integer> getMoonlightEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        if(!isNoCollisionEnemy) {
-//            enemyIds.add(0x69); // Moonlight - Bug
-            if(includeGround) {
-                enemyIds.add(0x6a); // Moonlight - Troll
+        if(!Settings.isHalloweenMode()) {
+            if(!isNoCollisionEnemy) {
+//                enemyIds.add(0x69); // Moonlight - Bug
+                if(includeGround) {
+                    enemyIds.add(0x6a); // Moonlight - Troll
+                }
             }
         }
         return enemyIds;
@@ -535,28 +646,40 @@ public final class EnemyRandomizer {
 
     private List<Integer> getGoddessEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        enemyIds.add(0x6d); // Goddess - A Bao A Qu
+        if(!Settings.isHalloweenMode()) {
+            enemyIds.add(0x6d); // Goddess - A Bao A Qu
+        }
         if(!isNoCollisionEnemy && includeGround) {
-            enemyIds.add(0x6e); // Goddess - Andras
-            enemyIds.add(0x70); // Goddess - Cyclops
+            if(Settings.isHalloweenMode()) {
+                enemyIds.add(0x27); // Sun - Cait Sith / CatBall
+                enemyIds.add(0x55); // Twin Labs - Witch // todo: consider removal
+            }
+            else {
+                enemyIds.add(0x6e); // Goddess - Andras
+                enemyIds.add(0x70); // Goddess - Cyclops
+            }
         }
         return enemyIds;
     }
 
     private List<Integer> getRuinEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        if(!isNoCollisionEnemy && includeGround) {
-            enemyIds.add(0x73); // Ruin - Dog
-            enemyIds.add(0x74); // Ruin - Salamander
+        if(!Settings.isHalloweenMode()) {
+            if(!isNoCollisionEnemy && includeGround) {
+                enemyIds.add(0x73); // Ruin - Dog
+                enemyIds.add(0x74); // Ruin - Salamander
+            }
         }
         return enemyIds;
     }
 
     private List<Integer> getBirthEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        enemyIds.add(0x7d); // Birth - Sword Bird
-        if(!isNoCollisionEnemy && includeGround) {
-            enemyIds.add(0x7e); // Birth - Elephant
+        if(!Settings.isHalloweenMode()) {
+            enemyIds.add(0x7d); // Birth - Sword Bird
+            if(!isNoCollisionEnemy && includeGround) {
+                enemyIds.add(0x7e); // Birth - Elephant
+            }
         }
         return enemyIds;
     }
@@ -564,10 +687,17 @@ public final class EnemyRandomizer {
     private List<Integer> getDimensionalEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy) {
-            enemyIds.add(0x83); // Dimensional - Gargoyle / Satan / Telephone Demon
-            if(includeGround) {
-                enemyIds.add(0x81); // Dimensional - Amon / Teleport Demon / Flame Summoner
-                enemyIds.add(0x82); // Dimensional - Devil Crown Skull
+            if(Settings.isHalloweenMode()) {
+                if(includeGround) {
+                    enemyIds.add(0x55); // Twin Labs - Witch // todo: consider removal
+                }
+            }
+            else {
+                enemyIds.add(0x83); // Dimensional - Gargoyle / Satan / Telephone Demon
+                if(includeGround) {
+                    enemyIds.add(0x81); // Dimensional - Amon / Teleport Demon / Flame Summoner
+                    enemyIds.add(0x82); // Dimensional - Devil Crown Skull
+                }
             }
         }
         return enemyIds;
@@ -576,27 +706,35 @@ public final class EnemyRandomizer {
     private List<Integer> getRetroEnemyIds(boolean includeGround, boolean isNoCollisionEnemy, boolean hasUpdateFlags) {
         List<Integer> enemyIds = new ArrayList<>();
         enemyIds.add(0x02); // Bat
-        enemyIds.add(0x1b); // Mirror Ghost
-        if(!hasUpdateFlags) {
-            enemyIds.add(0x3b); // Explode Rock / Mine
+        if(!Settings.isHalloweenMode()) {
+            enemyIds.add(0x1b); // Mirror Ghost
+            if(!hasUpdateFlags) {
+                enemyIds.add(0x3b); // Explode Rock / Mine
+            }
+//            enemyIds.add(0x1f); // Mausoleum Ghosts
         }
-//        enemyIds.add(0x1f); // Mausoleum Ghosts
         if(!isNoCollisionEnemy) {
-            enemyIds.add(0x1e); // Mausoleum - Fist
-            enemyIds.add(0x68); // Anubis
+            if(!Settings.isHalloweenMode()) {
+                enemyIds.add(0x1e); // Mausoleum - Fist
+                enemyIds.add(0x68); // Anubis
+            }
             if(includeGround) {
-                enemyIds.add(0x01); // Guidance - Myrmecoleon
-                enemyIds.add(0x03); // Skeleton
-                enemyIds.add(0x05); // Snouter
-                if(!hasUpdateFlags) {
-                    enemyIds.add(0x06); // Kodama Rat / Pink exploding rat pig
+                if(!Settings.isHalloweenMode()) {
+                    enemyIds.add(0x01); // Guidance - Myrmecoleon
                 }
-                enemyIds.add(0x1c); // Masked Man
-                enemyIds.add(0x1d); // Mausoleum - Nozuchi
-                enemyIds.add(0x26); // Sonic
-                enemyIds.add(0x3c); // Jump Slime
-                enemyIds.add(0x41); // Mandrake
-                enemyIds.add(0x62); // Toujin / Hadouken turtle
+                enemyIds.add(0x03); // Skeleton
+                if(!Settings.isHalloweenMode()) {
+                    enemyIds.add(0x05); // Snouter
+                    if(!hasUpdateFlags) {
+                        enemyIds.add(0x06); // Kodama Rat / Pink exploding rat pig
+                    }
+                    enemyIds.add(0x1c); // Masked Man
+                    enemyIds.add(0x1d); // Mausoleum - Nozuchi
+                    enemyIds.add(0x26); // Sonic
+                    enemyIds.add(0x3c); // Jump Slime
+                    enemyIds.add(0x41); // Mandrake
+                    enemyIds.add(0x62); // Toujin / Hadouken turtle
+                }
             }
         }
         return enemyIds;
@@ -604,23 +742,31 @@ public final class EnemyRandomizer {
 
     private List<Integer> getHellTempleEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        enemyIds.add(0x7d); // Birth - Sword Bird
+        if(!Settings.isHalloweenMode()) {
+            enemyIds.add(0x7d); // Birth - Sword Bird
+        }
         if(!isNoCollisionEnemy) {
-            enemyIds.add(0x1e); // Mausoleum - Fist
-            enemyIds.add(0x83); // Dimensional - Gargoyle / Satan / Telephone Demon
+            if(!Settings.isHalloweenMode()) {
+                enemyIds.add(0x1e); // Mausoleum - Fist
+                enemyIds.add(0x83); // Dimensional - Gargoyle / Satan / Telephone Demon
+            }
             if(includeGround) {
-                enemyIds.add(0x50); // Shrine - Pan
-                enemyIds.add(0x51); // Shrine - Hanuman
-                enemyIds.add(0x52); // Shrine - Enkidu
-                enemyIds.add(0x53); // Shrine - Marchosias
+                if(!Settings.isHalloweenMode()) {
+                    enemyIds.add(0x50); // Shrine - Pan
+                    enemyIds.add(0x51); // Shrine - Hanuman
+                    enemyIds.add(0x52); // Shrine - Enkidu
+                    enemyIds.add(0x53); // Shrine - Marchosias
+                }
                 enemyIds.add(0x55); // Twin Labs - Witch
-                enemyIds.add(0x5c); // Illusion - Lizard
-                enemyIds.add(0x64); // Graveyard - Ice Wizard
-                enemyIds.add(0x6e); // Goddess - Andras
-                enemyIds.add(0x7e); // Birth - Elephant
-                enemyIds.add(0x81); // Dimensional - Amon / Teleport Demon / Flame Summoner
-                enemyIds.add(0x82); // Dimensional - Devil Crown Skull
-                enemyIds.add(0x8f); // HT - MiniBoss / Bomb-throwing Slime
+                if(!Settings.isHalloweenMode()) {
+                    enemyIds.add(0x5c); // Illusion - Lizard
+                    enemyIds.add(0x64); // Graveyard - Ice Wizard
+                    enemyIds.add(0x6e); // Goddess - Andras
+                    enemyIds.add(0x7e); // Birth - Elephant
+                    enemyIds.add(0x81); // Dimensional - Amon / Teleport Demon / Flame Summoner
+                    enemyIds.add(0x82); // Dimensional - Devil Crown Skull
+                    enemyIds.add(0x8f); // HT - MiniBoss / Bomb-throwing Slime
+                }
             }
         }
         return enemyIds;
@@ -644,34 +790,56 @@ public final class EnemyRandomizer {
     }
 
     private void setBatArgs(GameObject enemy, int zoneIndex) {
+        Integer contactDamage = getContactDamage(enemy);
+
         enemy.getArgs().clear();
         enemy.getArgs().add((short)1); // 0 = start resting / 1 = start flying
         enemy.getArgs().add((short)(random.nextInt(2) + 1)); // Drop type - nothing or coins
-        enemy.getArgs().add((short)(random.nextInt(3) + 1)); // UNKNOWN
+        enemy.getArgs().add((short)(random.nextInt(3) + 1)); // UNKNOWN - probably meant to be speed but bugged?
 
         // Bat type is special - backside bats are invisible in retro areas
         if(zoneIndex == 19 || zoneIndex == 20 || zoneIndex == 21) {
             enemy.getArgs().add((short)0);
         }
-        else {
+        else if(zoneIndex == 7) {
             enemy.getArgs().add((short)random.nextInt(2));
         }
+        else if(zoneIndex <= 9) {
+            enemy.getArgs().add((short)0);
+        }
+        else {
+            enemy.getArgs().add((short)1);
+        }
 
-        enemy.getArgs().add((short)(random.nextInt(2) + 2)); // Damage
+        enemy.getArgs().add((short)(contactDamage == null
+                ? random.nextInt(2) + 2
+                : contactDamage)); // Damage
     }
 
     private void setSkeletonArgs(GameObject enemy) {
         int facing = getFacing(enemy);
+        Integer health = getHealth(enemy);
+        Integer speedBonus = getSpeedBonus(enemy);
+        Integer contactDamage = getContactDamage(enemy);
+        Integer projectileDamage = getProjectileDamage(enemy);
 
         enemy.getArgs().clear();
         enemy.getArgs().add((short)facing);
         enemy.getArgs().add((short)(random.nextBoolean() ? 1 : 11)); // Droptype - 1 is coins, 11 for skeleton is either coins or weights
-        enemy.getArgs().add((short)random.nextInt(4)); // Speed
+        enemy.getArgs().add((short)(speedBonus == null
+                ? random.nextInt(4)
+                : Math.min(speedBonus, 3))); // Speed
         enemy.getArgs().add((short)random.nextInt(2)); // Collapsed or standing
         enemy.getArgs().add((short)random.nextInt(3)); // Type
-        enemy.getArgs().add((short)(random.nextInt(11) + 3)); // Health
-        enemy.getArgs().add((short)(random.nextInt(5) + 2)); // Contact damage
-        enemy.getArgs().add((short)(random.nextInt(4) + 2)); // Projectile damage
+        enemy.getArgs().add((short)(health == null
+                ? random.nextInt(11) + 3
+                : health)); // Health
+        enemy.getArgs().add((short)(contactDamage == null
+                ? random.nextInt(5) + 2
+                : contactDamage)); // Contact damage
+        enemy.getArgs().add((short)(projectileDamage == null
+                ? random.nextInt(4) + 2
+                : projectileDamage)); // Projectile damage
         enemy.getArgs().add((short)(random.nextInt(6) + 3)); // Soul drop
         enemy.getArgs().add((short)(random.nextInt(2) + 2)); // Projectile speed
     }
@@ -790,20 +958,92 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)7); // Soul
     }
 
+    private void setGhostSpawnerArgs(GameObject enemy) {
+        enemy.getArgs().clear();
+        enemy.getArgs().add((short)120); // Spawning period
+        enemy.getArgs().add((short)(random.nextInt(2) + 2)); // Maximum Ghosts
+        enemy.getArgs().add((short)0); // UNKNOWN - bugged?
+        enemy.getArgs().add((short)(Settings.isHalloweenMode() ? 1 : 0)); // Speed AND Drop-type
+        enemy.getArgs().add((short)1); // Health
+        enemy.getArgs().add((short)2); // Damage AND Soul
+        enemy.getArgs().add((short)3); // UNKNOWN - bugged?
+    }
+
+    private void setGhostLordArgs(GameObject enemy) {
+        enemy.getArgs().clear();
+
+        if(enemy.getX() > 640) {
+            enemy.setX(enemy.getX() % 640);
+        }
+        else if(enemy.getX() == 640) {
+            enemy.setX(620);
+        }
+
+        if(enemy.getX() == 0) {
+            enemy.setX(40);
+        }
+
+        if(enemy.getY() > 480) {
+            enemy.setY(enemy.getY() % 480);
+        }
+        else if(enemy.getY() == 480) {
+            enemy.setY(440);
+        }
+
+        if(enemy.getY() == 0) {
+            enemy.setY(20);
+        }
+
+//        enemy.getArgs().add((short)1); // Drop type - coins
+//        enemy.getArgs().add((short)(random.nextInt(10) + 1)); // Amount
+//        enemy.getArgs().add((short)(random.nextInt(4) + 1)); // Speed (up to 4 is allowed for this mode)
+//        enemy.getArgs().add((short)(random.nextInt(4) + 5)); // Health
+//        enemy.getArgs().add((short)(random.nextInt(8) + 3)); // Damage
+//        enemy.getArgs().add((short)5); // Soul
+        enemy.getArgs().add((short)1); // Drop type - coins
+        enemy.getArgs().add((short)30); // Amount
+        enemy.getArgs().add((short)3); // Speed (up to 4 is allowed for this mode)
+        enemy.getArgs().add((short)32); // Health
+        enemy.getArgs().add((short)10); // Damage
+        enemy.getArgs().add((short)20); // Soul
+    }
+
     private void setRedSkeletonArgs(GameObject enemy) {
         int facing = getFacing(enemy);
+        Integer health = getHealth(enemy);
+        Integer contactDamage = getContactDamage(enemy);
+        Integer projectileDamage = getProjectileDamage(enemy);
+
 
         enemy.getArgs().clear();
         enemy.getArgs().add((short)facing);
         enemy.getArgs().add((short)1); // Speed
-        enemy.getArgs().add((short)20); // Drop type
-        enemy.getArgs().add((short)0); // Amount
-        enemy.getArgs().add((short)12); // Health
-        enemy.getArgs().add((short)10); // Contact damage
-        enemy.getArgs().add((short)1); // Projectile Speed
-        enemy.getArgs().add((short)1); // Projectile Count
-        enemy.getArgs().add((short)3); // Projectile Damage
-        enemy.getArgs().add((short)15); // Soul
+        if(Settings.isHalloweenMode()) {
+            enemy.getArgs().add((short)(random.nextBoolean() ? 1 : 11)); // Droptype - 1 is coins, 11 for skeleton is either coins or weights
+            enemy.getArgs().add((short)1); // Amount
+            enemy.getArgs().add((short)(health == null
+                    ? random.nextInt(11) + 3
+                    : health)); // Health
+            enemy.getArgs().add((short)(contactDamage == null
+                    ? random.nextInt(5) + 2
+                    : contactDamage)); // Contact damage
+            enemy.getArgs().add((short)1); // Projectile Speed
+            enemy.getArgs().add((short)1); // Projectile Count
+            enemy.getArgs().add((short)(projectileDamage == null
+                    ? random.nextInt(4) + 2
+                    : projectileDamage)); // Projectile damage
+            enemy.getArgs().add((short)(random.nextInt(6) + 3)); // Soul drop
+        }
+        else {
+            enemy.getArgs().add((short)20); // Drop type
+            enemy.getArgs().add((short)0); // Amount
+            enemy.getArgs().add((short)12); // Health
+            enemy.getArgs().add((short)10); // Contact damage
+            enemy.getArgs().add((short)1); // Projectile Speed
+            enemy.getArgs().add((short)1); // Projectile Count
+            enemy.getArgs().add((short)3); // Projectile Damage
+            enemy.getArgs().add((short)15); // Soul
+        }
     }
 
     private void setSonicArgs(GameObject enemy) {
@@ -821,17 +1061,62 @@ public final class EnemyRandomizer {
 
     private void setCatBallArgs(GameObject enemy) {
         int facing = getFacing(enemy);
+        Integer health = getHealth(enemy);
+        Integer speedBonus = getSpeedBonus(enemy);
+        Integer contactDamage = getContactDamage(enemy);
 
         enemy.getArgs().clear();
         enemy.getArgs().add((short)random.nextInt(2)); // 0 = start on ball, 1 = start off ball
         enemy.getArgs().add((short)facing);
-        enemy.getArgs().add((short)(random.nextInt(3) + 2)); // Speed
+        enemy.getArgs().add((short)(speedBonus == null
+                ? (random.nextBoolean() ? 2 : 4)
+                : (speedBonus <= 0 ? 2 : 4))); // Speed
         enemy.getArgs().add((short)1); // Drop type - coins
-        enemy.getArgs().add((short)(random.nextInt(9) + 2)); // Cat Health
-        enemy.getArgs().add((short)(random.nextInt(7) + 2)); // Cat Damage
+//        if(health == null) {
+            if(Settings.isAutomaticHardmode()) {
+                enemy.getArgs().add((short)(random.nextBoolean() && random.nextBoolean() ? 10 : 2)); // Cat Health
+            }
+            else {
+                enemy.getArgs().add((short)2); // Cat Health
+            }
+//        }
+//        else {
+//            enemy.getArgs().add(health.shortValue()); // Cat Health
+//        }
+//        if(contactDamage == null) {
+            if(Settings.isAutomaticHardmode()) {
+                enemy.getArgs().add((short)(random.nextBoolean() && random.nextBoolean() ? 8 : 2)); // Cat Damage
+            }
+            else {
+                enemy.getArgs().add((short)2); // Cat Damage
+            }
+//        }
+//        else {
+//            enemy.getArgs().add(contactDamage.shortValue()); // Cat Damage
+//        }
         enemy.getArgs().add((short)3); // Cat Soul
-        enemy.getArgs().add((short)(random.nextInt(15) + 2)); // Ball Health
-        enemy.getArgs().add((short)(random.nextInt(13) + 4)); // Ball Damage
+//        if(health == null) {
+            if(Settings.isAutomaticHardmode()) {
+                enemy.getArgs().add((short)(random.nextBoolean() && random.nextBoolean() ? 16 : 2)); // Ball Health
+            }
+            else {
+                enemy.getArgs().add((short)2); // Ball Health
+            }
+//        }
+//        else {
+//            enemy.getArgs().add(health.shortValue()); // Ball Health
+//        }
+//        if(contactDamage == null) {
+            if(Settings.isAutomaticHardmode()) {
+                enemy.getArgs().add((short)(random.nextBoolean() && random.nextBoolean() ? 16 : 4)); // Ball Damage
+            }
+            else {
+                enemy.getArgs().add((short)4); // Ball Damage
+            }
+//        }
+//        else {
+//            enemy.getArgs().add(contactDamage.shortValue()); // Ball Damage
+//        }
         enemy.getArgs().add((short)2); // UNKNOWN
     }
 
@@ -1102,27 +1387,316 @@ public final class EnemyRandomizer {
 
     private void setWitchArgs(GameObject enemy, int zoneIndex) {
         int facing = getFacing(enemy);
+        int witchType = getWitchType(zoneIndex);
+        boolean isHardmode = Settings.isAutomaticHardmode();
+        if(!isHardmode) {
+            for(TestByteOperation testByteOperation : enemy.getTestByteOperations()) {
+                if(testByteOperation.getIndex() == 0x16a
+                        && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())
+                        && testByteOperation.getValue() == 2) {
+                    isHardmode = true;
+                    break;
+                }
+            }
+        }
 
         enemy.getArgs().clear();
         enemy.getArgs().add((short)facing);
-        enemy.getArgs().add((short)random.nextInt(6)); //  Type - 0 = lightning, 1 = fire, 2 = paralyze, 3 = splitting orb, 4 = white mage, 5+ = black mage // todo: only some of these work graphically outside of Twin labs
-        enemy.getArgs().add((short)random.nextInt(10)); // Drop type
-        enemy.getArgs().add((short)(random.nextInt(2) + 2)); // Speed
-        enemy.getArgs().add((short)(random.nextInt(9) + 4)); // Health
-        enemy.getArgs().add((short)(random.nextInt(4) + 3)); // Contact damage
-        enemy.getArgs().add((short)(random.nextInt(3) + 6)); // Soul
-        enemy.getArgs().add((short)(random.nextInt(119) + 2)); // Time between volleys attacks // todo: make this sane, probably per witch type
-        enemy.getArgs().add((short)(random.nextInt(6) + 1)); // Projectiles per volley // todo: make this sane, probably per witch type
-        enemy.getArgs().add((short)(random.nextInt(79) + 2)); // Delay after shot // todo: make this sane, probably per witch type
+        enemy.getArgs().add((short)witchType);
+
+        if(witchType == 0) {
+            setLightningWitchArgs(enemy, isHardmode, zoneIndex);
+        }
+        else if(witchType == 1) {
+            setFireWitchArgs(enemy, isHardmode, zoneIndex);
+        }
+        else if(witchType == 2) {
+            setStunWitchArgs(enemy, isHardmode, zoneIndex);
+        }
+        else if(witchType == 3) {
+            setOrbWitchArgs(enemy, isHardmode, zoneIndex);
+        }
+        else if(witchType == 4) {
+            setWhiteWitchArgs(enemy, isHardmode, zoneIndex);
+        }
+        else {
+            setBlackWitchArgs(enemy, isHardmode, zoneIndex);
+        }
+    }
+
+    private int getWitchType(int zoneIndex) {
+        // Type - 0 = pink = lightning, 1 = green = fire, 2 = blue = paralyze, 3 = brown = splitting orb, 4 = white mage, 5+ = black mage
+        if(Settings.isHalloweenMode()) {
+            if(zoneIndex == 23) {
+                return random.nextInt(2) + 2; // Only allowing 2 or 3 due to ghost graphics collision
+            }
+            if(zoneIndex == 6) {
+                return 1;
+            }
+            if(zoneIndex == 8) {
+                return random.nextInt(2) + 1; // Only allowing 1 or 2 due to ghost graphics collision
+            }
+            if(zoneIndex == 9 || zoneIndex == 18) {
+                return 3;
+            }
+            if(zoneIndex == 10) {
+                return 2;
+            }
+            if(zoneIndex == 11) {
+                return 2;
+            }
+            if(zoneIndex == 13) {
+                return 2;
+            }
+            if(zoneIndex == 17) {
+                return 2;
+            }
+        }
+        return random.nextInt(6);
+    }
+
+    private void setLightningWitchArgs(GameObject enemy, boolean isHardmode, int zoneIndex) {
+        enemy.getArgs().add((short)3); // Drop type
+        if(zoneIndex == 23) {
+            enemy.getArgs().add((short)2); // Speed
+            enemy.getArgs().add((short)4); // Health
+        }
+        else {
+            enemy.getArgs().add((short)((random.nextInt(3) / 2) + 2)); // Speed
+            enemy.getArgs().add((short)(isHardmode
+                    ? (random.nextBoolean() ? 10 : 4)
+                    : 4)); // Health
+        }
+        enemy.getArgs().add((short)3); // Contact damage
+        enemy.getArgs().add((short)6); // Soul
+        enemy.getArgs().add((short)60); // Time between volleys attacks
+        if(zoneIndex == 23) {
+            enemy.getArgs().add((short)2); // Projectiles per volley
+            enemy.getArgs().add((short)20); // Delay after shot
+        }
+        else {
+            enemy.getArgs().add((short)(isHardmode
+                    ? (random.nextBoolean() ? 3 : 2)
+                    : 2)); // Projectiles per volley
+            enemy.getArgs().add((short)(enemy.getArgs().get(8) == 3 ? 40 : 20)); // Delay after shot
+        }
         enemy.getArgs().add((short)2); // Projectile speed
         enemy.getArgs().add((short)2); // Secondary projectile speed (first split for witches)
         enemy.getArgs().add((short)2); // Tertiary projectile speed (first split for witches)
-        enemy.getArgs().add((short)(random.nextInt(21) + 4)); // Initial projectile damage // todo: make this sane, probably per witch type
-        enemy.getArgs().add((short)(random.nextInt(21) + 4)); // Secondary projectile damage (lingering flame, first split) // todo: make this sane, probably per witch type
-        enemy.getArgs().add((short)(random.nextInt(21) + 4)); // Tertiary projectile damage (second split) // todo: make this sane, probably per witch type
-        enemy.getArgs().add((short)(random.nextInt(59) + 2)); // Initial projectile duration (time to first split) // todo: make this sane, probably per witch type
-        enemy.getArgs().add((short)(random.nextInt(149) + 2)); // Secondary projectile duration (flame duration, time to second split) // todo: make this sane, probably per witch type
-        enemy.getArgs().add((short)(random.nextInt(59) + 2)); // Tertiary projectile duration (flame duration, time to second split) // todo: make this sane, probably per witch type
+        enemy.getArgs().add((short)4); // Initial projectile damage
+        enemy.getArgs().add((short)4); // Secondary projectile damage (lingering flame, first split)
+        enemy.getArgs().add((short)4); // Tertiary projectile damage (second split)
+        if(zoneIndex == 23 && random.nextBoolean() && random.nextBoolean() && random.nextBoolean()) {
+            enemy.getArgs().add((short)60); // Initial projectile duration (time to first split)
+            enemy.getArgs().add((short)60); // Secondary projectile duration (flame duration, time to second split)
+            enemy.getArgs().add((short)60); // Tertiary projectile duration (flame duration, time to second split)
+        }
+        else {
+            enemy.getArgs().add((short)2); // Initial projectile duration (time to first split)
+            enemy.getArgs().add((short)2); // Secondary projectile duration (flame duration, time to second split)
+            enemy.getArgs().add((short)2); // Tertiary projectile duration (flame duration, time to second split)
+        }
+        enemy.getArgs().add((short)0); // Crashes the game when changed
+    }
+
+    private void setFireWitchArgs(GameObject enemy, boolean isHardmode, int zoneIndex) {
+        enemy.getArgs().add((short)4); // Drop type
+        if(zoneIndex == 23) {
+            enemy.getArgs().add((short)2); // Speed
+            enemy.getArgs().add((short)4); // Health
+        }
+        else {
+            enemy.getArgs().add((short)((random.nextInt(3) / 2) + 2)); // Speed
+            enemy.getArgs().add((short)(isHardmode
+                    ? (random.nextBoolean() ? 8 : 4)
+                    : 4)); // Health
+        }
+        enemy.getArgs().add((short)3); // Contact damage
+        enemy.getArgs().add((short)6); // Soul
+        enemy.getArgs().add((short)120); // Time between volleys attacks
+        if(zoneIndex == 23) {
+            enemy.getArgs().add((short)2); // Projectiles per volley
+            enemy.getArgs().add((short)10); // Delay after shot
+        }
+        else {
+            if(isHardmode) {
+                int[] projectilesOptions = {3, 3, 5, 6};
+                int projectilesPerVolley = projectilesOptions[random.nextInt(projectilesOptions.length)];
+                enemy.getArgs().add((short)projectilesPerVolley);
+                if(projectilesPerVolley == 3) {
+                    enemy.getArgs().add((short)30); // Delay after shot
+                }
+                else if(projectilesPerVolley == 5) {
+                    enemy.getArgs().add((short)20); // Delay after shot
+                }
+                else {
+                    enemy.getArgs().add((short)50); // Delay after shot
+                }
+            }
+            else {
+                enemy.getArgs().add((short)1); // Projectiles per volley
+                enemy.getArgs().add((short)10); // Delay after shot
+            }
+        }
+        enemy.getArgs().add((short)2); // Projectile speed
+        enemy.getArgs().add((short)2); // Secondary projectile speed (first split for witches)
+        enemy.getArgs().add((short)2); // Tertiary projectile speed (first split for witches)
+        enemy.getArgs().add((short)8); // Initial projectile damage
+        enemy.getArgs().add((short)8); // Secondary projectile damage (lingering flame, first split)
+        enemy.getArgs().add((short)8); // Tertiary projectile damage (second split)
+        enemy.getArgs().add((short)2); // Initial projectile duration (time to first split)
+        enemy.getArgs().add((short)120); // Secondary projectile duration (flame duration, time to second split)
+        enemy.getArgs().add((short)2); // Tertiary projectile duration (flame duration, time to second split)
+        enemy.getArgs().add((short)0); // Crashes the game when changed
+    }
+
+    private void setStunWitchArgs(GameObject enemy, boolean isHardmode, int zoneIndex) {
+        enemy.getArgs().add((short)5); // Drop type
+        if(zoneIndex == 23) {
+            enemy.getArgs().add((short)2); // Speed
+            enemy.getArgs().add((short)4); // Health
+        }
+        else {
+            enemy.getArgs().add((short)((random.nextInt(3) / 2) + 2)); // Speed
+            enemy.getArgs().add((short)(isHardmode
+                    ? (random.nextInt(3) + 6)
+                    : 4)); // Health
+        }
+        enemy.getArgs().add((short)3); // Contact damage
+        enemy.getArgs().add((short)7); // Soul
+        if(zoneIndex == 23) {
+            enemy.getArgs().add((short)120); // Time between volleys attacks
+            enemy.getArgs().add((short)2); // Projectiles per volley
+            enemy.getArgs().add((short)20); // Delay after shot
+        }
+        else if(zoneIndex == 7){
+            enemy.getArgs().add((short)120); // Time between volleys attacks
+            enemy.getArgs().add((short)(isHardmode
+                    ? (random.nextBoolean() && random.nextBoolean() ? 2 : 1)
+                    : 1)); // Projectiles per volley
+            enemy.getArgs().add((short)(enemy.getArgs().get(8) == 2 ? 50 : 20)); // Delay after shot
+        }
+        else {
+            enemy.getArgs().add((short)180); // Time between volleys attacks
+            enemy.getArgs().add((short)(isHardmode
+                    ? (random.nextBoolean() && random.nextBoolean() ? 2 : 1)
+                    : 1)); // Projectiles per volley
+            enemy.getArgs().add((short)(enemy.getArgs().get(8) == 2 ? 50 : 20)); // Delay after shot
+        }
+        enemy.getArgs().add((short)2); // Projectile speed
+        enemy.getArgs().add((short)2); // Secondary projectile speed (first split for witches)
+        enemy.getArgs().add((short)2); // Tertiary projectile speed (first split for witches)
+        enemy.getArgs().add((short)8); // Initial projectile damage
+        enemy.getArgs().add((short)8); // Secondary projectile damage (lingering flame, first split)
+        enemy.getArgs().add((short)8); // Tertiary projectile damage (second split)
+        enemy.getArgs().add((short)2); // Initial projectile duration (time to first split)
+        enemy.getArgs().add((short)150); // Secondary projectile duration (flame duration, time to second split)
+        enemy.getArgs().add((short)2); // Tertiary projectile duration (flame duration, time to second split)
+        enemy.getArgs().add((short)0); // Crashes the game when changed
+    }
+
+    private void setOrbWitchArgs(GameObject enemy, boolean isHardmode, int zoneIndex) {
+        enemy.getArgs().add((short)9); // Drop type
+        if(zoneIndex == 23) {
+            enemy.getArgs().add((short)2); // Speed
+            enemy.getArgs().add((short)4); // Health
+        }
+        else {
+            enemy.getArgs().add((short)((random.nextInt(3) / 2) + 2)); // Speed
+            enemy.getArgs().add((short)(isHardmode
+                    ? (random.nextBoolean() ? 7 : 4)
+                    : 4)); // Health
+        }
+        enemy.getArgs().add((short)3); // Contact damage
+        enemy.getArgs().add((short)7); // Soul
+        enemy.getArgs().add((short)120); // Time between volleys attacks
+        if(zoneIndex == 23) {
+            enemy.getArgs().add((short)(isHardmode
+                    ? (random.nextBoolean() && random.nextBoolean() ? 2 : 1)
+                    : 1)); // Projectiles per volley
+            enemy.getArgs().add((short)(enemy.getArgs().get(8) == 2 ? 60 : 20)); // Delay after shot
+        }
+        else {
+            enemy.getArgs().add((short)(isHardmode
+                    ? (random.nextBoolean() && random.nextBoolean() ? 3 : 1)
+                    : 1)); // Projectiles per volley
+            enemy.getArgs().add((short)(enemy.getArgs().get(8) == 3 ? 80 : 20)); // Delay after shot
+        }
+        enemy.getArgs().add((short)2); // Projectile speed
+        enemy.getArgs().add((short)2); // Secondary projectile speed (first split for witches)
+        enemy.getArgs().add((short)2); // Tertiary projectile speed (first split for witches)
+        enemy.getArgs().add((short)12); // Initial projectile damage
+        enemy.getArgs().add((short)12); // Secondary projectile damage (lingering flame, first split)
+        enemy.getArgs().add((short)12); // Tertiary projectile damage (second split)
+        enemy.getArgs().add((short)60); // Initial projectile duration (time to first split)
+        enemy.getArgs().add((short)60); // Secondary projectile duration (flame duration, time to second split)
+        enemy.getArgs().add((short)60); // Tertiary projectile duration (flame duration, time to second split)
+        enemy.getArgs().add((short)0); // Crashes the game when changed
+    }
+
+    private void setWhiteWitchArgs(GameObject enemy, boolean isHardmode, int zoneIndex) {
+        enemy.getArgs().add((short)0); // Drop type
+        enemy.getArgs().add((short)2); // Speed
+        if(zoneIndex == 23) {
+            enemy.getArgs().add((short)12); // Health
+        }
+        else {
+            enemy.getArgs().add((short)(Settings.isHalloweenMode() ? 4 : 8)); // Health
+        }
+        enemy.getArgs().add((short)6); // Contact damage
+        enemy.getArgs().add((short)8); // Soul
+        enemy.getArgs().add((short)2); // Time between volleys attacks
+        enemy.getArgs().add((short)1); // Projectiles per volley
+        enemy.getArgs().add((short)2); // Delay after shot
+        enemy.getArgs().add((short)2); // Projectile speed
+        enemy.getArgs().add((short)2); // Secondary projectile speed (first split for witches)
+        enemy.getArgs().add((short)2); // Tertiary projectile speed (first split for witches)
+        if(Settings.isHalloweenMode()) {
+            enemy.getArgs().add((short)8); // Initial projectile damage
+            enemy.getArgs().add((short)8); // Secondary projectile damage (lingering flame, first split)
+            enemy.getArgs().add((short)8); // Tertiary projectile damage (second split)
+        }
+        else {
+            enemy.getArgs().add((short)24); // Initial projectile damage
+            enemy.getArgs().add((short)24); // Secondary projectile damage (lingering flame, first split)
+            enemy.getArgs().add((short)24); // Tertiary projectile damage (second split)
+        }
+        enemy.getArgs().add((short)2); // Initial projectile duration (time to first split)
+        enemy.getArgs().add((short)2); // Secondary projectile duration (flame duration, time to second split)
+        enemy.getArgs().add((short)2); // Tertiary projectile duration (flame duration, time to second split)
+        enemy.getArgs().add((short)0); // Crashes the game when changed
+    }
+
+    private void setBlackWitchArgs(GameObject enemy, boolean isHardmode, int zoneIndex) {
+        enemy.getArgs().add((short)0); // Drop type
+        enemy.getArgs().add((short)2); // Speed
+        if(zoneIndex == 23) {
+            enemy.getArgs().add((short)(random.nextBoolean() ? 12 : 8)); // Health
+        }
+        else {
+            enemy.getArgs().add((short)(Settings.isHalloweenMode() ? 4 : 8)); // Health
+        }
+        enemy.getArgs().add((short)6); // Contact damage
+        enemy.getArgs().add((short)8); // Soul
+        enemy.getArgs().add((short)2); // Time between volleys attacks
+        enemy.getArgs().add((short)1); // Projectiles per volley
+        enemy.getArgs().add((short)2); // Delay after shot
+        enemy.getArgs().add((short)2); // Projectile speed
+        enemy.getArgs().add((short)2); // Secondary projectile speed (first split for witches)
+        enemy.getArgs().add((short)2); // Tertiary projectile speed (first split for witches)
+        if(Settings.isHalloweenMode()) {
+            enemy.getArgs().add((short)8); // Initial projectile damage
+            enemy.getArgs().add((short)8); // Secondary projectile damage (lingering flame, first split)
+            enemy.getArgs().add((short)8); // Tertiary projectile damage (second split)
+        }
+        else {
+            enemy.getArgs().add((short)16); // Initial projectile damage
+            enemy.getArgs().add((short)16); // Secondary projectile damage (lingering flame, first split)
+            enemy.getArgs().add((short)16); // Tertiary projectile damage (second split)
+        }
+        enemy.getArgs().add((short)2); // Initial projectile duration (time to first split)
+        enemy.getArgs().add((short)2); // Secondary projectile duration (flame duration, time to second split)
+        enemy.getArgs().add((short)2); // Tertiary projectile duration (flame duration, time to second split)
         enemy.getArgs().add((short)0); // Crashes the game when changed
     }
 
@@ -1400,8 +1974,8 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)random.nextInt(2)); // Facing?
         enemy.getArgs().add((short)2); // Drop type - weights?
         enemy.getArgs().add((short)(random.nextInt(2) + 2)); // Speed?
-        enemy.getArgs().add((short)4); // Health?
-        enemy.getArgs().add((short)8); // UNKNOWN
+        enemy.getArgs().add((short)4); // Health
+        enemy.getArgs().add((short)8); // UNKNOWN - Contact damage?
         enemy.getArgs().add((short)6); // UNKNOWN
         enemy.getArgs().add((short)(random.nextInt(2) + 2)); // UNKNOWN
         enemy.getArgs().add((short)6); // UNKNOWN
@@ -1412,9 +1986,9 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)random.nextInt(2)); // Facing?
         enemy.getArgs().add((short)11); // UNKNOWN - maybe Drop type - 11 = "nothing for pots, coins or weights for skeletons"
         enemy.getArgs().add((short)(random.nextInt(4) + 1)); // Speed?
-        enemy.getArgs().add((short)30); // Health?
-        enemy.getArgs().add((short)10); // UNKNOWN
-        enemy.getArgs().add((short)10); // UNKNOWN
+        enemy.getArgs().add((short)30); // Health
+        enemy.getArgs().add((short)10); // UNKNOWN (Contact Damage?)
+        enemy.getArgs().add((short)10); // UNKNOWN (Contact Damage?)
         enemy.getArgs().add((short)36); // UNKNOWN
         enemy.getArgs().add((short)20); // UNKNOWN
     }
@@ -1424,12 +1998,12 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)random.nextInt(2)); // Facing?
         enemy.getArgs().add((short)11); // UNKNOWN - maybe Drop type - 11 = "nothing for pots, coins or weights for skeletons"
         enemy.getArgs().add((short)(random.nextInt(2) + 2)); // Speed?
-        enemy.getArgs().add((short)15); // Health?
-        enemy.getArgs().add((short)10); // UNKNOWN
+        enemy.getArgs().add((short)15); // Health
+        enemy.getArgs().add((short)10); // UNKNOWN - contact damage?
         enemy.getArgs().add((short)11); // UNKNOWN
         enemy.getArgs().add((short)(random.nextInt(2) + 2)); // UNKNOWN
         enemy.getArgs().add((short)(random.nextInt(3) + 2)); // UNKNOWN
-        enemy.getArgs().add((short)10); // UNKNOWN
+        enemy.getArgs().add((short)10); // UNKNOWN - contact damage?
         enemy.getArgs().add((short)3); // UNKNOWN
     }
 
@@ -1438,8 +2012,8 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)0); // UNKNOWN
         enemy.getArgs().add((short)0); // UNKNOWN
         enemy.getArgs().add((short)(random.nextInt(2) + 2)); // Speed?
-        enemy.getArgs().add((short)18); // Health?
-        enemy.getArgs().add((short)16); // UNKNOWN
+        enemy.getArgs().add((short)18); // Health
+        enemy.getArgs().add((short)16); // Contact damage
         enemy.getArgs().add((short)7); // UNKNOWN
     }
 
@@ -1451,9 +2025,9 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)facing); // 0 = left, 1 = right
         enemy.getArgs().add((short)11); // UNKNOWN - maybe Drop type - 11 = "nothing for pots, coins or weights for skeletons"
         enemy.getArgs().add((short)(random.nextInt(2) + 2)); // Speed?
-        enemy.getArgs().add((short)10); // UNKNOWN
-        enemy.getArgs().add((short)8); // UNKNOWN
-        enemy.getArgs().add((short)8); // UNKNOWN
+        enemy.getArgs().add((short)10); // Health
+        enemy.getArgs().add((short)8); // UNKNOWN - contact damage?
+        enemy.getArgs().add((short)8); // UNKNOWN - contact damage?
         enemy.getArgs().add((short)16); // UNKNOWN
         enemy.getArgs().add((short)(random.nextInt(2) + 1)); // UNKNOWN
         enemy.getArgs().add((short)4); // UNKNOWN
@@ -1466,8 +2040,8 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)random.nextInt(2)); // Facing?
         enemy.getArgs().add((short)1); // UNKNOWN
         enemy.getArgs().add((short)2); // UNKNOWN
-        enemy.getArgs().add((short)10); // UNKNOWN
-        enemy.getArgs().add((short)6); // UNKNOWN
+        enemy.getArgs().add((short)10); // Health
+        enemy.getArgs().add((short)6); // Contact Damage
         enemy.getArgs().add((short)7); // UNKNOWN
         enemy.getArgs().add((short)2); // UNKNOWN
         enemy.getArgs().add((short)300); // UNKNOWN
@@ -1649,6 +2223,763 @@ public final class EnemyRandomizer {
             return enemy.getArgs().get(0);
         }
         return (short)random.nextInt(2);
+    }
+
+    private Integer getHealth(GameObject enemy) {
+        int originalEnemyId = enemy.getId();
+        if(originalEnemyId == 0x01) {
+            return 1;
+        }
+        if(originalEnemyId == 0x02) {
+            return 1;
+        }
+        if(originalEnemyId == 0x03) {
+            return (int)enemy.getArgs().get(5);
+        }
+        if(originalEnemyId == 0x05) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x06) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x16) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x17) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x18) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x1b) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x1c) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x1d) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x1e) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x21) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x26) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x27) {
+            return random.nextBoolean()
+                    ? (int)enemy.getArgs().get(4)
+                    : (int)enemy.getArgs().get(7);
+        }
+        if(originalEnemyId == 0x28) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x29) {
+            return (int)enemy.getArgs().get(2);
+        }
+        if(originalEnemyId == 0x35) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x37) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x38) {
+            return (int)enemy.getArgs().get(2);
+        }
+        if(originalEnemyId == 0x39) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x3b) {
+            return (int)enemy.getArgs().get(5);
+        }
+        if(originalEnemyId == 0x3c) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x3e) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x41) {
+            return (int)enemy.getArgs().get(1);
+        }
+        if(originalEnemyId == 0x42) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x43) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x44) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x48) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x49) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x4a) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x4b) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x4c) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x4f) {
+            return random.nextBoolean()
+                    ? (int)enemy.getArgs().get(3)
+                    : (int)enemy.getArgs().get(6);
+        }
+        if(originalEnemyId == 0x50) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x51) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x52) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x53) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x55) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x56) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x57) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x58) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x59) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x5c) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x5d) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x5e) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x62) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x63) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x64) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x65) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x66) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x68) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x69) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x6a) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x6c) {
+            return (int)enemy.getArgs().get(5);
+        }
+        if(originalEnemyId == 0x6d) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x6e) {
+            return random.nextBoolean()
+                    ? (int)enemy.getArgs().get(3)
+                    : (int)enemy.getArgs().get(8);
+        }
+        if(originalEnemyId == 0x70) {
+            return random.nextBoolean()
+                    ? (int)enemy.getArgs().get(3)
+                    : (int)enemy.getArgs().get(7);
+        }
+        if(originalEnemyId == 0x73) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x74) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x7d) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x7e) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x81) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x82) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x83) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x8f) {
+            return (int)enemy.getArgs().get(3);
+        }
+        return null;
+    }
+
+    private Integer getContactDamage(GameObject enemy) {
+        int originalEnemyId = enemy.getId();
+        if(originalEnemyId == 0x01) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x02) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x03) {
+            return (int)enemy.getArgs().get(6);
+        }
+        if(originalEnemyId == 0x05) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x06) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x16) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x17) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x18) {
+            return (int)enemy.getArgs().get(5);
+        }
+        if(originalEnemyId == 0x1b) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x1c) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x1d) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x1e) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x21) {
+            return (int)enemy.getArgs().get(5);
+        }
+        if(originalEnemyId == 0x26) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x27) {
+            return random.nextBoolean()
+                    ? (int)enemy.getArgs().get(5)
+                    : (int)enemy.getArgs().get(8);
+        }
+        if(originalEnemyId == 0x28) {
+            return (int)enemy.getArgs().get(5);
+        }
+        if(originalEnemyId == 0x29) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x35) {
+            return (int)enemy.getArgs().get(5);
+        }
+        if(originalEnemyId == 0x37) {
+            return (int)enemy.getArgs().get(5);
+        }
+        if(originalEnemyId == 0x38) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x39) {
+            return (int)enemy.getArgs().get(5);
+        }
+        if(originalEnemyId == 0x3b) {
+            return (int)enemy.getArgs().get(6);
+        }
+        if(originalEnemyId == 0x3c) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x3e) {
+            return (int)enemy.getArgs().get(5);
+        }
+        if(originalEnemyId == 0x41) {
+            return (int)enemy.getArgs().get(2);
+        }
+        if(originalEnemyId == 0x42) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x43) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x44) {
+            return (int)enemy.getArgs().get(5);
+        }
+        if(originalEnemyId == 0x48) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x49) {
+            // Basing this on projectile speed
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x4a) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x4b) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x4c) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x4f) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x50) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x51) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x52) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x53) {
+            return (int)enemy.getArgs().get(5);
+        }
+        if(originalEnemyId == 0x55) {
+            return (int)enemy.getArgs().get(5);
+        }
+        if(originalEnemyId == 0x56) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x57) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x58) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x59) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x5c) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x5d) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x5e) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x62) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x63) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x64) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x65) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x66) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x68) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x69) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x6a) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x6c) {
+            return (int)enemy.getArgs().get(8);
+        }
+        if(originalEnemyId == 0x6d) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x6e) {
+            // 2 is rider speed, 7 is wolf speed, 11 is projectile speed
+            return random.nextBoolean()
+                    ? (int)enemy.getArgs().get(4)
+                    : (int)enemy.getArgs().get(9);
+        }
+        if(originalEnemyId == 0x6f) {
+            return (int)enemy.getArgs().get(7);
+        }
+        if(originalEnemyId == 0x70) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x73) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x74) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x7d) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x7e) {
+            return (int)enemy.getArgs().get(4); // todo: verify - it's either this or 5
+        }
+        if(originalEnemyId == 0x81) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x82) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x83) {
+            return (int)enemy.getArgs().get(4);
+        }
+        if(originalEnemyId == 0x8f) {
+            return (int)enemy.getArgs().get(4);
+        }
+        return null;
+    }
+
+    private Integer getProjectileDamage(GameObject enemy) {
+        int originalEnemyId = enemy.getId();
+        if(originalEnemyId == 0x03) {
+            if(enemy.getArgs().get(4) != 0) {
+                return (int)enemy.getArgs().get(7);
+            }
+        }
+        if(originalEnemyId == 0x06) {
+            return (int)enemy.getArgs().get(5);
+        }
+//        if(originalEnemyId == 0x17) {
+//            return (int)enemy.getArgs().get(5); // Swoop Damage
+//        }
+//        if(originalEnemyId == 0x18) {
+//            return (int)enemy.getArgs().get(6); // Swoop Damage
+//        }
+//        if(originalEnemyId == 0x1b) {
+//            return (int)enemy.getArgs().get(5); // Swoop Damage
+//        }
+//        if(originalEnemyId == 0x1e) {
+//            return (int)enemy.getArgs().get(5); // Punch Damage
+//        }
+        if(originalEnemyId == 0x21) {
+            return (int)enemy.getArgs().get(8);
+        }
+        if(originalEnemyId == 0x26) {
+            return (int)enemy.getArgs().get(5); // Spindash Damage
+        }
+//        if(originalEnemyId == 0x27) {
+//            return random.nextBoolean()
+//                    ? (int)enemy.getArgs().get(5)
+//                    : (int)enemy.getArgs().get(8);
+//        }
+        if(originalEnemyId == 0x28) {
+            return (int)enemy.getArgs().get(6);
+        }
+        if(originalEnemyId == 0x29) {
+            return (int)enemy.getArgs().get(6);
+        }
+        if(originalEnemyId == 0x35) {
+            return (int)enemy.getArgs().get(8);
+        }
+//        if(originalEnemyId == 0x3b) {
+//            return (int)enemy.getArgs().get(7); // Explosion damage
+//        }
+        if(originalEnemyId == 0x3e) {
+            return (int)enemy.getArgs().get(7);
+        }
+        if(originalEnemyId == 0x42) {
+            return (int)enemy.getArgs().get(6);
+        }
+//        if(originalEnemyId == 0x43) {
+//            return (int)enemy.getArgs().get(5); // Kick Damage
+//        }
+        if(originalEnemyId == 0x48) {
+            return (int)enemy.getArgs().get(9);
+        }
+        if(originalEnemyId == 0x49) {
+            return (int)enemy.getArgs().get(10);
+        }
+//        if(originalEnemyId == 0x4a) {
+//            return (int)enemy.getArgs().get(5); // Stomp Damage
+//        }
+//        if(originalEnemyId == 0x50) {
+//            return (int)enemy.getArgs().get(5); // Kick Damage
+//        }
+        if(originalEnemyId == 0x51) {
+            return (int)enemy.getArgs().get(6); // Shock Damage
+        }
+        if(originalEnemyId == 0x52) {
+            return (int)enemy.getArgs().get(6); // Flame damage
+        }
+        if(originalEnemyId == 0x53) {
+            return (int)enemy.getArgs().get(8);
+        }
+        if(originalEnemyId == 0x55) {
+            return (int)enemy.getArgs().get(13); // Initial projectile damage
+        }
+        if(originalEnemyId == 0x56) {
+            return (int)enemy.getArgs().get(7);
+        }
+        if(originalEnemyId == 0x5c) {
+            return (int)enemy.getArgs().get(8);
+        }
+//        if(originalEnemyId == 0x5d) {
+//            return (int)enemy.getArgs().get(5); // Leap damage
+//        }
+        if(originalEnemyId == 0x62) {
+            return (int)enemy.getArgs().get(9);
+        }
+        if(originalEnemyId == 0x64) {
+            return (int)enemy.getArgs().get(7);
+        }
+        if(originalEnemyId == 0x66) {
+            return (int)enemy.getArgs().get(8);
+        }
+//        if(originalEnemyId == 0x6a) {
+//            return (int)enemy.getArgs().get(7); // Rolling damage
+//        }
+        if(originalEnemyId == 0x6e) {
+            return (int)enemy.getArgs().get(6);
+        }
+        if(originalEnemyId == 0x74) {
+            return (int)enemy.getArgs().get(8); // Flame damage
+        }
+//        if(originalEnemyId == 0x7d) {
+//            return (int)enemy.getArgs().get(4);
+//        }
+//        if(originalEnemyId == 0x81) {
+//            return (int)enemy.getArgs().get(4);
+//        }
+//        if(originalEnemyId == 0x82) {
+//            return (int)enemy.getArgs().get(4);
+//        }
+//        if(originalEnemyId == 0x83) {
+//            return (int)enemy.getArgs().get(4);
+//        }
+//        if(originalEnemyId == 0x8f) {
+//            return (int)enemy.getArgs().get(4);
+//        }
+        return null;
+    }
+
+    private Integer getSpeedBonus(GameObject enemy) {
+        int originalEnemyId = enemy.getId();
+        if(originalEnemyId == 0x01) {
+            return 0;
+        }
+        if(originalEnemyId == 0x02) {
+            return (int)enemy.getArgs().get(2);
+        }
+        if(originalEnemyId == 0x03) {
+            return (int)enemy.getArgs().get(2);
+        }
+        if(originalEnemyId == 0x05) {
+            return 0;
+        }
+        if(originalEnemyId == 0x06) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x16) {
+            return 0;
+        }
+        if(originalEnemyId == 0x17) {
+            return 0;
+        }
+        if(originalEnemyId == 0x18) {
+            return Math.max(0, enemy.getArgs().get(2) - 1);
+        }
+        if(originalEnemyId == 0x1b) {
+            return 0;
+        }
+        if(originalEnemyId == 0x1c) {
+            return Math.max(0, enemy.getArgs().get(2) - 1);
+        }
+        if(originalEnemyId == 0x1d) {
+            return 0;
+        }
+        if(originalEnemyId == 0x1e) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x21) {
+            return 0;
+        }
+        if(originalEnemyId == 0x26) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x27) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x28) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x29) {
+            return 0;
+        }
+        if(originalEnemyId == 0x35) {
+            return (int)enemy.getArgs().get(3);
+        }
+        if(originalEnemyId == 0x37) {
+            return Math.max(0, enemy.getArgs().get(3) - 1);
+        }
+        if(originalEnemyId == 0x38) {
+            return 0;
+        }
+        if(originalEnemyId == 0x39) {
+            return 0;
+        }
+        if(originalEnemyId == 0x3b) {
+            return Math.max(0, enemy.getArgs().get(1) - 1);
+        }
+        if(originalEnemyId == 0x3c) {
+            return 0;
+        }
+        if(originalEnemyId == 0x3e) {
+            return 0;
+        }
+        if(originalEnemyId == 0x41) {
+            return 0;
+        }
+        if(originalEnemyId == 0x42) {
+            return 0;
+        }
+        if(originalEnemyId == 0x43) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x44) {
+            return 0;
+        }
+        if(originalEnemyId == 0x48) {
+            return 0;
+        }
+        if(originalEnemyId == 0x49) {
+            // Basing this on projectile speed
+            return Math.max(0, enemy.getArgs().get(9) - 2);
+        }
+        if(originalEnemyId == 0x4a) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x4b) {
+            return Math.max(0, enemy.getArgs().get(2) - 1);
+        }
+        if(originalEnemyId == 0x4c) {
+            return Math.max(0, enemy.getArgs().get(2) - 1);
+        }
+        if(originalEnemyId == 0x4f) {
+            return 0;
+        }
+        if(originalEnemyId == 0x50) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x51) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x52) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x53) {
+            // Basing this on projectile speed
+            return Math.max(0, enemy.getArgs().get(7) - 2);
+        }
+        if(originalEnemyId == 0x55) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x56) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x57) {
+            return (int)enemy.getArgs().get(2);
+        }
+        if(originalEnemyId == 0x58) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x59) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x5c) {
+            return Math.max(0, enemy.getArgs().get(2) - 1);
+        }
+        if(originalEnemyId == 0x5d) {
+            return 0;
+        }
+        if(originalEnemyId == 0x5e) {
+            return Math.max(0, enemy.getArgs().get(2) - 1);
+        }
+        if(originalEnemyId == 0x62) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x63) {
+            return 0;
+        }
+        if(originalEnemyId == 0x64) {
+            return Math.max(0, enemy.getArgs().get(2) - 1);
+        }
+        if(originalEnemyId == 0x65) {
+            return 0;
+        }
+        if(originalEnemyId == 0x66) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x68) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x69) {
+            return (int)enemy.getArgs().get(2);
+        }
+        if(originalEnemyId == 0x6a) {
+            return 0;
+        }
+        if(originalEnemyId == 0x6c) {
+            return Math.max(0, enemy.getArgs().get(4) - 2);
+        }
+        if(originalEnemyId == 0x6d) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x6e) {
+            // 2 is rider speed, 7 is wolf speed, 11 is projectile speed
+            return random.nextBoolean()
+                    ? 0
+                    : Math.max(0, enemy.getArgs().get(7) - 3);
+        }
+        if(originalEnemyId == 0x6f) {
+            return 0;
+        }
+        if(originalEnemyId == 0x70) {
+            return Math.max(0, enemy.getArgs().get(2) - 1);
+        }
+        if(originalEnemyId == 0x73) {
+            return 0;
+        }
+        if(originalEnemyId == 0x74) {
+            return 0;
+        }
+        if(originalEnemyId == 0x7d) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x7e) {
+            return Math.max(0, enemy.getArgs().get(2) - 1);
+        }
+        if(originalEnemyId == 0x81) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x82) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x83) {
+            return Math.max(0, enemy.getArgs().get(2) - 2);
+        }
+        if(originalEnemyId == 0x8f) {
+            return 0;
+        }
+        return null;
     }
 
     private void adjustEnemyHeight(GameObject enemy, int newEnemyId) {

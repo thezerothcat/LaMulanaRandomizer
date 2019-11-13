@@ -11,8 +11,11 @@ Misc replaced random item world flags: 2699-
 
 random graphics: 2730-2760
 
-{COL 000-050-150} = software
+{COL 00-32-96} = software
+000-050-150 = enemy??
 {COL 150-000-100} = treasure
+{COL 96-32-00} = area
+{COL 00-78-78} = enemy(/boss?)
 37/mekuri:{FLAG 740:=1}   {ITEM 100}{FLAG 241:=2}  {FLAG 740:=0}
 245/pepper:{FLAG 740:=1}   {ITEM 30}{FLAG 552:=1}  {FLAG 740:=0}
 247/anchor:{FLAG 740:=1}   {ITEM 50}{FLAG 552:=2}  {FLAG 740:=0}
@@ -24,8 +27,25 @@ random graphics: 2730-2760
 {FLAG 209:=1}I got a map and was looking at it as I walked.{BR}And then, I fell and sort of died.{BR}Heh heh--well, maybe it's not that funny...
 {CMD 0-0}
 
+mulbruk:
+912 / ? = reference to block 0x188 (before waking up, triggers the seal)
+990 / ? = reference to block 0x189 (intro after waking up)
+485 / 1e5 = master 1e6-1e7-1e8-1e9
+1082 / 43a = master 1e6-1e7-1e8-436
+1083 / 43b = master 1e6-1e7-1e8-437
+1013 / ? = provocative bathing suit conversation
+924 / ? = escape block, no check for swimsuit status
+926 / ? = escape block if mulbruk has swimsuit
 
-available: ac9-acb 2761-2763
+for Halloween, acd = secret shop unlocked
+for Halloween, ace = mulbruk conversation flag
+
+aab (2732): HT unlock fairy npc, should have been with the other group but wasn't, oops
+aac (2733): mulbruk > 0 = not spoken, 1 = did intro, 2 = ready to talk about HT, 3 = HT unlocked
+aad (2734): H4 tracking
+aae (2735): dracuet
+aaf-ac9 (2735-2761): halloween npc
+aca = halloween npc count
 inferno pushblock glove special: acb (2763)
 ruin pushblock glove special: acc (2764)
 retro grail flags: acd-acf 2765-2767
@@ -59,7 +79,7 @@ Cog of Soul chest: aef
 
 Screen flag 42: Shrine map sound effect
 Screen flag 43: Fake item and/or trap screen flag for floating items
-Screen flag 46: Fake item and/or trap screen flag for chests; also doubles as screen flag for one of the crushers on chain whip puzzle
+Screen flag 46: Fake item and/or trap screen flag for chests; also doubles as screen flag for one of the crushers on chain whip puzzle; also used for halloween stuff
 Screen flag 47: screen flag for the other crusher on chain whip puzzle
 
 Flag 20c (524): Formerly used for Illusion pot/warp, removed in randomizer and now available

@@ -9,6 +9,7 @@ public enum NodeType {
     EXIT,
     MAP_LOCATION,
     TRANSITION,
+    NPC,
     SETTING,
     STATE
 }

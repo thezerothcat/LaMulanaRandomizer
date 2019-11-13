@@ -106,7 +106,7 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 }
             }
         }
-        if(LocationCoordinateMapper.isSurfaceStart()) {
+        if(LocationCoordinateMapper.isSurfaceStart() || Settings.getCurrentStartingLocation() == 23 || Settings.getCurrentStartingLocation() == 24) {
             int i = 1;
             for(String shopContents : DataFromFile.getMapOfShopNameToShopOriginalContents().get(DataFromFile.CUSTOM_SHOP_NAME)) {
                 shopItemLocation = String.format("%s Item %d", DataFromFile.CUSTOM_SHOP_NAME, i++);
@@ -481,7 +481,7 @@ public class EverythingShopRandomizer implements ShopRandomizer {
         Pair<Short, Short> itemPriceCountMsxShop2 = null;
         Pair<Short, Short> itemPriceCountMsxShop3 = null;
         for(String shopName : randomizedShops) {
-            if(DataFromFile.CUSTOM_SHOP_NAME.equals(shopName) && LocationCoordinateMapper.isSurfaceStart()) {
+            if(DataFromFile.CUSTOM_SHOP_NAME.equals(shopName) && (LocationCoordinateMapper.isSurfaceStart() || Settings.getCurrentStartingLocation() == 23 || Settings.getCurrentStartingLocation() == 24)) {
                 continue;
             }
             shopBlock = (ShopBlock) blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get(shopName));

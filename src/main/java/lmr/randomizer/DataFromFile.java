@@ -48,6 +48,14 @@ public final class DataFromFile {
             44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
             71, 72, 73, 75, 76, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104);
     public static List<Integer> STARTING_LOCATIONS = Arrays.asList(0, 2, 5, 7, -7, 8, 10, 11, 13, 16, 21);
+    public static List<String> NPC_LOCATIONS = Arrays.asList("Location: Surface [Main]", "Location: Gate of Guidance [Main]",
+            "Location: Mausoleum of the Giants", "Location: Temple of the Sun [Sphinx]", "Location: Spring in the Sky [Main]",
+            "Location: Inferno Cavern [Main]", "Location: Chamber of Extinction [Main]", "Location: Chamber of Extinction [Ankh Lower]",
+            "Location: Twin Labyrinths [Poseidon]", "Location: Endless Corridor [1F]",
+            "Location: Gate of Illusion [Upper]", "Location: Gate of Illusion [Grail]", "Location: Gate of Illusion [Lower]",
+            "Location: Graveyard of the Giants [East]", "Location: Temple of Moonlight [Upper]", "Location: Temple of Moonlight [Pyramid]",
+            "Location: Tower of the Goddess [Lower]", "Location: Tower of Ruin [Southwest]", "Location: Chamber of Birth [West]",
+            "Location: Dimensional Corridor [Grail]", "Location: Gate of Time [Guidance]", "Location: Gate of Time [Surface]");
 
     public static List<String> POSSIBLE_GLITCHES = Arrays.asList("Lamp Glitch", "Cat Pause",
             "Raindrop", "Ice Raindrop", "Pot Clip", "Object Zip", "Screen Mash");
@@ -58,6 +66,8 @@ public final class DataFromFile {
     public static String ESCAPE_CHEST_NAME = "Coin: Twin (Escape)";
 
     public static String CUSTOM_SHOP_NAME = "Shop 0 (Default)";
+
+    public static int LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG = 2731;
 
     private static List<String> allShops;
     private static List<String> allItems;
@@ -235,7 +245,7 @@ public final class DataFromFile {
                         }
                     }
                 }
-                if(!LocationCoordinateMapper.isSurfaceStart()) {
+                if(!LocationCoordinateMapper.isSurfaceStart() && Settings.getCurrentStartingLocation() != 23 && Settings.getCurrentStartingLocation() != 24) {
                     // Random starting location comes with a special shop.
                     for(String shopItem : getMapOfShopNameToShopOriginalContents().get(CUSTOM_SHOP_NAME)) {
                         if(!shopItem.equals("Weights") && !shopItem.endsWith("Ammo") && !"Shell Horn".equals(shopItem)
@@ -354,6 +364,9 @@ public final class DataFromFile {
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/attack_reqs.txt", true);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dead_ends.txt", true);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/transition_reqs.txt", true);
+            if(Settings.isHalloweenMode()) {
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/npc_reqs.txt", true);
+            }
             if(!Settings.getEnabledGlitches().isEmpty()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch_reqs.txt", true);
             }
@@ -368,7 +381,7 @@ public final class DataFromFile {
             for(String removeNode : getCustomPlacementData().getRemovedLogicNodes()) {
                 mapOfNodeNameToRequirementsObject.remove(removeNode);
             }
-            if(LocationCoordinateMapper.isSurfaceStart()) {
+            if(LocationCoordinateMapper.isSurfaceStart() || Settings.getCurrentStartingLocation() == 23 || Settings.getCurrentStartingLocation() == 24) {
                 mapOfNodeNameToRequirementsObject.remove(DataFromFile.CUSTOM_SHOP_NAME);
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "custom-reqs.txt", false);
@@ -407,7 +420,12 @@ public final class DataFromFile {
 
     public static List<String> getWinRequirements() {
         if(winRequirements == null) {
-            winRequirements = FileUtils.getList("requirement/win_reqs.txt");
+            if(Settings.isHalloweenMode()) {
+                winRequirements = FileUtils.getList("requirement/win/npc_win_reqs.txt");
+            }
+            else {
+                winRequirements = FileUtils.getList("requirement/win/win_reqs.txt");
+            }
         }
         return winRequirements;
     }

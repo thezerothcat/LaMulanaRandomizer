@@ -199,7 +199,7 @@ public class ShopItemPriceCountRandomizer {
                 ? null
                 : moneyChecker.getShopPrice(itemName, shopInventoryLocation.replaceAll(" Item \\d", ""));
         if(shopPrice != null) {
-            return (short)(shopPrice - 5 * random.nextInt(2));
+            return (short)Math.max(1, (shopPrice - 5 * random.nextInt(2)));
         }
         if(PRICE_TIER1.contains(itemName)) {
             return (short)(40 + 5 * random.nextInt(5));
