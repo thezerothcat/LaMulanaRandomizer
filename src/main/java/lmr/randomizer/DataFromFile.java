@@ -67,7 +67,7 @@ public final class DataFromFile {
 
     public static String CUSTOM_SHOP_NAME = "Shop 0 (Default)";
 
-    public static int LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG = 2731;
+    public static int LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG = 2760;
 
     private static List<String> allShops;
     private static List<String> allItems;

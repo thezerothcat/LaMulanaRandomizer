@@ -159,7 +159,7 @@ public final class Settings {
                 break;
             }
         }
-        
+
         try {
             // Try to find the GOG game on Linux
             // Also honor file system hierachy (local installs supersede global installs)
@@ -169,22 +169,22 @@ public final class Settings {
                     System.getProperty("user.home") + "/.local/share/applications/gog_com-La_Mulana_1.desktop",
                     System.getProperty("user.home") + "/Desktop/gog_com-La_Mulana_1.desktop"
                     /* other valid paths for the .desktop file to be located? */)) {
-                
+
                 File menu_entry_file = new File(menu_entry_file_path);
                 if (!menu_entry_file.exists()) {
                     continue; // Try next item if file doesn't exist
                 }
-                
+
                 List<String> menu_file_lines = Files.readAllLines(menu_entry_file.toPath());
                 menu_file_lines.removeIf(l -> !l.startsWith("Path="));
-                
+
                 if (menu_file_lines.size() != 1) {
                     continue; // File is malformed, there should be exactly one "Path=..." line
                 }
-                
+
                 laMulanaBaseDir = menu_file_lines.get(0).substring(5);
             }
-            
+
             // The GOG version has some fluff around the *actual* game install, moving it into the
             // "game" subdirectory. If it exists, then just use that, otherwise the rcdReader won't
             // be able to find the necessary files!
@@ -818,7 +818,7 @@ public final class Settings {
 //    }
 
     public static boolean isHalloweenMode() {
-        return true;
+        return false;
     }
 
     public static boolean isIncludeHellTempleNPCs() {
@@ -875,7 +875,8 @@ public final class Settings {
     }
 
     public static boolean isRandomizeEnemies() {
-        return singleton.randomizeEnemies;
+//        return singleton.randomizeEnemies;
+        return false;
     }
 
     public static void setRandomizeEnemies(boolean randomizeEnemies, boolean update) {

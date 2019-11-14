@@ -255,14 +255,14 @@ public final class GameDataTracker {
 //                    gameObject.getArgs().set(30, (short)2316);
 //                }
 //            }
-            if(Settings.isHalloweenMode()) {
-                // Bahamut to Night Surface
-                Screen screen = (Screen) gameObject.getObjectContainer();
-                if(screen.getZoneIndex() == 4) {
-                    gameObject.getArgs().set(24, (short)22);
-                    gameObject.getArgs().set(28, (short)22);
-                }
-            }
+//            if(Settings.isHalloweenMode()) {
+//                // Bahamut to Night Surface
+//                Screen screen = (Screen) gameObject.getObjectContainer();
+//                if(screen.getZoneIndex() == 4) {
+//                    gameObject.getArgs().set(24, (short)22);
+//                    gameObject.getArgs().set(28, (short)22);
+//                }
+//            }
             if(Settings.isRandomizeBosses()) {
                 Screen screen = (Screen) gameObject.getObjectContainer();
                 if(screen.getZoneIndex() == 0) {
@@ -339,19 +339,20 @@ public final class GameDataTracker {
         }
         else if (gameObject.getId() == 0x03) {
             if(Settings.isRandomizeEnemies()) {
-                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-                    if(gameObject.getObjectContainer() instanceof Screen) {
-                        Screen screen = (Screen) gameObject.getObjectContainer();
-                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
-                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-                                if (flagUpdate.getIndex() == 0x000) {
-                                    flagUpdate.setIndex(0xaad);
-                                }
-                            }
-                        }
-                    }
-                }
+//                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+//                    // Fix flag for looping punishment room enemies
+//                    if(gameObject.getObjectContainer() instanceof Screen) {
+//                        Screen screen = (Screen) gameObject.getObjectContainer();
+//                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
+//                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+//                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
+//                                if (flagUpdate.getIndex() == 0x000) {
+//                                    flagUpdate.setIndex(0xaad);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
                 enemyObjects.add(gameObject);
             }
 
@@ -518,11 +519,12 @@ public final class GameDataTracker {
                 enemyObjects.add(gameObject);
             }
         }
-        else if (gameObject.getId() == 0x44) {
-            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
-                enemyObjects.add(gameObject);
-            }
-        }
+//        else if (gameObject.getId() == 0x44) {
+//            // Hand enemies in Extinction
+//            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+//                enemyObjects.add(gameObject);
+//            }
+//        }
 //        else if (gameObject.getId() == 0x45) {
 //            // Centimani
 //            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
@@ -561,19 +563,20 @@ public final class GameDataTracker {
 //        }
         else if (gameObject.getId() == 0x50) {
             if(Settings.isRandomizeEnemies()) {
-                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-                    if(gameObject.getObjectContainer() instanceof Screen) {
-                        Screen screen = (Screen) gameObject.getObjectContainer();
-                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
-                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-                                if (flagUpdate.getIndex() == 0x000) {
-                                    flagUpdate.setIndex(0xaad);
-                                }
-                            }
-                        }
-                    }
-                }
+//                // Fix flag for looping punishment room enemies
+//                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+//                    if(gameObject.getObjectContainer() instanceof Screen) {
+//                        Screen screen = (Screen) gameObject.getObjectContainer();
+//                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
+//                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+//                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
+//                                if (flagUpdate.getIndex() == 0x000) {
+//                                    flagUpdate.setIndex(0xaad);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
                 enemyObjects.add(gameObject);
             }
         }
@@ -653,19 +656,20 @@ public final class GameDataTracker {
         }
         else if (gameObject.getId() == 0x64) {
             if(Settings.isRandomizeEnemies()) {
-                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-                    if(gameObject.getObjectContainer() instanceof Screen) {
-                        Screen screen = (Screen) gameObject.getObjectContainer();
-                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
-                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-                                if (flagUpdate.getIndex() == 0x000) {
-                                    flagUpdate.setIndex(0xaad);
-                                }
-                            }
-                        }
-                    }
-                }
+//                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+//                    // Fix flag for looping punishment room enemies
+//                    if(gameObject.getObjectContainer() instanceof Screen) {
+//                        Screen screen = (Screen) gameObject.getObjectContainer();
+//                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
+//                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+//                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
+//                                if (flagUpdate.getIndex() == 0x000) {
+//                                    flagUpdate.setIndex(0xaad);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
                 enemyObjects.add(gameObject);
             }
         }
@@ -721,19 +725,20 @@ public final class GameDataTracker {
         }
         else if (gameObject.getId() == 0x7d) {
             if(Settings.isRandomizeEnemies()) {
-                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-                    if(gameObject.getObjectContainer() instanceof Screen) {
-                        Screen screen = (Screen) gameObject.getObjectContainer();
-                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
-                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-                                if (flagUpdate.getIndex() == 0x000) {
-                                    flagUpdate.setIndex(0xaad);
-                                }
-                            }
-                        }
-                    }
-                }
+//                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+//                    // Fix flag for looping punishment room enemies
+//                    if(gameObject.getObjectContainer() instanceof Screen) {
+//                        Screen screen = (Screen) gameObject.getObjectContainer();
+//                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
+//                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+//                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
+//                                if (flagUpdate.getIndex() == 0x000) {
+//                                    flagUpdate.setIndex(0xaad);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
                 enemyObjects.add(gameObject);
             }
         }
@@ -754,81 +759,83 @@ public final class GameDataTracker {
         }
         else if (gameObject.getId() == 0x83) {
             if(Settings.isRandomizeEnemies()) {
-                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-                    if(gameObject.getObjectContainer() instanceof Screen) {
-                        Screen screen = (Screen) gameObject.getObjectContainer();
-                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
-                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-                                if (flagUpdate.getIndex() == 0x000) {
-                                    flagUpdate.setIndex(0xaad);
-                                }
-                            }
-                        }
-                    }
-                }
+//                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+//                    // Fix flag for looping punishment room enemies
+//                    if(gameObject.getObjectContainer() instanceof Screen) {
+//                        Screen screen = (Screen) gameObject.getObjectContainer();
+//                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
+//                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+//                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
+//                                if (flagUpdate.getIndex() == 0x000) {
+//                                    flagUpdate.setIndex(0xaad);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
                 enemyObjects.add(gameObject);
             }
         }
-        else if (gameObject.getId() == 0x87) {
-            // Kuusarikku
-            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
-                if(gameObject.getObjectContainer() instanceof Screen) {
-                    Screen screen = (Screen) gameObject.getObjectContainer();
-                    if(screen.getZoneIndex() == 24) {
-                        enemyObjects.add(gameObject);
-                    }
-                }
-            }
-        }
-        else if (gameObject.getId() == 0x88) {
-            // Girtablilu
-            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
-                if(gameObject.getObjectContainer() instanceof Screen) {
-                    Screen screen = (Screen) gameObject.getObjectContainer();
-                    if(screen.getZoneIndex() == 24) {
-                        enemyObjects.add(gameObject);
-                    }
-                }
-            }
-        }
-        else if (gameObject.getId() == 0x8d) {
-            // Ushum
-            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
-                if(gameObject.getObjectContainer() instanceof Screen) {
-                    Screen screen = (Screen) gameObject.getObjectContainer();
-                    if(screen.getZoneIndex() == 24) {
-                        Integer flagToRemoveIndex = null;
-                        for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
-                            if (gameObject.getTestByteOperations().get(i).getIndex() == 0x016) {
-                                flagToRemoveIndex = i;
-                                break;
-                            }
-                        }
-                        if(flagToRemoveIndex != null) {
-                            gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
-                        }
-
-                        enemyObjects.add(gameObject);
-                    }
-                }
-            }
-        }
+//        else if (gameObject.getId() == 0x87) {
+//            // Kuusarikku
+//            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+//                if(gameObject.getObjectContainer() instanceof Screen) {
+//                    Screen screen = (Screen) gameObject.getObjectContainer();
+//                    if(screen.getZoneIndex() == 24) {
+//                        enemyObjects.add(gameObject);
+//                    }
+//                }
+//            }
+//        }
+//        else if (gameObject.getId() == 0x88) {
+//            // Girtablilu
+//            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+//                if(gameObject.getObjectContainer() instanceof Screen) {
+//                    Screen screen = (Screen) gameObject.getObjectContainer();
+//                    if(screen.getZoneIndex() == 24) {
+//                        enemyObjects.add(gameObject);
+//                    }
+//                }
+//            }
+//        }
+//        else if (gameObject.getId() == 0x8d) {
+//            // Ushum
+//            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+//                if(gameObject.getObjectContainer() instanceof Screen) {
+//                    Screen screen = (Screen) gameObject.getObjectContainer();
+//                    if(screen.getZoneIndex() == 24) {
+//                        Integer flagToRemoveIndex = null;
+//                        for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+//                            if (gameObject.getTestByteOperations().get(i).getIndex() == 0x016) {
+//                                flagToRemoveIndex = i;
+//                                break;
+//                            }
+//                        }
+//                        if(flagToRemoveIndex != null) {
+//                            gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
+//                        }
+//
+//                        enemyObjects.add(gameObject);
+//                    }
+//                }
+//            }
+//        }
         else if (gameObject.getId() == 0x8f) {
             if(Settings.isRandomizeEnemies()) {
-                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-                    if(gameObject.getObjectContainer() instanceof Screen) {
-                        Screen screen = (Screen) gameObject.getObjectContainer();
-                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
-                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-                                if (flagUpdate.getIndex() == 0x000) {
-                                    flagUpdate.setIndex(0xaad);
-                                }
-                            }
-                        }
-                    }
-                }
+//                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+//                    // Fix flag for looping punishment room enemies
+//                    if(gameObject.getObjectContainer() instanceof Screen) {
+//                        Screen screen = (Screen) gameObject.getObjectContainer();
+//                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
+//                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+//                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
+//                                if (flagUpdate.getIndex() == 0x000) {
+//                                    flagUpdate.setIndex(0xaad);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
                 enemyObjects.add(gameObject);
             }
         }
@@ -1272,6 +1279,7 @@ public final class GameDataTracker {
                     break;
                 }
                 else if(flagTest.getIndex() == 0x256) {
+                    // Moonlight dev room floor
                     gameObject.getArgs().set(3, (short)4); // Any direction, to be more bomb-friendly.
                     break;
                 }
@@ -1534,13 +1542,13 @@ public final class GameDataTracker {
             }
         }
         else if (gameObject.getId() == 0x98) {
-            if(Settings.isHalloweenMode()) {
-                int destinationZoneIndex = gameObject.getArgs().get(1);
-                if(destinationZoneIndex == 1) {
-                    // Night Surface, not normal Surface.
-                    gameObject.getArgs().set(1, (short)22);
-                }
-            }
+//            if(Settings.isHalloweenMode()) {
+//                int destinationZoneIndex = gameObject.getArgs().get(1);
+//                if(destinationZoneIndex == 1) {
+//                    // Night Surface, not normal Surface.
+//                    gameObject.getArgs().set(1, (short)22);
+//                }
+//            }
 
             if(gameObject.getArgs().get(0) == 0) {
                 if(Settings.isRandomizeBacksideDoors()) {
@@ -1745,27 +1753,28 @@ public final class GameDataTracker {
                     }
                 }
 
-                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-                    Screen screen = (Screen)gameObject.getObjectContainer();
-                    if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
-                        if(gameObject.getArgs().get(1) == 0) {
-                            GameObject replacementDoor = new GameObject(gameObject);
-                            replacementDoor.setId((short)0xa0);
-                            replacementDoor.getArgs().clear();
-                            replacementDoor.getArgs().add((short)0);
-                            replacementDoor.getArgs().add((short)0);
-                            replacementDoor.getArgs().add((short)0);
-                            replacementDoor.getArgs().add((short)0);
-                            replacementDoor.getArgs().add((short)926);
-                            replacementDoor.getArgs().add((short)0);
-                            replacementDoor.getArgs().add((short)1);
-                            replacementDoor.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
-                            gameObject.getObjectContainer().getObjects().add(replacementDoor);
-
-                            gameObject.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0));
-                        }
-                    }
-                }
+//                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+//                    // Add escape door in place of normal HT to Guidance door
+//                    Screen screen = (Screen)gameObject.getObjectContainer();
+//                    if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+//                        if(gameObject.getArgs().get(1) == 0) {
+//                            GameObject replacementDoor = new GameObject(gameObject);
+//                            replacementDoor.setId((short)0xa0);
+//                            replacementDoor.getArgs().clear();
+//                            replacementDoor.getArgs().add((short)0);
+//                            replacementDoor.getArgs().add((short)0);
+//                            replacementDoor.getArgs().add((short)0);
+//                            replacementDoor.getArgs().add((short)0);
+//                            replacementDoor.getArgs().add((short)926);
+//                            replacementDoor.getArgs().add((short)0);
+//                            replacementDoor.getArgs().add((short)1);
+//                            replacementDoor.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+//                            gameObject.getObjectContainer().getObjects().add(replacementDoor);
+//
+//                            gameObject.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0));
+//                        }
+//                    }
+//                }
             }
         }
         else if(gameObject.getId() == 0x6b) {
@@ -2213,6 +2222,9 @@ public final class GameDataTracker {
                 npcObjects.add(gameObject);
             }
             else if(blockNumber == 681) {
+                // Priest Triton - Extinction NPC, 06-09-01
+                npcObjects.add(gameObject);
+
                 if(Settings.isHalloweenMode()) {
                     for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                         if (flagTest.getIndex() == 0x1c3) {
@@ -2223,9 +2235,6 @@ public final class GameDataTracker {
                             break;
                         }
                     }
-
-                    // Priest Triton - Extinction NPC, 06-09-01
-                    npcObjects.add(gameObject);
                 }
             }
             else if(blockNumber == 683) {

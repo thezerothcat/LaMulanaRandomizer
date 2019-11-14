@@ -117,14 +117,7 @@ public class Main {
         public void actionPerformed(ActionEvent e) {
             mainPanel.updateSettings();
             tabbedPanel.updateSettings();
-            if(Settings.isHalloweenMode()) {
-                Settings.setRandomizeEnemies(true, false);
-                Settings.setRandomizeStartingLocation(true, false);
-                if(Settings.isIncludeHellTempleNPCs()) {
-                    Settings.setRandomizeForbiddenTreasure(true, false);
-                    Settings.setHTFullRandom(false, false);
-                }
-            }
+            // Any forced temporary settings updates can go here.
 
             if("generate".equals(e.getActionCommand())) {
                 try {
@@ -259,18 +252,7 @@ public class Main {
 
             Settings.saveSettings();
 
-            if(Settings.isHalloweenMode()) {
-                CustomItemPlacement customItemPlacement = new CustomItemPlacement("xmailer.exe", "Provocative Bathing Suit", null);
-                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-                customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 3", "Buckler", (short)5, (short)1);
-                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-//                if(Settings.isIncludeHellTempleNPCs() && Settings.isRandomizeDracuetShop()) {
-//                    customItemPlacement = new CustomItemPlacement("Shop 23 (HT) Item 1", "Weights", (short)10, (short)31);
-//                    DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-//                }
-            }
+            // Any forced temporary plando settings can go here.
 
             progressDialog.updateProgress(10, Translations.getText("setup.backup"));
 
@@ -1614,15 +1596,6 @@ public class Main {
 
         if(Settings.isSubweaponOnlyLogic() || isSubweaponOnly()) {
             startingNodes.add("Setting: Subweapon Only");
-        }
-        if(Settings.isHalloweenMode()) {
-            startingNodes.add("Setting: Halloween");
-            if(!Settings.isIncludeHellTempleNPCs()) {
-                startingNodes.add("Setting: No HT");
-            }
-        }
-        else {
-            startingNodes.add("Setting: Not Halloween");
         }
         return startingNodes;
     }

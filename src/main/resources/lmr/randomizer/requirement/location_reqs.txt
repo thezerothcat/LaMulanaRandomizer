@@ -58,7 +58,7 @@ Location: Temple of the Sun [West] => Location: Temple of the Sun [Top Entrance]
 Location: Temple of the Sun [West] => Transition: Sun L1, Event: Buer Defeated
 Location: Temple of the Sun [East] => Location: Temple of the Sun [Main], State: Can Reach East Sun
 Location: Temple of the Sun [East] => Location: Spring in the Sky, Event: Flooded Temple of the Sun, Exit: Temple of the Sun [East]
-Location: Temple of the Sun [East] => Location: Temple of the Sun [East] => Location: Temple of the Sun [Sphinx]
+Location: Temple of the Sun [East] => Location: Temple of the Sun [East] => Location: Temple of the Sun [Sphinx], Exit: Temple of the Sun [East]
 Location: Temple of the Sun [East] => Transition: Sun R1, Glitch: Lamp Glitch, Setting: Nonrandom Transitions
 Location: Temple of the Sun [East] => Transition: Sun R1, Glitch: Raindrop
 Location: Temple of the Sun [East] => Transition: Sun R2, Glitch: Raindrop
@@ -255,9 +255,11 @@ Location: Gate of Time [Mausoleum Upper] => Transition: Retromausoleum U1
 Location: Gate of Time [Guidance] => Transition: Retroguidance L1
 Location: Gate of Time [Guidance] => Transition: Retroguidance D1
 Location: Gate of Time [Surface] => Transition: Retrosurface R1
-Location: Hell Temple [Entrance] => Event: Hell Temple Unlocked, Location: Gate of Guidance [Main], Life Seal, Feather, Setting: Not Halloween # Must have broken the seal to open the ceiling. Also requiring at least 128HP to ensure at least some things are available.
-Location: Hell Temple [Entrance] => Event: Hell Temple Unlocked, Location: Gate of Guidance [Main], Life Seal, Feather, Setting: Halloween, State: 3-Orb HP, State: Shield # Must have broken the seal to open the ceiling. Also requiring at least 128HP and a shield to ensure at least some things are available and stun witches don't murder you too hard.
+Location: Hell Temple [Entrance] => Event: Hell Temple Unlocked, Location: Gate of Guidance [Main], Life Seal, Feather # Must have broken the seal to open the ceiling.
+#Location: Hell Temple [Entrance] => Event: Hell Temple Unlocked, Location: Gate of Guidance [Main], Life Seal, Feather, Setting: Not Halloween # Must have broken the seal to open the ceiling.
+#Location: Hell Temple [Entrance] => Event: Hell Temple Unlocked, Location: Gate of Guidance [Main], Life Seal, Feather, Setting: Halloween, State: 3-Orb HP, State: Shield # Must have broken the seal to open the ceiling. Also requiring at least 128HP and a shield to ensure at least some things are available and stun witches don't murder you too hard.
 Location: Hell Temple [Shop] => Location: Hell Temple [Entrance], Hermes' Boots, Attack: Bomb, Ring
 Location: Hell Temple [Shop] => Location: Hell Temple [Entrance], State: Lamp, Attack: Bomb, Ring
-Location: Hell Temple [Dracuet] => Location: Hell Temple [Shop], State: Literacy, Grapple Claw, State: Key Fairy Access, State: Block Pushing, Event: HT Bosses Defeated, guild.exe, Setting: Not Halloween
-Location: Hell Temple [Dracuet] => Location: Hell Temple [Shop], State: Literacy, Grapple Claw, State: Key Fairy Access, State: Block Pushing, Event: HT Bosses Defeated, guild.exe, Setting: Halloween, Hermes' Boots, Holy Grail # Boots for the escape
+Location: Hell Temple [Dracuet] => Location: Hell Temple [Shop], State: Literacy, Grapple Claw, State: Key Fairy Access, State: Block Pushing, Event: HT Bosses Defeated, guild.exe
+#Location: Hell Temple [Dracuet] => Location: Hell Temple [Shop], State: Literacy, Grapple Claw, State: Key Fairy Access, State: Block Pushing, Event: HT Bosses Defeated, guild.exe, Setting: Not Halloween
+#Location: Hell Temple [Dracuet] => Location: Hell Temple [Shop], State: Literacy, Grapple Claw, State: Key Fairy Access, State: Block Pushing, Event: HT Bosses Defeated, guild.exe, Setting: Halloween, Hermes' Boots, Holy Grail # Boots for the escape

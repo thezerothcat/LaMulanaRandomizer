@@ -2478,82 +2478,19 @@ public final class RcdReader {
             }
         }
 
-        if(zoneIndex != 0 && zoneIndex != 7) {
-            // Guidance can't have ghosts because of red skeletons.
-            // Twin labs can't have ghosts because of witches.
-//            if(zoneIndex == 3 && roomIndex == 8 && screenIndex == 0) {
-//                // Ellmac
-//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(0x0f9, ByteOp.FLAG_EQUALS, 0));
-//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(0x0f9, ByteOp.FLAG_GT, 2));
-//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(0x001, ByteOp.FLAG_EQUALS, 1));
-//                AddObject.addTimer(screen, 10,
-//                        Arrays.asList(new TestByteOperation(0x0f9, ByteOp.FLAG_EQUALS, 2)),
-//                        Arrays.asList(new WriteByteOperation(0x001, ByteOp.ASSIGN_FLAG, 1)));
-//            }
-//            if(zoneIndex == 4 && roomIndex == 4 && screenIndex == 0) {
-//                // Bahamut
-//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(0x0f9, ByteOp.FLAG_EQUALS, 0));
-//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(0x0f9, ByteOp.FLAG_GT, 2));
-//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(0x001, ByteOp.FLAG_EQUALS, 1));
-//                AddObject.addTimer(screen, 10,
-//                        Arrays.asList(new TestByteOperation(0x0f9, ByteOp.FLAG_EQUALS, 2)),
-//                        Arrays.asList(new WriteByteOperation(0x001, ByteOp.ASSIGN_FLAG, 1)));
-//            }
-//            else {
-            if(zoneIndex == 2) {
-//                if(roomIndex == 3 && screenIndex != 0) {
-                    AddObject.addGhostSpawner(screen, 120);
-//                }
-//                else if(roomIndex == 5 && screenIndex != 1) {
-//                    AddObject.addGhostSpawner(screen, 120);
-//                }
-//                else if(roomIndex == 9 && screenIndex != 0) {
-//                    AddObject.addGhostSpawner(screen, 120);
-//                }
-//                else if(roomIndex != 7 && roomIndex != 8) {
-//                    AddObject.addGhostSpawner(screen, 120);
-//                }
-            }
-            else if(zoneIndex == 19) {
-                if(roomIndex == 0 && screenIndex != 0) {
-                    AddObject.addGhostSpawner(screen, 120);
-                }
-                else if(roomIndex != 1) {
-                    AddObject.addGhostSpawner(screen, 120);
-                }
-            }
-            else if(zoneIndex == 23) {
-                if(roomIndex != 22 || screenIndex != 1) {
-                    // No ghosts in The Boss's room.
-                    AddObject.addGhostSpawner(screen, 240);
-                }
-            }
-            else if(zoneIndex == 24) {
-                AddObject.addGhostSpawner(screen, 240);
-            }
-            else {
-                AddObject.addGhostSpawner(screen, 120);
-            }
-        }
-
         if(zoneIndex == 0) {
-            if(Settings.isHalloweenMode()) {
-                if(roomIndex == 4 && screenIndex == 1) {
+            if(roomIndex == 4 && screenIndex == 1) {
+                if(Settings.isHalloweenMode()) {
                     // Priest Zarnac - 674
                     if(!Settings.isIncludeHellTempleNPCs()) {
                         AddObject.addEscapeTimer(screen, 0xaca, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xac6);
-
-                    AddObject.addTimer(screen, 0,
-                            Arrays.asList(new TestByteOperation(0x34c, ByteOp.FLAG_GT, 1), new TestByteOperation(0x134, ByteOp.FLAG_EQUALS, 0)),
-                            Arrays.asList(new WriteByteOperation(0x134, ByteOp.ASSIGN_FLAG, 1)));
                 }
-//                else if(roomIndex == 6 && screenIndex == 0) {
-//                    AddObject.addTimer(screen, 0,
-//                            Arrays.asList(new TestByteOperation(0x34c, ByteOp.FLAG_GT, 1), new TestByteOperation(0x134, ByteOp.FLAG_EQUALS, 0)),
-//                            Arrays.asList(new WriteByteOperation(0x134, ByteOp.ASSIGN_FLAG, 1)));
-//                }
+                // Ensure you can't lose access to the Guidance elevator. // todo: maybe find a better solution that respects logic
+                AddObject.addTimer(screen, 0,
+                        Arrays.asList(new TestByteOperation(0x34c, ByteOp.FLAG_GT, 1), new TestByteOperation(0x134, ByteOp.FLAG_EQUALS, 0)),
+                        Arrays.asList(new WriteByteOperation(0x134, ByteOp.ASSIGN_FLAG, 1)));
             }
         }
         else if(zoneIndex == 1) {
