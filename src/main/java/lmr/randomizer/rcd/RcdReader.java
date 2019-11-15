@@ -1087,6 +1087,12 @@ public final class RcdReader {
 //                }
             }
         }
+        else if (obj.getId() == 0xc7) {
+            // Escape screenshake
+            if(Settings.isScreenshakeDisabled()) {
+               keepObject = false;
+            }
+        }
 
         if(keepObject) {
             objectContainer.getObjects().add(obj);
