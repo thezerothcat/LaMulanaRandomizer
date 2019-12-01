@@ -1954,40 +1954,6 @@ public final class RcdReader {
                         downExit.setScreenIndex((byte)0);
                     }
                 }
-
-//                if(screen.getRoomIndex() == 17 && screen.getScreenIndex() == 0) {
-//                    ScreenExit upExit = screen.getScreenExits().get(0);
-//                    upExit.setZoneIndex((byte)23);
-//                    upExit.setRoomIndex((byte)21);
-//                    upExit.setScreenIndex((byte)0);
-//                }
-//                if(screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
-//                    ScreenExit upExit = screen.getScreenExits().get(0);
-//                    upExit.setZoneIndex((byte)23);
-//                    upExit.setRoomIndex((byte)21);
-//                    upExit.setScreenIndex((byte)0);
-//                }
-//                if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
-//                    ScreenExit upExit = screen.getScreenExits().get(0);
-//                    upExit.setZoneIndex((byte));
-//                    upExit.setRoomIndex((byte));
-//                    upExit.setScreenIndex((byte));
-//                }
-//                if(screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
-//                    ScreenExit upExit = screen.getScreenExits().get(0);
-//                    upExit.setZoneIndex((byte)23);
-//                    upExit.setRoomIndex((byte)4);
-//                    upExit.setScreenIndex((byte)1);
-//                }
-//                if(screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
-//                    // Room below ninjas and timer platform drops (first real weight challenge)
-//                    // Room falling after Amphisbaena room
-//                    ScreenExit upExit = screen.getScreenExits().get(0);
-//                    upExit.setZoneIndex((byte)23);
-////                    upExit.setRoomIndex((byte)4);
-//                    upExit.setRoomIndex((byte)1);
-//                    upExit.setScreenIndex((byte)1);
-//                }
             }
             else if(screen.getZoneIndex() == 24) {
                 if(screen.getRoomIndex() == 0) {
