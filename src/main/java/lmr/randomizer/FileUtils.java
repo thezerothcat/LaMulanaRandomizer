@@ -544,6 +544,9 @@ public class FileUtils {
             else if(line.startsWith("ushumgalluAssist")) {
                 Settings.setUshumgalluAssist(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("bossCheckpoints")) {
+                Settings.setBossCheckpoints(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("blockPushingRequiresGlove")) {
                 Settings.setBlockPushingRequiresGlove(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -694,6 +697,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("ushumgalluAssist=%s", Settings.isUshumgalluAssist()));
+        writer.newLine();
+
+        writer.write(String.format("bossCheckpoints=%s", Settings.isBossCheckpoints()));
         writer.newLine();
 
         writer.write(String.format("includeHellTempleNPCs=%s", Settings.isIncludeHellTempleNPCs()));

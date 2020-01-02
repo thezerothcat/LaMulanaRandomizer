@@ -2098,6 +2098,21 @@ public final class RcdReader {
                 }
                 else if(roomIndex == 8 && screenIndex == 1) {
                     AddObject.addSpecialTransitionGate(screen, 5);
+                    // todo: test boss swap + boss checkpoint
+                    AddObject.addAutosave(screen, 300, 880, 41,
+                            Arrays.asList(new TestByteOperation(0x1b4, ByteOp.FLAG_EQUALS, 4),
+                                    new TestByteOperation(0x0f6, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                }
+            }
+            else if(Settings.isBossCheckpoints()) {
+                if(roomIndex == 8 && screenIndex == 1) {
+                    AddObject.addAutosave(screen, 300, 880, 41,
+                            Arrays.asList(new TestByteOperation(0x133, ByteOp.FLAG_EQUALS, 5),
+                                    new TestByteOperation(0x0f6, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
         }
@@ -2128,8 +2143,19 @@ public final class RcdReader {
                 }
             }
         }
-        else if(zoneIndex == 2 && roomIndex == 2 && screenIndex == 0) {
-            AddObject.addHardmodeToggleWeights(screen);
+        else if(zoneIndex == 2) {
+            if(roomIndex == 2 && screenIndex == 0) {
+                AddObject.addHardmodeToggleWeights(screen);
+            }
+            if(roomIndex == 8 && screenIndex == 0) {
+                if(Settings.isBossCheckpoints()) {
+                    AddObject.addAutosave(screen, 900, 120, 75,
+                            Arrays.asList(new TestByteOperation(164, ByteOp.FLAG_EQUALS, 1),
+                                    new TestByteOperation(0x0f7, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                }
+            }
         }
         else if(zoneIndex == 3) {
             if(roomIndex == 8 && screenIndex == 0) {
@@ -2142,6 +2168,25 @@ public final class RcdReader {
                     warpTest.setOp(ByteOp.FLAG_NOT_EQUAL);
                     warp.getTestByteOperations().add(warpTest);
                 }
+                if(Settings.isBossCheckpoints()) {
+                    AddObject.addAutosave(screen, 400, 320, 104,
+                            Arrays.asList(new TestByteOperation(178, ByteOp.FLAG_EQUALS, 5),
+                                    new TestByteOperation(0x0f8, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                }
+            }
+        }
+        else if(zoneIndex == 4) {
+            if(Settings.isBossCheckpoints()) {
+                if(roomIndex == 4 && screenIndex == 0) {
+                    AddObject.addAutosave(screen, 380, 340, 136,
+                            Arrays.asList(new TestByteOperation(0x19f, ByteOp.FLAG_EQUALS, 1),
+                                    new TestByteOperation(0x199, ByteOp.FLAG_EQUALS, 1),
+                                    new TestByteOperation(0x0f9, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                }
             }
         }
         else if(zoneIndex == 5) {
@@ -2151,6 +2196,21 @@ public final class RcdReader {
                 }
                 else if(roomIndex == 8 && screenIndex == 1) {
                     AddObject.addSpecialTransitionGate(screen, 0);
+                    // todo: test boss swap + boss checkpoint
+                    AddObject.addAutosave(screen, 460, 560, 149,
+                            Arrays.asList(new TestByteOperation(0x133, ByteOp.FLAG_EQUALS, 5),
+                                    new TestByteOperation(0x0fa, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                }
+            }
+            else if(Settings.isBossCheckpoints()) {
+                if(roomIndex == 8 && screenIndex == 1) {
+                    AddObject.addAutosave(screen, 460, 560, 149,
+                            Arrays.asList(new TestByteOperation(0x1b4, ByteOp.FLAG_EQUALS, 4),
+                                    new TestByteOperation(0x0fa, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
         }
@@ -2160,15 +2220,38 @@ public final class RcdReader {
                     AddObject.addExtinctionTorch(screen);
                 }
             }
+            if(Settings.isBossCheckpoints()) {
+                if(roomIndex == 9 && screenIndex == 1) {
+                    AddObject.addAutosave(screen, 940, 400, 170,
+                            Arrays.asList(new TestByteOperation(0x1ca, ByteOp.FLAG_EQUALS, 3),
+                                    new TestByteOperation(0x1c3, ByteOp.FLAG_EQUALS, 3),
+                                    new TestByteOperation(0x0fb, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                }
+            }
         }
-        else if(zoneIndex == 9 && roomIndex == 8 && screenIndex == 1) {
-            GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 0));
+        else if(zoneIndex == 7) {
+            if(Settings.isBossCheckpoints()) {
+                if(roomIndex == 4 && screenIndex == 1) {
+                    AddObject.addAutosave(screen, 940, 80, 188,
+                            Arrays.asList(new TestByteOperation(0x1e0, ByteOp.FLAG_EQUALS, 2),
+                                    new TestByteOperation(0x0fc, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1)); // Text block 206 is backside Twin Labs grail, but they seem to be identical.
+                }
+            }
         }
-        else if(zoneIndex == 9 && roomIndex == 9 && screenIndex == 0) {
-            GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 1));
-        }
-        else if(zoneIndex == 9 && roomIndex == 9 && screenIndex == 1) {
-            GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 2));
+        else if(zoneIndex == 9) {
+            if(roomIndex == 8 && screenIndex == 1) {
+                GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 0));
+            }
+            else if(roomIndex == 9 && screenIndex == 0) {
+                GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 1));
+            }
+            else if(roomIndex == 9 && screenIndex == 1) {
+                GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 2));
+            }
         }
         else if(zoneIndex == 10) {
             if(Settings.isHalloweenMode()) {
@@ -2184,9 +2267,21 @@ public final class RcdReader {
                 }
             }
         }
-        else if(zoneIndex == 17 && roomIndex == 10 && screenIndex == 1) {
-            if(Settings.isUshumgalluAssist()) {
-                AddObject.addDimensionalOrbLadder(screen);
+        else if(zoneIndex == 17) {
+            if(roomIndex == 10 && screenIndex == 1) {
+                if(Settings.isUshumgalluAssist()) {
+                    AddObject.addDimensionalOrbLadder(screen);
+                }
+            }
+            else if(roomIndex == 9 && screenIndex == 0) {
+                if(Settings.isBossCheckpoints()) {
+                    AddObject.addAutosave(screen, 300, 80, 358,
+                            Arrays.asList(new TestByteOperation(0x2ed, ByteOp.FLAG_EQUALS, 1),
+                                    new TestByteOperation(0x0fd, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                }
+
             }
         }
         else if(zoneIndex == 18) {
@@ -2317,7 +2412,8 @@ public final class RcdReader {
                     if(screenIndex == 0) {
                         // HT room 35
                         AddObject.addGhostLord(screen, 300, 220, 0, 400, 5, 20);
-                        AddObject.addAutosave(screen, 580, 380, new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0),
+                        AddObject.addAutosave(screen, 580, 380, 918,
+                                Arrays.asList(new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                                 new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                     }
                     else if(screenIndex == 1) {
@@ -2431,7 +2527,8 @@ public final class RcdReader {
                             Arrays.asList(new WriteByteOperation(0x7e2, ByteOp.ASSIGN_FLAG, 1)));
 
                     // Autosave
-                    AddObject.addAutosave(screen, 580, 400, new TestByteOperation(0x004, ByteOp.FLAG_EQUALS, 0),
+                    AddObject.addAutosave(screen, 580, 400, 918,
+                            Arrays.asList(new TestByteOperation(0x004, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x004, ByteOp.ASSIGN_FLAG, 1));
                 }
             }

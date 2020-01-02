@@ -56,6 +56,7 @@ public final class Settings {
     private boolean automaticGrailPoints;
     private boolean automaticTranslations;
     private boolean ushumgalluAssist;
+    private boolean bossCheckpoints;
     private boolean bossSpecificAnkhJewels;
     private boolean blockPushingRequiresGlove;
     private boolean screenshakeDisabled;
@@ -131,6 +132,7 @@ public final class Settings {
         automaticGrailPoints = false;
         automaticTranslations = false;
         ushumgalluAssist = false;
+        bossCheckpoints = false;
 
         alternateMotherAnkh = false;
         automaticMantras = false;
@@ -567,6 +569,17 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.ushumgalluAssist = ushumgalluAssist;
+    }
+
+    public static boolean isBossCheckpoints() {
+        return singleton.bossCheckpoints;
+    }
+
+    public static void setBossCheckpoints(boolean bossCheckpoints, boolean update) {
+        if(update && bossCheckpoints != singleton.bossCheckpoints) {
+            singleton.changed = true;
+        }
+        singleton.bossCheckpoints = bossCheckpoints;
     }
 
     public static boolean isBossSpecificAnkhJewels() {
@@ -1023,6 +1036,7 @@ public final class Settings {
         int bossDifficulty = singleton.bossDifficulty.ordinal();
 
         int booleanSettings2 = 0;
+        booleanSettings2 |= processBooleanFlag.apply(singleton.bossCheckpoints, 7);
         booleanSettings2 |= processBooleanFlag.apply(singleton.screenshakeDisabled, 6);
         booleanSettings2 |= processBooleanFlag.apply(singleton.includeHellTempleNPCs, 5);
         booleanSettings2 |= processBooleanFlag.apply(singleton.blockPushingRequiresGlove, 4);
@@ -1110,6 +1124,7 @@ public final class Settings {
         int maxRandomRemovedItems = Integer.parseInt(parts[9],16);
 
         int booleanSettingsFlag2 = Integer.parseInt(parts[10], 16);
+        singleton.bossCheckpoints = getBoolFlagFromInt.apply(booleanSettingsFlag2, 7);
         singleton.screenshakeDisabled = getBoolFlagFromInt.apply(booleanSettingsFlag2, 6);
         singleton.includeHellTempleNPCs = getBoolFlagFromInt.apply(booleanSettingsFlag2, 5);
         singleton.blockPushingRequiresGlove = getBoolFlagFromInt.apply(booleanSettingsFlag2, 4);

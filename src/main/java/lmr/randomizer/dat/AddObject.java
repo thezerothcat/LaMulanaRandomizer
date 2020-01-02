@@ -70,13 +70,13 @@ public final class AddObject {
      * @param screen to add the object to
      * @param x position of the quicksave object
      * @param y position of the quicksave object
-     * @param test existence test for the quicksave
+     * @param tests existence tests for the quicksave
      * @param update update to make when the quicksave happens
      */
-    public static void addAutosave(Screen screen, int x, int y, TestByteOperation test, WriteByteOperation update) {
+    public static GameObject addAutosave(Screen screen, int x, int y, int textBlock, List<TestByteOperation> tests, WriteByteOperation update) {
         GameObject obj = new GameObject(screen);
         obj.setId((short)0x9f);
-        obj.getArgs().add((short)918);
+        obj.getArgs().add((short)textBlock);
         obj.getArgs().add((short)0);
         obj.getArgs().add((short)0);
         obj.getArgs().add((short)1);
@@ -88,10 +88,11 @@ public final class AddObject {
         obj.setX(x);
         obj.setY(y);
 
-        obj.getTestByteOperations().add(test);
+        obj.getTestByteOperations().addAll(tests);
         obj.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0));
         obj.getWriteByteOperations().add(update);
         screen.getObjects().add(obj);
+        return obj;
     }
 
     /**
