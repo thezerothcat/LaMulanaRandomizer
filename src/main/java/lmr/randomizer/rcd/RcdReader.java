@@ -2101,7 +2101,7 @@ public final class RcdReader {
                     // todo: test boss swap + boss checkpoint
                     AddObject.addAutosave(screen, 300, 880, 41,
                             Arrays.asList(new TestByteOperation(0x1b4, ByteOp.FLAG_EQUALS, 4),
-                                    new TestByteOperation(0x0f6, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x0f6, ByteOp.FLAG_LT, 2),
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
@@ -2110,7 +2110,7 @@ public final class RcdReader {
                 if(roomIndex == 8 && screenIndex == 1) {
                     AddObject.addAutosave(screen, 300, 880, 41,
                             Arrays.asList(new TestByteOperation(0x133, ByteOp.FLAG_EQUALS, 5),
-                                    new TestByteOperation(0x0f6, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x0f6, ByteOp.FLAG_LT, 2),
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
@@ -2147,11 +2147,11 @@ public final class RcdReader {
             if(roomIndex == 2 && screenIndex == 0) {
                 AddObject.addHardmodeToggleWeights(screen);
             }
-            if(roomIndex == 8 && screenIndex == 0) {
+            if(roomIndex == 8 && screenIndex == 1) {
                 if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 900, 120, 75,
-                            Arrays.asList(new TestByteOperation(164, ByteOp.FLAG_EQUALS, 1),
-                                    new TestByteOperation(0x0f7, ByteOp.FLAG_NOT_EQUAL, 2),
+                            Arrays.asList(new TestByteOperation(0x164, ByteOp.FLAG_EQUALS, 1),
+                                    new TestByteOperation(0x0f7, ByteOp.FLAG_LT, 2),
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
@@ -2170,8 +2170,8 @@ public final class RcdReader {
                 }
                 if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 400, 320, 104,
-                            Arrays.asList(new TestByteOperation(178, ByteOp.FLAG_EQUALS, 5),
-                                    new TestByteOperation(0x0f8, ByteOp.FLAG_NOT_EQUAL, 2),
+                            Arrays.asList(new TestByteOperation(0x178, ByteOp.FLAG_EQUALS, 5),
+                                    new TestByteOperation(0x0f8, ByteOp.FLAG_LT, 2),
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
@@ -2183,7 +2183,7 @@ public final class RcdReader {
                     AddObject.addAutosave(screen, 380, 340, 136,
                             Arrays.asList(new TestByteOperation(0x19f, ByteOp.FLAG_EQUALS, 1),
                                     new TestByteOperation(0x199, ByteOp.FLAG_EQUALS, 1),
-                                    new TestByteOperation(0x0f9, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x0f9, ByteOp.FLAG_LT, 2),
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
@@ -2199,7 +2199,7 @@ public final class RcdReader {
                     // todo: test boss swap + boss checkpoint
                     AddObject.addAutosave(screen, 460, 560, 149,
                             Arrays.asList(new TestByteOperation(0x133, ByteOp.FLAG_EQUALS, 5),
-                                    new TestByteOperation(0x0fa, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x0fa, ByteOp.FLAG_LT, 2),
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
@@ -2208,7 +2208,7 @@ public final class RcdReader {
                 if(roomIndex == 8 && screenIndex == 1) {
                     AddObject.addAutosave(screen, 460, 560, 149,
                             Arrays.asList(new TestByteOperation(0x1b4, ByteOp.FLAG_EQUALS, 4),
-                                    new TestByteOperation(0x0fa, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x0fa, ByteOp.FLAG_LT, 2),
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
@@ -2225,7 +2225,7 @@ public final class RcdReader {
                     AddObject.addAutosave(screen, 940, 400, 170,
                             Arrays.asList(new TestByteOperation(0x1ca, ByteOp.FLAG_EQUALS, 3),
                                     new TestByteOperation(0x1c3, ByteOp.FLAG_EQUALS, 3),
-                                    new TestByteOperation(0x0fb, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x0fb, ByteOp.FLAG_LT, 2),
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
@@ -2236,7 +2236,7 @@ public final class RcdReader {
                 if(roomIndex == 4 && screenIndex == 1) {
                     AddObject.addAutosave(screen, 940, 80, 188,
                             Arrays.asList(new TestByteOperation(0x1e0, ByteOp.FLAG_EQUALS, 2),
-                                    new TestByteOperation(0x0fc, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x0fc, ByteOp.FLAG_LT, 2),
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1)); // Text block 206 is backside Twin Labs grail, but they seem to be identical.
                 }
@@ -2277,11 +2277,10 @@ public final class RcdReader {
                 if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 300, 80, 358,
                             Arrays.asList(new TestByteOperation(0x2ed, ByteOp.FLAG_EQUALS, 1),
-                                    new TestByteOperation(0x0fd, ByteOp.FLAG_NOT_EQUAL, 2),
+                                    new TestByteOperation(0x0fd, ByteOp.FLAG_LT, 2),
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
-
             }
         }
         else if(zoneIndex == 18) {

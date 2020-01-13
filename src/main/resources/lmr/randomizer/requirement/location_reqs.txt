@@ -1,6 +1,6 @@
 Location: Surface [Main] => Event: Mother Ankh, Attack: Forward
 Location: Surface [Main] => Event: Mother Ankh, Attack: Flare Gun
-Location: Surface [Main] => Event: Bahamut Defeated
+Location: Surface [Main] => Event: Bahamut Defeated, Exit: Surface [Main]
 Location: Surface [Main] => Door: B5, Exit: Surface [Main]
 Location: Surface [Main] => State: Phase 1 Surface Access, Transition: Surface R1
 Location: Surface [Ruin Path Upper] => Location: Surface [Ruin Path Lower], Feather
