@@ -525,6 +525,9 @@ public final class LocationCoordinateMapper {
         if(zone == 7) {
             return "Twin Labyrinths (Front)";
         }
+        if(zone == -7) {
+            return "Twin Labyrinths (Back)";
+        }
         if(zone == 8) {
             return "Endless Corridor";
         }
