@@ -595,22 +595,22 @@ public class Main {
 
             List<String> locations = new ArrayList<>();
             List<String> items = new ArrayList<>();
-            if(customPlacementData.getStartingWeapon() != null) {
-                if(Settings.getStartingItemsIncludingCustom().contains(customPlacementData.getStartingWeapon())) {
+            for (var weapon : customPlacementData.getStartingWeapons()) {
+                if(Settings.getStartingItemsIncludingCustom().contains(weapon)) {
                     JOptionPane.showMessageDialog(randomizerUI,
-                            "Custom starting weapon cannot be the same as starting item" + customPlacementData.getStartingWeapon() + " not valid with current settings for starting item",
+                            "Custom starting weapon cannot be the same as starting item" + weapon + " not valid with current settings for starting item",
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
 
-                if(customPlacementData.getRemovedItems().contains(customPlacementData.getStartingWeapon())) {
+                if(customPlacementData.getRemovedItems().contains(weapon)) {
                     JOptionPane.showMessageDialog(randomizerUI,
                             "Cannot remove starting weapon",
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
 
-                if(ItemRandomizer.ALL_SUBWEAPONS.contains(customPlacementData.getStartingWeapon())) {
+                if(ItemRandomizer.ALL_SUBWEAPONS.contains(weapon)) {
                     if(!Settings.isAllowSubweaponStart()) {
                         JOptionPane.showMessageDialog(randomizerUI,
                                 "Custom starting weapon not enabled",
@@ -618,8 +618,8 @@ public class Main {
                         return false;
                     }
                 }
-                else if(DataFromFile.MAIN_WEAPONS.contains(customPlacementData.getStartingWeapon())) {
-                    if("Whip".equals(customPlacementData.getStartingWeapon())) {
+                else if(DataFromFile.MAIN_WEAPONS.contains(weapon)) {
+                    if("Whip".equals(weapon)) {
                         if(!Settings.isAllowWhipStart()) {
                             JOptionPane.showMessageDialog(randomizerUI,
                                     "Custom starting weapon not enabled",
@@ -637,7 +637,7 @@ public class Main {
                 }
                 else {
                     JOptionPane.showMessageDialog(randomizerUI,
-                            "Invalid starting weapon: " + customPlacementData.getStartingWeapon(),
+                            "Invalid starting weapon: " + weapon,
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
@@ -1314,7 +1314,7 @@ public class Main {
 
             itemRandomizer.placeNonRandomizedItems();
             shopRandomizer.placeNonRandomizedItems();
-            if(ItemRandomizer.ALL_SUBWEAPONS.contains(Settings.getCurrentStartingWeapon())) {
+            if(!Settings.getCurrentStartingSubWeapons().isEmpty()) {
                 shopRandomizer.placeSpecialSubweaponAmmo(random);
             }
             if(ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
@@ -1523,7 +1523,7 @@ public class Main {
     }
 
     private static boolean isSubweaponOnly() {
-        if(DataFromFile.MAIN_WEAPONS.contains(Settings.getCurrentStartingWeapon())) {
+        if(Settings.getCurrentStartingWeapons().size() != Settings.getCurrentStartingSubWeapons().size()) {
             return false;
         }
 
@@ -1536,11 +1536,13 @@ public class Main {
 
     private static List<String> getStartingNodes() {
         List<String> startingNodes = new ArrayList<>();
-        startingNodes.add(Settings.getCurrentStartingWeapon());
+        for (var weapon : Settings.getCurrentStartingWeapons()) {
+            startingNodes.add(weapon);
+        }
         startingNodes.add("State: Pre-Escape");
-        if(ItemRandomizer.ALL_SUBWEAPONS.contains(Settings.getCurrentStartingWeapon())) {
-            startingNodes.add(Settings.getCurrentStartingWeapon() + " Ammo");
-            if("Pistol".equals(Settings.getCurrentStartingWeapon())) {
+        if(!Settings.getCurrentStartingSubWeapons().isEmpty()) {
+            startingNodes.add(Settings.getCurrentStartingSubWeapons().get(0) + " Ammo");
+            if("Pistol".equals(Settings.getCurrentStartingSubWeapons().get(0))) {
                 startingNodes.add("Attack: Pistol"); // This one normally requires Isis' Pendant
             }
         }
@@ -1629,112 +1631,70 @@ public class Main {
 
     private static void writeSaveFile() {
         byte[] saveData = buildNewSave();
-        String startingWeapon = Settings.getCurrentStartingWeapon();
-        if(!"Whip".equals(startingWeapon)) {
+        if(!Settings.isDefaultStartingWeapon()) {
             FileUtils.logFlush("Updating weapon data");
-            saveData[4113] = (byte)-1; // word + 0x1011; remove whip
-            saveData[4114] = (byte)-1; // word + 0x1011; remove whip
-
-            if("Chain Whip".equals(startingWeapon)) {
-                saveData[142] = (byte)2; // byte + 0x11; add chain whip flag
-                saveData[4115] = (byte)1; // word + 0x1011; add chain whip
-                saveData[4623] = (byte)1; // Held main weapon item number
-                saveData[4626] = (byte)0; // Held main weapon slot number
-            }
-            else if("Flail Whip".equals(startingWeapon)) {
-                saveData[143] = (byte)2; // byte + 0x11; add flail whip flag
-                saveData[4117] = (byte)1; // word + 0x1011; add flail whip
-                saveData[4623] = (byte)2; // Held main weapon item number
-                saveData[4626] = (byte)0; // Held main weapon slot number
-            }
-            else if("Knife".equals(startingWeapon)) {
-                saveData[144] = (byte)2; // byte + 0x11; add knife flag
-                saveData[4119] = (byte)1; // word + 0x1011; add knife
-                saveData[4623] = (byte)3; // Held main weapon item number
-                saveData[4626] = (byte)1; // Held main weapon slot number
-            }
-            else if("Key Sword".equals(startingWeapon)) {
-                saveData[145] = (byte)2; // byte + 0x11; add key sword flag
-                saveData[4121] = (byte)1; // word + 0x1011; add key sword
-                saveData[4623] = (byte)4; // Held main weapon item number
-                saveData[4626] = (byte)2; // Held main weapon slot number
-
-                if(Settings.isAutomaticMantras()) {
-                    saveData[0x11 + 0x124] = (byte)4;
-                }
-            }
-            else if("Axe".equals(startingWeapon)) {
-                saveData[146] = (byte)2; // byte + 0x11; add axe flag
-                saveData[4123] = (byte)1; // word + 0x1011; add axe
-                saveData[4623] = (byte)5; // Held main weapon item number
-                saveData[4626] = (byte)3; // Held main weapon slot number
-            }
-            else if("Katana".equals(startingWeapon)) {
-                saveData[147] = (byte)2; // byte + 0x11; add katana flag
-                saveData[4125] = (byte)1; // word + 0x1011; add katana
-                saveData[4623] = (byte)6; // Held main weapon item number
-                saveData[4626] = (byte)4; // Held main weapon slot number
-            }
-            else {
+            if(!Settings.getCurrentStartingWeapons().contains("Whip")) {
+                saveData[4113] = (byte)-1; // word + 0x1011; remove whip
+                saveData[4114] = (byte)-1; // word + 0x1011; remove whip
                 saveData[4623] = (byte)-1; // Held main weapon item number
                 saveData[4626] = (byte)-1; // Held main weapon slot number
+            }
 
-                if("Shuriken".equals(startingWeapon)) {
-                    saveData[148] = (byte)2;
-                    saveData[4129] = (byte)1;
-                    saveData[4624] = (byte)8; // Held subweapon item number
-                    saveData[4627] = (byte)0; // Held subweapon slot number
-                    saveData[0x06b * 2 + 0x1011 + 1] = (byte)150; // Ammo
+            List<String> otherMainWeapons = Arrays.asList("Flail Whip", "Knife", "Key Sword", "Axe", "Katana");
+            for (String weapon : Settings.getCurrentStartingWeapons()) {
+                if("Chain Whip".equals(weapon)) {
+                    saveData[0x11 + 125] = (byte)2; // byte + 0x11; add chain whip flag
+                    saveData[0x1011 + 2] = (byte)1; // word + 0x1011; add chain whip
+                    if(-1 == saveData[4623]) {
+                        saveData[4623] = (byte)1; // Held main weapon item number
+                        saveData[4626] = (byte)0; // Held main weapon slot number
+                    }
                 }
-                else if("Rolling Shuriken".equals(startingWeapon)) {
-                    saveData[149] = (byte)2;
-                    saveData[4131] = (byte)1;
-                    saveData[4624] = (byte)9; // Held subweapon item number
-                    saveData[4627] = (byte)1; // Held subweapon slot number
-                    saveData[0x06c * 2 + 0x1011 + 1] = (byte)100; // Ammo
+                else if(otherMainWeapons.contains(weapon)) {
+                    int mainWeaponSlot = otherMainWeapons.indexOf(weapon);
+                    saveData[0x11 + 126 + mainWeaponSlot] = (byte)2; // flag
+                    saveData[0x1011 + 2 * (2 + mainWeaponSlot)] = (byte)1; // inventory item
+                    if(-1 == saveData[4623]) {
+                        saveData[4623] = (byte)(2 + mainWeaponSlot); // Held main weapon item number
+                        saveData[4626] = (byte)mainWeaponSlot; // Held main weapon slot number
+                    }
+                    if("Key Sword".equals(weapon) && Settings.isAutomaticMantras()) {
+                        saveData[0x11 + 0x124] = (byte)4;
+                    }
                 }
-                else if("Earth Spear".equals(startingWeapon)) {
-                    saveData[150] = (byte)2;
-                    saveData[4133] = (byte)1;
-                    saveData[4624] = (byte)10; // Held subweapon item number
-                    saveData[4627] = (byte)2; // Held subweapon slot number
-                    saveData[0x06d * 2 + 0x1011 + 1] = (byte)80; // Ammo
-                }
-                else if("Flare Gun".equals(startingWeapon)) {
-                    saveData[151] = (byte)2;
-                    saveData[4135] = (byte)1;
-                    saveData[4624] = (byte)11; // Held subweapon item number
-                    saveData[4627] = (byte)3; // Held subweapon slot number
-                    saveData[0x06e * 2 + 0x1011 + 1] = (byte)80; // Ammo
-                }
-                else if("Bomb".equals(startingWeapon)) {
-                    saveData[152] = (byte)2;
-                    saveData[4137] = (byte)1;
-                    saveData[4624] = (byte)12; // Held subweapon item number
-                    saveData[4627] = (byte)4; // Held subweapon slot number
-                    saveData[0x06f * 2 + 0x1011 + 1] = (byte)30; // Ammo
-                }
-                else if("Chakram".equals(startingWeapon)) {
-                    saveData[153] = (byte)2;
-                    saveData[4139] = (byte)1;
-                    saveData[4624] = (byte)13; // Held subweapon item number
-                    saveData[4627] = (byte)5; // Held subweapon slot number
-                    saveData[0x070 * 2 + 0x1011 + 1] = (byte)10; // Ammo
-                }
-                else if("Caltrops".equals(startingWeapon)) {
-                    saveData[154] = (byte)2;
-                    saveData[4141] = (byte)1;
-                    saveData[4624] = (byte)14; // Held subweapon item number
-                    saveData[4627] = (byte)6; // Held subweapon slot number
-                    saveData[0x071 * 2 + 0x1011 + 1] = (byte)80; // Ammo
-                }
-                else if("Pistol".equals(startingWeapon)) {
-                    saveData[155] = (byte)2;
-                    saveData[4143] = (byte)1;
-                    saveData[4624] = (byte)15; // Held subweapon item number
-                    saveData[4627] = (byte)7; // Held subweapon slot number
-                    saveData[0x072 * 2 + 0x1011 + 1] = (byte)3; // Ammo
-                    saveData[0x074 * 2 + 0x1011 + 1] = (byte)6; // Ammo
+                else if(ItemRandomizer.ALL_SUBWEAPONS.contains(weapon)) {
+                    int subWeaponSlot = ItemRandomizer.ALL_SUBWEAPONS.indexOf(weapon);
+                    saveData[0x11 + 131 + subWeaponSlot] = (byte)2; // flag
+                    saveData[0x1011 + 2 * (8 + subWeaponSlot)] = (byte)1; // inventory item
+                    if(-1 == saveData[4624]) {
+                        saveData[4624] = (byte)(8 + subWeaponSlot); // Held subweapon item number
+                        saveData[4627] = (byte)subWeaponSlot; // Held subweapon slot number
+                    }
+                    if("Shuriken".equals(weapon)) {
+                        saveData[0x06b * 2 + 0x1011 + 1] = (byte)150; // Ammo
+                    }
+                    else if("Rolling Shuriken".equals(weapon)) {
+                        saveData[0x06c * 2 + 0x1011 + 1] = (byte)100; // Ammo
+                    }
+                    else if("Earth Spear".equals(weapon)) {
+                        saveData[0x06d * 2 + 0x1011 + 1] = (byte)80; // Ammo
+                    }
+                    else if("Flare Gun".equals(weapon)) {
+                        saveData[0x06e * 2 + 0x1011 + 1] = (byte)80; // Ammo
+                    }
+                    else if("Bomb".equals(weapon)) {
+                        saveData[0x06f * 2 + 0x1011 + 1] = (byte)30; // Ammo
+                    }
+                    else if("Chakram".equals(weapon)) {
+                        saveData[0x070 * 2 + 0x1011 + 1] = (byte)10; // Ammo
+                    }
+                    else if("Caltrops".equals(weapon)) {
+                        saveData[0x071 * 2 + 0x1011 + 1] = (byte)80; // Ammo
+                    }
+                    else if("Pistol".equals(weapon)) {
+                        saveData[0x072 * 2 + 0x1011 + 1] = (byte)3; // Ammo
+                        saveData[0x074 * 2 + 0x1011 + 1] = (byte)6; // Ammo
+                    }
                 }
             }
         }
@@ -1897,12 +1857,18 @@ public class Main {
 
     private static void determineStartingWeapon(Random random) {
         CustomPlacementData customPlacementData = DataFromFile.getCustomPlacementData();
-        String customStartingWeapon = customPlacementData.getStartingWeapon();
-        if(customStartingWeapon != null) {
-            Settings.setCurrentStartingWeapon(customStartingWeapon);
-            FileUtils.logFlush("Selected custom starting weapon: " + customStartingWeapon);
+        List<String> customStartingWeapons = customPlacementData.getStartingWeapons();
+        if(!customStartingWeapons.isEmpty()) {
+            Settings.setCurrentStartingWeapons(customStartingWeapons);
+            FileUtils.logFlush("Selected custom starting weapons: " + String.join(", ", customStartingWeapons));
             return;
         }
+
+        List<String> bannedStartingWeapons = new ArrayList<>();
+        bannedStartingWeapons.addAll(customPlacementData.getRemovedItems());
+        bannedStartingWeapons.addAll(customPlacementData.getStartingItems());
+        bannedStartingWeapons.addAll(Settings.getRemovedItems());
+        boolean canCombineFlaresAndSpears = !bannedStartingWeapons.contains("Flare Gun") && !bannedStartingWeapons.contains("Earth Spear");
 
         List<String> startingWeapons = new ArrayList<>();
         if(Settings.isAllowWhipStart()) {
@@ -1915,14 +1881,38 @@ public class Main {
             startingWeapons.add("Katana");
         }
         if(Settings.isAllowSubweaponStart()) {
-            startingWeapons.addAll(ItemRandomizer.ALL_SUBWEAPONS);
+            startingWeapons.add("Shuriken");
+            startingWeapons.add("Rolling Shuriken");
+            startingWeapons.add("Bomb");
+            startingWeapons.add("Chakram");
+            startingWeapons.add("Caltrops");
+            startingWeapons.add("Pistol");
+            if (!canCombineFlaresAndSpears) {
+                startingWeapons.add("Flare Gun");
+                startingWeapons.add("Earth Spear");
+            } else {
+                if (random.nextBoolean()) {
+                    startingWeapons.add("Flare Gun");
+                }
+                else {
+                    startingWeapons.add("Earth Spear");
+                }
+            }
         }
 
-        startingWeapons.removeAll(customPlacementData.getRemovedItems());
-        startingWeapons.removeAll(customPlacementData.getStartingItems());
-        startingWeapons.removeAll(Settings.getRemovedItems());
-        Settings.setCurrentStartingWeapon(startingWeapons.get(random.nextInt(startingWeapons.size())));
-        FileUtils.logFlush("Selected starting weapon: " + Settings.getCurrentStartingWeapon());
+        startingWeapons.removeAll(bannedStartingWeapons);
+        String startingWeapon = startingWeapons.get(random.nextInt(startingWeapons.size()));
+        if (canCombineFlaresAndSpears && startingWeapon.equals("Flare Gun")) {
+            Settings.setCurrentStartingWeapons(Arrays.asList("Flare Gun", "Earth Spear"));
+        }
+        else if (canCombineFlaresAndSpears && startingWeapon.equals("Earth Spear")) {
+            Settings.setCurrentStartingWeapons(Arrays.asList("Earth Spear", "Flare Gun"));
+        }
+        else {
+            Settings.setCurrentStartingWeapons(Arrays.asList(startingWeapon));
+        }
+
+        FileUtils.logFlush("Selected starting weapons: " + String.join(", ", Settings.getCurrentStartingWeapons()));
     }
 
     private static void determineStartingLocation(Random random) {
@@ -1967,7 +1957,7 @@ public class Main {
 
     private static void determineRemovedItems(int totalItemsRemoved, Random random) {
         Set<String> removedItems = new HashSet<>(Settings.getRemovedItems());
-        if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
+        if(!Settings.getCurrentStartingWeapons().contains("Whip")) {
             removedItems.add("Whip");
         }
         if(totalItemsRemoved < 1) {
@@ -1976,7 +1966,7 @@ public class Main {
         }
         List<String> removableItems = new ArrayList<>(DataFromFile.getRandomRemovableItems());
         removableItems.removeAll(removedItems);
-        removableItems.remove(Settings.getCurrentStartingWeapon());
+        removableItems.removeAll(Settings.getCurrentStartingWeapons());
         if(removableItems.isEmpty()) {
             Settings.setCurrentRemovedItems(removedItems);
             return;

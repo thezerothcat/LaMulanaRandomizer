@@ -141,7 +141,7 @@ public class EverythingShopRandomizer implements ShopRandomizer {
             }
             if(!guaranteedAmmoShopLocations.isEmpty()) {
                 String specialAmmoLocation = guaranteedAmmoShopLocations.get(random.nextInt(guaranteedAmmoShopLocations.size()));
-                mapOfShopInventoryItemToContents.put(specialAmmoLocation, Settings.getCurrentStartingWeapon() + " Ammo");
+                mapOfShopInventoryItemToContents.put(specialAmmoLocation, Settings.getCurrentStartingSubWeapons().get(0) + " Ammo");
                 unassignedShopItemLocations.remove(specialAmmoLocation);
             }
         }
@@ -149,21 +149,21 @@ public class EverythingShopRandomizer implements ShopRandomizer {
             String shopItem = DataFromFile.CUSTOM_SHOP_NAME + " Item 1";
             String shopContents = mapOfShopInventoryItemToContents.get(shopItem);
             if(shopContents == null) {
-                mapOfShopInventoryItemToContents.put(shopItem, Settings.getCurrentStartingWeapon() + " Ammo");
+                mapOfShopInventoryItemToContents.put(shopItem, Settings.getCurrentStartingSubWeapons().get(0) + " Ammo");
                 unassignedShopItemLocations.remove(shopItem);
                 return;
             }
             shopItem = DataFromFile.CUSTOM_SHOP_NAME + " Item 2";
             shopContents = mapOfShopInventoryItemToContents.get(shopItem);
             if(shopContents == null) {
-                mapOfShopInventoryItemToContents.put(shopItem, Settings.getCurrentStartingWeapon() + " Ammo");
+                mapOfShopInventoryItemToContents.put(shopItem, Settings.getCurrentStartingSubWeapons().get(0) + " Ammo");
                 unassignedShopItemLocations.remove(shopItem);
                 return;
             }
             shopItem = DataFromFile.CUSTOM_SHOP_NAME + " Item 3";
             shopContents = mapOfShopInventoryItemToContents.get(shopItem);
             if(shopContents == null) {
-                mapOfShopInventoryItemToContents.put(shopItem, Settings.getCurrentStartingWeapon() + " Ammo");
+                mapOfShopInventoryItemToContents.put(shopItem, Settings.getCurrentStartingSubWeapons().get(0) + " Ammo");
                 unassignedShopItemLocations.remove(shopItem);
                 return;
             }

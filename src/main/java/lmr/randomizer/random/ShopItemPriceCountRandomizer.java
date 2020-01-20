@@ -6,9 +6,7 @@ import lmr.randomizer.Settings;
 import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.node.MoneyChecker;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by thezerothcat on 8/19/2017.
@@ -112,7 +110,9 @@ public class ShopItemPriceCountRandomizer {
         if(subweaponOnly && itemName.endsWith(" Ammo")) {
             return 0;
         }
-        if(itemName.equals(Settings.getCurrentStartingWeapon() + " Ammo")) {
+        List<String> startingSubWeaponAmmo = new ArrayList<>(Settings.getCurrentStartingSubWeapons());
+        startingSubWeaponAmmo.replaceAll(weapon -> weapon + " Ammo");
+        if(startingSubWeaponAmmo.contains(itemName)) {
             return 0;
         }
         if("Weights".equals(itemName)) {
@@ -226,29 +226,31 @@ public class ShopItemPriceCountRandomizer {
         if("Weights".equals(item)) {
             return 5;
         }
+        List<String> startingSubWeaponAmmo = new ArrayList<>(Settings.getCurrentStartingSubWeapons());
+        startingSubWeaponAmmo.replaceAll(weapon -> weapon + " Ammo");
         if("Shuriken Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Shuriken") ? (short)150 : 10;
+            return subweaponOnly || startingSubWeaponAmmo.contains(item) ? (short)150 : 10;
         }
         if("Rolling Shuriken Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Rolling Shuriken") ? (short)100 : 10;
+            return subweaponOnly || startingSubWeaponAmmo.contains(item) ? (short)100 : 10;
         }
         if("Earth Spear Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Earth Spear") ? (short)80 : 10;
+            return subweaponOnly || startingSubWeaponAmmo.contains(item) ? (short)80 : 10;
         }
         if("Flare Gun Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Flare Gun") ? (short)80 : 10;
+            return subweaponOnly || startingSubWeaponAmmo.contains(item) ? (short)80 : 10;
         }
         if("Bomb Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Bomb") ? (short)30 : 10;
+            return subweaponOnly || startingSubWeaponAmmo.contains(item) ? (short)30 : 10;
         }
         if("Chakram Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Chakram") ? (short)10 : 2;
+            return subweaponOnly || startingSubWeaponAmmo.contains(item) ? (short)10 : 2;
         }
         if("Caltrops Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Caltrops") ? (short)80 : 10;
+            return subweaponOnly || startingSubWeaponAmmo.contains(item) ? (short)80 : 10;
         }
         if("Pistol Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Pistol") ? (short)3 : 1;
+            return subweaponOnly || startingSubWeaponAmmo.contains(item) ? (short)3 : 1;
         }
         return 1;
     }
