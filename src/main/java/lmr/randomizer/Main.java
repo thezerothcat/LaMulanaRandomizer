@@ -24,7 +24,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
-import java.nio.file.Files;
+import java.nio.file.*;
+import java.net.URI;
 import java.util.List;
 import java.util.*;
 
@@ -1492,6 +1493,21 @@ public class Main {
                     Files.copy(settingsFile.toPath(), fileOutputStream);
                     fileOutputStream.flush();
                     fileOutputStream.close();
+                }
+
+                FileUtils.logFlush("Zipping seed");
+                Map<String, String> zipEnv = new HashMap<>();
+                zipEnv.put("create", "true");
+                URI zipURI = URI.create(String.format("jar:%s", Paths.get(String.format("%d/seed.zip", Settings.getStartingSeed())).toUri().toString()));
+                try (FileSystem zip = FileSystems.newFileSystem(zipURI, zipEnv)) {
+                    String[] seedfiles = {"script.rcd", "script_code.dat", "lm_00.sav"};
+                    for (String filename : seedfiles) {
+                        Path source = Paths.get(String.format("%d/%s", Settings.getStartingSeed(), filename));
+                        Path dest = zip.getPath("/" + filename);
+                        try {
+                            Files.copy(source, dest);
+                        } catch (IOException e) {}
+                    }
                 }
 
                 dialog.updateProgress(100, Translations.getText("progress.done"));
