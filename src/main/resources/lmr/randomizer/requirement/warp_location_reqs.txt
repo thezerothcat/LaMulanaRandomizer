@@ -1,5 +1,5 @@
 Warp: Sun Pyramid => Location: Temple of the Sun [Main], State: Can Reach Sun Warp
-Warp: Spring Drain => Location: Spring in the Sky, Event: Flooded Temple of the Sun
+Warp: Spring Drain => Location: Spring in the Sky [Main], Event: Flooded Temple of the Sun
 Warp: Ellmac Exit => Location: Temple of the Sun [Main], Twin Statue, Event: Ellmac Defeated, Setting: Normal Boss
 Warp: Ellmac Exit => Location: Chamber of Extinction [Ankh Lower], Twin Statue, Event: Palenque Defeated, Setting: Abnormal Boss
 Warp: Bahamut Exit => Event: Bahamut Defeated

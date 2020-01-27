@@ -1,6 +1,6 @@
 Location: Surface [Main] => Event: Mother Ankh, Attack: Forward
 Location: Surface [Main] => Event: Mother Ankh, Attack: Flare Gun
-Location: Surface [Main] => Event: Bahamut Defeated
+Location: Surface [Main] => Event: Bahamut Defeated, Exit: Surface [Main]
 Location: Surface [Main] => Door: B5, Exit: Surface [Main]
 Location: Surface [Main] => State: Phase 1 Surface Access, Transition: Surface R1
 Location: Surface [Ruin Path Upper] => Location: Surface [Ruin Path Lower], Feather
@@ -57,8 +57,7 @@ Location: Temple of the Sun [Main] => Door: B3, Exit: Temple of the Sun [Main]
 Location: Temple of the Sun [West] => Location: Temple of the Sun [Top Entrance], Event: Buer Defeated, State: Can Reach West Sun
 Location: Temple of the Sun [West] => Transition: Sun L1, Event: Buer Defeated
 Location: Temple of the Sun [East] => Location: Temple of the Sun [Main], State: Can Reach East Sun
-Location: Temple of the Sun [East] => Location: Spring in the Sky, Event: Flooded Temple of the Sun, Exit: Temple of the Sun [East]
-Location: Temple of the Sun [East] => Location: Temple of the Sun [East] => Location: Temple of the Sun [Sphinx], Exit: Temple of the Sun [East]
+Location: Temple of the Sun [East] => Location: Temple of the Sun [Sphinx], Exit: Temple of the Sun [East]
 Location: Temple of the Sun [East] => Transition: Sun R1, Glitch: Lamp Glitch, Setting: Nonrandom Transitions
 Location: Temple of the Sun [East] => Transition: Sun R1, Glitch: Raindrop
 Location: Temple of the Sun [East] => Transition: Sun R2, Glitch: Raindrop

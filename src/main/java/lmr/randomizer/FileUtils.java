@@ -19,7 +19,7 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.23.0a2";
+    public static final String VERSION = "2.23.0";
     public static final int EXISTING_FILE_WIDTH = 1024;
     public static final int EXISTING_FILE_HEIGHT = 512;
     public static final int GRAPHICS_VERSION = 4;
@@ -544,6 +544,9 @@ public class FileUtils {
             else if(line.startsWith("ushumgalluAssist")) {
                 Settings.setUshumgalluAssist(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("bossCheckpoints")) {
+                Settings.setBossCheckpoints(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("blockPushingRequiresGlove")) {
                 Settings.setBlockPushingRequiresGlove(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -694,6 +697,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("ushumgalluAssist=%s", Settings.isUshumgalluAssist()));
+        writer.newLine();
+
+        writer.write(String.format("bossCheckpoints=%s", Settings.isBossCheckpoints()));
         writer.newLine();
 
         writer.write(String.format("includeHellTempleNPCs=%s", Settings.isIncludeHellTempleNPCs()));
