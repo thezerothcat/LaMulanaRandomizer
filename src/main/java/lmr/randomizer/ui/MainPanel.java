@@ -1,6 +1,7 @@
 package lmr.randomizer.ui;
 
 import lmr.randomizer.FileUtils;
+import lmr.randomizer.Main;
 import lmr.randomizer.Settings;
 import lmr.randomizer.Translations;
 import net.miginfocom.swing.MigLayout;
@@ -13,13 +14,15 @@ public class MainPanel extends JPanel {
     private JTextField laMulanaDirectory;
     private JTextField laMulanaSaveDirectory;
     private JTextField seedNumber;
+    private JButton rerollSeedButton;
     private JComboBox language;
 
     private JLabel seedNumberLabel;
+    private JLabel languageLabel;
     private JLabel laMulanaDirectoryLabel;
     private JLabel laMulanaSaveDirectoryLabel;
 
-    public MainPanel() {
+    public MainPanel(Main.RandomizerUI randomizerUI) {
         super(new MigLayout("fillx", "[][sg fields, fill, grow 80]", "[]"));
         setBorder(BorderFactory.createTitledBorder(Translations.getText("settings.main")));
 
@@ -28,8 +31,15 @@ public class MainPanel extends JPanel {
         add(seedNumberLabel, "gap related");
         add(seedNumber);
 
+        rerollSeedButton = new JButton(Translations.getText("settings.rerollSeed"));
+        rerollSeedButton.addActionListener(randomizerUI);
+        rerollSeedButton.setActionCommand("rerollSeed");
+        add(rerollSeedButton, "wrap");
+
         language = new JComboBox(new String[]{"English", "日本語"});
         language.setSelectedIndex("en".equals(Settings.getLanguage()) ? 0 : 1);
+        languageLabel = new JLabel(Translations.getText("settings.language"));
+        add(languageLabel, "gap related");
         add(language, "grow 50, wrap");
 
         laMulanaDirectory = new JTextField(Settings.getLaMulanaBaseDir());
