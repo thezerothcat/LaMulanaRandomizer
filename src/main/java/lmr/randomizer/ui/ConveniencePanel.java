@@ -57,5 +57,6 @@ public class ConveniencePanel extends JPanel {
         automaticGrailPoints.setSelected(Settings.isAutomaticGrailPoints());
         automaticTranslations.setSelected(Settings.isAutomaticTranslations());
         ushumgalluAssist.setSelected(Settings.isUshumgalluAssist());
+        bossCheckpoints.setSelected(Settings.isBossCheckpoints());
     }
 }
