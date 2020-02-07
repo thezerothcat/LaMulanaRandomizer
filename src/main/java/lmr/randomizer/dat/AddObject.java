@@ -4952,22 +4952,22 @@ public final class AddObject {
     public static Block addDanceBlock(List<Block> blocks) {
         Block danceBlock = new Block(blocks.size());
         BlockListData danceMove = new BlockListData((short)0x004e, (short)1);
-        danceMove.getData().add((short)1);
+        danceMove.getData().add((short)1); // Jump
         danceBlock.getBlockContents().add(danceMove);
         danceBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
 
         danceMove = new BlockListData((short)0x004e, (short)1);
-        danceMove.getData().add((short)3);
+        danceMove.getData().add((short)3); // Swing right
         danceBlock.getBlockContents().add(danceMove);
         danceBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
 
         danceMove = new BlockListData((short)0x004e, (short)1);
-        danceMove.getData().add((short)1);
+        danceMove.getData().add((short)1); // Jump
         danceBlock.getBlockContents().add(danceMove);
         danceBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
 
         danceMove = new BlockListData((short)0x004e, (short)1);
-        danceMove.getData().add((short)2);
+        danceMove.getData().add((short)2); // Swing left
         danceBlock.getBlockContents().add(danceMove);
 
         blocks.add(danceBlock);

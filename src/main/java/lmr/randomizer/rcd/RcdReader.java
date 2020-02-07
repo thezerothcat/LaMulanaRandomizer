@@ -1081,6 +1081,18 @@ public final class RcdReader {
                     obj.getWriteByteOperations().get(0).setValue((byte) 1);
                     obj.getWriteByteOperations().get(1).setValue((byte) 2);
                     obj.setY(obj.getY() + 60);
+                    AddObject.addAutosave((Screen)obj.getObjectContainer(), obj.getX(), obj.getY(), 231,
+                            Arrays.asList(new TestByteOperation(0x2e0, ByteOp.FLAG_EQUALS, 3),
+                                    new TestByteOperation(0x0fe, ByteOp.FLAG_LTEQ, 2),
+                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                }
+                else {
+                    AddObject.addAutosave((Screen)obj.getObjectContainer(), obj.getX(), obj.getY() + 60, 231,
+                            Arrays.asList(new TestByteOperation(0x2e0, ByteOp.FLAG_EQUALS, 3),
+                                    new TestByteOperation(0x0fe, ByteOp.FLAG_LTEQ, 2),
+                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
 //                for(int i = 1; i <= 23; i++) {
 //                    obj.getArgs().set(i, (short) 1);
