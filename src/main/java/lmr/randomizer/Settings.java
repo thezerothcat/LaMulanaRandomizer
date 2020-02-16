@@ -834,6 +834,10 @@ public final class Settings {
         return false;
     }
 
+    public static boolean isEasterMode() {
+        return true;
+    }
+
     public static boolean isIncludeHellTempleNPCs() {
         return singleton.includeHellTempleNPCs;
     }
