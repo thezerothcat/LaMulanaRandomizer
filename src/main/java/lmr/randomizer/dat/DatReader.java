@@ -213,6 +213,14 @@ public final class DatReader {
             blockStringData.getData().add((short)0x000a);
             itemNameBlock.getBlockContents().add(blockStringData);
         }
+        else if(Settings.isEasterMode()) {
+            // Get the data for Secret Treasure of Life, but throw it away in favor of custom replacement
+            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
+            blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.easter.egg.name")));
+            blockStringData.getData().add((short)0x000a);
+            itemNameBlock.getBlockContents().add(blockStringData);
+        }
         else {
             // Get Secret Treasure of Life item name
             blockStringData = new BlockStringData();
@@ -284,6 +292,14 @@ public final class DatReader {
             dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
             blockStringData = new BlockStringData();
             blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.halloween.candy.description")));
+            blockStringData.getData().add((short)0x000a);
+            itemDescriptionBlock.getBlockContents().add(blockStringData);
+        }
+        else if(Settings.isEasterMode()) {
+            // Get the data for Secret Treasure of Life, but throw it away in favor of custom replacement
+            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
+            blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.easter.egg.description")));
             blockStringData.getData().add((short)0x000a);
             itemDescriptionBlock.getBlockContents().add(blockStringData);
         }

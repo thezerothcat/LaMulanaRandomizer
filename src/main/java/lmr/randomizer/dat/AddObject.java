@@ -5656,13 +5656,13 @@ public final class AddObject {
         addedGraphic.getArgs().add((short)(984 - Math.min(30, shiftDown))); // Imagey - puts small egg in top left, add up to 32 to shift down
         addedGraphic.getArgs().add((short)40); // dx
         addedGraphic.getArgs().add((short)40); // dy
-        addedGraphic.getArgs().add((short)1); // 0: act as if animation already played; 1: allow animation; 2: ..?
-        addedGraphic.getArgs().add((short)7); // Animation frames
-        addedGraphic.getArgs().add((short)6); // Pause frames
+        addedGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        addedGraphic.getArgs().add((short)0); // Animation frames
+        addedGraphic.getArgs().add((short)1); // Pause frames
         addedGraphic.getArgs().add((short)1); // Repeat count (<1 is forever)
         addedGraphic.getArgs().add((short)0); // Hittile to fill with
         addedGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
-        addedGraphic.getArgs().add((short)5); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        addedGraphic.getArgs().add((short)2); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
         addedGraphic.getArgs().add((short)0); // Cycle colors t/f
         addedGraphic.getArgs().add((short)0); // Alpha/frame
         addedGraphic.getArgs().add((short)255); // Max alpha
@@ -5702,13 +5702,13 @@ public final class AddObject {
         addedGraphic.getArgs().add((short)(986 - Math.min(2, shiftDown))); // Imagey - puts small egg in top left, add up to 32 to shift down
         addedGraphic.getArgs().add((short)40); // dx
         addedGraphic.getArgs().add((short)40); // dy
-        addedGraphic.getArgs().add((short)1); // 0: act as if animation already played; 1: allow animation; 2: ..?
-        addedGraphic.getArgs().add((short)7); // Animation frames
-        addedGraphic.getArgs().add((short)6); // Pause frames
+        addedGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        addedGraphic.getArgs().add((short)0); // Animation frames
+        addedGraphic.getArgs().add((short)1); // Pause frames
         addedGraphic.getArgs().add((short)1); // Repeat count (<1 is forever)
         addedGraphic.getArgs().add((short)0); // Hittile to fill with
         addedGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
-        addedGraphic.getArgs().add((short)5); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        addedGraphic.getArgs().add((short)2); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
         addedGraphic.getArgs().add((short)0); // Cycle colors t/f
         addedGraphic.getArgs().add((short)0); // Alpha/frame
         addedGraphic.getArgs().add((short)255); // Max alpha

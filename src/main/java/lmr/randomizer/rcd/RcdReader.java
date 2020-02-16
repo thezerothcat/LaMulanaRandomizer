@@ -2132,7 +2132,7 @@ public final class RcdReader {
                 if(roomIndex == 0 && screenIndex == 0) {
 //                    AddObject.addEasterEggGraphic(screen, 20, 180, 6, 30, 0,
 //                            Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 0)));
-                    AddObject.addLargeEasterEggGraphic(screen, 0, 180, 0, 2, 0,
+                    AddObject.addLargeEasterEggGraphic(screen, 20, 180, 0, 2, 0,
                             Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 0)));
                     AddObject.addEasterEggGive(screen, 0, 180,
                             Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 0)),
