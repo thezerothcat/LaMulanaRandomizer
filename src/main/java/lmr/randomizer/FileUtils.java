@@ -22,7 +22,7 @@ public class FileUtils {
     public static final String VERSION = "EASTER";
     public static final int EXISTING_FILE_WIDTH = 1024;
     public static final int EXISTING_FILE_HEIGHT = 512;
-    public static final int GRAPHICS_VERSION = 4;
+    public static final int GRAPHICS_VERSION = 5;
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();

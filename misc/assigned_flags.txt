@@ -44,8 +44,8 @@ aab (2732): HT unlock fairy npc, should have been with the other group but wasn'
 aac (2733): mulbruk > 0 = not spoken, 1 = did intro, 2 = ready to talk about HT, 3 = HT unlocked
 aad (2734): H4 tracking
 aae (2735): dracuet
-aaf-ac9 (2735-2761): halloween npc
-aca = halloween npc count
+aaf-ac9 (2735-2761): halloween npc / easter egg
+aca = halloween npc count / easter egg count
 inferno pushblock glove special: acb (2763)
 ruin pushblock glove special: acc (2764)
 retro grail flags: acd-acf 2765-2767

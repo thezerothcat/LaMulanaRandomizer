@@ -2127,6 +2127,19 @@ public final class RcdReader {
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
+
+            if(Settings.isEasterMode()) {
+                if(roomIndex == 0 && screenIndex == 0) {
+//                    AddObject.addEasterEggGraphic(screen, 20, 180, 6, 30, 0,
+//                            Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 0)));
+                    AddObject.addLargeEasterEggGraphic(screen, 0, 180, 0, 2, 0,
+                            Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 0)));
+                    AddObject.addEasterEggGive(screen, 0, 180,
+                            Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 0)),
+                            Arrays.asList(new WriteByteOperation(0xaaf, ByteOp.ASSIGN_FLAG, 1),
+                                    new WriteByteOperation(0xaca, ByteOp.ADD_FLAG, 1)));
+                }
+            }
         }
         else if(zoneIndex == 1) {
             if(roomIndex == 2 && screenIndex == 1) {

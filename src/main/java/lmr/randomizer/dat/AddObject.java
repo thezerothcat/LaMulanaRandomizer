@@ -5633,4 +5633,122 @@ public final class AddObject {
         sphinxRemovalTimer.getWriteByteOperations().add(writeByteOperation);
         screen.getObjects().add(0, sphinxRemovalTimer);
     }
+
+    /**
+     * Add graphics (easter egg) to screen on specified layer.
+     *
+     * @param screen to add the object to
+     * @param x horizontal position for the object
+     * @param y vertical position for the object
+     * @param shiftRight range 0-32, for the egg to be as far left as possible or as far right as possible
+     * @param shiftDown range 0-30, for the egg to be as far up as possible or as far down as possible
+     * @param layer which layer to draw the object on
+     * @param tests determines whether or not the graphic exists
+     */
+    public static void addEasterEggGraphic(ObjectContainer screen, int x, int y, int shiftRight, int shiftDown, int layer, List<TestByteOperation> tests) {
+        GameObject addedGraphic = new GameObject(screen);
+        addedGraphic.setId((short)0x93);
+        addedGraphic.setX(x);
+        addedGraphic.setY(y);
+        addedGraphic.getArgs().add((short)layer); // Layer
+        addedGraphic.getArgs().add((short)7); // 01.effect.png for anything not 0-6?
+        addedGraphic.getArgs().add((short)(32 - Math.min(32, shiftRight))); // Imagex - puts small egg in top left, add up to 32 to shift right
+        addedGraphic.getArgs().add((short)(984 - Math.min(30, shiftDown))); // Imagey - puts small egg in top left, add up to 32 to shift down
+        addedGraphic.getArgs().add((short)40); // dx
+        addedGraphic.getArgs().add((short)40); // dy
+        addedGraphic.getArgs().add((short)1); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        addedGraphic.getArgs().add((short)7); // Animation frames
+        addedGraphic.getArgs().add((short)6); // Pause frames
+        addedGraphic.getArgs().add((short)1); // Repeat count (<1 is forever)
+        addedGraphic.getArgs().add((short)0); // Hittile to fill with
+        addedGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        addedGraphic.getArgs().add((short)5); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        addedGraphic.getArgs().add((short)0); // Cycle colors t/f
+        addedGraphic.getArgs().add((short)0); // Alpha/frame
+        addedGraphic.getArgs().add((short)255); // Max alpha
+        addedGraphic.getArgs().add((short)0); // R/frame
+        addedGraphic.getArgs().add((short)0); // Max R
+        addedGraphic.getArgs().add((short)0); // G/frame
+        addedGraphic.getArgs().add((short)0); // Max G
+        addedGraphic.getArgs().add((short)0); // B/frame
+        addedGraphic.getArgs().add((short)0); // Max B
+        addedGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        addedGraphic.getArgs().add((short)1); // not0?
+
+        addedGraphic.getTestByteOperations().addAll(tests);
+
+        screen.getObjects().add(addedGraphic);
+    }
+
+    /**
+     * Add graphics (bigger easter egg) to screen on specified layer.
+     *
+     * @param screen to add the object to
+     * @param x horizontal position for the object
+     * @param y vertical position for the object
+     * @param shiftRight range 0-32, for the egg to be as far left as possible or as far right as possible
+     * @param shiftDown range 0-30, for the egg to be as far up as possible or as far down as possible
+     * @param layer which layer to draw the object on
+     * @param tests determines whether or not the graphic exists
+     */
+    public static void addLargeEasterEggGraphic(ObjectContainer screen, int x, int y, int shiftRight, int shiftDown, int layer, List<TestByteOperation> tests) {
+        GameObject addedGraphic = new GameObject(screen);
+        addedGraphic.setId((short)0x93);
+        addedGraphic.setX(x);
+        addedGraphic.setY(y);
+        addedGraphic.getArgs().add((short)layer); // Layer
+        addedGraphic.getArgs().add((short)7); // 01.effect.png for anything not 0-6?
+        addedGraphic.getArgs().add((short)(112 - Math.min(10, shiftRight))); // Imagex - puts small egg in top left, add up to 32 to shift right
+        addedGraphic.getArgs().add((short)(986 - Math.min(2, shiftDown))); // Imagey - puts small egg in top left, add up to 32 to shift down
+        addedGraphic.getArgs().add((short)40); // dx
+        addedGraphic.getArgs().add((short)40); // dy
+        addedGraphic.getArgs().add((short)1); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        addedGraphic.getArgs().add((short)7); // Animation frames
+        addedGraphic.getArgs().add((short)6); // Pause frames
+        addedGraphic.getArgs().add((short)1); // Repeat count (<1 is forever)
+        addedGraphic.getArgs().add((short)0); // Hittile to fill with
+        addedGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        addedGraphic.getArgs().add((short)5); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        addedGraphic.getArgs().add((short)0); // Cycle colors t/f
+        addedGraphic.getArgs().add((short)0); // Alpha/frame
+        addedGraphic.getArgs().add((short)255); // Max alpha
+        addedGraphic.getArgs().add((short)0); // R/frame
+        addedGraphic.getArgs().add((short)0); // Max R
+        addedGraphic.getArgs().add((short)0); // G/frame
+        addedGraphic.getArgs().add((short)0); // Max G
+        addedGraphic.getArgs().add((short)0); // B/frame
+        addedGraphic.getArgs().add((short)0); // Max B
+        addedGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        addedGraphic.getArgs().add((short)1); // not0?
+
+        addedGraphic.getTestByteOperations().addAll(tests);
+
+        screen.getObjects().add(addedGraphic);
+    }
+
+    /**
+     * Add item give to specified screen and position, with the provided tests and updates.
+     * @param screen to add the object to
+     * @param x horizontal position for the object
+     * @param y vertical position for the object
+     * @param tests determines whether or not the object exists
+     * @param updates flags to set when the item is collected
+     */
+    public static void addEasterEggGive(ObjectContainer screen, int x, int y, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject itemGive = new GameObject(screen);
+        itemGive.setId((short) 0xb5);
+        itemGive.setX(x);
+        itemGive.setY(y);
+
+        itemGive.getArgs().add((short)84); // Secret Treasure of Life
+        itemGive.getArgs().add((short)2);
+//        itemGive.getArgs().add((short)3);
+        itemGive.getArgs().add((short)2);
+        itemGive.getArgs().add((short)39);
+
+        itemGive.getTestByteOperations().addAll(tests);
+        itemGive.getWriteByteOperations().addAll(updates);
+
+        screen.getObjects().add(itemGive);
+    }
 }
