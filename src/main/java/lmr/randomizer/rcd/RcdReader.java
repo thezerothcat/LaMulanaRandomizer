@@ -2135,7 +2135,7 @@ public final class RcdReader {
                     AddObject.addLargeEasterEggGraphic(screen, 20, 180, 0, 2, 0,
                             Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 0)));
                     AddObject.addEasterEggGive(screen, 0, 180,
-                            Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 0)),
+                            2, 2, Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 0)),
                             Arrays.asList(new WriteByteOperation(0xaaf, ByteOp.ASSIGN_FLAG, 1),
                                     new WriteByteOperation(0xaca, ByteOp.ADD_FLAG, 1)));
                 }
@@ -2179,6 +2179,22 @@ public final class RcdReader {
                                     new TestByteOperation(0x0f7, ByteOp.FLAG_LT, 2),
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                }
+            }
+
+            if(Settings.isEasterMode()) {
+                if(roomIndex == 1 && screenIndex == 1) {
+                    AddObject.addBreakableWall(screen, 740, 360,
+                            Arrays.asList(new TestByteOperation(0xab0, ByteOp.FLAG_EQUALS, 0)),
+                            Arrays.asList(new WriteByteOperation(0xab0, ByteOp.ASSIGN_FLAG, 1)));
+                    AddObject.addWallGraphic(screen, 740, 360, 0, 200, 80, 80, 5,
+                            Arrays.asList(new TestByteOperation(0xab0, ByteOp.FLAG_EQUALS, 0)));
+                    AddObject.addLargeEasterEggGraphic(screen, 760, 380, 2, 10, 0,
+                            Arrays.asList(new TestByteOperation(0xab0, ByteOp.FLAG_EQUALS, 1)));
+                    AddObject.addEasterEggGive(screen, 760, 380,
+                            4, 4, Arrays.asList(new TestByteOperation(0xab0, ByteOp.FLAG_EQUALS, 1)),
+                            Arrays.asList(new WriteByteOperation(0xab0, ByteOp.ASSIGN_FLAG, 2),
+                                    new WriteByteOperation(0xaca, ByteOp.ADD_FLAG, 1)));
                 }
             }
         }
@@ -2236,6 +2252,22 @@ public final class RcdReader {
                                     new TestByteOperation(0x0fa, ByteOp.FLAG_LT, 2),
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                }
+            }
+
+            if(Settings.isEasterMode()) {
+                if(roomIndex == 8 && screenIndex == 0) {
+                    AddObject.addBreakableWall(screen, 140, 200,
+                            Arrays.asList(new TestByteOperation(0xab1, ByteOp.FLAG_EQUALS, 0)),
+                            Arrays.asList(new WriteByteOperation(0xab1, ByteOp.ASSIGN_FLAG, 1)));
+                    AddObject.addLavaWall(screen, 140, 220, 4,
+                            Arrays.asList(new TestByteOperation(0xab1, ByteOp.FLAG_EQUALS, 0)));
+                    AddObject.addLargeEasterEggGraphic(screen, 160, 240, 2, 10, 0,
+                            Arrays.asList(new TestByteOperation(0xab1, ByteOp.FLAG_EQUALS, 1)));
+                    AddObject.addEasterEggGive(screen, 180, 260,
+                            2, 4, Arrays.asList(new TestByteOperation(0xab1, ByteOp.FLAG_EQUALS, 1)),
+                            Arrays.asList(new WriteByteOperation(0xab1, ByteOp.ASSIGN_FLAG, 2),
+                                    new WriteByteOperation(0xaca, ByteOp.ADD_FLAG, 1)));
                 }
             }
         }

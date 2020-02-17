@@ -5702,6 +5702,10 @@ public final class AddObject {
         addedGraphic.getArgs().add((short)(986 - Math.min(2, shiftDown))); // Imagey - puts small egg in top left, add up to 32 to shift down
         addedGraphic.getArgs().add((short)40); // dx
         addedGraphic.getArgs().add((short)40); // dy
+//        addedGraphic.getArgs().add((short)(112 - Math.min(30, shiftRight))); // Imagex - puts small egg in top left, add up to 30 to shift right
+//        addedGraphic.getArgs().add((short)(986 - Math.min(22, shiftDown))); // Imagey - puts small egg in top left, add up to 22 to shift down
+//        addedGraphic.getArgs().add((short)((shiftRight > 2 ? 60 : 40))); // dx
+//        addedGraphic.getArgs().add((short)((shiftDown > 2 ? 60 : 40))); // dy
         addedGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
         addedGraphic.getArgs().add((short)0); // Animation frames
         addedGraphic.getArgs().add((short)1); // Pause frames
@@ -5731,24 +5735,130 @@ public final class AddObject {
      * @param screen to add the object to
      * @param x horizontal position for the object
      * @param y vertical position for the object
+     * @param width
+     * @param height
      * @param tests determines whether or not the object exists
      * @param updates flags to set when the item is collected
      */
-    public static void addEasterEggGive(ObjectContainer screen, int x, int y, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+    public static void addEasterEggGive(ObjectContainer screen, int x, int y, int width, int height, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
         GameObject itemGive = new GameObject(screen);
         itemGive.setId((short) 0xb5);
         itemGive.setX(x);
         itemGive.setY(y);
 
         itemGive.getArgs().add((short)84); // Secret Treasure of Life
-        itemGive.getArgs().add((short)2);
-//        itemGive.getArgs().add((short)3);
-        itemGive.getArgs().add((short)2);
+        itemGive.getArgs().add((short)width);
+        itemGive.getArgs().add((short)height);
         itemGive.getArgs().add((short)39);
 
         itemGive.getTestByteOperations().addAll(tests);
         itemGive.getWriteByteOperations().addAll(updates);
 
         screen.getObjects().add(itemGive);
+    }
+
+    /**
+     * @param screen to add the object to
+     * @param x horizontal position for the object
+     * @param y vertical position for the object
+     * @param tests determines whether or not the object exists
+     * @param updates flags to set when the item is collected
+     */
+    public static void addBreakableWall(ObjectContainer screen, int x, int y, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject breakableWall = new GameObject(screen);
+        breakableWall.setId((short)0x12);
+        breakableWall.setX(x);
+        breakableWall.setY(y);
+
+        breakableWall.getArgs().add((short)2); // visual 1:dust >1: star
+        breakableWall.getArgs().add((short)1); // 0:hp 1:hits
+        breakableWall.getArgs().add((short)4); // health
+        breakableWall.getArgs().add((short)3); // direction: 0 - up 1 - right 2 - down 3 - left 4 - any
+        breakableWall.getArgs().add((short)18); // weapon type: 0-15 same as word, 16 all main 17 all sub 18 all 19 none
+        breakableWall.getArgs().add((short)0); // Update Type: 0-  break: update all 4 / wrongwep: update none. 1-  break: update 0,2 / wrongwep: update 1,3
+        breakableWall.getArgs().add((short)3); // hitbox sizex
+        breakableWall.getArgs().add((short)3); // hitbox sizey
+        breakableWall.getArgs().add((short)105); // Hit Success Sound Effect (-1 for silent)
+        breakableWall.getArgs().add((short)104); // Hit Fail Sound Effect (-1 for silent)
+        breakableWall.getArgs().add((short)0); // dust1 density 1
+        breakableWall.getArgs().add((short)2); // dust2 density 2
+
+        breakableWall.getTestByteOperations().addAll(tests);
+        breakableWall.getWriteByteOperations().addAll(updates);
+
+        screen.getObjects().add(breakableWall);
+    }
+
+    /**
+     * @param screen to add the object to
+     * @param x horizontal position for the object
+     * @param y vertical position for the object
+     * @param tests determines whether or not the object exists
+     */
+    public static void addWallGraphic(ObjectContainer screen, int x, int y, int graphicsX, int graphicsY, int width, int height, int layer, List<TestByteOperation> tests) {
+        GameObject addedGraphic = new GameObject(screen);
+        addedGraphic.setId((short)0x93);
+        addedGraphic.setX(x);
+        addedGraphic.setY(y);
+        addedGraphic.getArgs().add((short)layer); // Layer
+        addedGraphic.getArgs().add((short)0); // 0=mapxx_1.png 1=evegxx.png 2=00prof.png 3=02comenemy.png 4=6=00item.png 5=01menu.png 6=4=00item.png Default:01effect.png
+        addedGraphic.getArgs().add((short)graphicsX); // Imagex
+        addedGraphic.getArgs().add((short)graphicsY); // Imagey
+        addedGraphic.getArgs().add((short)width); // dx
+        addedGraphic.getArgs().add((short)height); // dy
+        addedGraphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        addedGraphic.getArgs().add((short)0); // Animation frames
+        addedGraphic.getArgs().add((short)1); // Pause frames
+        addedGraphic.getArgs().add((short)1); // Repeat count (<1 is forever)
+        addedGraphic.getArgs().add((short)128); // Hittile to fill with
+        addedGraphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        addedGraphic.getArgs().add((short)3); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        addedGraphic.getArgs().add((short)0); // Cycle colors t/f
+        addedGraphic.getArgs().add((short)0); // Alpha/frame
+        addedGraphic.getArgs().add((short)255); // Max alpha
+        addedGraphic.getArgs().add((short)0); // R/frame
+        addedGraphic.getArgs().add((short)0); // Max R
+        addedGraphic.getArgs().add((short)0); // G/frame
+        addedGraphic.getArgs().add((short)0); // Max G
+        addedGraphic.getArgs().add((short)0); // B/frame
+        addedGraphic.getArgs().add((short)0); // Max B
+        addedGraphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        addedGraphic.getArgs().add((short)1); // not0?
+
+        addedGraphic.getTestByteOperations().addAll(tests);
+
+        screen.getObjects().add(addedGraphic);
+    }
+
+    /**
+     * @param screen to add the object to
+     * @param x horizontal position for the object
+     * @param y vertical position for the object
+     * @param layer which layer to draw the object on
+     * @param tests determines whether or not the object exists
+     */
+    public static void addLavaWall(ObjectContainer screen, int x, int y, int layer, List<TestByteOperation> tests) {
+        GameObject addedGraphic = new GameObject(screen);
+        addedGraphic.setId((short)0x0e);
+        addedGraphic.setX(x);
+        addedGraphic.setY(y);
+        addedGraphic.getArgs().add((short)14); // Room
+        addedGraphic.getArgs().add((short)layer); // Destination layer
+        addedGraphic.getArgs().add((short)1); // UseHitMap
+        addedGraphic.getArgs().add((short)0); // Entry Effect - 0: Normal / 1: Fade
+        addedGraphic.getArgs().add((short)2); // Exit Effect - 0:Normal / 1:Fade / 2:Large Break / 3:Crack-Break/ 4:Also Fade / 5:Go white and vanish in a puff / 6:Go Black and vanish in a puff / 7:Go Red and do that streak dealie / 8:Glow white + rising white pixels / 9:Break Glass
+        addedGraphic.getArgs().add((short)0); // Use ARGB Cycle
+        addedGraphic.getArgs().add((short)0); // dA
+        addedGraphic.getArgs().add((short)255); // Min A
+        addedGraphic.getArgs().add((short)0); // dR
+        addedGraphic.getArgs().add((short)0); // Max R
+        addedGraphic.getArgs().add((short)0); // dG
+        addedGraphic.getArgs().add((short)0); // Max G
+        addedGraphic.getArgs().add((short)0); // dB
+        addedGraphic.getArgs().add((short)0); // Max B
+
+        addedGraphic.getTestByteOperations().addAll(tests);
+
+        screen.getObjects().add(addedGraphic);
     }
 }
