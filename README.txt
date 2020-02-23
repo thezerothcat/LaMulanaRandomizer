@@ -1,6 +1,13 @@
 Please see the wiki page on github for information on how to use the randomizer, and other things you may need to know about it.
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
+2.24
+-----------------------------
+Added a quicksave for Mother's ankh. Fixed a few bugs.
+
+2.23
+-----------------------------
+Added an option for quicksaves at boss ankhs (requires Holy Grail). Added several new starting locations.
 
 2.22
 -----------------------------
