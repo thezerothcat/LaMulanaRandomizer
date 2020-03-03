@@ -92,7 +92,8 @@ public class ShopItemPriceCountRandomizer {
                 count = customItemPlacement.getShopCount();
             }
         }
-        if(price == null && count == null && !specialAmmoPlaced && !subweaponOnly && "Pistol Ammo".equals(itemName)) {
+        if(price == null && count == null && !specialAmmoPlaced && !subweaponOnly
+                && "Pistol Ammo".equals(itemName) && !"Pistol".equals(Settings.getCurrentStartingWeapon())) {
             // Special case
             if(random.nextInt(10) == 0) {
                 specialAmmoPlaced = true;
