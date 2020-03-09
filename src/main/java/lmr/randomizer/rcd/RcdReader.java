@@ -1108,9 +1108,9 @@ public final class RcdReader {
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
-                for(int i = 1; i <= 23; i++) {
-                    obj.getArgs().set(i, (short) 1);
-                }
+//                for(int i = 1; i <= 23; i++) {
+//                    obj.getArgs().set(i, (short) 1);
+//                }
             }
         }
         else if (obj.getId() == 0xc7) {
