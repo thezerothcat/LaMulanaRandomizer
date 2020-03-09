@@ -1057,6 +1057,15 @@ public final class RcdReader {
                         }
                     }
                 }
+
+                if(Settings.isEasterMode()) {
+                    if(screen.getZoneIndex() == 18 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
+                        TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
+                        testByteOperation.setIndex(0xab6);
+                        testByteOperation.setOp(ByteOp.FLAG_GT);
+                        testByteOperation.setValue((byte)0);
+                    }
+                }
             }
         }
         else if (obj.getId() == 0xa3) {
@@ -1075,6 +1084,11 @@ public final class RcdReader {
                keepObject = false;
             }
             else {
+                if(Settings.isEasterMode()) {
+                    obj.getWriteByteOperations().get(2).setValue((byte) 4);
+                    obj.getWriteByteOperations().get(3).setIndex((byte) 0xab6);
+                }
+
                 if(Settings.isAlternateMotherAnkh()) {
                     obj.setId((short)0x2e);
                     obj.getArgs().set(0, (short)8);
@@ -1094,9 +1108,9 @@ public final class RcdReader {
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
-//                for(int i = 1; i <= 23; i++) {
-//                    obj.getArgs().set(i, (short) 1);
-//                }
+                for(int i = 1; i <= 23; i++) {
+                    obj.getArgs().set(i, (short) 1);
+                }
             }
         }
         else if (obj.getId() == 0xc7) {
@@ -2130,18 +2144,31 @@ public final class RcdReader {
 
             if(Settings.isEasterMode()) {
                 if(roomIndex == 0 && screenIndex == 0) {
-//                    AddObject.addEasterEggGraphic(screen, 20, 180, 6, 30, 0,
-//                            Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 0)));
-                    AddObject.addLargeEasterEggGraphic(screen, 20, 180, 0, 2, 0,
+                    AddObject.addEasterEggGraphic(screen, 20, 180, 6, 30, 0,
                             Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 0)));
-                    AddObject.addEasterEggGive(screen, 0, 180,
-                            2, 2, Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 0)),
-                            Arrays.asList(new WriteByteOperation(0xaaf, ByteOp.ASSIGN_FLAG, 1),
+                    AddObject.addHandScannerDetector(screen, 0, 180,
+                            Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 0)),
+                            Arrays.asList(new WriteByteOperation(0xaaf, ByteOp.ASSIGN_FLAG, 1)));
+                    AddObject.addTimer(screen, 3, false,
+                            Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 1)),
+                            Arrays.asList(new WriteByteOperation(0xaaf, ByteOp.ASSIGN_FLAG, 2)));
+                    AddObject.addEasterEggGive(screen, 0, 0,
+                            32, 24, Arrays.asList(new TestByteOperation(0xaaf, ByteOp.FLAG_EQUALS, 2)),
+                            Arrays.asList(new WriteByteOperation(0xaaf, ByteOp.ASSIGN_FLAG, 3),
                                     new WriteByteOperation(0xaca, ByteOp.ADD_FLAG, 1)));
                 }
             }
         }
         else if(zoneIndex == 1) {
+            if(Settings.isEasterMode()) {
+                if(roomIndex == 6 && screenIndex == 1) {
+                    AddObject.addFloatingItem(screen, 84, 660, 420,
+                            Arrays.asList(new TestByteOperation(0xab3, ByteOp.FLAG_EQUALS, 0)),
+                            Arrays.asList(new WriteByteOperation(0xab3, ByteOp.ASSIGN_FLAG, 1),
+                                    new WriteByteOperation(0xaca, ByteOp.ADD_FLAG, 1)));
+                }
+            }
+
             if(roomIndex == 2 && screenIndex == 1) {
                 if(!LocationCoordinateMapper.isSurfaceStart()) {
                     AddObject.addSurfaceGrailTablet(screen);
@@ -2189,10 +2216,9 @@ public final class RcdReader {
                             Arrays.asList(new WriteByteOperation(0xab0, ByteOp.ASSIGN_FLAG, 1)));
                     AddObject.addWallGraphic(screen, 740, 360, 0, 200, 80, 80, 5,
                             Arrays.asList(new TestByteOperation(0xab0, ByteOp.FLAG_EQUALS, 0)));
-                    AddObject.addLargeEasterEggGraphic(screen, 760, 380, 2, 10, 0,
-                            Arrays.asList(new TestByteOperation(0xab0, ByteOp.FLAG_EQUALS, 1)));
-                    AddObject.addEasterEggGive(screen, 760, 380,
-                            4, 4, Arrays.asList(new TestByteOperation(0xab0, ByteOp.FLAG_EQUALS, 1)),
+
+                    AddObject.addFloatingItem(screen, 84, 760, 400,
+                            Arrays.asList(new TestByteOperation(0xab0, ByteOp.FLAG_EQUALS, 1)),
                             Arrays.asList(new WriteByteOperation(0xab0, ByteOp.ASSIGN_FLAG, 2),
                                     new WriteByteOperation(0xaca, ByteOp.ADD_FLAG, 1)));
                 }
@@ -2215,6 +2241,23 @@ public final class RcdReader {
                                     new TestByteOperation(0x0f8, ByteOp.FLAG_LT, 2),
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                }
+            }
+
+            if(Settings.isEasterMode()) {
+                if(roomIndex == 0 && screenIndex == 0) {
+                    AddObject.addEasterEggGraphic(screen, 0, 100, 16, 10, 0,
+                            Arrays.asList(new TestByteOperation(0xab2, ByteOp.FLAG_EQUALS, 0)));
+                    AddObject.addHandScannerDetector(screen, 0, 100,
+                            Arrays.asList(new TestByteOperation(0xab2, ByteOp.FLAG_EQUALS, 0)),
+                            Arrays.asList(new WriteByteOperation(0xab2, ByteOp.ASSIGN_FLAG, 1)));
+                    AddObject.addTimer(screen, 3, false,
+                            Arrays.asList(new TestByteOperation(0xab2, ByteOp.FLAG_EQUALS, 1)),
+                            Arrays.asList(new WriteByteOperation(0xab2, ByteOp.ASSIGN_FLAG, 2)));
+                    AddObject.addEasterEggGive(screen, 0, 0,
+                            32, 24, Arrays.asList(new TestByteOperation(0xab2, ByteOp.FLAG_EQUALS, 2)),
+                            Arrays.asList(new WriteByteOperation(0xab2, ByteOp.ASSIGN_FLAG, 3),
+                                    new WriteByteOperation(0xaca, ByteOp.ADD_FLAG, 1)));
                 }
             }
         }
@@ -2257,17 +2300,32 @@ public final class RcdReader {
 
             if(Settings.isEasterMode()) {
                 if(roomIndex == 8 && screenIndex == 0) {
+                    AddObject.addLavaWall(screen, 140, 220, 4,
+                            Arrays.asList(new TestByteOperation(0xab1, ByteOp.FLAG_EQUALS, 0)));
                     AddObject.addBreakableWall(screen, 140, 200,
                             Arrays.asList(new TestByteOperation(0xab1, ByteOp.FLAG_EQUALS, 0)),
                             Arrays.asList(new WriteByteOperation(0xab1, ByteOp.ASSIGN_FLAG, 1)));
-                    AddObject.addLavaWall(screen, 140, 220, 4,
-                            Arrays.asList(new TestByteOperation(0xab1, ByteOp.FLAG_EQUALS, 0)));
-                    AddObject.addLargeEasterEggGraphic(screen, 160, 240, 2, 10, 0,
-                            Arrays.asList(new TestByteOperation(0xab1, ByteOp.FLAG_EQUALS, 1)));
-                    AddObject.addEasterEggGive(screen, 180, 260,
-                            2, 4, Arrays.asList(new TestByteOperation(0xab1, ByteOp.FLAG_EQUALS, 1)),
+
+                    AddObject.addFloatingItem(screen, 84, 160, 240,
+                            Arrays.asList(new TestByteOperation(0xab1, ByteOp.FLAG_EQUALS, 1)),
                             Arrays.asList(new WriteByteOperation(0xab1, ByteOp.ASSIGN_FLAG, 2),
                                     new WriteByteOperation(0xaca, ByteOp.ADD_FLAG, 1)));
+
+//                    AddObject.addLargeEasterEggGraphic(screen, 160, 240, 2, 10, 0,
+//                            Arrays.asList(new TestByteOperation(0xab1, ByteOp.FLAG_EQUALS, 1)));
+
+//                    AddObject.addLemezaDetector(screen, 140, 220, 3, 4,
+//                            Arrays.asList(new TestByteOperation(0xab1, ByteOp.FLAG_EQUALS, 1)),
+//                            Arrays.asList(new WriteByteOperation(0xab1, ByteOp.ASSIGN_FLAG, 2)));
+//
+//                    AddObject.addTimer(screen, 3, false,
+//                            Arrays.asList(new TestByteOperation(0xab1, ByteOp.FLAG_EQUALS, 2)),
+//                            Arrays.asList(new WriteByteOperation(0xab1, ByteOp.ASSIGN_FLAG, 3)));
+//
+//                    AddObject.addEasterEggGive(screen, 0, 0,
+//                            32, 24, Arrays.asList(new TestByteOperation(0xab1, ByteOp.FLAG_EQUALS, 3)),
+//                            Arrays.asList(new WriteByteOperation(0xab1, ByteOp.ASSIGN_FLAG, 4),
+//                                    new WriteByteOperation(0xaca, ByteOp.ADD_FLAG, 1)));
                 }
             }
         }
@@ -2299,6 +2357,16 @@ public final class RcdReader {
                 }
             }
         }
+        else if(zoneIndex == 8) {
+            if(Settings.isEasterMode()) {
+                if(roomIndex == 3 && screenIndex == 2) {
+                    AddObject.addFloatingItem(screen, 84, 1560, 400,
+                            Arrays.asList(new TestByteOperation(0xab4, ByteOp.FLAG_EQUALS, 0)),
+                            Arrays.asList(new WriteByteOperation(0xab4, ByteOp.ASSIGN_FLAG, 1),
+                                    new WriteByteOperation(0xaca, ByteOp.ADD_FLAG, 1)));
+                }
+            }
+        }
         else if(zoneIndex == 9) {
             if(roomIndex == 8 && screenIndex == 1) {
                 GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 0));
@@ -2321,6 +2389,39 @@ public final class RcdReader {
                     warpTest.setValue((byte)1);
                     warpTest.setOp(ByteOp.FLAG_EQUALS);
                     warp.getTestByteOperations().add(warpTest);
+                }
+            }
+        }
+        else if(zoneIndex == 12) {
+            if(Settings.isEasterMode()) {
+                if(roomIndex == 6 && screenIndex == 1) {
+                    AddObject.addFloatingItem(screen, 84, 60, 560,
+                            Arrays.asList(new TestByteOperation(0xab5, ByteOp.FLAG_EQUALS, 0)),
+                            Arrays.asList(new WriteByteOperation(0xab5, ByteOp.ASSIGN_FLAG, 1),
+                                    new WriteByteOperation(0xaca, ByteOp.ADD_FLAG, 1)));
+                }
+            }
+        }
+        else if(zoneIndex == 14) {
+            if(Settings.isEasterMode()) {
+                if(roomIndex == 1 && screenIndex == 1) {
+                    AddObject.addEasterEggGraphic(screen, 820, 40, 32, 20, 0,
+                            Arrays.asList(new TestByteOperation(0xab7, ByteOp.FLAG_EQUALS, 0)));
+                    // todo: swap the above graphic with the below if eggs appearing on the map becomes a thing
+//                    AddObject.addEasterEggGraphic(screen, 820, 60, 14, 15, 0,
+//                            Arrays.asList(new TestByteOperation(0xab7, ByteOp.FLAG_EQUALS, 0),
+//                                    new TestByteOperation(0x035, ByteOp.FLAG_EQUALS, 1)));
+                    AddObject.addHandScannerDetector(screen, 820, 60,
+                            Arrays.asList(new TestByteOperation(0xab7, ByteOp.FLAG_EQUALS, 0),
+                                    new TestByteOperation(0x035, ByteOp.FLAG_EQUALS, 1)),
+                            Arrays.asList(new WriteByteOperation(0xab7, ByteOp.ASSIGN_FLAG, 1)));
+                    AddObject.addTimer(screen, 3, false,
+                            Arrays.asList(new TestByteOperation(0xab7, ByteOp.FLAG_EQUALS, 1)),
+                            Arrays.asList(new WriteByteOperation(0xab7, ByteOp.ASSIGN_FLAG, 2)));
+                    AddObject.addEasterEggGive(screen, 640, 0,
+                            32, 24, Arrays.asList(new TestByteOperation(0xab7, ByteOp.FLAG_EQUALS, 2)),
+                            Arrays.asList(new WriteByteOperation(0xab7, ByteOp.ASSIGN_FLAG, 3),
+                                    new WriteByteOperation(0xaca, ByteOp.ADD_FLAG, 1)));
                 }
             }
         }
@@ -2533,7 +2634,7 @@ public final class RcdReader {
 
                     // Mid ghosts, wave 2
                     AddObject.addTimer(screen, delayPerWave,
-                            Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0),
+                            true, Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0),
                                     new TestByteOperation(0x003, ByteOp.FLAG_EQUALS, 0)),
                             Arrays.asList(new WriteByteOperation(0x003, ByteOp.ASSIGN_FLAG, 1)));
 
@@ -2551,7 +2652,7 @@ public final class RcdReader {
 
                     // Bottom ghosts, wave 3
                     AddObject.addTimer(screen, delayPerWave,
-                            Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0),
+                            true, Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0),
                                     new TestByteOperation(0x003, ByteOp.FLAG_EQUALS, 1)),
                             Arrays.asList(new WriteByteOperation(0x003, ByteOp.ASSIGN_FLAG, 2)));
                     ghostLord = AddObject.addGhostLord(screen, fromLeft, fromBottom, wave3Speed, wave3Health, wave3Damage, 0);
@@ -2568,7 +2669,7 @@ public final class RcdReader {
 
                     // Center ghost, final wave, true boss
                     AddObject.addTimer(screen, delayPerWave,
-                            Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0),
+                            true, Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0),
                                     new TestByteOperation(0x003, ByteOp.FLAG_EQUALS, 2)),
                             Arrays.asList(new WriteByteOperation(0x003, ByteOp.ASSIGN_FLAG, 3)));
                     ghostLord = AddObject.addGhostLord(screen, midWidth, midHeight, wave4Speed, wave4Health, wave4Damage, 352);
@@ -2579,7 +2680,7 @@ public final class RcdReader {
 
                     // Timer to trigger end of fight
                     AddObject.addTimer(screen,
-                            0, Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0), new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 7)),
+                            0, true, Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0), new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 7)),
                             Arrays.asList(new WriteByteOperation(0x7e2, ByteOp.ASSIGN_FLAG, 1)));
 
                     // Autosave
@@ -2614,7 +2715,7 @@ public final class RcdReader {
                 }
                 // Ensure you can't lose access to the Guidance elevator. // todo: maybe find a better solution that respects logic
                 AddObject.addTimer(screen, 0,
-                        Arrays.asList(new TestByteOperation(0x34c, ByteOp.FLAG_GT, 1), new TestByteOperation(0x134, ByteOp.FLAG_EQUALS, 0)),
+                        true, Arrays.asList(new TestByteOperation(0x34c, ByteOp.FLAG_GT, 1), new TestByteOperation(0x134, ByteOp.FLAG_EQUALS, 0)),
                         Arrays.asList(new WriteByteOperation(0x134, ByteOp.ASSIGN_FLAG, 1)));
             }
         }
@@ -2689,7 +2790,7 @@ public final class RcdReader {
                     if(Settings.isIncludeHellTempleNPCs()) {
                         // Timer to set flag for talking about HT
                         AddObject.addTimer(screen,
-                                0, Arrays.asList(new TestByteOperation(0xaca, ByteOp.FLAG_EQUALS, 29),
+                                0, true, Arrays.asList(new TestByteOperation(0xaca, ByteOp.FLAG_EQUALS, 29),
                                         new TestByteOperation(0xaac, ByteOp.FLAG_EQUALS, 1)),
                                 Arrays.asList(new WriteByteOperation(0xaac, ByteOp.ASSIGN_FLAG, 2)));
                     }
@@ -2950,6 +3051,17 @@ public final class RcdReader {
                 AddObject.addAngelShieldPuzzleTimers(screen);
             }
         }
+        else if(zoneIndex == 18) {
+            if(Settings.isEasterMode()) {
+                if(roomIndex == 3 && screenIndex == 0) {
+                    AddObject.addTimer(screen,
+                            0, true,
+                            Arrays.asList(new TestByteOperation(0xab6, ByteOp.FLAG_EQUALS, 1)),
+                            Arrays.asList(new WriteByteOperation(0xab6, ByteOp.ASSIGN_FLAG, 2),
+                                    new WriteByteOperation(0xaca, ByteOp.ADD_FLAG, 1)));
+                }
+            }
+        }
         else if(zoneIndex == 21) {
             if(Settings.isHalloweenMode()) {
                 if(roomIndex == 0 && screenIndex == 0) {
@@ -2990,17 +3102,17 @@ public final class RcdReader {
                 }
                 else if(roomIndex == 12 && screenIndex == 1) {
                     AddObject.addTimer(screen,
-                            0, Arrays.asList(new TestByteOperation(0xaad, ByteOp.FLAG_GT, 0)),
+                            0, true, Arrays.asList(new TestByteOperation(0xaad, ByteOp.FLAG_GT, 0)),
                             Arrays.asList(new WriteByteOperation(0xaad, ByteOp.ASSIGN_FLAG, 0)));
                 }
                 else if(roomIndex == 14 && screenIndex == 1) {
                     AddObject.addTimer(screen,
-                            0, Arrays.asList(new TestByteOperation(0xaad, ByteOp.FLAG_GT, 0)),
+                            0, true, Arrays.asList(new TestByteOperation(0xaad, ByteOp.FLAG_GT, 0)),
                             Arrays.asList(new WriteByteOperation(0xaad, ByteOp.ASSIGN_FLAG, 0)));
                 }
                 else if(roomIndex == 15 && screenIndex == 1) {
                     AddObject.addTimer(screen,
-                            0, Arrays.asList(new TestByteOperation(0xaad, ByteOp.FLAG_GT, 0)),
+                            0, true, Arrays.asList(new TestByteOperation(0xaad, ByteOp.FLAG_GT, 0)),
                             Arrays.asList(new WriteByteOperation(0xaad, ByteOp.ASSIGN_FLAG, 0)));
                 }
             }

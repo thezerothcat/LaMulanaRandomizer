@@ -1482,6 +1482,13 @@ public class Main {
                                 "Randomizer error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
+                if(Settings.isEasterMode()) {
+                    if(!FileUtils.updateGraphicsFilesForEaster(Settings.getGraphicsPack())) {
+                        JOptionPane.showMessageDialog(f,
+                                Translations.getText("Unable to create Easter graphics"),
+                                "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
                 FileUtils.updateGraphicsFiles(); // Always want to update graphics files, for backup Shrine door and possibly other things.
 
                 FileUtils.logFlush("Copying settings file");
@@ -1780,6 +1787,13 @@ public class Main {
 ////            saveData[0x11 + 0x7ef] = (byte)1; // room 32
 ////            saveData[0x11 + 0x7f0] = (byte)1; // room 33
 //            saveData[0x11 + 0x70c] = (byte)1; // room 34
+        }
+
+        if(Settings.isEasterMode()) {
+            // Unlock Mulbruk for Easter
+            saveData[0x11 + 0x079] = (byte)1;
+            saveData[0x11 + 0x18e] = (byte)2;
+            saveData[0x11 + 0x391] = (byte)1;
         }
 
 //        saveData[0x11 + 0x064] = 1;

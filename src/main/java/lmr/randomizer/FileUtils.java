@@ -813,6 +813,9 @@ public class FileUtils {
             if(Settings.isHalloweenMode()) {
                 FileUtils.updateGraphicsFilesForHalloween(Settings.getGraphicsPack());
             }
+            if(Settings.isEasterMode()) {
+                FileUtils.updateGraphicsFilesForEaster(Settings.getGraphicsPack());
+            }
             FileUtils.updateGraphicsFiles();
 
             FileUtils.logFlush("Save file copy complete");
@@ -973,13 +976,67 @@ public class FileUtils {
         return true;
     }
 
-    private static boolean writeTitle01(String halloweenFolderPath) {
+    public static boolean updateGraphicsFilesForEaster(String graphicsPack) {
+        String graphicsBase = Settings.getLaMulanaBaseDir() + "/data/graphics";
+        String easterFolderPath = graphicsBase + "/EASTER";
+        File easterGraphicsFolder = new File(easterFolderPath);
+        File graphicsBaseFolder = new File(graphicsBase, graphicsPack);
+        if(easterGraphicsFolder.exists()) {
+            easterGraphicsFolder.delete();
+        }
+        easterGraphicsFolder.mkdir();
+
+        if(!copyGraphicsFiles(graphicsBaseFolder, easterGraphicsFolder)) {
+            FileUtils.logFlush("Problem copying graphics from source folder " + graphicsPack);
+            easterGraphicsFolder.delete();
+            return false;
+        }
+
+        final List<String> modifiedFilesToCopy = Arrays.asList("_banner.png");
+        for(String file : modifiedFilesToCopy) {
+            try {
+                File graphicsFileToWrite = new File(easterFolderPath, file);
+                BufferedImage modified;
+                try {
+                    modified = ImageIO.read(FileUtils.class.getResource("graphics/easter/" + file));
+                }
+                catch (IOException ex) {
+                    FileUtils.logFlush("Problem copying graphics file " + file);
+                    easterGraphicsFolder.delete();
+                    return false;
+                }
+                BufferedImage existingImage = ImageIO.read(graphicsFileToWrite);
+                BufferedImage newImage = new BufferedImage(existingImage.getWidth(), existingImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                Graphics2D graphics2D = newImage.createGraphics();
+                graphics2D.drawImage(modified, null, 0, 0); // Use backup to ensure no duplication of file
+                graphics2D.dispose();
+
+                ImageIO.write(newImage, "png", graphicsFileToWrite);
+            }
+            catch(IOException ex) {
+                FileUtils.logFlush("Problem copying graphics file " + file);
+                easterGraphicsFolder.delete();
+                return false;
+            }
+        }
+
+        if(!writeTitle01(easterFolderPath)) {
+            return false;
+        }
+        if(!write01Menu(easterFolderPath)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static boolean writeTitle01(String easterFolderPath) {
         String file = "title01.png";
         try {
-            File graphicsFileToWrite = new File(halloweenFolderPath, file);
+            File graphicsFileToWrite = new File(easterFolderPath, file);
             BufferedImage modified;
             try {
-                modified = ImageIO.read(FileUtils.class.getResource("graphics/halloween/" + file));
+                modified = ImageIO.read(FileUtils.class.getResource("graphics/easter/" + file));
             }
             catch (IOException ex) {
                 return false;
@@ -1009,13 +1066,13 @@ public class FileUtils {
         return true;
     }
 
-    private static boolean write01Menu(String halloweenFolderPath) {
+    private static boolean write01Menu(String easterFolderPath) {
         String file = "01menu.png";
         try {
-            File graphicsFileToWrite = new File(halloweenFolderPath, file);
+            File graphicsFileToWrite = new File(easterFolderPath, file);
             BufferedImage modified;
             try {
-                modified = ImageIO.read(FileUtils.class.getResource("graphics/halloween/" + file));
+                modified = ImageIO.read(FileUtils.class.getResource("graphics/easter/" + file));
             }
             catch (IOException ex) {
                 return false;

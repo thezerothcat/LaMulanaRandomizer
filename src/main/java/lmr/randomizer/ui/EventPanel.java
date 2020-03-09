@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 public class EventPanel extends JPanel {
-    private JCheckBox halloweenMode;
+    private JCheckBox holidayMode;
     private JCheckBox includeHT;
     private JTextField graphicsPack;
     private JLabel graphicsPackLabel;
@@ -19,17 +19,21 @@ public class EventPanel extends JPanel {
     public EventPanel(TabbedPanel tabbedPanel) {
         super(new MigLayout("fillx, wrap"));
 
-        halloweenMode = new JCheckBox();
-        halloweenMode.setSelected(true);
-        halloweenMode.setEnabled(false);
+        holidayMode = new JCheckBox();
+        holidayMode.setSelected(true);
+        holidayMode.setEnabled(false);
 
-        includeHT = new JCheckBox();
-        includeHT.setSelected(true);
-        includeHT.setSelected(Settings.isIncludeHellTempleNPCs());
+        if(Settings.isHalloweenMode()) {
+            includeHT = new JCheckBox();
+            includeHT.setSelected(true);
+            includeHT.setSelected(Settings.isIncludeHellTempleNPCs());
+        }
 
         CheckboxContainer checkboxContainer = new CheckboxContainer(1);
-        checkboxContainer.add(halloweenMode);
-        checkboxContainer.add(includeHT);
+        checkboxContainer.add(holidayMode);
+        if(Settings.isHalloweenMode()) {
+            checkboxContainer.add(includeHT);
+        }
         add(checkboxContainer, "growx, wrap");
 
         graphicsPack = new JTextField(Settings.getGraphicsPack());
@@ -57,19 +61,28 @@ public class EventPanel extends JPanel {
     }
 
     public void updateTranslations() {
-        halloweenMode.setText(Translations.getText("event.halloween"));
-        includeHT.setText(Translations.getText("event.includeHTNPCs"));
+        if(Settings.isHalloweenMode()) {
+            holidayMode.setText(Translations.getText("event.halloween"));
+            includeHT.setText(Translations.getText("event.includeHTNPCs"));
+        }
+        else if(Settings.isEasterMode()) {
+            holidayMode.setText(Translations.getText("event.easter"));
+        }
         graphicsPackLabel.setText(Translations.getText("settings.graphicsPack"));
         chooseGraphicsButton.setText(Translations.getText("button.browse"));
     }
 
     public void updateSettings() {
-        Settings.setIncludeHellTempleNPCs(includeHT.isSelected(), true);
+        if(Settings.isHalloweenMode()) {
+            Settings.setIncludeHellTempleNPCs(includeHT.isSelected(), true);
+        }
         Settings.setGraphicsPack(graphicsPack.getText(), true);
     }
 
     public void reloadSettings() {
-        includeHT.setSelected(Settings.isIncludeHellTempleNPCs());
+        if(Settings.isHalloweenMode()) {
+            includeHT.setSelected(Settings.isIncludeHellTempleNPCs());
+        }
         graphicsPack.setText(Settings.getGraphicsPack());
     }
 }

@@ -48,21 +48,51 @@ public final class AddObject {
     /**
      * Convenience for adding a timer object to any screen.
      * @param screen to add the timer object to
-     * @param delaySeconds seconds to wait before the timer runs its updates
+     * @param delayTime seconds to wait before the timer runs its updates
+     * @param delayInSeconds
      * @param tests tests to put on the timer object
      * @param updates updates the timer object should make when all of its tests pass
      */
-    public static void addTimer(Screen screen, int delaySeconds, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+    public static void addTimer(Screen screen, int delayTime, boolean delayInSeconds, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
         GameObject obj = new GameObject(screen);
         obj.setId((short)0x0b);
-        obj.getArgs().add((short)delaySeconds);
-        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)(delayInSeconds ? delayTime : 0));
+        obj.getArgs().add((short)(delayInSeconds ? 0 : delayTime));
         obj.setX(-1);
         obj.setY(-1);
 
         obj.getTestByteOperations().addAll(tests);
         obj.getWriteByteOperations().addAll(updates);
         screen.getObjects().add(0, obj);
+    }
+
+    public static void addFloatingItem(Screen screen, int itemArg, int x, int y, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x2f);
+        obj.setX(x);
+        obj.setY(y);
+
+        obj.getArgs().clear();
+        obj.getArgs().add((short)0); // Interactable any time?
+        obj.getArgs().add((short)itemArg); // Item arg
+        obj.getArgs().add((short)1); // 0 = fake item, 1 = real item
+        obj.getTestByteOperations().addAll(tests);
+        obj.getWriteByteOperations().addAll(updates);
+        screen.getObjects().add(obj);
+    }
+
+    public static void addHandScannerDetector(Screen screen, int x, int y, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x9c);
+        obj.setX(x);
+        obj.setY(y);
+        obj.getArgs().add((short)2); // dX
+        obj.getArgs().add((short)3); // dY
+        obj.getArgs().add((short)0); // Usable Item index slot(0=Hand Scanner, 10=Pepper, etc.)
+        obj.getArgs().add((short)0); // OnlyWhenGrounded
+        obj.getTestByteOperations().addAll(tests);
+        obj.getWriteByteOperations().addAll(updates);
+        screen.getObjects().add(obj);
     }
 
     /**
@@ -2657,11 +2687,11 @@ public final class AddObject {
         return warp;
     }
 
-    public static GameObject addLemezaDetector(Screen screen, int detectorX, int detectorY, int width, int height, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+    public static GameObject addLemezaDetector(Screen screen, int x, int y, int width, int height, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
         GameObject detector = new GameObject(screen);
         detector.setId((short) 0x14);
-        detector.setX(detectorX);
-        detector.setY(detectorY);
+        detector.setX(x);
+        detector.setY(y);
 
         detector.getArgs().add((short)0);
         detector.getArgs().add((short)0);
@@ -5747,8 +5777,8 @@ public final class AddObject {
         itemGive.setY(y);
 
         itemGive.getArgs().add((short)84); // Secret Treasure of Life
-        itemGive.getArgs().add((short)width);
-        itemGive.getArgs().add((short)height);
+        itemGive.getArgs().add((short)32);
+        itemGive.getArgs().add((short)24);
         itemGive.getArgs().add((short)39);
 
         itemGive.getTestByteOperations().addAll(tests);
