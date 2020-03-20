@@ -142,6 +142,9 @@ public class AccessChecker {
                 else if(!Settings.isHalloweenMode() && NodeType.NPC.equals(nodeType)) {
                     continue;
                 }
+                else if(!Settings.isEasterMode() && NodeType.EASTER_EGG.equals(nodeType)) {
+                    continue;
+                }
                 else if(NodeType.ITEM_LOCATION.equals(nodeType)) {
                     if(DataFromFile.ESCAPE_CHEST_NAME.equals(nodeName)) {
                         continue;
@@ -484,6 +487,9 @@ public class AccessChecker {
                 else {
                     DataFromFile.getInitialNonShopItemLocations().add(nodeName);
                 }
+                break;
+            case EASTER_EGG:
+                queuedUpdates.add(nodeName);
                 break;
             case NPC:
                 queuedUpdates.add(nodeName);

@@ -163,6 +163,10 @@ public class EscapeChecker {
                 queuedUpdates.add(nodeName);
                 queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, null));
                 break;
+            case EASTER_EGG:
+                FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
+                queuedUpdates.add(nodeName);
+                break;
             case NPC:
                 FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
                 queuedUpdates.add(nodeName);

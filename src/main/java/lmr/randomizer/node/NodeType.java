@@ -10,6 +10,7 @@ public enum NodeType {
     MAP_LOCATION,
     TRANSITION,
     NPC,
+    EASTER_EGG,
     SETTING,
     STATE
 }

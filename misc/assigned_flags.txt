@@ -31,9 +31,11 @@ mulbruk:
 912 / ? = reference to block 0x188 (before waking up, triggers the seal)
 990 / ? = reference to block 0x189 (intro after waking up)
 485 / 1e5 = master 1e6-1e7-1e8-1e9
+719 / removed (Low-score version of Mulbruk which could interfere with getting Book of the Dead)
 1082 / 43a = master 1e6-1e7-1e8-436
 1083 / 43b = master 1e6-1e7-1e8-437
 1013 / ? = provocative bathing suit conversation
+1014 / removed (Mulbruk conversation after she runs away from the Provocative Bathing Suit)
 924 / ? = escape block, no check for swimsuit status
 926 / ? = escape block if mulbruk has swimsuit
 

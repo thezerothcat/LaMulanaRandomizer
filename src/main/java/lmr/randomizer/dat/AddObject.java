@@ -12,6 +12,7 @@ import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.GameObjectId;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class AddObject {
@@ -3265,6 +3266,56 @@ public final class AddObject {
         return shop;
     }
 
+    public static GameObject addSunShop(Screen screen) {
+//        GameObject graphic = new GameObject(screen);
+//        graphic.setId((short) 0x93);
+//        graphic.setX(1040);
+//        graphic.setY(240);
+//
+//        graphic.getArgs().add((short)0); // Layer
+//        graphic.getArgs().add((short)0); // 0=mapxx_1.png 1=evegxx.png 2=00prof.png 3=02comenemy.png 4=6=00item.png 5=01menu.png 6=4=00item.png Default:01effect.png
+//        graphic.getArgs().add((short)320); // Imagex
+//        graphic.getArgs().add((short)212); // Imagey
+//        graphic.getArgs().add((short)40); // dx
+//        graphic.getArgs().add((short)60); // dy
+//        graphic.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+//        graphic.getArgs().add((short)0); // Animation frames
+//        graphic.getArgs().add((short)1); // Pause frames
+//        graphic.getArgs().add((short)0); // Repeat count (<1 is forever)
+//        graphic.getArgs().add((short)0); // Hittile to fill with
+//        graphic.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+//        graphic.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+//        graphic.getArgs().add((short)0); // Cycle colors t/f
+//        graphic.getArgs().add((short)0); // Alpha/frame
+//        graphic.getArgs().add((short)255); // Max alpha
+//        graphic.getArgs().add((short)0); // R/frame
+//        graphic.getArgs().add((short)0); // Max R
+//        graphic.getArgs().add((short)0); // G/frame
+//        graphic.getArgs().add((short)0); // Max G
+//        graphic.getArgs().add((short)0); // B/frame
+//        graphic.getArgs().add((short)0); // Max B
+//        graphic.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+//        graphic.getArgs().add((short)1); // not0?
+//
+//        screen.getObjects().add(graphic);
+
+        GameObject shop = new GameObject(screen);
+        shop.setId((short) 0xa0);
+        shop.setX(1060);
+        shop.setY(240);
+
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)1);
+        shop.getArgs().add((short)36);
+        shop.getArgs().add((short)0);
+        shop.getArgs().add((short)0);
+
+        screen.getObjects().add(shop);
+        return shop;
+    }
+
     public static GameObject addInfernoShop(Screen screen) {
         GameObject graphic = new GameObject(screen);
         graphic.setId((short) 0x93);
@@ -5085,6 +5136,160 @@ public final class AddObject {
 
         blocks.add(npcCountBlock);
         return npcCountBlock.getBlockNumber();
+    }
+
+    public static void addEasterMulbrukBlocks(Screen mulbrukScreen, List<Block> datInfo) {
+        // Win condition conversation
+        Block easterWinBlock = new Block(datInfo.size());
+        String winText = Translations.getText("event.easter.win");
+        String[] winTexts = winText.split("%s");
+        List<Short> stringCharacters;
+        if(winTexts.length > 0) {
+            stringCharacters = FileUtils.stringToData(winTexts[0]);
+            for (Short shortCharacter : stringCharacters) {
+                easterWinBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            }
+        }
+        easterWinBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0, (short)0x64));
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.egg.name.plural"));
+        for (Short shortCharacter : stringCharacters) {
+            easterWinBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        easterWinBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+
+        stringCharacters = FileUtils.stringToData(winTexts[winTexts.length > 1 ? 1 : 0]);
+        for (Short shortCharacter : stringCharacters) {
+            easterWinBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        easterWinBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        easterWinBlock.getBlockContents().add(new BlockPoseData((short)0x0046, (short)8)); // Pose 8
+        easterWinBlock.getBlockContents().add(new BlockPoseData((short)0x0046, (short)9)); // Pose 9
+        easterWinBlock.getBlockContents().add(new BlockSceneData((short)0x004f, (short)0)); // Scene 0 (credits)
+        datInfo.add(easterWinBlock);
+
+        // Conversation to go to credits early.
+        Block easterExitBlock = new Block(datInfo.size());
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.exit"));
+        for (Short shortCharacter : stringCharacters) {
+            easterExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        easterExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        easterExitBlock.getBlockContents().add(new BlockPoseData((short)0x0046, (short)8)); // Pose 8
+        easterExitBlock.getBlockContents().add(new BlockPoseData((short)0x0046, (short)9)); // Pose 9
+        easterExitBlock.getBlockContents().add(new BlockSceneData((short)0x004f, (short)0)); // Scene 0 (credits)
+        datInfo.add(easterExitBlock);
+
+        // Conversation offering to quit
+        Block easterOptionBlock = new Block(datInfo.size());
+        String optionText = Translations.getText("event.easter.exitPrompt");
+        String[] optionTexts = optionText.split("%s");
+        if(optionTexts.length > 0) {
+            stringCharacters = FileUtils.stringToData(optionTexts[0]);
+            for (Short shortCharacter : stringCharacters) {
+                easterOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            }
+        }
+        easterOptionBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0, (short)0x64));
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.egg.name.plural"));
+        for (Short shortCharacter : stringCharacters) {
+            easterOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        easterOptionBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+
+        stringCharacters = FileUtils.stringToData(optionTexts[optionTexts.length > 1 ? 1 : 0]);
+        for (Short shortCharacter : stringCharacters) {
+            easterOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+//        easterOptionBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+        easterOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        BlockListData repeatCmd = new BlockListData((short)0x004e, (short)1);
+        repeatCmd.getData().add((short)easterExitBlock.getBlockNumber());
+        easterOptionBlock.getBlockContents().add(repeatCmd);
+        easterOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("prompt.yes"));
+        for (Short shortCharacter : stringCharacters) {
+            easterOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        easterOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("prompt.no"));
+        for (Short shortCharacter : stringCharacters) {
+            easterOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        easterOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.noQuit"));
+        for (Short shortCharacter : stringCharacters) {
+            easterOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        easterOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        datInfo.add(easterOptionBlock);
+
+        // Master block - All eggs
+        MasterNpcBlock winMasterNpcBlock = new MasterNpcBlock((MasterNpcBlock)datInfo.get(0x39e), datInfo.size());
+        winMasterNpcBlock.setTextCard(new BlockCmdSingle((short)easterExitBlock.getBlockNumber()));
+        datInfo.add(winMasterNpcBlock);
+
+        // Master block - Some eggs
+        MasterNpcBlock optionMasterNpcBlock = new MasterNpcBlock((MasterNpcBlock)datInfo.get(0x39c), datInfo.size());
+        optionMasterNpcBlock.setTextCard(new BlockCmdSingle((short)easterOptionBlock.getBlockNumber()));
+        datInfo.add(optionMasterNpcBlock);
+
+        // Master block - Book of the Dead
+        MasterNpcBlock bookMasterNpcBlock = new MasterNpcBlock(datInfo.size());
+        bookMasterNpcBlock.setTextCard(new BlockCmdSingle((short)397));
+        bookMasterNpcBlock.setBackground(new BlockCmdSingle((short)0x019));
+        bookMasterNpcBlock.setNpcCard(new BlockCmdSingle((short)0x2e0)); // 2f0?
+        bookMasterNpcBlock.setMusic(new BlockCmdSingle((short)0x00f));
+        bookMasterNpcBlock.setNpcName(((MasterNpcBlock)datInfo.get(0x39c)).getNpcName());
+        datInfo.add(bookMasterNpcBlock);
+
+        // Find existing objects
+        GameObject escapeConversationNormal = null;
+        GameObject escapeConversationSwimsuit = null;
+        List<GameObject> keptObjects = new ArrayList<>();
+        for(GameObject gameObject : mulbrukScreen.getObjects()) {
+            if(gameObject.getId() == 0xa0) {
+                if(gameObject.getArgs().get(4) == 924) {
+                    escapeConversationNormal = gameObject;
+                }
+                else if(gameObject.getArgs().get(4) == 926) {
+                    escapeConversationSwimsuit = gameObject;
+                }
+            }
+            else {
+                keptObjects.add(gameObject);
+            }
+        }
+
+        GameObject winConversation = new GameObject(escapeConversationSwimsuit);
+        winConversation.getArgs().set(4, (short)winMasterNpcBlock.getBlockNumber());
+        winConversation.getTestByteOperations().clear();
+        winConversation.getTestByteOperations().add(new TestByteOperation(0xaca, ByteOp.FLAG_EQUALS, 50)); // todo: update according to eggs that exist
+
+        GameObject bookOfTheDeadConversation = new GameObject(escapeConversationNormal);
+        winConversation.getArgs().set(4, (short)bookMasterNpcBlock.getBlockNumber());
+        winConversation.getTestByteOperations().clear();
+        winConversation.getTestByteOperations().add(new TestByteOperation(0xaca, ByteOp.FLAG_NOT_EQUAL, 50)); // todo: update according to eggs that exist
+        winConversation.getTestByteOperations().add(new TestByteOperation(0x32a, ByteOp.FLAG_EQUALS, 1)); // todo: whatever flag book is on
+
+        GameObject optionConversation = new GameObject(escapeConversationSwimsuit);
+        optionConversation.getArgs().set(4, (short)optionMasterNpcBlock.getBlockNumber());
+        optionConversation.getTestByteOperations().clear();
+        optionConversation.getTestByteOperations().add(new TestByteOperation(0xaca, ByteOp.FLAG_NOT_EQUAL, 50)); // todo: update according to eggs that exist
+        optionConversation.getTestByteOperations().add(new TestByteOperation(0x32a, ByteOp.FLAG_NOT_EQUAL, 1)); // todo: whatever flag book is on
+
+        // todo: intro conversation
+
+        mulbrukScreen.getObjects().clear();
+        mulbrukScreen.getObjects().addAll(keptObjects);
+        mulbrukScreen.getObjects().add(bookOfTheDeadConversation);
+        mulbrukScreen.getObjects().add(winConversation);
+        mulbrukScreen.getObjects().add(optionConversation);
     }
 
     public static int addDevRoomHintBlock(List<Block> blocks, boolean updateConversationFlag) {

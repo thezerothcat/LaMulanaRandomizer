@@ -252,6 +252,16 @@ public class Main {
 
             Settings.saveSettings();
 
+            if(Settings.isHalloweenMode()) {
+                CustomItemPlacement customItemPlacement = new CustomItemPlacement("xmailer.exe", "Provocative Bathing Suit", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+            }
+            else if(Settings.isEasterMode()) {
+                if(!DataFromFile.getCustomPlacementData().getStartingItems().contains("Hand Scanner")) {
+                    DataFromFile.getCustomPlacementData().getStartingItems().add("Hand Scanner");
+                }
+            }
+
             // Any forced temporary plando settings can go here.
 
             progressDialog.updateProgress(10, Translations.getText("setup.backup"));
@@ -485,6 +495,12 @@ public class Main {
             if(Settings.getGraphicsPack().equals("HALLOWEEN")) {
                 JOptionPane.showMessageDialog(this,
                         String.format("HALLOWEEN cannot be used as %s. Please select a folder from which the HALLOWEEN graphics should be created.", Translations.getText("settings.graphicsPack")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(Settings.getGraphicsPack().equals("EASTER")) {
+                JOptionPane.showMessageDialog(this,
+                        String.format("EASTER cannot be used as %s. Please select a folder from which the EASTER graphics should be created.", Translations.getText("settings.graphicsPack")),
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
@@ -906,6 +922,13 @@ public class Main {
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
+                if(Settings.isEasterMode() && customRemovedItem.equals("Hand Scanner")) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("Custom placement of \"%s\" cannot be used with this mode",
+                                    Translations.getText("items.HandScanner")),
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
 
                 if(!isValidContents(customRemovedItem)) {
                     JOptionPane.showMessageDialog(randomizerUI,
@@ -974,6 +997,13 @@ public class Main {
                     JOptionPane.showMessageDialog(this,
                             String.format("Custom placement of \"%s\" cannot be used with this mode",
                                     Translations.getText("items.ProvocativeBathingSuit")),
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(Settings.isEasterMode() && customItemPlacement.getContents().equals("Hand Scanner")) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("Custom placement of \"%s\" cannot be used with this mode",
+                                    Translations.getText("items.HandScanner")),
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
@@ -1461,6 +1491,10 @@ public class Main {
                     }
                     GameDataTracker.fixTransitionGates(rcdData);
                 }
+                if(Settings.isEasterMode()) {
+                    GameDataTracker.addEasterConversations(rcdData, datInfo);
+                    GameDataTracker.updateGrailTabletText(datInfo);
+                }
 
                 FileUtils.logFlush("Writing rcd file");
                 RcdWriter.writeRcd(rcdData);
@@ -1946,21 +1980,21 @@ public class Main {
             return;
         }
 
-        CustomPlacementData customPlacementData = DataFromFile.getCustomPlacementData();
-        Integer customStartingLocation = customPlacementData.getStartingLocation();
-        if(customStartingLocation != null) {
-            Settings.setCurrentStartingLocation(customStartingLocation);
-            FileUtils.logFlush("Selected custom starting location: " + LocationCoordinateMapper.getStartingZoneName(customStartingLocation));
-            return;
-        }
-
         if(Settings.isHalloweenMode()) {
-//            Settings.setCurrentStartingLocation(24);
-//            Settings.setCurrentStartingLocation(23);
-//            Settings.setCurrentStartingLocation(0);
             Settings.setCurrentStartingLocation(22);
         }
+        else if(Settings.isEasterMode()) {
+            Settings.setCurrentStartingLocation(3);
+        }
         else {
+            CustomPlacementData customPlacementData = DataFromFile.getCustomPlacementData();
+            Integer customStartingLocation = customPlacementData.getStartingLocation();
+            if(customStartingLocation != null) {
+                Settings.setCurrentStartingLocation(customStartingLocation);
+                FileUtils.logFlush("Selected custom starting location: " + LocationCoordinateMapper.getStartingZoneName(customStartingLocation));
+                return;
+            }
+
             List<Integer> possibleStartingLocations = new ArrayList<>(DataFromFile.STARTING_LOCATIONS);
             if(!Settings.getStartingItemsIncludingCustom().contains("Holy Grail")) {
                 // Tower of Ruin will be unable to get back to the grail tablet easily/will have very limited options without grail/feather/boots/ice cape, so just ban it.

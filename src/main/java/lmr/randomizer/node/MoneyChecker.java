@@ -226,6 +226,9 @@ public class MoneyChecker {
                 queuedUpdates.add(nodeName);
                 queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
                 break;
+            case EASTER_EGG:
+                queuedUpdates.add(nodeName);
+                break;
             case NPC:
                 queuedUpdates.add(nodeName);
                 break;

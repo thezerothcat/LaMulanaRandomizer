@@ -2079,6 +2079,9 @@ public final class RcdReader {
             else if(zoneIndex == 2) {
                 GameDataTracker.setCustomShop(AddObject.addMausoleumShop(screen));
             }
+            else if(zoneIndex == 3) {
+                GameDataTracker.setCustomShop(AddObject.addSunShop(screen));
+            }
             else if(zoneIndex == 5) {
                 GameDataTracker.setCustomShop(AddObject.addInfernoShop(screen));
             }

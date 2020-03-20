@@ -165,6 +165,65 @@ public final class DatReader {
         return masterNpcBlock;
     }
 
+    private static TabletBlock buildTabletBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        BlockStringData tabletText = new BlockStringData();
+        int dataIndex = populateBlockStringData(tabletText, dataInputStream);
+
+        TabletBlock tabletBlock = new TabletBlock(blockIndex);
+        tabletBlock.setTabletText(tabletText);
+
+        short cmdShort = dataInputStream.readShort();
+        ++dataIndex;
+        short lengthShort = dataInputStream.readShort();
+        ++dataIndex;
+        BlockListData langPictureData = new BlockListData(cmdShort, lengthShort);
+        langPictureData.getData().add(dataInputStream.readShort());
+        ++dataIndex;
+        short isSlate = dataInputStream.readShort();
+        ++dataIndex;
+        langPictureData.getData().add(isSlate);
+        tabletBlock.setLangPictureData(langPictureData);
+
+        if(isSlate != 0) {
+            dataInputStream.readShort(); // 0x000a
+            ++dataIndex;
+
+            cmdShort = dataInputStream.readShort();
+            ++dataIndex;
+            lengthShort = dataInputStream.readShort();
+            ++dataIndex;
+            BlockListData graphicFileCoordinateData = new BlockListData(cmdShort, lengthShort);
+            graphicFileCoordinateData.getData().add(dataInputStream.readShort());
+            ++dataIndex;
+            graphicFileCoordinateData.getData().add(dataInputStream.readShort());
+            ++dataIndex;
+            graphicFileCoordinateData.getData().add(dataInputStream.readShort());
+            ++dataIndex;
+            graphicFileCoordinateData.getData().add(dataInputStream.readShort());
+            ++dataIndex;
+            dataInputStream.readShort(); // 0x000a
+            ++dataIndex;
+            tabletBlock.setGraphicFileCoordinateData(graphicFileCoordinateData);
+
+            cmdShort = dataInputStream.readShort();
+            ++dataIndex;
+            lengthShort = dataInputStream.readShort();
+            ++dataIndex;
+            BlockListData tabletDrawCoordinateData = new BlockListData(cmdShort, lengthShort);
+            graphicFileCoordinateData.getData().add(dataInputStream.readShort());
+            ++dataIndex;
+            graphicFileCoordinateData.getData().add(dataInputStream.readShort());
+            ++dataIndex;
+            tabletBlock.setTabletDrawCoordinateData(tabletDrawCoordinateData);
+        }
+        while(dataIndex < numberOfShortsInThisBlock) {
+            // Surface tablet and maybe some others have an extra 0x000a at the end, and this seems to be allowed.
+            dataInputStream.readShort();
+            ++dataIndex;
+        }
+        return tabletBlock;
+    }
+
     private static Block buildCheckBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         int dataIndex = 0;
         CheckBlock checkBlock = new CheckBlock(blockIndex);
@@ -217,7 +276,7 @@ public final class DatReader {
             // Get the data for Secret Treasure of Life, but throw it away in favor of custom replacement
             dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
             blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.easter.egg.name")));
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.easter.egg.name.singular")));
             blockStringData.getData().add((short)0x000a);
             itemNameBlock.getBlockContents().add(blockStringData);
         }
@@ -716,12 +775,24 @@ public final class DatReader {
             else if(blockIndex == 0xda && Settings.isHalloweenMode()) {
                 block = buildFairyQueenLastConversationBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
+            else if(blockIndex == 38 || blockIndex == 41 || blockIndex == 75 || blockIndex == 104 || blockIndex == 136 || blockIndex == 149
+                    || blockIndex == 170 || blockIndex == 188 || blockIndex == 221 || blockIndex == 231
+                    || blockIndex == 250 || blockIndex == 275 || blockIndex == 291 || blockIndex == 305
+                    || blockIndex == 323 || blockIndex == 339 || blockIndex == 206 || blockIndex == 358) {
+                    // Grail points for:
+                    // Gate of Guidance, Mausoleum of the Giants, Temple of the Sun, Spring in the Sky,
+                    // Inferno Cavern, Chamber of Extinction, Twin Labyrinths (Front), Endless Corridor,
+                    // Gate of Illusion, Graveyard of the Giants, Temple of Moonlight, Tower of the Goddess,
+                    // Tower of Ruin, Chamber of Birth, Twin Labyrinths (Back), Dimensional Corridor
+                block = buildTabletBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
             else if(blockIndex == 671 || blockIndex == 672 || blockIndex == 673 || blockIndex == 674 || blockIndex == 675 || blockIndex == 677 || blockIndex == 678 || blockIndex == 679
                     || blockIndex == 680 || blockIndex == 681 || blockIndex == 683 || blockIndex == 689
                     || blockIndex == 693 || blockIndex == 694 || blockIndex == 696 || blockIndex == 698
                     || blockIndex == 700 || blockIndex == 701 || blockIndex == 702 || blockIndex == 704 || blockIndex == 706 || blockIndex == 707 || blockIndex == 708 || blockIndex == 709
                     || blockIndex == 710 || blockIndex == 718 || blockIndex == 723
-                    || blockIndex == 726 || blockIndex == 991 || blockIndex == 993 || blockIndex == 1000) {
+                    || blockIndex == 726 || blockIndex == 0x39c || blockIndex == 0x39e || blockIndex == 991 || blockIndex == 993 || blockIndex == 1000
+                    ) {
                 block = buildMasterNpcBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             else if(blockIndex == 998 && Settings.isIncludeHellTempleNPCs()) {

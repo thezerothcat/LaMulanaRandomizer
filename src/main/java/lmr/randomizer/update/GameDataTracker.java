@@ -4134,7 +4134,7 @@ public final class GameDataTracker {
                     continue;
                 }
                 else if(blockNum == 0x189) {
-                    updateMulbrukIntroBlock(datBlocks.get(0x189).getBlockContents(), 0x189);
+                    updateMulbrukIntroBlockForHalloween(datBlocks.get(0x189).getBlockContents(), 0x189);
                     BlockListData mulbrukBlockListData = new BlockListData((short)78, (short)4);
                     mulbrukBlockListData.getData().add((short)0xaac);
                     mulbrukBlockListData.getData().add((short)0);
@@ -4415,7 +4415,7 @@ public final class GameDataTracker {
         swimsuitBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
     }
 
-    public static void updateMulbrukIntroBlock(List<BlockContents> mulbrukBlockContents, int repeatBlock) {
+    public static void updateMulbrukIntroBlockForHalloween(List<BlockContents> mulbrukBlockContents, int repeatBlock) {
         mulbrukBlockContents.clear();
         mulbrukBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
         mulbrukBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xaac, (short) 1));
@@ -4485,6 +4485,70 @@ public final class GameDataTracker {
         mulbrukBlockContents.add(new BlockSingleData((short)0x000a));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.mulbruk5"));
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukBlockContents.add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukBlockContents.add(new BlockSingleData((short)0x000a));
+    }
+
+    public static void updateMulbrukIntroBlockForEaster(List<BlockContents> mulbrukBlockContents, int repeatBlock) {
+        mulbrukBlockContents.clear();
+//        mulbrukBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1)); // Can exit flag
+        mulbrukBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xaac, (short) 1));
+        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.mulbruk1"));
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukBlockContents.add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukBlockContents.add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        String text = Translations.getText("event.easter.mulbruk2");
+        String[] texts = text.split("%s");
+        if(texts.length > 0) {
+            stringCharacters = FileUtils.stringToData(texts[0]);
+            for (Short shortCharacter : stringCharacters) {
+                mulbrukBlockContents.add(new BlockSingleData(shortCharacter));
+            }
+        }
+
+        mulbrukBlockContents.add(new BlockColorsData((short)0x004a, (short)0x96, (short)0, (short)0x64));
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.egg.name.singular"));
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukBlockContents.add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukBlockContents.add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+
+        stringCharacters = FileUtils.stringToData(texts[texts.length > 0 ? 1 : 0]);
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukBlockContents.add(new BlockSingleData(shortCharacter));
+        }
+//        mulbrukBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
+        mulbrukBlockContents.add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        // Allow repeat
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.repeat"));
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukBlockContents.add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukBlockContents.add(new BlockSingleData((short)0x000a));
+
+        BlockListData repeatCmd = new BlockListData((short)0x004e, (short)1);
+        repeatCmd.getData().add((short)repeatBlock); // Re-use the same block, since this doesn't really affect much.
+        mulbrukBlockContents.add(repeatCmd);
+        mulbrukBlockContents.add(new BlockSingleData((short)0x000a));
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("prompt.yes"));
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukBlockContents.add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukBlockContents.add(new BlockSingleData((short)0x000a));
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("prompt.no"));
+        for (Short shortCharacter : stringCharacters) {
+            mulbrukBlockContents.add(new BlockSingleData(shortCharacter));
+        }
+        mulbrukBlockContents.add(new BlockSingleData((short)0x000a));
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.mulbruk3"));
         for (Short shortCharacter : stringCharacters) {
             mulbrukBlockContents.add(new BlockSingleData(shortCharacter));
         }
@@ -6535,6 +6599,177 @@ public final class GameDataTracker {
                 }
             }
         }
+    }
+
+    public static void addEasterConversations(List<Zone> rcdInfo, List<Block> datInfo) {
+        Zone mulbrukZone = getZone(rcdInfo, 3);
+        Room mulbrukRoom = getRoom(mulbrukZone.getRooms(), 3);
+        Screen mulbrukScreen = getScreen(mulbrukRoom.getScreens(), 0);
+        AddObject.addEasterMulbrukBlocks(mulbrukScreen, datInfo);
+    }
+
+    public static void updateGrailTabletText(List<Block> datInfo) {
+        TabletBlock tablet = (TabletBlock)datInfo.get(38);
+        BlockStringData blockStringData = new BlockStringData();
+        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.surface"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(41);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.guidance"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(75);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.mausoleum"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(104);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.sun"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(136);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.spring"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(149);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.inferno"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(170);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.extinction"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(188);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.twin.front"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(206);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.twin.back"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(221);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.endless"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(231);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.shrine"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(250);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.illusion"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(275);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.graveyard"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(291);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.moonlight"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(305);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.goddess"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(323);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.ruin"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(339);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.birth"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
+
+        tablet = (TabletBlock)datInfo.get(358);
+        blockStringData = new BlockStringData();
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.easter.hint.dimensional"));
+        for (Short shortCharacter : stringCharacters) {
+            blockStringData.getData().add(shortCharacter);
+        }
+        tablet.setTabletText(blockStringData);
+        tablet.getLangPictureData().getData().set(0, (short)0);
     }
 
     public static void fixTransitionGates(List<Zone> rcdInfo) {
