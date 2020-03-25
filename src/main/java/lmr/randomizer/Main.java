@@ -259,6 +259,19 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 3", "Buckler", (short)5, (short)1);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
             } else if(Settings.isFools2020Mode()) {
+                DataFromFile.clearCustomPlacementData();
+                DataFromFile.getCustomPlacementData().setAlternateMotherAnkh(true);
+                DataFromFile.getCustomPlacementData().setMedicineColor("Yellow");
+                DataFromFile.getCustomPlacementData().setStartingWeapon("Whip");
+                DataFromFile.getCustomPlacementData().getStartingItems().add("mirai.exe");
+                if(Settings.getStartingItems().contains("Hermes' Boots") || Settings.getStartingItems().contains("Holy Grail")) {
+                    DataFromFile.getCustomPlacementData().getStartingItems().add("Hermes' Boots");
+                }
+                if(Settings.getStartingItems().contains("bunemon.exe")) {
+                    DataFromFile.getCustomPlacementData().getStartingItems().add("bunemon.exe");
+                }
+                DataFromFile.getCustomPlacementData().setStartingLocation(1);
+
                 Settings.setRandomizeEscapeChest(true, false);
                 Settings.setRandomizeTransitionGates(false, false);
                 Settings.setRandomizeBacksideDoors(false, false);
@@ -273,13 +286,6 @@ public class Main {
                 Settings.getStartingItems().clear();
                 Settings.getInitiallyAccessibleItems().clear();
                 Settings.getRemovedItems().clear();
-
-                DataFromFile.clearCustomPlacementData();
-                DataFromFile.getCustomPlacementData().setAlternateMotherAnkh(true);
-                DataFromFile.getCustomPlacementData().setMedicineColor("Yellow");
-                DataFromFile.getCustomPlacementData().setStartingWeapon("Whip");
-                DataFromFile.getCustomPlacementData().getStartingItems().add("mirai.exe");
-                DataFromFile.getCustomPlacementData().setStartingLocation(1);
 
                 // Cursed chests
                 DataFromFile.getCustomPlacementData().getCursedChests().add("Glove");
