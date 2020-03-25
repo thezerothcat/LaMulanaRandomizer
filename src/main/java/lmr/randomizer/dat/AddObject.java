@@ -5254,40 +5254,40 @@ public final class AddObject {
         datInfo.add(foolsEarlyExitBlock);
 
         // Conversation offering to quit
-        Block easterOptionBlock = new Block(datInfo.size());
+        Block foolsOptionBlock = new Block(datInfo.size());
         stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exitPrompt"));
         for (Short shortCharacter : stringCharacters) {
-            easterOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            foolsOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        easterOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
 
         BlockListData repeatCmd = new BlockListData((short)0x004e, (short)1);
         repeatCmd.getData().add((short)foolsEarlyExitBlock.getBlockNumber());
-        easterOptionBlock.getBlockContents().add(repeatCmd);
-        easterOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        foolsOptionBlock.getBlockContents().add(repeatCmd);
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("prompt.yes"));
         for (Short shortCharacter : stringCharacters) {
-            easterOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            foolsOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        easterOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("prompt.no"));
         for (Short shortCharacter : stringCharacters) {
-            easterOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            foolsOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        easterOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.noQuit"));
         for (Short shortCharacter : stringCharacters) {
-            easterOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            foolsOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        easterOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
-        datInfo.add(easterOptionBlock);
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        datInfo.add(foolsOptionBlock);
 
         // Master block - Some eggs
         MasterNpcBlock optionMasterNpcBlock = new MasterNpcBlock((MasterNpcBlock)datInfo.get(0x39c), datInfo.size());
-        optionMasterNpcBlock.setTextCard(new BlockCmdSingle((short)easterOptionBlock.getBlockNumber()));
+        optionMasterNpcBlock.setTextCard(new BlockCmdSingle((short)foolsOptionBlock.getBlockNumber()));
         datInfo.add(optionMasterNpcBlock);
 
         // Master block - Book of the Dead
@@ -5301,7 +5301,6 @@ public final class AddObject {
 
         // Find existing objects
         GameObject escapeConversationNormal = null;
-        GameObject escapeConversationSwimsuit = null;
         List<GameObject> keptObjects = new ArrayList<>();
         for(GameObject gameObject : mulbrukScreen.getObjects()) {
             if(gameObject.getId() == 0xa0) {
@@ -5330,7 +5329,7 @@ public final class AddObject {
         optionConversation.getTestByteOperations().clear();
         optionConversation.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_NOT_EQUAL, 1)); // Option to quit
         optionConversation.getTestByteOperations().add(new TestByteOperation(0x32a, ByteOp.FLAG_NOT_EQUAL, 1));
-        bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(0x391, ByteOp.FLAG_GTEQ, 1));
+        optionConversation.getTestByteOperations().add(new TestByteOperation(0x391, ByteOp.FLAG_GTEQ, 1));
 
         mulbrukScreen.getObjects().clear();
         mulbrukScreen.getObjects().addAll(keptObjects);
