@@ -2251,7 +2251,12 @@ public class Main {
             saveData[0x11 + 0x243] = 3;
             saveData[0x11 + 0x244] = 3;
         }
-
+        if(Settings.isFools2020Mode()) {
+            // Unlock Mulbruk so you can have conversations about quitting the game
+            saveData[0x11 + 0x079] = (byte)1;
+            saveData[0x11 + 0x18e] = (byte)2;
+            saveData[0x11 + 0x391] = (byte)1;
+        }
 //        saveData[0x11 + 0x064] = 1;
 //        saveData[0x11 + 0x065] = 1;
 //        saveData[0x11 + 0x066] = 1;
