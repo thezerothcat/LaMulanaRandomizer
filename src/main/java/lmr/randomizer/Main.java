@@ -494,9 +494,6 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Grapple Claw", "Grapple Claw", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-                customItemPlacement = new CustomItemPlacement("Holy Grail", "Holy Grail", null);
-                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
                 customItemPlacement = new CustomItemPlacement("Ice Cape", "Ice Cape", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
