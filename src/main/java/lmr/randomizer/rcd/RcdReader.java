@@ -2382,6 +2382,12 @@ public final class RcdReader {
                     AddObject.addPot(screen, 580, 280, 10, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)));
                 }
             }
+            if(Settings.isFools2020Mode()) {
+                if(roomIndex == 8 && screenIndex == 0) {
+                    // Ladder attack!
+                    AddObject.addPot(screen, 580, 280, 10, new ArrayList<>());
+                }
+            }
         }
         else if(zoneIndex == 12) {
             if(Settings.isFeatherlessMode()) {
