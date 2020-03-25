@@ -1,10 +1,6 @@
 package lmr.randomizer.random;
 
-import javafx.util.Pair;
-import lmr.randomizer.DataFromFile;
-import lmr.randomizer.FileUtils;
-import lmr.randomizer.Settings;
-import lmr.randomizer.Translations;
+import lmr.randomizer.*;
 import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.AccessChecker;
@@ -319,28 +315,28 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         }
     }
 
-    private Pair<Short, Short> getItemPriceCount(boolean subweaponOnly, String itemName, String shopInventoryLocation, MoneyChecker moneyChecker, Random random) {
+    private ItemPriceCount getItemPriceCount(boolean subweaponOnly, String itemName, String shopInventoryLocation, MoneyChecker moneyChecker, Random random) {
         String startingWeapon = Settings.getCurrentStartingWeapon();
         if((subweaponOnly && itemName.endsWith(" Ammo")) || itemName.equals(startingWeapon + " Ammo")) {
             if("Shuriken".equals(startingWeapon)) {
-                return new Pair<>((short)0, (short)150);
+                return new ItemPriceCount((short)0, (short)150);
             }
             if("Rolling Shuriken".equals(startingWeapon)) {
-                return new Pair<>((short)0, (short)100);
+                return new ItemPriceCount((short)0, (short)100);
             }
             if("Earth Spear".equals(startingWeapon)
                     || "Flare Gun".equals(startingWeapon)
                     || "Caltrops".equals(startingWeapon)) {
-                return new Pair<>((short)0, (short)80);
+                return new ItemPriceCount((short)0, (short)80);
             }
             if("Bomb".equals(startingWeapon)) {
-                return new Pair<>((short)0, (short)30);
+                return new ItemPriceCount((short)0, (short)30);
             }
             if("Chakram".equals(startingWeapon)) {
-                return new Pair<>((short)0, (short)10);
+                return new ItemPriceCount((short)0, (short)10);
             }
             if("Pistol".equals(startingWeapon)) {
-                return new Pair<>((short)0, (short)3);
+                return new ItemPriceCount((short)0, (short)3);
             }
         }
 
@@ -372,9 +368,9 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                 defaultShopPrice = 60;
             }
             if(defaultShopPrice != null) {
-                return new Pair<>((short)(int)(defaultShopPrice < shopPrice ? defaultShopPrice : shopPrice - 5 * random.nextInt(2)), null);
+                return new ItemPriceCount((short)(int)(defaultShopPrice < shopPrice ? defaultShopPrice : shopPrice - 5 * random.nextInt(2)), null);
             }
-            return new Pair<>((short)(int)(shopPrice - 5 * random.nextInt(2)), null);
+            return new ItemPriceCount((short)(int)(shopPrice - 5 * random.nextInt(2)), null);
         }
         return null;
     }

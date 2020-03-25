@@ -1,11 +1,12 @@
 package lmr.randomizer.ui;
 
+import lmr.randomizer.Settings;
 import lmr.randomizer.Translations;
 
 import javax.swing.*;
 
 public class TabbedPanel extends JTabbedPane {
-//    private EventPanel eventPanel;
+    private EventPanel eventPanel;
     private RandomizationPanel randomizationPanel;
     private LocationPanel locationPanel;
 //    private EnemiesPanel enemiesPanel;
@@ -19,8 +20,14 @@ public class TabbedPanel extends JTabbedPane {
     public TabbedPanel(MainPanel _mainPanel) {
         mainPanel = _mainPanel;
 
-//        eventPanel = new EventPanel(this);
-//        addTab(Translations.getText("settings.event"), eventPanel);
+        if(Settings.isHalloweenMode()) {
+            eventPanel = new EventPanel(this);
+            addTab(Translations.getText("settings.event.halloween"), eventPanel);
+        }
+        else if(Settings.isFools2020Mode()) {
+            eventPanel = new EventPanel(this);
+            addTab(Translations.getText("settings.event.fools2020"), eventPanel);
+        }
 
         randomizationPanel = new RandomizationPanel();
         addTab(Translations.getText("settings.items"), randomizationPanel);
@@ -49,7 +56,7 @@ public class TabbedPanel extends JTabbedPane {
 
     public void reloadSettings() {
         mainPanel.reloadSettings();
-//        eventPanel.reloadSettings();
+        eventPanel.reloadSettings();
         randomizationPanel.reloadSettings();
         locationPanel.reloadSettings();
 //        enemiesPanel.reloadSettings();
@@ -60,7 +67,7 @@ public class TabbedPanel extends JTabbedPane {
     }
 
     public void updateSettings() {
-//        eventPanel.updateSettings();
+        eventPanel.updateSettings();
         mainPanel.updateSettings();
         randomizationPanel.updateSettings();
         locationPanel.updateSettings();
@@ -72,7 +79,7 @@ public class TabbedPanel extends JTabbedPane {
     }
 
     public void updateTranslations() {
-//        eventPanel.updateTranslations();
+        eventPanel.updateTranslations();
         randomizationPanel.updateTranslations();
         locationPanel.updateTranslations();
 //        enemiesPanel.updateTranslations();
@@ -81,13 +88,20 @@ public class TabbedPanel extends JTabbedPane {
         gameplayChangesPanel.updateTranslations();
         removedItemsPanel.updateTranslations();
 
-        setTitleAt(0, Translations.getText("settings.items"));
-        setTitleAt(1, Translations.getText("settings.locations"));
+        int i = 0;
+        if(Settings.isHalloweenMode()) {
+            setTitleAt(i++, Translations.getText("settings.event.halloween"));
+        }
+        else if(Settings.isFools2020Mode()) {
+            setTitleAt(i++, Translations.getText("settings.event.fools2020"));
+        }
+        setTitleAt(i++, Translations.getText("settings.items"));
+        setTitleAt(i++, Translations.getText("settings.locations"));
 //        setTitleAt(2, Translations.getText("settings.enemies"));
-        setTitleAt(2, Translations.getText("settings.logic"));
-        setTitleAt(3, Translations.getText("settings.appearance"));
-        setTitleAt(4, Translations.getText("settings.gameplay"));
-        setTitleAt(5, Translations.getText("settings.removal"));
-        setTitleAt(6, Translations.getText("settings.share"));
+        setTitleAt(i++, Translations.getText("settings.logic"));
+        setTitleAt(i++, Translations.getText("settings.appearance"));
+        setTitleAt(i++, Translations.getText("settings.gameplay"));
+        setTitleAt(i++, Translations.getText("settings.removal"));
+        setTitleAt(i++, Translations.getText("settings.share"));
     }
 }

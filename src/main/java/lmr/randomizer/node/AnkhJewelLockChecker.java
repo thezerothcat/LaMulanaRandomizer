@@ -21,4 +21,8 @@ public class AnkhJewelLockChecker implements Runnable {
     public boolean isEnoughAnkhJewelsToDefeatAllAccessibleBosses() {
         return accessChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses();
     }
+
+    public void logAnkhJewelLock() {
+        accessChecker.logAnkhJewelLock();
+    }
 }

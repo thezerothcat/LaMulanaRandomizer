@@ -834,6 +834,14 @@ public final class Settings {
         return false;
     }
 
+    public static boolean isFools2020Mode() {
+        return true;
+    }
+
+    public static boolean isFeatherlessMode() {
+        return true;
+    }
+
     public static boolean isIncludeHellTempleNPCs() {
         return singleton.includeHellTempleNPCs;
     }

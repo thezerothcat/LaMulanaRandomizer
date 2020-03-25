@@ -19,7 +19,7 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.24.1";
+    public static final String VERSION = "Fools2020";
     public static final int EXISTING_FILE_WIDTH = 1024;
     public static final int EXISTING_FILE_HEIGHT = 512;
     public static final int GRAPHICS_VERSION = 4;
@@ -813,6 +813,9 @@ public class FileUtils {
             if(Settings.isHalloweenMode()) {
                 FileUtils.updateGraphicsFilesForHalloween(Settings.getGraphicsPack());
             }
+            if(Settings.isFools2020Mode()) {
+                FileUtils.updateGraphicsFilesForFools2020(Settings.getGraphicsPack());
+            }
             FileUtils.updateGraphicsFiles();
 
             FileUtils.logFlush("Save file copy complete");
@@ -973,13 +976,77 @@ public class FileUtils {
         return true;
     }
 
-    private static boolean writeTitle01(String halloweenFolderPath) {
+    public static boolean updateGraphicsFilesForFools2020(String graphicsPack) {
+        String graphicsBase = Settings.getLaMulanaBaseDir() + "/data/graphics";
+        String foolFolderPath = graphicsBase + "/FOOLS2020";
+        File foolGraphicsFolder = new File(foolFolderPath);
+        File graphicsBaseFolder = new File(graphicsBase, graphicsPack);
+        if(foolGraphicsFolder.exists()) {
+            foolGraphicsFolder.delete();
+        }
+        foolGraphicsFolder.mkdir();
+
+        if(!copyGraphicsFiles(graphicsBaseFolder, foolGraphicsFolder)) {
+            FileUtils.logFlush("Problem copying graphics from source folder " + graphicsPack);
+            foolGraphicsFolder.delete();
+            return false;
+        }
+
+        final List<String> modifiedFilesToCopy = Arrays.asList("_banner.png");
+        for(String file : modifiedFilesToCopy) {
+            try {
+                File graphicsFileToWrite = new File(foolFolderPath, file);
+                BufferedImage modified;
+                try {
+                    modified = ImageIO.read(FileUtils.class.getResource("graphics/fools2020/" + file));
+                }
+                catch (IOException ex) {
+                    FileUtils.logFlush("Problem copying graphics file " + file);
+                    foolGraphicsFolder.delete();
+                    return false;
+                }
+                BufferedImage existingImage = ImageIO.read(graphicsFileToWrite);
+                BufferedImage newImage = new BufferedImage(existingImage.getWidth(), existingImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                Graphics2D graphics2D = newImage.createGraphics();
+                graphics2D.drawImage(modified, null, 0, 0); // Use backup to ensure no duplication of file
+                graphics2D.dispose();
+
+                ImageIO.write(newImage, "png", graphicsFileToWrite);
+            }
+            catch(IOException ex) {
+                FileUtils.logFlush("Problem copying graphics file " + file);
+                foolGraphicsFolder.delete();
+                return false;
+            }
+        }
+
+//        if(!writeTitle01(foolFolderPath)) {
+//            return false;
+//        }
+        if(!write01Menu(foolFolderPath)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static boolean writeTitle01(String folderPath) {
         String file = "title01.png";
         try {
-            File graphicsFileToWrite = new File(halloweenFolderPath, file);
+            File graphicsFileToWrite = new File(folderPath, file);
             BufferedImage modified;
             try {
-                modified = ImageIO.read(FileUtils.class.getResource("graphics/halloween/" + file));
+                String path;
+                if(Settings.isHalloweenMode()) {
+                    path = "graphics/halloween/";
+                }
+                else if(Settings.isFools2020Mode()) {
+                    path = "graphics/fools2020/";
+                }
+                else {
+                    path = "";
+                }
+                modified = ImageIO.read(FileUtils.class.getResource(path + file));
             }
             catch (IOException ex) {
                 return false;
@@ -1009,31 +1076,83 @@ public class FileUtils {
         return true;
     }
 
-    private static boolean write01Menu(String halloweenFolderPath) {
+    private static boolean write01Menu(String folderPath) {
         String file = "01menu.png";
+        String filepath;
+        if(Settings.isHalloweenMode()) {
+            filepath = "graphics/halloween/" + file;
+        }
+        else if(Settings.isFools2020Mode()) {
+            filepath = "graphics/fools2020/" + file;
+        }
+        else {
+            filepath = "";
+        }
+
         try {
-            File graphicsFileToWrite = new File(halloweenFolderPath, file);
-            BufferedImage modified;
-            try {
-                modified = ImageIO.read(FileUtils.class.getResource("graphics/halloween/" + file));
-            }
-            catch (IOException ex) {
-                return false;
-            }
+            File graphicsFileToWrite = new File(folderPath, file);
             BufferedImage existingImage = ImageIO.read(graphicsFileToWrite);
             BufferedImage newImage = new BufferedImage(existingImage.getWidth(), existingImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics2D = newImage.createGraphics();
 
-            BufferedImage leftPart = existingImage.getSubimage(0, 0, 780, 1024);
-            BufferedImage topPart = existingImage.getSubimage(780, 0, 244, 320);
-            BufferedImage replacedPart = modified.getSubimage(780, 320, 40, 40);
-            BufferedImage rightPart = existingImage.getSubimage(820, 320, 204, 40);
-            BufferedImage bottomPart = existingImage.getSubimage(780, 360, 244, 664);
-            graphics2D.drawImage(leftPart, null, 0, 0);
-            graphics2D.drawImage(topPart, null, 780, 0);
-            graphics2D.drawImage(replacedPart, null, 780, 320);
-            graphics2D.drawImage(rightPart, null, 820, 320);
-            graphics2D.drawImage(bottomPart, null, 780, 360);
+            if(Settings.isHalloweenMode()) {
+                BufferedImage modified;
+                try {
+                    modified = ImageIO.read(FileUtils.class.getResource(filepath));
+                }
+                catch (IOException ex) {
+                    return false;
+                }
+                BufferedImage replacedPart = modified.getSubimage(780, 320, 40, 40);
+
+                BufferedImage leftPart = existingImage.getSubimage(0, 0, 780, 1024);
+                BufferedImage topPart = existingImage.getSubimage(780, 0, 244, 320);
+                BufferedImage rightPart = existingImage.getSubimage(820, 320, 204, 40);
+                BufferedImage bottomPart = existingImage.getSubimage(780, 360, 244, 664);
+                graphics2D.drawImage(leftPart, null, 0, 0);
+                graphics2D.drawImage(topPart, null, 780, 0);
+                graphics2D.drawImage(replacedPart, null, 780, 320);
+                graphics2D.drawImage(rightPart, null, 820, 320);
+                graphics2D.drawImage(bottomPart, null, 780, 360);
+            }
+            else if(Settings.isFools2020Mode()) {
+                final int itemsBeginX = 620;
+                final int itemsBeginY = 0;
+                final int itemsEndY = 440;
+                final int fullWidth = 1024;
+                final int fullHeight = 1024;
+                BufferedImage leftOfItems = existingImage.getSubimage(0, 0, itemsBeginX, fullHeight);
+                BufferedImage belowItems = existingImage.getSubimage(itemsBeginX, itemsEndY, fullWidth - itemsBeginX, fullHeight - itemsEndY);
+                graphics2D.drawImage(leftOfItems, null, 0, 0);
+                graphics2D.drawImage(belowItems, null, itemsBeginX, itemsEndY);
+
+                for(int verticalIndex = 0; verticalIndex < 11; verticalIndex++) {
+                    for(int horizontalIndex = 0; horizontalIndex < 10; horizontalIndex++) {
+                        int itemDrawBeginX = itemsBeginX + horizontalIndex * 40;
+                        int itemDrawBeginY = itemsBeginY + verticalIndex * 40;
+                        int sourceGraphicsBeginX = itemDrawBeginX;
+                        int sourceGraphicsBeginY = itemDrawBeginY;
+                        if(horizontalIndex == 7 && verticalIndex == 3) {
+                            // Heatproof case
+                            sourceGraphicsBeginX = itemsBeginX + 240;
+                            sourceGraphicsBeginY = itemsBeginY + 200;
+                        }
+                        else if(horizontalIndex == 6 && verticalIndex == 5) {
+                            // Scriptures
+                            sourceGraphicsBeginX = itemsBeginX + 280;
+                            sourceGraphicsBeginY = itemsBeginY + 120;
+                        }
+                        else if(horizontalIndex == 4 && verticalIndex == 8) {
+                            // Secret Treasure of Life
+                            sourceGraphicsBeginX = itemsBeginX + 120;
+                            sourceGraphicsBeginY = itemsBeginY + 200;
+                        }
+                        BufferedImage itemGraphic = existingImage.getSubimage(sourceGraphicsBeginX, sourceGraphicsBeginY, 40, 40);
+                        graphics2D.drawImage(itemGraphic, null, itemDrawBeginX, itemDrawBeginY);
+                    }
+                }
+            }
+
             graphics2D.dispose();
 
             ImageIO.write(newImage, "png", graphicsFileToWrite);

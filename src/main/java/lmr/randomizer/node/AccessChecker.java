@@ -375,7 +375,7 @@ public class AccessChecker {
         }
         if(stateToUpdate.startsWith("Coin:")) {
             accessedNodes.add(stateToUpdate);
-            mapOfNodeNameToRequirementsObject.remove(stateToUpdate);
+            mapOfNodeNameToRequirementsObject.remove(stateToUpdate); // todo: this looks wrong
             queuedUpdates.remove(stateToUpdate);
             return null;
         }
@@ -403,7 +403,7 @@ public class AccessChecker {
             return "Sacred Orb";
         }
         if(!"Whip".equals(Settings.getCurrentStartingWeapon()) && "Whip".equals(stateToUpdate)) {
-            return null; // Whip is a removed item.
+            return null; // Whip is a removed item. // todo: this might be an infinite loop?
         }
         if(stateToUpdate.equals("Vessel")) {
             if(Settings.getMedicineColor() != null) {
@@ -478,7 +478,17 @@ public class AccessChecker {
                     }
                     if (!Settings.getCurrentRemovedItems().contains(item) && !Settings.getRemovedItems().contains(item)) {
                         FileUtils.logDetail("Found item " + item, attemptNumber);
-                        queuedUpdates.add(item);
+                        if(Settings.isFools2020Mode()) {
+                            if("Fake Silver Shield".equals(item)) {
+                                queuedUpdates.add("Angel Shield");
+                            }
+                            else if(!"Silver Shield".equals(item) && !"Angel Shield".equals(item)) {
+                                queuedUpdates.add(item);
+                            }
+                        }
+                        else {
+                            queuedUpdates.add(item);
+                        }
                     }
                 }
                 else {
@@ -519,7 +529,19 @@ public class AccessChecker {
                                 && !Settings.getRemovedItems().contains(shopItem)
                                 && !Settings.getCurrentRemovedItems().contains(shopItem)) {
                             FileUtils.logDetail("Found item " + shopItem, attemptNumber);
-                            queuedUpdates.add(shopItem);
+                            if(Settings.isFools2020Mode()) {
+                                if("Fake Silver Shield".equals(shopItem)) {
+                                    queuedUpdates.add("Angel Shield");
+                                }
+                                else if(!"Silver Shield".equals(shopItem)
+                                        && !"Angel Shield".equals(shopItem)
+                                        && !"Lamp of Time".equals(shopItem)) {
+                                    queuedUpdates.add(shopItem);
+                                }
+                            }
+                            else {
+                                queuedUpdates.add(shopItem);
+                            }
                         }
                     }
                 }
@@ -648,6 +670,11 @@ public class AccessChecker {
         return numberOfAccessibleAnkhJewels >= accessibleBossNodes.size();
     }
 
+    public void logAnkhJewelLock() {
+        FileUtils.log("Accessible bosses: " + accessibleBossNodes.toString());
+        FileUtils.logFlush("Total ankh jewels: " + numberOfAccessibleAnkhJewels);
+    }
+
     public void setItemRandomizer(ItemRandomizer itemRandomizer) {
         this.itemRandomizer = itemRandomizer;
     }
@@ -686,6 +713,7 @@ public class AccessChecker {
 
         for(AnkhJewelLockChecker ankhJewelLockChecker : ankhJewelLockCheckers) {
             if(!ankhJewelLockChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
+                ankhJewelLockChecker.logAnkhJewelLock();
                 return false;
             }
         }

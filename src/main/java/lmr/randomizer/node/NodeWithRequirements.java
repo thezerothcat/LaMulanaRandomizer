@@ -87,7 +87,9 @@ public class NodeWithRequirements {
             }
             if(requirementSet.contains("Event: Mudmen Awakened")) {
                 requirementSet.add("Cog of the Soul");
-                requirementSet.add("Feather");
+                if(!Settings.isFeatherlessMode()) {
+                    requirementSet.add("Feather");
+                }
             }
             if(requirementSet.contains("Event: Flooded Spring in the Sky")) {
                 requirementSet.add("Helmet");

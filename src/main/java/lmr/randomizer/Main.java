@@ -252,6 +252,421 @@ public class Main {
 
             Settings.saveSettings();
 
+            if(Settings.isHalloweenMode()) {
+                CustomItemPlacement customItemPlacement = new CustomItemPlacement("xmailer.exe", "Provocative Bathing Suit", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 3", "Buckler", (short)5, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+            } else if(Settings.isFools2020Mode()) {
+                Settings.setRandomizeEscapeChest(true, false);
+                Settings.setRandomizeTransitionGates(false, false);
+                Settings.setRandomizeBacksideDoors(false, false);
+                Settings.setRandomizeCoinChests(true, false);
+                Settings.setRandomizeTrapItems(true, false);
+                Settings.setRandomizeCursedChests(true, false);
+                Settings.setShopRandomization(ShopRandomizationEnum.EVERYTHING.name(), false);
+                Settings.setAllowSubweaponStart(false, false);
+                Settings.setRandomizeGraphics(false, false);
+                Settings.setMinRandomRemovedItems(0, false);
+                Settings.setMaxRandomRemovedItems(0, false);
+                Settings.getStartingItems().clear();
+                Settings.getInitiallyAccessibleItems().clear();
+                Settings.getRemovedItems().clear();
+
+                DataFromFile.clearCustomPlacementData();
+                DataFromFile.getCustomPlacementData().setAlternateMotherAnkh(true);
+                DataFromFile.getCustomPlacementData().setMedicineColor("Yellow");
+                DataFromFile.getCustomPlacementData().setStartingWeapon("Whip");
+                DataFromFile.getCustomPlacementData().getStartingItems().add("mirai.exe");
+                DataFromFile.getCustomPlacementData().setStartingLocation(1);
+
+                // Cursed chests
+                DataFromFile.getCustomPlacementData().getCursedChests().add("Glove");
+                DataFromFile.getCustomPlacementData().getCursedChests().add("Magatama Jewel");
+                DataFromFile.getCustomPlacementData().getCursedChests().add("Dimensional Key");
+                DataFromFile.getCustomPlacementData().getCursedChests().add("Crystal Skull");
+                DataFromFile.getCustomPlacementData().getCursedChests().add("Djed Pillar");
+
+                // Maps
+                CustomItemPlacement customItemPlacement = new CustomItemPlacement("Map (Chamber of Birth)", "Map (Chamber of Birth)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Chamber of Extinction)", "Map (Chamber of Extinction)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Dimensional Corridor)", "Map (Dimensional Corridor)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Endless Corridor)", "Map (Endless Corridor)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Gate of Guidance)", "Map (Gate of Guidance)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Gate of Illusion)", "Map (Gate of Illusion)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Graveyard of the Giants)", "Map (Graveyard of the Giants)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Inferno Cavern)", "Map (Inferno Cavern)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Mausoleum of the Giants)", "Map (Mausoleum of the Giants)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Shrine of the Mother)", "Map (Shrine of the Mother)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Spring in the Sky)", "Map (Spring in the Sky)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Surface)", "Map (Surface)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Temple of Moonlight)", "Map (Temple of Moonlight)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Temple of the Sun)", "Map (Temple of the Sun)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Tower of Ruin)", "Map (Tower of Ruin)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Tower of the Goddess)", "Map (Tower of the Goddess)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Map (Twin Labyrinths)", "Map (Twin Labyrinths)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                // Ankh jewels
+                customItemPlacement = new CustomItemPlacement("Ankh Jewel (Gate of Guidance)", "Ankh Jewel (Gate of Guidance)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Ankh Jewel (Mausoleum of the Giants)", "Ankh Jewel (Mausoleum of the Giants)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Ankh Jewel (Temple of the Sun)", "Ankh Jewel (Temple of the Sun)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Ankh Jewel (Spring in the Sky)", "Ankh Jewel (Spring in the Sky)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Ankh Jewel (Tower of Ruin)", "Ankh Jewel (Tower of Ruin)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Ankh Jewel (Dimensional Corridor)", "Ankh Jewel (Dimensional Corridor)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                // Sacred Orbs
+                customItemPlacement = new CustomItemPlacement("Sacred Orb (Surface)", "Sacred Orb (Surface)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Sacred Orb (Gate of Guidance)", "Sacred Orb (Gate of Guidance)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Sacred Orb (Mausoleum of the Giants)", "Sacred Orb (Mausoleum of the Giants)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Sacred Orb (Temple of the Sun)", "Sacred Orb (Temple of the Sun)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Sacred Orb (Spring in the Sky)", "Sacred Orb (Spring in the Sky)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Sacred Orb (Tower of Ruin)", "Sacred Orb (Tower of Ruin)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Sacred Orb (Chamber of Extinction)", "Sacred Orb (Chamber of Extinction)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Sacred Orb (Twin Labyrinths)", "Sacred Orb (Twin Labyrinths)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Sacred Orb (Shrine of the Mother)", "Sacred Orb (Shrine of the Mother)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Sacred Orb (Dimensional Corridor)", "Coin: Guidance (Two)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Coin: Inferno (Spikes)", "Sacred Orb (Dimensional Corridor)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                // Weapons
+                customItemPlacement = new CustomItemPlacement("Axe", "Katana", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Bomb", "Key Sword", null); // Key sword not required in this
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Caltrops", "Caltrops", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Chain Whip", "Flare Gun", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Chakram", "Bomb", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Earth Spear", "Chakram", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Flail Whip", "Flail Whip", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Flare Gun", "Glove", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Katana", "Axe", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Key Sword", "Earth Spear", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Knife", "Knife", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Rolling Shuriken", "Rolling Shuriken", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Shuriken", "Shuriken", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                // Swap
+                customItemPlacement = new CustomItemPlacement("Coin: Twin (Lower)", "Ankh Jewel (Twin Labyrinths)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Ankh Jewel (Twin Labyrinths)", "Coin: Twin (Lower)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Gauntlet", "Silver Shield", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Glove", "Gauntlet", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Holy Grail", "Spaulder", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Spaulder", "Ankh Jewel (Extra)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Trap: Twin Ankh", "Holy Grail", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Feather", "Angel Shield", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("mirai.exe", "Chain Whip", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Coin: Twin (Escape)", "Feather", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Djed Pillar", "Dimensional Key", "Feather");
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Death Seal", "Cog of the Soul", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Cog of the Soul", "Coin: Guidance (One)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Dimensional Key", "Death Seal", "Feather");
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("yagostr.exe", "yagomap.exe", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("lamulana.exe", "guild.exe", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                // Traps
+                customItemPlacement = new CustomItemPlacement("Trap: Inferno Orb", "Trap: Inferno Orb", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Trap: Exploding", "Trap: Exploding", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Angel Shield", "Trap: Twin Ankh", "Angel Shield");
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Silver Shield", "Trap: Graveyard", "Silver Shield");
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                // Other
+                customItemPlacement = new CustomItemPlacement("Anchor", "Anchor", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("beolamu.exe", "beolamu.exe", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Birth Seal", "Birth Seal", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Book of the Dead", "Book of the Dead", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("bounce.exe", "bounce.exe", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Bronze Mirror", "Bronze Mirror", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("bunplus.com", "bunplus.com", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Crucifix", "Crucifix", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Crystal Skull", "Crystal Skull", "Feather");
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("deathv.exe", "deathv.exe", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Diary", "Diary", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("emusic.exe", "emusic.exe", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Eye of Truth", "Eye of Truth", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Fairy Clothes", "Fairy Clothes", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Fruit of Eden", "Fruit of Eden", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Grapple Claw", "Grapple Claw", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Holy Grail", "Holy Grail", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Ice Cape", "Ice Cape", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Isis' Pendant", "Isis' Pendant", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Key of Eternity", "Key of Eternity", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Life Seal", "Life Seal", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("mantra.exe", "mantra.exe", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Magatama Jewel", "Magatama Jewel", "Feather");
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("mekuri.exe", "mekuri.exe", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Mini Doll", "Mini Doll", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("mirai.exe", "mirai.exe", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Mulana Talisman", "Mulana Talisman", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Origin Seal", "Origin Seal", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Pepper", "Pepper", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Perfume", "Perfume", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Philosopher's Ocarina", "Philosopher's Ocarina", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Plane Model", "Plane Model", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Pochette Key", "Pochette Key", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Provocative Bathing Suit", "Provocative Bathing Suit", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Ring", "Ring", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Scalesphere", "Scalesphere", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Serpent Staff", "Serpent Staff", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shell Horn", "Shell Horn", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Talisman", "Talisman", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Treasures", "Treasures", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Twin Statue", "Twin Statue", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Vessel", "Vessel", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Woman Statue", "Woman Statue", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("xmailer.exe", "xmailer.exe", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                // Shops
+                customItemPlacement = new CustomItemPlacement("Shop 1 (Surface) Item 1", "Hand Scanner", (short)10, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 1 (Surface) Item 2", "Pistol Ammo", (short)400, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 1 (Surface) Item 3", "Shuriken Ammo", (short)10, (short)10);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 1", "Weights", (short)10, (short)5);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 2", "reader.exe", (short)50, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 3", "yagostr.exe", (short)20, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 2 Alt (Surface) Item 1", "Mobile Super X2", null, null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 3 (Surface) Item 1", "Buckler", (short)10, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 3 (Surface) Item 2", "Waterproof Case", (short)50, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 3 (Surface) Item 3", "Pistol", (short)100, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 4 (Guidance) Item 1", "Shuriken Ammo", (short)10, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 4 (Guidance) Item 2", "lamulana.exe", (short)60, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 4 (Guidance) Item 3", "Weights", (short)10, (short)5);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 5 (Illusion) Item 1", "move.exe", null, null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 6 (Mausoleum) Item 1", "Hermes' Boots", (short)60, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 7 (Graveyard) Item 2", "Fake Silver Shield", (short)250, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 8 (Sun) Item 3", "bunemon.exe", (short)50, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 9 (Sun) Item 1", "Scriptures", (short)250, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 11 (Moonlight) Item 1", "Heatproof Case", (short)250, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 11 (Moonlight) Item 3", "Pistol Ammo", (short)4, (short)6);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 12 Alt (Spring) Item 3", "randc.exe", (short)200, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 13 (Goddess) Item 1", "torude.exe", (short)200, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 14 (Inferno) Item 1", "capstar.exe", (short)150, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 15 (Ruin) Item 1", "miracle.exe", (short)200, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 17 (Birth) Item 2", "Ankh Jewel (Chamber of Birth)", null, null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 18 (Lil Bro) Item 1", "Helmet", (short)60, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 18 (Lil Bro) Item 2", "Weights", (short)1, (short)50);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 18 (Lil Bro) Item 3", "Weights", (short)50, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 19 (Big Bro) Item 1", "Dragon Bone", (short)100, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 20 (Twin Labs) Item 1", "Bracelet", (short)150, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 21 (Unsolvable) Item 1", "Lamp of Time", (short)1, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+            }
+
             // Any forced temporary plando settings can go here.
 
             progressDialog.updateProgress(10, Translations.getText("setup.backup"));
@@ -388,7 +803,7 @@ public class Main {
                 fileOutputStream.close();
                 FileUtils.logFlush("dat copy complete");
 
-                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation()) {
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || Settings.isFools2020Mode()) {
                     FileUtils.logFlush("Copying save file from seed folder to La-Mulana save directory");
                     File saveFile = new File(String.format("%s/lm_00.sav", Settings.getStartingSeed()));
                     if(saveFile.exists()) {
@@ -488,7 +903,7 @@ public class Main {
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            if((Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || Settings.isHalloweenMode()) && !validateSaveDir()) {
+            if((Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || Settings.isHalloweenMode() || Settings.isFools2020Mode()) && !validateSaveDir()) {
                 JOptionPane.showMessageDialog(this,
                         "Unable to find La-Mulana save directory",
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
@@ -526,6 +941,29 @@ public class Main {
                     JOptionPane.showMessageDialog(this,
                             String.format("The setting \"%s\" cannot be used with this mode",
                                     Translations.getText("dboost.Enemy")),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }
+            if(Settings.isFools2020Mode()) {
+                if(Settings.isRequireFullAccess()) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("The setting \"%s\" cannot be used with this mode",
+                                    Translations.getText("logic.requireFullAccess.short")),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(!Settings.isRandomizeTrapItems()) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("The setting \"%s\" is required for this mode",
+                                    Translations.getText("randomization.randomizeTrapItems")),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(!Settings.isRandomizeCoinChests()) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("The setting \"%s\" is required for this mode",
+                                    Translations.getText("randomization.randomizeCoinChests")),
                             "Randomizer error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
@@ -1117,8 +1555,7 @@ public class Main {
                     || DataFromFile.ESCAPE_CHEST_NAME.equals(location)) {
                 return true;
             }
-            if(location.equals("Trap: Graveyard") || location.equals("Trap: Exploding")
-                    || location.equals("Trap: Inferno Orb") || location.equals("Trap: Twin Ankh")) {
+            if(DataFromFile.TRAP_ITEMS.contains(location)) {
                 return true;
             }
             if(location.startsWith("Shop ")
@@ -1145,8 +1582,7 @@ public class Main {
                     || DataFromFile.ESCAPE_CHEST_NAME.equals(contents)) {
                 return true;
             }
-            if(contents.equals("Trap: Graveyard") || contents.equals("Trap: Exploding")
-                    || contents.equals("Trap: Inferno Orb") || contents.equals("Trap: Twin Ankh")) {
+            if(DataFromFile.TRAP_ITEMS.contains(contents)) {
                 return true;
             }
             if(contents.equals("Weights") || contents.equals("Shuriken Ammo") || contents.equals("Rolling Shuriken Ammo")
@@ -1363,6 +1799,7 @@ public class Main {
                             accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next(), attempt);
                             if (accessChecker.getQueuedUpdates().isEmpty()) {
                                 if (!accessChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
+                                    accessChecker.logAnkhJewelLock();
                                     ankhJewelLock = true;
                                     break;
                                 }
@@ -1375,8 +1812,13 @@ public class Main {
                     }
 
                     if (ankhJewelLock) {
-                        FileUtils.log(String.format("Detected ankh jewel lock on attempt %s. Re-shuffling items.", attempt));
-                        continue;
+                        if(Settings.isGenerationComplete(attempt)) {
+                            FileUtils.log(String.format("Detected ankh jewel lock on attempt %s, but validation is skipped. Generating seed anyway.", attempt));
+                        }
+                        else {
+                            FileUtils.log(String.format("Detected ankh jewel lock on attempt %s. Re-shuffling items.", attempt));
+                            continue;
+                        }
                     }
                 }
             }
@@ -1446,7 +1888,7 @@ public class Main {
                     transitionGateRandomizer.updateTransitions();
                     FileUtils.logFlush("Updated transition gate data");
                 }
-                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation()) {
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || Settings.isFools2020Mode()) {
                     GameDataTracker.updateXelpudIntro(datInfo);
                 }
 //                if(Settings.isRandomizeMantras()) {
@@ -1461,6 +1903,9 @@ public class Main {
                     }
                     GameDataTracker.fixTransitionGates(rcdData);
                 }
+                else if(Settings.isFools2020Mode()) {
+                    GameDataTracker.updateWorldForFools(rcdData, datInfo);
+                }
 
                 FileUtils.logFlush("Writing rcd file");
                 RcdWriter.writeRcd(rcdData);
@@ -1470,7 +1915,7 @@ public class Main {
 
                 DatWriter.writeDat(datInfo);
                 FileUtils.logFlush("dat file successfully written");
-                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || Settings.isHalloweenMode()) {
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
                     backupSaves();
                     writeSaveFile();
                 }
@@ -1479,6 +1924,13 @@ public class Main {
                     if(!FileUtils.updateGraphicsFilesForHalloween(Settings.getGraphicsPack())) {
                         JOptionPane.showMessageDialog(f,
                                 Translations.getText("Unable to create Halloween graphics"),
+                                "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                if(Settings.isFools2020Mode()) {
+                    if(!FileUtils.updateGraphicsFilesForFools2020(Settings.getGraphicsPack())) {
+                        JOptionPane.showMessageDialog(f,
+                                Translations.getText("Unable to create Fools 2020 graphics"),
                                 "Randomizer error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -1579,6 +2031,12 @@ public class Main {
         }
         if(!Settings.isBlockPushingRequiresGlove()) {
             startingNodes.add("Setting: Normal Pushing");
+        }
+        if(Settings.isFeatherlessMode()) {
+            startingNodes.add("Setting: Featherless");
+        }
+        if(!Settings.getEnabledGlitches().contains("Raindrop")) {
+            startingNodes.add("Setting: No Raindrop");
         }
         if(Settings.isRandomizeTransitionGates()) {
             startingNodes.add("Setting: Random Transitions");
@@ -1750,6 +2208,10 @@ public class Main {
                 // Twin labs front, auto-solve the elevator puzzle
                 saveData[0x11 + 0x1db] = (byte)2;
             }
+//            if(Settings.getCurrentStartingLocation() == 13) {
+//                // Tower of the Goddess, turn on the lights.
+//                saveData[0x11 + 0x271] = 3;
+//            }
         }
         if(Settings.isHalloweenMode()) {
             // Unlock Mulbruk so you can get Halloween hints.
@@ -1780,6 +2242,11 @@ public class Main {
 ////            saveData[0x11 + 0x7ef] = (byte)1; // room 32
 ////            saveData[0x11 + 0x7f0] = (byte)1; // room 33
 //            saveData[0x11 + 0x70c] = (byte)1; // room 34
+        }
+        if(Settings.isFeatherlessMode()) {
+            // Ice block puzzle forced.
+            saveData[0x11 + 0x243] = 3;
+            saveData[0x11 + 0x244] = 3;
         }
 
 //        saveData[0x11 + 0x064] = 1;

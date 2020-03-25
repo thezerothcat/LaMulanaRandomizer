@@ -67,7 +67,8 @@ public final class DataFromFile {
 
     public static String CUSTOM_SHOP_NAME = "Shop 0 (Default)";
 
-    public static int LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG = 2760;
+    public static int FIRST_AVAILABLE_RANDOM_GRAPHICS_FLAG = Settings.isFools2020Mode() ? 2762 : 2730;
+    public static int LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG = Settings.isFools2020Mode() ? 2766 : 2760;
 
     private static List<String> allShops;
     private static List<String> allItems;
@@ -278,10 +279,13 @@ public final class DataFromFile {
                         || "Crystal Skull".equals(itemName) || "Pochette Key".equals(itemName)
                         || "Philosopher's Ocarina".equals(itemName)
                         || "Helmet".equals(itemName) || "Vessel".equals(itemName)
-                        || "Feather".equals(itemName) || "Isis' Pendant".equals(itemName)
+                        || "Isis' Pendant".equals(itemName)
                         || "Origin Seal".equals(itemName) || "Birth Seal".equals(itemName)
                         || "Life Seal".equals(itemName) || "Death Seal".equals(itemName)) {
                     continue; // Things that should never be removed.
+                }
+                if(!Settings.isFeatherlessMode() && "Feather".equals(itemName)) {
+                    continue;
                 }
                 if(Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
                     continue; // Can't get Extinction grail without flares according to this logic.
