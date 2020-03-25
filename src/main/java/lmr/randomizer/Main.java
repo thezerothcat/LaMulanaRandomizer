@@ -294,6 +294,7 @@ public class Main {
                 DataFromFile.getCustomPlacementData().getCursedChests().add("Dimensional Key");
                 DataFromFile.getCustomPlacementData().getCursedChests().add("Crystal Skull");
                 DataFromFile.getCustomPlacementData().getCursedChests().add("Djed Pillar");
+                DataFromFile.getCustomPlacementData().getCursedChests().add("Coin: Twin (Escape)");
 
                 // Maps
                 CustomItemPlacement customItemPlacement = new CustomItemPlacement("Map (Chamber of Birth)", "Map (Chamber of Birth)", null);
