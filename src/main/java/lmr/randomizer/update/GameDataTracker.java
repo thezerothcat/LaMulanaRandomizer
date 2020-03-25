@@ -6746,7 +6746,7 @@ public final class GameDataTracker {
     }
 
     public static void updateWorldForFools(List<Zone> rcdInfo, List<Block> datInfo) {
-        Zone surface = getZone(rcdInfo, 23);
+        Zone surface = getZone(rcdInfo, 1);
         Room argusRoom = getRoom(surface.getRooms(), 0);
         Screen featherScreen = getScreen(argusRoom.getScreens(), 0);
 

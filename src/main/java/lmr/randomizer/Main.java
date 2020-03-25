@@ -289,6 +289,7 @@ public class Main {
 
                 // Cursed chests
                 DataFromFile.getCustomPlacementData().getCursedChests().add("Glove");
+                DataFromFile.getCustomPlacementData().getCursedChests().add("Feather");
                 DataFromFile.getCustomPlacementData().getCursedChests().add("Magatama Jewel");
                 DataFromFile.getCustomPlacementData().getCursedChests().add("Dimensional Key");
                 DataFromFile.getCustomPlacementData().getCursedChests().add("Crystal Skull");

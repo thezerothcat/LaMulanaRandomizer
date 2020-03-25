@@ -2377,8 +2377,10 @@ public final class RcdReader {
                 }
             }
             if(Settings.isFeatherlessMode()) {
-                // For not having to damage boost up Gate of Illusion to Cog of the Soul
-                AddObject.addPot(screen, 580, 280, 10, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)));
+                if(roomIndex == 1 && screenIndex == 0) {
+                    // For not having to damage boost up Gate of Illusion to Cog of the Soul
+                    AddObject.addPot(screen, 580, 280, 10, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)));
+                }
             }
         }
         else if(zoneIndex == 12) {
