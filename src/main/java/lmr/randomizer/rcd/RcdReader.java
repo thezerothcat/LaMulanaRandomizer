@@ -2439,6 +2439,10 @@ public final class RcdReader {
             if (roomIndex == 0 && screenIndex == 0) {
                 AddObject.addUpperUntrueShrineBackupDoor(screen);
             }
+            if (roomIndex == 1 && screenIndex == 1) {
+                AddObject.addTrueShrineFeatherlessPlatform(screen, 800, 240);
+                AddObject.addTrueShrineFeatherlessPlatform(screen, 1020, 220);
+            }
 //            else if (roomIndex == 3 && screenIndex == 0) {
 //                if(Settings.isFoolsMode()) {
 //                    AddObject.addWarp(screen, 600, 440, 32, 3, 18, 3, 1, 150, 72);

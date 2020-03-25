@@ -275,6 +275,7 @@ public class Main {
                 Settings.setRandomizeEscapeChest(true, false);
                 Settings.setRandomizeTransitionGates(false, false);
                 Settings.setRandomizeBacksideDoors(false, false);
+                Settings.setRandomizeNonBossDoors(false, false);
                 Settings.setRandomizeCoinChests(true, false);
                 Settings.setRandomizeTrapItems(true, false);
                 Settings.setRandomizeCursedChests(true, false);
