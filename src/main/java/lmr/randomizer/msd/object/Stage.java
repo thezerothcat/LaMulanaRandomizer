@@ -2,7 +2,6 @@ package lmr.randomizer.msd.object;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public final class Stage {
     public StageType type;

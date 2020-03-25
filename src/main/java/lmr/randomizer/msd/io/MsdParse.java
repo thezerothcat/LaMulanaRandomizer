@@ -12,7 +12,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import lmr.randomizer.msd.object.*;
-import lmr.randomizer.msd.object.tilemap.TileMap;
 
 public abstract class MsdParse {
     @FunctionalInterface

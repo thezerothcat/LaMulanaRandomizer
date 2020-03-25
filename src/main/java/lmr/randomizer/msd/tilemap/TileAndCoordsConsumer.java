@@ -1,4 +1,4 @@
-package lmr.randomizer.msd.object.tilemap;
+package lmr.randomizer.msd.tilemap;
 
 @FunctionalInterface
 public interface TileAndCoordsConsumer<T> {

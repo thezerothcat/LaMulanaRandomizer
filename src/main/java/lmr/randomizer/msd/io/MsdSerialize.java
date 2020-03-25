@@ -1,7 +1,6 @@
 package lmr.randomizer.msd.io;
 
 import lmr.randomizer.msd.object.*;
-import lmr.randomizer.msd.object.tilemap.TileMap;
 import lmr.randomizer.msd.validate.MsdValidation;
 import lmr.randomizer.msd.validate.MsdValidationException;
 

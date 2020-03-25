@@ -1,4 +1,4 @@
-package lmr.randomizer.msd.object.tilemap;
+package lmr.randomizer.msd.tilemap;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -6,7 +6,12 @@ import java.util.List;
 import java.util.function.*;
 
 // T should be a Value object, i.e. immutable with equals() performing value equality
-public class TileMap<M extends TileMap<M, T>, T> {
+public abstract class TileMap<
+    M extends TileMap<M, R, S, T>,
+    R extends RectangleSelection<M, R, S, T>,
+    S extends ScatteredSelection<M, R, S, T>,
+    T
+> {
     protected List<List<T>> data;
 
     public TileMap() {
@@ -21,9 +26,7 @@ public class TileMap<M extends TileMap<M, T>, T> {
         this.data = TileMapEdit.buildData(width, height, defaultValue);
     }
 
-    protected M self() {
-        return (M) this;
-    }
+    protected abstract M self();
 
     public List<List<T>> getData() {
         return data;
@@ -75,11 +78,11 @@ public class TileMap<M extends TileMap<M, T>, T> {
         return setEach((tile, x, y) -> supplier.get());
     }
 
-    public M setEach(Function<T,T> supplier) {
+    public M setEach(Function<T, T> supplier) {
         return setEach((tile, x, y) -> supplier.apply(tile));
     }
 
-    public M setEach(BiFunction<Short,Short,T> supplier) {
+    public M setEach(BiFunction<Short, Short, T> supplier) {
         return setEach((tile, x, y) -> supplier.apply(x, y));
     }
 
@@ -88,6 +91,7 @@ public class TileMap<M extends TileMap<M, T>, T> {
             var value = supplier.get(tile, x, y);
             setTile(x, y, value);
         });
+
         return self();
     }
 
@@ -96,7 +100,14 @@ public class TileMap<M extends TileMap<M, T>, T> {
             throw new IllegalArgumentException("TileMap cannot stamp itself onto itself");
 
         select(x, y, stamp.width(), stamp.height())
-            .setEach(this::getTile);
+            .setEach(stamp::getTile);
+
+        return self();
+    }
+
+    public M stamp(R stamp, int x, int y) {
+        select(x, y, stamp.width(), stamp.height())
+                .setEach(stamp::getTile);
 
         return self();
     }
@@ -114,36 +125,30 @@ public class TileMap<M extends TileMap<M, T>, T> {
         return make(cloneData());
     }
 
-    public RectangleSelection<M, T> select(int x, int y, int width, int height) {
+    public R select(int x, int y, int width, int height) {
         return select(new Rectangle(x, y, width, height));
     }
 
-    public RectangleSelection<M, T> select(Rectangle rect) {
-        return new RectangleSelection<>(self(), rect);
-    }
+    public abstract R select(Rectangle rect);
 
-    public RectangleSelection<M, T> selectAll() {
+    public R selectAll() {
         return select(new Rectangle(0, 0, width(), height()));
     }
 
-    public ScatteredSelection<M, T> select(Predicate<T> condition) {
+    public S select(Predicate<T> condition) {
         return select((tile, x, y) -> condition.test(tile));
     }
 
-    public ScatteredSelection<M, T> select(BiPredicate<Short, Short> condition) {
+    public S select(BiPredicate<Short, Short> condition) {
         return select((tile, x, y) -> condition.test(x, y));
     }
 
-    public ScatteredSelection<M, T> select(TileAndCoordsPredicate<T> condition) {
+    public S select(TileAndCoordsPredicate<T> condition) {
         var points = TileMapEdit.testTiles(getData(), 0, 0, width(), height(), condition);
         return select(points);
     }
 
-    public ScatteredSelection<M, T> select(List<Point> points) {
-        return new ScatteredSelection<>(self(), points);
-    }
+    public abstract S select(List<Point> points);
 
-    public M make(List<List<T>> data) {
-        return (M) (new TileMap<M, T>(data));
-    }
+    public abstract M make(List<List<T>> data);
 }

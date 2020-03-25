@@ -1,7 +1,5 @@
 package lmr.randomizer.msd.object;
 
-import lmr.randomizer.msd.object.tilemap.TileMap;
-
 import java.util.ArrayList;
 import java.util.List;
 
