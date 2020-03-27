@@ -2743,6 +2743,14 @@ public final class GameDataTracker {
                     gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
                 }
             }
+        } else if (gameObject.getId() == 0x92) {
+            if(Settings.isFools2020Mode()) {
+                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                    if(flagTest.getIndex() == 0x1cd) {
+                        flagTest.setValue((byte)(flagTest.getValue() == 0 ? 1 : 0));
+                    }
+                }
+            }
         } else if (gameObject.getId() == 0x93) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                 if(!Settings.isRandomizeNonBossDoors()) {
