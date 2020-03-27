@@ -623,7 +623,7 @@ public final class DatReader {
             itemDescriptionBlock.getBlockContents().add(blockStringData);
         }
 
-        for(int i = 0; i < 20; i ++) {
+        for(int i = 0; i < 19; i ++) {
             blockStringData = new BlockStringData();
             dataIndex += populateBlockStringData(blockStringData, dataInputStream);
             blockStringData.getData().add((short)0x000a);
@@ -640,7 +640,7 @@ public final class DatReader {
         itemDescriptionBlock.getBlockContents().add(blockStringData);
 
         // Add everything before Lamp of Time
-        for(int i = 0; i < 2; i ++) {
+        for(int i = 0; i < 3; i ++) {
             blockStringData = new BlockStringData();
             dataIndex += populateBlockStringData(blockStringData, dataInputStream);
             blockStringData.getData().add((short)0x000a);

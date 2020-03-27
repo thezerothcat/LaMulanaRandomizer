@@ -2340,7 +2340,7 @@ public final class RcdReader {
             if(Settings.isFeatherlessMode() && !Settings.getEnabledDamageBoosts().contains("Item")) {
                 if(roomIndex == 10 && screenIndex == 1) {
                     // Access to Dimensional without Feather
-                    AddObject.addPot(screen, 840, 200, 6, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)));
+                    AddObject.addPot(screen, 840, 320, 6, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)));
                 }
             }
             if(Settings.isFools2020Mode()) {
@@ -2353,7 +2353,10 @@ public final class RcdReader {
             }
         }
         else if(zoneIndex == 9) {
-            if(roomIndex == 8 && screenIndex == 1) {
+            if(roomIndex == 7 && screenIndex == 0) {
+                AddObject.addPot(screen, 280, 240, 8, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)));
+            }
+            else if(roomIndex == 8 && screenIndex == 1) {
                 GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 0));
             }
             else if(roomIndex == 9 && screenIndex == 0) {
