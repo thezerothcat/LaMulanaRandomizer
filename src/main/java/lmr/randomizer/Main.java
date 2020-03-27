@@ -1708,7 +1708,7 @@ public class Main {
                 this.attempt = attempt;
             }
         }
-        int totalFakeAttempts = Settings.isFools2020Mode() ? new Random().nextInt(4120) : 0; // Use random not from seed, to avoid messing things up.
+        int totalFakeAttempts = Settings.isFools2020Mode() ? random.nextInt(4120) : 0; // Use random not from seed, to avoid messing things up.
         var updateHistory = new LinkedList<ProgressUpdate>();
         updateHistory.add(new ProgressUpdate(startTime, 0));
         while(true) {
@@ -2263,6 +2263,9 @@ public class Main {
             saveData[0x11 + 0x079] = (byte)1;
             saveData[0x11 + 0x18e] = (byte)2;
             saveData[0x11 + 0x391] = (byte)1;
+
+            // Default Illusion lighting
+            saveData[0x11 + 0x1cd] = (byte)1;
         }
 //        saveData[0x11 + 0x064] = 1;
 //        saveData[0x11 + 0x065] = 1;

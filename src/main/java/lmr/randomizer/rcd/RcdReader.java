@@ -729,7 +729,7 @@ public final class RcdReader {
                     }
                 }
                 else if(screen.getZoneIndex() == 3 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
-                    if(Settings.isHalloweenMode()) {
+                    if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
                         // Graphic for closed Mulbruk door should be removed since the door won't be closed.
                         keepObject = false;
                     }
@@ -2386,7 +2386,11 @@ public final class RcdReader {
                 }
             }
             if(Settings.isFools2020Mode()) {
-                if(roomIndex == 8 && screenIndex == 0) {
+                if(roomIndex == 0 && screenIndex == 0) {
+                    // Ladder attack!
+                    AddObject.addPot(screen, 580, 280, 10, new ArrayList<>());
+                }
+                else if(roomIndex == 8 && screenIndex == 0) {
                     // Ladder attack!
                     AddObject.addPot(screen, 580, 280, 10, new ArrayList<>());
                 }
@@ -2401,9 +2405,19 @@ public final class RcdReader {
         }
         else if(zoneIndex == 14) {
             if(Settings.isFools2020Mode()) {
-                if(roomIndex == 8 && screenIndex == 2) {
-                    AddObject.addPot(screen, 1840, 180, 14, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)));
-                    AddObject.addPot(screen, 1840, 220, 14, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)));
+                if(roomIndex == 8) {
+                    if(screenIndex == 1) {
+                        // Troll pot on the way to Nuwa
+                        AddObject.addPot(screen, 940, 280, 14, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2),
+                                new TestByteOperation(0x369, ByteOp.FLAG_GTEQ, 1),
+                                new TestByteOperation(0x265, ByteOp.FLAG_GTEQ, 1),
+                                new TestByteOperation(0x298, ByteOp.FLAG_GTEQ, 1)));
+                    }
+                    else if(screenIndex == 2) {
+                        // Nuwa assist
+                        AddObject.addPot(screen, 1840, 180, 14, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)));
+                        AddObject.addPot(screen, 1840, 220, 14, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)));
+                    }
                 }
             }
         }
