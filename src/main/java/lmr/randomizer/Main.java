@@ -264,7 +264,7 @@ public class Main {
                 DataFromFile.getCustomPlacementData().setMedicineColor("Yellow");
                 DataFromFile.getCustomPlacementData().setStartingWeapon("Whip");
                 DataFromFile.getCustomPlacementData().getStartingItems().add("mirai.exe");
-                if(Settings.getStartingItems().contains("Hermes' Boots") || Settings.getStartingItems().contains("Holy Grail")) {
+                if(Settings.getStartingItems().contains("Hermes' Boots")) {
                     DataFromFile.getCustomPlacementData().getStartingItems().add("Hermes' Boots");
                 }
                 if(Settings.getStartingItems().contains("bunemon.exe")) {
@@ -1708,6 +1708,7 @@ public class Main {
                 this.attempt = attempt;
             }
         }
+        int totalFakeAttempts = Settings.isFools2020Mode() ? new Random().nextInt(4120) : 0; // Use random not from seed, to avoid messing things up.
         var updateHistory = new LinkedList<ProgressUpdate>();
         updateHistory.add(new ProgressUpdate(startTime, 0));
         while(true) {
@@ -1827,6 +1828,9 @@ public class Main {
                         }
                     }
                 }
+            }
+            if(Settings.isFools2020Mode() && attempt < totalFakeAttempts) {
+                continue;
             }
             if(Settings.isGenerationComplete(attempt) || accessChecker.isSuccess(attempt)) {
                 dialog.progressBar.setIndeterminate(false);
