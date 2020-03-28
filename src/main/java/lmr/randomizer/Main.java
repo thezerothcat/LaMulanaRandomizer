@@ -279,11 +279,14 @@ public class Main {
                 Settings.setRandomizeCoinChests(true, false);
                 Settings.setRandomizeTrapItems(true, false);
                 Settings.setRandomizeCursedChests(true, false);
+                Settings.setAllowWhipStart(true, false);
                 Settings.setShopRandomization(ShopRandomizationEnum.EVERYTHING.name(), false);
-                Settings.setAllowSubweaponStart(false, false);
                 Settings.setRandomizeGraphics(false, false);
                 Settings.setMinRandomRemovedItems(0, false);
                 Settings.setMaxRandomRemovedItems(0, false);
+                Settings.setReplaceMapsWithWeights(false, false);
+                Settings.setRemoveSpaulder(false, false);
+                Settings.setRemoveMainWeapons(false, false);
                 Settings.getStartingItems().clear();
                 Settings.getInitiallyAccessibleItems().clear();
                 Settings.getRemovedItems().clear();
@@ -438,7 +441,7 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("lamulana.exe", "guild.exe", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-                customItemPlacement = new CustomItemPlacement("Perfume", "Mobile Super X2", null);
+                customItemPlacement = new CustomItemPlacement("Perfume", "Djed Pillar", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
                 // Traps

@@ -363,8 +363,32 @@ public final class DatReader {
             itemNameBlock.getBlockContents().add(blockStringData);
         }
 
+        // Add everything before Map
+        for(int i = 0; i < 13; i ++) {
+            blockStringData = new BlockStringData();
+            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
+            blockStringData.getData().add((short)0x000a);
+            itemNameBlock.getBlockContents().add(blockStringData);
+        }
+
+        if(Settings.isFools2020Mode()) {
+            // Get the data for the item, but throw it away in favor of custom replacement
+            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
+            blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("items.Nothing")));
+            blockStringData.getData().add((short)0x000a);
+            itemNameBlock.getBlockContents().add(blockStringData);
+        }
+        else {
+            // Get normal item name
+            blockStringData = new BlockStringData();
+            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
+            blockStringData.getData().add((short)0x000a);
+            itemNameBlock.getBlockContents().add(blockStringData);
+        }
+
         // Add everything before Lamp of Time
-        for(int i = 0; i < 23; i ++) {
+        for(int i = 0; i < 9; i ++) {
             blockStringData = new BlockStringData();
             dataIndex += populateBlockStringData(blockStringData, dataInputStream);
             blockStringData.getData().add((short)0x000a);

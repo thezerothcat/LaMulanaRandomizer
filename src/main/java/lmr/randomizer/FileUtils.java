@@ -1147,8 +1147,10 @@ public class FileUtils {
                             sourceGraphicsBeginX = itemsBeginX + 120;
                             sourceGraphicsBeginY = itemsBeginY + 200;
                         }
-                        BufferedImage itemGraphic = existingImage.getSubimage(sourceGraphicsBeginX, sourceGraphicsBeginY, 40, 40);
-                        graphics2D.drawImage(itemGraphic, null, itemDrawBeginX, itemDrawBeginY);
+                        if(horizontalIndex != 0 || verticalIndex != 7) {
+                            BufferedImage itemGraphic = existingImage.getSubimage(sourceGraphicsBeginX, sourceGraphicsBeginY, 40, 40);
+                            graphics2D.drawImage(itemGraphic, null, itemDrawBeginX, itemDrawBeginY);
+                        }
                     }
                 }
             }
