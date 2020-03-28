@@ -672,7 +672,7 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Shop 20 (Twin Labs) Item 1", "Perfume", (short)150, (short)1);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-                customItemPlacement = new CustomItemPlacement("Shop 21 (Unsolvable) Item 1", "Lamp of Time", (short)1, (short)1);
+                customItemPlacement = new CustomItemPlacement("Shop 21 (Unsolvable) Item 1", "Lamp of Time", null, null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
             }
 

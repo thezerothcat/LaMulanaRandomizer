@@ -243,6 +243,16 @@ public final class RcdReader {
                 }
             }
         }
+        else if(obj.getId() == 0x2d) {
+            if(Settings.isFools2020Mode()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                        keepObject = false; // Remove weapon cover from Flare puzzle room
+                    }
+                }
+            }
+        }
         else if(obj.getId() == 0x2f) {
             if(obj.getArgs().get(1) == 7) {
                 // Remove empowered Key Sword
@@ -679,6 +689,16 @@ public final class RcdReader {
         else if (obj.getId() == 0xc5) {
             if(Settings.isRandomizeTransitionGates()) {
                 obj.getArgs().set(2, (short)10);
+            }
+        }
+        else if (obj.getId() == 0x9b) {
+            if(Settings.isFools2020Mode()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 6 && screen.getScreenIndex() == 1) {
+                        keepObject = false; // Remove shell horn puzzle solve sound
+                    }
+                }
             }
         }
         else if (obj.getId() == 0x9e) {
@@ -2279,12 +2299,17 @@ public final class RcdReader {
                 }
             }
             if(Settings.isFools2020Mode()) {
-                if(roomIndex == 9) {
+                if(roomIndex == 4) {
+                    if(screenIndex == 0) {
+                        AddObject.addInfernoFakeWeaponCover(screen);
+                    }
+                }
+                else if(roomIndex == 9) {
                     if(screenIndex == 0) {
                         int randomizeGraphicsFlag = 2730;
                         for(int i = 0; i < 640; i += 40) {
-                            AddObject.addFloatingItem(screen, 62, i, 400,
-                                    Arrays.asList(new TestByteOperation(randomizeGraphicsFlag, ByteOp.FLAG_EQUALS, 0)),
+                            AddObject.addFloatingItem(screen, i, 400, 62,
+                                    true, Arrays.asList(new TestByteOperation(randomizeGraphicsFlag, ByteOp.FLAG_EQUALS, 0)),
                                     Arrays.asList(new WriteByteOperation(randomizeGraphicsFlag, ByteOp.ASSIGN_FLAG, 1)));
                             ++randomizeGraphicsFlag;
                         }
@@ -2292,8 +2317,8 @@ public final class RcdReader {
                     else if(screenIndex == 1) {
                         int randomizeGraphicsFlag = 2746;
                         for(int i = 640; i < 1280; i += 40) {
-                            AddObject.addFloatingItem(screen, 62, i, 400,
-                                    Arrays.asList(new TestByteOperation(randomizeGraphicsFlag, ByteOp.FLAG_EQUALS, 0)),
+                            AddObject.addFloatingItem(screen, i, 400, 62,
+                                    true, Arrays.asList(new TestByteOperation(randomizeGraphicsFlag, ByteOp.FLAG_EQUALS, 0)),
                                     Arrays.asList(new WriteByteOperation(randomizeGraphicsFlag, ByteOp.ASSIGN_FLAG, 1)));
                         }
                         AddObject.addAutosave(screen, 1080, 80, 0x06b,
@@ -2349,6 +2374,8 @@ public final class RcdReader {
                 }
                 if(roomIndex == 6 && screenIndex == 1) {
                     AddObject.addTwinPuzzleFeatherlessPlatform(screen);
+                    AddObject.addFloatingItem(screen, 1200, 80, 84, false, Arrays.asList(new TestByteOperation(0x1e4, ByteOp.FLAG_EQUALS, 0)), new ArrayList<>(0));
+                    AddObject.addNoItemSoundEffect(screen, 0x1e4, 0x00b);
                 }
             }
         }

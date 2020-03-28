@@ -66,7 +66,7 @@ public final class AddObject {
         screen.getObjects().add(0, obj);
     }
 
-    public static void addFloatingItem(Screen screen, int itemArg, int x, int y, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+    public static void addFloatingItem(Screen screen, int x, int y, int itemArg, boolean realItem, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
         GameObject obj = new GameObject(screen);
         obj.setId((short)0x2f);
         obj.setX(x);
@@ -75,7 +75,7 @@ public final class AddObject {
         obj.getArgs().clear();
         obj.getArgs().add((short)0); // Interactable any time?
         obj.getArgs().add((short)itemArg); // Item arg
-        obj.getArgs().add((short)1); // 0 = fake item, 1 = real item
+        obj.getArgs().add((short)(realItem ? 1 : 0)); // 0 = fake item, 1 = real item
         obj.getTestByteOperations().addAll(tests);
         obj.getWriteByteOperations().addAll(updates);
         screen.getObjects().add(obj);
@@ -2503,6 +2503,42 @@ public final class AddObject {
         platform.getArgs().add((short)1); // not0?
 
         screen.getObjects().add(platform);
+    }
+
+    public static void addInfernoFakeWeaponCover(Screen screen) {
+        GameObject weaponCover = new GameObject(screen);
+        weaponCover.setId((short)0x93);
+        weaponCover.setX(20);
+        weaponCover.setY(300);
+
+        weaponCover.getArgs().add((short)0); // Layer
+        weaponCover.getArgs().add((short)1); // 0=mapxx_1.png 1=evegxx.png 2=00prof.png 3=02comenemy.png 4=6=00item.png 5=01menu.png 6=4=00item.png Default:01effect.png
+        weaponCover.getArgs().add((short)420); // Imagex
+        weaponCover.getArgs().add((short)0); // Imagey
+        weaponCover.getArgs().add((short)120); // dx
+        weaponCover.getArgs().add((short)60); // dy
+        weaponCover.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        weaponCover.getArgs().add((short)1); // Animation frames
+        weaponCover.getArgs().add((short)0); // Pause frames
+        weaponCover.getArgs().add((short)0); // Repeat count (<1 is forever)
+        weaponCover.getArgs().add((short)128); // Hittile to fill with
+        weaponCover.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        weaponCover.getArgs().add((short)1); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        weaponCover.getArgs().add((short)0); // Cycle colors t/f
+        weaponCover.getArgs().add((short)0); // Alpha/frame
+        weaponCover.getArgs().add((short)255); // Max alpha
+        weaponCover.getArgs().add((short)0); // R/frame
+        weaponCover.getArgs().add((short)0); // Max R
+        weaponCover.getArgs().add((short)0); // G/frame
+        weaponCover.getArgs().add((short)0); // Max G
+        weaponCover.getArgs().add((short)0); // B/frame
+        weaponCover.getArgs().add((short)0); // Max B
+        weaponCover.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        weaponCover.getArgs().add((short)1); // not0?
+
+        weaponCover.getTestByteOperations().add(new TestByteOperation(0x1b3, ByteOp.FLAG_LT, 2));
+
+        screen.getObjects().add(weaponCover);
     }
 
     public static void addLittleBrotherWeightWaster(Screen screen) {

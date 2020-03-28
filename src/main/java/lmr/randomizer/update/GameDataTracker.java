@@ -7332,6 +7332,10 @@ public final class GameDataTracker {
 
             AddObject.addItemGive(objectToModify, inventoryArg, itemRandomizeGraphicsFlag, newWorldFlag);
         }
+
+        if(itemLocationData.getInventoryArg() == 11) {
+            objectToModify.getTestByteOperations().add(new TestByteOperation(0x1b3, ByteOp.FLAG_GTEQ, 2));
+        }
     }
 
     private static void updateRelatedObject(GameObject objectToModify, GameObjectId itemLocationData, int newWorldFlag) {
