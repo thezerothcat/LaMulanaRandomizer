@@ -5325,6 +5325,7 @@ public final class AddObject {
 
         // Conversation offering to quit
         Block foolsOptionBlock = new Block(datInfo.size());
+        foolsOptionBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1)); // Can-exit flag
         stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exitPrompt"));
         for (Short shortCharacter : stringCharacters) {
             foolsOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
@@ -5352,6 +5353,7 @@ public final class AddObject {
         for (Short shortCharacter : stringCharacters) {
             foolsOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
+        foolsOptionBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
         foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
         datInfo.add(foolsOptionBlock);
 
