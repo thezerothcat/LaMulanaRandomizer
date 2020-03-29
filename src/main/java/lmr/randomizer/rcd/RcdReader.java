@@ -4,6 +4,7 @@ import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
 import lmr.randomizer.dat.AddObject;
+import lmr.msd.io.MsdParse;
 import lmr.randomizer.random.ShopRandomizationEnum;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.GameDataTracker;
@@ -11,6 +12,7 @@ import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -1072,7 +1074,7 @@ public final class RcdReader {
         else if (obj.getId() == 0xc0) {
             // Mother ankh
             if(Settings.isHalloweenMode()) {
-               keepObject = false;
+                keepObject = false;
             }
             else {
                 if(Settings.isAlternateMotherAnkh()) {
@@ -1102,7 +1104,7 @@ public final class RcdReader {
         else if (obj.getId() == 0xc7) {
             // Escape screenshake
             if(Settings.isScreenshakeDisabled()) {
-               keepObject = false;
+                keepObject = false;
             }
         }
 
@@ -1180,22 +1182,12 @@ public final class RcdReader {
                 rcdByteIndex = addObject(zone, rcdBytes, rcdByteIndex, false);
             }
 
+            var msdPath = Path.of(String.format("%s/map%02d.msd", mapPath, zoneIndex));
+            var msd = MsdParse.parse(msdPath);
 
-            byte[] msdBytes = FileUtils.getBytes(String.format("%s/map%02d.msd", mapPath, zoneIndex));
-            int msdByteIndex = 0;
-            while (true) {
-                short frames = getField(msdBytes, msdByteIndex, 2).getShort();
-                msdByteIndex += 2;
-                if (frames == 0) {
-                    break;
-                }
-                msdByteIndex += frames * 2;
-            }
+            for (int roomIndex = 0; roomIndex < msd.scenes.size(); roomIndex++) {
+                var scene = msd.scenes.get(roomIndex);
 
-            byte rooms = msdBytes[msdByteIndex + 2];
-            msdByteIndex += 3;
-
-            for (int roomIndex = 0; roomIndex < rooms; roomIndex++) {
                 Room room = new Room();
                 room.setZone(zone);
                 room.setZoneIndex(zoneIndex);
@@ -1207,42 +1199,22 @@ public final class RcdReader {
                     rcdByteIndex = addObject(room, rcdBytes, rcdByteIndex, false);
                 }
 
-                msdByteIndex += 1; // unwanted byte for use boss graphics
-
-                room.setNumberOfLayers(msdBytes[msdByteIndex]);
-                msdByteIndex += 1;
-
-                room.setPrimeLayerNumber(msdBytes[msdByteIndex]);
-                msdByteIndex += 1;
-
-                room.setHitMaskWidth(getField(msdBytes, msdByteIndex, 2).getShort());
-                msdByteIndex += 2;
-
-                room.setHitMaskHeight(getField(msdBytes, msdByteIndex, 2).getShort());
-                msdByteIndex += 2;
-
-                msdByteIndex += room.getHitMaskWidth() * room.getHitMaskHeight();
+                room.setNumberOfLayers((byte) scene.layerGroups.size());
+                room.setPrimeLayerNumber(scene.primeLayerGroupIdx);
+                room.setHitMaskWidth(scene.collision.width());
+                room.setHitMaskHeight(scene.collision.height());
 
                 for (int layerIndex = 0; layerIndex < room.getNumberOfLayers(); layerIndex++) {
-                    short layerWidth = getField(msdBytes, msdByteIndex, 2).getShort();
-                    msdByteIndex += 2;
+                    if (layerIndex == scene.primeLayerGroupIdx) {
+                        var primeGroup = scene.primeGroup();
 
-                    short layerHeight = getField(msdBytes, msdByteIndex, 2).getShort();
-                    msdByteIndex += 2;
-
-                    byte sublayers = msdBytes[msdByteIndex];
-                    msdByteIndex += 1;
-
-                    if (layerIndex == (int) room.getPrimeLayerNumber()) {
-                        room.setTileWidth(layerWidth);
-                        room.setTileHeight(layerHeight);
+                        room.setTileWidth(primeGroup.width());
+                        room.setTileHeight(primeGroup.height());
 
                         room.setScreenWidth((int)room.getTileWidth() / 32);
                         room.setScreenHeight((int)room.getTileHeight() / 24);
                         room.setNumberOfScreens(room.getScreenWidth() * room.getScreenHeight());
                     }
-
-                    msdByteIndex += sublayers * layerWidth * layerHeight * 2;
                 }
 
                 for (int screenIndex = 0; screenIndex < room.getNumberOfScreens(); screenIndex++) {
