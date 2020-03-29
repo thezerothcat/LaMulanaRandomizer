@@ -10,3 +10,6 @@ misc/rcdout-safe.txt
 misc/rcdType1.1.txt
 randomizer-config.txt
 log.txt
+
+# seed folders
+*[0-9]
