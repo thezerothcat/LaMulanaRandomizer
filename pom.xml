@@ -18,6 +18,13 @@
     </properties>
 
     <dependencies>
+        <!-- https://maven.pkg.github.com -->
+        <dependency>
+            <groupId>com.github.halgorithm</groupId>
+            <artifactId>lmr-msd</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.miglayout/miglayout-swing -->
         <dependency>
             <groupId>com.miglayout</groupId>
