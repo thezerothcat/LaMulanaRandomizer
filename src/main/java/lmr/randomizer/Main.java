@@ -312,6 +312,13 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Ankh Jewel (Gate of Guidance)", "Ankh Jewel (Gate of Guidance)", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
+                customItemPlacement = new CustomItemPlacement("Map (Mausoleum of the Giants)", "Map (Mausoleum of the Giants)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Ankh Jewel (Mausoleum of the Giants)", "Ankh Jewel (Mausoleum of the Giants)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Sacred Orb (Mausoleum of the Giants)", "Sacred Orb (Mausoleum of the Giants)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
                 // Sacred Orbs
                 customItemPlacement = new CustomItemPlacement("Sacred Orb (Surface)", "Sacred Orb (Surface)", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
