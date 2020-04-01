@@ -410,6 +410,18 @@ public class Main {
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
                 // Other
+                customItemPlacement = new CustomItemPlacement("Coin: Surface (Waterfall)", "Coin: Surface (Waterfall)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Coin: Surface (Seal)", "Coin: Surface (Seal)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Coin: Surface (Ruin Path)", "Coin: Surface (Ruin Path)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Coin: Guidance (One)", "Coin: Guidance (One)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Coin: Guidance (Two)", "Coin: Guidance (Two)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                customItemPlacement = new CustomItemPlacement("Coin: Guidance (Trap)", "Coin: Guidance (Trap)", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
                 customItemPlacement = new CustomItemPlacement("beolamu.exe", "beolamu.exe", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
@@ -427,10 +439,10 @@ public class Main {
                     DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
                 }
 
-                customItemPlacement = new CustomItemPlacement("Cog of the Soul", "Coin: Spring", "Feather");
+                customItemPlacement = new CustomItemPlacement("Cog of the Soul", "Coin: Spring", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-                customItemPlacement = new CustomItemPlacement("Coin: Graveyard", "Coin: Graveyard", "Feather");
+                customItemPlacement = new CustomItemPlacement("Coin: Graveyard", "Coin: Graveyard", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
                 customItemPlacement = new CustomItemPlacement("Crystal Skull", "Crystal Skull", "Feather");
