@@ -303,9 +303,7 @@ public class Main {
                 DataFromFile.getCustomPlacementData().getCursedChests().add("Coin: Twin (Escape)");
 
                 // Maps
-                CustomItemPlacement customItemPlacement = new CustomItemPlacement("Map (Chamber of Birth)", "Map (Chamber of Birth)", null);
-                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-                customItemPlacement = new CustomItemPlacement("Map (Gate of Guidance)", "Map (Gate of Guidance)", null);
+                CustomItemPlacement customItemPlacement = new CustomItemPlacement("Map (Gate of Guidance)", "Map (Gate of Guidance)", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
                 customItemPlacement = new CustomItemPlacement("Map (Surface)", "Map (Surface)", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
@@ -438,7 +436,7 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Ice Cape", "Ice Cape", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-                customItemPlacement = new CustomItemPlacement("Isis' Pendant", "Isis' Pendant", null);
+                customItemPlacement = new CustomItemPlacement("Map (Endless Corridor)", "Isis' Pendant", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
                 customItemPlacement = new CustomItemPlacement("Key of Eternity", "Key of Eternity", null);
@@ -459,7 +457,7 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Mulana Talisman", "Mulana Talisman", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-                customItemPlacement = new CustomItemPlacement("Origin Seal", "Origin Seal", null);
+                customItemPlacement = new CustomItemPlacement("Scalesphere", "Origin Seal", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
                 customItemPlacement = new CustomItemPlacement("Pepper", "Pepper", null);
