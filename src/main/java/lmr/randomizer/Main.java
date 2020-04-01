@@ -436,8 +436,14 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Grapple Claw", "Grapple Claw", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-                customItemPlacement = new CustomItemPlacement("Ice Cape", "Fairy Clothes", null);
-                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                if(Settings.isRandomizeForbiddenTreasure()) {
+                    customItemPlacement = new CustomItemPlacement("Ice Cape", "Provocative Bathing Suit", null);
+                    DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                }
+                else {
+                    customItemPlacement = new CustomItemPlacement("Ice Cape", "Ice Cape", null);
+                    DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                }
 
                 customItemPlacement = new CustomItemPlacement("Life Seal", "Life Seal", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
