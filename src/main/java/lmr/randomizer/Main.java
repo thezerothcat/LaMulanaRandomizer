@@ -406,6 +406,9 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("beolamu.exe", "beolamu.exe", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
+                customItemPlacement = new CustomItemPlacement("Birth Seal", "Birth Seal", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
                 customItemPlacement = new CustomItemPlacement("Book of the Dead", "Book of the Dead", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
@@ -433,7 +436,10 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Grapple Claw", "Grapple Claw", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-                customItemPlacement = new CustomItemPlacement("Ice Cape", "Ice Cape", null);
+                customItemPlacement = new CustomItemPlacement("Ice Cape", "Fairy Clothes", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Life Seal", "Life Seal", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
                 customItemPlacement = new CustomItemPlacement("Map (Endless Corridor)", "Isis' Pendant", null);
@@ -497,6 +503,9 @@ public class Main {
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
                 customItemPlacement = new CustomItemPlacement("Vessel", "Vessel", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Woman Statue", "Woman Statue", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
                 customItemPlacement = new CustomItemPlacement("xmailer.exe", "xmailer.exe", null);
@@ -1749,6 +1758,9 @@ public class Main {
                         }
                     }
                 }
+            }
+            if(Settings.isFools2020Mode() && attempt < totalFakeAttempts) {
+                continue;
             }
             if(Settings.isGenerationComplete(attempt) || accessChecker.isSuccess(attempt)) {
                 dialog.progressBar.setIndeterminate(false);
