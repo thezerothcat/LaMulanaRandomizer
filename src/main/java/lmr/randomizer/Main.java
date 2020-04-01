@@ -420,6 +420,12 @@ public class Main {
                     DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
                 }
 
+                customItemPlacement = new CustomItemPlacement("Cog of the Soul", "Coin: Spring", "Feather");
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Coin: Graveyard", "Coin: Graveyard", "Feather");
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
                 customItemPlacement = new CustomItemPlacement("Crystal Skull", "Crystal Skull", "Feather");
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
@@ -513,6 +519,9 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Talisman", "Talisman", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
+                customItemPlacement = new CustomItemPlacement("Treasures", "Treasures", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
                 customItemPlacement = new CustomItemPlacement("Twin Statue", "Twin Statue", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
@@ -586,10 +595,19 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Shop 11 (Moonlight) Item 3", "Pistol Ammo", (short)4, (short)6);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-                customItemPlacement = new CustomItemPlacement("Shop 12 Alt (Spring) Item 3", "randc.exe", (short)200, (short)1);
+                customItemPlacement = new CustomItemPlacement("Shop 12 (Spring) Item 3", "capstar.exe", (short)200, (short)1);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
                 customItemPlacement = new CustomItemPlacement("Shop 13 (Goddess) Item 1", "torude.exe", (short)200, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 13 (Goddess) Item 2", "Weights", null, null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 13 (Goddess) Item 3", "Weights", null, null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 14 (Inferno) Item 1", "randc.exe", (short)150, (short)1);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
                 customItemPlacement = new CustomItemPlacement("Shop 15 (Ruin) Item 1", "miracle.exe", (short)200, (short)1);
@@ -608,6 +626,15 @@ public class Main {
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
                 customItemPlacement = new CustomItemPlacement("Shop 19 (Big Bro) Item 1", "Map (Shrine of the Mother)", (short)100, (short)1);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 20 (Twin Labs) Item 1", "Weights", null, null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 20 (Twin Labs) Item 2", "Weights", null, null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+                customItemPlacement = new CustomItemPlacement("Shop 20 (Twin Labs) Item 3", "Weights", null, null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
                 customItemPlacement = new CustomItemPlacement("Shop 21 (Unsolvable) Item 1", "Lamp of Time", null, null);
