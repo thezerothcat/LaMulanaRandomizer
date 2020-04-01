@@ -339,7 +339,7 @@ public class Main {
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
                 customItemPlacement = new CustomItemPlacement("Chain Whip", "Flare Gun", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-                customItemPlacement = new CustomItemPlacement("Chakram", "Bomb", null);
+                customItemPlacement = new CustomItemPlacement("Chakram", "Knife", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
                 customItemPlacement = new CustomItemPlacement("Earth Spear", "Chakram", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
@@ -351,7 +351,7 @@ public class Main {
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
                 customItemPlacement = new CustomItemPlacement("Key Sword", "Earth Spear", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-                customItemPlacement = new CustomItemPlacement("Knife", "Knife", null);
+                customItemPlacement = new CustomItemPlacement("Knife", "Bomb", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
                 customItemPlacement = new CustomItemPlacement("Rolling Shuriken", "Rolling Shuriken", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
