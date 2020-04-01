@@ -415,6 +415,11 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Bronze Mirror", "Bronze Mirror", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
+                if(Settings.isRandomizeForbiddenTreasure()) {
+                    customItemPlacement = new CustomItemPlacement("bunplus.com", "Ice Cape", null);
+                    DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                }
+
                 customItemPlacement = new CustomItemPlacement("Crystal Skull", "Crystal Skull", "Feather");
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
