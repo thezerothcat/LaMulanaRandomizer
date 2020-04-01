@@ -113,5 +113,6 @@ Shop 19 (Big Bro) => Location: Twin Labyrinths [Loop]
 Shop 20 (Twin Labs) => Location: Twin Labyrinths [Lower], Feather
 Shop 21 (Unsolvable) => Location: Twin Labyrinths [Lower], State: Block Pushing, Feather, Attack: Bomb
 Shop 21 (Unsolvable) => Location: Twin Labyrinths [Lower], Glitch: Raindrop
+Shop 21 (Unsolvable) => Location: Twin Labyrinths [Lower], Setting: Featherless
 Shop 22 (Endless) => Location: Endless Corridor [1F], Origin Seal
 Shop 23 (HT) => Location: Hell Temple [Shop]
