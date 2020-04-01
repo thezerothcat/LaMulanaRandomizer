@@ -2384,7 +2384,7 @@ public final class RcdReader {
         }
         else if(zoneIndex == 9) {
             if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addPot(screen, 280, 240, 8, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)));
+                AddObject.addPot(screen, 280, 240, 8, new ArrayList<>(0));
             }
             else if(roomIndex == 8 && screenIndex == 1) {
                 GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 0));
