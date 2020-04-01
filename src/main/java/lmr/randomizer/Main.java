@@ -430,6 +430,9 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Eye of Truth", "Eye of Truth", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
+                customItemPlacement = new CustomItemPlacement("Coin: Illusion (Katana)", "Fairy Clothes", null);
+                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
                 customItemPlacement = new CustomItemPlacement("Fruit of Eden", "Fruit of Eden", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
