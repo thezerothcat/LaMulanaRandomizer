@@ -2471,6 +2471,40 @@ public final class AddObject {
         screen.getObjects().add(platform);
     }
 
+    public static void addTwinPuzzleBlockFix(Screen screen) {
+        GameObject platform = new GameObject(screen);
+        platform.setId((short)0x93);
+        platform.setX(1060);
+        platform.setY(440);
+
+        platform.getArgs().add((short)0); // Layer
+        platform.getArgs().add((short)0); // 0=mapxx_1.png 1=evegxx.png 2=00prof.png 3=02comenemy.png 4=6=00item.png 5=01menu.png 6=4=00item.png Default:01effect.png
+        platform.getArgs().add((short)280); // Imagex
+        platform.getArgs().add((short)80); // Imagey
+        platform.getArgs().add((short)40); // dx
+        platform.getArgs().add((short)20); // dy
+        platform.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        platform.getArgs().add((short)1); // Animation frames
+        platform.getArgs().add((short)0); // Pause frames
+        platform.getArgs().add((short)0); // Repeat count (<1 is forever)
+        platform.getArgs().add((short)128); // Hittile to fill with
+        platform.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        platform.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        platform.getArgs().add((short)0); // Cycle colors t/f
+        platform.getArgs().add((short)0); // Alpha/frame
+        platform.getArgs().add((short)255); // Max alpha
+        platform.getArgs().add((short)0); // R/frame
+        platform.getArgs().add((short)0); // Max R
+        platform.getArgs().add((short)0); // G/frame
+        platform.getArgs().add((short)0); // Max G
+        platform.getArgs().add((short)0); // B/frame
+        platform.getArgs().add((short)0); // Max B
+        platform.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        platform.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(platform);
+    }
+
     public static void addTrueShrineFeatherlessPlatform(Screen screen, int x, int y) {
         GameObject platform = new GameObject(screen);
         platform.setId((short)0x93);

@@ -2379,6 +2379,7 @@ public final class RcdReader {
                     AddObject.addTwinPuzzleFeatherlessPlatform(screen);
                     AddObject.addFloatingItem(screen, 1200, 80, 84, false, Arrays.asList(new TestByteOperation(0x1e4, ByteOp.FLAG_EQUALS, 0)), new ArrayList<>(0));
                     AddObject.addNoItemSoundEffect(screen, 0x1e4, 0x00b);
+                    AddObject.addTwinPuzzleBlockFix(screen);
                 }
             }
         }
