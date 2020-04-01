@@ -1227,6 +1227,9 @@ public final class DatReader {
             if(DataFromFile.getMapOfShopNameToShopBlock().values().contains((Integer)blockIndex)) {
                 block = buildShopBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
+            else if(blockIndex == 273 && Settings.isFools2020Mode()) {
+                block = buildShopBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
             else if(blockIndex == 480 || blockIndex == 482 || blockIndex == 486) {
                 block = buildCheckBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }

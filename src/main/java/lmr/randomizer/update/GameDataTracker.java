@@ -2173,7 +2173,8 @@ public final class GameDataTracker {
             int blockNumber = gameObject.getArgs().get(4);
             if(gameObject.getArgs().get(3) == 1) {
                 // Any shop
-                if(DataFromFile.getMapOfShopNameToShopBlock().values().contains(blockNumber)) {
+                if(DataFromFile.getMapOfShopNameToShopBlock().values().contains(blockNumber)
+                        || (Settings.isFools2020Mode() && blockNumber == 273)) {
                     List<GameObject> objects = mapOfShopBlockToShopObjects.get(blockNumber);
                     if (objects == null) {
                         mapOfShopBlockToShopObjects.put(blockNumber, new ArrayList<>());

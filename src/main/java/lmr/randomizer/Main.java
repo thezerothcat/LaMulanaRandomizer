@@ -290,6 +290,9 @@ public class Main {
                 Settings.getStartingItems().clear();
                 Settings.getInitiallyAccessibleItems().clear();
                 Settings.getRemovedItems().clear();
+                if(Settings.isRandomizeForbiddenTreasure() && !Settings.isHTFullRandom()) {
+                    Settings.setHTFullRandom(true, false);
+                }
 
                 // Cursed chests
                 DataFromFile.getCustomPlacementData().getCursedChests().add("Glove");
@@ -473,9 +476,6 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Bronze Mirror", "Bronze Mirror", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-                customItemPlacement = new CustomItemPlacement("bunplus.com", "bunplus.com", null);
-                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
                 customItemPlacement = new CustomItemPlacement("Crucifix", "Crucifix", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
@@ -548,8 +548,14 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Pochette Key", "Pochette Key", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-                customItemPlacement = new CustomItemPlacement("Provocative Bathing Suit", "Provocative Bathing Suit", null);
-                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                if(Settings.isRandomizeForbiddenTreasure()) {
+                    customItemPlacement = new CustomItemPlacement("Provocative Bathing Suit", "bunplus.com", null);
+                    DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                }
+                else {
+                    customItemPlacement = new CustomItemPlacement("bunplus.com", "bunplus.com", null);
+                    DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+                }
 
                 customItemPlacement = new CustomItemPlacement("Ring", "Ring", null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
@@ -669,10 +675,10 @@ public class Main {
                 customItemPlacement = new CustomItemPlacement("Shop 19 (Big Bro) Item 1", "Dragon Bone", (short)100, (short)1);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-                customItemPlacement = new CustomItemPlacement("Shop 20 (Twin Labs) Item 1", "Perfume", (short)150, (short)1);
+                customItemPlacement = new CustomItemPlacement("Shop 21 (Unsolvable) Item 1", "Lamp of Time", null, null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-                customItemPlacement = new CustomItemPlacement("Shop 21 (Unsolvable) Item 1", "Lamp of Time", null, null);
+                customItemPlacement = new CustomItemPlacement("Shop 21 (Unsolvable) Item 2", "Mobile Super X2", null, null);
                 DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
             }
 

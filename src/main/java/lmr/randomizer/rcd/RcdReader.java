@@ -384,6 +384,9 @@ public final class RcdReader {
                     if(testFlagIndex != null) {
                         obj.getTestByteOperations().remove((int)testFlagIndex);
                     }
+                    if(Settings.isFools2020Mode()) {
+                        obj.getArgs().set(4, (short)273);
+                    }
                 }
                 else if(obj.getArgs().get(4) == 273) {
                     // Get rid of alternate Graveyard shop (with the Angel Shield)
@@ -2345,7 +2348,7 @@ public final class RcdReader {
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
-            if(Settings.isFools2020Mode()) {
+            if(Settings.isFools2020Mode() && !Settings.getEnabledGlitches().contains("Raindrop")) {
                 if(roomIndex == 1 && screenIndex == 1) {
                     // Land on Spriggan without feather
                     AddObject.addPot(screen, 780, 400, 5, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)));

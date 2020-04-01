@@ -480,7 +480,13 @@ public class EverythingShopRandomizer implements ShopRandomizer {
             if(DataFromFile.CUSTOM_SHOP_NAME.equals(shopName) && (LocationCoordinateMapper.isSurfaceStart() || Settings.getCurrentStartingLocation() == 23 || Settings.getCurrentStartingLocation() == 24)) {
                 continue;
             }
-            shopBlock = (ShopBlock) blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get(shopName));
+            if(Settings.isFools2020Mode() && "Shop 7 (Graveyard)".equals(shopName)) {
+                // Angel Shield shop text for Graveyard
+                shopBlock = (ShopBlock) blocks.get(273);
+            }
+            else {
+                shopBlock = (ShopBlock) blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get(shopName));
+            }
 
             if(MSX_SHOP_NAME.equals(shopName)) {
                 shopItem1 = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(String.format("%s Item 1", shopName)));
