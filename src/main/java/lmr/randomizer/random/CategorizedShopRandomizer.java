@@ -137,7 +137,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
 
     @Override
     public void placeSpecialSubweaponAmmo(Random random) {
-        mapOfShopInventoryItemToContents.put("Shop 1 (Surface) Item 3", Settings.getCurrentStartingWeapon() + " Ammo");
+        mapOfShopInventoryItemToContents.put("Shop 1 (Surface) Item 3", Settings.getCurrentStartingSubWeapons().get(0) + " Ammo");
     }
 
     public List<String> getShopItems(String shopName) {
@@ -320,26 +320,27 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
     }
 
     private Pair<Short, Short> getItemPriceCount(boolean subweaponOnly, String itemName, String shopInventoryLocation, MoneyChecker moneyChecker, Random random) {
-        String startingWeapon = Settings.getCurrentStartingWeapon();
-        if((subweaponOnly && itemName.endsWith(" Ammo")) || itemName.equals(startingWeapon + " Ammo")) {
-            if("Shuriken".equals(startingWeapon)) {
+        List<String> startingSubWeaponAmmo = new ArrayList<>(Settings.getCurrentStartingSubWeapons());
+        startingSubWeaponAmmo.replaceAll(weapon -> weapon + " Ammo");
+        if((subweaponOnly && itemName.endsWith(" Ammo")) || startingSubWeaponAmmo.contains(itemName)) {
+            if("Shuriken Ammo".equals(itemName)) {
                 return new Pair<>((short)0, (short)150);
             }
-            if("Rolling Shuriken".equals(startingWeapon)) {
+            if("Rolling Shuriken Ammo".equals(itemName)) {
                 return new Pair<>((short)0, (short)100);
             }
-            if("Earth Spear".equals(startingWeapon)
-                    || "Flare Gun".equals(startingWeapon)
-                    || "Caltrops".equals(startingWeapon)) {
+            if("Earth Spear Ammo".equals(itemName)
+                    || "Flare Gun Ammo".equals(itemName)
+                    || "Caltrops Ammo".equals(itemName)) {
                 return new Pair<>((short)0, (short)80);
             }
-            if("Bomb".equals(startingWeapon)) {
+            if("Bomb Ammo".equals(itemName)) {
                 return new Pair<>((short)0, (short)30);
             }
-            if("Chakram".equals(startingWeapon)) {
+            if("Chakram Ammo".equals(itemName)) {
                 return new Pair<>((short)0, (short)10);
             }
-            if("Pistol".equals(startingWeapon)) {
+            if("Pistol Ammo".equals(itemName)) {
                 return new Pair<>((short)0, (short)3);
             }
         }

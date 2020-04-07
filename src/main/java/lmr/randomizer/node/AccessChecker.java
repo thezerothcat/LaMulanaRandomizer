@@ -402,7 +402,7 @@ public class AccessChecker {
             queuedUpdates.add("Sacred Orb: " + numberOfAccessibleSacredOrbs);
             return "Sacred Orb";
         }
-        if(!"Whip".equals(Settings.getCurrentStartingWeapon()) && "Whip".equals(stateToUpdate)) {
+        if(!Settings.getCurrentStartingWeapons().contains("Whip") && "Whip".equals(stateToUpdate)) {
             return null; // Whip is a removed item.
         }
         if(stateToUpdate.equals("Vessel")) {

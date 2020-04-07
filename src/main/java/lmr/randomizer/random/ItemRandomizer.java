@@ -35,9 +35,9 @@ public class ItemRandomizer {
     public ItemRandomizer() {
         allItems = new ArrayList<>(DataFromFile.getAllNonShopItemsPlusAllRandomizedShopItemsPlusAllRandomizedCoinChests());
         unplacedItems = new ArrayList<>(allItems);
-        if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
+        if(!Settings.isDefaultStartingWeapon()) {
             unplacedItems.add("Whip");
-            unplacedItems.remove(Settings.getCurrentStartingWeapon());
+            unplacedItems.removeAll(Settings.getCurrentStartingWeapons());
         }
         if (Settings.isAlternateMotherAnkh()) {
             unplacedItems.add("Ankh Jewel (Extra)");
@@ -318,8 +318,10 @@ public class ItemRandomizer {
             }
         };
 
-        writer.write(Translations.getItemText(Settings.getCurrentStartingWeapon(), false) + ": starting weapon");
-        writer.newLine();
+        for (String weapon : Settings.getCurrentStartingWeapons()) {
+            writer.write(Translations.getItemText(weapon, false) + ": starting weapon");
+            writer.newLine();
+        }
 
         List<String> sortedStartingItems = new ArrayList<>(Settings.getStartingItemsIncludingCustom());
         Collections.sort(sortedStartingItems, itemNameComparator);

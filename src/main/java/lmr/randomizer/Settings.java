@@ -1,6 +1,7 @@
 package lmr.randomizer;
 
 import lmr.randomizer.random.BossDifficulty;
+import lmr.randomizer.random.ItemRandomizer;
 import lmr.randomizer.random.ShopRandomizationEnum;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
@@ -19,7 +20,7 @@ public final class Settings {
 
     public static Set<String> currentRemovedItems;
     public static List<String> currentCursedChests;
-    public static String currentStartingWeapon;
+    public static List<String> currentStartingWeapons;
     public static Integer currentStartingLocation;
 
     private static Settings singleton = new Settings();
@@ -787,12 +788,22 @@ public final class Settings {
         singleton.currentRemovedItems = currentRemovedItems;
     }
 
-    public static String getCurrentStartingWeapon() {
-        return singleton.currentStartingWeapon == null ? "Whip" : singleton.currentStartingWeapon;
+    public static List<String> getCurrentStartingWeapons() {
+        return currentStartingWeapons == null ? Arrays.asList("Whip") : currentStartingWeapons;
     }
 
-    public static void setCurrentStartingWeapon(String currentStartingItem) {
-        singleton.currentStartingWeapon = currentStartingItem;
+    public static List<String> getCurrentStartingSubWeapons() {
+        List<String> startingSubWeapons = new ArrayList<String>(singleton.getCurrentStartingWeapons());
+        startingSubWeapons.retainAll(ItemRandomizer.ALL_SUBWEAPONS);
+        return startingSubWeapons;
+    }
+
+    public static boolean isDefaultStartingWeapon() {
+        return singleton.getCurrentStartingWeapons().equals(Arrays.asList("Whip"));
+    }
+
+    public static void setCurrentStartingWeapons(List<String> newStartingWeapons) {
+        currentStartingWeapons = new ArrayList<String>(newStartingWeapons);
     }
 
     public static int getCurrentStartingLocation() {

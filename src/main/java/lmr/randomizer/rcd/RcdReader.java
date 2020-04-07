@@ -2575,20 +2575,20 @@ public final class RcdReader {
             }
             else if(roomIndex == 2) {
                 if(screenIndex == 0) {
-                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
+                    if (!Settings.isDefaultStartingWeapon() || Settings.isRandomizeStartingLocation()) {
                         AddObject.addSurfaceKillTimer(screen, false);
                     }
                 }
                 if(screenIndex == 1) {
                     AddObject.addXelpudIntroTimer(screen);
                     AddObject.addDiaryTalismanConversationTimers(screen);
-                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
+                    if (!Settings.isDefaultStartingWeapon() || Settings.isRandomizeStartingLocation()) {
                         AddObject.addSurfaceKillTimer(screen, true);
                     }
                 }
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
+                if (!Settings.isDefaultStartingWeapon() || Settings.isRandomizeStartingLocation()) {
                     AddObject.addSurfaceKillTimer(screen, false);
                 }
             }
