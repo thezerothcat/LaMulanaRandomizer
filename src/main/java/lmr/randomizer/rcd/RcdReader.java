@@ -1,12 +1,21 @@
 package lmr.randomizer.rcd;
 
+import lmr.msd.io.MsdParse;
+import lmr.randomizer.ItemConstants;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
 import lmr.randomizer.dat.AddObject;
-import lmr.msd.io.MsdParse;
 import lmr.randomizer.random.ShopRandomizationEnum;
-import lmr.randomizer.rcd.object.*;
+import lmr.randomizer.rcd.object.ByteOp;
+import lmr.randomizer.rcd.object.GameObject;
+import lmr.randomizer.rcd.object.ObjectContainer;
+import lmr.randomizer.rcd.object.Room;
+import lmr.randomizer.rcd.object.Screen;
+import lmr.randomizer.rcd.object.ScreenExit;
+import lmr.randomizer.rcd.object.TestByteOperation;
+import lmr.randomizer.rcd.object.WriteByteOperation;
+import lmr.randomizer.rcd.object.Zone;
 import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
@@ -709,17 +718,6 @@ public final class RcdReader {
                         keepObject = false;
                     }
                 }
-//                else if(Settings.isFoolsMode() && screen.getZoneIndex() == 4 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
-//                    // Bahamut wall graphic that gets removed after the fight.
-//                    if(obj.getTestByteOperations().size() == 1) {
-//                        TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
-//                        if(testByteOperation.getIndex() == 0x0f9 && ByteOp.FLAG_LTEQ.equals(testByteOperation.getOp())
-//                            && testByteOperation.getValue() == (byte)1) {
-//                            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-//                            testByteOperation.setValue((byte)2);
-//                        }
-//                    }
-//                }
             }
 
             if(Settings.isRandomizeTrapItems()) {
@@ -1310,16 +1308,6 @@ public final class RcdReader {
             screenExit.setRoomIndex((byte)-1);
             screenExit.setScreenIndex((byte)-1);
         }
-
-//        if(Settings.isFoolsMode()) {
-//            if(screen.getZoneIndex() == 4 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
-//                ScreenExit screenExit = screen.getScreenExits().get(3);
-//                screenExit.setZoneIndex((byte)-1);
-//                screenExit.setRoomIndex((byte)-1);
-//                screenExit.setScreenIndex((byte)-1);
-//            }
-//        }
-
         if(Settings.isRandomizeBosses()) {
             if(screen.getZoneIndex() == 0) {
                 if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
@@ -2271,11 +2259,6 @@ public final class RcdReader {
             if (roomIndex == 0 && screenIndex == 0) {
                 AddObject.addUpperUntrueShrineBackupDoor(screen);
             }
-//            else if (roomIndex == 3 && screenIndex == 0) {
-//                if(Settings.isFoolsMode()) {
-//                    AddObject.addWarp(screen, 600, 440, 32, 3, 18, 3, 1, 150, 72);
-//                }
-//            }
             else if (roomIndex == 8 && screenIndex == 1) {
                 AddObject.addLowerUntrueShrineBackupDoor(screen);
             }
@@ -2575,20 +2558,20 @@ public final class RcdReader {
             }
             else if(roomIndex == 2) {
                 if(screenIndex == 0) {
-                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
+                    if (!ItemConstants.WHIP.equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
                         AddObject.addSurfaceKillTimer(screen, false);
                     }
                 }
                 if(screenIndex == 1) {
                     AddObject.addXelpudIntroTimer(screen);
                     AddObject.addDiaryTalismanConversationTimers(screen);
-                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
+                    if (!ItemConstants.WHIP.equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
                         AddObject.addSurfaceKillTimer(screen, true);
                     }
                 }
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
+                if (!ItemConstants.WHIP.equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
                     AddObject.addSurfaceKillTimer(screen, false);
                 }
             }
@@ -2656,11 +2639,6 @@ public final class RcdReader {
                     AddObject.addNpcConversationTimer(screen, 0xac3);
                 }
             }
-//            if(roomIndex == 4 && screenIndex == 0) {
-//                if(Settings.isFoolsMode()) {
-//                    AddObject.addBossTimer(screen, 0x0f9, 0x2d9);
-//                }
-//            }
         }
         else if(zoneIndex == 5) {
             if(Settings.isHalloweenMode()) {

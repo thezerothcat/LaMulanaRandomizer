@@ -435,13 +435,13 @@ public class FileUtils {
             }
             else if(line.startsWith("glitches.")) {
                 settingAndValue = line.replace("glitches.", "").split("=");
-                if(Boolean.valueOf(settingAndValue[1])) {
+                if(Boolean.parseBoolean(settingAndValue[1])) {
                     enabledGlitches.add(settingAndValue[0]);
                 }
             }
             else if(line.startsWith("dboost.")) {
                 settingAndValue = line.replace("dboost.", "").split("=");
-                if(Boolean.valueOf(settingAndValue[1])) {
+                if(Boolean.parseBoolean(settingAndValue[1])) {
                     enabledDamageBoosts.add(settingAndValue[0]);
                 }
             }
@@ -449,118 +449,118 @@ public class FileUtils {
                 Settings.setShopRandomization(line.split("=")[1], false);
             }
             else if(line.startsWith("automaticHardmode")) {
-                Settings.setAutomaticHardmode(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setAutomaticHardmode(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("automaticTranslations")) {
-                Settings.setAutomaticTranslations(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setAutomaticTranslations(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("requireSoftwareComboForKeyFairy")) {
-                Settings.setRequireSoftwareComboForKeyFairy(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRequireSoftwareComboForKeyFairy(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("requireFullAccess")) {
-                Settings.setRequireFullAccess(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRequireFullAccess(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("requireIceCapeForLava")) {
-                Settings.setRequireIceCapeForLava(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRequireIceCapeForLava(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("requireFlaresForExtinction")) {
-                Settings.setRequireFlaresForExtinction(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRequireFlaresForExtinction(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeXmailer")) {
-                Settings.setRandomizeXmailer(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeXmailer(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeForbiddenTreasure")) {
-                Settings.setRandomizeForbiddenTreasure(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeForbiddenTreasure(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("htFullRandom")) {
-                Settings.setHTFullRandom(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setHTFullRandom(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeDracuetShop")) {
-                Settings.setRandomizeDracuetShop(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeDracuetShop(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeCoinChests")) {
-                Settings.setRandomizeCoinChests(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeCoinChests(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeTrapItems")) {
-                Settings.setRandomizeTrapItems(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeTrapItems(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeEscapeChest")) {
-                Settings.setRandomizeEscapeChest(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeEscapeChest(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("allowWhipStart")) {
-                Settings.setAllowWhipStart(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setAllowWhipStart(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("allowMainWeaponStart")) {
-                Settings.setAllowMainWeaponStart(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setAllowMainWeaponStart(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("allowSubweaponStart")) {
-                Settings.setAllowSubweaponStart(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setAllowSubweaponStart(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("subweaponOnlyLogic")) {
-                Settings.setSubweaponOnlyLogic(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setSubweaponOnlyLogic(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("removeMainWeapons")) {
-                Settings.setRemoveMainWeapons(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRemoveMainWeapons(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeCursedChests")) {
-                Settings.setRandomizeCursedChests(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeCursedChests(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeTransitionGates")) {
-                Settings.setRandomizeTransitionGates(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeTransitionGates(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeOneWayTransitions")) {
-                Settings.setRandomizeOneWayTransitions(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeOneWayTransitions(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeBacksideDoors")) {
-                Settings.setRandomizeBacksideDoors(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeBacksideDoors(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeNonBossDoors")) {
-                Settings.setRandomizeNonBossDoors(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeNonBossDoors(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("alternateMotherAnkh")) {
-                Settings.setAlternateMotherAnkh(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setAlternateMotherAnkh(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeStartingLocation")) {
-                Settings.setRandomizeStartingLocation(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeStartingLocation(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeBosses")) {
-                Settings.setRandomizeBosses(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeBosses(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeEnemies")) {
-                Settings.setRandomizeEnemies(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeEnemies(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("randomizeGraphics")) {
-                Settings.setRandomizeGraphics(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setRandomizeGraphics(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("replaceMapsWithWeights")) {
-                Settings.setReplaceMapsWithWeights(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setReplaceMapsWithWeights(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("coinChestGraphics")) {
-                Settings.setCoinChestGraphics(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setCoinChestGraphics(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("automaticGrailPoints")) {
-                Settings.setAutomaticGrailPoints(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setAutomaticGrailPoints(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("ushumgalluAssist")) {
-                Settings.setUshumgalluAssist(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setUshumgalluAssist(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("bossCheckpoints")) {
-                Settings.setBossCheckpoints(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setBossCheckpoints(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("blockPushingRequiresGlove")) {
-                Settings.setBlockPushingRequiresGlove(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setBlockPushingRequiresGlove(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("screenshakeDisabled")) {
-                Settings.setScreenshakeDisabled(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setScreenshakeDisabled(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("includeHellTempleNPCs")) {
-                Settings.setIncludeHellTempleNPCs(Boolean.valueOf(line.split("=")[1]), false);
+                Settings.setIncludeHellTempleNPCs(Boolean.parseBoolean(line.split("=")[1]), false);
             }
             else if(line.startsWith("quickStartItemsEnabled")) {
                 // Upgrade legacy settings
-                if(Boolean.valueOf(line.split("=")[1])) {
+                if(Boolean.parseBoolean(line.split("=")[1])) {
                     startingItems.add("Holy Grail");
-                    startingItems.add("Hermes' Boots");
+                    startingItems.add(ItemConstants.HERMES_BOOTS);
                     startingItems.add("mirai.exe");
                 }
             }

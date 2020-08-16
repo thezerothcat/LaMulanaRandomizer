@@ -22,7 +22,7 @@ public final class Settings {
     public static String currentStartingWeapon;
     public static Integer currentStartingLocation;
 
-    private static Settings singleton = new Settings();
+    private static final Settings singleton = new Settings();
 
     private long startingSeed;
 
@@ -57,7 +57,6 @@ public final class Settings {
     private boolean automaticTranslations;
     private boolean ushumgalluAssist;
     private boolean bossCheckpoints;
-    private boolean bossSpecificAnkhJewels;
     private boolean blockPushingRequiresGlove;
     private boolean screenshakeDisabled;
 
@@ -78,8 +77,8 @@ public final class Settings {
     private List<String> enabledGlitches = new ArrayList<>();
     private List<String> enabledDamageBoosts = new ArrayList<>();
 
-    private List<String> possibleRandomizedItems = Arrays.asList("Holy Grail", "Hand Scanner", "reader.exe",
-            "Hermes' Boots", "Grapple Claw", "Feather", "Isis' Pendant", "Bronze Mirror", "mirai.exe", "bunemon.exe", "Ring");
+    private List<String> possibleRandomizedItems = Arrays.asList("Holy Grail", ItemConstants.HAND_SCANNER, "reader.exe",
+            ItemConstants.HERMES_BOOTS, "Grapple Claw", "Feather", "Isis' Pendant", "Bronze Mirror", "mirai.exe", "bunemon.exe", "Ring");
 
     private String laMulanaBaseDir;
     private String laMulanaSaveDir;
@@ -123,7 +122,6 @@ public final class Settings {
         randomizeOneWayTransitions = false;
         randomizeBacksideDoors = false;
         randomizeNonBossDoors = false;
-        bossSpecificAnkhJewels = false;
         blockPushingRequiresGlove = false;
         removeSpaulder = false;
         replaceMapsWithWeights = false;
@@ -165,26 +163,21 @@ public final class Settings {
         try {
             // Try to find the GOG game on Linux
             // Also honor file system hierachy (local installs supersede global installs)
-            for (String menu_entry_file_path : Arrays.asList(
+            for (String menuEntryFilePath : Arrays.asList(
                     "/usr/share/applications/gog_com-La_Mulana_1.desktop",
                     "/usr/local/share/applications/gog_com-La_Mulana_1.desktop",
                     System.getProperty("user.home") + "/.local/share/applications/gog_com-La_Mulana_1.desktop",
                     System.getProperty("user.home") + "/Desktop/gog_com-La_Mulana_1.desktop"
                     /* other valid paths for the .desktop file to be located? */)) {
 
-                File menu_entry_file = new File(menu_entry_file_path);
-                if (!menu_entry_file.exists()) {
-                    continue; // Try next item if file doesn't exist
+                File menuEntryFile = new File(menuEntryFilePath);
+                if (menuEntryFile.exists()) {
+                    List<String> menuFileLines = Files.readAllLines(menuEntryFile.toPath());
+                    menuFileLines.removeIf(l -> !l.startsWith("Path="));
+                    if (menuFileLines.size() == 1) { // File is malformed if false, there should be exactly one "Path=..." line
+                        laMulanaBaseDir = menuFileLines.get(0).substring(5);
+                    }
                 }
-
-                List<String> menu_file_lines = Files.readAllLines(menu_entry_file.toPath());
-                menu_file_lines.removeIf(l -> !l.startsWith("Path="));
-
-                if (menu_file_lines.size() != 1) {
-                    continue; // File is malformed, there should be exactly one "Path=..." line
-                }
-
-                laMulanaBaseDir = menu_file_lines.get(0).substring(5);
             }
 
             // The GOG version has some fluff around the *actual* game install, moving it into the
@@ -216,7 +209,7 @@ public final class Settings {
     }
 
     public static void setLaMulanaBaseDir(String laMulanaBaseDir, boolean update) {
-        if(update && !laMulanaBaseDir.equals(singleton.laMulanaBaseDir)) {
+        if (update && !laMulanaBaseDir.equals(singleton.laMulanaBaseDir)) {
             singleton.changed = true;
         }
         singleton.laMulanaBaseDir = laMulanaBaseDir;
@@ -227,21 +220,21 @@ public final class Settings {
     }
 
     public static void setLaMulanaSaveDir(String laMulanaSaveDir, boolean update) {
-        if(update && !laMulanaSaveDir.equals(singleton.laMulanaSaveDir)) {
+        if (update && !laMulanaSaveDir.equals(singleton.laMulanaSaveDir)) {
             singleton.changed = true;
         }
         singleton.laMulanaSaveDir = laMulanaSaveDir;
     }
 
     public static String getGraphicsPack() {
-        if(singleton.graphicsPack == null) {
+        if (singleton.graphicsPack == null) {
             return "00";
         }
         return singleton.graphicsPack;
     }
 
     public static void setGraphicsPack(String graphicsPack, boolean update) {
-        if(update && !graphicsPack.equals(singleton.graphicsPack)) {
+        if (update && !graphicsPack.equals(singleton.graphicsPack)) {
             singleton.changed = true;
         }
         singleton.graphicsPack = graphicsPack;
@@ -252,14 +245,14 @@ public final class Settings {
     }
 
     public static void setLanguage(String language, boolean update) {
-        if(update && !language.equals(singleton.language)) {
+        if (update && !language.equals(singleton.language)) {
             singleton.changed = true;
         }
         singleton.language = language;
     }
 
     public static String getBackupDatFile() {
-        if("en".equals(singleton.language)) {
+        if ("en".equals(singleton.language)) {
             return "script_code.dat.bak";
         }
         return "script_code_" + singleton.language + ".dat.bak";
@@ -270,7 +263,7 @@ public final class Settings {
     }
 
     public static void setShopRandomization(String shopRandomization, boolean update) {
-        if(update && !shopRandomization.equals(singleton.shopRandomization.toString())) {
+        if (update && !shopRandomization.equals(singleton.shopRandomization.toString())) {
             singleton.changed = true;
         }
         singleton.shopRandomization = ShopRandomizationEnum.valueOf(shopRandomization);
@@ -281,7 +274,7 @@ public final class Settings {
     }
 
     public static void setBossDifficulty(String bossDifficulty, boolean update) {
-        if(update && !bossDifficulty.equals(singleton.bossDifficulty.toString())) {
+        if (update && !bossDifficulty.equals(singleton.bossDifficulty.toString())) {
             singleton.changed = true;
         }
         singleton.bossDifficulty = BossDifficulty.valueOf(bossDifficulty);
@@ -292,7 +285,7 @@ public final class Settings {
     }
 
     public static void setRequireSoftwareComboForKeyFairy(boolean requireSoftwareComboForKeyFairy, boolean update) {
-        if(update && requireSoftwareComboForKeyFairy != singleton.requireSoftwareComboForKeyFairy) {
+        if (update && requireSoftwareComboForKeyFairy != singleton.requireSoftwareComboForKeyFairy) {
             singleton.changed = true;
         }
         singleton.requireSoftwareComboForKeyFairy = requireSoftwareComboForKeyFairy;
@@ -303,7 +296,7 @@ public final class Settings {
     }
 
     public static void setRequireFullAccess(boolean requireFullAccess, boolean update) {
-        if(update && requireFullAccess != singleton.requireFullAccess) {
+        if (update && requireFullAccess != singleton.requireFullAccess) {
             singleton.changed = true;
         }
         singleton.requireFullAccess = requireFullAccess;
@@ -314,7 +307,7 @@ public final class Settings {
     }
 
     public static void setRequireIceCapeForLava(boolean requireIceCapeForLava, boolean update) {
-        if(update && requireIceCapeForLava != singleton.requireIceCapeForLava) {
+        if (update && requireIceCapeForLava != singleton.requireIceCapeForLava) {
             singleton.changed = true;
         }
         singleton.requireIceCapeForLava = requireIceCapeForLava;
@@ -325,7 +318,7 @@ public final class Settings {
     }
 
     public static void setRequireFlaresForExtinction(boolean requireFlaresForExtinction, boolean update) {
-        if(update && requireFlaresForExtinction != singleton.requireFlaresForExtinction) {
+        if (update && requireFlaresForExtinction != singleton.requireFlaresForExtinction) {
             singleton.changed = true;
         }
         singleton.requireFlaresForExtinction = requireFlaresForExtinction;
@@ -336,7 +329,7 @@ public final class Settings {
     }
 
     public static void setRandomizeXmailer(boolean randomizeXmailer, boolean update) {
-        if(update && randomizeXmailer != singleton.randomizeXmailer) {
+        if (update && randomizeXmailer != singleton.randomizeXmailer) {
             singleton.changed = true;
         }
         singleton.randomizeXmailer = randomizeXmailer;
@@ -347,7 +340,7 @@ public final class Settings {
     }
 
     public static void setRandomizeForbiddenTreasure(boolean randomizeForbiddenTreasure, boolean update) {
-        if(update && randomizeForbiddenTreasure != singleton.randomizeForbiddenTreasure) {
+        if (update && randomizeForbiddenTreasure != singleton.randomizeForbiddenTreasure) {
             singleton.changed = true;
         }
         singleton.randomizeForbiddenTreasure = randomizeForbiddenTreasure;
@@ -358,7 +351,7 @@ public final class Settings {
     }
 
     public static void setHTFullRandom(boolean htFullRandom, boolean update) {
-        if(update && htFullRandom != singleton.htFullRandom) {
+        if (update && htFullRandom != singleton.htFullRandom) {
             singleton.changed = true;
         }
         singleton.htFullRandom = htFullRandom;
@@ -369,7 +362,7 @@ public final class Settings {
     }
 
     public static void setRandomizeDracuetShop(boolean randomizeDracuetShop, boolean update) {
-        if(update && randomizeDracuetShop != singleton.randomizeDracuetShop) {
+        if (update && randomizeDracuetShop != singleton.randomizeDracuetShop) {
             singleton.changed = true;
         }
         singleton.randomizeDracuetShop = randomizeDracuetShop;
@@ -380,7 +373,7 @@ public final class Settings {
     }
 
     public static void setRandomizeCoinChests(boolean randomizeCoinChests, boolean update) {
-        if(update && randomizeCoinChests != singleton.randomizeCoinChests) {
+        if (update && randomizeCoinChests != singleton.randomizeCoinChests) {
             singleton.changed = true;
         }
         singleton.randomizeCoinChests = randomizeCoinChests;
@@ -391,7 +384,7 @@ public final class Settings {
     }
 
     public static void setRandomizeTrapItems(boolean randomizeTrapItems, boolean update) {
-        if(update && randomizeTrapItems != singleton.randomizeTrapItems) {
+        if (update && randomizeTrapItems != singleton.randomizeTrapItems) {
             singleton.changed = true;
         }
         singleton.randomizeTrapItems = randomizeTrapItems;
@@ -402,7 +395,7 @@ public final class Settings {
     }
 
     public static void setRandomizeEscapeChest(boolean randomizeEscapeChest, boolean update) {
-        if(update && randomizeEscapeChest != singleton.randomizeEscapeChest) {
+        if (update && randomizeEscapeChest != singleton.randomizeEscapeChest) {
             singleton.changed = true;
         }
         singleton.randomizeEscapeChest = randomizeEscapeChest;
@@ -413,7 +406,7 @@ public final class Settings {
     }
 
     public static void setAllowWhipStart(boolean allowWhipStart, boolean update) {
-        if(update && allowWhipStart != singleton.allowWhipStart) {
+        if (update && allowWhipStart != singleton.allowWhipStart) {
             singleton.changed = true;
         }
         singleton.allowWhipStart = allowWhipStart;
@@ -424,7 +417,7 @@ public final class Settings {
     }
 
     public static void setAllowMainWeaponStart(boolean allowMainWeaponStart, boolean update) {
-        if(update && allowMainWeaponStart != singleton.allowMainWeaponStart) {
+        if (update && allowMainWeaponStart != singleton.allowMainWeaponStart) {
             singleton.changed = true;
         }
         singleton.allowMainWeaponStart = allowMainWeaponStart;
@@ -435,7 +428,7 @@ public final class Settings {
     }
 
     public static void setAllowSubweaponStart(boolean allowSubweaponStart, boolean update) {
-        if(update && allowSubweaponStart != singleton.allowSubweaponStart) {
+        if (update && allowSubweaponStart != singleton.allowSubweaponStart) {
             singleton.changed = true;
         }
         singleton.allowSubweaponStart = allowSubweaponStart;
@@ -446,7 +439,7 @@ public final class Settings {
     }
 
     public static void setSubweaponOnlyLogic(boolean subweaponOnlyLogic, boolean update) {
-        if(update && subweaponOnlyLogic != singleton.subweaponOnlyLogic) {
+        if (update && subweaponOnlyLogic != singleton.subweaponOnlyLogic) {
             singleton.changed = true;
         }
         singleton.subweaponOnlyLogic = subweaponOnlyLogic;
@@ -457,7 +450,7 @@ public final class Settings {
     }
 
     public static void setRemoveMainWeapons(boolean removeMainWeapons, boolean update) {
-        if(update && removeMainWeapons != singleton.removeMainWeapons) {
+        if (update && removeMainWeapons != singleton.removeMainWeapons) {
             singleton.changed = true;
         }
         singleton.removeMainWeapons = removeMainWeapons;
@@ -468,7 +461,7 @@ public final class Settings {
     }
 
     public static void setRandomizeCursedChests(boolean randomizeCursedChests, boolean update) {
-        if(update && randomizeCursedChests != singleton.randomizeCursedChests) {
+        if (update && randomizeCursedChests != singleton.randomizeCursedChests) {
             singleton.changed = true;
         }
         singleton.randomizeCursedChests = randomizeCursedChests;
@@ -479,7 +472,7 @@ public final class Settings {
     }
 
     public static void setRandomizeTransitionGates(boolean randomizeTransitionGates, boolean update) {
-        if(update && randomizeTransitionGates != singleton.randomizeTransitionGates) {
+        if (update && randomizeTransitionGates != singleton.randomizeTransitionGates) {
             singleton.changed = true;
         }
         singleton.randomizeTransitionGates = randomizeTransitionGates;
@@ -490,7 +483,7 @@ public final class Settings {
     }
 
     public static void setRandomizeOneWayTransitions(boolean randomizeOneWayTransitions, boolean update) {
-        if(update && randomizeOneWayTransitions != singleton.randomizeOneWayTransitions) {
+        if (update && randomizeOneWayTransitions != singleton.randomizeOneWayTransitions) {
             singleton.changed = true;
         }
         singleton.randomizeOneWayTransitions = randomizeOneWayTransitions;
@@ -501,7 +494,7 @@ public final class Settings {
     }
 
     public static void setRandomizeBacksideDoors(boolean randomizeBacksideDoors, boolean update) {
-        if(update && randomizeBacksideDoors != singleton.randomizeBacksideDoors) {
+        if (update && randomizeBacksideDoors != singleton.randomizeBacksideDoors) {
             singleton.changed = true;
         }
         singleton.randomizeBacksideDoors = randomizeBacksideDoors;
@@ -512,16 +505,18 @@ public final class Settings {
     }
 
     public static void setRandomizeNonBossDoors(boolean randomizeNonBossDoors, boolean update) {
-        if(update && randomizeNonBossDoors != singleton.randomizeNonBossDoors) {
+        if (update && randomizeNonBossDoors != singleton.randomizeNonBossDoors) {
             singleton.changed = true;
         }
         singleton.randomizeNonBossDoors = randomizeNonBossDoors;
     }
 
-    public static boolean isReplaceMapsWithWeights() { return singleton.replaceMapsWithWeights; }
+    public static boolean isReplaceMapsWithWeights() {
+        return singleton.replaceMapsWithWeights;
+    }
 
     public static void setReplaceMapsWithWeights(boolean replaceMapsWithWeights, boolean update) {
-        if(update && replaceMapsWithWeights != singleton.replaceMapsWithWeights) {
+        if (update && replaceMapsWithWeights != singleton.replaceMapsWithWeights) {
             singleton.changed = true;
         }
         singleton.replaceMapsWithWeights = replaceMapsWithWeights;
@@ -532,7 +527,7 @@ public final class Settings {
     }
 
     public static void setAutomaticHardmode(boolean automaticHardmode, boolean update) {
-        if(update && automaticHardmode != singleton.automaticHardmode) {
+        if (update && automaticHardmode != singleton.automaticHardmode) {
             singleton.changed = true;
         }
         singleton.automaticHardmode = automaticHardmode;
@@ -543,7 +538,7 @@ public final class Settings {
     }
 
     public static void setAutomaticGrailPoints(boolean automaticGrailPoints, boolean update) {
-        if(update && automaticGrailPoints != singleton.automaticGrailPoints) {
+        if (update && automaticGrailPoints != singleton.automaticGrailPoints) {
             singleton.changed = true;
         }
         singleton.automaticGrailPoints = automaticGrailPoints;
@@ -554,7 +549,7 @@ public final class Settings {
     }
 
     public static void setAutomaticTranslations(boolean automaticTranslations, boolean update) {
-        if(update && automaticTranslations != singleton.automaticTranslations) {
+        if (update && automaticTranslations != singleton.automaticTranslations) {
             singleton.changed = true;
         }
         singleton.automaticTranslations = automaticTranslations;
@@ -565,7 +560,7 @@ public final class Settings {
     }
 
     public static void setUshumgalluAssist(boolean ushumgalluAssist, boolean update) {
-        if(update && ushumgalluAssist != singleton.ushumgalluAssist) {
+        if (update && ushumgalluAssist != singleton.ushumgalluAssist) {
             singleton.changed = true;
         }
         singleton.ushumgalluAssist = ushumgalluAssist;
@@ -576,21 +571,10 @@ public final class Settings {
     }
 
     public static void setBossCheckpoints(boolean bossCheckpoints, boolean update) {
-        if(update && bossCheckpoints != singleton.bossCheckpoints) {
+        if (update && bossCheckpoints != singleton.bossCheckpoints) {
             singleton.changed = true;
         }
         singleton.bossCheckpoints = bossCheckpoints;
-    }
-
-    public static boolean isBossSpecificAnkhJewels() {
-        return singleton.bossSpecificAnkhJewels;
-    }
-
-    public static void setBossSpecificAnkhJewels(boolean bossSpecificAnkhJewels, boolean update) {
-        if(update && bossSpecificAnkhJewels != singleton.bossSpecificAnkhJewels) {
-            singleton.changed = true;
-        }
-        singleton.bossSpecificAnkhJewels = bossSpecificAnkhJewels;
     }
 
     public static boolean isBlockPushingRequiresGlove() {
@@ -598,7 +582,7 @@ public final class Settings {
     }
 
     public static void setBlockPushingRequiresGlove(boolean blockPushingRequiresGlove, boolean update) {
-        if(update && blockPushingRequiresGlove != singleton.blockPushingRequiresGlove) {
+        if (update && blockPushingRequiresGlove != singleton.blockPushingRequiresGlove) {
             singleton.changed = true;
         }
         singleton.blockPushingRequiresGlove = blockPushingRequiresGlove;
@@ -609,7 +593,7 @@ public final class Settings {
     }
 
     public static void setScreenshakeDisabled(boolean screenshakeDisabled, boolean update) {
-        if(update && screenshakeDisabled != singleton.screenshakeDisabled) {
+        if (update && screenshakeDisabled != singleton.screenshakeDisabled) {
             singleton.changed = true;
         }
         singleton.screenshakeDisabled = screenshakeDisabled;
@@ -620,7 +604,7 @@ public final class Settings {
     }
 
     public static void setCoinChestGraphics(boolean coinChestGraphics, boolean update) {
-        if(update && coinChestGraphics != singleton.coinChestGraphics) {
+        if (update && coinChestGraphics != singleton.coinChestGraphics) {
             singleton.changed = true;
         }
         singleton.coinChestGraphics = coinChestGraphics;
@@ -631,11 +615,10 @@ public final class Settings {
     }
 
     public static void setNonRandomizedItems(Set<String> nonRandomizedItems, boolean update) {
-        if(update && !singleton.changed) {
-            if(nonRandomizedItems.containsAll(singleton.nonRandomizedItems)) {
+        if (update && !singleton.changed) {
+            if (nonRandomizedItems.containsAll(singleton.nonRandomizedItems)) {
                 singleton.changed = !singleton.nonRandomizedItems.containsAll(nonRandomizedItems);
-            }
-            else {
+            } else {
                 singleton.changed = true;
             }
         }
@@ -650,21 +633,20 @@ public final class Settings {
     public static Set<String> getStartingItemsIncludingCustom() {
         Set<String> startingItems = new HashSet<>(singleton.startingItems);
         startingItems.addAll(DataFromFile.getCustomPlacementData().getStartingItems());
-        if(Settings.getCurrentStartingLocation() == 7) {
+        if (Settings.getCurrentStartingLocation() == 7) {
             startingItems.add("Twin Statue");
         }
-        if(LocationCoordinateMapper.getStartingZone() == 13) {
+        if (LocationCoordinateMapper.getStartingZone() == 13) {
             startingItems.add("Plane Model");
         }
         return startingItems;
     }
 
     public static void setStartingItems(Set<String> startingItems, boolean update) {
-        if(update && !singleton.changed) {
-            if(startingItems.containsAll(singleton.startingItems)) {
+        if (update && !singleton.changed) {
+            if (startingItems.containsAll(singleton.startingItems)) {
                 singleton.changed = !singleton.startingItems.containsAll(startingItems);
-            }
-            else {
+            } else {
                 singleton.changed = true;
             }
         }
@@ -676,11 +658,10 @@ public final class Settings {
     }
 
     public static void setInitiallyAccessibleItems(Set<String> initiallyAccessibleItems, boolean update) {
-        if(update && !singleton.changed) {
-            if(initiallyAccessibleItems.containsAll(singleton.initiallyAccessibleItems)) {
+        if (update && !singleton.changed) {
+            if (initiallyAccessibleItems.containsAll(singleton.initiallyAccessibleItems)) {
                 singleton.changed = !singleton.initiallyAccessibleItems.containsAll(initiallyAccessibleItems);
-            }
-            else {
+            } else {
                 singleton.changed = true;
             }
         }
@@ -692,7 +673,7 @@ public final class Settings {
     }
 
     public static void setEnabledGlitches(List<String> enabledGlitches, boolean update) {
-        if(update && !singleton.changed) {
+        if (update && !singleton.changed) {
             if (enabledGlitches.containsAll(singleton.enabledGlitches)) {
                 singleton.changed = !singleton.enabledGlitches.containsAll(enabledGlitches);
             } else {
@@ -707,7 +688,7 @@ public final class Settings {
     }
 
     public static void setEnabledDamageBoosts(List<String> enabledDamageBoosts, boolean update) {
-        if(update && !singleton.changed) {
+        if (update && !singleton.changed) {
             if (enabledDamageBoosts.containsAll(singleton.enabledDamageBoosts)) {
                 singleton.changed = !singleton.enabledDamageBoosts.containsAll(enabledDamageBoosts);
             } else {
@@ -722,10 +703,10 @@ public final class Settings {
     }
 
     public static void setMinRandomRemovedItems(int minRandomRemovedItems, boolean update) {
-        if(minRandomRemovedItems > MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED || minRandomRemovedItems < 0) {
+        if (minRandomRemovedItems > MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED || minRandomRemovedItems < 0) {
             return;
         }
-        if(update && minRandomRemovedItems != singleton.minRandomRemovedItems) {
+        if (update && minRandomRemovedItems != singleton.minRandomRemovedItems) {
             singleton.changed = true;
         }
         singleton.minRandomRemovedItems = minRandomRemovedItems;
@@ -736,10 +717,10 @@ public final class Settings {
     }
 
     public static void setMaxRandomRemovedItems(int maxRandomRemovedItems, boolean update) {
-        if(maxRandomRemovedItems > MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED || maxRandomRemovedItems < 0) {
+        if (maxRandomRemovedItems > MAX_RANDOM_REMOVED_ITEMS_CURRENTLY_SUPPORTED || maxRandomRemovedItems < 0) {
             return;
         }
-        if(update && maxRandomRemovedItems != singleton.maxRandomRemovedItems) {
+        if (update && maxRandomRemovedItems != singleton.maxRandomRemovedItems) {
             singleton.changed = true;
         }
         singleton.maxRandomRemovedItems = maxRandomRemovedItems;
@@ -747,90 +728,81 @@ public final class Settings {
 
     public static Set<String> getRemovedItems() {
         Set<String> removedItems = new HashSet<>();
-        if(singleton.removeSpaulder) {
+        if (singleton.removeSpaulder) {
             removedItems.add("Spaulder");
         }
-        if(singleton.removeMainWeapons) {
-            removedItems.add("Whip");
-            removedItems.add("Chain Whip");
-            removedItems.add("Flail Whip");
-            removedItems.add("Axe");
-            removedItems.add("Knife");
-            removedItems.add("Katana");
-            removedItems.add("Key Sword");
+        if (singleton.removeMainWeapons) {
+            removedItems.add(ItemConstants.WHIP);
+            removedItems.add(ItemConstants.CHAIN_WHIP);
+            removedItems.add(ItemConstants.FLAIL_WHIP);
+            removedItems.add(ItemConstants.AXE);
+            removedItems.add(ItemConstants.KNIFE);
+            removedItems.add(ItemConstants.KATANA);
+            removedItems.add(ItemConstants.KEY_SWORD);
         }
         removedItems.addAll(DataFromFile.getCustomPlacementData().getRemovedItems());
         return removedItems;
     }
 
     public static void setRemovedItem(String itemName, boolean isRemoved, boolean update) {
-        if("Spaulder".equals(itemName)) {
+        if ("Spaulder".equals(itemName)) {
             setRemoveSpaulder(isRemoved, update);
         }
     }
 
     public static void setRemoveSpaulder(boolean removeSpaulder, boolean update) {
-        if(update && removeSpaulder != singleton.removeSpaulder) {
+        if (update && removeSpaulder != singleton.removeSpaulder) {
             singleton.changed = true;
         }
         singleton.removeSpaulder = removeSpaulder;
     }
 
     public static Set<String> getCurrentRemovedItems() {
-        if(currentRemovedItems == null) {
+        if (currentRemovedItems == null) {
             return new HashSet<>(0);
         }
         return currentRemovedItems;
     }
 
     public static void setCurrentRemovedItems(Set<String> currentRemovedItems) {
-        singleton.currentRemovedItems = currentRemovedItems;
+        Settings.currentRemovedItems = currentRemovedItems;
     }
 
     public static String getCurrentStartingWeapon() {
-        return singleton.currentStartingWeapon == null ? "Whip" : singleton.currentStartingWeapon;
+        return Settings.currentStartingWeapon == null ? ItemConstants.WHIP : Settings.currentStartingWeapon;
     }
 
     public static void setCurrentStartingWeapon(String currentStartingItem) {
-        singleton.currentStartingWeapon = currentStartingItem;
+        Settings.currentStartingWeapon = currentStartingItem;
     }
 
     public static int getCurrentStartingLocation() {
-        return singleton.currentStartingLocation == null ? 1 : singleton.currentStartingLocation;
+        return Settings.currentStartingLocation == null ? 1 : Settings.currentStartingLocation;
     }
 
     public static void setCurrentStartingLocation(int currentStartingLocation) {
-        singleton.currentStartingLocation = currentStartingLocation;
+        Settings.currentStartingLocation = currentStartingLocation;
     }
 
     public static List<String> getCurrentCursedChests() {
         if(singleton.randomizeCursedChests) {
-            return singleton.currentCursedChests;
+            return Settings.currentCursedChests;
         }
         return Arrays.asList("Crystal Skull", "Djed Pillar", "Dimensional Key", "Magatama Jewel");
     }
 
     public static void setCurrentCursedChests(List<String> currentCursedChests) {
-        singleton.currentCursedChests = currentCursedChests;
+        Settings.currentCursedChests = currentCursedChests;
     }
 
     public static String getUpdatedContents(String originalContents) {
-        if("Vessel".equals(originalContents)) {
-            if(Settings.getMedicineColor() != null) {
-                return String.format("Medicine of the Mind (%s)", Settings.getMedicineColor());
-            }
+        if ("Vessel".equals(originalContents) && Settings.getMedicineColor() != null) {
+            return String.format("Medicine of the Mind (%s)", Settings.getMedicineColor());
         }
-//        if("Djed Pillar".equals(originalContents)) {
-//            newContents = "Ankh Jewel (Extra)";
-//        }
         return originalContents;
     }
 
-//    public static boolean isFoolsMode() {
-//        return false;
-//    }
-
-    public static boolean isHalloweenMode() {
+    public static boolean isHalloweenMode() {   //TODO: Remove this function or complete implementation
         return false;
     }
 
@@ -839,7 +811,7 @@ public final class Settings {
     }
 
     public static void setIncludeHellTempleNPCs(boolean includeHellTempleNPCs, boolean update) {
-        if(update && includeHellTempleNPCs != singleton.includeHellTempleNPCs) {
+        if (update && includeHellTempleNPCs != singleton.includeHellTempleNPCs) {
             singleton.changed = true;
         }
         singleton.includeHellTempleNPCs = includeHellTempleNPCs;
@@ -850,7 +822,7 @@ public final class Settings {
     }
 
     public static void setAlternateMotherAnkh(boolean alternateMotherAnkh, boolean update) {
-        if(update && alternateMotherAnkh != singleton.alternateMotherAnkh) {
+        if (update && alternateMotherAnkh != singleton.alternateMotherAnkh) {
             singleton.changed = true;
         }
         singleton.alternateMotherAnkh = alternateMotherAnkh;
@@ -870,7 +842,7 @@ public final class Settings {
     }
 
     public static void setRandomizeStartingLocation(boolean randomizeStartingLocation, boolean update) {
-        if(update && randomizeStartingLocation != singleton.randomizeStartingLocation) {
+        if (update && randomizeStartingLocation != singleton.randomizeStartingLocation) {
             singleton.changed = true;
         }
         singleton.randomizeStartingLocation = randomizeStartingLocation;
@@ -881,7 +853,7 @@ public final class Settings {
     }
 
     public static void setRandomizeBosses(boolean randomizeBosses, boolean update) {
-        if(update && randomizeBosses != singleton.randomizeBosses) {
+        if (update && randomizeBosses != singleton.randomizeBosses) {
             singleton.changed = true;
         }
         singleton.randomizeBosses = randomizeBosses;
@@ -893,7 +865,7 @@ public final class Settings {
     }
 
     public static void setRandomizeEnemies(boolean randomizeEnemies, boolean update) {
-        if(update && randomizeEnemies != singleton.randomizeEnemies) {
+        if (update && randomizeEnemies != singleton.randomizeEnemies) {
             singleton.changed = true;
         }
         singleton.randomizeEnemies = randomizeEnemies;
@@ -904,7 +876,7 @@ public final class Settings {
     }
 
     public static void setRandomizeGraphics(boolean randomizeGraphics, boolean update) {
-        if(update && randomizeGraphics != singleton.randomizeGraphics) {
+        if (update && randomizeGraphics != singleton.randomizeGraphics) {
             singleton.changed = true;
         }
         singleton.randomizeGraphics = randomizeGraphics;
@@ -914,26 +886,13 @@ public final class Settings {
         return singleton.automaticMantras || DataFromFile.getCustomPlacementData().isAutomaticMantras();
     }
 
-    public static boolean isGenerationComplete(int attemptNumber) {
-        return singleton.skipValidation != null
-                && (singleton.skipValidation <= attemptNumber || singleton.skipValidation.equals(-1));
-    }
-
     public static boolean isDetailedLoggingAttempt(Integer attemptNumber) {
         return singleton.skipValidation != null
                 && (singleton.skipValidation.equals(attemptNumber) || singleton.skipValidation.equals(-1));
     }
 
-    public static boolean isSkipValidation(int attemptNumber) {
-        return singleton.skipValidation != null && attemptNumber < singleton.skipValidation;
-    }
-
-    public static void setSkipValidation(int skipValidationAttemptNumber) {
-        singleton.skipValidation = skipValidationAttemptNumber;
-    }
-
     public static void saveSettings() {
-        if(singleton.changed) {
+        if (singleton.changed) {
             try {
                 FileUtils.saveSettings();
             } catch (IOException ex) {
@@ -958,8 +917,8 @@ public final class Settings {
 
         int index = 0;
 
-        while(input > 0) {
-            if((input & 1) == 1) {
+        while (input > 0) {
+            if ((input & 1) == 1) {
                 items.add(possibleItems.get(index));
             }
 
@@ -971,11 +930,11 @@ public final class Settings {
     }
 
     public static int boolToInt(boolean b) {
-        return b?1:0;
+        return b ? 1 : 0;
     }
 
     public static boolean intToBool(int i) {
-        return i>0;
+        return i > 0;
     }
 
     public static String generateShortString() {
@@ -1065,11 +1024,11 @@ public final class Settings {
         String[] parts = text.split("-");
 
         // Check version compatibility?
-        if(!FileUtils.VERSION.equals(parts[0])) {
+        if (!FileUtils.VERSION.equals(parts[0])) {
             // Show pop up that the version changed
-            int version_mismatch = JOptionPane.showConfirmDialog(null, "These settings were generated with a different version of the randomizer. Do you  still want to try loading them?", "Version Mismatch", JOptionPane.YES_NO_OPTION);
+            int versionMismatch = JOptionPane.showConfirmDialog(null, "These settings were generated with a different version of the randomizer. Do you  still want to try loading them?", "Version Mismatch", JOptionPane.YES_NO_OPTION);
 
-            if(version_mismatch != JOptionPane.OK_OPTION) {
+            if (versionMismatch != JOptionPane.OK_OPTION) {
                 return;
             }
         }
@@ -1115,13 +1074,13 @@ public final class Settings {
         singleton.replaceMapsWithWeights = getBoolFlagFromInt.apply(booleanSettingsFlag, 1);
         singleton.automaticGrailPoints = getBoolFlagFromInt.apply(booleanSettingsFlag, 0);
 
-        Collection<String> glitches = intToItemSet(Integer.parseInt(parts[3],16), DataFromFile.POSSIBLE_GLITCHES);
-        Collection<String> dboosts = intToItemSet(Integer.parseInt(parts[4],16), DataFromFile.POSSIBLE_DBOOSTS);
-        Set<String> initItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[5],16), singleton.possibleRandomizedItems));
-        Set<String> startingItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[6],16), singleton.possibleRandomizedItems));
-        BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[7],16)];
-        int minRandomRemovedItems = Integer.parseInt(parts[8],16);
-        int maxRandomRemovedItems = Integer.parseInt(parts[9],16);
+        Collection<String> glitches = intToItemSet(Integer.parseInt(parts[3], 16), DataFromFile.POSSIBLE_GLITCHES);
+        Collection<String> dboosts = intToItemSet(Integer.parseInt(parts[4], 16), DataFromFile.POSSIBLE_DBOOSTS);
+        Set<String> initItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[5], 16), singleton.possibleRandomizedItems));
+        Set<String> startingItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[6], 16), singleton.possibleRandomizedItems));
+        BossDifficulty bossDifficulty = BossDifficulty.values()[Integer.parseInt(parts[7], 16)];
+        int minRandomRemovedItems = Integer.parseInt(parts[8], 16);
+        int maxRandomRemovedItems = Integer.parseInt(parts[9], 16);
 
         int booleanSettingsFlag2 = Integer.parseInt(parts[10], 16);
         singleton.bossCheckpoints = getBoolFlagFromInt.apply(booleanSettingsFlag2, 7);

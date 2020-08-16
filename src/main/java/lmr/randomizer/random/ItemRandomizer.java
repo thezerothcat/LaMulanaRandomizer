@@ -1,5 +1,6 @@
 package lmr.randomizer.random;
 
+import lmr.randomizer.ItemConstants;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
@@ -11,13 +12,20 @@ import lmr.randomizer.update.GameObjectId;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by thezerothcat on 7/10/2017.
  */
 public class ItemRandomizer {
-    public static final List<String> ALL_SUBWEAPONS = Arrays.asList("Shuriken", "Rolling Shuriken", "Earth Spear", "Flare Gun", "Bomb", "Chakram", "Caltrops", "Pistol");
+    public static final List<String> ALL_SUBWEAPONS = Arrays.asList(ItemConstants.SHURIKEN, ItemConstants.ROLLING_SHURIKEN, ItemConstants.EARTH_SPEAR, ItemConstants.FLARE_GUN, ItemConstants.BOMB, ItemConstants.CHAKRAM, ItemConstants.CALTROPS, "Pistol");
 
     private Map<String, String> mapOfItemLocationToItem = new HashMap<>(); // The map we're trying to build.
 
@@ -35,12 +43,12 @@ public class ItemRandomizer {
     public ItemRandomizer() {
         allItems = new ArrayList<>(DataFromFile.getAllNonShopItemsPlusAllRandomizedShopItemsPlusAllRandomizedCoinChests());
         unplacedItems = new ArrayList<>(allItems);
-        if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
-            unplacedItems.add("Whip");
+        if(!ItemConstants.WHIP.equals(Settings.getCurrentStartingWeapon())) {
+            unplacedItems.add(ItemConstants.WHIP);
             unplacedItems.remove(Settings.getCurrentStartingWeapon());
         }
         if (Settings.isAlternateMotherAnkh()) {
-            unplacedItems.add("Ankh Jewel (Extra)");
+            unplacedItems.add(ItemConstants.ANKH_JEWEL_EXTRA);
         }
 
         unassignedNonShopItemLocations = new ArrayList<>(DataFromFile.getNonShopItemLocations());
@@ -401,8 +409,8 @@ public class ItemRandomizer {
         if(itemNewContentsData.getInventoryArg() == 62 && Settings.getRemovedItems().contains("Spaulder")) {
             return 2781;
         }
-        if("Whip".equals(newContents)
-                && (Settings.getCurrentRemovedItems().contains("Whip") || Settings.getRemovedItems().contains("Whip"))) {
+        if(ItemConstants.WHIP.equals(newContents)
+                && (Settings.getCurrentRemovedItems().contains(ItemConstants.WHIP) || Settings.getRemovedItems().contains(ItemConstants.WHIP))) {
             return 2773;
         }
         if(Settings.isReplaceMapsWithWeights()

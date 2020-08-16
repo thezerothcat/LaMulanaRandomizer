@@ -1,6 +1,7 @@
 package lmr.randomizer.random;
 
 import javafx.util.Pair;
+import lmr.randomizer.ItemConstants;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
@@ -16,7 +17,11 @@ import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by thezerothcat on 8/2/2017.
@@ -322,21 +327,21 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
     private Pair<Short, Short> getItemPriceCount(boolean subweaponOnly, String itemName, String shopInventoryLocation, MoneyChecker moneyChecker, Random random) {
         String startingWeapon = Settings.getCurrentStartingWeapon();
         if((subweaponOnly && itemName.endsWith(" Ammo")) || itemName.equals(startingWeapon + " Ammo")) {
-            if("Shuriken".equals(startingWeapon)) {
+            if(ItemConstants.SHURIKEN.equals(startingWeapon)) {
                 return new Pair<>((short)0, (short)150);
             }
-            if("Rolling Shuriken".equals(startingWeapon)) {
+            if(ItemConstants.ROLLING_SHURIKEN.equals(startingWeapon)) {
                 return new Pair<>((short)0, (short)100);
             }
-            if("Earth Spear".equals(startingWeapon)
-                    || "Flare Gun".equals(startingWeapon)
-                    || "Caltrops".equals(startingWeapon)) {
+            if(ItemConstants.EARTH_SPEAR.equals(startingWeapon)
+                    || ItemConstants.FLARE_GUN.equals(startingWeapon)
+                    || ItemConstants.CALTROPS.equals(startingWeapon)) {
                 return new Pair<>((short)0, (short)80);
             }
-            if("Bomb".equals(startingWeapon)) {
+            if(ItemConstants.BOMB.equals(startingWeapon)) {
                 return new Pair<>((short)0, (short)30);
             }
-            if("Chakram".equals(startingWeapon)) {
+            if(ItemConstants.CHAKRAM.equals(startingWeapon)) {
                 return new Pair<>((short)0, (short)10);
             }
             if("Pistol".equals(startingWeapon)) {

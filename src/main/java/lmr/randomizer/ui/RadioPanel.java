@@ -1,5 +1,6 @@
 package lmr.randomizer.ui;
 
+import lmr.randomizer.ItemConstants;
 import lmr.randomizer.Main;
 import lmr.randomizer.Settings;
 import lmr.randomizer.Translations;
@@ -20,9 +21,9 @@ public class RadioPanel extends JPanel {
 
         itemConfigRadioGroupPanels = new ArrayList<>();
         itemConfigRadioGroupPanels.add(new GameItemRadio("Holy Grail"));
-        itemConfigRadioGroupPanels.add(new GameItemRadio("Hand Scanner"));
+        itemConfigRadioGroupPanels.add(new GameItemRadio(ItemConstants.HAND_SCANNER));
         itemConfigRadioGroupPanels.add(new GameItemRadio("reader.exe"));
-        itemConfigRadioGroupPanels.add(new GameItemRadio("Hermes' Boots"));
+        itemConfigRadioGroupPanels.add(new GameItemRadio(ItemConstants.HERMES_BOOTS));
         itemConfigRadioGroupPanels.add(new GameItemRadio("Grapple Claw"));
         itemConfigRadioGroupPanels.add(new GameItemRadio("Feather"));
 

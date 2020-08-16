@@ -1,5 +1,6 @@
 package lmr.randomizer.dat;
 
+import lmr.randomizer.ItemConstants;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
@@ -2516,7 +2517,7 @@ public final class AddObject {
         if (newContents.startsWith("Medicine of the Mind") && !newContents.contains("Yellow")) {
             AddObject.addMedicineStatueTimer(objectContainer);
         }
-        if(Settings.isAutomaticMantras() && "Key Sword".equals(newContents)) {
+        if(Settings.isAutomaticMantras() && ItemConstants.KEY_SWORD.equals(newContents)) {
             AddObject.addAutomaticMantrasTimer(objectContainer);
         }
     }

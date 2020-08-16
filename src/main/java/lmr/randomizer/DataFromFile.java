@@ -6,18 +6,25 @@ import lmr.randomizer.random.ShopRandomizationEnum;
 import lmr.randomizer.update.GameObjectId;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by thezerothcat on 7/20/2017.
  */
 public final class DataFromFile {
-    public static final List<String> MAIN_WEAPONS = Arrays.asList("Whip", "Chain Whip", "Flail Whip", "Axe",
-            "Knife", "Katana", "Key Sword");
-    public static final List<String> FLOATING_ITEM_LOCATIONS = Arrays.asList("deathv.exe", "Shuriken",
-            "Rolling Shuriken", "Knife", "Talisman", "Caltrops", "Chain Whip", "Flare Gun", "bunplus.com",
-            "Chakram", "Ring", "Katana", "Key Sword", "Silver Shield", "Bomb", "Axe", "Philosopher's Ocarina",
-            "Flail Whip", "Earth Spear", "Angel Shield", "Trap: Inferno Orb", "Trap: Twin Ankh");
+    public static final List<String> MAIN_WEAPONS = Arrays.asList(ItemConstants.WHIP, ItemConstants.CHAIN_WHIP, ItemConstants.FLAIL_WHIP, ItemConstants.AXE,
+            ItemConstants.KNIFE, ItemConstants.KATANA, ItemConstants.KEY_SWORD);
+    public static final List<String> FLOATING_ITEM_LOCATIONS = Arrays.asList("deathv.exe", ItemConstants.SHURIKEN,
+            ItemConstants.ROLLING_SHURIKEN, ItemConstants.KNIFE, "Talisman", ItemConstants.CALTROPS, ItemConstants.CHAIN_WHIP, ItemConstants.FLARE_GUN, "bunplus.com",
+            ItemConstants.CHAKRAM, "Ring", ItemConstants.KATANA, ItemConstants.KEY_SWORD, ItemConstants.SILVER_SHIELD, ItemConstants.BOMB, ItemConstants.AXE, "Philosopher's Ocarina",
+            ItemConstants.FLAIL_WHIP, ItemConstants.EARTH_SPEAR, ItemConstants.ANGEL_SHIELD, "Trap: Inferno Orb", "Trap: Twin Ankh");
     public static List<String> LOCATIONS_RELATED_TO_BLOCKS = Arrays.asList("Map (Surface)", "mekuri.exe",
             "Mini Doll", "Pepper", "Anchor", "Mulana Talisman", "xmailer.exe", "Book of the Dead", "Provocative Bathing Suit");
     public static List<String> TRAP_ITEMS = Arrays.asList("Trap: Graveyard", "Trap: Exploding",
@@ -25,13 +32,13 @@ public final class DataFromFile {
     public static List<String> USELESS_ITEMS = Arrays.asList("Map (Surface)", "Map (Gate of Guidance)", "Map (Mausoleum of the Giants)", "Map (Temple of the Sun)",
             "Map (Spring in the Sky)", "Map (Inferno Cavern)", "Map (Chamber of Extinction)", "Map (Twin Labyrinths)", "Map (Endless Corridor)", "Map (Gate of Illusion)", "Map (Graveyard of the Giants)",
             "Map (Temple of Moonlight)", "Map (Tower of the Goddess)", "Map (Tower of Ruin)", "Map (Chamber of Birth)", "Map (Dimensional Corridor)");
-    public static List<String> HT_BANNED_ITEMS = Arrays.asList("Holy Grail", "Hand Scanner", "reader.exe", "Feather",
-            "Ice Cape", "Flail Whip", "Lamp of Time", "Bomb", "Ring", "guild.exe", "Grapple Claw",
+    public static List<String> HT_BANNED_ITEMS = Arrays.asList("Holy Grail", ItemConstants.HAND_SCANNER, "reader.exe", "Feather",
+            "Ice Cape", ItemConstants.FLAIL_WHIP, "Lamp of Time", ItemConstants.BOMB, "Ring", "guild.exe", "Grapple Claw",
             "Origin Seal", "Isis' Pendant",
             "Fruit of Eden");
-    public static List<String> SHOP_ITEMS = Arrays.asList("Ankh Jewel (Chamber of Birth)", "Bracelet", "Buckler", "bunemon.exe",
-            "capstar.exe", "Dragon Bone", "Fake Silver Shield", "guild.exe", "Hand Scanner", "Heatproof Case", "Helmet",
-            "Hermes' Boots", "Lamp of Time", "miracle.exe", "Mobile Super X2", "move.exe", "Pistol", "randc.exe", "reader.exe",
+    public static List<String> SHOP_ITEMS = Arrays.asList(ItemConstants.ANKH_JEWEL_CHAMBER_OF_BIRTH, "Bracelet", ItemConstants.BUCKLER, "bunemon.exe",
+            "capstar.exe", "Dragon Bone", ItemConstants.FAKE_SILVER_SHIELD, "guild.exe", ItemConstants.HAND_SCANNER, "Heatproof Case", "Helmet",
+            ItemConstants.HERMES_BOOTS, "Lamp of Time", "miracle.exe", "Mobile Super X2", "move.exe", "Pistol", "randc.exe", "reader.exe",
             "Scriptures", "torude.exe", "Waterproof Case", "yagomap.exe");
     public static List<String> CATEGORIZED_SHOP_ITEM_LOCATIONS = Arrays.asList("Shop 1 (Surface) Item 1",
             "Shop 2 (Surface) Item 2", "Shop 2 (Surface) Item 3", "Shop 2 Alt (Surface) Item 1",
@@ -91,15 +98,16 @@ public final class DataFromFile {
 
     private static CustomPlacementData customPlacementData;
 
-    private DataFromFile() { }
+    private DataFromFile() {
+    }
 
     public static List<String> getAllShops() {
-        if(allShops == null) {
+        if (allShops == null) {
             allShops = FileUtils.getList("all/all_shops.txt");
-            if(Settings.isRandomizeDracuetShop()) {
+            if (Settings.isRandomizeDracuetShop()) {
                 allShops.add("Shop 23 (HT)");
             }
-            if(allShops == null) {
+            if (allShops == null) {
                 allShops = new ArrayList<>(0);
             }
         }
@@ -107,9 +115,9 @@ public final class DataFromFile {
     }
 
     public static List<String> getAllItems() {
-        if(allItems == null) {
+        if (allItems == null) {
             allItems = FileUtils.getList("all/all_items.txt");
-            if(allItems == null) {
+            if (allItems == null) {
                 allItems = new ArrayList<>(0);
             }
         }
@@ -117,16 +125,16 @@ public final class DataFromFile {
     }
 
     public static List<String> getAllNonShopItemsPlusAllRandomizedShopItemsPlusAllRandomizedCoinChests() {
-        if(allNonShopItemsPlusAllRandomizedShopItems == null) {
+        if (allNonShopItemsPlusAllRandomizedShopItems == null) {
             allNonShopItemsPlusAllRandomizedShopItems = new ArrayList<>(getNonShopItemLocations());
-            if(!ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
-                for(String item : getRandomizedShopItems()) {
-                    if(!allNonShopItemsPlusAllRandomizedShopItems.contains(item)) {
+            if (!ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
+                for (String item : getRandomizedShopItems()) {
+                    if (!allNonShopItemsPlusAllRandomizedShopItems.contains(item)) {
                         allNonShopItemsPlusAllRandomizedShopItems.add(item);
                     }
                 }
             }
-            if(allNonShopItemsPlusAllRandomizedShopItems == null) {
+            if (allNonShopItemsPlusAllRandomizedShopItems == null) {
                 allNonShopItemsPlusAllRandomizedShopItems = new ArrayList<>(0); // todo: NPE more likely
             }
         }
@@ -134,18 +142,18 @@ public final class DataFromFile {
     }
 
     public static List<String> getNonShopItemLocations() {
-        if(nonShopItemLocations == null) {
+        if (nonShopItemLocations == null) {
             nonShopItemLocations = FileUtils.getList("all/non_shop_items.txt");
-            if(nonShopItemLocations == null) {
+            if (nonShopItemLocations == null) {
                 nonShopItemLocations = new ArrayList<>(0);
             }
-            if(Settings.isRandomizeCoinChests()) {
+            if (Settings.isRandomizeCoinChests()) {
                 nonShopItemLocations.addAll(getAllCoinChests());
             }
-            if(Settings.isRandomizeTrapItems()) {
+            if (Settings.isRandomizeTrapItems()) {
                 nonShopItemLocations.addAll(DataFromFile.TRAP_ITEMS);
             }
-            if(Settings.isRandomizeEscapeChest()) {
+            if (Settings.isRandomizeEscapeChest()) {
                 nonShopItemLocations.add(DataFromFile.ESCAPE_CHEST_NAME);
             }
         }
@@ -153,21 +161,21 @@ public final class DataFromFile {
     }
 
     public static List<String> getNonRandomizedItems() {
-        if(nonRandomizedItems == null) {
+        if (nonRandomizedItems == null) {
             nonRandomizedItems = new ArrayList<>();
             nonRandomizedItems.add("Maternity Statue");
-            for(String item : Settings.getNonRandomizedItems()) {
-                if(!nonRandomizedItems.contains(item)) {
+            for (String item : Settings.getNonRandomizedItems()) {
+                if (!nonRandomizedItems.contains(item)) {
                     nonRandomizedItems.add(item);
                 }
             }
-            if(!Settings.isRandomizeForbiddenTreasure()) {
+            if (!Settings.isRandomizeForbiddenTreasure()) {
                 nonRandomizedItems.add("Provocative Bathing Suit");
             }
-            if(!Settings.isRandomizeXmailer()) {
+            if (!Settings.isRandomizeXmailer()) {
                 nonRandomizedItems.add("xmailer.exe");
             }
-            if(nonRandomizedItems == null) {
+            if (nonRandomizedItems == null) {
                 nonRandomizedItems = new ArrayList<>(0);
             }
         }
@@ -175,14 +183,14 @@ public final class DataFromFile {
     }
 
     public static List<String> getInitialShops() {
-        if(initialShops == null) {
+        if (initialShops == null) {
             initialShops = new ArrayList<>();
         }
         return initialShops;
     }
 
     public static List<String> getInitialNonShopItemLocations() {
-        if(initialNonShopItemLocations == null) {
+        if (initialNonShopItemLocations == null) {
             initialNonShopItemLocations = new ArrayList<>();
         }
         return initialNonShopItemLocations;
@@ -193,7 +201,7 @@ public final class DataFromFile {
     }
 
     public static void setBannedTrapLocations(Random random) {
-        if(bannedTrapLocations == null) {
+        if (bannedTrapLocations == null) {
             bannedTrapLocations = new ArrayList<>(0);
             bannedTrapLocations.add(random.nextBoolean() ? "Coin: Guidance (One)" : "Coin: Guidance (Two)");
             bannedTrapLocations.add(random.nextBoolean() ? "Coin: Illusion (Katana)" : "Fairy Clothes");
@@ -203,9 +211,9 @@ public final class DataFromFile {
     }
 
     public static List<String> getAvailableGlitches() {
-        if(availableGlitches == null) {
+        if (availableGlitches == null) {
             availableGlitches = FileUtils.getList("all/available_glitches.txt");
-            if(availableGlitches == null) {
+            if (availableGlitches == null) {
                 availableGlitches = new ArrayList<>(0);
             }
         }
@@ -213,9 +221,9 @@ public final class DataFromFile {
     }
 
     public static Map<String, GameObjectId> getMapOfItemToUsefulIdentifyingRcdData() {
-        if(mapOfItemToUsefulIdentifyingRcdData == null) {
+        if (mapOfItemToUsefulIdentifyingRcdData == null) {
             mapOfItemToUsefulIdentifyingRcdData = FileUtils.getRcdDataIdMap("rcd/item_args.txt");
-            if(mapOfItemToUsefulIdentifyingRcdData == null) {
+            if (mapOfItemToUsefulIdentifyingRcdData == null) {
                 mapOfItemToUsefulIdentifyingRcdData = new HashMap<>(0);
             }
         }
@@ -223,9 +231,9 @@ public final class DataFromFile {
     }
 
     public static Map<String, Integer> getMapOfShopNameToShopBlock() {
-        if(mapOfShopNameToShopBlock == null) {
+        if (mapOfShopNameToShopBlock == null) {
             mapOfShopNameToShopBlock = FileUtils.getShopBlockMap("rcd/shop_args.txt");
-            if(mapOfShopNameToShopBlock == null) {
+            if (mapOfShopNameToShopBlock == null) {
                 mapOfShopNameToShopBlock = new HashMap<>(0);
             }
         }
@@ -233,30 +241,29 @@ public final class DataFromFile {
     }
 
     public static List<String> getRandomizedShopItems() {
-        if(randomizedShopItems == null) {
-            if(!ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
+        if (randomizedShopItems == null) {
+            if (!ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
                 randomizedShopItems = new ArrayList<>();
-                for(String shopName : getAllShops()) {
-                    for(String shopItem : getMapOfShopNameToShopOriginalContents().get(shopName)) {
-                        if(!shopItem.equals("Weights") && !shopItem.endsWith("Ammo") && !"Shell Horn".equals(shopItem)
+                for (String shopName : getAllShops()) {
+                    for (String shopItem : getMapOfShopNameToShopOriginalContents().get(shopName)) {
+                        if (!shopItem.equals("Weights") && !shopItem.endsWith("Ammo") && !"Shell Horn".equals(shopItem)
                                 && !randomizedShopItems.contains(shopItem)) {
                             // Don't count weights, ammo, or the backup copies of Shell Horn or guild.exe
                             randomizedShopItems.add(shopItem);
                         }
                     }
                 }
-                if(!LocationCoordinateMapper.isSurfaceStart() && Settings.getCurrentStartingLocation() != 23 && Settings.getCurrentStartingLocation() != 24) {
+                if (!LocationCoordinateMapper.isSurfaceStart() && Settings.getCurrentStartingLocation() != 23 && Settings.getCurrentStartingLocation() != 24) {
                     // Random starting location comes with a special shop.
-                    for(String shopItem : getMapOfShopNameToShopOriginalContents().get(CUSTOM_SHOP_NAME)) {
-                        if(!shopItem.equals("Weights") && !shopItem.endsWith("Ammo") && !"Shell Horn".equals(shopItem)
+                    for (String shopItem : getMapOfShopNameToShopOriginalContents().get(CUSTOM_SHOP_NAME)) {
+                        if (!shopItem.equals("Weights") && !shopItem.endsWith("Ammo") && !"Shell Horn".equals(shopItem)
                                 && !randomizedShopItems.contains(shopItem)) {
                             // Don't count weights, ammo, or the backup copies of Shell Horn or guild.exe
                             randomizedShopItems.add(shopItem);
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 randomizedShopItems = new ArrayList<>(0);
             }
         }
@@ -264,17 +271,17 @@ public final class DataFromFile {
     }
 
     public static List<String> getRandomRemovableItems() {
-        if(randomRemovableItems == null) {
+        if (randomRemovableItems == null) {
             randomRemovableItems = new ArrayList<>();
             boolean requireSerpentStaffAndChakrams = !Settings.getEnabledGlitches().contains("Cat Pause") && !Settings.getEnabledGlitches().contains("Object Zip") && !Settings.getEnabledGlitches().contains("Raindrop");
             boolean requireFruitOfEden = !Settings.isRandomizeBacksideDoors() || (!Settings.getEnabledGlitches().contains("Raindrop") && !Settings.isAutomaticMantras() && !Settings.isAlternateMotherAnkh()); // Deep dive not supported in logic, so the only way to reach upper Illusion grail is the backside door, and raindropping is needed to get to where you'd recite LAMULANA
             boolean requirePlaneModelAndTwinStatueAndLiteracy = !Settings.getEnabledGlitches().contains("Raindrop");
             boolean requireEarthSpearAndBronzeMirror = !Settings.getEnabledGlitches().contains("Lamp Glitch") && !Settings.getEnabledGlitches().contains("Raindrop");
-            for(String itemName : getAllItems()) {
-                if(itemName.startsWith("Ankh Jewel")) {
+            for (String itemName : getAllItems()) {
+                if (itemName.startsWith(ItemConstants.ANKH_JEWEL)) {
                     continue; // Never remove an ankh jewel.
                 }
-                if("Holy Grail".equals(itemName) || "Dimensional Key".equals(itemName)
+                if ("Holy Grail".equals(itemName) || "Dimensional Key".equals(itemName)
                         || "Crystal Skull".equals(itemName) || "Pochette Key".equals(itemName)
                         || "Philosopher's Ocarina".equals(itemName)
                         || "Helmet".equals(itemName) || "Vessel".equals(itemName)
@@ -283,56 +290,56 @@ public final class DataFromFile {
                         || "Life Seal".equals(itemName) || "Death Seal".equals(itemName)) {
                     continue; // Things that should never be removed.
                 }
-                if(Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
+                if (Settings.isRequireFlaresForExtinction() && ItemConstants.FLARE_GUN.equals(itemName)) {
                     continue; // Can't get Extinction grail without flares according to this logic.
                 }
-                if(Settings.isRequireIceCapeForLava() && "Ice Cape".equals(itemName)) {
+                if (Settings.isRequireIceCapeForLava() && "Ice Cape".equals(itemName)) {
                     continue; // Needed for Viy
                 }
-                if(requireFruitOfEden && "Fruit of Eden".equals(itemName)) {
+                if (requireFruitOfEden && "Fruit of Eden".equals(itemName)) {
                     continue; // Can't get Illusion grail without this.
                 }
-                if(requireSerpentStaffAndChakrams && ("Chakram".equals(itemName) || "Serpent Staff".equals(itemName))) {
+                if (requireSerpentStaffAndChakrams && (ItemConstants.CHAKRAM.equals(itemName) || "Serpent Staff".equals(itemName))) {
                     continue; // Can't get Birth grail without these.
                 }
-                if(requirePlaneModelAndTwinStatueAndLiteracy && ("Plane Model".equals(itemName) || "Twin Statue".equals(itemName))) {
+                if (requirePlaneModelAndTwinStatueAndLiteracy && ("Plane Model".equals(itemName) || "Twin Statue".equals(itemName))) {
                     continue; // Can't get to Birth grail area without Plane Model, Dimensional Corridor without Twin Statue.
                 }
-                if(requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
+                if (requireEarthSpearAndBronzeMirror && (ItemConstants.EARTH_SPEAR.equals(itemName) || "Bronze Mirror".equals(itemName))) {
                     continue; // Earth Spear needed for Viy access. Bronze Mirror for VIY mantra statue.
                 }
-                if(Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName)) {
+                if (Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName)) {
                     continue; // Don't count the maps that will already be replaced.
                 }
-                if(!Settings.isAlternateMotherAnkh() && "Key Sword".equals(itemName)) {
+                if (!Settings.isAlternateMotherAnkh() && ItemConstants.KEY_SWORD.equals(itemName)) {
                     continue; // Required to start the Mother fight
                 }
-                if(Settings.getNonRandomizedItems().contains(itemName)) {
+                if (Settings.getNonRandomizedItems().contains(itemName)) {
                     continue; // If the user wanted this item in its original location, they probably don't want it gone.
                 }
-                if(!Settings.isRandomizeXmailer() && "xmailer.exe".equals(itemName)) {
+                if (!Settings.isRandomizeXmailer() && "xmailer.exe".equals(itemName)) {
                     continue; // NPCs can't have removed items yet.
                 }
-                if("Provocative Bathing Suit".equals(itemName)) {
+                if ("Provocative Bathing Suit".equals(itemName)) {
                     continue; // No value in removing this, and if someone wanted it randomized they probably want to actually see it.
                 }
-                if(Settings.getStartingItems().contains(itemName)) {
+                if (Settings.getStartingItems().contains(itemName)) {
                     continue; // If the user wanted this item in a specific location, they probably don't want it gone.
                 }
-                if(Settings.getInitiallyAccessibleItems().contains(itemName)) {
+                if (Settings.getInitiallyAccessibleItems().contains(itemName)) {
                     continue; // If the user wanted this item early, they probably don't want it gone.
                 }
 
-                if("mantra.exe".equals(itemName) || "Djed Pillar".equals(itemName)) {
-                    if(!Settings.isAlternateMotherAnkh() || !"Yellow".equals(Settings.getMedicineColor())) {
+                if ("mantra.exe".equals(itemName) || "Djed Pillar".equals(itemName)) {
+                    if (!Settings.isAlternateMotherAnkh() || !"Yellow".equals(Settings.getMedicineColor())) {
                         continue; // Don't remove mantra or Djed Pillar if they're needed for reciting mantras to fight mother.
                     }
                 }
-                if("Lamp of Time".equals(itemName) && !"Yellow".equals(Settings.getMedicineColor())) {
+                if ("Lamp of Time".equals(itemName) && !"Yellow".equals(Settings.getMedicineColor())) {
                     continue; // Don't remove mantra or Djed Pillar if they're needed for reciting mantras to fight mother.
                 }
-                if("Hand Scanner".equals(itemName) || "reader.exe".equals(itemName)) {
-                    if(requirePlaneModelAndTwinStatueAndLiteracy || !Settings.isAutomaticGrailPoints()
+                if (ItemConstants.HAND_SCANNER.equals(itemName) || "reader.exe".equals(itemName)) {
+                    if (requirePlaneModelAndTwinStatueAndLiteracy || !Settings.isAutomaticGrailPoints()
                             || !Settings.isAlternateMotherAnkh() || !"Yellow".equals(Settings.getMedicineColor())) {
                         continue; // Don't remove literacy if it's needed for reciting mantras to fight Mother.
                     }
@@ -345,9 +352,9 @@ public final class DataFromFile {
     }
 
     public static Map<String, List<String>> getMapOfShopNameToShopOriginalContents() {
-        if(mapOfShopNameToShopOriginalContents == null) {
+        if (mapOfShopNameToShopOriginalContents == null) {
             mapOfShopNameToShopOriginalContents = FileUtils.getShopOriginalContentsMap("initial/non_randomized_shop_contents.txt");
-            if(mapOfShopNameToShopOriginalContents == null) {
+            if (mapOfShopNameToShopOriginalContents == null) {
                 mapOfShopNameToShopOriginalContents = new HashMap<>(0);
             }
         }
@@ -355,7 +362,7 @@ public final class DataFromFile {
     }
 
     public static Map<String, NodeWithRequirements> getMapOfNodeNameToRequirementsObject() {
-        if(mapOfNodeNameToRequirementsObject == null) {
+        if (mapOfNodeNameToRequirementsObject == null) {
             mapOfNodeNameToRequirementsObject = new HashMap<>();
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/location_reqs.txt", true);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/item_reqs.txt", true);
@@ -364,29 +371,29 @@ public final class DataFromFile {
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/attack_reqs.txt", true);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dead_ends.txt", true);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/transition_reqs.txt", true);
-            if(Settings.isHalloweenMode()) {
+            if (Settings.isHalloweenMode()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/npc_reqs.txt", true);
             }
-            if(!Settings.getEnabledGlitches().isEmpty()) {
+            if (!Settings.getEnabledGlitches().isEmpty()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch_reqs.txt", true);
             }
-            if(Settings.isRandomizeCoinChests()) {
+            if (Settings.isRandomizeCoinChests()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/coin_chest_reqs.txt", true);
             }
-            if(Settings.isRandomizeTrapItems()) {
+            if (Settings.isRandomizeTrapItems()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/trap_item_reqs.txt", true);
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject,
                     String.format("requirement/bosses/%s_reqs.txt", Settings.getBossDifficulty().name().toLowerCase()), true);
-            for(String removeNode : getCustomPlacementData().getRemovedLogicNodes()) {
+            for (String removeNode : getCustomPlacementData().getRemovedLogicNodes()) {
                 mapOfNodeNameToRequirementsObject.remove(removeNode);
             }
-            if(LocationCoordinateMapper.isSurfaceStart() || Settings.getCurrentStartingLocation() == 23 || Settings.getCurrentStartingLocation() == 24) {
+            if (LocationCoordinateMapper.isSurfaceStart() || Settings.getCurrentStartingLocation() == 23 || Settings.getCurrentStartingLocation() == 24) {
                 mapOfNodeNameToRequirementsObject.remove(DataFromFile.CUSTOM_SHOP_NAME);
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "custom-reqs.txt", false);
 
-            for(NodeWithRequirements nodeWithRequirements : mapOfNodeNameToRequirementsObject.values()) {
+            for (NodeWithRequirements nodeWithRequirements : mapOfNodeNameToRequirementsObject.values()) {
                 nodeWithRequirements.expandRequirements();
             }
         }
@@ -396,18 +403,18 @@ public final class DataFromFile {
     //Goes through the map of nodes and their requirements, and makes a reverse map, where the keys are the items/areas/etc
     // and the value is a set of all nodes that have that item/area as a requirement.  Call this after building the previous map.
     public static Map<String, Set<String>> getMapOfRequirementsToNodeNameObject() {
-        if(mapOfRequirementsToNodeNameObject == null) {
+        if (mapOfRequirementsToNodeNameObject == null) {
             mapOfRequirementsToNodeNameObject = new HashMap<String, Set<String>>();
             NodeWithRequirements node;
             List<List<String>> listOfRequirementSets;
 
-            for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
+            for (String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
                 node = mapOfNodeNameToRequirementsObject.get(nodeName);
                 listOfRequirementSets = node.getAllRequirements();
-                for(List<String> requirementSet : listOfRequirementSets) {
-                    for(String requirement : requirementSet) {
+                for (List<String> requirementSet : listOfRequirementSets) {
+                    for (String requirement : requirementSet) {
                         Set nodeSet = mapOfRequirementsToNodeNameObject.get(requirement);
-                        if(nodeSet == null)
+                        if (nodeSet == null)
                             nodeSet = new HashSet<String>();
                         nodeSet.add(nodeName);
                         mapOfRequirementsToNodeNameObject.put(requirement, nodeSet);
@@ -419,11 +426,10 @@ public final class DataFromFile {
     }
 
     public static List<String> getWinRequirements() {
-        if(winRequirements == null) {
-            if(Settings.isHalloweenMode()) {
+        if (winRequirements == null) {
+            if (Settings.isHalloweenMode()) {
                 winRequirements = FileUtils.getList("requirement/win/npc_win_reqs.txt");
-            }
-            else {
+            } else {
                 winRequirements = FileUtils.getList("requirement/win/win_reqs.txt");
             }
         }
@@ -431,14 +437,14 @@ public final class DataFromFile {
     }
 
     public static List<String> getChestOnlyLocations() {
-        if(chestOnlyLocations == null ) {
+        if (chestOnlyLocations == null) {
             chestOnlyLocations = FileUtils.getList("all/chest_only_locations.txt");
         }
         return chestOnlyLocations;
     }
 
     public static List<String> getAllCoinChests() {
-        if(allCoinChests == null ) {
+        if (allCoinChests == null) {
             allCoinChests = FileUtils.getList("all/coin_chests.txt");
         }
         return allCoinChests;
@@ -446,18 +452,17 @@ public final class DataFromFile {
 
     public static List<String> getHTItems(List<String> possibleItems) {
         List<String> enabledItems = new ArrayList<>(possibleItems.size());
-        if(Settings.isHTFullRandom()) {
-            for(String item : possibleItems) {
-                if(!HT_BANNED_ITEMS.contains(item) && !item.startsWith("Coin:") && !item.startsWith("Trap:")
+        if (Settings.isHTFullRandom()) {
+            for (String item : possibleItems) {
+                if (!HT_BANNED_ITEMS.contains(item) && !item.startsWith("Coin:") && !item.startsWith("Trap:")
                         && !Settings.getRemovedItems().contains(item)
                         && !Settings.getCurrentRemovedItems().contains(item)) {
                     enabledItems.add(item);
                 }
             }
-        }
-        else {
-            for(String item : possibleItems) {
-                if(USELESS_ITEMS.contains(item)) {
+        } else {
+            for (String item : possibleItems) {
+                if (USELESS_ITEMS.contains(item)) {
                     enabledItems.add(item);
                 }
             }
@@ -466,7 +471,7 @@ public final class DataFromFile {
     }
 
     public static CustomPlacementData getCustomPlacementData() {
-        if(customPlacementData == null) {
+        if (customPlacementData == null) {
             customPlacementData = FileUtils.getCustomPlacementData();
         }
         return customPlacementData;
@@ -482,7 +487,7 @@ public final class DataFromFile {
     }
 
     public static void clearAllData() {
-        if(Settings.isChanged()) {
+        if (Settings.isChanged()) {
             allNonShopItemsPlusAllRandomizedShopItems = null;
             nonRandomizedItems = null;
             allShops = null;

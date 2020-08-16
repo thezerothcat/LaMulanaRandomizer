@@ -1,5 +1,6 @@
 package lmr.randomizer.node;
 
+import lmr.randomizer.ItemConstants;
 import lmr.randomizer.Settings;
 
 import java.util.ArrayList;
@@ -60,18 +61,18 @@ public class NodeWithRequirements {
     public void expandRequirements() {
         for(List<String> requirementSet : listOfRequirementSets) {
             if(requirementSet.contains("Attack: Flare Gun")) {
-                requirementSet.add("Flare Gun");
+                requirementSet.add(ItemConstants.FLARE_GUN);
             }
             if(requirementSet.contains("Attack: Bomb")) {
-                requirementSet.add("Bomb");
+                requirementSet.add(ItemConstants.BOMB);
             }
             if(requirementSet.contains("State: Literacy")) {
                 requirementSet.remove("State: Literacy");
-                requirementSet.add("Hand Scanner");
+                requirementSet.add(ItemConstants.HAND_SCANNER);
                 requirementSet.add("reader.exe");
             }
             if(requirementSet.contains("State: Extinction Light") && Settings.isRequireFlaresForExtinction()) {
-                requirementSet.add("Flare Gun");
+                requirementSet.add(ItemConstants.FLARE_GUN);
             }
             if(requirementSet.contains("State: Key Fairy Access")) {
                 requirementSet.add("Isis' Pendant");
@@ -143,7 +144,7 @@ public class NodeWithRequirements {
             if(requirementSet.contains(item)) {
                 continue; // This requirement set doesn't work; try another one.
             }
-            if(item.equals("Ankh Jewel")) {
+            if(item.equals(ItemConstants.ANKH_JEWEL)) {
                 badRequirementSet = false;
                 for(String requirement : requirementSet) {
                     if(requirement.contains("Amphisbaena Defeated") || requirement.contains("Sakit Defeated")

@@ -1,6 +1,7 @@
 package lmr.randomizer.random;
 
 import javafx.util.Pair;
+import lmr.randomizer.ItemConstants;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.Settings;
 import lmr.randomizer.node.CustomItemPlacement;
@@ -25,57 +26,57 @@ public class ShopItemPriceCountRandomizer {
 
 //    // 50-70
 //    private List<String> PRICE_TIER1 = Arrays.asList("yagomap.exe", "bunemon.exe", "Glove", "Shell Horn",
-//            "xmailer.exe", "bunplus.com", "guild.exe", "Buckler", "Helmet", "Bronze Mirror", "emusic.exe", "beolamu.exe",
+//            "xmailer.exe", "bunplus.com", "guild.exe", Constants.BUCKLER, "Helmet", "Bronze Mirror", "emusic.exe", "beolamu.exe",
 //            "Waterproof Case", "Heatproof Case", "Map");
 //
 //    // 80-120
 //    private List<String> PRICE_TIER2 = Arrays.asList("Key of Eternity", "Birth Seal", "Life Seal", "Death Seal",
-//            "Knife", "Key Sword", "Shuriken", "Rolling Shuriken", "Scalesphere", "Pepper", "Talisman", "Magatama Jewel",
-//            "yagostr.exe", "Mini Doll", "Treasures", "Anchor", "Grapple Claw", "Perfume", "Hand Scanner", "Hermes' Boots",
-//            "bounce.exe", "Ankh Jewel", "Woman Statue", "Maternity Statue", "Flare Gun", "Serpent Staff", "Holy Grail");
+//            Constants.KNIFE, Constants.KEY_SWORD, Constants.SHURIKEN, Constants.ROLLING_SHURIKEN, "Scalesphere", "Pepper", "Talisman", "Magatama Jewel",
+//            "yagostr.exe", "Mini Doll", "Treasures", "Anchor", "Grapple Claw", "Perfume", Constants.HAND_SCANNER, Constants.HERMES_BOOTS,
+//            "bounce.exe", Constants.ANKH_JEWEL, "Woman Statue", "Maternity Statue", Constants.FLARE_GUN, "Serpent Staff", "Holy Grail");
 //
 //    // 140-160
 //    private List<String> PRICE_TIER3 = Arrays.asList("Feather", "Origin Seal", "Fruit of Eden", "Twin Statue",
-//            "Eye of Truth", "Diary", "Ice Cape", "Dragon Bone", "Caltrops", "Earth Spear", "Pistol", "Katana",
-//            "Fake Silver Shield", "Silver Shield", "Isis' Pendant", "Bracelet", "Crucifix", "miracle.exe", "torude.exe",
+//            "Eye of Truth", "Diary", "Ice Cape", "Dragon Bone", Constants.CALTROPS, Constants.EARTH_SPEAR, "Pistol", Constants.KATANA,
+//            Constants.FAKE_SILVER_SHIELD, Constants.SILVER_SHIELD, "Isis' Pendant", "Bracelet", "Crucifix", "miracle.exe", "torude.exe",
 //            "mirai.exe", "mekuri.exe", "reader.exe", "capstar.exe", "Sacred Orb", "Mobile Super X2");
 //
 //    // 180-220
 //    private List<String> PRICE_TIER4 = Arrays.asList("Plane Model", "Philosopher's Ocarina", "Dimensional Key",
 //            "mantra.exe", "Djed Pillar", "Cog of the Soul", "Crystal Skull", "Mulana Talisman", "Vessel", "Pochette Key",
-//            "Ring", "Chain Whip", "Axe", "Chakram",  "Bomb", "Book of the Dead", "Angel Shield", "Lamp of Time",
+//            "Ring", Constants.CHAIN_WHIP, Constants.AXE, Constants.CHAKRAM,  Constants.BOMB, "Book of the Dead", Constants.ANGEL_SHIELD, "Lamp of Time",
 //            "move.exe", "randc.exe");
 //
 //    // 250-350
 //    private List<String> PRICE_TIER5 = Arrays.asList("Fairy Clothes", "Scriptures", "Gauntlet", "deathv.exe",
-//            "Provocative Bathing Suit", "Spaulder", "Flail Whip", "lamulana.exe");
+//            "Provocative Bathing Suit", "Spaulder", Constants.FLAIL_WHIP, "lamulana.exe");
 
     // 40-60
     private List<String> PRICE_TIER1 = Arrays.asList("yagomap.exe", "bunemon.exe", "Glove", "Shell Horn",
-            "xmailer.exe", "bunplus.com", "guild.exe", "Buckler", "Helmet", "Bronze Mirror", "emusic.exe", "beolamu.exe",
+            "xmailer.exe", "bunplus.com", "guild.exe", ItemConstants.BUCKLER, "Helmet", "Bronze Mirror", "emusic.exe", "beolamu.exe",
             "Waterproof Case", "Heatproof Case", "Map");
 
     // 70-110
     private List<String> PRICE_TIER2 = Arrays.asList("Key of Eternity", "Birth Seal", "Life Seal", "Death Seal",
-            "Knife", "Key Sword", "Shuriken", "Rolling Shuriken", "Scalesphere", "Pepper", "Talisman", "Magatama Jewel",
-            "yagostr.exe", "Mini Doll", "Treasures", "Anchor", "Grapple Claw", "Perfume", "Hand Scanner", "Hermes' Boots",
-            "bounce.exe", "Ankh Jewel", "Woman Statue", "Maternity Statue", "Flare Gun", "Serpent Staff", "Holy Grail",
+            ItemConstants.KNIFE, ItemConstants.KEY_SWORD, ItemConstants.SHURIKEN, ItemConstants.ROLLING_SHURIKEN, "Scalesphere", "Pepper", "Talisman", "Magatama Jewel",
+            "yagostr.exe", "Mini Doll", "Treasures", "Anchor", "Grapple Claw", "Perfume", ItemConstants.HAND_SCANNER, ItemConstants.HERMES_BOOTS,
+            "bounce.exe", ItemConstants.ANKH_JEWEL, "Woman Statue", "Maternity Statue", ItemConstants.FLARE_GUN, "Serpent Staff", "Holy Grail",
             "mirai.exe", "mekuri.exe", "reader.exe", "capstar.exe", "Dragon Bone", "Diary", "Eye of Truth",
-            "Cog of the Soul", "Dimensional Key", "Earth Spear", "Pochette Key");
+            "Cog of the Soul", "Dimensional Key", ItemConstants.EARTH_SPEAR, "Pochette Key");
 
     // 130-150
     private List<String> PRICE_TIER3 = Arrays.asList("Feather", "Origin Seal", "Fruit of Eden", "Twin Statue",
-            "Ice Cape", "Fake Silver Shield", "Silver Shield", "Vessel", "Whip",
+            "Ice Cape", ItemConstants.FAKE_SILVER_SHIELD, ItemConstants.SILVER_SHIELD, "Vessel", ItemConstants.WHIP,
             "Isis' Pendant", "Bracelet", "Crucifix", "miracle.exe", "torude.exe", "Mobile Super X2", "Sacred Orb",
             "mantra.exe", "Djed Pillar", "Plane Model", "Philosopher's Ocarina", "Mulana Talisman", "Book of the Dead",
-            "Caltrops", "Pistol", "Katana", "Chain Whip", "Chakram",  "Bomb", "Axe", "Ring", "Crystal Skull",
+            ItemConstants.CALTROPS, "Pistol", ItemConstants.KATANA, ItemConstants.CHAIN_WHIP, ItemConstants.CHAKRAM,  ItemConstants.BOMB, ItemConstants.AXE, "Ring", "Crystal Skull",
             "Medicine of the Mind (Green)", "Medicine of the Mind (Red)", "Medicine of the Mind (Yellow)");
 
     // 170-210
     private List<String> PRICE_TIER4 = Arrays.asList(
-            "Lamp of Time", "Angel Shield",
+            "Lamp of Time", ItemConstants.ANGEL_SHIELD,
             "move.exe", "randc.exe", "Fairy Clothes", "Scriptures", "Gauntlet", "deathv.exe",
-            "Provocative Bathing Suit", "Spaulder", "Flail Whip", "lamulana.exe");
+            "Provocative Bathing Suit", "Spaulder", ItemConstants.FLAIL_WHIP, "lamulana.exe");
 
     public ShopItemPriceCountRandomizer(boolean subweaponOnly, MoneyChecker moneyChecker, Random random) {
         this.subweaponOnly = subweaponOnly;
@@ -189,8 +190,8 @@ public class ShopItemPriceCountRandomizer {
         if(itemName.contains("Map")) {
             itemName = "Map";
         }
-        else if(itemName.contains("Ankh Jewel")) {
-            itemName = "Ankh Jewel";
+        else if(itemName.contains(ItemConstants.ANKH_JEWEL)) {
+            itemName = ItemConstants.ANKH_JEWEL;
         }
         else if(itemName.contains("Sacred Orb")) {
             itemName = "Sacred Orb";
@@ -228,25 +229,25 @@ public class ShopItemPriceCountRandomizer {
             return 5;
         }
         if("Shuriken Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Shuriken") ? (short)150 : 10;
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals(ItemConstants.SHURIKEN) ? (short)150 : 10;
         }
         if("Rolling Shuriken Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Rolling Shuriken") ? (short)100 : 10;
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals(ItemConstants.ROLLING_SHURIKEN) ? (short)100 : 10;
         }
         if("Earth Spear Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Earth Spear") ? (short)80 : 10;
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals(ItemConstants.EARTH_SPEAR) ? (short)80 : 10;
         }
         if("Flare Gun Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Flare Gun") ? (short)80 : 10;
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals(ItemConstants.FLARE_GUN) ? (short)80 : 10;
         }
         if("Bomb Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Bomb") ? (short)30 : 10;
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals(ItemConstants.BOMB) ? (short)30 : 10;
         }
         if("Chakram Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Chakram") ? (short)10 : 2;
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals(ItemConstants.CHAKRAM) ? (short)10 : 2;
         }
         if("Caltrops Ammo".equals(item)) {
-            return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Caltrops") ? (short)80 : 10;
+            return subweaponOnly || Settings.getCurrentStartingWeapon().equals(ItemConstants.CALTROPS) ? (short)80 : 10;
         }
         if("Pistol Ammo".equals(item)) {
             return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Pistol") ? (short)3 : 1;

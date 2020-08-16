@@ -1,5 +1,6 @@
 package lmr.randomizer.node;
 
+import lmr.randomizer.ItemConstants;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
@@ -9,7 +10,14 @@ import lmr.randomizer.random.ShopRandomizer;
 import lmr.randomizer.random.TransitionGateRandomizer;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by thezerothcat on 7/11/2017.
@@ -39,7 +47,7 @@ public class AccessChecker {
     public AccessChecker() {
         mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
         mapOfRequirementsToNodeNameObject = copyNodeNameMap(DataFromFile.getMapOfRequirementsToNodeNameObject());
-        nodesToDelay = Settings.isUshumgalluAssist() ? new ArrayList<>(0) : Arrays.asList("Anchor");
+        nodesToDelay = Settings.isUshumgalluAssist() ? new ArrayList<>(0) : Collections.singletonList("Anchor");
     }
 
     public AccessChecker(AccessChecker accessChecker, boolean copyAll) {
@@ -121,7 +129,7 @@ public class AccessChecker {
 
             for(String requiredItem : DataFromFile.getWinRequirements()) {
                 if(!accessedNodes.contains(requiredItem)) {
-                    FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
+                    FileUtils.log("Win requirement not accessible on attempt " + attemptNumber + ": " + requiredItem + ", accessed nodes = " + accessedNodes.size());
                     if(accessedNodes.size() > 500 || Settings.isDetailedLoggingAttempt(attemptNumber)) {
                         List<String> logged = new ArrayList<>();
                         if (requiredItem.startsWith("Event:")) {
@@ -151,7 +159,7 @@ public class AccessChecker {
                         continue;
                     }
                 }
-                FileUtils.log("Inaccessible node detected: " + nodeName + " containing " + itemRandomizer.getItem(nodeName) + ", accessed nodes = " + accessedNodes.size());
+                FileUtils.log("Inaccessible node detected on attempt " + attemptNumber + ": " + nodeName + " containing " + itemRandomizer.getItem(nodeName) + ", accessed nodes = " + accessedNodes.size());
                 if(accessedNodes.size() > 500 || Settings.isDetailedLoggingAttempt(attemptNumber)) {
                     List<String> logged = new ArrayList<>();
                     logAccess(nodeName, logged);
@@ -283,12 +291,12 @@ public class AccessChecker {
         }
         if(Settings.getCurrentRemovedItems().size() == 1) {
             String removedItem = Settings.getCurrentRemovedItems().iterator().next();
-            if("Whip".equals(removedItem) || "Spaulder".equals(removedItem)) {
+            if(ItemConstants.WHIP.equals(removedItem) || "Spaulder".equals(removedItem)) {
                 return true;
             }
         }
         if(Settings.getCurrentRemovedItems().size() == 2
-                && Settings.getCurrentRemovedItems().contains("Whip") && Settings.getCurrentRemovedItems().contains("Spaulder")) {
+                && Settings.getCurrentRemovedItems().contains(ItemConstants.WHIP) && Settings.getCurrentRemovedItems().contains("Spaulder")) {
             return true;
         }
         return Settings.getRemovedItems().isEmpty() && Settings.getCurrentRemovedItems().isEmpty();
@@ -318,9 +326,9 @@ public class AccessChecker {
             if(stateToUpdate == null) {
                 return;
             }
+            accessedNodes.add(stateToUpdate);
         }
         accessedNodes.add(newState);
-        accessedNodes.add(stateToUpdate);
 
         NodeWithRequirements node;
         Set<String> nodesToRemove = new HashSet<>();
@@ -352,11 +360,9 @@ public class AccessChecker {
                 }
             }
         }
-
         for(String nodeToRemove : nodesToRemove) {
             mapOfNodeNameToRequirementsObject.remove(nodeToRemove);
         }
-
         queuedUpdates.remove(newState);
     }
 
@@ -365,9 +371,6 @@ public class AccessChecker {
                 || stateToUpdate.contains("Ellmac Accessible") || stateToUpdate.contains("Bahamut Accessible")
                 || stateToUpdate.contains("Viy Accessible") || stateToUpdate.contains("Baphomet Accessible")
                 || stateToUpdate.contains("Palenque Accessible") || stateToUpdate.contains("Tiamat Accessible")) {
-            if(Settings.isBossSpecificAnkhJewels()) {
-                return stateToUpdate;
-            }
             accessibleBossNodes.add(stateToUpdate);
             mapOfNodeNameToRequirementsObject.remove(stateToUpdate);
             queuedUpdates.remove(stateToUpdate);
@@ -385,24 +388,21 @@ public class AccessChecker {
             queuedUpdates.add(stateToUpdate);
             return null;
         }
-        if(stateToUpdate.contains("Ankh Jewel") && !stateToUpdate.equals("Ankh Jewel: 9")) {
-            if(Settings.isBossSpecificAnkhJewels()) {
-                return stateToUpdate;
-            }
+        if(stateToUpdate.contains(ItemConstants.ANKH_JEWEL) && !stateToUpdate.equals("Ankh Jewel: 9")) {
             numberOfAccessibleAnkhJewels += 1;
             numberOfCollectedAnkhJewels += 1;
             if(numberOfCollectedAnkhJewels == 9) {
                 // Alternate Mother Ankh
                 queuedUpdates.add("Ankh Jewel: 9");
             }
-            return "Ankh Jewel";
+            return ItemConstants.ANKH_JEWEL;
         }
         if(stateToUpdate.contains("Sacred Orb (")) {
             numberOfAccessibleSacredOrbs += 1;
             queuedUpdates.add("Sacred Orb: " + numberOfAccessibleSacredOrbs);
             return "Sacred Orb";
         }
-        if(!"Whip".equals(Settings.getCurrentStartingWeapon()) && "Whip".equals(stateToUpdate)) {
+        if(!ItemConstants.WHIP.equals(Settings.getCurrentStartingWeapon()) && ItemConstants.WHIP.equals(stateToUpdate)) {
             return null; // Whip is a removed item.
         }
         if(stateToUpdate.equals("Vessel")) {
@@ -557,14 +557,14 @@ public class AccessChecker {
         }
 
         if(item.equals("Dimensional Key")) {
-            if("Angel Shield".equals(location) || "beolamu.exe".equals(location) || "Sacred Orb (Dimensional Corridor)".equals(location)
+            if(ItemConstants.ANGEL_SHIELD.equals(location) || "beolamu.exe".equals(location) || "Sacred Orb (Dimensional Corridor)".equals(location)
                     || "Ankh Jewel (Dimensional Corridor)".equals(location) || "Magatama Jewel".equals(location)
                     || "Map (Dimensional Corridor)".equals(location) || "Coin: Dimensional".equals(location)) {
                 return false;
             }
         }
-        else if(item.contains("Ankh Jewel")) {
-            item = "Ankh Jewel";
+        else if(item.contains(ItemConstants.ANKH_JEWEL)) {
+            item = ItemConstants.ANKH_JEWEL;
             if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
                 return false;
             }
@@ -609,7 +609,7 @@ public class AccessChecker {
                 return false;
             }
         }
-        else if(item.equals("Whip") || item.equals("Chain Whip") || item.equals("Buckler") || item.contains("Silver Shield")) {
+        else if(item.equals(ItemConstants.WHIP) || item.equals(ItemConstants.CHAIN_WHIP) || item.equals(ItemConstants.BUCKLER) || item.contains(ItemConstants.SILVER_SHIELD)) {
             if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
                 return false;
             }
@@ -674,7 +674,6 @@ public class AccessChecker {
             threads.add(thread);
             thread.start();
         }
-
         try {
             for(Thread thread : threads) {
                 thread.join();
@@ -683,7 +682,6 @@ public class AccessChecker {
         catch (InterruptedException ex) {
             FileUtils.log("Error: interrupted thread while checking for ankh jewel locks");
         }
-
         for(AnkhJewelLockChecker ankhJewelLockChecker : ankhJewelLockCheckers) {
             if(!ankhJewelLockChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
                 return false;

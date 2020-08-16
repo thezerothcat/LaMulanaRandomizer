@@ -1,5 +1,6 @@
 package lmr.randomizer.node;
 
+import lmr.randomizer.ItemConstants;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
@@ -9,7 +10,12 @@ import lmr.randomizer.random.ShopRandomizer;
 import lmr.randomizer.random.TransitionGateRandomizer;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by thezerothcat on 7/11/2017.
@@ -100,7 +106,7 @@ public class MoneyChecker {
             queuedUpdates.add("Sacred Orb: " + numberOfAccessibleSacredOrbs);
             return "Sacred Orb";
         }
-        if(!"Whip".equals(Settings.getCurrentStartingWeapon()) && "Whip".equals(stateToUpdate)) {
+        if(!ItemConstants.WHIP.equals(Settings.getCurrentStartingWeapon()) && ItemConstants.WHIP.equals(stateToUpdate)) {
             return null; // Whip is a removed item.
         }
         if(stateToUpdate.equals("Vessel")) {
@@ -118,7 +124,7 @@ public class MoneyChecker {
                     && accessedAreas.contains("Tower of the Goddess")) {
                 return accessedMoney < 50 ? accessedMoney : 50;
             }
-            if("Ankh Jewel".equals(itemName) && accessedAreas.contains("Mausoleum of the Giants")) {
+            if(ItemConstants.ANKH_JEWEL.equals(itemName) && accessedAreas.contains("Mausoleum of the Giants")) {
                 return accessedMoney < 40 ? accessedMoney : 40;
             }
             if("Bronze Mirror".equals(itemName)
@@ -152,13 +158,13 @@ public class MoneyChecker {
             if("Fruit of Eden".equals(itemName) && accessedNodes.contains("Location: Gate of Illusion [Eden]")) {
                 return accessedMoney < 50 ? accessedMoney : 50;
             }
-            if("Hand Scanner".equals(itemName) && accessedAreas.contains("Gate of Illusion")) {
+            if(ItemConstants.HAND_SCANNER.equals(itemName) && accessedAreas.contains("Gate of Illusion")) {
                 return accessedMoney < 50 ? accessedMoney : 50;
             }
-            if("Bomb".equals(itemName) && accessedAreas.contains("Graveyard of the Giants")) {
+            if(ItemConstants.BOMB.equals(itemName) && accessedAreas.contains("Graveyard of the Giants")) {
                 return accessedMoney < 50 ? accessedMoney : 50;
             }
-            if("Bomb".equals(itemName) && accessedAreas.contains("Dimensional Corridor") && Settings.getEnabledDamageBoosts().contains("Item")) {
+            if(ItemConstants.BOMB.equals(itemName) && accessedAreas.contains("Dimensional Corridor") && Settings.getEnabledDamageBoosts().contains("Item")) {
                 return accessedMoney < 20 ? accessedMoney : 20; // Extra cheap because ammo is also needed
             }
             if("Ring".equals(itemName) && accessedAreas.contains("Graveyard of the Giants")) {
@@ -169,21 +175,21 @@ public class MoneyChecker {
                     || (Settings.getEnabledGlitches().contains("Raindrop")))) {
                 return accessedMoney < 50 ? accessedMoney : 50;
             }
-            if("Hermes' Boots".equals(itemName)
+            if(ItemConstants.HERMES_BOOTS.equals(itemName)
                     && (Settings.getEnabledGlitches().contains("Raindrop") || Settings.getEnabledGlitches().contains("Object Zip"))) {
                 return accessedMoney < 80 ? accessedMoney : 80;
             }
             if(accessedAreas.contains("Temple of Moonlight")
-                    && ("Shuriken".equals(itemName) || "Rolling Shuriken".equals(itemName)
-                    || "Caltrops".equals(itemName) || "Bomb".equals(itemName)
-                    || "Chakram".equals(itemName) || "Pistol".equals(itemName))) {
+                    && (ItemConstants.SHURIKEN.equals(itemName) || ItemConstants.ROLLING_SHURIKEN.equals(itemName)
+                    || ItemConstants.CALTROPS.equals(itemName) || ItemConstants.BOMB.equals(itemName)
+                    || ItemConstants.CHAKRAM.equals(itemName) || "Pistol".equals(itemName))) {
                 if(!accessedNodes.contains("Attack: Shuriken") && !accessedNodes.contains("Attack: Rolling Shuriken")
                         && !accessedNodes.contains("Attack: Caltrops") && !accessedNodes.contains("Attack: Bomb")
                         && !accessedNodes.contains("Attack: Chakram") && !accessedNodes.contains("Attack: Pistol")) {
                     return accessedMoney < 50 ? accessedMoney : 50;
                 }
             }
-            if("Flare Gun".equals(itemName) && accessedAreas.contains("Chamber of Extinction")) {
+            if(ItemConstants.FLARE_GUN.equals(itemName) && accessedAreas.contains("Chamber of Extinction")) {
                 return accessedMoney < 50 ? accessedMoney : 50;
             }
             if("Key of Eternity".equals(itemName) && accessedAreas.contains("Endless Corridor")) {
