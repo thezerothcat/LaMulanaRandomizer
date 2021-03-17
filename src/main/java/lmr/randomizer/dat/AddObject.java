@@ -12,6 +12,7 @@ import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.GameObjectId;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class AddObject {
@@ -63,6 +64,21 @@ public final class AddObject {
         obj.getTestByteOperations().addAll(tests);
         obj.getWriteByteOperations().addAll(updates);
         screen.getObjects().add(0, obj);
+    }
+
+    public static void addFloatingItem(Screen screen, int x, int y, int itemArg, boolean realItem, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x2f);
+        obj.setX(x);
+        obj.setY(y);
+
+        obj.getArgs().clear();
+        obj.getArgs().add((short)0); // Interactable any time?
+        obj.getArgs().add((short)itemArg); // Item arg
+        obj.getArgs().add((short)(realItem ? 1 : 0)); // 0 = fake item, 1 = real item
+        obj.getTestByteOperations().addAll(tests);
+        obj.getWriteByteOperations().addAll(updates);
+        screen.getObjects().add(obj);
     }
 
     /**
@@ -2303,18 +2319,46 @@ public final class AddObject {
         objectContainer.getObjects().add(bat);
     }
 
-    public static void addExplosion(ObjectContainer objectContainer, int xPos, int yPos, int newWorldFlag) {
+    public static void addExplosion(ObjectContainer objectContainer, int xPos, int yPos, int newWorldFlag, int damage, boolean percentDamage) {
         GameObject explosion = new GameObject(objectContainer);
         explosion.setId((short)0xb4);
         explosion.setX(xPos - 80);
         explosion.setY(yPos - 80);
-        explosion.getArgs().add((short)200);
-        explosion.getArgs().add((short)1);
-        explosion.getArgs().add((short)6);
-        explosion.getArgs().add((short)6);
-        explosion.getArgs().add((short)1);
-        explosion.getArgs().add((short)60);
-        explosion.getArgs().add((short)85);
+        explosion.getArgs().add((short)200); // Width & Height
+        explosion.getArgs().add((short)1); // Undocumented
+        explosion.getArgs().add((short)6); // Frames No Animation
+        explosion.getArgs().add((short)6); // Undocumented
+        explosion.getArgs().add((short)(percentDamage ? 1 : 0)); // hp or %
+        explosion.getArgs().add((short)damage); // Damage
+        explosion.getArgs().add((short)85); // sound effect select
+
+        TestByteOperation testByteOperation = new TestByteOperation();
+        testByteOperation.setIndex(newWorldFlag);
+        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
+        testByteOperation.setValue((byte)1);
+        explosion.getTestByteOperations().add(testByteOperation);
+
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+        writeByteOperation.setIndex(newWorldFlag);
+        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+        writeByteOperation.setValue(2);
+        explosion.getWriteByteOperations().add(writeByteOperation);
+
+        objectContainer.getObjects().add(explosion);
+    }
+
+    public static void addFoolsExplosion(ObjectContainer objectContainer, int xPos, int yPos, int newWorldFlag) {
+        GameObject explosion = new GameObject(objectContainer);
+        explosion.setId((short)0xb4);
+        explosion.setX(640 * (xPos / 640));
+        explosion.setY(480 * (yPos / 480));
+        explosion.getArgs().add((short)640); // Width & Height
+        explosion.getArgs().add((short)1); // Undocumented
+        explosion.getArgs().add((short)6); // Frames No Animation
+        explosion.getArgs().add((short)6); // Undocumented
+        explosion.getArgs().add((short)1); // hp or %
+        explosion.getArgs().add((short)60); // Damage
+        explosion.getArgs().add((short)85); // sound effect select
 
         TestByteOperation testByteOperation = new TestByteOperation();
         testByteOperation.setIndex(newWorldFlag);
@@ -2332,26 +2376,228 @@ public final class AddObject {
     }
 
     /**
-     * For not having to damage boost up Gate of Illusion to Cog of the Soul
+     * Add a pot to a screen
      * @param screen the screen to add the objects to
+     * @param graphic
      */
-    public static void addFeatherlessCogAccessPot(ObjectContainer screen) {
-        GameObject featherlessCogAccessPot = new GameObject(screen);
-        featherlessCogAccessPot.setId((short) 0x0);
-        featherlessCogAccessPot.setX(580);
-        featherlessCogAccessPot.setY(260);
+    public static void addPot(ObjectContainer screen, int x, int y, int graphic, List<TestByteOperation> tests) {
+        GameObject addedPot = new GameObject(screen);
+        addedPot.setId((short) 0x0);
+        addedPot.setX(x);
+        addedPot.setY(y);
 
-        featherlessCogAccessPot.getArgs().add((short)0);
-        featherlessCogAccessPot.getArgs().add((short)0);
-        featherlessCogAccessPot.getArgs().add((short)-1);
-        featherlessCogAccessPot.getArgs().add((short)1);
-        featherlessCogAccessPot.getArgs().add((short)10);
-        featherlessCogAccessPot.getArgs().add((short)105);
-        featherlessCogAccessPot.getArgs().add((short)35);
-        featherlessCogAccessPot.getArgs().add((short)17);
-        featherlessCogAccessPot.getArgs().add((short)0);
+        addedPot.getArgs().add((short)0);
+        addedPot.getArgs().add((short)0);
+        addedPot.getArgs().add((short)-1);
+        addedPot.getArgs().add((short)1);
+        addedPot.getArgs().add((short)graphic);
+        addedPot.getArgs().add((short)105);
+        addedPot.getArgs().add((short)35);
+        addedPot.getArgs().add((short)17);
+        addedPot.getArgs().add((short)0);
 
-        screen.getObjects().add(featherlessCogAccessPot);
+        addedPot.getTestByteOperations().addAll(tests);
+
+        screen.getObjects().add(addedPot);
+    }
+
+    public static void addMoonlightFeatherlessPlatform(Screen screen) {
+        GameObject platform = new GameObject(screen);
+        platform.setId((short)0x93);
+        platform.setX(580);
+        platform.setY(200);
+
+        platform.getArgs().add((short)0); // Layer
+        platform.getArgs().add((short)0); // 0=mapxx_1.png 1=evegxx.png 2=00prof.png 3=02comenemy.png 4=6=00item.png 5=01menu.png 6=4=00item.png Default:01effect.png
+        platform.getArgs().add((short)0); // Imagex
+        platform.getArgs().add((short)80); // Imagey
+        platform.getArgs().add((short)40); // dx
+        platform.getArgs().add((short)20); // dy
+        platform.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        platform.getArgs().add((short)1); // Animation frames
+        platform.getArgs().add((short)0); // Pause frames
+        platform.getArgs().add((short)0); // Repeat count (<1 is forever)
+        platform.getArgs().add((short)128); // Hittile to fill with
+        platform.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        platform.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        platform.getArgs().add((short)0); // Cycle colors t/f
+        platform.getArgs().add((short)0); // Alpha/frame
+        platform.getArgs().add((short)255); // Max alpha
+        platform.getArgs().add((short)0); // R/frame
+        platform.getArgs().add((short)0); // Max R
+        platform.getArgs().add((short)0); // G/frame
+        platform.getArgs().add((short)0); // Max G
+        platform.getArgs().add((short)0); // B/frame
+        platform.getArgs().add((short)0); // Max B
+        platform.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        platform.getArgs().add((short)1); // not0?
+
+        if (Settings.isFools2020Mode()) {
+            platform.getTestByteOperations().add(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2));
+        }
+
+        screen.getObjects().add(platform);
+    }
+
+    public static void addTwinPuzzleFeatherlessPlatform(Screen screen) {
+        GameObject platform = new GameObject(screen);
+        platform.setId((short)0x93);
+        platform.setX(900);
+        platform.setY(280);
+
+        platform.getArgs().add((short)0); // Layer
+        platform.getArgs().add((short)0); // 0=mapxx_1.png 1=evegxx.png 2=00prof.png 3=02comenemy.png 4=6=00item.png 5=01menu.png 6=4=00item.png Default:01effect.png
+        platform.getArgs().add((short)280); // Imagex
+        platform.getArgs().add((short)80); // Imagey
+        platform.getArgs().add((short)40); // dx
+        platform.getArgs().add((short)20); // dy
+        platform.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        platform.getArgs().add((short)1); // Animation frames
+        platform.getArgs().add((short)0); // Pause frames
+        platform.getArgs().add((short)0); // Repeat count (<1 is forever)
+        platform.getArgs().add((short)128); // Hittile to fill with
+        platform.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        platform.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        platform.getArgs().add((short)0); // Cycle colors t/f
+        platform.getArgs().add((short)0); // Alpha/frame
+        platform.getArgs().add((short)255); // Max alpha
+        platform.getArgs().add((short)0); // R/frame
+        platform.getArgs().add((short)0); // Max R
+        platform.getArgs().add((short)0); // G/frame
+        platform.getArgs().add((short)0); // Max G
+        platform.getArgs().add((short)0); // B/frame
+        platform.getArgs().add((short)0); // Max B
+        platform.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        platform.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(platform);
+    }
+
+    public static void addTwinPuzzleBlockFix(Screen screen) {
+        GameObject platform = new GameObject(screen);
+        platform.setId((short)0x93);
+        platform.setX(1060);
+        platform.setY(440);
+
+        platform.getArgs().add((short)0); // Layer
+        platform.getArgs().add((short)0); // 0=mapxx_1.png 1=evegxx.png 2=00prof.png 3=02comenemy.png 4=6=00item.png 5=01menu.png 6=4=00item.png Default:01effect.png
+        platform.getArgs().add((short)280); // Imagex
+        platform.getArgs().add((short)80); // Imagey
+        platform.getArgs().add((short)40); // dx
+        platform.getArgs().add((short)20); // dy
+        platform.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        platform.getArgs().add((short)1); // Animation frames
+        platform.getArgs().add((short)0); // Pause frames
+        platform.getArgs().add((short)0); // Repeat count (<1 is forever)
+        platform.getArgs().add((short)128); // Hittile to fill with
+        platform.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        platform.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        platform.getArgs().add((short)0); // Cycle colors t/f
+        platform.getArgs().add((short)0); // Alpha/frame
+        platform.getArgs().add((short)255); // Max alpha
+        platform.getArgs().add((short)0); // R/frame
+        platform.getArgs().add((short)0); // Max R
+        platform.getArgs().add((short)0); // G/frame
+        platform.getArgs().add((short)0); // Max G
+        platform.getArgs().add((short)0); // B/frame
+        platform.getArgs().add((short)0); // Max B
+        platform.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        platform.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(platform);
+    }
+
+    public static void addTrueShrineFeatherlessPlatform(Screen screen, int x, int y) {
+        GameObject platform = new GameObject(screen);
+        platform.setId((short)0x93);
+        platform.setX(x);
+        platform.setY(y);
+
+        platform.getArgs().add((short)0); // Layer
+        platform.getArgs().add((short)0); // 0=mapxx_1.png 1=evegxx.png 2=00prof.png 3=02comenemy.png 4=6=00item.png 5=01menu.png 6=4=00item.png Default:01effect.png
+        platform.getArgs().add((short)220); // Imagex
+        platform.getArgs().add((short)40); // Imagey
+        platform.getArgs().add((short)40); // dx
+        platform.getArgs().add((short)20); // dy
+        platform.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        platform.getArgs().add((short)1); // Animation frames
+        platform.getArgs().add((short)0); // Pause frames
+        platform.getArgs().add((short)0); // Repeat count (<1 is forever)
+        platform.getArgs().add((short)128); // Hittile to fill with
+        platform.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        platform.getArgs().add((short)0); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        platform.getArgs().add((short)0); // Cycle colors t/f
+        platform.getArgs().add((short)0); // Alpha/frame
+        platform.getArgs().add((short)255); // Max alpha
+        platform.getArgs().add((short)0); // R/frame
+        platform.getArgs().add((short)0); // Max R
+        platform.getArgs().add((short)0); // G/frame
+        platform.getArgs().add((short)0); // Max G
+        platform.getArgs().add((short)0); // B/frame
+        platform.getArgs().add((short)0); // Max B
+        platform.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        platform.getArgs().add((short)1); // not0?
+
+        screen.getObjects().add(platform);
+    }
+
+    public static void addInfernoFakeWeaponCover(Screen screen) {
+        GameObject weaponCover = new GameObject(screen);
+        weaponCover.setId((short)0x93);
+        weaponCover.setX(20);
+        weaponCover.setY(300);
+
+        weaponCover.getArgs().add((short)0); // Layer
+        weaponCover.getArgs().add((short)1); // 0=mapxx_1.png 1=evegxx.png 2=00prof.png 3=02comenemy.png 4=6=00item.png 5=01menu.png 6=4=00item.png Default:01effect.png
+        weaponCover.getArgs().add((short)420); // Imagex
+        weaponCover.getArgs().add((short)0); // Imagey
+        weaponCover.getArgs().add((short)120); // dx
+        weaponCover.getArgs().add((short)60); // dy
+        weaponCover.getArgs().add((short)0); // 0: act as if animation already played; 1: allow animation; 2: ..?
+        weaponCover.getArgs().add((short)1); // Animation frames
+        weaponCover.getArgs().add((short)0); // Pause frames
+        weaponCover.getArgs().add((short)0); // Repeat count (<1 is forever)
+        weaponCover.getArgs().add((short)128); // Hittile to fill with
+        weaponCover.getArgs().add((short)0); // Entry effect (0=static, 1=fade, 2=animate; show LAST frame)
+        weaponCover.getArgs().add((short)1); // Exit effect (0=disallow animation, 1=fade, 2=default, 3=large break on completion/failure, 4=default, 5=animate on failure/frame 1 on success, 6=break glass on completion/failure, default=disappear instantly)
+        weaponCover.getArgs().add((short)0); // Cycle colors t/f
+        weaponCover.getArgs().add((short)0); // Alpha/frame
+        weaponCover.getArgs().add((short)255); // Max alpha
+        weaponCover.getArgs().add((short)0); // R/frame
+        weaponCover.getArgs().add((short)0); // Max R
+        weaponCover.getArgs().add((short)0); // G/frame
+        weaponCover.getArgs().add((short)0); // Max G
+        weaponCover.getArgs().add((short)0); // B/frame
+        weaponCover.getArgs().add((short)0); // Max B
+        weaponCover.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
+        weaponCover.getArgs().add((short)1); // not0?
+
+        weaponCover.getTestByteOperations().add(new TestByteOperation(0x1b3, ByteOp.FLAG_LT, 2));
+
+        screen.getObjects().add(weaponCover);
+    }
+
+    public static void addLittleBrotherWeightWaster(Screen screen) {
+        GameObject weightWaster = new GameObject(screen);
+        weightWaster.setId((short)0x08);
+        weightWaster.setX(560);
+        weightWaster.setY(1140);
+
+        weightWaster.getArgs().add((short)0); // (0-1) Light red dust or pink dust
+        weightWaster.getArgs().add((short)60); // (1-270) Falling time (in frames?)
+        weightWaster.getArgs().add((short)0); // (-1-50) RiseFlag -1 Never Rise. 0 Always Rise
+        weightWaster.getArgs().add((short)2); // (0-2) Image
+        weightWaster.getArgs().add((short)0); // (0) (unused?)
+        weightWaster.getArgs().add((short)860); // (180-860) ImageX
+        weightWaster.getArgs().add((short)60); // (0-100) ImageY
+        weightWaster.getArgs().add((short)1); // (0-1) Width 0 = Half-width, 1 = Full-width
+        weightWaster.getArgs().add((short)10); // (0-10) (probably unused height)
+        weightWaster.getArgs().add((short)60); // (0-60) RiseSpeed
+
+        weightWaster.getTestByteOperations().add(new TestByteOperation(0x1f0, ByteOp.FLAG_LT, 2));
+        weightWaster.getTestByteOperations().add(new TestByteOperation(0x1ea, ByteOp.FLAG_GT, 0));
+
+        screen.getObjects().add(weightWaster);
     }
 
     /**
@@ -5055,6 +5301,148 @@ public final class AddObject {
 
         blocks.add(npcCountBlock);
         return npcCountBlock.getBlockNumber();
+    }
+
+    public static void addFoolsMulbrukBlocks(Screen mulbrukScreen, List<Block> datInfo) {
+        // Conversation to go to credits early.
+        Block foolsEarlyExitBlock = new Block(datInfo.size());
+        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit1"));
+        for (Short shortCharacter : stringCharacters) {
+            foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        foolsEarlyExitBlock.getBlockContents().add(new BlockItemData((short)0x0042, (short)62)); // Spaulder
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit2"));
+        for (Short shortCharacter : stringCharacters) {
+            foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit3"));
+        for (Short shortCharacter : stringCharacters) {
+            foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit4"));
+        for (Short shortCharacter : stringCharacters) {
+            foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit5"));
+        for (Short shortCharacter : stringCharacters) {
+            foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit6"));
+        for (Short shortCharacter : stringCharacters) {
+            foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit7"));
+        for (Short shortCharacter : stringCharacters) {
+            foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit8"));
+        for (Short shortCharacter : stringCharacters) {
+            foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+
+        foolsEarlyExitBlock.getBlockContents().add(new BlockPoseData((short)0x0046, (short)8)); // Pose 8
+        foolsEarlyExitBlock.getBlockContents().add(new BlockPoseData((short)0x0046, (short)9)); // Pose 9
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSceneData((short)0x004f, (short)0)); // Scene 0 (credits)
+        datInfo.add(foolsEarlyExitBlock);
+
+        // Conversation offering to quit
+        Block foolsOptionBlock = new Block(datInfo.size());
+        foolsOptionBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1)); // Can-exit flag
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exitPrompt"));
+        for (Short shortCharacter : stringCharacters) {
+            foolsOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        BlockListData repeatCmd = new BlockListData((short)0x004e, (short)1);
+        repeatCmd.getData().add((short)foolsEarlyExitBlock.getBlockNumber());
+        foolsOptionBlock.getBlockContents().add(repeatCmd);
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("prompt.yes"));
+        for (Short shortCharacter : stringCharacters) {
+            foolsOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("prompt.no"));
+        for (Short shortCharacter : stringCharacters) {
+            foolsOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+
+        stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.noQuit"));
+        for (Short shortCharacter : stringCharacters) {
+            foolsOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        foolsOptionBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        datInfo.add(foolsOptionBlock);
+
+        // Master block - Some eggs
+        MasterNpcBlock optionMasterNpcBlock = new MasterNpcBlock((MasterNpcBlock)datInfo.get(0x39c), datInfo.size());
+        optionMasterNpcBlock.setTextCard(new BlockCmdSingle((short)foolsOptionBlock.getBlockNumber()));
+        datInfo.add(optionMasterNpcBlock);
+
+        // Master block - Book of the Dead
+        MasterNpcBlock bookMasterNpcBlock = new MasterNpcBlock(datInfo.size());
+        bookMasterNpcBlock.setTextCard(new BlockCmdSingle((short)397));
+        bookMasterNpcBlock.setBackground(new BlockCmdSingle((short)0x019));
+        bookMasterNpcBlock.setNpcCard(new BlockCmdSingle((short)0x2e0)); // 2f0?
+        bookMasterNpcBlock.setMusic(new BlockCmdSingle((short)0x00f));
+        bookMasterNpcBlock.setNpcName(((MasterNpcBlock)datInfo.get(0x39c)).getNpcName());
+        datInfo.add(bookMasterNpcBlock);
+
+        // Find existing objects
+        GameObject escapeConversationNormal = null;
+        List<GameObject> keptObjects = new ArrayList<>();
+        for(GameObject gameObject : mulbrukScreen.getObjects()) {
+            if(gameObject.getId() == 0xa0) {
+                if(gameObject.getArgs().get(4) == 924) {
+                    escapeConversationNormal = gameObject;
+                    keptObjects.add(gameObject);
+                }
+                else if(gameObject.getArgs().get(4) == 926) {
+                    keptObjects.add(gameObject);
+                }
+            }
+            else {
+                keptObjects.add(gameObject);
+            }
+        }
+
+        GameObject bookOfTheDeadConversation = new GameObject(escapeConversationNormal);
+        bookOfTheDeadConversation.getArgs().set(4, (short)bookMasterNpcBlock.getBlockNumber());
+        bookOfTheDeadConversation.getTestByteOperations().clear();
+        bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_NOT_EQUAL, 1));
+        bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(0x32a, ByteOp.FLAG_EQUALS, 1));
+        bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(0x391, ByteOp.FLAG_GTEQ, 1));
+
+        GameObject optionConversation = new GameObject(escapeConversationNormal);
+        optionConversation.getArgs().set(4, (short)optionMasterNpcBlock.getBlockNumber());
+        optionConversation.getTestByteOperations().clear();
+        optionConversation.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_NOT_EQUAL, 1)); // Option to quit
+        optionConversation.getTestByteOperations().add(new TestByteOperation(0x32a, ByteOp.FLAG_NOT_EQUAL, 1));
+        optionConversation.getTestByteOperations().add(new TestByteOperation(0x391, ByteOp.FLAG_GTEQ, 1));
+
+        mulbrukScreen.getObjects().clear();
+        mulbrukScreen.getObjects().addAll(keptObjects);
+        mulbrukScreen.getObjects().add(bookOfTheDeadConversation);
+        mulbrukScreen.getObjects().add(optionConversation);
     }
 
     public static int addDevRoomHintBlock(List<Block> blocks, boolean updateConversationFlag) {

@@ -243,6 +243,16 @@ public final class RcdReader {
                 }
             }
         }
+        else if(obj.getId() == 0x2d) {
+            if(Settings.isFools2020Mode()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                        keepObject = false; // Remove weapon cover from Flare puzzle room
+                    }
+                }
+            }
+        }
         else if(obj.getId() == 0x2f) {
             if(obj.getArgs().get(1) == 7) {
                 // Remove empowered Key Sword
@@ -373,6 +383,9 @@ public final class RcdReader {
                     }
                     if(testFlagIndex != null) {
                         obj.getTestByteOperations().remove((int)testFlagIndex);
+                    }
+                    if(Settings.isFools2020Mode()) {
+                        obj.getArgs().set(4, (short)273);
                     }
                 }
                 else if(obj.getArgs().get(4) == 273) {
@@ -549,7 +562,9 @@ public final class RcdReader {
                     Screen screen = (Screen) objectContainer;
                     if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
                         // Lemeza Detector part of Inferno Cavern fake Sacred Orb trap
-                        keepObject = false;
+                        if(!Settings.isFools2020Mode()) {
+                            keepObject = false;
+                        }
                     } else if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 12 && screen.getScreenIndex() == 0) {
                         // Lemeza Detector part of Twin Labs fake Ankh Jewel trap
                         keepObject = false;
@@ -597,6 +612,17 @@ public final class RcdReader {
                 }
             }
         }
+        else if(obj.getId() == 0x30) {
+            // Trapdoor
+            if(Settings.isFools2020Mode()) {
+                if(obj.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) obj.getObjectContainer();
+                    if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 6 && screen.getScreenIndex() == 1) {
+                        keepObject = false;
+                    }
+                }
+            }
+        }
         else if(obj.getId() == 0x34) {
             // Seal
             if(objectContainer instanceof Screen) {
@@ -614,9 +640,21 @@ public final class RcdReader {
                         obj.getWriteByteOperations().add(flagUpdate);
                     }
                 }
-                else if(Settings.isHalloweenMode()
-                        && screen.getZoneIndex() == 18 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
-                    keepObject = false; // Remove seal for mother ankh
+                if(screen.getZoneIndex() == 18 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
+                    if(Settings.isHalloweenMode()) {
+                        keepObject = false; // Remove seal for mother ankh
+                    }
+                    if(Settings.isFeatherlessMode()) {
+                        if(obj.getY() == 240) {
+                            obj.setY(260);
+                            if(obj.getX() == 200) {
+                                obj.setX(220);
+                            }
+                            else {
+                                obj.setX(380);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -652,6 +690,16 @@ public final class RcdReader {
         else if (obj.getId() == 0xc5) {
             if(Settings.isRandomizeTransitionGates()) {
                 obj.getArgs().set(2, (short)10);
+            }
+        }
+        else if (obj.getId() == 0x9b) {
+            if(Settings.isFools2020Mode()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 6 && screen.getScreenIndex() == 1) {
+                        keepObject = false; // Remove shell horn puzzle solve sound
+                    }
+                }
             }
         }
         else if (obj.getId() == 0x9e) {
@@ -702,7 +750,7 @@ public final class RcdReader {
                     }
                 }
                 else if(screen.getZoneIndex() == 3 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
-                    if(Settings.isHalloweenMode()) {
+                    if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
                         // Graphic for closed Mulbruk door should be removed since the door won't be closed.
                         keepObject = false;
                     }
@@ -724,22 +772,24 @@ public final class RcdReader {
                 if(objectContainer instanceof Screen) {
                     Screen screen = (Screen)objectContainer;
                     if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
-                        for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                            if(testByteOperation.getIndex() == 0x1ac) {
-                                // Graphical part of Inferno Cavern fake Sacred Orb trap
-                                obj.setId((short)0x2f);
-                                obj.getArgs().clear();
-                                obj.getArgs().add((short)0); // Interactable any time?
-                                obj.getArgs().add((short)69); // Sacred Orb item
-                                obj.getArgs().add((short)0); // Fake item
-                                obj.getTestByteOperations().get(0).setIndex(2779);
+                        if(!Settings.isFools2020Mode()) {
+                            for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                                if(testByteOperation.getIndex() == 0x1ac) {
+                                    // Graphical part of Inferno Cavern fake Sacred Orb trap
+                                    obj.setId((short)0x2f);
+                                    obj.getArgs().clear();
+                                    obj.getArgs().add((short)0); // Interactable any time?
+                                    obj.getArgs().add((short)69); // Sacred Orb item
+                                    obj.getArgs().add((short)0); // Fake item
+                                    obj.getTestByteOperations().get(0).setIndex(2779);
 
-                                WriteByteOperation writeByteOperation = new WriteByteOperation();
-                                writeByteOperation.setIndex(2779);
-                                writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
-                                writeByteOperation.setValue((byte)1);
-                                obj.getWriteByteOperations().add(writeByteOperation);
-                                break;
+                                    WriteByteOperation writeByteOperation = new WriteByteOperation();
+                                    writeByteOperation.setIndex(2779);
+                                    writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
+                                    writeByteOperation.setValue((byte)1);
+                                    obj.getWriteByteOperations().add(writeByteOperation);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -853,6 +903,21 @@ public final class RcdReader {
                     Screen screen = (Screen) objectContainer;
                     if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
                         keepObject = false;
+                    }
+                }
+            }
+        }
+        else if(obj.getId() == 0xa9) {
+            if(Settings.isFools2020Mode()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen) objectContainer;
+                    if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                        if(obj.getX() == 360) {
+                            obj.setX(obj.getX() + 60);
+                        }
+                        else {
+                            keepObject = false;
+                        }
                     }
                 }
             }
@@ -1405,6 +1470,16 @@ public final class RcdReader {
                 if(screenExit.getZoneIndex() == 1) {
                     screenExit.setZoneIndex((byte)22);
                 }
+            }
+        }
+
+        if(Settings.isFools2020Mode()) {
+            if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 1) {
+                // Prevent raindropping to the Lamp of Time shop
+                ScreenExit downExit = screen.getScreenExits().get(2);
+                downExit.setZoneIndex((byte)7);
+                downExit.setRoomIndex((byte)4);
+                downExit.setScreenIndex((byte)1);
             }
         }
         if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
@@ -2225,6 +2300,36 @@ public final class RcdReader {
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
+            if(Settings.isFools2020Mode()) {
+                if(roomIndex == 4) {
+                    if(screenIndex == 0) {
+                        AddObject.addInfernoFakeWeaponCover(screen);
+                    }
+                }
+                else if(roomIndex == 9) {
+                    if(screenIndex == 0) {
+                        int randomizeGraphicsFlag = 2730;
+                        for(int i = 0; i < 640; i += 40) {
+                            AddObject.addFloatingItem(screen, i, 400, 62,
+                                    true, Arrays.asList(new TestByteOperation(randomizeGraphicsFlag, ByteOp.FLAG_EQUALS, 0)),
+                                    Arrays.asList(new WriteByteOperation(randomizeGraphicsFlag, ByteOp.ASSIGN_FLAG, 1)));
+                            ++randomizeGraphicsFlag;
+                        }
+                    }
+                    else if(screenIndex == 1) {
+                        int randomizeGraphicsFlag = 2746;
+                        for(int i = 640; i < 1280; i += 40) {
+                            AddObject.addFloatingItem(screen, i, 400, 62,
+                                    true, Arrays.asList(new TestByteOperation(randomizeGraphicsFlag, ByteOp.FLAG_EQUALS, 0)),
+                                    Arrays.asList(new WriteByteOperation(randomizeGraphicsFlag, ByteOp.ASSIGN_FLAG, 1)));
+                        }
+                        AddObject.addAutosave(screen, 1080, 80, 0x06b,
+                                Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2),
+                                        new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
+                                new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                    }
+                }
+            }
         }
         else if(zoneIndex == 6) {
             if(roomIndex == 2 && screenIndex == 0) {
@@ -2242,6 +2347,13 @@ public final class RcdReader {
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
+            if(Settings.isFeatherlessMode()) {
+                if(roomIndex == 1 && screenIndex == 1) {
+                    // Land on Spriggan without feather
+                    AddObject.addPot(screen, 780, 400, 5,
+                            Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                }
+            }
         }
         else if(zoneIndex == 7) {
             if(Settings.isBossCheckpoints()) {
@@ -2253,9 +2365,32 @@ public final class RcdReader {
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1)); // Text block 206 is backside Twin Labs grail, but they seem to be identical.
                 }
             }
+            if(Settings.isFeatherlessMode()) {
+                if(roomIndex == 10 && screenIndex == 1) {
+                    // Access to Dimensional without Feather
+                    AddObject.addPot(screen, 840, 320, 6,
+                            Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                }
+            }
+            if(Settings.isFools2020Mode()) {
+                if(roomIndex == 3 && screenIndex == 2) {
+                    AddObject.addLittleBrotherWeightWaster(screen);
+                }
+                if(roomIndex == 6 && screenIndex == 1) {
+                    AddObject.addTwinPuzzleFeatherlessPlatform(screen);
+                    AddObject.addFloatingItem(screen, 1200, 80, 84, false, Arrays.asList(new TestByteOperation(0x1e4, ByteOp.FLAG_EQUALS, 0)), new ArrayList<>(0));
+                    AddObject.addNoItemSoundEffect(screen, 0x1e4, 0x00b);
+                    AddObject.addTwinPuzzleBlockFix(screen);
+                }
+            }
         }
         else if(zoneIndex == 9) {
-            if(roomIndex == 8 && screenIndex == 1) {
+            if(roomIndex == 7 && screenIndex == 0) {
+                if(Settings.isFeatherlessMode()) {
+                    AddObject.addPot(screen, 280, 240, 8, new ArrayList<>(0));
+                }
+            }
+            else if(roomIndex == 8 && screenIndex == 1) {
                 GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 0));
             }
             else if(roomIndex == 9 && screenIndex == 0) {
@@ -2278,6 +2413,65 @@ public final class RcdReader {
                     warp.getTestByteOperations().add(warpTest);
                 }
             }
+            if(Settings.isFeatherlessMode()) {
+                if(roomIndex == 1 && screenIndex == 0) {
+                    // For not having to damage boost up Gate of Illusion to Cog of the Soul
+                    AddObject.addPot(screen, 580, 280, 10,
+                            Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                }
+            }
+            if(Settings.isFools2020Mode()) {
+                if(roomIndex == 0 && screenIndex == 0) {
+                    // Ladder attack!
+                    AddObject.addPot(screen, 580, 280, 10, new ArrayList<>());
+                }
+                else if(roomIndex == 8 && screenIndex == 0) {
+                    // Ladder attack!
+                    AddObject.addPot(screen, 580, 280, 10, new ArrayList<>());
+                }
+            }
+        }
+        else if(zoneIndex == 12) {
+            if(Settings.isFeatherlessMode()) {
+                if(roomIndex == 5 && screenIndex == 0) {
+                    AddObject.addMoonlightFeatherlessPlatform(screen);
+                }
+            }
+        }
+        else if(zoneIndex == 14) {
+            if(Settings.isFools2020Mode()) {
+                if(roomIndex == 8) {
+                    if(screenIndex == 1) {
+                        // Troll pot on the way to Nuwa
+                        AddObject.addPot(screen, 940, 280, 14, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2),
+                                new TestByteOperation(0x369, ByteOp.FLAG_GTEQ, 1),
+                                new TestByteOperation(0x265, ByteOp.FLAG_GTEQ, 1),
+                                new TestByteOperation(0x298, ByteOp.FLAG_GTEQ, 1)));
+                    }
+                }
+            }
+            if(Settings.isFeatherlessMode()) {
+                if(roomIndex == 8) {
+                    if(screenIndex == 2) {
+                        // Nuwa assist
+                        AddObject.addPot(screen, 1840, 180, 14,
+                                Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                        AddObject.addPot(screen, 1840, 220, 14,
+                                Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                    }
+                }
+            }
+        }
+        else if(zoneIndex == 15) {
+            if(Settings.isFeatherlessMode() && !Settings.getEnabledGlitches().contains("Raindrop")) {
+                if(roomIndex == 2 && screenIndex == 1) {
+                    // Access to Palenque without Feather
+                    AddObject.addPot(screen, 20, 760, 15,
+                            Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                    AddObject.addPot(screen, 20, 800, 15,
+                            Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                }
+            }
         }
         else if(zoneIndex == 17) {
             if(roomIndex == 10 && screenIndex == 1) {
@@ -2294,10 +2488,24 @@ public final class RcdReader {
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
+            if(Settings.isFeatherlessMode()) {
+                if(roomIndex == 0 && screenIndex == 1) {
+                    AddObject.addPot(screen, 500, 680, 16,
+                            Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                    AddObject.addPot(screen, 500, 720, 16,
+                            Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                }
+            }
         }
         else if(zoneIndex == 18) {
             if (roomIndex == 0 && screenIndex == 0) {
                 AddObject.addUpperUntrueShrineBackupDoor(screen);
+            }
+            if (roomIndex == 1 && screenIndex == 1) {
+                if(Settings.isFeatherlessMode()) {
+                    AddObject.addTrueShrineFeatherlessPlatform(screen, 800, 240);
+                    AddObject.addTrueShrineFeatherlessPlatform(screen, 1020, 220);
+                }
             }
 //            else if (roomIndex == 3 && screenIndex == 0) {
 //                if(Settings.isFoolsMode()) {
@@ -2603,20 +2811,20 @@ public final class RcdReader {
             }
             else if(roomIndex == 2) {
                 if(screenIndex == 0) {
-                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
+                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation() || Settings.isFools2020Mode()) {
                         AddObject.addSurfaceKillTimer(screen, false);
                     }
                 }
                 if(screenIndex == 1) {
                     AddObject.addXelpudIntroTimer(screen);
                     AddObject.addDiaryTalismanConversationTimers(screen);
-                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
+                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation() || Settings.isFools2020Mode()) {
                         AddObject.addSurfaceKillTimer(screen, true);
                     }
                 }
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation()) {
+                if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation() || Settings.isFools2020Mode()) {
                     AddObject.addSurfaceKillTimer(screen, false);
                 }
             }
@@ -2705,6 +2913,13 @@ public final class RcdReader {
                         AddObject.addEscapeTimer(screen, 0xaca, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xaaf);
+                }
+            }
+            if(Settings.isFools2020Mode()) {
+                if(roomIndex == 4 && screenIndex == 0) {
+                    AddObject.addTimer(screen, 0,
+                            Arrays.asList(new TestByteOperation(0x13, ByteOp.FLAG_GTEQ, 1), new TestByteOperation(0x1b3, ByteOp.FLAG_EQUALS, 1)),
+                            Arrays.asList(new WriteByteOperation(0x1b3, ByteOp.ASSIGN_FLAG, 2), new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1)));
                 }
             }
         }

@@ -4,6 +4,7 @@ import lmr.randomizer.dat.AddObject;
 import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.DatReader;
 import lmr.randomizer.dat.DatWriter;
+import lmr.randomizer.custom.CustomPlacements;
 import lmr.randomizer.node.*;
 import lmr.randomizer.random.*;
 import lmr.randomizer.rcd.RcdReader;
@@ -252,6 +253,8 @@ public class Main {
 
             Settings.saveSettings();
 
+            CustomPlacements.addHolidayPlacements();
+
             // Any forced temporary plando settings can go here.
 
             progressDialog.updateProgress(10, Translations.getText("setup.backup"));
@@ -388,7 +391,7 @@ public class Main {
                 fileOutputStream.close();
                 FileUtils.logFlush("dat copy complete");
 
-                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation()) {
+                if(Settings.isSaveFileNeeded()) {
                     FileUtils.logFlush("Copying save file from seed folder to La-Mulana save directory");
                     File saveFile = new File(String.format("%s/lm_00.sav", Settings.getStartingSeed()));
                     if(saveFile.exists()) {
@@ -488,7 +491,7 @@ public class Main {
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            if((Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || Settings.isHalloweenMode()) && !validateSaveDir()) {
+            if(Settings.isSaveFileNeeded() && !validateSaveDir()) {
                 JOptionPane.showMessageDialog(this,
                         "Unable to find La-Mulana save directory",
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
@@ -530,6 +533,29 @@ public class Main {
                     return false;
                 }
             }
+            if(Settings.isFools2020Mode()) {
+                if(Settings.isRequireFullAccess()) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("The setting \"%s\" cannot be used with this mode",
+                                    Translations.getText("logic.requireFullAccess.short")),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(!Settings.isRandomizeTrapItems()) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("The setting \"%s\" is required for this mode",
+                                    Translations.getText("randomization.randomizeTrapItems")),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(!Settings.isRandomizeCoinChests()) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("The setting \"%s\" is required for this mode",
+                                    Translations.getText("randomization.randomizeCoinChests")),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }
             if(Settings.isRandomizeEnemies() && Settings.getEnabledDamageBoosts().contains("Enemy")) {
                 JOptionPane.showMessageDialog(this,
                         String.format("The setting \"%s\" cannot be used with the setting \"%s\"",
@@ -552,7 +578,7 @@ public class Main {
                     return false;
                 }
             }
-            if(!validateCustomPlacements(this)) {
+            if(!CustomPlacements.validateCustomPlacements(this)) {
                 // Message created below
                 return false;
             }
@@ -590,515 +616,6 @@ public class Main {
             return true;
         }
 
-        private boolean validateCustomPlacements(RandomizerUI randomizerUI) {
-            CustomPlacementData customPlacementData = DataFromFile.getCustomPlacementData();
-
-            List<String> locations = new ArrayList<>();
-            List<String> items = new ArrayList<>();
-            if(customPlacementData.getStartingWeapon() != null) {
-                if(Settings.getStartingItemsIncludingCustom().contains(customPlacementData.getStartingWeapon())) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Custom starting weapon cannot be the same as starting item" + customPlacementData.getStartingWeapon() + " not valid with current settings for starting item",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-
-                if(customPlacementData.getRemovedItems().contains(customPlacementData.getStartingWeapon())) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Cannot remove starting weapon",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-
-                if(ItemRandomizer.ALL_SUBWEAPONS.contains(customPlacementData.getStartingWeapon())) {
-                    if(!Settings.isAllowSubweaponStart()) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Custom starting weapon not enabled",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                }
-                else if(DataFromFile.MAIN_WEAPONS.contains(customPlacementData.getStartingWeapon())) {
-                    if("Whip".equals(customPlacementData.getStartingWeapon())) {
-                        if(!Settings.isAllowWhipStart()) {
-                            JOptionPane.showMessageDialog(randomizerUI,
-                                    "Custom starting weapon not enabled",
-                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                            return false;
-                        }
-                    }
-                    else if(!Settings.isAllowMainWeaponStart()) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Custom starting weapon not enabled",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-
-                }
-                else {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Invalid starting weapon: " + customPlacementData.getStartingWeapon(),
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-            }
-            if(customPlacementData.getStartingLocation() != null) {
-                if(!Settings.isRandomizeStartingLocation()) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            String.format("Please enable \"%s\"", Translations.getText("randomization.randomizeStartingLocation")),
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(!DataFromFile.STARTING_LOCATIONS.contains(customPlacementData.getStartingLocation())) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Invalid starting location: " + LocationCoordinateMapper.getStartingZoneName(customPlacementData.getStartingLocation()),
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(!Settings.isRandomizeTransitionGates()) {
-                    if(customPlacementData.getStartingLocation() == 11
-                            || customPlacementData.getStartingLocation() == 14
-                            || customPlacementData.getStartingLocation() == 16
-                            || customPlacementData.getStartingLocation() == 21) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                String.format("Please enable \"%s\"", Translations.getText("randomization.randomizeTransitionGates")),
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                }
-            }
-            if(!customPlacementData.getCustomDoorPlacements().isEmpty()) {
-                if(!Settings.isRandomizeBacksideDoors()) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Please enable the setting \"" + Translations.getText("randomization.randomizeBacksideDoors") + "\"",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-
-                Map<String, String> placedDoorsAndDestinations = new HashMap<>();
-                Map<String, Integer> placedDoorsAndBosses = new HashMap<>();
-                for(CustomDoorPlacement customDoorPlacement : customPlacementData.getCustomDoorPlacements()) {
-                    if(!customDoorPlacement.getTargetDoor().startsWith("Door F") && !customDoorPlacement.getTargetDoor().startsWith("Door B")) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Backside door " + customDoorPlacement.getTargetDoor() + " is invalid",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if(!customDoorPlacement.getDestinationDoor().startsWith("Door F") && !customDoorPlacement.getDestinationDoor().startsWith("Door B")) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Backside door " + customDoorPlacement.getDestinationDoor() + " is invalid",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if(!Settings.isRandomizeNonBossDoors()) {
-                        if(isNonBossDoor(customDoorPlacement.getTargetDoor())) {
-                            JOptionPane.showMessageDialog(randomizerUI,
-                                    "Please enable the setting \"" + Translations.getText("randomization.randomizeNonBossDoors") + "\"",
-                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                            return false;
-                        }
-                        if(isNonBossDoor(customDoorPlacement.getDestinationDoor())) {
-                            JOptionPane.showMessageDialog(randomizerUI,
-                                    "Please enable the setting \"" + Translations.getText("randomization.randomizeNonBossDoors") + "\"",
-                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                            return false;
-                        }
-                    }
-                    if(placedDoorsAndDestinations.keySet().contains(customDoorPlacement.getTargetDoor())) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Backside door " + customDoorPlacement.getTargetDoor() + " cannot be assigned multiple destinations",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if(placedDoorsAndDestinations.values().contains(customDoorPlacement.getDestinationDoor())) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Multiple backside doors cannot lead to destination door " + customDoorPlacement.getDestinationDoor(),
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if(customDoorPlacement.getTargetDoor().equals(customDoorPlacement.getDestinationDoor())) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Backside door " + customDoorPlacement.getTargetDoor() + " cannot lead to itself",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if(customDoorPlacement.getAssignedBoss() != null
-                            && customDoorPlacement.getAssignedBoss() != 9 && (customDoorPlacement.getAssignedBoss() < 1 || customDoorPlacement.getAssignedBoss() > 7)) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Assigned boss for backside door " + customDoorPlacement.getTargetDoor() + " could not be processed; please use boss name or numbers 1-7",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if(placedDoorsAndDestinations.values().contains(customDoorPlacement.getTargetDoor())) {
-                        if(!customDoorPlacement.getTargetDoor().equals(placedDoorsAndDestinations.get(customDoorPlacement.getDestinationDoor()))) {
-                            JOptionPane.showMessageDialog(randomizerUI,
-                                    "Support for non-reversible backside door placement does not exist at this time; please update assignment for " + customDoorPlacement.getTargetDoor() + " or " + customDoorPlacement.getDestinationDoor(),
-                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                            return false;
-                        }
-                    }
-                    if(placedDoorsAndDestinations.keySet().contains(customDoorPlacement.getDestinationDoor())) {
-                        if(!customDoorPlacement.getTargetDoor().equals(placedDoorsAndDestinations.get(customDoorPlacement.getDestinationDoor()))) {
-                            JOptionPane.showMessageDialog(randomizerUI,
-                                    "Support for non-reversible backside door placement does not exist at this time; please update assignment for " + customDoorPlacement.getTargetDoor() + " or " + customDoorPlacement.getDestinationDoor(),
-                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                            return false;
-                        }
-                    }
-                    Integer existingBoss = placedDoorsAndBosses.get(customDoorPlacement.getDestinationDoor());
-                    if(existingBoss != null && !existingBoss.equals(customDoorPlacement.getAssignedBoss())) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "A pair of backside doors cannot be assigned two different bosses at this time; please update assignment for " + customDoorPlacement.getTargetDoor() + " or " + customDoorPlacement.getDestinationDoor(),
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if((customDoorPlacement.getAssignedBoss() != null && customDoorPlacement.getAssignedBoss() > 0 && customDoorPlacement.getAssignedBoss() < 9)
-                            && (customDoorPlacement.getTargetDoor().endsWith("B8") || customDoorPlacement.getDestinationDoor().endsWith("B8"))) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Dimensional Corridor may not be paired with a Bronze Mirror door",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if((customDoorPlacement.getAssignedBoss() != null && customDoorPlacement.getAssignedBoss() > 0 && customDoorPlacement.getAssignedBoss() < 9)
-                            && (customDoorPlacement.getTargetDoor().endsWith("B9") || customDoorPlacement.getDestinationDoor().endsWith("B9"))) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Gate of Time may not be paired with a Bronze Mirror door",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    placedDoorsAndDestinations.put(customDoorPlacement.getTargetDoor(), customDoorPlacement.getDestinationDoor());
-                    placedDoorsAndBosses.put(customDoorPlacement.getTargetDoor(), customDoorPlacement.getAssignedBoss());
-                    placedDoorsAndBosses.put(customDoorPlacement.getDestinationDoor(), customDoorPlacement.getAssignedBoss());
-                }
-            }
-            if(!customPlacementData.getCustomTransitionPlacements().isEmpty()) {
-                if(!Settings.isRandomizeTransitionGates()) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Please enable the setting \"" + Translations.getText("randomization.randomizeTransitionGates") + "\"",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-
-                Map<String, String> placedTargetAndDestination = new HashMap<>();
-                for(CustomTransitionPlacement customTransitionPlacement : customPlacementData.getCustomTransitionPlacements()) {
-                    if(!isValidTransition(customTransitionPlacement.getTargetTransition())) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Transition " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", "") + " is invalid",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if(!isValidTransition(customTransitionPlacement.getDestinationTransition())) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Transition " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", "") + " is invalid",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if(!isValidTransitionDirection(customTransitionPlacement.getTargetTransition(), customTransitionPlacement.getDestinationTransition())) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Transition " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", "") + " is the wrong direction for " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", ""),
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if(!Settings.isRandomizeOneWayTransitions()) {
-                        if(isOneWayTransition(customTransitionPlacement.getTargetTransition())) {
-                            JOptionPane.showMessageDialog(randomizerUI,
-                                    "Please enable the setting \"" + Translations.getText("randomization.randomizeOneWayTransitions") + "\"",
-                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                            return false;
-                        }
-                        if(isOneWayTransition(customTransitionPlacement.getDestinationTransition())) {
-                            JOptionPane.showMessageDialog(randomizerUI,
-                                    "Please enable the setting \"" + Translations.getText("randomization.randomizeOneWayTransitions") + "\"",
-                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                            return false;
-                        }
-                    }
-
-                    if(placedTargetAndDestination.keySet().contains(customTransitionPlacement.getTargetTransition())) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Transition " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", "") + " cannot be assigned multiple destinations",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if(placedTargetAndDestination.values().contains(customTransitionPlacement.getDestinationTransition())) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Multiple transitions cannot lead to destination transition " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", ""),
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if(customTransitionPlacement.getTargetTransition().equals(customTransitionPlacement.getDestinationTransition())) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Transition " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", "") + " cannot lead to itself",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if(placedTargetAndDestination.values().contains(customTransitionPlacement.getTargetTransition())) {
-                        if(!customTransitionPlacement.getTargetTransition().equals(placedTargetAndDestination.get(customTransitionPlacement.getDestinationTransition()))) {
-                            JOptionPane.showMessageDialog(randomizerUI,
-                                    "Support for non-reversible transition placement does not exist at this time; please update assignment for " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", "") + " or " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", ""),
-                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                            return false;
-                        }
-                    }
-                    if(placedTargetAndDestination.keySet().contains(customTransitionPlacement.getDestinationTransition())) {
-                        if(!customTransitionPlacement.getTargetTransition().equals(placedTargetAndDestination.get(customTransitionPlacement.getDestinationTransition()))) {
-                            JOptionPane.showMessageDialog(randomizerUI,
-                                    "Support for non-reversible backside door placement does not exist at this time; please update assignment for " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", "") + " or " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", ""),
-                                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                            return false;
-                        }
-                    }
-                    placedTargetAndDestination.put(customTransitionPlacement.getTargetTransition(), customTransitionPlacement.getDestinationTransition());
-                }
-            }
-            if(Settings.isRequireFullAccess() && !customPlacementData.getRemovedItems().isEmpty()) {
-                if(Settings.isRequireFullAccess()) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Please disable the setting \"Require all items to be accessible\"",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-            }
-            for(String customRemovedItem : customPlacementData.getRemovedItems()) {
-                if(Settings.getStartingItems().contains(customRemovedItem)) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Custom placement of " + customRemovedItem + " not valid with current settings for starting item",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-
-                if(customRemovedItem.startsWith("Coin:")) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Coin chests cannot be removed items",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(customRemovedItem.startsWith("Trap:")) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Traps cannot be removed items",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(Settings.isRequireIceCapeForLava() && customRemovedItem.equals("Ice Cape")) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Please disable the setting \"Require Ice Cape for swimming through lava\"",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(Settings.isRequireFlaresForExtinction() && customRemovedItem.equals("Flare Gun")) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Please disable the setting \"Require Flare Gun for Chamber of Extinction\"",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(!DataFromFile.getRandomRemovableItems().contains(customRemovedItem)
-                        && !"Whip".equals(customRemovedItem)) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            customRemovedItem + " cannot be a removed item",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-
-                if(Settings.isHalloweenMode() && customRemovedItem.equals("Provocative Bathing Suit")) {
-                    JOptionPane.showMessageDialog(this,
-                            String.format("Custom placement of \"%s\" cannot be used with this mode",
-                                    Translations.getText("items.ProvocativeBathingSuit")),
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-
-                if(!isValidContents(customRemovedItem)) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Removed item not valid: " + customRemovedItem,
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-            }
-            for(String customStartingItem : customPlacementData.getStartingItems()) {
-                if (!isValidContents(customStartingItem)) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Starting item not valid: " + customStartingItem,
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-
-                if(Settings.isHalloweenMode() && customStartingItem.equals("Provocative Bathing Suit")) {
-                    JOptionPane.showMessageDialog(this,
-                            String.format("Custom placement of \"%s\" cannot be used with this mode",
-                                    Translations.getText("items.ProvocativeBathingSuit")),
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-            }
-            for(String cursedChestLocation : customPlacementData.getCursedChests()) {
-                if(!Settings.isRandomizeCursedChests()) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Custom placement of cursed chest not valid with current settings for cursed chest randomization",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(DataFromFile.FLOATING_ITEM_LOCATIONS.contains(cursedChestLocation)
-                        || DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(cursedChestLocation)
-                        || "mantra.exe".equals(cursedChestLocation)
-                        || "emusic.exe".equals(cursedChestLocation)
-                        || "beolamu.exe".equals(cursedChestLocation)) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Non-chest location " + cursedChestLocation + " cannot be cursed",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-            }
-            for(CustomItemPlacement customItemPlacement : customPlacementData.getCustomItemPlacements()) {
-                if(Settings.getStartingItems().contains(customItemPlacement.getContents())) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Custom placement of " + customItemPlacement.getContents() + " not valid with current settings for starting item",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-
-                if(locations.contains(customItemPlacement.getLocation())) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Location used for multiple items: " + customItemPlacement.getLocation(),
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(items.contains(customItemPlacement.getContents())
-                        && !"Weights".equals(customItemPlacement.getContents())
-                        && !customItemPlacement.getContents().endsWith(" Ammo")) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Item placed in multiple locations: " + customItemPlacement.getContents(),
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(Settings.isHalloweenMode() && customItemPlacement.getContents().equals("Provocative Bathing Suit")) {
-                    JOptionPane.showMessageDialog(this,
-                            String.format("Custom placement of \"%s\" cannot be used with this mode",
-                                    Translations.getText("items.ProvocativeBathingSuit")),
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(!isValidLocation(customItemPlacement.getLocation())) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Location not valid: " + customItemPlacement.getLocation() + " for item " + customItemPlacement.getContents(),
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(!isValidContents(customItemPlacement.getContents())) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Placed item not valid: " + customItemPlacement.getContents() + " at location " + customItemPlacement.getLocation(),
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(DataFromFile.SHOP_ITEMS.contains(customItemPlacement.getLocation())) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "To place " + customItemPlacement.getLocation() + " in a shop, please use the shop name and item number instead of the item name",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(!Settings.isRandomizeTrapItems()) {
-                    if(customItemPlacement.getLocation().startsWith("Trap:")) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Custom placement at location " + customItemPlacement.getLocation() + " not valid with current settings for randomized traps",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if(customItemPlacement.getContents().startsWith("Trap:")) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Custom placement of item " + customItemPlacement.getContents() + " not valid with current settings for randomized traps",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                }
-                if(!Settings.isRandomizeEscapeChest()) {
-                    if(customItemPlacement.getLocation().equals(DataFromFile.ESCAPE_CHEST_NAME) || customItemPlacement.getContents().startsWith(DataFromFile.ESCAPE_CHEST_NAME)) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Custom placement not valid with current settings for randomized escape chest",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                }
-                if(!Settings.isRandomizeCoinChests()) {
-                    if(customItemPlacement.getLocation().startsWith("Coin:")) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Custom placement at location " + customItemPlacement.getLocation() + " not valid with current settings for randomized coin chests",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    if(customItemPlacement.getContents().startsWith("Coin:")) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Custom placement of item " + customItemPlacement.getContents() + " not valid with current settings for randomized coin chests",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                }
-                if(!Settings.isRandomizeForbiddenTreasure()) {
-                    if(customItemPlacement.getLocation().equals("Provocative Bathing Suit")
-                            || customItemPlacement.getContents().equals("Provocative Bathing Suit")) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Custom placement not valid with current settings for Provocative Bathing Suit randomization",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                }
-                else if(!Settings.isHTFullRandom()) {
-                    if(customItemPlacement.getLocation().equals("Provocative Bathing Suit")
-                            && !customItemPlacement.getContents().startsWith("Map (")) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Custom placement not valid with current settings for Provocative Bathing Suit randomization",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                }
-                if(customItemPlacement.getContents().startsWith("Coin:") || DataFromFile.EXPLODING_CHEST_NAME.equals(customItemPlacement.getContents())) {
-                    if(DataFromFile.FLOATING_ITEM_LOCATIONS.contains(customItemPlacement.getLocation())
-                            || DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(customItemPlacement.getLocation())
-                            || "mantra.exe".equals(customItemPlacement.getLocation())
-                            || "emusic.exe".equals(customItemPlacement.getLocation())
-                            || "beolamu.exe".equals(customItemPlacement.getLocation())) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Item " + customItemPlacement.getContents() + " cannot be placed at non-chest location " + customItemPlacement.getLocation(),
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                }
-
-                if(!Settings.isRandomizeDracuetShop() && customItemPlacement.getLocation().startsWith("Shop 23 (HT)")) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Custom placement not valid with current settings for Dracuet shop randomization",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-
-                if(ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())
-                        && customItemPlacement.getLocation().startsWith("Shop ")) {
-                    if(!DataFromFile.CATEGORIZED_SHOP_ITEM_LOCATIONS.contains(customItemPlacement.getLocation())) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Custom placement of item at " + customItemPlacement.getLocation() + " not valid with current settings for shop randomization",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                    else if("Weights".equals(customItemPlacement.getContents())
-                            || customItemPlacement.getContents().endsWith(" Ammo")) {
-                        JOptionPane.showMessageDialog(randomizerUI,
-                                "Custom placement of " + customItemPlacement.getContents() + " not valid with current settings for shop randomization",
-                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-                }
-
-                if(!Settings.isRandomizeStartingLocation() && customItemPlacement.getLocation().startsWith("Shop 0")) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            String.format("Please enable the setting \"%s\"", Translations.getText("randomization.randomizeStartingLocation")),
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-
-                locations.add(customItemPlacement.getLocation());
-                items.add(customItemPlacement.getContents());
-            }
-            return true;
-        }
-
         private boolean validateInstallDir() {
             return Settings.getLaMulanaBaseDir() != null && !Settings.getLaMulanaBaseDir().isEmpty()
                     && new File(Settings.getLaMulanaBaseDir()).exists();
@@ -1107,119 +624,6 @@ public class Main {
         private boolean validateSaveDir() {
             return Settings.getLaMulanaSaveDir() != null && !Settings.getLaMulanaSaveDir().isEmpty()
                     && new File(Settings.getLaMulanaSaveDir()).exists();
-        }
-
-        private boolean isValidLocation(String location) {
-            if(DataFromFile.getAllItems().contains(location)) {
-                return true;
-            }
-            if(DataFromFile.getAllCoinChests().contains(location)
-                    || DataFromFile.ESCAPE_CHEST_NAME.equals(location)) {
-                return true;
-            }
-            if(location.equals("Trap: Graveyard") || location.equals("Trap: Exploding")
-                    || location.equals("Trap: Inferno Orb") || location.equals("Trap: Twin Ankh")) {
-                return true;
-            }
-            if(location.startsWith("Shop ")
-                    && (location.endsWith(" Item 1") || location.endsWith(" Item 2") || location.endsWith(" Item 3"))) {
-                for(String shopName : DataFromFile.getAllShops()) {
-                    if(location.startsWith(shopName)) {
-                        return !location.startsWith("Shop 2 Alt (Surface)") || location.endsWith("1");
-                    }
-                }
-                if(Settings.isRandomizeStartingLocation() && location.startsWith(DataFromFile.CUSTOM_SHOP_NAME)) {
-                    // Assumes random starting location that isn't the Surface. // todo: should probably just ban this in general
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private boolean isValidContents(String contents) {
-            if(DataFromFile.getAllItems().contains(contents)
-                    || "Whip".equals(contents) || "Ankh Jewel (Extra)".equals(contents)) {
-                return true;
-            }
-            if(DataFromFile.getAllCoinChests().contains(contents)
-                    || DataFromFile.ESCAPE_CHEST_NAME.equals(contents)) {
-                return true;
-            }
-            if(contents.equals("Trap: Graveyard") || contents.equals("Trap: Exploding")
-                    || contents.equals("Trap: Inferno Orb") || contents.equals("Trap: Twin Ankh")) {
-                return true;
-            }
-            if(contents.equals("Weights") || contents.equals("Shuriken Ammo") || contents.equals("Rolling Shuriken Ammo")
-                    || contents.equals("Caltrops Ammo") || contents.equals("Chakram Ammo") || contents.equals("Flare Gun Ammo")
-                    || contents.equals("Earth Spear Ammo") || contents.equals("Pistol Ammo") || contents.equals("Bomb Ammo")) {
-                return true;
-            }
-            return false;
-        }
-
-        private boolean isValidTransition(String transition) {
-            String formattedTransition = transition.replace("Transition ", "Transition: ");
-            return "Transition: Goddess W1".equals(formattedTransition)
-                    || "Transition: Inferno W1".equals(formattedTransition)
-                    || (TransitionGateRandomizer.getTransitionList().contains(formattedTransition)
-                    && !formattedTransition.startsWith("Transition: Sun R")
-                    && !formattedTransition.startsWith("Transition: Extinction L"));
-        }
-
-        private boolean isOneWayTransition(String transition) {
-            String formattedTransition = transition.replace("Transition ", "Transition: ");
-            return !"Transition: Goddess L1".equals(formattedTransition)
-                    && !"Transition: Illusion R1".equals(formattedTransition)
-                    && !"Transition: Twin U3".equals(formattedTransition)
-                    && !"Transition: Dimensional D1".equals(formattedTransition)
-                    && !"Transition: Shrine U1".equals(formattedTransition)
-                    && !"Transition: Endless D1".equals(formattedTransition)
-                    && !"Transition: Extinction U3".equals(formattedTransition)
-                    && !"Transition: Inferno W1".equals(formattedTransition)
-                    && !"Transition: Retromausoleum D1".equals(formattedTransition)
-                    && !"Transition: Goddess W1".equals(formattedTransition)
-                    && !"Transition: Twin U2".equals(formattedTransition)
-                    && !"Transition: Shrine D3".equals(formattedTransition)
-                    && !"Transition: Endless U1".equals(formattedTransition)
-                    && !"Transition: Shrine D2".equals(formattedTransition);
-        }
-
-        private boolean isNonBossDoor(String door) {
-            return door.endsWith("8") || door.endsWith("9");
-        }
-
-        private boolean isValidTransitionDirection(String transitionTarget, String transitionDestination) {
-            char transitionDirection1 = transitionTarget.charAt(transitionTarget.length() - 2);
-            char transitionDirection2 = transitionDestination.charAt(transitionDestination.length() - 2);
-
-            // Handle special transitions
-            if(transitionDirection1 == 'W' && transitionTarget.contains("Goddess W1")) {
-                transitionDirection1 = 'U';
-            }
-            if(transitionDirection2 == 'W' && transitionDestination.contains("Goddess W1")) {
-                transitionDirection2 = 'U';
-            }
-            if(transitionDirection1 == 'W' && transitionTarget.contains("Inferno W1")) {
-                transitionDirection1 = 'D';
-            }
-            if(transitionDirection2 == 'W' && transitionDestination.contains("Inferno W1")) {
-                transitionDirection2 = 'D';
-            }
-
-            // Check direction
-            if (transitionDirection1 == 'U') {
-                return transitionDirection2 == 'D';
-            }
-            else if (transitionDirection1 == 'R') {
-                return transitionDirection2 == 'L';
-            }
-            else if (transitionDirection1 == 'D') {
-                return transitionDirection2 == 'U';
-            }
-            else if (transitionDirection1 == 'L') {
-                return transitionDirection2 == 'R';
-            }
-            return false;
         }
     }
 
@@ -1266,6 +670,7 @@ public class Main {
                 this.attempt = attempt;
             }
         }
+        int totalFakeAttempts = Settings.isFools2020Mode() ? random.nextInt(4120) : 0; // Use random not from seed, to avoid messing things up.
         var updateHistory = new LinkedList<ProgressUpdate>();
         updateHistory.add(new ProgressUpdate(startTime, 0));
         while(true) {
@@ -1363,6 +768,7 @@ public class Main {
                             accessChecker.computeAccessibleNodes(accessChecker.getQueuedUpdates().iterator().next(), attempt);
                             if (accessChecker.getQueuedUpdates().isEmpty()) {
                                 if (!accessChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
+                                    accessChecker.logAnkhJewelLock();
                                     ankhJewelLock = true;
                                     break;
                                 }
@@ -1375,10 +781,18 @@ public class Main {
                     }
 
                     if (ankhJewelLock) {
-                        FileUtils.log(String.format("Detected ankh jewel lock on attempt %s. Re-shuffling items.", attempt));
-                        continue;
+                        if(Settings.isGenerationComplete(attempt)) {
+                            FileUtils.log(String.format("Detected ankh jewel lock on attempt %s, but validation is skipped. Generating seed anyway.", attempt));
+                        }
+                        else {
+                            FileUtils.log(String.format("Detected ankh jewel lock on attempt %s. Re-shuffling items.", attempt));
+                            continue;
+                        }
                     }
                 }
+            }
+            if(Settings.isFools2020Mode() && attempt < totalFakeAttempts) {
+                continue;
             }
             if(Settings.isGenerationComplete(attempt) || accessChecker.isSuccess(attempt)) {
                 dialog.progressBar.setIndeterminate(false);
@@ -1446,7 +860,7 @@ public class Main {
                     transitionGateRandomizer.updateTransitions();
                     FileUtils.logFlush("Updated transition gate data");
                 }
-                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation()) {
+                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || Settings.isFools2020Mode()) {
                     GameDataTracker.updateXelpudIntro(datInfo);
                 }
 //                if(Settings.isRandomizeMantras()) {
@@ -1461,6 +875,9 @@ public class Main {
                     }
                     GameDataTracker.fixTransitionGates(rcdData);
                 }
+                else if(Settings.isFools2020Mode()) {
+                    GameDataTracker.updateWorldForFools2020(rcdData, datInfo);
+                }
 
                 FileUtils.logFlush("Writing rcd file");
                 RcdWriter.writeRcd(rcdData);
@@ -1470,7 +887,7 @@ public class Main {
 
                 DatWriter.writeDat(datInfo);
                 FileUtils.logFlush("dat file successfully written");
-                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || Settings.isHalloweenMode()) {
+                if(Settings.isSaveFileNeeded()) {
                     backupSaves();
                     writeSaveFile();
                 }
@@ -1479,6 +896,13 @@ public class Main {
                     if(!FileUtils.updateGraphicsFilesForHalloween(Settings.getGraphicsPack())) {
                         JOptionPane.showMessageDialog(f,
                                 Translations.getText("Unable to create Halloween graphics"),
+                                "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                if(Settings.isFools2020Mode()) {
+                    if(!FileUtils.updateGraphicsFilesForFools2020(Settings.getGraphicsPack())) {
+                        JOptionPane.showMessageDialog(f,
+                                Translations.getText("Unable to create Fools 2020 graphics"),
                                 "Randomizer error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -1579,6 +1003,12 @@ public class Main {
         }
         if(!Settings.isBlockPushingRequiresGlove()) {
             startingNodes.add("Setting: Normal Pushing");
+        }
+        if(Settings.isFeatherlessMode()) {
+            startingNodes.add("Setting: Featherless");
+        }
+        if(!Settings.getEnabledGlitches().contains("Raindrop")) {
+            startingNodes.add("Setting: No Raindrop");
         }
         if(Settings.isRandomizeTransitionGates()) {
             startingNodes.add("Setting: Random Transitions");
@@ -1750,6 +1180,10 @@ public class Main {
                 // Twin labs front, auto-solve the elevator puzzle
                 saveData[0x11 + 0x1db] = (byte)2;
             }
+//            if(Settings.getCurrentStartingLocation() == 13) {
+//                // Tower of the Goddess, turn on the lights.
+//                saveData[0x11 + 0x271] = 3;
+//            }
         }
         if(Settings.isHalloweenMode()) {
             // Unlock Mulbruk so you can get Halloween hints.
@@ -1781,7 +1215,20 @@ public class Main {
 ////            saveData[0x11 + 0x7f0] = (byte)1; // room 33
 //            saveData[0x11 + 0x70c] = (byte)1; // room 34
         }
+        if(Settings.isFeatherlessMode()) {
+            // Ice block puzzle forced.
+            saveData[0x11 + 0x243] = 3;
+            saveData[0x11 + 0x244] = 3;
+        }
+        if(Settings.isFools2020Mode()) {
+            // Unlock Mulbruk so you can have conversations about quitting the game
+            saveData[0x11 + 0x079] = (byte)1;
+            saveData[0x11 + 0x18e] = (byte)2;
+            saveData[0x11 + 0x391] = (byte)1;
 
+            // Default Extinction lighting
+            saveData[0x11 + 0x1cd] = (byte)1;
+        }
 //        saveData[0x11 + 0x064] = 1;
 //        saveData[0x11 + 0x065] = 1;
 //        saveData[0x11 + 0x066] = 1;

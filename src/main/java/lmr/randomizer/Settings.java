@@ -834,6 +834,14 @@ public final class Settings {
         return false;
     }
 
+    public static boolean isFools2020Mode() {
+        return false;
+    }
+
+    public static boolean isFeatherlessMode() {
+        return false;
+    }
+
     public static boolean isIncludeHellTempleNPCs() {
         return singleton.includeHellTempleNPCs;
     }
@@ -930,6 +938,11 @@ public final class Settings {
 
     public static void setSkipValidation(int skipValidationAttemptNumber) {
         singleton.skipValidation = skipValidationAttemptNumber;
+    }
+
+    public static boolean isSaveFileNeeded() {
+        return isAllowMainWeaponStart() || isAllowSubweaponStart() || isRandomizeStartingLocation()
+                || Settings.isHalloweenMode() || isFools2020Mode();
     }
 
     public static void saveSettings() {

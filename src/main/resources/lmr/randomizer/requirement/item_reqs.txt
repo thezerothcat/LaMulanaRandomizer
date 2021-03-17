@@ -83,6 +83,7 @@ Earth Spear => Location: Tower of Ruin [Southwest], Feather
 Earth Spear => Location: Tower of Ruin [Southwest], Glitch: Cat Pause
 Earth Spear => Location: Tower of Ruin [Southwest], Boost: Enemy
 Earth Spear => Location: Tower of Ruin [Southwest], Boost: Item, Attack: Bomb, Hermes' Boots
+Earth Spear => Location: Tower of Ruin [Grail], Exit: Tower of Ruin [Southwest]
 emusic.exe => Location: Graveyard of the Giants [East], torude.exe, Attack: Bomb
 Eye of Truth => Location: Tower of the Goddess [Lower], Location: Tower of the Goddess [Lamp], Event: Flooded Tower of the Goddess, Attack: Chest-Any
 # Fairy Clothes attack requirements are stricter on breaking the fairy block than opening the chest
@@ -157,6 +158,7 @@ Origin Seal => Location: Spring in the Sky [Upper], Helmet, Event: Nuckelavee De
 Pepper => Location: Gate of Illusion [Lower], State: Can Reach Illusion Fraud
 Perfume => Location: Chamber of Birth [Northeast], Event: Mudmen Awakened, Attack: Chest-Any
 Philosopher's Ocarina => Location: Temple of Moonlight [Pyramid], Maternity Statue, Feather
+Philosopher's Ocarina => Location: Temple of Moonlight [Pyramid], Maternity Statue, Setting: Featherless
 Philosopher's Ocarina => Location: Temple of Moonlight [Upper], Maternity Statue, Glitch: Raindrop
 Plane Model => Location: Tower of the Goddess [Grail], Location: Tower of the Goddess [Spaulder], Location: Tower of the Goddess [Lower], Eye of Truth, Event: Flooded Tower of the Goddess, Event: Vimana Defeated, Attack: Chest
 Plane Model => Location: Tower of the Goddess [Grail], Location: Tower of the Goddess [Spaulder], Location: Tower of the Goddess [Lower], Eye of Truth, Event: Flooded Tower of the Goddess, Event: Vimana Defeated, Attack: Flare Gun, Feather # Feather needed to get to the level with the chest after opening, since you can't leave the screen

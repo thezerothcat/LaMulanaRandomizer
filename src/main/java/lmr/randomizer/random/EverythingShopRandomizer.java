@@ -1,15 +1,12 @@
 package lmr.randomizer.random;
 
-import javafx.util.Pair;
-import lmr.randomizer.DataFromFile;
-import lmr.randomizer.FileUtils;
-import lmr.randomizer.Settings;
-import lmr.randomizer.Translations;
+import lmr.randomizer.*;
 import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.node.MoneyChecker;
+import lmr.randomizer.Settings;
 import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.GameObjectId;
 import lmr.randomizer.update.LocationCoordinateMapper;
@@ -412,7 +409,7 @@ public class EverythingShopRandomizer implements ShopRandomizer {
             }
 
             if(availableSubweapons.isEmpty()) {
-                mapOfShopInventoryItemToContents.put(location, "Weight");
+                mapOfShopInventoryItemToContents.put(location, "Weights");
                 unassignedShopItemLocations.remove(location);
                 continue;
             }
@@ -478,13 +475,19 @@ public class EverythingShopRandomizer implements ShopRandomizer {
         String shopItem3;
         ShopBlock shopBlock;
         ShopItemPriceCountRandomizer shopItemPriceCountRandomizer = new ShopItemPriceCountRandomizer(subweaponOnly, moneyChecker, random);
-        Pair<Short, Short> itemPriceCountMsxShop2 = null;
-        Pair<Short, Short> itemPriceCountMsxShop3 = null;
+        ItemPriceCount itemPriceCountMsxShop2 = null;
+        ItemPriceCount itemPriceCountMsxShop3 = null;
         for(String shopName : randomizedShops) {
             if(DataFromFile.CUSTOM_SHOP_NAME.equals(shopName) && (LocationCoordinateMapper.isSurfaceStart() || Settings.getCurrentStartingLocation() == 23 || Settings.getCurrentStartingLocation() == 24)) {
                 continue;
             }
-            shopBlock = (ShopBlock) blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get(shopName));
+            if(Settings.isFools2020Mode() && "Shop 7 (Graveyard)".equals(shopName)) {
+                // Angel Shield shop text for Graveyard
+                shopBlock = (ShopBlock) blocks.get(273);
+            }
+            else {
+                shopBlock = (ShopBlock) blocks.get(DataFromFile.getMapOfShopNameToShopBlock().get(shopName));
+            }
 
             if(MSX_SHOP_NAME.equals(shopName)) {
                 shopItem1 = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(String.format("%s Item 1", shopName)));

@@ -1,10 +1,6 @@
 package lmr.randomizer.update;
 
-import javafx.util.Pair;
-import lmr.randomizer.DataFromFile;
-import lmr.randomizer.FileUtils;
-import lmr.randomizer.Settings;
-import lmr.randomizer.Translations;
+import lmr.randomizer.*;
 import lmr.randomizer.dat.*;
 import lmr.randomizer.dat.conversation.CheckBlock;
 import lmr.randomizer.dat.shop.BlockStringData;
@@ -12,6 +8,7 @@ import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.random.EnemyRandomizer;
 import lmr.randomizer.rcd.object.*;
+import lmr.randomizer.Settings;
 
 import java.util.*;
 
@@ -33,7 +30,7 @@ public final class GameDataTracker {
     private static GameObject customShop;
 
     private static Map<Integer, Integer> mapOfWorldFlagToAssignedReplacementFlag = new HashMap<>();
-    private static int randomizeGraphicsFlag = 2730;
+    private static int randomizeGraphicsFlag = DataFromFile.FIRST_AVAILABLE_RANDOM_GRAPHICS_FLAG;
 
     private GameDataTracker() {
     }
@@ -51,7 +48,7 @@ public final class GameDataTracker {
         customShop = null;
 
         mapOfWorldFlagToAssignedReplacementFlag.clear();
-        randomizeGraphicsFlag = 2730;
+        randomizeGraphicsFlag = DataFromFile.FIRST_AVAILABLE_RANDOM_GRAPHICS_FLAG;
     }
 
     public static void setSubweaponPot(GameObject subweaponPot) {
@@ -180,6 +177,28 @@ public final class GameDataTracker {
                 }
                 else if(screen.getZoneIndex() != 12 || screen.getRoomIndex() != 7 || screen.getScreenIndex() != 0) {
                     AddObject.addPushableBlockBlockage(gameObject);
+                }
+            }
+            if(Settings.isFools2020Mode()) {
+                if(gameObject.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) gameObject.getObjectContainer();
+                    if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 6 && screen.getScreenIndex() == 1) {
+                        if(gameObject.getY() == 160) {
+                            gameObject.setX(gameObject.getX() - 40);
+                        }
+                    }
+                }
+            }
+        }
+        else if (gameObject.getId() == 0xaa) {
+            if(Settings.isFools2020Mode()) {
+                if(gameObject.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) gameObject.getObjectContainer();
+                    if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 6 && screen.getScreenIndex() == 1) {
+                        if(gameObject.getX() == 1060) {
+                            gameObject.setX(gameObject.getX() - 40);
+                        }
+                    }
                 }
             }
         }
@@ -1833,7 +1852,22 @@ public final class GameDataTracker {
                     }
                 }
             }
-        } else if (gameObject.getId() == 0x71 || gameObject.getId() == 0x33) {
+            if(Settings.isFools2020Mode()) {
+                boolean lampOfTimeDetector = false;
+                for(WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
+                    if(writeByteOperation.getIndex() == 0x34d && ByteOp.ASSIGN_FLAG.equals(writeByteOperation.getOp()) && writeByteOperation.getValue() == 1) {
+                        // Lemeza detector for Lamp of Time light
+                        lampOfTimeDetector = true;
+                        break;
+                    }
+                }
+                if(lampOfTimeDetector) {
+                    gameObject.getWriteByteOperations().clear();
+                    gameObject.getWriteByteOperations().add(new WriteByteOperation(42, ByteOp.ASSIGN_FLAG, 1));
+                    AddObject.addExplosion(gameObject.getObjectContainer(), gameObject.getX(), gameObject.getY(), 42, 15, true);
+                }
+            }
+        } else if (gameObject.getId() == 0x33) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                 if (flagTest.getIndex() == 180) {
                     // Plane Model stuff
@@ -1846,6 +1880,39 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
+            }
+        } else if (gameObject.getId() == 0x71) {
+            // Vimana
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == 180) {
+                    // Plane Model stuff
+                    GameObjectId gameObjectId = new GameObjectId((short) 51, 180);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
+            if(Settings.isFools2020Mode()) {
+                List<TestByteOperation> testsToUse = new ArrayList<>();
+                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                    if (flagTest.getIndex() == 0x0b4) {
+                        // Don't stop spawning after you get the chest.
+                        continue;
+                    }
+                    if(flagTest.getIndex() == gameObject.getWriteByteOperations().get(0).getIndex()) {
+                        // Don't stop spawning if you've killed one already.
+                        continue;
+                    }
+                    testsToUse.add(flagTest);
+                }
+                gameObject.getTestByteOperations().clear();
+                gameObject.getTestByteOperations().addAll(testsToUse);
+                gameObject.getArgs().set(3, (short)10); // Increase speed
+                gameObject.getArgs().set(4, (short)1); // Set HP to 1
             }
         } else if (gameObject.getId() == 0x08) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
@@ -2107,7 +2174,8 @@ public final class GameDataTracker {
             int blockNumber = gameObject.getArgs().get(4);
             if(gameObject.getArgs().get(3) == 1) {
                 // Any shop
-                if(DataFromFile.getMapOfShopNameToShopBlock().values().contains(blockNumber)) {
+                if(DataFromFile.getMapOfShopNameToShopBlock().values().contains(blockNumber)
+                        || (Settings.isFools2020Mode() && blockNumber == 273)) {
                     List<GameObject> objects = mapOfShopBlockToShopObjects.get(blockNumber);
                     if (objects == null) {
                         mapOfShopBlockToShopObjects.put(blockNumber, new ArrayList<>());
@@ -2677,6 +2745,14 @@ public final class GameDataTracker {
                     gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
                 }
             }
+        } else if (gameObject.getId() == 0x92) {
+            if(Settings.isFools2020Mode()) {
+                for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                    if(flagTest.getIndex() == 0x1cd) {
+                        flagTest.setValue((byte)(flagTest.getValue() == 0 ? 1 : 0));
+                    }
+                }
+            }
         } else if (gameObject.getId() == 0x93) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                 if(!Settings.isRandomizeNonBossDoors()) {
@@ -2934,6 +3010,20 @@ public final class GameDataTracker {
                             TestByteOperation flagTest = gameObject.getTestByteOperations().get(i);
                             if (flagTest.getIndex() == 0x000) {
                                 flagTest.setIndex(0xaad);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if(Settings.isFools2020Mode()) {
+                if(gameObject.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) gameObject.getObjectContainer();
+                    if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 2) {
+                        for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                            TestByteOperation flagTest = gameObject.getTestByteOperations().get(i);
+                            if (flagTest.getIndex() == 0x1ea) {
+                                flagTest.setValue((byte)4);
                                 break;
                             }
                         }
@@ -4373,6 +4463,42 @@ public final class GameDataTracker {
             xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xad0, (short) 1)); // Talked to xelpud flag
             xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
         }
+        else if(Settings.isFools2020Mode()) {
+            xelpudBlockContents.clear();
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xaa7, (short) 1));
+            List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.intro1"));
+            for (Short shortCharacter : stringCharacters) {
+                xelpudBlockContents.add(new BlockSingleData(shortCharacter));
+            }
+            xelpudBlockContents.add(new BlockItemData((short) 0x0042, (short) 86)); // xmailer, to be replaced with 74=swimsuit
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0x0e3, (short) 2)); // xmailer flag
+            xelpudBlockContents.add(new BlockSingleData((short) 0x0044)); // {CLS}
+
+            String text = Translations.getText("event.fools2020.intro2");
+            String[] texts = text.split("%s");
+            if(texts.length > 0) {
+                stringCharacters = FileUtils.stringToData(texts[0]);
+                for (Short shortCharacter : stringCharacters) {
+                    xelpudBlockContents.add(new BlockSingleData(shortCharacter));
+                }
+            }
+
+            xelpudBlockContents.add(new BlockColorsData((short)0x004a, (short)0, (short)0x32, (short)0x96));
+            stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.graphics"));
+            for (Short shortCharacter : stringCharacters) {
+                xelpudBlockContents.add(new BlockSingleData(shortCharacter));
+            }
+            xelpudBlockContents.add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+
+            stringCharacters = FileUtils.stringToData(texts[texts.length > 0 ? 1 : 0]);
+            for (Short shortCharacter : stringCharacters) {
+                xelpudBlockContents.add(new BlockSingleData(shortCharacter));
+            }
+
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xad0, (short) 1)); // Talked to xelpud flag
+            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
+        }
         else {
             // Set value of world flag to 2 instead of 1
             for(int i = 0; i < xelpudBlockContents.size(); i++) {
@@ -4805,7 +4931,7 @@ public final class GameDataTracker {
     }
 
     public static void writeShopInventory(ShopBlock shopBlock, String shopItem1, String shopItem2, String shopItem3, List<Block> blocks,
-                                          Pair<Short, Short> itemPriceAndCount1, Pair<Short, Short> itemPriceAndCount2, Pair<Short, Short> itemPriceAndCount3,
+                                          ItemPriceCount itemPriceAndCount1, ItemPriceCount itemPriceAndCount2, ItemPriceCount itemPriceAndCount3,
                                           boolean littleBrotherShop, boolean msxShop, boolean recursive, Random random) {
         short shopItem1Flag = getFlag(shopItem1);
         short shopItem2Flag = getFlag(shopItem2);
@@ -4816,7 +4942,7 @@ public final class GameDataTracker {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
             writeShopInventory(noOrbShopBlock, "Weights", shopItem2, shopItem3, blocks,
-                    new Pair<>((short)10, (short)5), itemPriceAndCount2, itemPriceAndCount3, littleBrotherShop, msxShop, true, random);
+                    new ItemPriceCount((short)10, (short)5), itemPriceAndCount2, itemPriceAndCount3, littleBrotherShop, msxShop, true, random);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -4842,7 +4968,7 @@ public final class GameDataTracker {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
             writeShopInventory(noOrbShopBlock, shopItem1, "Weights", shopItem3, blocks,
-                    itemPriceAndCount1, new Pair<>((short)10, (short)5), itemPriceAndCount3, littleBrotherShop, msxShop, true, random);
+                    itemPriceAndCount1, new ItemPriceCount((short)10, (short)5), itemPriceAndCount3, littleBrotherShop, msxShop, true, random);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -4868,7 +4994,7 @@ public final class GameDataTracker {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
             writeShopInventory(noOrbShopBlock, shopItem1, shopItem2, "Weights", blocks,
-                    itemPriceAndCount1, itemPriceAndCount2, new Pair<>((short)10, (short)5), littleBrotherShop, msxShop, true, random);
+                    itemPriceAndCount1, itemPriceAndCount2, new ItemPriceCount((short)10, (short)5), littleBrotherShop, msxShop, true, random);
 
             TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
@@ -4924,18 +5050,18 @@ public final class GameDataTracker {
             }
         }
         else {
-            if(itemPriceAndCount1.getKey() == null) {
+            if(itemPriceAndCount1.getPrice() == null) {
                 newPrices.add(shopBlock.getInventoryPriceList().getData().get(0));
             }
             else {
-                newPrices.add(itemPriceAndCount1.getKey());
+                newPrices.add(itemPriceAndCount1.getPrice());
             }
 
-            if(itemPriceAndCount1.getValue() == null) {
+            if(itemPriceAndCount1.getCount() == null) {
                 newCounts.add(shopBlock.getInventoryCountList().getData().get(0));
             }
             else {
-                newCounts.add(itemPriceAndCount1.getValue());
+                newCounts.add(itemPriceAndCount1.getCount());
             }
         }
 
@@ -4965,18 +5091,18 @@ public final class GameDataTracker {
             }
         }
         else {
-            if(itemPriceAndCount2.getKey() == null) {
+            if(itemPriceAndCount2.getPrice() == null) {
                 newPrices.add(shopBlock.getInventoryPriceList().getData().get(1));
             }
             else {
-                newPrices.add(itemPriceAndCount2.getKey());
+                newPrices.add(itemPriceAndCount2.getPrice());
             }
 
-            if(itemPriceAndCount2.getValue() == null) {
+            if(itemPriceAndCount2.getCount() == null) {
                 newCounts.add(shopBlock.getInventoryCountList().getData().get(1));
             }
             else {
-                newCounts.add(itemPriceAndCount2.getValue());
+                newCounts.add(itemPriceAndCount2.getCount());
             }
         }
 
@@ -5005,18 +5131,18 @@ public final class GameDataTracker {
             }
         }
         else {
-            if(itemPriceAndCount3.getKey() == null) {
+            if(itemPriceAndCount3.getPrice() == null) {
                 newPrices.add(shopBlock.getInventoryPriceList().getData().get(2));
             }
             else {
-                newPrices.add(itemPriceAndCount3.getKey());
+                newPrices.add(itemPriceAndCount3.getPrice());
             }
 
-            if(itemPriceAndCount3.getValue() == null) {
+            if(itemPriceAndCount3.getCount() == null) {
                 newCounts.add(shopBlock.getInventoryCountList().getData().get(2));
             }
             else {
-                newCounts.add(itemPriceAndCount3.getValue());
+                newCounts.add(itemPriceAndCount3.getCount());
             }
         }
 
@@ -5033,13 +5159,13 @@ public final class GameDataTracker {
 
         if(littleBrotherShop) {
             // Little Brother's shop
-            if(!"Weights".equals(shopItem1) || !shopItem1.endsWith("Ammo")) {
+            if(!"Weights".equals(shopItem1) && !shopItem1.endsWith("Ammo")) {
                 AddObject.addLittleBrotherShopTimer(shopItem1Flag);
             }
-            if(!"Weights".equals(shopItem2) || !shopItem2.endsWith("Ammo")) {
+            if(!"Weights".equals(shopItem2) && !shopItem2.endsWith("Ammo")) {
                 AddObject.addLittleBrotherShopTimer(shopItem2Flag);
             }
-            if(!"Weights".equals(shopItem3) || !shopItem3.endsWith("Ammo")) {
+            if(!"Weights".equals(shopItem3) && !shopItem3.endsWith("Ammo")) {
                 AddObject.addLittleBrotherShopTimer(shopItem3Flag);
             }
         }
@@ -5111,32 +5237,64 @@ public final class GameDataTracker {
         }
 
         List<Short> newBlockData = new ArrayList<>(blockStringData.getData().subList(0, blockStringData.getItemNameStartIndex()));
-        if("Map (Shrine of the Mother)".equals(shopItem)) {
-            if("jp".equals(Settings.getLanguage())) {
-                // 聖母の祠の
-                newBlockData.add((short)1027);
-                newBlockData.add((short)882);
-                newBlockData.add((short)386);
-                newBlockData.add((short)975);
-                newBlockData.add((short)386);
-            } else {
-                newBlockData.add((short)296);
-                newBlockData.add((short)315);
-                newBlockData.add((short)325);
-                newBlockData.add((short)316);
-                newBlockData.add((short)321);
-                newBlockData.add((short)312);
-                newBlockData.add((short)32);
+        if(Settings.isFools2020Mode()) {
+            if("Scriptures".equals(shopItem)) {
+                newBlockData.addAll(FileUtils.stringToData(Translations.getText("items.HeatproofCase")));
+            }
+            else if("Heatproof Case".equals(shopItem)) {
+                newBlockData.addAll(FileUtils.stringToData(Translations.getText("items.Scriptures")));
+            }
+            else {
+                if("Map (Shrine of the Mother)".equals(shopItem)) {
+                    if("jp".equals(Settings.getLanguage())) {
+                        // 聖母の祠の
+                        newBlockData.add((short)1027);
+                        newBlockData.add((short)882);
+                        newBlockData.add((short)386);
+                        newBlockData.add((short)975);
+                        newBlockData.add((short)386);
+                    } else {
+                        newBlockData.add((short)296);
+                        newBlockData.add((short)315);
+                        newBlockData.add((short)325);
+                        newBlockData.add((short)316);
+                        newBlockData.add((short)321);
+                        newBlockData.add((short)312);
+                        newBlockData.add((short)32);
+                    }
+                }
+                newBlockData.add((short)77);
+                newBlockData.add(getInventoryItemArg(shopItem));
             }
         }
-        newBlockData.add((short)77);
-        newBlockData.add(getInventoryItemArg(shopItem));
+        else {
+            if("Map (Shrine of the Mother)".equals(shopItem)) {
+                if("jp".equals(Settings.getLanguage())) {
+                    // 聖母の祠の
+                    newBlockData.add((short)1027);
+                    newBlockData.add((short)882);
+                    newBlockData.add((short)386);
+                    newBlockData.add((short)975);
+                    newBlockData.add((short)386);
+                } else {
+                    newBlockData.add((short)296);
+                    newBlockData.add((short)315);
+                    newBlockData.add((short)325);
+                    newBlockData.add((short)316);
+                    newBlockData.add((short)321);
+                    newBlockData.add((short)312);
+                    newBlockData.add((short)32);
+                }
+            }
+            newBlockData.add((short)77);
+            newBlockData.add(getInventoryItemArg(shopItem));
+        }
         newBlockData.addAll(blockStringData.getData().subList(blockStringData.getItemNameEndIndex(), blockStringData.getData().size()));
         blockStringData.getData().clear();
         blockStringData.getData().addAll(newBlockData);
     }
 
-    private static void updateBunemonText(List<Short> bunemonData, String shopItem, Short itemPrice) {
+    private static void addShrinePrefixIfNeeded(List<Short> bunemonData, String shopItem) {
         if("Map (Shrine of the Mother)".equals(shopItem)) {
             if("jp".equals(Settings.getLanguage())) {
                 // 聖母の祠の
@@ -5155,8 +5313,27 @@ public final class GameDataTracker {
                 bunemonData.add((short)32);
             }
         }
-        bunemonData.add((short)77);
-        bunemonData.add(getInventoryItemArg(shopItem));
+    }
+
+    private static void updateBunemonText(List<Short> bunemonData, String shopItem, Short itemPrice) {
+        if(Settings.isFools2020Mode()) {
+            if("Scriptures".equals(shopItem)) {
+                bunemonData.addAll(FileUtils.stringToData(Translations.getText("items.HeatproofCase")));
+            }
+            else if("Heatproof Case".equals(shopItem)) {
+                bunemonData.addAll(FileUtils.stringToData(Translations.getText("items.Scriptures")));
+            }
+            else {
+                addShrinePrefixIfNeeded(bunemonData, shopItem);
+                bunemonData.add((short)77);
+                bunemonData.add(getInventoryItemArg(shopItem));
+            }
+        }
+        else {
+            addShrinePrefixIfNeeded(bunemonData, shopItem);
+            bunemonData.add((short)77);
+            bunemonData.add(getInventoryItemArg(shopItem));
+        }
 
         bunemonData.add((short)32);
         for(char c : Short.toString(itemPrice).toCharArray()) {
@@ -6429,7 +6606,7 @@ public final class GameDataTracker {
         boolean isRemovedItem = itemNewContentsData.getWorldFlag() != newWorldFlag;
         boolean isTrapItem = Settings.isRandomizeTrapItems() && (newWorldFlag == 2777 || newWorldFlag == 2779 || newWorldFlag == 2780);
         boolean randomizeGraphics = isRandomizeGraphicsAllowed && !isRemovedItem && !isTrapItem && !chestContents.startsWith("Coin:")
-                && isRandomGraphicsAvailable() && (getItemGraphic(chestContents) != 0 || random.nextBoolean());
+                && (getCustomItemGraphic(chestContents) != 0 || (isRandomGraphicsAvailable() && random.nextBoolean()));
         Integer itemRandomizeGraphicsFlag = randomizeGraphics ? getRandomizeGraphicsFlag(newWorldFlag) : null;
 
         for(GameObject objectToModify : objectsToModify) {
@@ -6565,6 +6742,46 @@ public final class GameDataTracker {
         }
     }
 
+    public static void updateWorldForFools2020(List<Zone> rcdInfo, List<Block> datInfo) {
+        Zone surface = getZone(rcdInfo, 1);
+        Room argusRoom = getRoom(surface.getRooms(), 0);
+        Screen featherScreen = getScreen(argusRoom.getScreens(), 0);
+
+        for(GameObject gameObject : featherScreen.getObjects()) {
+            if(gameObject.getId() == 0x2c) {
+                gameObject.getArgs().set(0, (short)95); // Item arg to indicate what the chest drops
+
+                WriteByteOperation puzzleFlag = gameObject.getWriteByteOperations().get(1);
+                gameObject.getWriteByteOperations().clear();
+
+                WriteByteOperation updateFlag = new WriteByteOperation();
+                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                updateFlag.setIndex(0xacf);
+                updateFlag.setValue(2);
+                gameObject.getWriteByteOperations().add(updateFlag);
+
+                gameObject.getWriteByteOperations().add(puzzleFlag);
+
+                updateFlag = new WriteByteOperation();
+                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                updateFlag.setIndex(0xacf);
+                updateFlag.setValue(1);
+                gameObject.getWriteByteOperations().add(updateFlag);
+
+                updateFlag = new WriteByteOperation();
+                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
+                updateFlag.setIndex(0xacf);
+                updateFlag.setValue(2);
+                gameObject.getWriteByteOperations().add(updateFlag);
+            }
+        }
+
+        Zone mulbrukZone = getZone(rcdInfo, 3);
+        Room mulbrukRoom = getRoom(mulbrukZone.getRooms(), 3);
+        Screen mulbrukScreen = getScreen(mulbrukRoom.getScreens(), 0);
+        AddObject.addFoolsMulbrukBlocks(mulbrukScreen, datInfo);
+    }
+
     private static Zone getZone(List<Zone> zones, int zoneIndex) {
         for(Zone zone : zones) {
             if(zone.getZoneIndex() == zoneIndex) {
@@ -6684,10 +6901,15 @@ public final class GameDataTracker {
                 objectToModify.getWriteByteOperations().add(updateFlag);
 
                 // Exploding trap chest
-                AddObject.addExplosion(objectToModify.getObjectContainer(), objectToModify.getX(), objectToModify.getY(), newWorldFlag);
+                if(Settings.isFools2020Mode()) {
+                    AddObject.addFoolsExplosion(objectToModify.getObjectContainer(), objectToModify.getX(), objectToModify.getY(), newWorldFlag);
+                }
+                else {
+                    AddObject.addExplosion(objectToModify.getObjectContainer(), objectToModify.getX(), objectToModify.getY(), newWorldFlag, 60, true);
+                }
             }
             else {
-                short newContentsGraphic = getItemGraphic(newChestContentsItemName);
+                short newContentsGraphic = getCustomItemGraphic(newChestContentsItemName);
                 if(newContentsGraphic == 0) {
                     // Nothing
                     objectToModify.getArgs().set(0, newContentsGraphic);
@@ -6774,13 +6996,13 @@ public final class GameDataTracker {
                     objectToModify.getWriteByteOperations().add(updateFlag);
                 }
                 else {
-                    short graphic = getItemGraphic(newChestContentsItemName);
+                    short graphic = getCustomItemGraphic(newChestContentsItemName);
                     if(graphic == 0) {
                         // No custom graphic
                         graphic = getRandomItemGraphic(random);
                     }
                     objectToModify.getArgs().set(0, (short)(graphic + 11)); // Item arg to indicate what the chest drops
-                    objectToModify.getArgs().set(1, (short)0); // Real item, not fake (or 1 weight, because the game won't allow multiple)
+                    objectToModify.getArgs().set(1, (short)0); // Fake item
 
                     if(Settings.isRandomizeGraphics()) {
                         objectToModify.getArgs().set(2, (short)random.nextInt(2)); // Random graphics
@@ -6977,11 +7199,19 @@ public final class GameDataTracker {
             updateFlag.setValue(1);
             objectToModify.getWriteByteOperations().add(updateFlag);
 
+            if(Settings.isFools2020Mode()) {
+                int xPos = objectToModify.getX();
+                int yPos = objectToModify.getY();
+                AddObject.addBat(objectToModify.getObjectContainer(), xPos - 20, yPos, 43);
+                AddObject.addBat(objectToModify.getObjectContainer(), xPos + 20, yPos, 43);
+                AddObject.addBat(objectToModify.getObjectContainer(), xPos, yPos - 20, 43);
+                AddObject.addBat(objectToModify.getObjectContainer(), xPos, yPos + 20, 43);
+            }
             AddObject.addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, 43);
         }
         else if(isTrapItem) {
             // Trap items
-            short graphic = getItemGraphic(newChestContentsItemName);
+            short graphic = getCustomItemGraphic(newChestContentsItemName);
             if(graphic == 0) {
                 // No custom graphic
                 graphic = getRandomItemGraphic(random);
@@ -7059,7 +7289,7 @@ public final class GameDataTracker {
             }
         }
         else {
-            short graphic = getItemGraphic(newChestContentsItemName);
+            short graphic = getCustomItemGraphic(newChestContentsItemName);
             if(graphic == 0) {
                 // No custom graphic
                 graphic = getRandomItemGraphic(random);
@@ -7090,6 +7320,12 @@ public final class GameDataTracker {
             }
 
             AddObject.addItemGive(objectToModify, inventoryArg, itemRandomizeGraphicsFlag, newWorldFlag);
+        }
+
+        if(Settings.isFools2020Mode()) {
+            if(itemLocationData.getInventoryArg() == 11) {
+                objectToModify.getTestByteOperations().add(new TestByteOperation(0x1b3, ByteOp.FLAG_GTEQ, 2));
+            }
         }
     }
 
@@ -7153,7 +7389,7 @@ public final class GameDataTracker {
         }
     }
 
-    private static short getItemGraphic(String itemName) {
+    private static short getCustomItemGraphic(String itemName) {
         for(CustomItemPlacement customItemPlacement : DataFromFile.getCustomPlacementData().getCustomItemPlacements()) {
             if(customItemPlacement.getItemGraphic() != null && customItemPlacement.getContents().equals(itemName)) {
                 return DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(customItemPlacement.getItemGraphic()).getInventoryArg();

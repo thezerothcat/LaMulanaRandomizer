@@ -40,18 +40,24 @@
                 <version>3.1.0</version>
                 <executions>
                     <execution>
-                        <id>copy-resources</id>
+                        <id>default-resources</id>
                         <phase>generate-resources</phase>
                         <goals>
-                            <goal>copy-resources</goal>
+                            <goal>resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/resources</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.resource.dir}</directory>
                                     <includes>
-                                        <include>**/*</include>
+                                        <include>**/all/**/*</include>
+                                        <include>**/initial/**/*</include>
+                                        <include>**/lang/**/*</include>
+                                        <include>**/min/**/*</include>
+                                        <include>**/rcd/**/*</include>
+                                        <include>**/requirement/**/*</include>
+                                        <include>**/graphics/fools2020/**/*</include>
+                                        <include>**/01effect-custom.png</include>
                                     </includes>
                                 </resource>
                             </resources>

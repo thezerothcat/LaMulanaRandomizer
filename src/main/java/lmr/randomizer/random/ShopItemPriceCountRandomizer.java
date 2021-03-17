@@ -1,7 +1,7 @@
 package lmr.randomizer.random;
 
-import javafx.util.Pair;
 import lmr.randomizer.DataFromFile;
+import lmr.randomizer.ItemPriceCount;
 import lmr.randomizer.Settings;
 import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.node.MoneyChecker;
@@ -83,7 +83,7 @@ public class ShopItemPriceCountRandomizer {
         this.random = random;
     }
 
-    public Pair<Short, Short> getItemPriceAndCount(String location, String itemName) {
+    public ItemPriceCount getItemPriceAndCount(String location, String itemName) {
         Short price = null;
         Short count = null;
         for(CustomItemPlacement customItemPlacement : DataFromFile.getCustomPlacementData().getCustomItemPlacements()) {
@@ -97,7 +97,7 @@ public class ShopItemPriceCountRandomizer {
             // Special case
             if(random.nextInt(10) == 0) {
                 specialAmmoPlaced = true;
-                return new Pair<>((short)400, (short)6);
+                return new ItemPriceCount((short)400, (short)6);
             }
         }
         if(price == null) {
@@ -106,7 +106,7 @@ public class ShopItemPriceCountRandomizer {
         if(count == null) {
             count = getCount(itemName);
         }
-        return new Pair<>(price, count);
+        return new ItemPriceCount(price, count);
     }
 
     private short getPrice(String itemName, String shopInventoryLocation) {
@@ -117,6 +117,9 @@ public class ShopItemPriceCountRandomizer {
             return 0;
         }
         if("Weights".equals(itemName)) {
+            if(Settings.isFools2020Mode()) {
+                return 1;
+            }
             if(!normalPriceWeightsPlaced) {
                 normalPriceWeightsPlaced = true;
                 return 10;
@@ -129,6 +132,11 @@ public class ShopItemPriceCountRandomizer {
                 return 20;
             }
             return 10;
+        }
+        if(Settings.isFools2020Mode()) {
+            if(itemName.contains("Ammo")) {
+                return 4;
+            }
         }
         if("Shuriken Ammo".equals(itemName)) {
             return 10;
@@ -225,6 +233,9 @@ public class ShopItemPriceCountRandomizer {
 
     private short getCount(String item) {
         if("Weights".equals(item)) {
+            if(Settings.isFools2020Mode()) {
+                return (short)(random.nextInt(10) + 1);
+            }
             return 5;
         }
         if("Shuriken Ammo".equals(item)) {
