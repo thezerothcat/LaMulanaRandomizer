@@ -4,7 +4,6 @@ import lmr.randomizer.dat.AddObject;
 import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.DatReader;
 import lmr.randomizer.dat.DatWriter;
-import lmr.randomizer.custom.CustomPlacements;
 import lmr.randomizer.node.*;
 import lmr.randomizer.random.*;
 import lmr.randomizer.rcd.RcdReader;
@@ -172,10 +171,7 @@ public class Main {
 //                }
             }
             else if("restore".equals(e.getActionCommand())) {
-                if(!validateInstallDir()) {
-                    JOptionPane.showMessageDialog(this,
-                            "Unable to find La-Mulana install directory",
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                if(!Validation.validateInstallDir(this)) {
                     return;
                 }
 
@@ -206,10 +202,7 @@ public class Main {
                 }
             }
             else if("restoreSaves".equals(e.getActionCommand())) {
-                if(!validateSaveDir()) {
-                    JOptionPane.showMessageDialog(this,
-                            "Unable to find La-Mulana install directory",
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                if(!Validation.validateSaveDir(this)) {
                     return;
                 }
 
@@ -253,7 +246,7 @@ public class Main {
 
             Settings.saveSettings();
 
-            CustomPlacements.addHolidayPlacements();
+            HolidayModePlacements.applyCustomPlacements();
 
             // Any forced temporary plando settings can go here.
 
@@ -479,151 +472,34 @@ public class Main {
         }
 
         private boolean validateSettings() {
-            if(!validateInstallDir()) {
-                JOptionPane.showMessageDialog(this,
-                        "Unable to find La-Mulana install directory",
-                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+            if(!Validation.validateInstallDir(this)) {
                 return false;
             }
-            if(Settings.getGraphicsPack().equals("HALLOWEEN")) {
-                JOptionPane.showMessageDialog(this,
-                        String.format("HALLOWEEN cannot be used as %s. Please select a folder from which the HALLOWEEN graphics should be created.", Translations.getText("settings.graphicsPack")),
-                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+            if(Settings.isSaveFileNeeded() && !Validation.validateSaveDir(this)) {
                 return false;
             }
-            if(Settings.isSaveFileNeeded() && !validateSaveDir()) {
-                JOptionPane.showMessageDialog(this,
-                        "Unable to find La-Mulana save directory",
-                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+            if(!Validation.validateGraphicsPack(this)) {
                 return false;
             }
-            if(!Settings.isAllowWhipStart() && !Settings.isAllowMainWeaponStart() && !Settings.isAllowSubweaponStart()) {
-                JOptionPane.showMessageDialog(this,
-                        "Starting without a weapon is not currently enabled",
-                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+            if(!Validation.validateSettingCombinations(this)) {
                 return false;
             }
-            if(Settings.isHalloweenMode()){
-                if(Settings.isRequireFullAccess()) {
-                    JOptionPane.showMessageDialog(this,
-                            String.format("The setting \"%s\" cannot be used with this mode",
-                                    Translations.getText("logic.requireFullAccess.short")),
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-//                if(!Settings.isRandomizeEnemies()) {
-//                    JOptionPane.showMessageDialog(this,
-//                            String.format("The setting \"%s\" is required for this mode",
-//                                    Translations.getText("enemies.randomizeEnemies")),
-//                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-//                    return false;
-//                }
-//                if(!Settings.isRandomizeStartingLocation()) {
-//                    JOptionPane.showMessageDialog(this,
-//                            String.format("The setting \"%s\" is required for this mode",
-//                                    Translations.getText("randomization.randomizeStartingLocation")),
-//                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-//                    return false;
-//                }
-                if(Settings.getEnabledDamageBoosts().contains("Enemy")) {
-                    JOptionPane.showMessageDialog(this,
-                            String.format("The setting \"%s\" cannot be used with this mode",
-                                    Translations.getText("dboost.Enemy")),
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-            }
-            if(Settings.isFools2020Mode()) {
-                if(Settings.isRequireFullAccess()) {
-                    JOptionPane.showMessageDialog(this,
-                            String.format("The setting \"%s\" cannot be used with this mode",
-                                    Translations.getText("logic.requireFullAccess.short")),
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(!Settings.isRandomizeTrapItems()) {
-                    JOptionPane.showMessageDialog(this,
-                            String.format("The setting \"%s\" is required for this mode",
-                                    Translations.getText("randomization.randomizeTrapItems")),
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(!Settings.isRandomizeCoinChests()) {
-                    JOptionPane.showMessageDialog(this,
-                            String.format("The setting \"%s\" is required for this mode",
-                                    Translations.getText("randomization.randomizeCoinChests")),
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-            }
-            if(Settings.isRandomizeEnemies() && Settings.getEnabledDamageBoosts().contains("Enemy")) {
-                JOptionPane.showMessageDialog(this,
-                        String.format("The setting \"%s\" cannot be used with the setting \"%s\"",
-                                Translations.getText("enemies.randomizeEnemies"),
-                                Translations.getText("dboost.Enemy")),
-                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+            if(!Validation.validateHalloween(this)) {
                 return false;
             }
-            if(Settings.isRequireFullAccess() && Settings.isRemoveMainWeapons()) {
-                JOptionPane.showMessageDialog(this,
-                        "The setting \"Require all items to be accessible\" cannot be used when removing Main Weapons",
-                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+            if(!Validation.validateFools2020(this)) {
                 return false;
             }
-            if(Settings.isRandomizeStartingLocation()) {
-                if(!ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
-                    JOptionPane.showMessageDialog(this,
-                            String.format("Please enable %s %s when using %s", Translations.getText("randomization.randomizeShops"), Translations.getText("randomization.randomizeShops.everything"), Translations.getText("randomization.randomizeStartingLocation")),
-                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-            }
-            if(!CustomPlacements.validateCustomPlacements(this)) {
-                // Message created below
+            if(!Validation.validateFools2021(this)) {
                 return false;
             }
-
-            Set<String> manuallyRemovedItems = new HashSet<>(DataFromFile.getCustomPlacementData().getRemovedItems());
-            if(Settings.isRemoveMainWeapons()) {
-                manuallyRemovedItems.addAll(DataFromFile.MAIN_WEAPONS);
-                manuallyRemovedItems.remove("Whip"); // Whip gets special treatment.
-
-                if(!Settings.isAlternateMotherAnkh()) {
-                    JOptionPane.showMessageDialog(this,
-                            String.format("The setting \"%s \" is required when removing Main Weapons", Translations.getText("gameplay.alternateMotherAnkh")),
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(!Settings.isAllowSubweaponStart()) {
-                    JOptionPane.showMessageDialog(this,
-                            "Starting with subweapon is required when removing Main Weapons",
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
+            if(!Validation.validateCustomPlacements(this)) {
+                return false;
             }
-            if((Settings.getMinRandomRemovedItems() + manuallyRemovedItems.size() > 99)) {
-                JOptionPane.showMessageDialog(this,
-                        "Minimum removed item count is too high with custom placement settings. A minimum of " + (99 - manuallyRemovedItems.size()) + " will be used instead.",
-                        "Randomizer error", JOptionPane.WARNING_MESSAGE);
-                Settings.setMinRandomRemovedItems(99 - manuallyRemovedItems.size(), false);
-            }
-            if((Settings.getMaxRandomRemovedItems() + manuallyRemovedItems.size() > 99)) {
-                JOptionPane.showMessageDialog(this,
-                        "Maximum removed item count is too high with custom placement settings. A maximum of " + (99 - manuallyRemovedItems.size()) + " will be used instead.",
-                        "Randomizer error", JOptionPane.WARNING_MESSAGE);
-                Settings.setMaxRandomRemovedItems(99 - manuallyRemovedItems.size(), false);
+            if (!Validation.validateRemovedItems(this)) {
+                return false;
             }
             return true;
-        }
-
-        private boolean validateInstallDir() {
-            return Settings.getLaMulanaBaseDir() != null && !Settings.getLaMulanaBaseDir().isEmpty()
-                    && new File(Settings.getLaMulanaBaseDir()).exists();
-        }
-
-        private boolean validateSaveDir() {
-            return Settings.getLaMulanaSaveDir() != null && !Settings.getLaMulanaSaveDir().isEmpty()
-                    && new File(Settings.getLaMulanaSaveDir()).exists();
         }
     }
 
@@ -651,6 +527,7 @@ public class Main {
         int totalItemsRemoved = getTotalItemsRemoved(random);
         determineStartingLocation(random);
         determineStartingWeapon(random);
+        determineFoolsGameplay(random);
 
         BacksideDoorRandomizer backsideDoorRandomizer = new BacksideDoorRandomizer();
         backsideDoorRandomizer.determineDoorDestinations(random);
@@ -1007,6 +884,14 @@ public class Main {
         if(Settings.isFeatherlessMode()) {
             startingNodes.add("Setting: Featherless");
         }
+        if(Settings.isFools2021Mode()) {
+            startingNodes.add("Setting: Fools2021");
+        } else {
+            startingNodes.add("Setting: Not Fools2021");
+        }
+        if(Settings.isFoolsGameplay()) {
+            startingNodes.add("Setting: " + Settings.getCurrentBossCount() + " Bosses");
+        }
         if(!Settings.getEnabledGlitches().contains("Raindrop")) {
             startingNodes.add("Setting: No Raindrop");
         }
@@ -1184,6 +1069,26 @@ public class Main {
 //                // Tower of the Goddess, turn on the lights.
 //                saveData[0x11 + 0x271] = 3;
 //            }
+        }
+        if(Settings.isFools2021Mode()) {
+            saveData[0x11 + 0x178] = (byte)5; // ankh
+            saveData[0x11 + 0x064] = (byte)1; // guidance
+            saveData[0x11 + 0x065] = (byte)1; // maus
+            saveData[0x11 + 0x066] = (byte)1; // sun
+            saveData[0x11 + 0x067] = (byte)1; // spring
+            saveData[0x11 + 0x068] = (byte)1; // inferno
+            saveData[0x11 + 0x069] = (byte)1; // extinction
+            saveData[0x11 + 0x06a] = (byte)1; // twin-f
+            saveData[0x11 + 0x06b] = (byte)1; // endless
+            saveData[0x11 + 0x06d] = (byte)1; // illusion
+            saveData[0x11 + 0x06e] = (byte)1; // graveyard
+            saveData[0x11 + 0x06f] = (byte)1; // moonlight
+            saveData[0x11 + 0x070] = (byte)1; // goddess
+            saveData[0x11 + 0x071] = (byte)1; // ruin
+            saveData[0x11 + 0x072] = (byte)1; // birth
+            saveData[0x11 + 0x073] = (byte)1; // twin-b
+            saveData[0x11 + 0x074] = (byte)1; // dimensional
+            saveData[0x11 + 0x075] = (byte)1; // t-shrine
         }
         if(Settings.isHalloweenMode()) {
             // Unlock Mulbruk so you can get Halloween hints.
@@ -1412,6 +1317,26 @@ public class Main {
         }
     }
 
+    private static void determineFoolsGameplay(Random random) {
+        if(!Settings.isFoolsGameplay()) {
+            Settings.setCurrentBossCount(8);
+            FileUtils.logFlush("Using default boss count: 8");
+            return;
+        }
+
+        // todo: alt mother ankh??
+//        int ankhJewelsRemoved = 0;
+//        for (String item : DataFromFile.getCustomPlacementData().getRemovedItems()) {
+//            if(item.contains("Ankh Jewel")) {
+//                ankhJewelsRemoved += 1;
+//            }
+//        }
+
+//        Settings.setCurrentBossCount(random.nextInt((Settings.isFools2021Mode() ? 4 : 5) - ankhJewelsRemoved) + 4); // todo: how do ankh jewels removed factor in?
+        Settings.setCurrentBossCount(7);
+        FileUtils.logFlush("Using random boss count: " + Settings.getCurrentBossCount());
+    }
+
     private static void determineRemovedItems(int totalItemsRemoved, Random random) {
         Set<String> removedItems = new HashSet<>(Settings.getRemovedItems());
         if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
@@ -1458,6 +1383,7 @@ public class Main {
         }
 
         int chosenRemovedItems = 0;
+        int removedAnkhJewels = 0;
         while(chosenRemovedItems < totalItemsRemoved && !removableItems.isEmpty()) {
             int removedItemIndex = random.nextInt(removableItems.size());
             String removedItem = removableItems.get(removedItemIndex);
@@ -1465,10 +1391,28 @@ public class Main {
                 removedItems.add(removedItem);
                 removableItems.remove(removedItem);
                 orbRemoved = filterRemovableItems(removedItem, removableItems, objectZipEnabled, easierBosses, lampGlitchEnabled, requireKeyFairyCombo, catPauseEnabled, lamulanaMantraRequired, subweaponOnly, orbRemoved, mainWeapons, easierWeapons, subweaponOnlyItems, easierSubweaponsForPalenque);
+                if(removedItem.startsWith("Ankh Jewel (")) {
+                    removedAnkhJewels += 1;
+                    if (removedAnkhJewels >= 8 - Settings.getCurrentBossCount()) {
+                        filterAnkhJewels(removableItems);
+                    }
+                }
                 ++chosenRemovedItems;
             }
         }
         Settings.setCurrentRemovedItems(removedItems);
+    }
+
+    private static void filterAnkhJewels(List<String> removableItems) {
+        removableItems.remove("Ankh Jewel (Gate of Guidance)");
+        removableItems.remove("Ankh Jewel (Mausoleum of the Giants)");
+        removableItems.remove("Ankh Jewel (Temple of the Sun)");
+        removableItems.remove("Ankh Jewel (Spring in the Sky)");
+        removableItems.remove("Ankh Jewel (Tower of Ruin)");
+        removableItems.remove("Ankh Jewel (Chamber of Birth)");
+        removableItems.remove("Ankh Jewel (Twin Labyrinths)");
+        removableItems.remove("Ankh Jewel (Dimensional Corridor)");
+        removableItems.remove("Ankh Jewel (Extra)");
     }
 
     private static boolean filterRemovableItems(String removedItem, List<String> removableItems, boolean objectZipEnabled, boolean easierBosses, boolean lampGlitchEnabled, boolean requireKeyFairyCombo, boolean catPauseEnabled, boolean lamulanaMantraRequired, boolean subweaponOnly, boolean orbRemoved, List<String> mainWeapons, List<String> easierWeapons, List<String> subweaponOnlyItems, List<String> easierSubweaponsForPalenque) {
@@ -1656,11 +1600,8 @@ public class Main {
                 return;
             }
 
-            for(String removedItem : Settings.getCurrentRemovedItems()) {
-                writer.write(Translations.getItemText(removedItem, false));
-                writer.newLine();
-            }
-            for(String removedItem : Settings.getRemovedItems()) {
+            Set<String> allRemovedItems = new HashSet<>(Settings.getCurrentRemovedItems());
+            for(String removedItem : allRemovedItems) {
                 writer.write(Translations.getItemText(removedItem, false));
                 writer.newLine();
             }

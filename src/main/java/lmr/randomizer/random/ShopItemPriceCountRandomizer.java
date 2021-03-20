@@ -117,7 +117,7 @@ public class ShopItemPriceCountRandomizer {
             return 0;
         }
         if("Weights".equals(itemName)) {
-            if(Settings.isFools2020Mode()) {
+            if(Settings.isCheapConsumables()) {
                 return 1;
             }
             if(!normalPriceWeightsPlaced) {
@@ -133,7 +133,7 @@ public class ShopItemPriceCountRandomizer {
             }
             return 10;
         }
-        if(Settings.isFools2020Mode()) {
+        if(Settings.isCheapConsumables()) {
             if(itemName.contains("Ammo")) {
                 return 4;
             }
@@ -233,7 +233,7 @@ public class ShopItemPriceCountRandomizer {
 
     private short getCount(String item) {
         if("Weights".equals(item)) {
-            if(Settings.isFools2020Mode()) {
+            if(Settings.isCheapConsumables()) {
                 return (short)(random.nextInt(10) + 1);
             }
             return 5;

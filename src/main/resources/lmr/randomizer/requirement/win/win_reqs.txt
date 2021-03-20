@@ -1,4 +1,1 @@
-Event: Mother Ankh
-Event: All Grails Read
-Event: Medicine of the Mind (Yellow)
-Holy Grail
+Event: Mother Defeated

@@ -37,18 +37,20 @@ mulbruk:
 924 / ? = escape block, no check for swimsuit status
 926 / ? = escape block if mulbruk has swimsuit
 
-for Halloween, acd = secret shop unlocked
-for Halloween, ace = mulbruk conversation flag
-aab (2732): HT unlock fairy npc, should have been with the other group but wasn't, oops
+for Halloween, acd (2765) = secret shop unlocked
+for Halloween, ace (2766) = mulbruk conversation flag
+aab (2731): HT unlock fairy npc, should have been with the other group but wasn't, oops
 aac (2733): mulbruk > 0 = not spoken, 1 = did intro, 2 = ready to talk about HT, 3 = HT unlocked
 aad (2734): H4 tracking
 aae (2735): dracuet
 aaf-ac9 (2735-2761): halloween npc
 aca = halloween npc count
 
-for fools 2020, 2730-2761 for spaulders
-for fools 2020, 2762 - 2766 = random item graphics flags (only 2762-2765 currently used)
+for fools 2020, 2730-2761 (aaa-ac9) for spaulders
+for fools 2020 & 2021, 2762 - 2766 = random item graphics flags (only 2762-2765 currently used)
 for fools 2020, 2767 / acf = feather flag
+
+for fools 20201, 2730-2746 (aaa-aba) for grail flags
 
 un-implemented features:
 inferno pushblock glove special: acb (2763)

@@ -415,6 +415,7 @@ public class AccessChecker {
                 || stateToUpdate.contains("Viy Defeated") || stateToUpdate.contains("Baphomet Defeated")
                 || stateToUpdate.contains("Palenque Defeated") || stateToUpdate.contains("Tiamat Defeated")) {
             bossesDefeated += 1;
+            queuedUpdates.add("Bosses Defeated: " + bossesDefeated);
         }
         return stateToUpdate;
     }
@@ -712,7 +713,7 @@ public class AccessChecker {
         }
 
         for(AnkhJewelLockChecker ankhJewelLockChecker : ankhJewelLockCheckers) {
-            if(!ankhJewelLockChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
+            if(ankhJewelLockChecker.isAnkhJewelLock()) {
                 ankhJewelLockChecker.logAnkhJewelLock();
                 return false;
             }

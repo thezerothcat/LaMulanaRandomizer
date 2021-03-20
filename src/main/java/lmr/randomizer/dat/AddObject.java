@@ -53,11 +53,31 @@ public final class AddObject {
      * @param tests tests to put on the timer object
      * @param updates updates the timer object should make when all of its tests pass
      */
-    public static void addTimer(Screen screen, int delaySeconds, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+    public static void addSecondsTimer(Screen screen, int delaySeconds, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
         GameObject obj = new GameObject(screen);
         obj.setId((short)0x0b);
         obj.getArgs().add((short)delaySeconds);
         obj.getArgs().add((short)0);
+        obj.setX(-1);
+        obj.setY(-1);
+
+        obj.getTestByteOperations().addAll(tests);
+        obj.getWriteByteOperations().addAll(updates);
+        screen.getObjects().add(0, obj);
+    }
+
+    /**
+     * Convenience for adding a timer object to any screen.
+     * @param screen to add the timer object to
+     * @param delayFrames seconds to wait before the timer runs its updates
+     * @param tests tests to put on the timer object
+     * @param updates updates the timer object should make when all of its tests pass
+     */
+    public static void addFramesTimer(Screen screen, int delayFrames, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x0b);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)delayFrames);
         obj.setX(-1);
         obj.setY(-1);
 
@@ -510,25 +530,25 @@ public final class AddObject {
             obj.setY(-1);
 
             TestByteOperation testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(853 + i);
+            testByteOperation.setIndex(0x355 + i);
             testByteOperation.setOp(ByteOp.FLAG_EQUALS);
             testByteOperation.setValue((byte)0);
             obj.getTestByteOperations().add(testByteOperation);
 
             testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(199 + i);
+            testByteOperation.setIndex(0x0c7 + i);
             testByteOperation.setOp(ByteOp.FLAG_EQUALS);
             testByteOperation.setValue((byte)2);
             obj.getTestByteOperations().add(testByteOperation);
 
             WriteByteOperation writeByteOperation = new WriteByteOperation();
-            writeByteOperation.setIndex(853 + i);
+            writeByteOperation.setIndex(0x355 + i);
             writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
             writeByteOperation.setValue((byte)1);
             obj.getWriteByteOperations().add(writeByteOperation);
 
             writeByteOperation = new WriteByteOperation();
-            writeByteOperation.setIndex(852);
+            writeByteOperation.setIndex(0x354);
             writeByteOperation.setOp(ByteOp.ADD_FLAG);
             writeByteOperation.setValue((byte)1);
             obj.getWriteByteOperations().add(writeByteOperation);
@@ -6020,5 +6040,154 @@ public final class AddObject {
         writeByteOperation.setValue(1);
         sphinxRemovalTimer.getWriteByteOperations().add(writeByteOperation);
         screen.getObjects().add(0, sphinxRemovalTimer);
+    }
+
+    /**
+     * Add 0x95 object
+     * @param screen to add to
+     * @param x position
+     * @param y position
+     */
+    public static void addEyeOfDivineRetribution(Screen screen, int x, int y) {
+        GameObject eyeOfDivineRetribution = new GameObject(screen);
+        eyeOfDivineRetribution.setId((short)0x95);
+        eyeOfDivineRetribution.setX(x);
+        eyeOfDivineRetribution.setY(y);
+
+        eyeOfDivineRetribution.getArgs().add((short)10); // Flag 0x000a
+        eyeOfDivineRetribution.getArgs().add((short)0); // 0 = percent hp; 1 = flat damage
+        eyeOfDivineRetribution.getArgs().add((short)100); // Damage is percent or flat depending on previous arg.
+        screen.getObjects().add(eyeOfDivineRetribution);
+    }
+
+    /**
+     * Add 0xa9 object
+     * @param screen to add to
+     * @param x position
+     * @param y position
+     */
+    public static void addPushableBlock(Screen screen, int x, int y, List<TestByteOperation> tests) {
+        GameObject pushableBlock = new GameObject(screen);
+        pushableBlock.setId((short)0xa9);
+        pushableBlock.setX(x);
+        pushableBlock.setY(y);
+
+        pushableBlock.getArgs().add((short)1); // Push damage
+        pushableBlock.getArgs().add((short)1); // Fall damage
+
+        pushableBlock.getTestByteOperations().addAll(tests);
+
+        screen.getObjects().add(pushableBlock);
+    }
+
+    /**
+     * Add 0x12 object
+     * @param screen to add to
+     * @param x position
+     * @param y position
+     */
+    public static void addHitbox(Screen screen, int x, int y, int width, int height, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject hitbox = new GameObject(screen);
+        hitbox.setId((short)0x12);
+        hitbox.setX(x);
+        hitbox.setY(y);
+
+        hitbox.getArgs().add((short)0); // visual 1:dust >1: star
+        hitbox.getArgs().add((short)1); // 0:hp 1:hits
+        hitbox.getArgs().add((short)1); // health
+        hitbox.getArgs().add((short)4); // direction: 0 - up 1 - right 2 - down 3 - left 4 - any
+        hitbox.getArgs().add((short)18); // weapon type: 0-15 same as word, 16 all main 17 all sub 18 all 19 none
+        hitbox.getArgs().add((short)0); // Update Type - 0= break: update all 4 / wrongwep: update none; 1= break: update 0,2 / wrongwep: update 1,3
+        hitbox.getArgs().add((short)width); // hitbox sizex
+        hitbox.getArgs().add((short)height); // hitbox sizey
+        hitbox.getArgs().add((short)105); // Hit Success Sound Effect (-1 for silent)
+        hitbox.getArgs().add((short)104); // Hit Fail Sound Effect (-1 for silent)
+        hitbox.getArgs().add((short)1); // dust1 density 1
+        hitbox.getArgs().add((short)2); // dust2 density 2
+
+        hitbox.getTestByteOperations().addAll(tests);
+        hitbox.getWriteByteOperations().addAll(updates);
+
+        screen.getObjects().add(hitbox);
+    }
+
+    /**
+     * Add 0x98 object
+     * @param screen to add to
+     * @param x position
+     * @param y position
+     */
+    public static void addWarpDoor(Screen screen, int x, int y, int destZone, int destRoom, int destScreen, int destX, int destY, List<TestByteOperation> tests) {
+        GameObject warpDoor = new GameObject(screen);
+
+        warpDoor.setId((short) 0x98);
+        warpDoor.setX(x);
+        warpDoor.setY(y);
+
+        warpDoor.getArgs().add((short)0); // Interaction type: 0 = press up. 1 = press down.
+        warpDoor.getArgs().add((short)destZone); // Destination field
+        warpDoor.getArgs().add((short)destRoom); // Destination room
+        warpDoor.getArgs().add((short)destScreen); // Destination screen
+        warpDoor.getArgs().add((short)destX); // Destination screen X
+        warpDoor.getArgs().add((short)destY); // Destination screen Y
+
+        warpDoor.getTestByteOperations().addAll(tests);
+
+        screen.getObjects().add(warpDoor);
+    }
+    /**
+     * Add 0x2e object
+     * @param screen to add to
+     * @param x position
+     * @param y position
+     */
+    public static void addAmphisbaenaAnkh(Screen screen, int x, int y, int damage, List<TestByteOperation> tests) {
+        GameObject amphisbaenaAnkh = new GameObject(screen);
+
+        amphisbaenaAnkh.setId((short) 0x2e);
+        amphisbaenaAnkh.setX(x);
+        amphisbaenaAnkh.setY(y);
+
+        amphisbaenaAnkh.getArgs().add((short)0); // Boss type (0=amphisbaena)
+        amphisbaenaAnkh.getArgs().add((short)0); // Speed
+        amphisbaenaAnkh.getArgs().add((short)4); // Health
+        amphisbaenaAnkh.getArgs().add((short)damage); // Contact Damage
+        amphisbaenaAnkh.getArgs().add((short)1); // Flame Speed
+        amphisbaenaAnkh.getArgs().add((short)damage); // Flame Damage
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)-1);
+        amphisbaenaAnkh.getArgs().add((short)-1);
+        amphisbaenaAnkh.getArgs().add((short)1519);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)-1);
+        amphisbaenaAnkh.getArgs().add((short)-1);
+        amphisbaenaAnkh.getArgs().add((short)1519);
+        amphisbaenaAnkh.getArgs().add((short)0);
+
+        amphisbaenaAnkh.getTestByteOperations().addAll(tests);
+
+        amphisbaenaAnkh.getWriteByteOperations().add(new WriteByteOperation(0x0f6, ByteOp.ASSIGN_FLAG, (byte)1));
+        amphisbaenaAnkh.getWriteByteOperations().add(new WriteByteOperation(0x0f6, ByteOp.ASSIGN_FLAG, (byte)2));
+        amphisbaenaAnkh.getWriteByteOperations().add(new WriteByteOperation(0x0f6, ByteOp.ASSIGN_FLAG, (byte)3));
+        amphisbaenaAnkh.getWriteByteOperations().add(new WriteByteOperation(0x133, ByteOp.ASSIGN_FLAG, (byte)6));
+
+        screen.getObjects().add(amphisbaenaAnkh);
     }
 }

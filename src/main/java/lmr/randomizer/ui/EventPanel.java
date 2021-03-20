@@ -12,6 +12,8 @@ import java.io.File;
 public class EventPanel extends JPanel {
     private JCheckBox holidayMode;
     private JCheckBox includeHT;
+    private JCheckBox foolsGameplay;
+    private JCheckBox foolsEnemies;
     private JTextField graphicsPack;
     private JLabel graphicsPackLabel;
     private JButton chooseGraphicsButton;
@@ -21,12 +23,22 @@ public class EventPanel extends JPanel {
 
         holidayMode = new JCheckBox();
         holidayMode.setSelected(true);
-        holidayMode.setEnabled(false);
+        if (Settings.isHalloweenMode() || Settings.isFools2020Mode() || Settings.isFools2021Mode()) {
+            holidayMode.setEnabled(false);
+        }
 
         if(Settings.isHalloweenMode()) {
             includeHT = new JCheckBox();
-            includeHT.setSelected(true);
             includeHT.setSelected(Settings.isIncludeHellTempleNPCs());
+        }
+        if(Settings.isFools2021Mode()) {
+            foolsGameplay = new JCheckBox();
+            foolsGameplay.setSelected(true);
+            foolsGameplay.setEnabled(false);
+
+            foolsEnemies = new JCheckBox();
+            foolsEnemies.setSelected(true);
+            foolsEnemies.setEnabled(false);
         }
 
         CheckboxContainer checkboxContainer = new CheckboxContainer(1);
@@ -34,28 +46,34 @@ public class EventPanel extends JPanel {
         if(Settings.isHalloweenMode()) {
             checkboxContainer.add(includeHT);
         }
+        if(Settings.isFools2021Mode()) {
+            checkboxContainer.add(foolsGameplay);
+            checkboxContainer.add(foolsEnemies);
+        }
         add(checkboxContainer, "growx, wrap");
 
-        graphicsPack = new JTextField(Settings.getGraphicsPack());
-        graphicsPackLabel = new JLabel(Translations.getText("settings.graphicsPack"));
+        if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
+            graphicsPack = new JTextField(Settings.getGraphicsPack());
+            graphicsPackLabel = new JLabel(Translations.getText("settings.graphicsPack"));
 
-        chooseGraphicsButton = new JButton(Translations.getText("button.browse"));
-        chooseGraphicsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser graphicsFileChooser = new JFileChooser();
-                graphicsFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                graphicsFileChooser.setCurrentDirectory(new File(Settings.getLaMulanaBaseDir() + "/data/graphics"));
-                if(graphicsFileChooser.showOpenDialog(tabbedPanel.getParent()) == JFileChooser.APPROVE_OPTION) {
-                    graphicsPack.setText(graphicsFileChooser.getSelectedFile().getName());
+            chooseGraphicsButton = new JButton(Translations.getText("button.browse"));
+            chooseGraphicsButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JFileChooser graphicsFileChooser = new JFileChooser();
+                    graphicsFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    graphicsFileChooser.setCurrentDirectory(new File(Settings.getLaMulanaBaseDir() + "/data/graphics"));
+                    if(graphicsFileChooser.showOpenDialog(tabbedPanel.getParent()) == JFileChooser.APPROVE_OPTION) {
+                        graphicsPack.setText(graphicsFileChooser.getSelectedFile().getName());
+                    }
                 }
-            }
-        });
-        JPanel panel = new JPanel(new MigLayout("fillx", "[right]rel[grow,fill]rel[]", "[]10[]10[]"));
-        panel.add(graphicsPackLabel);
-        panel.add(graphicsPack);
-        panel.add(chooseGraphicsButton);
-        add(panel, "growx, wrap");
+            });
+            JPanel panel = new JPanel(new MigLayout("fillx", "[right]rel[grow,fill]rel[]", "[]10[]10[]"));
+            panel.add(graphicsPackLabel);
+            panel.add(graphicsPack);
+            panel.add(chooseGraphicsButton);
+            add(panel, "growx, wrap");
+        }
 
         updateTranslations();
     }
@@ -68,21 +86,40 @@ public class EventPanel extends JPanel {
         else if(Settings.isFools2020Mode()) {
             holidayMode.setText(Translations.getText("event.fools2020"));
         }
-        graphicsPackLabel.setText(Translations.getText("settings.graphicsPack"));
-        chooseGraphicsButton.setText(Translations.getText("button.browse"));
+        else if(Settings.isFools2021Mode()) {
+            holidayMode.setText(Translations.getText("event.fools2021"));
+            foolsGameplay.setText(Translations.getText("gameplay.fools2021"));
+            foolsEnemies.setText(Translations.getText("enemies.fools2021"));
+        }
+        if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
+            graphicsPackLabel.setText(Translations.getText("settings.graphicsPack"));
+            chooseGraphicsButton.setText(Translations.getText("button.browse"));
+        }
     }
 
     public void updateSettings() {
         if(Settings.isHalloweenMode()) {
             Settings.setIncludeHellTempleNPCs(includeHT.isSelected(), true);
         }
-        Settings.setGraphicsPack(graphicsPack.getText(), true);
+        if(Settings.isFools2021Mode()) {
+            Settings.setFoolsGameplay(foolsGameplay.isSelected(), true);
+            Settings.setFoolsEnemies(foolsEnemies.isSelected(), true);
+        }
+        if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
+            Settings.setGraphicsPack(graphicsPack.getText(), true);
+        }
     }
 
     public void reloadSettings() {
         if(Settings.isHalloweenMode()) {
             includeHT.setSelected(Settings.isIncludeHellTempleNPCs());
         }
-        graphicsPack.setText(Settings.getGraphicsPack());
+        if(Settings.isFools2021Mode()) {
+            foolsGameplay.setSelected(Settings.isFoolsGameplay());
+            foolsEnemies.setSelected(Settings.isFoolsEnemies());
+        }
+        if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
+            graphicsPack.setText(Settings.getGraphicsPack());
+        }
     }
 }

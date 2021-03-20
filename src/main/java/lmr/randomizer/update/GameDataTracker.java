@@ -221,46 +221,16 @@ public final class GameDataTracker {
             }
         }
         else if (gameObject.getId() == 0x2e) {
+            Screen screen = (Screen)gameObject.getObjectContainer();
             if(Settings.isBossSpecificAnkhJewels()) {
-                Screen screen = (Screen)gameObject.getObjectContainer();
-                int ankhFlag = 0;
-                if(screen.getZoneIndex() == 0) {
-                    ankhFlag = getAnkhFlag(1);
-                }
-                else if(screen.getZoneIndex() == 2) {
-                    ankhFlag = getAnkhFlag(2);
-                }
-                else if(screen.getZoneIndex() == 3) {
-                    ankhFlag = getAnkhFlag(3);
-                }
-                else if(screen.getZoneIndex() == 4) {
-                    ankhFlag = getAnkhFlag(4);
-                }
-                else if(screen.getZoneIndex() == 5) {
-                    ankhFlag = getAnkhFlag(5);
-                }
-                else if(screen.getZoneIndex() == 6) {
-                    ankhFlag = getAnkhFlag(6);
-                }
-                else if(screen.getZoneIndex() == 7) {
-                    ankhFlag = getAnkhFlag(7);
-                }
-                else if(screen.getZoneIndex() == 17) {
-                    ankhFlag = getAnkhFlag(8);
-                }
+                int ankhFlag = getAnkhFlag(screen.getZoneIndex());
 
                 for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
                     if(testByteOperation.getIndex() == 0x16a && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())) {
                         AddObject.addBossSpecificAnkhCover(gameObject, ankhFlag);
                     }
                 }
-
-                // Don't spawn ankh without jewel collected.
-                TestByteOperation testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(ankhFlag);
-                testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-                testByteOperation.setValue((byte) 0);
-                gameObject.getTestByteOperations().add(testByteOperation);
+                gameObject.getTestByteOperations().add(new TestByteOperation(ankhFlag, ByteOp.FLAG_NOT_EQUAL, (byte) 0)); // Don't spawn ankh without jewel collected.
             }
 //            if(Settings.isFoolsMode()) {
 //                Screen screen = (Screen) gameObject.getObjectContainer();
@@ -282,9 +252,9 @@ public final class GameDataTracker {
 //                    gameObject.getArgs().set(28, (short)22);
 //                }
 //            }
-            if(Settings.isRandomizeBosses()) {
-                Screen screen = (Screen) gameObject.getObjectContainer();
-                if(screen.getZoneIndex() == 0) {
+            if(screen.getZoneIndex() == 0) {
+                // Amphisbaena ankh
+                if(Settings.isRandomizeBosses()) {
                     for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
                         if(testByteOperation.getIndex() == 0x133) {
                             testByteOperation.setIndex(0x1b4);
@@ -298,7 +268,9 @@ public final class GameDataTracker {
                         }
                     }
                 }
-                else if(screen.getZoneIndex() == 3) {
+            }
+            else if(screen.getZoneIndex() == 3) {
+                if(Settings.isRandomizeBosses()) {
                     gameObject.getArgs().set(24, (short)3);
                     gameObject.getArgs().set(25, (short)402);
                     gameObject.getArgs().set(26, (short)508);
@@ -306,7 +278,9 @@ public final class GameDataTracker {
                     gameObject.getArgs().set(29, (short)402);
                     gameObject.getArgs().set(30, (short)508);
                 }
-                else if(screen.getZoneIndex() == 5) {
+            }
+            else if(screen.getZoneIndex() == 5) {
+                if(Settings.isRandomizeBosses()) {
                     for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
                         if(testByteOperation.getIndex() == 0x1b4) {
                             testByteOperation.setIndex(0x133);
@@ -320,7 +294,9 @@ public final class GameDataTracker {
                         }
                     }
                 }
-                else if(screen.getZoneIndex() == 6) {
+            }
+            else if(screen.getZoneIndex() == 6) {
+                if(Settings.isRandomizeBosses()) {
                     gameObject.getArgs().set(24, (short)7);
                     gameObject.getArgs().set(25, (short)0);
                     gameObject.getArgs().set(26, (short)1500);
@@ -2013,6 +1989,27 @@ public final class GameDataTracker {
                     AddObject.addHotspring(gameObject);
                 }
             }
+
+            if(gameObject.getObjectContainer() instanceof Screen) {
+                if (Settings.isFools2021Mode()) {
+                    int languageBlock = gameObject.getArgs().get(0);
+                    int zoneIndex = ((Screen)gameObject.getObjectContainer()).getZoneIndex();
+                    boolean front = (languageBlock == 41 || languageBlock == 75 || languageBlock == 104 || languageBlock == 136
+                            || languageBlock == 149 || languageBlock == 170 || languageBlock == 188 || languageBlock == 221)
+                            || (languageBlock == 231 && zoneIndex == 9);
+                    // Swap out original for custom flags
+                    for (TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                        if (testByteOperation.getIndex() == LocationCoordinateMapper.getOriginalGrailFlag(zoneIndex, front)) {
+                            testByteOperation.setIndex(LocationCoordinateMapper.getGrailFlag(zoneIndex, front));
+                        }
+                    }
+                    for (WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
+                        if (writeByteOperation.getIndex() == LocationCoordinateMapper.getOriginalGrailFlag(zoneIndex, front)) {
+                            writeByteOperation.setIndex(LocationCoordinateMapper.getGrailFlag(zoneIndex, front));
+                        }
+                    }
+                }
+            }
         } else if (gameObject.getId() == 0x9e) {
             if(LocationCoordinateMapper.getStartingZone() == 16) {
                 Screen screen = (Screen) gameObject.getObjectContainer();
@@ -2027,108 +2024,32 @@ public final class GameDataTracker {
             }
 
             int languageBlock = gameObject.getArgs().get(0);
-            if(Settings.isAutomaticGrailPoints()) {
-                if(languageBlock == 41 || languageBlock == 75 || languageBlock == 104 || languageBlock == 136
-                        || languageBlock == 149 || languageBlock == 170 || languageBlock == 188 || languageBlock == 221
-                        || languageBlock == 250 || languageBlock == 275 || languageBlock == 291 || languageBlock == 305
-                        || languageBlock == 323 || languageBlock == 339 || languageBlock == 206 || languageBlock == 358) {
-                    // Grail points for:
-                    // Gate of Guidance, Mausoleum of the Giants, Temple of the Sun, Spring in the Sky,
-                    // Inferno Cavern, Chamber of Extinction, Twin Labyrinths (Front), Endless Corridor,
-                    // Gate of Illusion, Graveyard of the Giants, Temple of Moonlight, Tower of the Goddess,
-                    // Tower of Ruin, Chamber of Birth, Twin Labyrinths (Back), Dimensional Corridor
-                    AddObject.addGrailDetector(gameObject, getGrailFlag(languageBlock));
-                    return;
+            if(gameObject.getObjectContainer() instanceof Screen) {
+                int zoneIndex = ((Screen)gameObject.getObjectContainer()).getZoneIndex();
+                boolean front = (languageBlock == 41 || languageBlock == 75 || languageBlock == 104 || languageBlock == 136
+                        || languageBlock == 149 || languageBlock == 170 || languageBlock == 188 || languageBlock == 221)
+                        || (languageBlock == 231 && zoneIndex == 9);
+
+                if(Settings.isAutomaticGrailPoints()) {
+                    AddObject.addGrailDetector(gameObject, LocationCoordinateMapper.getGrailFlag(zoneIndex, front));
                 }
-                else if(languageBlock == 231) {
-                    if(gameObject.getObjectContainer() instanceof Screen) {
-                        if(((Screen)gameObject.getObjectContainer()).getZoneIndex() == 9) {
-                            // Shrine of the Mother (Front)
-                            AddObject.addGrailDetector(gameObject, 108);
-                            return;
+                if (Settings.isFools2021Mode()) {
+                    // Swap out original for custom flags
+                    for (TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                        if (testByteOperation.getIndex() == LocationCoordinateMapper.getOriginalGrailFlag(zoneIndex, front)) {
+                            testByteOperation.setIndex(LocationCoordinateMapper.getGrailFlag(zoneIndex, front));
                         }
-                        else {
-                            // Shrine of the Mother (Back)
-                            AddObject.addGrailDetector(gameObject, 117);
-                            return;
+                    }
+                    for (WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
+                        if (writeByteOperation.getIndex() == LocationCoordinateMapper.getOriginalGrailFlag(zoneIndex, front)) {
+                            writeByteOperation.setIndex(LocationCoordinateMapper.getGrailFlag(zoneIndex, front));
                         }
                     }
                 }
+                return;
             }
 
-            if(languageBlock == 223) {
-                // Tablet for MARDUK mantra
-                List<GameObject> objects = mantraTablets.get("MARDUK");
-                if (objects == null) {
-                    mantraTablets.put("MARDUK", new ArrayList<>());
-                    objects = mantraTablets.get("MARDUK");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 200) {
-                // Tablet for SABBAT mantra
-                List<GameObject> objects = mantraTablets.get("SABBAT");
-                if (objects == null) {
-                    mantraTablets.put("SABBAT", new ArrayList<>());
-                    objects = mantraTablets.get("SABBAT");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 172) {
-                // Tablet for MU mantra
-                List<GameObject> objects = mantraTablets.get("MU");
-                if (objects == null) {
-                    mantraTablets.put("MU", new ArrayList<>());
-                    objects = mantraTablets.get("MU");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 153) {
-                // Tablet for VIY mantra
-                List<GameObject> objects = mantraTablets.get("VIY");
-                if (objects == null) {
-                    mantraTablets.put("VIY", new ArrayList<>());
-                    objects = mantraTablets.get("VIY");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 313) {
-                // Tablet for BAHRUN mantra
-                List<GameObject> objects = mantraTablets.get("BAHRUN");
-                if (objects == null) {
-                    mantraTablets.put("BAHRUN", new ArrayList<>());
-                    objects = mantraTablets.get("BAHRUN");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 115) {
-                // Tablet for WEDJET mantra
-                List<GameObject> objects = mantraTablets.get("WEDJET");
-                if (objects == null) {
-                    mantraTablets.put("WEDJET", new ArrayList<>());
-                    objects = mantraTablets.get("WEDJET");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 282) {
-                // Tablet for ABUTO mantra
-                List<GameObject> objects = mantraTablets.get("ABUTO");
-                if (objects == null) {
-                    mantraTablets.put("ABUTO", new ArrayList<>());
-                    objects = mantraTablets.get("ABUTO");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 72) {
-                // Tablet for LAMULANA mantra
-                List<GameObject> objects = mantraTablets.get("LAMULANA");
-                if (objects == null) {
-                    mantraTablets.put("LAMULANA", new ArrayList<>());
-                    objects = mantraTablets.get("LAMULANA");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 648) {
+            if(languageBlock == 648) {
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 292 && flagTest.getValue() == 4) {
                         flagTest.setIndex(2794);
@@ -3389,8 +3310,8 @@ public final class GameDataTracker {
                     }
                     break;
                 }
-                else if(Settings.isBlockPushingRequiresGlove()) {
-                    if(flagTest.getIndex() == 0x28d) {
+                else if(flagTest.getIndex() == 0x28d) {
+                    if(Settings.isBlockPushingRequiresGlove()) {
                         flagTest.setIndex(0xacc);
                     }
                 }
@@ -3629,82 +3550,144 @@ public final class GameDataTracker {
         }
     }
 
-    private static int getAnkhFlag(int bossNumber) {
-        if(bossNumber == 1) {
+    private static int getAnkhFlag(int zoneIndex) {
+        if(zoneIndex == 0) {
             return 0x08e;
         }
-        if(bossNumber == 2) {
+        if(zoneIndex == 2) {
             return 0x08f;
         }
-        if(bossNumber == 3) {
+        if(zoneIndex == 3) {
             return 0x090;
         }
-        if(bossNumber == 4) {
+        if(zoneIndex == 4) {
             return 0x091;
         }
-        if(bossNumber == 5) {
+        if(zoneIndex == 5) {
             return 0x092;
         }
-        if(bossNumber == 6) {
+        if(zoneIndex == 6) {
             return 0x093;
         }
-        if(bossNumber == 7) {
+        if(zoneIndex == 7) {
             return 0x094;
         }
-        if(bossNumber == 8) {
+        if(zoneIndex == 17) {
             return 0x095;
         }
         return 0;
     }
 
     private static int getGrailFlag(int languageBlock) {
-        if(languageBlock == 41) {
-            return 100;
+        if(Settings.isFools2021Mode()) {
+            if(languageBlock == 41) {
+                return LocationCoordinateMapper.getGrailFlag(0, true);
+            }
+            else if(languageBlock == 75) {
+                return LocationCoordinateMapper.getGrailFlag(2, true);
+            }
+            else if(languageBlock == 104) {
+                return LocationCoordinateMapper.getGrailFlag(3, true);
+            }
+            else if(languageBlock == 136) {
+                return LocationCoordinateMapper.getGrailFlag(4, true);
+            }
+            else if(languageBlock == 149) {
+                return LocationCoordinateMapper.getGrailFlag(5, true);
+            }
+            else if(languageBlock == 170) {
+                return LocationCoordinateMapper.getGrailFlag(6, true);
+            }
+            else if(languageBlock == 188) {
+                return LocationCoordinateMapper.getGrailFlag(7, true);
+            }
+            else if(languageBlock == 221) {
+                return LocationCoordinateMapper.getGrailFlag(8, true);
+            }
+            else if(languageBlock == 250) {
+                return LocationCoordinateMapper.getGrailFlag(10, false);
+            }
+            else if(languageBlock == 275) {
+                return LocationCoordinateMapper.getGrailFlag(11, false);
+            }
+            else if(languageBlock == 291) {
+                return LocationCoordinateMapper.getGrailFlag(12, false);
+            }
+            else if(languageBlock == 305) {
+                return LocationCoordinateMapper.getGrailFlag(13, false);
+            }
+            else if(languageBlock == 323) {
+                return LocationCoordinateMapper.getGrailFlag(14, false);
+            }
+            else if(languageBlock == 339) {
+                return LocationCoordinateMapper.getGrailFlag(15, false); // 16 also works, the outcome is the same right now.
+            }
+            else if(languageBlock == 206) {
+                return LocationCoordinateMapper.getGrailFlag(7, false);
+            }
+            else if(languageBlock == 358) {
+                return LocationCoordinateMapper.getGrailFlag(17, false);
+            }
+            else if(languageBlock == 231) {
+                return LocationCoordinateMapper.getGrailFlag(18, false);
+            }
         }
-        else if(languageBlock == 75) {
-            return 101;
-        }
-        else if(languageBlock == 104) {
-            return 102;
-        }
-        else if(languageBlock == 136) {
-            return 103;
-        }
-        else if(languageBlock == 149) {
-            return 104;
-        }
-        else if(languageBlock == 170) {
-            return 105;
-        }
-        else if(languageBlock == 188) {
-            return 106;
-        }
-        else if(languageBlock == 221) {
-            return 107;
-        }
-        else if(languageBlock == 250) {
-            return 109;
-        }
-        else if(languageBlock == 275) {
-            return 110;
-        }
-        else if(languageBlock == 291) {
-            return 111;
-        }
-        else if(languageBlock == 305) {
-            return 112;
-        }
-        else if(languageBlock == 323) {
-            return 113;
-        }
-        else if(languageBlock == 339) {
-            return 114;
-        }
-        else if(languageBlock == 206) {
-            return 115;
-        }
-        else if(languageBlock == 358) {
-            return 116;
+        throw new RuntimeException();
+    }
+
+    private static int getOriginalGrailFlag(int languageBlock) {
+        if(Settings.isFools2021Mode()) {
+            if(languageBlock == 41) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(0, true);
+            }
+            else if(languageBlock == 75) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(2, true);
+            }
+            else if(languageBlock == 104) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(3, true);
+            }
+            else if(languageBlock == 136) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(4, true);
+            }
+            else if(languageBlock == 149) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(5, true);
+            }
+            else if(languageBlock == 170) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(6, true);
+            }
+            else if(languageBlock == 188) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(7, true);
+            }
+            else if(languageBlock == 221) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(8, true);
+            }
+            else if(languageBlock == 250) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(10, false);
+            }
+            else if(languageBlock == 275) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(11, false);
+            }
+            else if(languageBlock == 291) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(12, false);
+            }
+            else if(languageBlock == 305) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(13, false);
+            }
+            else if(languageBlock == 323) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(14, false);
+            }
+            else if(languageBlock == 339) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(15, false); // 16 also works, the outcome is the same right now.
+            }
+            else if(languageBlock == 206) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(7, false);
+            }
+            else if(languageBlock == 358) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(17, false);
+            }
+            else if(languageBlock == 231) {
+                return LocationCoordinateMapper.getOriginalGrailFlag(18, false);
+            }
         }
         throw new RuntimeException();
     }

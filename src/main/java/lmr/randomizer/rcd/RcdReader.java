@@ -177,6 +177,23 @@ public final class RcdReader {
                 }
             }
 
+            if(Settings.isFoolsGameplay() && Settings.getCurrentBossCount() != 8) {
+                // Timers for unlocking true shrine, normally set value from 8 to 9
+                boolean addTest = false;
+                for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                    if (testByteOperation.getIndex() == 0x102
+                           && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())
+                           && testByteOperation.getValue() == 8) {
+                        addTest = true;
+                        testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+                        testByteOperation.setValue((byte)9);
+                        break;
+                    }
+                }
+                if(addTest) {
+                    obj.getTestByteOperations().add(new TestByteOperation(0x102, ByteOp.FLAG_GTEQ, Settings.getCurrentBossCount()));
+                }
+            }
             if(!(objectContainer instanceof Zone)) {
                 for (int i = 0; i < obj.getWriteByteOperations().size(); i++) {
                     WriteByteOperation updateFlag = obj.getWriteByteOperations().get(i);
@@ -243,12 +260,48 @@ public final class RcdReader {
                 }
             }
         }
+        else if(obj.getId() == 0x2c) {
+            if(Settings.isFools2021Mode()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if (screen.getZoneIndex() == 0 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        keepObject = false; // Remove Treasures chest from Guidance.
+                    }
+                }
+            }
+        }
         else if(obj.getId() == 0x2d) {
             if(Settings.isFools2020Mode()) {
+                // Remove weapon cover from Flare puzzle room
                 if(objectContainer instanceof Screen) {
                     Screen screen = (Screen)objectContainer;
                     if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
-                        keepObject = false; // Remove weapon cover from Flare puzzle room
+                        keepObject = false;
+                    }
+                }
+            }
+        }
+        else if(obj.getId() == 0x2e) {
+            if(Settings.isFools2021Mode()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if (screen.getZoneIndex() == 0 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                        for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
+                            if (testByteOperation.getIndex() == 0x16a && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp()) && testByteOperation.getValue() == 2) {
+                                // Delete the hardmode variant of Amphisbaena ankh
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                        if(keepObject) {
+                            obj.getTestByteOperations().add(new TestByteOperation(0x354, ByteOp.FLAG_EQUALS, 0));
+
+                            // Reduce health
+                            obj.getArgs().set(2, (short)4);
+                            // Buff damage
+                            obj.getArgs().set(3, (short)32);
+                            obj.getArgs().set(5, (short)32);
+                        }
                     }
                 }
             }
@@ -521,6 +574,17 @@ public final class RcdReader {
                 }
                 if(testFlagIndex != null) {
                     obj.getTestByteOperations().remove((int)testFlagIndex);
+                }
+            }
+        }
+        else if (obj.getId() == 0x9a) {
+            if(Settings.isFools2021Mode()) {
+                // Remove Treasures chest falling animation from Guidance.
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if (screen.getZoneIndex() == 0 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        keepObject = false;
+                    }
                 }
             }
         }
@@ -893,6 +957,31 @@ public final class RcdReader {
                     if (flagTest.getIndex() == 0x106) {
                         flagTest.setIndex(0xaae);
                         flagTest.setValue((byte)0);
+                    }
+                }
+            }
+        }
+        else if(obj.getId() == 0x95) {
+            // Eye of Divine Retribution
+            if(Settings.isFools2021Mode()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen) objectContainer;
+                    if (screen.getZoneIndex() == 12) {
+                        if(screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                            keepObject = false;
+                        }
+                        else if(screen.getRoomIndex() == 4 && screen.getScreenIndex() == 1) {
+                            keepObject = false;
+                        }
+                        else if(screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
+                            keepObject = false;
+                        }
+                        else if(screen.getRoomIndex() == 5 && screen.getScreenIndex() == 1) {
+                            keepObject = false;
+                        }
+                        else if(screen.getRoomIndex() == 6 && screen.getScreenIndex() == 0) {
+                            keepObject = false;
+                        }
                     }
                 }
             }
@@ -1412,6 +1501,15 @@ public final class RcdReader {
 //                screenExit.setScreenIndex((byte)-1);
 //            }
 //        }
+        if(Settings.isFools2021Mode()) {
+            // Transition to Ellmac
+            if(screen.getZoneIndex() == 4 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                ScreenExit screenExit = screen.getScreenExits().get(3);
+                screenExit.setZoneIndex((byte)3);
+                screenExit.setRoomIndex((byte)8);
+                screenExit.setScreenIndex((byte)0);
+            }
+        }
 
         if(Settings.isRandomizeBosses()) {
             if(screen.getZoneIndex() == 0) {
@@ -2179,11 +2277,27 @@ public final class RcdReader {
         }
 
         if(zoneIndex == 0) {
-            if(Settings.isRandomizeBosses()) {
-                if(roomIndex == 8 && screenIndex == 0) {
+            if(roomIndex == 0 && screenIndex == 0) {
+                if(Settings.isFools2021Mode()) {
+                    // Treasures room
+                    AddObject.addWarpDoor(screen, 320, 160, 3, 6, 0, 460, 152,
+                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_GTEQ, 1)));
+                    AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 1)));
+                    AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 2)));
+                    AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 3)));
+                    AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 4)));
+                }
+            }
+            else if(roomIndex == 8 && screenIndex == 0) {
+                // Room above Amphisbaena
+                if(Settings.isRandomizeBosses()) {
+                    // Transition to Viy
                     AddObject.addSpecialTransitionWarp(screen, 5);
                 }
-                else if(roomIndex == 8 && screenIndex == 1) {
+            }
+            else if(roomIndex == 8 && screenIndex == 1) {
+                // Amphisbaena boss room
+                if(Settings.isRandomizeBosses()) {
                     AddObject.addSpecialTransitionGate(screen, 5);
                     // todo: test boss swap + boss checkpoint
                     AddObject.addAutosave(screen, 300, 880, 41,
@@ -2192,9 +2306,17 @@ public final class RcdReader {
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
-            }
-            else if(Settings.isBossCheckpoints()) {
-                if(roomIndex == 8 && screenIndex == 1) {
+                if (Settings.isFools2021Mode()) {
+                    AddObject.addEyeOfDivineRetribution(screen, 300, 500);
+                    AddObject.addHitbox(screen, 0, 480, 32, 24, new ArrayList<>(0), Arrays.asList(new WriteByteOperation(0x000a, ByteOp.ADD_FLAG, 1)));
+
+                    for (int i = 1; i <= 10; i++) {
+                        AddObject.addAmphisbaenaAnkh(screen, 300, 880, 32 * (i + 1),
+                                Arrays.asList(new TestByteOperation(0x133, ByteOp.FLAG_EQUALS, 5),
+                                        new TestByteOperation(0x354, ByteOp.FLAG_EQUALS, i)));
+                    }
+                }
+                if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 300, 880, 41,
                             Arrays.asList(new TestByteOperation(0x133, ByteOp.FLAG_EQUALS, 5),
                                     new TestByteOperation(0x0f6, ByteOp.FLAG_LT, 2),
@@ -2245,7 +2367,19 @@ public final class RcdReader {
             }
         }
         else if(zoneIndex == 3) {
-            if(roomIndex == 8 && screenIndex == 0) {
+            if(roomIndex == 4 && screenIndex == 3) {
+                if(Settings.isFools2021Mode()) {
+                    AddObject.addPot(screen, 40, 480, 1, new ArrayList<>(0));
+                }
+            }
+            else if(roomIndex == 4 && screenIndex == 5) {
+                if(Settings.isFools2021Mode()) {
+                    AddObject.addWarp(screen, 1280, 480, 32, 24, 12, 8, 0, 20, 232)
+                            .getTestByteOperations().add(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, (byte)0));
+                }
+            }
+            else if(roomIndex == 8 && screenIndex == 0) {
+                // Ellmac boss room
                 if(Settings.isRandomizeBosses()) {
                     GameObject warp = AddObject.addWarp(screen, 0, 420, 32, 4, 3, 4, 2, 100, 160);
 
@@ -2265,8 +2399,8 @@ public final class RcdReader {
             }
         }
         else if(zoneIndex == 4) {
-            if(Settings.isBossCheckpoints()) {
-                if(roomIndex == 4 && screenIndex == 0) {
+            if(roomIndex == 4 && screenIndex == 0) {
+                if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 380, 340, 136,
                             Arrays.asList(new TestByteOperation(0x19f, ByteOp.FLAG_EQUALS, 1),
                                     new TestByteOperation(0x199, ByteOp.FLAG_EQUALS, 1),
@@ -2275,13 +2409,23 @@ public final class RcdReader {
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
+            else if (roomIndex == 8 && screenIndex == 1) {
+                if (Settings.isFools2021Mode()) {
+                    // Transition to Ellmac
+                    AddObject.addWarp(screen, 0, 440 + 480, 32, 4, 3, 8, 0, 360, 40)
+                            .getTestByteOperations().add(new TestByteOperation(0x0f8, ByteOp.FLAG_NOT_EQUAL, (byte) 2));
+                }
+            }
         }
         else if(zoneIndex == 5) {
-            if(Settings.isRandomizeBosses()) {
-                if(roomIndex == 8 && screenIndex == 0) {
+            if(roomIndex == 8 && screenIndex == 0) {
+                if(Settings.isRandomizeBosses()) {
                     AddObject.addSpecialTransitionWarp(screen, 0);
                 }
-                else if(roomIndex == 8 && screenIndex == 1) {
+            }
+            else if(roomIndex == 8 && screenIndex == 1) {
+                // Viy boss room
+                if(Settings.isRandomizeBosses()) {
                     AddObject.addSpecialTransitionGate(screen, 0);
                     // todo: test boss swap + boss checkpoint
                     AddObject.addAutosave(screen, 460, 560, 149,
@@ -2290,9 +2434,7 @@ public final class RcdReader {
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
-            }
-            else if(Settings.isBossCheckpoints()) {
-                if(roomIndex == 8 && screenIndex == 1) {
+                if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 460, 560, 149,
                             Arrays.asList(new TestByteOperation(0x1b4, ByteOp.FLAG_EQUALS, 4),
                                     new TestByteOperation(0x0fa, ByteOp.FLAG_LT, 2),
@@ -2300,28 +2442,31 @@ public final class RcdReader {
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
-            if(Settings.isFools2020Mode()) {
-                if(roomIndex == 4) {
+            else if(roomIndex == 4) {
+                if(Settings.isFools2020Mode()) {
                     if(screenIndex == 0) {
                         AddObject.addInfernoFakeWeaponCover(screen);
                     }
                 }
-                else if(roomIndex == 9) {
+            }
+            else if(roomIndex == 9) {
+                if(Settings.isFools2020Mode()) {
+                    // Add fools 2020 spaulders
                     if(screenIndex == 0) {
-                        int randomizeGraphicsFlag = 2730;
+                        int spaulderCollectFlag = 2730;
                         for(int i = 0; i < 640; i += 40) {
                             AddObject.addFloatingItem(screen, i, 400, 62,
-                                    true, Arrays.asList(new TestByteOperation(randomizeGraphicsFlag, ByteOp.FLAG_EQUALS, 0)),
-                                    Arrays.asList(new WriteByteOperation(randomizeGraphicsFlag, ByteOp.ASSIGN_FLAG, 1)));
-                            ++randomizeGraphicsFlag;
+                                    true, Arrays.asList(new TestByteOperation(spaulderCollectFlag, ByteOp.FLAG_EQUALS, 0)),
+                                    Arrays.asList(new WriteByteOperation(spaulderCollectFlag, ByteOp.ASSIGN_FLAG, 1)));
+                            ++spaulderCollectFlag;
                         }
                     }
                     else if(screenIndex == 1) {
-                        int randomizeGraphicsFlag = 2746;
+                        int spaulderCollectFlag = 2746;
                         for(int i = 640; i < 1280; i += 40) {
                             AddObject.addFloatingItem(screen, i, 400, 62,
-                                    true, Arrays.asList(new TestByteOperation(randomizeGraphicsFlag, ByteOp.FLAG_EQUALS, 0)),
-                                    Arrays.asList(new WriteByteOperation(randomizeGraphicsFlag, ByteOp.ASSIGN_FLAG, 1)));
+                                    true, Arrays.asList(new TestByteOperation(spaulderCollectFlag, ByteOp.FLAG_EQUALS, 0)),
+                                    Arrays.asList(new WriteByteOperation(spaulderCollectFlag, ByteOp.ASSIGN_FLAG, 1)));
                         }
                         AddObject.addAutosave(screen, 1080, 80, 0x06b,
                                 Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2),
@@ -2695,7 +2840,7 @@ public final class RcdReader {
 
 
                     // Mid ghosts, wave 2
-                    AddObject.addTimer(screen, delayPerWave,
+                    AddObject.addSecondsTimer(screen, delayPerWave,
                             Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0),
                                     new TestByteOperation(0x003, ByteOp.FLAG_EQUALS, 0)),
                             Arrays.asList(new WriteByteOperation(0x003, ByteOp.ASSIGN_FLAG, 1)));
@@ -2713,7 +2858,7 @@ public final class RcdReader {
                     ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
 
                     // Bottom ghosts, wave 3
-                    AddObject.addTimer(screen, delayPerWave,
+                    AddObject.addSecondsTimer(screen, delayPerWave,
                             Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0),
                                     new TestByteOperation(0x003, ByteOp.FLAG_EQUALS, 1)),
                             Arrays.asList(new WriteByteOperation(0x003, ByteOp.ASSIGN_FLAG, 2)));
@@ -2730,7 +2875,7 @@ public final class RcdReader {
                     ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
 
                     // Center ghost, final wave, true boss
-                    AddObject.addTimer(screen, delayPerWave,
+                    AddObject.addSecondsTimer(screen, delayPerWave,
                             Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0),
                                     new TestByteOperation(0x003, ByteOp.FLAG_EQUALS, 2)),
                             Arrays.asList(new WriteByteOperation(0x003, ByteOp.ASSIGN_FLAG, 3)));
@@ -2741,7 +2886,7 @@ public final class RcdReader {
                     ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
 
                     // Timer to trigger end of fight
-                    AddObject.addTimer(screen,
+                    AddObject.addSecondsTimer(screen,
                             0, Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0), new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 7)),
                             Arrays.asList(new WriteByteOperation(0x7e2, ByteOp.ASSIGN_FLAG, 1)));
 
@@ -2767,6 +2912,21 @@ public final class RcdReader {
         }
 
         if(zoneIndex == 0) {
+            if(roomIndex == 0 && screenIndex == 0) {
+                // Treasures room
+                if(Settings.isFools2021Mode()) {
+                    AddObject.addFramesTimer(screen, 24,
+                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 1)),
+                            Arrays.asList(new WriteByteOperation(0x137, ByteOp.ASSIGN_FLAG, 2)));
+                    AddObject.addFramesTimer(screen, 20,
+                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 2)),
+                            Arrays.asList(new WriteByteOperation(0x137, ByteOp.ASSIGN_FLAG, 3)));
+                    AddObject.addFramesTimer(screen, 12,
+                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 3)),
+                            Arrays.asList(new WriteByteOperation(0x137, ByteOp.ASSIGN_FLAG, 4)));
+                }
+            }
+
             if(roomIndex == 4 && screenIndex == 1) {
                 if(Settings.isHalloweenMode()) {
                     // Priest Zarnac - 674
@@ -2776,9 +2936,15 @@ public final class RcdReader {
                     AddObject.addNpcConversationTimer(screen, 0xac6);
                 }
                 // Ensure you can't lose access to the Guidance elevator. // todo: maybe find a better solution that respects logic
-                AddObject.addTimer(screen, 0,
+                AddObject.addSecondsTimer(screen, 0,
                         Arrays.asList(new TestByteOperation(0x34c, ByteOp.FLAG_GT, 1), new TestByteOperation(0x134, ByteOp.FLAG_EQUALS, 0)),
                         Arrays.asList(new WriteByteOperation(0x134, ByteOp.ASSIGN_FLAG, 1)));
+            }
+            if(roomIndex == 8 && screenIndex == 0) {
+                if(Settings.isFools2021Mode()) {
+                    // Make sure Amphisbaena is appropriately buffed.
+                    AddObject.addSacredOrbCountTimers(screen);
+                }
             }
         }
         else if(zoneIndex == 1) {
@@ -2851,7 +3017,7 @@ public final class RcdReader {
                     // Mulbruk
                     if(Settings.isIncludeHellTempleNPCs()) {
                         // Timer to set flag for talking about HT
-                        AddObject.addTimer(screen,
+                        AddObject.addSecondsTimer(screen,
                                 0, Arrays.asList(new TestByteOperation(0xaca, ByteOp.FLAG_EQUALS, 29),
                                         new TestByteOperation(0xaac, ByteOp.FLAG_EQUALS, 1)),
                                 Arrays.asList(new WriteByteOperation(0xaac, ByteOp.ASSIGN_FLAG, 2)));
@@ -2917,7 +3083,7 @@ public final class RcdReader {
             }
             if(Settings.isFools2020Mode()) {
                 if(roomIndex == 4 && screenIndex == 0) {
-                    AddObject.addTimer(screen, 0,
+                    AddObject.addSecondsTimer(screen, 0,
                             Arrays.asList(new TestByteOperation(0x13, ByteOp.FLAG_GTEQ, 1), new TestByteOperation(0x1b3, ByteOp.FLAG_EQUALS, 1)),
                             Arrays.asList(new WriteByteOperation(0x1b3, ByteOp.ASSIGN_FLAG, 2), new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1)));
                 }
@@ -3146,7 +3312,7 @@ public final class RcdReader {
             if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
 //                if(roomIndex == 0) {
 //                    if(screenIndex == 0) {
-//                        AddObject.addTimer(screen,
+//                        AddObject.addSecondsTimer(screen,
 //                                Arrays.asList(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0)),
 //                                Arrays.asList(new WriteByteOperation(0x382, ByteOp.ASSIGN_FLAG, 1)));
 //                    }
@@ -3159,17 +3325,17 @@ public final class RcdReader {
                     }
                 }
                 else if(roomIndex == 12 && screenIndex == 1) {
-                    AddObject.addTimer(screen,
+                    AddObject.addSecondsTimer(screen,
                             0, Arrays.asList(new TestByteOperation(0xaad, ByteOp.FLAG_GT, 0)),
                             Arrays.asList(new WriteByteOperation(0xaad, ByteOp.ASSIGN_FLAG, 0)));
                 }
                 else if(roomIndex == 14 && screenIndex == 1) {
-                    AddObject.addTimer(screen,
+                    AddObject.addSecondsTimer(screen,
                             0, Arrays.asList(new TestByteOperation(0xaad, ByteOp.FLAG_GT, 0)),
                             Arrays.asList(new WriteByteOperation(0xaad, ByteOp.ASSIGN_FLAG, 0)));
                 }
                 else if(roomIndex == 15 && screenIndex == 1) {
-                    AddObject.addTimer(screen,
+                    AddObject.addSecondsTimer(screen,
                             0, Arrays.asList(new TestByteOperation(0xaad, ByteOp.FLAG_GT, 0)),
                             Arrays.asList(new WriteByteOperation(0xaad, ByteOp.ASSIGN_FLAG, 0)));
                 }

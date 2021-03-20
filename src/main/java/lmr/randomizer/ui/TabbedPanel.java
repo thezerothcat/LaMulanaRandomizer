@@ -28,6 +28,10 @@ public class TabbedPanel extends JTabbedPane {
             eventPanel = new EventPanel(this);
             addTab(Translations.getText("settings.event.fools2020"), eventPanel);
         }
+        else if(Settings.isFools2021Mode()) {
+            eventPanel = new EventPanel(this);
+            addTab(Translations.getText("settings.event.fools2021"), eventPanel);
+        }
 
         randomizationPanel = new RandomizationPanel();
         addTab(Translations.getText("settings.items"), randomizationPanel);
@@ -100,6 +104,9 @@ public class TabbedPanel extends JTabbedPane {
         }
         else if(Settings.isFools2020Mode()) {
             setTitleAt(i++, Translations.getText("settings.event.fools2020"));
+        }
+        else if(Settings.isFools2021Mode()) {
+            setTitleAt(i++, Translations.getText("settings.event.fools2021"));
         }
         setTitleAt(i++, Translations.getText("settings.items"));
         setTitleAt(i++, Translations.getText("settings.locations"));

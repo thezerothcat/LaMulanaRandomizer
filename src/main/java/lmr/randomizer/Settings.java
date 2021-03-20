@@ -21,6 +21,7 @@ public final class Settings {
     public static List<String> currentCursedChests;
     public static String currentStartingWeapon;
     public static Integer currentStartingLocation;
+    public static Integer currentBossCount;
 
     private static Settings singleton = new Settings();
 
@@ -58,6 +59,8 @@ public final class Settings {
     private boolean ushumgalluAssist;
     private boolean bossCheckpoints;
     private boolean bossSpecificAnkhJewels;
+    private boolean foolsGameplay;
+    private boolean foolsEnemies;
     private boolean blockPushingRequiresGlove;
     private boolean screenshakeDisabled;
 
@@ -124,6 +127,8 @@ public final class Settings {
         randomizeBacksideDoors = false;
         randomizeNonBossDoors = false;
         bossSpecificAnkhJewels = false;
+        foolsGameplay = false;
+        foolsEnemies = false;
         blockPushingRequiresGlove = false;
         removeSpaulder = false;
         replaceMapsWithWeights = false;
@@ -398,7 +403,7 @@ public final class Settings {
     }
 
     public static boolean isRandomizeEscapeChest() {
-        return singleton.randomizeEscapeChest;
+        return Settings.isFools2021Mode() || singleton.randomizeEscapeChest;
     }
 
     public static void setRandomizeEscapeChest(boolean randomizeEscapeChest, boolean update) {
@@ -591,6 +596,28 @@ public final class Settings {
             singleton.changed = true;
         }
         singleton.bossSpecificAnkhJewels = bossSpecificAnkhJewels;
+    }
+
+    public static boolean isFoolsGameplay() {
+        return singleton.foolsGameplay;
+    }
+
+    public static void setFoolsGameplay(boolean foolsGameplay, boolean update) {
+        if(update && foolsGameplay != singleton.foolsGameplay) {
+            singleton.changed = true;
+        }
+        singleton.foolsGameplay= foolsGameplay;
+    }
+
+    public static boolean isFoolsEnemies() {
+        return singleton.foolsEnemies;
+    }
+
+    public static void setFoolsEnemies(boolean foolsEnemies, boolean update) {
+        if(update && foolsEnemies != singleton.foolsEnemies) {
+            singleton.changed = true;
+        }
+        singleton.foolsEnemies = foolsEnemies;
     }
 
     public static boolean isBlockPushingRequiresGlove() {
@@ -814,6 +841,14 @@ public final class Settings {
         singleton.currentCursedChests = currentCursedChests;
     }
 
+    public static int getCurrentBossCount() {
+        return singleton.currentBossCount == null ? 8 : singleton.currentBossCount;
+    }
+
+    public static void setCurrentBossCount(int currentBossCount) {
+        singleton.currentBossCount = currentBossCount;
+    }
+
     public static String getUpdatedContents(String originalContents) {
         if("Vessel".equals(originalContents)) {
             if(Settings.getMedicineColor() != null) {
@@ -838,6 +873,10 @@ public final class Settings {
         return false;
     }
 
+    public static boolean isFools2021Mode() {
+        return true;
+    }
+
     public static boolean isFeatherlessMode() {
         return false;
     }
@@ -854,7 +893,7 @@ public final class Settings {
     }
 
     public static boolean isAlternateMotherAnkh() {
-        return singleton.alternateMotherAnkh || DataFromFile.getCustomPlacementData().isAlternateMotherAnkh();
+        return !Settings.isFools2021Mode() && (singleton.alternateMotherAnkh || DataFromFile.getCustomPlacementData().isAlternateMotherAnkh());
     }
 
     public static void setAlternateMotherAnkh(boolean alternateMotherAnkh, boolean update) {
@@ -885,7 +924,7 @@ public final class Settings {
     }
 
     public static boolean isRandomizeBosses() {
-        return singleton.randomizeBosses;
+        return !isFools2021Mode() && singleton.randomizeBosses;
     }
 
     public static void setRandomizeBosses(boolean randomizeBosses, boolean update) {
@@ -943,6 +982,10 @@ public final class Settings {
     public static boolean isSaveFileNeeded() {
         return isAllowMainWeaponStart() || isAllowSubweaponStart() || isRandomizeStartingLocation()
                 || Settings.isHalloweenMode() || isFools2020Mode();
+    }
+
+    public static boolean isCheapConsumables() {
+        return isFools2020Mode() || isFools2021Mode();
     }
 
     public static void saveSettings() {
@@ -1049,6 +1092,8 @@ public final class Settings {
         int bossDifficulty = singleton.bossDifficulty.ordinal();
 
         int booleanSettings2 = 0;
+        booleanSettings2 |= processBooleanFlag.apply(singleton.foolsEnemies, 9);
+        booleanSettings2 |= processBooleanFlag.apply(singleton.foolsGameplay, 8);
         booleanSettings2 |= processBooleanFlag.apply(singleton.bossCheckpoints, 7);
         booleanSettings2 |= processBooleanFlag.apply(singleton.screenshakeDisabled, 6);
         booleanSettings2 |= processBooleanFlag.apply(singleton.includeHellTempleNPCs, 5);
@@ -1137,6 +1182,8 @@ public final class Settings {
         int maxRandomRemovedItems = Integer.parseInt(parts[9],16);
 
         int booleanSettingsFlag2 = Integer.parseInt(parts[10], 16);
+        singleton.foolsEnemies = getBoolFlagFromInt.apply(booleanSettingsFlag2, 9);
+        singleton.foolsGameplay = getBoolFlagFromInt.apply(booleanSettingsFlag2, 8);
         singleton.bossCheckpoints = getBoolFlagFromInt.apply(booleanSettingsFlag2, 7);
         singleton.screenshakeDisabled = getBoolFlagFromInt.apply(booleanSettingsFlag2, 6);
         singleton.includeHellTempleNPCs = getBoolFlagFromInt.apply(booleanSettingsFlag2, 5);
