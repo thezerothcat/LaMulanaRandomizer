@@ -1,5 +1,5 @@
 Coin: Surface (Waterfall) => Location: Surface [Main], Attack: Chest
-Coin: Surface (Seal) => Location: Surface [Main], Attack: Chest, Life Seal
+Coin: Surface (Seal) => Location: Surface [Main], Attack: Chest, Seal: L2
 Coin: Surface (Ruin Path) => Location: Surface [Ruin Path Upper], Attack: Bomb
 Coin: Guidance (One) => Location: Gate of Guidance [Main], Attack: Chest-Any
 Coin: Guidance (Two) => Location: Gate of Guidance [Main], Attack: Chest-Any

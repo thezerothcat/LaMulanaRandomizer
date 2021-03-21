@@ -535,6 +535,8 @@ public class Main {
 
         TransitionGateRandomizer transitionGateRandomizer = new TransitionGateRandomizer(backsideDoorRandomizer);
 
+        SealRandomizer sealRandomizer = new SealRandomizer();
+
         Set<String> initiallyAccessibleItems = getInitiallyAvailableItems();
 
         int attempt = 0;
@@ -574,10 +576,11 @@ public class Main {
 
             transitionGateRandomizer.determineGateDestinations(random);
             backsideDoorRandomizer.determineDoorBosses(random, attempt);
+            sealRandomizer.assignSeals(random);
 
             ItemRandomizer itemRandomizer = new ItemRandomizer();
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
-            AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer);
+            AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer, sealRandomizer);
 
             List<String> startingNodes = getStartingNodes();
 
@@ -727,6 +730,11 @@ public class Main {
                 if(Settings.isRandomizeEnemies()) {
                     GameDataTracker.randomizeEnemies(random);
                     FileUtils.logFlush("Updated enemy data");
+                }
+
+                if(Settings.isFoolsLogic()) {
+                    sealRandomizer.updateSeals();
+                    FileUtils.logFlush("Updated seal data");
                 }
 
                 if(Settings.isRandomizeBacksideDoors()) {
@@ -1230,12 +1238,15 @@ public class Main {
     }
 
     private static AccessChecker buildAccessChecker(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer,
-                                                    BacksideDoorRandomizer backsideDoorRandomizer, TransitionGateRandomizer transitionGateRandomizer) {
+                                                    BacksideDoorRandomizer backsideDoorRandomizer,
+                                                    TransitionGateRandomizer transitionGateRandomizer,
+                                                    SealRandomizer sealRandomizer) {
         AccessChecker accessChecker = new AccessChecker();
         accessChecker.setItemRandomizer(itemRandomizer);
         accessChecker.setShopRandomizer(shopRandomizer);
         accessChecker.setBacksideDoorRandomizer(backsideDoorRandomizer);
         accessChecker.setTransitionGateRandomizer(transitionGateRandomizer);
+        accessChecker.setSealRandomizer(sealRandomizer);
         itemRandomizer.setAccessChecker(accessChecker);
         shopRandomizer.setAccessChecker(accessChecker);
         return accessChecker;

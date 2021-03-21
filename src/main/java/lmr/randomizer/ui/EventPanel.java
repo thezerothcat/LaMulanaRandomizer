@@ -13,7 +13,7 @@ public class EventPanel extends JPanel {
     private JCheckBox holidayMode;
     private JCheckBox includeHT;
     private JCheckBox foolsGameplay;
-    private JCheckBox foolsEnemies;
+    private JCheckBox foolsLogic;
     private JTextField graphicsPack;
     private JLabel graphicsPackLabel;
     private JButton chooseGraphicsButton;
@@ -36,9 +36,9 @@ public class EventPanel extends JPanel {
             foolsGameplay.setSelected(true);
             foolsGameplay.setEnabled(false);
 
-            foolsEnemies = new JCheckBox();
-            foolsEnemies.setSelected(true);
-            foolsEnemies.setEnabled(false);
+            foolsLogic = new JCheckBox();
+            foolsLogic.setSelected(true);
+            foolsLogic.setEnabled(false);
         }
 
         CheckboxContainer checkboxContainer = new CheckboxContainer(1);
@@ -48,7 +48,7 @@ public class EventPanel extends JPanel {
         }
         if(Settings.isFools2021Mode()) {
             checkboxContainer.add(foolsGameplay);
-            checkboxContainer.add(foolsEnemies);
+            checkboxContainer.add(foolsLogic);
         }
         add(checkboxContainer, "growx, wrap");
 
@@ -89,7 +89,7 @@ public class EventPanel extends JPanel {
         else if(Settings.isFools2021Mode()) {
             holidayMode.setText(Translations.getText("event.fools2021"));
             foolsGameplay.setText(Translations.getText("gameplay.fools2021"));
-            foolsEnemies.setText(Translations.getText("enemies.fools2021"));
+            foolsLogic.setText(Translations.getText("randomization.fools2021"));
         }
         if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
             graphicsPackLabel.setText(Translations.getText("settings.graphicsPack"));
@@ -103,7 +103,7 @@ public class EventPanel extends JPanel {
         }
         if(Settings.isFools2021Mode()) {
             Settings.setFoolsGameplay(foolsGameplay.isSelected(), true);
-            Settings.setFoolsEnemies(foolsEnemies.isSelected(), true);
+            Settings.setFoolsLogic(foolsLogic.isSelected(), true);
         }
         if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
             Settings.setGraphicsPack(graphicsPack.getText(), true);
@@ -116,7 +116,7 @@ public class EventPanel extends JPanel {
         }
         if(Settings.isFools2021Mode()) {
             foolsGameplay.setSelected(Settings.isFoolsGameplay());
-            foolsEnemies.setSelected(Settings.isFoolsEnemies());
+            foolsLogic.setSelected(Settings.isFoolsLogic());
         }
         if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
             graphicsPack.setText(Settings.getGraphicsPack());

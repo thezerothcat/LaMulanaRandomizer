@@ -60,7 +60,7 @@ public final class Settings {
     private boolean bossCheckpoints;
     private boolean bossSpecificAnkhJewels;
     private boolean foolsGameplay;
-    private boolean foolsEnemies;
+    private boolean foolsLogic;
     private boolean blockPushingRequiresGlove;
     private boolean screenshakeDisabled;
 
@@ -128,7 +128,7 @@ public final class Settings {
         randomizeNonBossDoors = false;
         bossSpecificAnkhJewels = false;
         foolsGameplay = false;
-        foolsEnemies = false;
+        foolsLogic = false;
         blockPushingRequiresGlove = false;
         removeSpaulder = false;
         replaceMapsWithWeights = false;
@@ -609,15 +609,15 @@ public final class Settings {
         singleton.foolsGameplay= foolsGameplay;
     }
 
-    public static boolean isFoolsEnemies() {
-        return singleton.foolsEnemies;
+    public static boolean isFoolsLogic() {
+        return singleton.foolsLogic;
     }
 
-    public static void setFoolsEnemies(boolean foolsEnemies, boolean update) {
-        if(update && foolsEnemies != singleton.foolsEnemies) {
+    public static void setFoolsLogic(boolean foolsLogic, boolean update) {
+        if(update && foolsLogic != singleton.foolsLogic) {
             singleton.changed = true;
         }
-        singleton.foolsEnemies = foolsEnemies;
+        singleton.foolsLogic = foolsLogic;
     }
 
     public static boolean isBlockPushingRequiresGlove() {
@@ -1092,7 +1092,7 @@ public final class Settings {
         int bossDifficulty = singleton.bossDifficulty.ordinal();
 
         int booleanSettings2 = 0;
-        booleanSettings2 |= processBooleanFlag.apply(singleton.foolsEnemies, 9);
+        booleanSettings2 |= processBooleanFlag.apply(singleton.foolsLogic, 9);
         booleanSettings2 |= processBooleanFlag.apply(singleton.foolsGameplay, 8);
         booleanSettings2 |= processBooleanFlag.apply(singleton.bossCheckpoints, 7);
         booleanSettings2 |= processBooleanFlag.apply(singleton.screenshakeDisabled, 6);
@@ -1182,7 +1182,7 @@ public final class Settings {
         int maxRandomRemovedItems = Integer.parseInt(parts[9],16);
 
         int booleanSettingsFlag2 = Integer.parseInt(parts[10], 16);
-        singleton.foolsEnemies = getBoolFlagFromInt.apply(booleanSettingsFlag2, 9);
+        singleton.foolsLogic = getBoolFlagFromInt.apply(booleanSettingsFlag2, 9);
         singleton.foolsGameplay = getBoolFlagFromInt.apply(booleanSettingsFlag2, 8);
         singleton.bossCheckpoints = getBoolFlagFromInt.apply(booleanSettingsFlag2, 7);
         singleton.screenshakeDisabled = getBoolFlagFromInt.apply(booleanSettingsFlag2, 6);

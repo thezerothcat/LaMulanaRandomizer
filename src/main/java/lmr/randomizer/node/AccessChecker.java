@@ -3,10 +3,7 @@ package lmr.randomizer.node;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
-import lmr.randomizer.random.BacksideDoorRandomizer;
-import lmr.randomizer.random.ItemRandomizer;
-import lmr.randomizer.random.ShopRandomizer;
-import lmr.randomizer.random.TransitionGateRandomizer;
+import lmr.randomizer.random.*;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.util.*;
@@ -30,6 +27,7 @@ public class AccessChecker {
     private ShopRandomizer shopRandomizer;
     private BacksideDoorRandomizer backsideDoorRandomizer;
     private TransitionGateRandomizer transitionGateRandomizer;
+    private SealRandomizer sealRandomizer;
 
     private int numberOfAccessibleAnkhJewels;
     private int numberOfCollectedAnkhJewels;
@@ -47,6 +45,7 @@ public class AccessChecker {
         this.mapOfRequirementsToNodeNameObject = copyNodeNameMap(accessChecker.mapOfRequirementsToNodeNameObject);
         this.itemRandomizer = copyAll ? new ItemRandomizer(accessChecker.itemRandomizer) : accessChecker.itemRandomizer;
         this.shopRandomizer = copyAll ? accessChecker.shopRandomizer.copy() : accessChecker.shopRandomizer;
+        this.sealRandomizer = accessChecker.sealRandomizer;
         this.backsideDoorRandomizer = new BacksideDoorRandomizer(accessChecker.backsideDoorRandomizer);
         this.transitionGateRandomizer = accessChecker.transitionGateRandomizer; // Might need to copy at some point, but currently this only keeps a map/doesn't track state.
         this.accessedNodes = new HashSet<>(accessChecker.accessedNodes);
@@ -331,6 +330,9 @@ public class AccessChecker {
             if("Bronze Mirror".equals(stateToUpdate)) {
                 queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(stateToUpdate, attemptNumber));
             }
+            if("Origin Seal".equals(stateToUpdate) || "Birth Seal".equals(stateToUpdate) || "Life Seal".equals(stateToUpdate) || "Death Seal".equals(stateToUpdate)) {
+                queuedUpdates.addAll(sealRandomizer.getNodesForSeal(stateToUpdate));
+            }
             if(mapOfRequirementsToNodeNameObject.containsKey(stateToUpdate)) {
                 for(String nodeName : mapOfRequirementsToNodeNameObject.get(stateToUpdate)) {
                     node = mapOfNodeNameToRequirementsObject.get(nodeName);
@@ -343,6 +345,10 @@ public class AccessChecker {
             }
         }
         else { // When not doing full validation, just use old version of this check.  It's slower but this doesn't happen many times per loop so not a big deal
+            if("Origin Seal".equals(stateToUpdate) || "Birth Seal".equals(stateToUpdate) || "Life Seal".equals(stateToUpdate) || "Death Seal".equals(stateToUpdate)) {
+                // Included for non-full validation on the off chance that someone starts with one or more seals via custom placements/plando.
+                queuedUpdates.addAll(sealRandomizer.getNodesForSeal(stateToUpdate));
+            }
             for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
                 node = mapOfNodeNameToRequirementsObject.get(nodeName);
                 if(node.updateRequirements(stateToUpdate)) {
@@ -690,6 +696,10 @@ public class AccessChecker {
 
     public void setTransitionGateRandomizer(TransitionGateRandomizer transitionGateRandomizer) {
         this.transitionGateRandomizer = transitionGateRandomizer;
+    }
+
+    public void setSealRandomizer(SealRandomizer sealRandomizer) {
+        this.sealRandomizer = sealRandomizer;
     }
 
     public boolean updateForBosses() {

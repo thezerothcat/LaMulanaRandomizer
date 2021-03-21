@@ -7,8 +7,8 @@ import lmr.randomizer.dat.shop.BlockStringData;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.random.EnemyRandomizer;
+import lmr.randomizer.random.SealRandomizer;
 import lmr.randomizer.rcd.object.*;
-import lmr.randomizer.Settings;
 
 import java.util.*;
 
@@ -23,6 +23,7 @@ public final class GameDataTracker {
     private static Map<String, List<GameObject>> mapOfDoorNameToBacksideDoor = new HashMap<>();
     private static Map<String, List<GameObject>> mapOfGateNameToTransitionGate = new HashMap<>();
     private static Map<String, Screen> mapOfTransitionNameToScreen = new HashMap<>();
+    private static Map<String, List<GameObject>> mapOfSealNodeToSealObjects = new HashMap<>();
     private static List<GameObject> enemyObjects = new ArrayList<>();
     private static List<GameObject> npcObjects = new ArrayList<>();
 
@@ -457,6 +458,17 @@ public final class GameDataTracker {
                 objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
             }
             objects.add(gameObject);
+        }
+        else if (gameObject.getId() == 0x34) {
+            if(Settings.isFoolsLogic()) {
+                String sealNode = SealRandomizer.getSealNode(gameObject);
+                List<GameObject> seals = mapOfSealNodeToSealObjects.get(sealNode);
+                if(seals == null) {
+                    seals = new ArrayList<>();
+                    mapOfSealNodeToSealObjects.put(sealNode, seals);
+                }
+                seals.add(gameObject);
+            }
         }
         else if (gameObject.getId() == 0x35) {
             if(Settings.isRandomizeEnemies()) {
@@ -6435,6 +6447,13 @@ public final class GameDataTracker {
                     }
                 }
             }
+        }
+    }
+
+    public static void writeSeals(String sealNode, short sealNumber) {
+        List<GameObject> seals = mapOfSealNodeToSealObjects.get(sealNode);
+        for (GameObject sealToUpdate : seals) {
+            sealToUpdate.getArgs().set(0, sealNumber);
         }
     }
 
