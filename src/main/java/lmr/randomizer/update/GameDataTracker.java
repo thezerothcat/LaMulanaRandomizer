@@ -1513,7 +1513,7 @@ public final class GameDataTracker {
             }
         } else if (gameObject.getId() == 0x9c) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                if (flagTest.getIndex() == 552) {
+                if (flagTest.getIndex() == 0x228) {
                     // Using Pepper to spawn Treasures chest
                     flagTest.setIndex(259);
                     flagTest.setOp(ByteOp.FLAG_LTEQ);
@@ -5381,43 +5381,64 @@ public final class GameDataTracker {
                 replaceTransitionGateFlags(gameObject, gateToUpdate, gateDestination); // Update flags on the gate, as needed.
 
                 if(!"Transition: Sun R2".equals(gateToUpdate) && !"Transition: Extinction L2".equals(gateToUpdate)) {
+                    // Both of these screen edges have more than one door; the screen transition is based on Sun R1 and Extinction L1, respectively
                     updateScreenTransition(gameObject, gateDestination);
                 }
                 if(firstObject && "Transition: Illusion R2".equals(gateToUpdate)) {
+                    // Block leading out of Illusion
                     AddObject.addIllusionFruitBlockHorizontal(gameObject, true);
                     updateFirstObject = true;
                 }
                 if(firstObject
                         && ("Transition: Illusion R1".equals(gateDestination)
                         || "Transition: Illusion R2".equals(gateDestination))) {
+                    // Block leading into Illusion
                     AddObject.addIllusionFruitBlockHorizontal(gameObject, "Transition: Illusion R2".equals(gateDestination));
                     updateFirstObject = true;
                 }
                 if(firstObject && "Transition: Illusion D1".equals(gateDestination)) {
+                    // Block leading into Illusion
                     AddObject.addIllusionFruitBlockVertical(gameObject);
                     updateFirstObject = true;
                 }
+                if(firstObject && Settings.isFools2021Mode() && "Transition: Guidance L1".equals(gateDestination)) {
+                    // Add timer for fools' rando 2021 to ensure a flag sequence behaves as intended.
+                    // Ensure the process of falling blocks triggered by Pepper is reset if unfinished.
+                    AddObject.addFramesTimer((Screen)gameObject.getObjectContainer(), 0,
+                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_GT, 0),
+                                    new TestByteOperation(0x137, ByteOp.FLAG_LT, 5)),
+                            Arrays.asList(new WriteByteOperation(0x137, ByteOp.ASSIGN_FLAG, 1)));
+                    updateFirstObject = true;
+                }
                 if(firstObject && "Transition: Sun L1".equals(gateDestination)) {
+                    // Timer on the other side of the gate leading into Buer's room, to mark that the ceiling can now be broken (not allowed during the boss fight).
                     AddObject.addIsisRoomCeilingTimer(gameObject.getObjectContainer());
                     updateFirstObject = true;
                 }
                 if(firstObject && "Transition: Goddess L2".equals(gateDestination)) {
+                    // Timer on the other side of the gate leading into the lower of the left Goddess exits, to mark that the statue should be removed.
                     AddObject.addGoddessStatueLemezaDetector(gameObject);
                     updateFirstObject = true;
                 }
                 if(firstObject && "Transition: Goddess D1".equals(gateDestination)) {
+                    // Timer on the other side of the gate leading into the shield statue's room in Goddess, marking that the shield has been thrown and the statue should not exist upon returning.
                     AddObject.addGoddessShieldTimer(gameObject.getObjectContainer());
                     updateFirstObject = true;
                 }
                 if(firstObject && "Transition: Birth R1".equals(gateDestination)) {
+                    // Block leading into Skanda's room.
                     AddObject.addSkandaBlock(gameObject);
                     updateFirstObject = true;
                 }
                 if(firstObject && gateDestination.contains("Transition: Twin ") && !gateToUpdate.equals("Transition: Twin U2")) {
+                    // For every transition gate leading into Twin Labyrinths, the poison timer (but not the puzzle itself) will be reset,
+                    // UNLESS this is a transition from the screen with the first dais into some other screen of Twin Labyrinths.
                     AddObject.addTwinLabsPoisonTimerRemoval(gameObject.getObjectContainer(), false);
                     updateFirstObject = true;
                 }
                 if(firstObject && !LocationCoordinateMapper.isSurfaceStart() && "Transition: Surface R1".equals(gateToUpdate)) {
+                    // Transition gate leading from Surface into some other location. If non-random start, the player may be trapped in the un-opened entryway
+                    // and forcibly raindropped somewhere unintended if a warp is not provided before the passageway has been opened on the Surface side.
                     GameObject warp = AddObject.addWarp((Screen)gameObject.getObjectContainer(), 1220, 340, 4, 7, 0, 0, 0, 20, 312);
                     replaceTransitionGateArgs(warp, gateDestination); // First update the transitions so we can make a correct copy of the gate if needed.
 

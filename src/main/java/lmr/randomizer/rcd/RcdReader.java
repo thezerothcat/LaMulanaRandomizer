@@ -2286,6 +2286,12 @@ public final class RcdReader {
                     AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 2)));
                     AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 3)));
                     AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 4)));
+
+                    // After the falling block sequence, the blocks can be replaced by stationary ones.
+                    AddObject.addPushableBlock(screen, 320, 200, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 5), new TestByteOperation(0x00d, ByteOp.FLAG_EQUALS, 0)));
+                    AddObject.addPushableBlock(screen, 320, 240, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 5), new TestByteOperation(0x00d, ByteOp.FLAG_EQUALS, 0)));
+                    AddObject.addPushableBlock(screen, 320, 280, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 5), new TestByteOperation(0x00d, ByteOp.FLAG_EQUALS, 0)));
+                    AddObject.addPushableBlock(screen, 320, 320, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 5), new TestByteOperation(0x00d, ByteOp.FLAG_EQUALS, 0)));
                 }
             }
             else if(roomIndex == 8 && screenIndex == 0) {
@@ -2924,6 +2930,19 @@ public final class RcdReader {
                     AddObject.addFramesTimer(screen, 12,
                             Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 3)),
                             Arrays.asList(new WriteByteOperation(0x137, ByteOp.ASSIGN_FLAG, 4)));
+                    AddObject.addFramesTimer(screen, 6,
+                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 4)),
+                            Arrays.asList(new WriteByteOperation(0x137, ByteOp.ASSIGN_FLAG, 5)));
+                }
+            }
+            else if(roomIndex == 0 && screenIndex == 1) {
+                // Treasures room
+                if(Settings.isFools2021Mode()) {
+                    // Ensure the process of falling blocks triggered by Pepper is reset if unfinished.
+                    AddObject.addFramesTimer(screen, 0,
+                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_GT, 0),
+                                    new TestByteOperation(0x137, ByteOp.FLAG_LT, 5)),
+                            Arrays.asList(new WriteByteOperation(0x137, ByteOp.ASSIGN_FLAG, 1)));
                 }
             }
 
