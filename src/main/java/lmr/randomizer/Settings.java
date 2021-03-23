@@ -61,6 +61,7 @@ public final class Settings {
     private boolean bossSpecificAnkhJewels;
     private boolean foolsGameplay;
     private boolean foolsLogic;
+    private boolean foolsNpc;
     private boolean blockPushingRequiresGlove;
     private boolean screenshakeDisabled;
 
@@ -129,6 +130,7 @@ public final class Settings {
         bossSpecificAnkhJewels = false;
         foolsGameplay = false;
         foolsLogic = false;
+        foolsNpc = false;
         blockPushingRequiresGlove = false;
         removeSpaulder = false;
         replaceMapsWithWeights = false;
@@ -620,6 +622,17 @@ public final class Settings {
         singleton.foolsLogic = foolsLogic;
     }
 
+    public static boolean isFoolsNpc() {
+        return singleton.foolsNpc;
+    }
+
+    public static void setFoolsNpc(boolean foolsNpc, boolean update) {
+        if(update && foolsNpc != singleton.foolsNpc) {
+            singleton.changed = true;
+        }
+        singleton.foolsNpc = foolsNpc;
+    }
+
     public static boolean isBlockPushingRequiresGlove() {
         return singleton.blockPushingRequiresGlove;
     }
@@ -1092,6 +1105,7 @@ public final class Settings {
         int bossDifficulty = singleton.bossDifficulty.ordinal();
 
         int booleanSettings2 = 0;
+        booleanSettings2 |= processBooleanFlag.apply(singleton.foolsNpc, 10);
         booleanSettings2 |= processBooleanFlag.apply(singleton.foolsLogic, 9);
         booleanSettings2 |= processBooleanFlag.apply(singleton.foolsGameplay, 8);
         booleanSettings2 |= processBooleanFlag.apply(singleton.bossCheckpoints, 7);
@@ -1182,6 +1196,7 @@ public final class Settings {
         int maxRandomRemovedItems = Integer.parseInt(parts[9],16);
 
         int booleanSettingsFlag2 = Integer.parseInt(parts[10], 16);
+        singleton.foolsNpc = getBoolFlagFromInt.apply(booleanSettingsFlag2, 10);
         singleton.foolsLogic = getBoolFlagFromInt.apply(booleanSettingsFlag2, 9);
         singleton.foolsGameplay = getBoolFlagFromInt.apply(booleanSettingsFlag2, 8);
         singleton.bossCheckpoints = getBoolFlagFromInt.apply(booleanSettingsFlag2, 7);

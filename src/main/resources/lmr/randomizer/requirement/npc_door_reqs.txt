@@ -1,0 +1,6 @@
+# Twin labs
+NPCL: Yiegah Kungfu => Location: Twin Labyrinths [Loop]
+#NPCL: Yiear Kungfu => Location: Twin Labyrinths [Loop], NPC: Yiegah Kungfu
+NPCL: Sturdy Snake => Location: Twin Labyrinths [Lower], Feather
+NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], State: Block Pushing, Feather, Attack: Bomb
+NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], Glitch: Raindrop

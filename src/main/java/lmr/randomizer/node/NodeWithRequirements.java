@@ -31,6 +31,9 @@ public class NodeWithRequirements {
         else if(name.startsWith("NPC:")) {
             type = NodeType.NPC;
         }
+        else if(name.startsWith("NPCL:")) {
+            type = NodeType.NPC_LOCATION;
+        }
         else if(name.startsWith("Shop")) {
             type = NodeType.SHOP;
         }

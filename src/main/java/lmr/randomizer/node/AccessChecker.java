@@ -28,6 +28,7 @@ public class AccessChecker {
     private BacksideDoorRandomizer backsideDoorRandomizer;
     private TransitionGateRandomizer transitionGateRandomizer;
     private SealRandomizer sealRandomizer;
+    private NpcRandomizer npcRandomizer;
 
     private int numberOfAccessibleAnkhJewels;
     private int numberOfCollectedAnkhJewels;
@@ -46,6 +47,7 @@ public class AccessChecker {
         this.itemRandomizer = copyAll ? new ItemRandomizer(accessChecker.itemRandomizer) : accessChecker.itemRandomizer;
         this.shopRandomizer = copyAll ? accessChecker.shopRandomizer.copy() : accessChecker.shopRandomizer;
         this.sealRandomizer = accessChecker.sealRandomizer;
+        this.npcRandomizer = accessChecker.npcRandomizer;
         this.backsideDoorRandomizer = new BacksideDoorRandomizer(accessChecker.backsideDoorRandomizer);
         this.transitionGateRandomizer = accessChecker.transitionGateRandomizer; // Might need to copy at some point, but currently this only keeps a map/doesn't track state.
         this.accessedNodes = new HashSet<>(accessChecker.accessedNodes);
@@ -505,6 +507,9 @@ public class AccessChecker {
             case NPC:
                 queuedUpdates.add(nodeName);
                 break;
+            case NPC_LOCATION:
+                queuedUpdates.add(npcRandomizer.getNpc(nodeName));
+                break;
             case MAP_LOCATION:
                 queuedUpdates.add(nodeName);
                 queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
@@ -700,6 +705,10 @@ public class AccessChecker {
 
     public void setSealRandomizer(SealRandomizer sealRandomizer) {
         this.sealRandomizer = sealRandomizer;
+    }
+
+    public void setNpcRandomizer(NpcRandomizer npcRandomizer) {
+        this.npcRandomizer = npcRandomizer;
     }
 
     public boolean updateForBosses() {

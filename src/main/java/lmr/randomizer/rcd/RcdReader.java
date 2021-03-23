@@ -177,6 +177,21 @@ public final class RcdReader {
                 }
             }
 
+            if(Settings.isFoolsNpc()) {
+                if(obj.getObjectContainer() instanceof Screen) {
+                    Screen screen = ((Screen)obj.getObjectContainer());
+                    if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 2) {
+                        for (WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
+                            if(flagUpdate.getIndex() == 0x1f0) {
+                                // Remove unneeded timer on original Little Brother screen
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
             if(Settings.isFoolsGameplay() && Settings.getCurrentBossCount() != 8) {
                 // Timers for unlocking true shrine, normally set value from 8 to 9
                 boolean addTest = false;
@@ -259,6 +274,25 @@ public final class RcdReader {
                     }
                 }
             }
+            if(Settings.isFools2021Mode()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if (screen.getZoneIndex() == 12) {
+                        if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0
+                            || screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0
+                            || screen.getRoomIndex() == 5 && screen.getScreenIndex() == 1
+                            || screen.getRoomIndex() == 6 && screen.getScreenIndex() == 0) {
+                            for (WriteByteOperation writeByteOperation : obj.getWriteByteOperations()) {
+                                if (writeByteOperation.getIndex() == 0x00a) {
+                                    // Retribution trigger wall in Moonlight pyramid
+                                    keepObject = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         else if(obj.getId() == 0x2c) {
             if(Settings.isFools2021Mode()) {
@@ -266,6 +300,9 @@ public final class RcdReader {
                     Screen screen = (Screen)objectContainer;
                     if (screen.getZoneIndex() == 0 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
                         keepObject = false; // Remove Treasures chest from Guidance.
+                    }
+                    else if (screen.getZoneIndex() == 12 && screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
+                        keepObject = false; // Remove Philosopher's Ocarina chest from Moonlight.
                     }
                 }
             }
@@ -307,6 +344,16 @@ public final class RcdReader {
             }
         }
         else if(obj.getId() == 0x2f) {
+            if(Settings.isFools2021Mode()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if (screen.getZoneIndex() == 12 && screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
+                        // Philosopher's Ocarina
+                        convertToChest(obj);
+                    }
+                }
+            }
+
             if(obj.getArgs().get(1) == 7) {
                 // Remove empowered Key Sword
                 keepObject = false;
@@ -450,6 +497,10 @@ public final class RcdReader {
                 // Low-score version of Mulbruk which could interfere with getting Book of the Dead.
                 keepObject = false;
             }
+            else if(obj.getArgs().get(4) == 682 && Settings.isFoolsNpc()) {
+                // Conversation to inform of unlocking Big Brother's shop, to be removed and re-added if shuffling NPCs for simplicity.
+                keepObject = false;
+            }
             else if(obj.getArgs().get(4) == 684 && !Settings.isHalloweenMode()) {
                 // First Fairy Queen conversation, completely unneeded for randomizer outside of Halloween.
                 keepObject = false;
@@ -558,7 +609,19 @@ public final class RcdReader {
             if(objectContainer instanceof Screen) {
                 Screen screen = (Screen)objectContainer;
                 if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 21 && screen.getScreenIndex() == 0) {
-                    obj.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0));
+                    if(Settings.isHalloweenMode()) {
+                        obj.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0));
+                    }
+                }
+                if(screen.getZoneIndex() == 16 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 2) {
+                    if(Settings.isFools2021Mode()) {
+                        obj.getArgs().set(0, (short)12);
+                        obj.getArgs().set(1, (short)5);
+                        obj.getArgs().set(2, (short)1);
+                        obj.getArgs().set(3, (short)300);
+                        obj.getArgs().set(4, (short)312);
+                        obj.getTestByteOperations().add(new TestByteOperation(0x3c8, ByteOp.FLAG_GT, 0));
+                    }
                 }
             }
         }
@@ -762,6 +825,20 @@ public final class RcdReader {
                     Screen screen = (Screen)objectContainer;
                     if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 6 && screen.getScreenIndex() == 1) {
                         keepObject = false; // Remove shell horn puzzle solve sound
+                    }
+                }
+            }
+            if(Settings.isFoolsNpc()) {
+                if(obj.getObjectContainer() instanceof Screen) {
+                    Screen screen = ((Screen)obj.getObjectContainer());
+                    if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 2) {
+                        for (WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
+                            if(flagUpdate.getIndex() == 0x1f0) {
+                                // Remove unneeded sound effect on original Little Brother screen
+                                keepObject = false;
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -1453,11 +1530,6 @@ public final class RcdReader {
                     else if(zoneIndex == 3) {
                         if(roomIndex == 3 && screenIndex == 0) {
                             AddObject.setMulbrukScreen(screen);
-                        }
-                    }
-                    else if(zoneIndex == 7) {
-                        if(roomIndex == 3 && screenIndex == 2) {
-                            AddObject.setLittleBrotherShopScreen(screen);
                         }
                     }
                     else if(zoneIndex == 8) {
@@ -2507,8 +2579,8 @@ public final class RcdReader {
             }
         }
         else if(zoneIndex == 7) {
-            if(Settings.isBossCheckpoints()) {
-                if(roomIndex == 4 && screenIndex == 1) {
+            if(roomIndex == 4 && screenIndex == 1) {
+                if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 940, 80, 188,
                             Arrays.asList(new TestByteOperation(0x1e0, ByteOp.FLAG_EQUALS, 2),
                                     new TestByteOperation(0x0fc, ByteOp.FLAG_LT, 2),
@@ -2516,18 +2588,20 @@ public final class RcdReader {
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1)); // Text block 206 is backside Twin Labs grail, but they seem to be identical.
                 }
             }
-            if(Settings.isFeatherlessMode()) {
-                if(roomIndex == 10 && screenIndex == 1) {
+            else if(roomIndex == 10 && screenIndex == 1) {
+                if(Settings.isFeatherlessMode()) {
                     // Access to Dimensional without Feather
                     AddObject.addPot(screen, 840, 320, 6,
                             Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
                 }
             }
-            if(Settings.isFools2020Mode()) {
-                if(roomIndex == 3 && screenIndex == 2) {
+            else if(roomIndex == 3 && screenIndex == 2) {
+                if(Settings.isFools2020Mode() || Settings.isFools2021Mode()) {
                     AddObject.addLittleBrotherWeightWaster(screen);
                 }
-                if(roomIndex == 6 && screenIndex == 1) {
+            }
+            else if(roomIndex == 6 && screenIndex == 1) {
+                if(Settings.isFools2020Mode()) {
                     AddObject.addTwinPuzzleFeatherlessPlatform(screen);
                     AddObject.addFloatingItem(screen, 1200, 80, 84, false, Arrays.asList(new TestByteOperation(0x1e4, ByteOp.FLAG_EQUALS, 0)), new ArrayList<>(0));
                     AddObject.addNoItemSoundEffect(screen, 0x1e4, 0x00b);
@@ -3360,5 +3434,31 @@ public final class RcdReader {
                 }
             }
         }
+    }
+
+    private static void convertToChest(GameObject gameObject) {
+        int itemFlag = gameObject.getWriteByteOperations().get(0).getIndex();
+        TestByteOperation puzzleFlag = gameObject.getTestByteOperations().get(1); // Probably a better approach is to look for flags that don't match the update flag, and that the comparison is ==
+        short inventoryWord = gameObject.getArgs().get(1);
+
+        gameObject.setId((short)0x2c);
+
+        while (gameObject.getArgs().size() < 6) {
+            // Ensure the correct number of args for chests, regardless of what was present before.
+            gameObject.getArgs().add((short) 0);
+        }
+        gameObject.getArgs().set(0, (short)(inventoryWord + 11));
+        gameObject.getArgs().set(1, (short)1); // Real item
+        gameObject.getArgs().set(2, (short)1); // Blue chest
+        gameObject.getArgs().set(3, (short)0); // Not cursed
+        gameObject.getArgs().set(4, (short)1); // Curse percent damage
+        gameObject.getArgs().set(5, (short)50); // Curse damage 50%
+
+        gameObject.getTestByteOperations().clear();
+        gameObject.getWriteByteOperations().clear();
+        gameObject.getWriteByteOperations().add(new WriteByteOperation(itemFlag, ByteOp.ASSIGN_FLAG, 2));
+        gameObject.getWriteByteOperations().add(new WriteByteOperation(puzzleFlag.getIndex(), ByteOp.ASSIGN_FLAG, puzzleFlag.getValue()));
+        gameObject.getWriteByteOperations().add(new WriteByteOperation(itemFlag, ByteOp.ASSIGN_FLAG, 1));
+        gameObject.getWriteByteOperations().add(new WriteByteOperation(itemFlag, ByteOp.ASSIGN_FLAG, 2));
     }
 }

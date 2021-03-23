@@ -128,35 +128,6 @@ public class SealRandomizer {
             deathSeals.add("Seal: D4");
             deathSeals.add("Seal: D5");
             deathSeals.add("Seal: D6");
-//            mapOfSealNodeToRequiredItem.put("Seal: O1", "Origin Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: O2", "Origin Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: O3", "Origin Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: O4", "Origin Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: O5", "Origin Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: O6", "Origin Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: O7", "Origin Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: O8", "Origin Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: B1", "Birth Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: B2", "Birth Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: B3", "Birth Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: B4", "Birth Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: B5", "Birth Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: B6", "Birth Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: B7", "Birth Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: L1", "Life Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: L2", "Life Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: L3", "Life Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: L4", "Life Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: L5", "Life Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: L6", "Life Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: L7", "Life Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: L8", "Life Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: D1", "Death Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: D2", "Death Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: D3", "Death Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: D4", "Death Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: D5", "Death Seal");
-//            mapOfSealNodeToRequiredItem.put("Seal: D6", "Death Seal");
         }
     }
 

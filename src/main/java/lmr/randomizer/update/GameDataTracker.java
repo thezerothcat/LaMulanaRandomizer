@@ -24,8 +24,10 @@ public final class GameDataTracker {
     private static Map<String, List<GameObject>> mapOfGateNameToTransitionGate = new HashMap<>();
     private static Map<String, Screen> mapOfTransitionNameToScreen = new HashMap<>();
     private static Map<String, List<GameObject>> mapOfSealNodeToSealObjects = new HashMap<>();
+    private static Map<String, GameObject> mapOfNpcLocationToObjects = new HashMap<>();
     private static List<GameObject> enemyObjects = new ArrayList<>();
     private static List<GameObject> npcObjects = new ArrayList<>();
+    private static List<GameObject> edenDaises = new ArrayList<>();
 
     private static GameObject subweaponPot;
     private static GameObject customShop;
@@ -43,9 +45,11 @@ public final class GameDataTracker {
         mapOfDoorNameToBacksideDoor.clear();
         mapOfGateNameToTransitionGate.clear();
         mapOfTransitionNameToScreen.clear();
+        mapOfNpcLocationToObjects.clear();
         mantraTablets.clear();
         enemyObjects.clear();
         npcObjects.clear();
+        edenDaises.clear();
         customShop = null;
 
         mapOfWorldFlagToAssignedReplacementFlag.clear();
@@ -1940,6 +1944,30 @@ public final class GameDataTracker {
                     gameObject.getWriteByteOperations().get(0).setIndex(47);
                     break;
                 }
+                else if(flagTest.getIndex() == 0x270) {
+                    // Eden chest 1
+                    if (Settings.isFools2021Mode()) {
+                        edenDaises.add(gameObject);
+                    }
+                }
+                else if(flagTest.getIndex() == 0x29c) {
+                    // Eden chest 2
+                    if (Settings.isFools2021Mode()) {
+                        edenDaises.add(gameObject);
+                    }
+                }
+                else if(flagTest.getIndex() == 0x29d) {
+                    // Eden chest 3
+                    if (Settings.isFools2021Mode()) {
+                        edenDaises.add(gameObject);
+                    }
+                }
+                else if(flagTest.getIndex() == 0x29e) {
+                    // Eden chest 4
+                    if (Settings.isFools2021Mode()) {
+                        edenDaises.add(gameObject);
+                    }
+                }
                 else if(Settings.isRandomizeTrapItems()) {
                     if(gameObject.getObjectContainer() instanceof Screen) {
                         Screen screen = (Screen) gameObject.getObjectContainer();
@@ -2144,14 +2172,29 @@ public final class GameDataTracker {
                     objects.add(AddObject.addAltSurfaceShopItemTimer(gameObject.getObjectContainer()));
                 }
                 else if(blockNumber == 132){
-                   // Untransformed Gyonin fish shop
-                   GameObject backupFishShop = AddObject.addBackupGyoninFishShop(gameObject);
-                   List<GameObject> objects = mapOfShopBlockToShopObjects.get(blockNumber);
-                   if (objects == null) {
-                       mapOfShopBlockToShopObjects.put(blockNumber, new ArrayList<>());
-                       objects = mapOfShopBlockToShopObjects.get(blockNumber);
-                   }
-                   objects.add(backupFishShop);
+                    // Untransformed Gyonin fish shop
+                    GameObject backupFishShop = AddObject.addBackupGyoninFishShop(gameObject);
+                    List<GameObject> objects = mapOfShopBlockToShopObjects.get(blockNumber);
+                    if (objects == null) {
+                        mapOfShopBlockToShopObjects.put(blockNumber, new ArrayList<>());
+                        objects = mapOfShopBlockToShopObjects.get(blockNumber);
+                    }
+                    objects.add(backupFishShop);
+                }
+                else if(blockNumber == 185){
+                    if(Settings.isFoolsNpc()) {
+                        mapOfNpcLocationToObjects.put("NPCL: Yiegah Kungfu", gameObject);
+                    }
+                }
+                else if(blockNumber == 187){
+                    if(Settings.isFoolsNpc()) {
+                        mapOfNpcLocationToObjects.put("NPCL: Arrogant Metagear", gameObject);
+                    }
+                }
+                else if(blockNumber == 204){
+                    if(Settings.isFoolsNpc()) {
+                        mapOfNpcLocationToObjects.put("NPCL: Sturdy Snake", gameObject);
+                    }
                }
             }
             else if(blockNumber == 915) {
@@ -6478,6 +6521,11 @@ public final class GameDataTracker {
         }
     }
 
+    public static void writeNpcDoor(String npcDoorLocation, String npc) {
+        GameObject doorToUpdate = mapOfNpcLocationToObjects.get(npcDoorLocation);
+        NpcObjectUpdates.updateDoor(doorToUpdate, npc);
+    }
+
     private static Integer getBossFlag(Integer bossNumber) {
         if(bossNumber == null) {
             return null;
@@ -7402,6 +7450,59 @@ public final class GameDataTracker {
         }
         else if("Pistol".equals(weapon)) {
             subweaponPot.getArgs().set(0, (short)10);
+        }
+    }
+
+    public static void updateEdenDaises(Random random) {
+        if (edenDaises.size() == 4) {
+            List<GameObject> updatedDaises = new ArrayList<>(edenDaises);
+            for (int i = 0; i < 4; i++) {
+                GameObject dais = updatedDaises.remove(random.nextInt(updatedDaises.size()));
+                if (i == 0) {
+                    dais.setX(160);
+                    dais.setY(180);
+                    for(TestByteOperation testByteOperation : dais.getTestByteOperations()) {
+                        if (testByteOperation.getIndex() == 0x270 || testByteOperation.getIndex() == 0x29c
+                            || testByteOperation.getIndex() == 0x29d || testByteOperation.getIndex() == 0x29e) {
+                            testByteOperation.setIndex(0x270);
+                            break;
+                        }
+                    }
+                }
+                else if (i == 1) {
+                    dais.setX(320);
+                    dais.setY(180);
+                    for(TestByteOperation testByteOperation : dais.getTestByteOperations()) {
+                        if (testByteOperation.getIndex() == 0x270 || testByteOperation.getIndex() == 0x29c
+                            || testByteOperation.getIndex() == 0x29d || testByteOperation.getIndex() == 0x29e) {
+                            testByteOperation.setIndex(0x29c);
+                            break;
+                        }
+                    }
+                }
+                else if (i == 2) {
+                    dais.setX(320);
+                    dais.setY(340);
+                    for(TestByteOperation testByteOperation : dais.getTestByteOperations()) {
+                        if (testByteOperation.getIndex() == 0x270 || testByteOperation.getIndex() == 0x29c
+                            || testByteOperation.getIndex() == 0x29d || testByteOperation.getIndex() == 0x29e) {
+                            testByteOperation.setIndex(0x29d);
+                            break;
+                        }
+                    }
+                }
+                else { // if (i == 3)
+                    dais.setX(320);
+                    dais.setY(260);
+                    for(TestByteOperation testByteOperation : dais.getTestByteOperations()) {
+                        if (testByteOperation.getIndex() == 0x270 || testByteOperation.getIndex() == 0x29c
+                            || testByteOperation.getIndex() == 0x29d || testByteOperation.getIndex() == 0x29e) {
+                            testByteOperation.setIndex(0x29e);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 

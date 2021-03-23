@@ -12,8 +12,9 @@ import java.io.File;
 public class EventPanel extends JPanel {
     private JCheckBox holidayMode;
     private JCheckBox includeHT;
-    private JCheckBox foolsGameplay;
     private JCheckBox foolsLogic;
+    private JCheckBox foolsNpc;
+    private JCheckBox foolsGameplay;
     private JTextField graphicsPack;
     private JLabel graphicsPackLabel;
     private JButton chooseGraphicsButton;
@@ -21,9 +22,9 @@ public class EventPanel extends JPanel {
     public EventPanel(TabbedPanel tabbedPanel) {
         super(new MigLayout("fillx, wrap"));
 
-        holidayMode = new JCheckBox();
-        holidayMode.setSelected(true);
-        if (Settings.isHalloweenMode() || Settings.isFools2020Mode() || Settings.isFools2021Mode()) {
+        if (Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
+            holidayMode = new JCheckBox();
+            holidayMode.setSelected(true);
             holidayMode.setEnabled(false);
         }
 
@@ -32,23 +33,30 @@ public class EventPanel extends JPanel {
             includeHT.setSelected(Settings.isIncludeHellTempleNPCs());
         }
         if(Settings.isFools2021Mode()) {
-            foolsGameplay = new JCheckBox();
-            foolsGameplay.setSelected(true);
-            foolsGameplay.setEnabled(false);
-
             foolsLogic = new JCheckBox();
             foolsLogic.setSelected(true);
             foolsLogic.setEnabled(false);
+
+            foolsNpc = new JCheckBox();
+            foolsNpc.setSelected(true);
+            foolsNpc.setEnabled(false);
+
+            foolsGameplay = new JCheckBox();
+            foolsGameplay.setSelected(true);
+            foolsGameplay.setEnabled(false);
         }
 
         CheckboxContainer checkboxContainer = new CheckboxContainer(1);
-        checkboxContainer.add(holidayMode);
+        if (Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
+            checkboxContainer.add(holidayMode);
+        }
         if(Settings.isHalloweenMode()) {
             checkboxContainer.add(includeHT);
         }
         if(Settings.isFools2021Mode()) {
-            checkboxContainer.add(foolsGameplay);
             checkboxContainer.add(foolsLogic);
+            checkboxContainer.add(foolsNpc);
+            checkboxContainer.add(foolsGameplay);
         }
         add(checkboxContainer, "growx, wrap");
 
@@ -87,9 +95,9 @@ public class EventPanel extends JPanel {
             holidayMode.setText(Translations.getText("event.fools2020"));
         }
         else if(Settings.isFools2021Mode()) {
-            holidayMode.setText(Translations.getText("event.fools2021"));
-            foolsGameplay.setText(Translations.getText("gameplay.fools2021"));
             foolsLogic.setText(Translations.getText("randomization.fools2021"));
+            foolsNpc.setText(Translations.getText("randomization.npc.fools2021"));
+            foolsGameplay.setText(Translations.getText("gameplay.fools2021"));
         }
         if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
             graphicsPackLabel.setText(Translations.getText("settings.graphicsPack"));
@@ -102,8 +110,9 @@ public class EventPanel extends JPanel {
             Settings.setIncludeHellTempleNPCs(includeHT.isSelected(), true);
         }
         if(Settings.isFools2021Mode()) {
-            Settings.setFoolsGameplay(foolsGameplay.isSelected(), true);
             Settings.setFoolsLogic(foolsLogic.isSelected(), true);
+            Settings.setFoolsNpc(foolsNpc.isSelected(), true);
+            Settings.setFoolsGameplay(foolsGameplay.isSelected(), true);
         }
         if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
             Settings.setGraphicsPack(graphicsPack.getText(), true);
@@ -115,8 +124,9 @@ public class EventPanel extends JPanel {
             includeHT.setSelected(Settings.isIncludeHellTempleNPCs());
         }
         if(Settings.isFools2021Mode()) {
-            foolsGameplay.setSelected(Settings.isFoolsGameplay());
             foolsLogic.setSelected(Settings.isFoolsLogic());
+            foolsNpc.setSelected(Settings.isFoolsNpc());
+            foolsGameplay.setSelected(Settings.isFoolsGameplay());
         }
         if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
             graphicsPack.setText(Settings.getGraphicsPack());

@@ -536,6 +536,7 @@ public class Main {
         TransitionGateRandomizer transitionGateRandomizer = new TransitionGateRandomizer(backsideDoorRandomizer);
 
         SealRandomizer sealRandomizer = new SealRandomizer();
+        NpcRandomizer npcRandomizer = new NpcRandomizer();
 
         Set<String> initiallyAccessibleItems = getInitiallyAvailableItems();
 
@@ -577,10 +578,11 @@ public class Main {
             transitionGateRandomizer.determineGateDestinations(random);
             backsideDoorRandomizer.determineDoorBosses(random, attempt);
             sealRandomizer.assignSeals(random);
+            npcRandomizer.determineNpcLocations(random);
 
             ItemRandomizer itemRandomizer = new ItemRandomizer();
             ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
-            AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer, sealRandomizer);
+            AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer, sealRandomizer, npcRandomizer);
 
             List<String> startingNodes = getStartingNodes();
 
@@ -716,6 +718,12 @@ public class Main {
                 itemRandomizer.updateFiles(random);
                 FileUtils.logFlush("Updated item location data");
 
+                if(Settings.isFoolsNpc()) {
+                    // This must happen before shop data randomized in order to get the correct shop screen for little brother
+                    npcRandomizer.updateNpcs();
+                    FileUtils.logFlush("Updated NPCs");
+                }
+
                 boolean subweaponOnly = isSubweaponOnly();
                 shopRandomizer.updateFiles(datInfo, subweaponOnly, moneyChecker, random);
                 FileUtils.logFlush("Updated shop data");
@@ -730,6 +738,10 @@ public class Main {
                 if(Settings.isRandomizeEnemies()) {
                     GameDataTracker.randomizeEnemies(random);
                     FileUtils.logFlush("Updated enemy data");
+                }
+                if(Settings.isFools2021Mode()) {
+                    GameDataTracker.updateEdenDaises(random);
+                    FileUtils.logFlush("Updated puzzle flags");
                 }
 
                 if(Settings.isFoolsLogic()) {
@@ -1240,13 +1252,14 @@ public class Main {
     private static AccessChecker buildAccessChecker(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer,
                                                     BacksideDoorRandomizer backsideDoorRandomizer,
                                                     TransitionGateRandomizer transitionGateRandomizer,
-                                                    SealRandomizer sealRandomizer) {
+                                                    SealRandomizer sealRandomizer, NpcRandomizer npcRandomizer) {
         AccessChecker accessChecker = new AccessChecker();
         accessChecker.setItemRandomizer(itemRandomizer);
         accessChecker.setShopRandomizer(shopRandomizer);
         accessChecker.setBacksideDoorRandomizer(backsideDoorRandomizer);
         accessChecker.setTransitionGateRandomizer(transitionGateRandomizer);
         accessChecker.setSealRandomizer(sealRandomizer);
+        accessChecker.setNpcRandomizer(npcRandomizer);
         itemRandomizer.setAccessChecker(accessChecker);
         shopRandomizer.setAccessChecker(accessChecker);
         return accessChecker;
