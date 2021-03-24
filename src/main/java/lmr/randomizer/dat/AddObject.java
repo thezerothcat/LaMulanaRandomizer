@@ -48,13 +48,13 @@ public final class AddObject {
 
     /**
      * Convenience for adding a timer object to any screen.
-     * @param screen to add the timer object to
+     * @param objectContainer to add the timer object to
      * @param delaySeconds seconds to wait before the timer runs its updates
      * @param tests tests to put on the timer object
      * @param updates updates the timer object should make when all of its tests pass
      */
-    public static void addSecondsTimer(Screen screen, int delaySeconds, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
-        GameObject obj = new GameObject(screen);
+    public static void addSecondsTimer(ObjectContainer objectContainer, int delaySeconds, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject obj = new GameObject(objectContainer);
         obj.setId((short)0x0b);
         obj.getArgs().add((short)delaySeconds);
         obj.getArgs().add((short)0);
@@ -63,18 +63,18 @@ public final class AddObject {
 
         obj.getTestByteOperations().addAll(tests);
         obj.getWriteByteOperations().addAll(updates);
-        screen.getObjects().add(0, obj);
+        objectContainer.getObjects().add(0, obj);
     }
 
     /**
      * Convenience for adding a timer object to any screen.
-     * @param screen to add the timer object to
+     * @param objectContainer to add the timer object to
      * @param delayFrames seconds to wait before the timer runs its updates
      * @param tests tests to put on the timer object
      * @param updates updates the timer object should make when all of its tests pass
      */
-    public static void addFramesTimer(Screen screen, int delayFrames, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
-        GameObject obj = new GameObject(screen);
+    public static GameObject addFramesTimer(ObjectContainer objectContainer, int delayFrames, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject obj = new GameObject(objectContainer);
         obj.setId((short)0x0b);
         obj.getArgs().add((short)0);
         obj.getArgs().add((short)delayFrames);
@@ -83,7 +83,8 @@ public final class AddObject {
 
         obj.getTestByteOperations().addAll(tests);
         obj.getWriteByteOperations().addAll(updates);
-        screen.getObjects().add(0, obj);
+        objectContainer.getObjects().add(0, obj);
+        return obj;
     }
 
     public static void addFloatingItem(Screen screen, int x, int y, int itemArg, boolean realItem, List<TestByteOperation> tests, List<WriteByteOperation> updates) {

@@ -76,7 +76,22 @@ public final class GameDataTracker {
     }
 
     public static void addObject(GameObject gameObject) {
-        if (gameObject.getId() == 0x2c) {
+        if (gameObject.getId() == 0x23) {
+            // Steam effect
+            if(Settings.isFools2021Mode()) {
+                if(gameObject.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) gameObject.getObjectContainer();
+                    if(screen.getZoneIndex() == 11 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                            if(testByteOperation.getIndex() == 0x3b5) {
+                                testByteOperation.setValue((byte)(testByteOperation.getValue() == 1 ? 0 : 1));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else if (gameObject.getId() == 0x2c) {
             int worldFlag;
             short inventoryArg;
 
@@ -202,6 +217,21 @@ public final class GameDataTracker {
                     if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 6 && screen.getScreenIndex() == 1) {
                         if(gameObject.getX() == 1060) {
                             gameObject.setX(gameObject.getX() - 40);
+                        }
+                    }
+                }
+            }
+        }
+        else if (gameObject.getId() == 0xad) {
+            // Hot spring
+            if(Settings.isFools2021Mode()) {
+                if(gameObject.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) gameObject.getObjectContainer();
+                    if(screen.getZoneIndex() == 11 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                            if(testByteOperation.getIndex() == 0x3b5) {
+                                testByteOperation.setValue((byte)(testByteOperation.getValue() == 1 ? 0 : 1));
+                            }
                         }
                     }
                 }
@@ -655,6 +685,13 @@ public final class GameDataTracker {
                 enemyObjects.add(gameObject);
             }
         }
+        else if (gameObject.getId() == 0x61) {
+            // Chi You
+//            if(Settings.isFools2021Mode()) {
+//                gameObject.getArgs().set(3, (short)1);
+//                gameObject.getArgs().set(12, (short)1);
+//            }
+        }
         else if (gameObject.getId() == 0x62) {
             if(Settings.isRandomizeEnemies()) {
                 enemyObjects.add(gameObject);
@@ -879,6 +916,9 @@ public final class GameDataTracker {
                 short worldFlag;
                 if(itemArg == 93) {
                     worldFlag = 234;
+                    if(Settings.isFools2021Mode()) {
+                        gameObject.getTestByteOperations().add(new TestByteOperation(0x1c2, ByteOp.FLAG_EQUALS, 3));
+                    }
                 }
                 else if(itemArg == 94) {
                     worldFlag = 235;
@@ -1323,6 +1363,19 @@ public final class GameDataTracker {
                 }
             }
         } else if (gameObject.getId() == 0x0e) {
+            if(Settings.isFools2021Mode()) {
+                if(gameObject.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) gameObject.getObjectContainer();
+                    if(screen.getZoneIndex() == 11 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                            if(testByteOperation.getIndex() == 0x3b5) {
+                                testByteOperation.setValue((byte)(testByteOperation.getValue() == 1 ? 0 : 1));
+                            }
+                        }
+                    }
+                }
+            }
+
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                 if (flagTest.getIndex() == 335) {
                     // deathv stuff
@@ -1985,6 +2038,27 @@ public final class GameDataTracker {
                             }
                             objects.add(gameObject);
                             break;
+                        }
+                    }
+                }
+            }
+            if(Settings.isFools2021Mode()) {
+                if(gameObject.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) gameObject.getObjectContainer();
+                    if (screen.getZoneIndex() == 10 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 0) {
+                        if(gameObject.getY() == 340) {
+                            gameObject.getTestByteOperations().clear();
+                            gameObject.getWriteByteOperations().clear();
+
+                            if(gameObject.getX() == 280) {
+                                gameObject.getTestByteOperations().add(new TestByteOperation(0x000, ByteOp.FLAG_EQUALS, 0));
+                                gameObject.getTestByteOperations().add(new TestByteOperation(0x227, ByteOp.FLAG_EQUALS, 0));
+                                gameObject.getWriteByteOperations().add(new WriteByteOperation(0x000, ByteOp.ASSIGN_FLAG, 1));
+                                gameObject.getWriteByteOperations().add(new WriteByteOperation(0x227, ByteOp.ASSIGN_FLAG, 1));
+                            }
+                            else {
+                                gameObject.getArgs().set(2, (short)0);
+                            }
                         }
                     }
                 }

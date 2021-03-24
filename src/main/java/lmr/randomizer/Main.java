@@ -1109,6 +1109,8 @@ public class Main {
             saveData[0x11 + 0x073] = (byte)1; // twin-b
             saveData[0x11 + 0x074] = (byte)1; // dimensional
             saveData[0x11 + 0x075] = (byte)1; // t-shrine
+
+            saveData[0x11 + 0x1cd] = (byte)1; // Default Extinction lighting
         }
         if(Settings.isHalloweenMode()) {
             // Unlock Mulbruk so you can get Halloween hints.

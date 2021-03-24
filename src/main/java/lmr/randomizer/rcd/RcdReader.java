@@ -189,6 +189,24 @@ public final class RcdReader {
                             }
                         }
                     }
+                } else if (obj.getObjectContainer() instanceof Zone) {
+                    boolean found = false;
+                    for (WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
+                        if(flagUpdate.getIndex() == 0x1cd) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) {
+                        int seconds = 5;
+                        obj.getArgs().set(0, (short)seconds);
+
+                        // Add reverse lighting timer
+                        AddObject.addSecondsTimer(obj.getObjectContainer(), seconds,
+                                Arrays.asList(new TestByteOperation(0x1c2, ByteOp.FLAG_NOT_EQUAL, 3),
+                                        new TestByteOperation(0x1cd, ByteOp.FLAG_EQUALS, 0)),
+                                Arrays.asList(new WriteByteOperation(0x1cd, ByteOp.ASSIGN_FLAG, 1)));
+                    }
                 }
             }
 
@@ -442,6 +460,16 @@ public final class RcdReader {
                     if(Settings.isRandomizeTransitionGates()) {
                         for (TestByteOperation flagTest : obj.getTestByteOperations()) {
                             if(flagTest.getIndex() == 0x0fe && flagTest.getValue() == 3) {
+                                keepObject = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if(screen.getZoneIndex() == 11 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                    if(Settings.isFools2021Mode()) {
+                        for (TestByteOperation flagTest : obj.getTestByteOperations()) {
+                            if(flagTest.getIndex() == 0x3b5 && flagTest.getValue() == 1) {
                                 keepObject = false;
                                 break;
                             }

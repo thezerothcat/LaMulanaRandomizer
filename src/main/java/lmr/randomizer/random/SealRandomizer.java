@@ -243,11 +243,11 @@ public class SealRandomizer {
             else if(screen.getZoneIndex() == 6) {
                 if(screen.getRoomIndex() == 6 && screen.getScreenIndex() == 1) {
                     if(sealObject.getArgs().get(0) == 1) {
-                        // Inferno - Life Seal chest; governed by flag 0x1c8
+                        // Extinction - Life Seal chest; governed by flag 0x1c8
                         return "Seal: B3";
                     }
                     else if(sealObject.getArgs().get(0) == 2) {
-                        // Inferno - Extinction perma-light; governed by flag 0x1c2
+                        // Extinction - Extinction perma-light; governed by flag 0x1c2
                         return "Seal: L3";
                     }
                 }
