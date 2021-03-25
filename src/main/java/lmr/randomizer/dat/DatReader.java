@@ -894,6 +894,21 @@ public final class DatReader {
         return htMapBlock;
     }
 
+    private static Block buildGiantSacredOrbSkeletonScanBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        Block block = new Block(blockIndex);
+        addBlockContentsToBlock(block, dataInputStream, numberOfShortsInThisBlock);
+        if(Settings.isFools2021Mode()) {
+            BlockContents lastEntry = block.getBlockContents().get(block.getBlockContents().size() - 1);
+            block.getBlockContents().clear();
+            for (Short singleCharacter : FileUtils.stringToData(String.format(Translations.getText("event.fools2021.giants"), Settings.getCurrentGiant(), Settings.getCurrentGiant()))) {
+                block.getBlockContents().add(new BlockSingleData(singleCharacter));
+            }
+            block.getBlockContents().add(new BlockSingleData((short)0x00a));
+            block.getBlockContents().add(lastEntry);
+        }
+        return block;
+    }
+
     private static Block buildFairyQueenFirstConversationBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         // Throw away entire existing block contents in favor of custom
         int dataIndex = 0;
@@ -1239,6 +1254,10 @@ public final class DatReader {
             }
             else if(blockIndex == 0x1c) {
                 block = buildHTMapBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
+            else if(blockIndex == 88 && Settings.isFools2021Mode()) {
+                // Strength lies at the foot of Futo
+                block = buildGiantSacredOrbSkeletonScanBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             else if(blockIndex == 0xd7 && Settings.isHalloweenMode()) {
                 block = buildFairyQueenFirstConversationBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);

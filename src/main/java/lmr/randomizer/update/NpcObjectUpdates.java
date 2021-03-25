@@ -8,13 +8,15 @@ public final class NpcObjectUpdates {
 
     public static void updateDoor(GameObject doorObject, String npcAssigned) {
         // Args 0-2 and 5-6 seem to just be 0 for the conversations referenced so far
-        doorObject.getArgs().set(3, (short)(isShop(npcAssigned) ? 1 : 0));
-        doorObject.getArgs().set(4, getConversationArg(npcAssigned));
+        if(doorObject != null) {
+            doorObject.getArgs().set(3, (short)(isShop(npcAssigned) ? 1 : 0));
+            doorObject.getArgs().set(4, getConversationArg(npcAssigned));
 
-        // Handle special cases
-        if("NPC: Yiegah Kungfu".equals(npcAssigned)) {
-            NpcObjectUpdates.addLittleBrotherScreenObjects(doorObject);
-            AddObject.setLittleBrotherShopScreen(doorObject.getObjectContainer());
+            // Handle special cases
+            if("NPC: Yiegah Kungfu".equals(npcAssigned)) {
+                NpcObjectUpdates.addLittleBrotherScreenObjects(doorObject);
+                AddObject.setLittleBrotherShopScreen(doorObject.getObjectContainer());
+            }
         }
     }
 
@@ -26,6 +28,12 @@ public final class NpcObjectUpdates {
             return true;
         }
         if("NPC: Arrogant Metagear".equals(npcAssigned)) {
+            return true;
+        }
+        if("NPC: Mr. Fishman (Original)".equals(npcAssigned)) {
+            return true;
+        }
+        if("NPC: Mr. Fishman (Alt)".equals(npcAssigned)) {
             return true;
         }
         return false;
@@ -40,6 +48,12 @@ public final class NpcObjectUpdates {
         }
         if("NPC: Sturdy Snake".equals(npcAssigned)) {
             return 204;
+        }
+        if("NPC: Mr. Fishman (Original)".equals(npcAssigned)) {
+            return 132;
+        }
+        if("NPC: Mr. Fishman (Alt)".equals(npcAssigned)) {
+            return 133;
         }
         return 0;
     }

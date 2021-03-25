@@ -629,6 +629,136 @@ public final class RcdReader {
             }
             return rcdByteIndex;
         }
+        else if (obj.getId() == 0x96) {
+            if(Settings.isFools2021Mode()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if(screen.getZoneIndex() == 2) {
+                        if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                            if("Migela".equals(Settings.getCurrentGiant())) {
+                                keepObject = false;
+                            }
+                        }
+                        else if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                            if("Bado".equals(Settings.getCurrentGiant())) {
+                                keepObject = false;
+                            }
+                        }
+                        else if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 2) {
+                            if("Ledo".equals(Settings.getCurrentGiant())) {
+                                keepObject = false;
+                            }
+                        }
+                        else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                            if("Abuto".equals(Settings.getCurrentGiant())) {
+                                keepObject = false;
+                            }
+                        }
+                        else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                            if(obj.getX() == 740) {
+                                if("Sakit".equals(Settings.getCurrentGiant())) {
+                                    keepObject = false;
+                                }
+                            }
+                            else { //if(obj.getX() == 1120) {
+                                if("Ji".equals(Settings.getCurrentGiant())) {
+                                    keepObject = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else if (obj.getId() == 0x08) {
+            if(Settings.isFools2021Mode()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen)objectContainer;
+                    if(screen.getZoneIndex() == 2) {
+                        if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                            if(obj.getX() == 140) {
+                                // Migela
+                                if("Migela".equals(Settings.getCurrentGiant())) {
+                                    obj.getTestByteOperations().clear();
+                                    obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
+
+                                    obj.getWriteByteOperations().clear();
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                                }
+                            }
+                            else {
+                                // Futo
+                                obj.getTestByteOperations().clear();
+                                obj.getTestByteOperations().add(new TestByteOperation(0x008, ByteOp.FLAG_EQUALS, 0));
+
+                                obj.getWriteByteOperations().clear();
+                                obj.getWriteByteOperations().add(new WriteByteOperation(0x008, ByteOp.ASSIGN_FLAG, 1));
+
+                                AddObject.addExtendingSpikes(obj, 0x008);
+                            }
+                        }
+                        else if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                            if("Bado".equals(Settings.getCurrentGiant())) {
+                                obj.getTestByteOperations().clear();
+                                obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
+
+                                obj.getWriteByteOperations().clear();
+                                obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
+                                obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                            }
+                        }
+                        else if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 2) {
+                            if(obj.getY() == 340) {
+                                // Make sure not to get the Sakit ankh unlock dais
+                                if("Ledo".equals(Settings.getCurrentGiant())) {
+                                    obj.getTestByteOperations().clear();
+                                    obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
+
+                                    obj.getWriteByteOperations().clear();
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                                }
+                            }
+                        }
+                        else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                            if("Abuto".equals(Settings.getCurrentGiant())) {
+                                obj.getTestByteOperations().clear();
+                                obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
+
+                                obj.getWriteByteOperations().clear();
+                                obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
+                                obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                            }
+                        }
+                        else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                            if(obj.getX() == 760) {
+                                if("Sakit".equals(Settings.getCurrentGiant())) {
+                                    obj.getTestByteOperations().clear();
+                                    obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
+                                    obj.getTestByteOperations().add(new TestByteOperation(0x164, ByteOp.FLAG_NOT_EQUAL, 1));
+
+                                    obj.getWriteByteOperations().clear();
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                                }
+                            }
+                            else { //if(obj.getX() == 1140) {
+                                if("Ji".equals(Settings.getCurrentGiant())) {
+                                    obj.getTestByteOperations().clear();
+                                    obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
+                                    obj.getTestByteOperations().add(new TestByteOperation(0x164, ByteOp.FLAG_NOT_EQUAL, 1));
+
+                                    obj.getWriteByteOperations().clear();
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         else if (obj.getId() == 0x97) {
             if(!obj.getTestByteOperations().isEmpty() && obj.getTestByteOperations().get(0).getIndex() == 524) {
                 // Remove broken pot flag check so the warp is just always active.
@@ -1092,12 +1222,15 @@ public final class RcdReader {
             }
         }
         else if(obj.getId() == 0xa7) {
-            if(Settings.isRandomizeNonBossDoors()) {
-                if(objectContainer instanceof Screen) {
-                    Screen screen = (Screen) objectContainer;
-                    if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
-                        keepObject = false;
-                    }
+            if(objectContainer instanceof Screen) {
+                Screen screen = (Screen) objectContainer;
+                if (screen.getZoneIndex() == 4 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 3) {
+                    // Key fairy point for Mr. Fishman shop
+                    obj.setX(180);
+                    obj.setY(1480);
+                }
+                else if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                    keepObject = false;
                 }
             }
         }
@@ -2462,6 +2595,10 @@ public final class RcdReader {
             if(roomIndex == 2 && screenIndex == 0) {
                 AddObject.addHardmodeToggleWeights(screen);
             }
+            if(roomIndex == 4 && screenIndex == 0) {
+                // Migela/Futo
+                AddObject.addZebuDais(screen);
+            }
             if(roomIndex == 8 && screenIndex == 1) {
                 if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 900, 120, 75,
@@ -3129,6 +3266,28 @@ public final class RcdReader {
                         AddObject.addEscapeTimer(screen, 0xaca, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xac5);
+                }
+            }
+            if(Settings.isFools2021Mode()) {
+                if(roomIndex == 7 && screenIndex == 1) {
+                    if("Bado".equals(Settings.getCurrentGiant())) {
+                        AddObject.addSuccessSound(screen);
+                    }
+                }
+                else if(roomIndex == 7 && screenIndex == 2) {
+                    if("Ledo".equals(Settings.getCurrentGiant())) {
+                        AddObject.addSuccessSound(screen);
+                    }
+                }
+                else if(roomIndex == 8 && screenIndex == 0) {
+                    if("Abuto".equals(Settings.getCurrentGiant())) {
+                        AddObject.addSuccessSound(screen);
+                    }
+                }
+                else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                    if("Sakit".equals(Settings.getCurrentGiant()) || "Ji".equals(Settings.getCurrentGiant())) {
+                        AddObject.addSuccessSound(screen);
+                    }
                 }
             }
         }

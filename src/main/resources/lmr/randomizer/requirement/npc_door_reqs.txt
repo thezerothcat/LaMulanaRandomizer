@@ -1,4 +1,8 @@
-# Twin labs
+# Spring in the Sky
+NPCL: Priest Hidlyda => Location: Spring in the Sky [Main], State: Can Open Spring NPC Wall, State: Can Escape Spring NPC
+NPCL: Mr. Fishman (Original) => Location: Spring in the Sky [Main], Location: Spring in the Sky [Upper], Helmet, Seal: O4
+NPCL: Mr. Fishman (Alt) => Location: Spring in the Sky [Main], Location: Spring in the Sky [Upper], Helmet, Seal: O4, Fairy: Spring in the Sky
+# Twin Labyrinths
 NPCL: Yiegah Kungfu => Location: Twin Labyrinths [Loop]
 #NPCL: Yiear Kungfu => Location: Twin Labyrinths [Loop], NPC: Yiegah Kungfu
 NPCL: Sturdy Snake => Location: Twin Labyrinths [Lower], Feather

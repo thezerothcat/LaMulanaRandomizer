@@ -603,10 +603,28 @@ public class AccessChecker {
                 return false;
             }
         }
-        else if(item.contains("Sacred Orb")) {
-            item = "Sacred Orb";
-            if(location.contains("Shop") && shopRandomizer.shopHasTransformation(location)) {
+        else if(item.contains("Key Sword")) {
+            if(Settings.isFools2021Mode()
+                    && ("Shop 12 (Spring)".equals(location) || "Shop 12 Alt (Spring)".equals(location)
+                    || "Shop 18 (Lil Bro)".equals(location) || "Shop 20 (Twin Labs)".equals(location)
+                    || "Shop 21 (Unsolvable)".equals(location))) {
+                // Avoid dealing with Key Sword mantra timer.
                 return false;
+            }
+        }
+        else if(item.contains("Sacred Orb")) { // todo: should probably not do this check if it's a removed item
+            item = "Sacred Orb";
+            if(location.contains("Shop")) {
+                if(shopRandomizer.shopHasTransformation(location)) {
+                    return false;
+                }
+                if(Settings.isFools2021Mode()
+                        && ("Shop 12 (Spring)".equals(location) || "Shop 12 Alt (Spring)".equals(location)
+                        || "Shop 18 (Lil Bro)".equals(location) || "Shop 20 (Twin Labs)".equals(location)
+                        || "Shop 21 (Unsolvable)".equals(location))) {
+                    // Avoid dealing with shop transformations.
+                    return false;
+                }
             }
             if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
                 return false;

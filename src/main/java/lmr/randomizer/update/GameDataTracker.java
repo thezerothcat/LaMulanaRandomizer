@@ -24,7 +24,7 @@ public final class GameDataTracker {
     private static Map<String, List<GameObject>> mapOfGateNameToTransitionGate = new HashMap<>();
     private static Map<String, Screen> mapOfTransitionNameToScreen = new HashMap<>();
     private static Map<String, List<GameObject>> mapOfSealNodeToSealObjects = new HashMap<>();
-    private static Map<String, GameObject> mapOfNpcLocationToObjects = new HashMap<>();
+    private static Map<String, GameObject> mapOfNpcLocationToObject = new HashMap<>();
     private static List<GameObject> enemyObjects = new ArrayList<>();
     private static List<GameObject> npcObjects = new ArrayList<>();
     private static List<GameObject> edenDaises = new ArrayList<>();
@@ -45,7 +45,7 @@ public final class GameDataTracker {
         mapOfDoorNameToBacksideDoor.clear();
         mapOfGateNameToTransitionGate.clear();
         mapOfTransitionNameToScreen.clear();
-        mapOfNpcLocationToObjects.clear();
+        mapOfNpcLocationToObject.clear();
         mantraTablets.clear();
         enemyObjects.clear();
         npcObjects.clear();
@@ -2140,27 +2140,32 @@ public final class GameDataTracker {
             int languageBlock = gameObject.getArgs().get(0);
             if(gameObject.getObjectContainer() instanceof Screen) {
                 int zoneIndex = ((Screen)gameObject.getObjectContainer()).getZoneIndex();
-                boolean front = (languageBlock == 41 || languageBlock == 75 || languageBlock == 104 || languageBlock == 136
+                boolean frontsideGrailScan = (languageBlock == 41 || languageBlock == 75 || languageBlock == 104 || languageBlock == 136
                         || languageBlock == 149 || languageBlock == 170 || languageBlock == 188 || languageBlock == 221)
                         || (languageBlock == 231 && zoneIndex == 9);
+                boolean backsideGrailScan = languageBlock == 250 || languageBlock == 275 || languageBlock == 291 || languageBlock == 305
+                        || languageBlock == 323 || languageBlock == 339 || languageBlock == 206 || languageBlock == 358
+                        || (languageBlock == 231 && zoneIndex != 9);
 
-                if(Settings.isAutomaticGrailPoints()) {
-                    AddObject.addGrailDetector(gameObject, LocationCoordinateMapper.getGrailFlag(zoneIndex, front));
-                }
-                if (Settings.isFools2021Mode()) {
-                    // Swap out original for custom flags
-                    for (TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-                        if (testByteOperation.getIndex() == LocationCoordinateMapper.getOriginalGrailFlag(zoneIndex, front)) {
-                            testByteOperation.setIndex(LocationCoordinateMapper.getGrailFlag(zoneIndex, front));
+                if(frontsideGrailScan || backsideGrailScan) {
+                    if(Settings.isAutomaticGrailPoints()) {
+                        AddObject.addGrailDetector(gameObject, LocationCoordinateMapper.getGrailFlag(zoneIndex, frontsideGrailScan));
+                    }
+                    if (Settings.isFools2021Mode()) {
+                        // Swap out original for custom flags
+                        for (TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                            if (testByteOperation.getIndex() == LocationCoordinateMapper.getOriginalGrailFlag(zoneIndex, frontsideGrailScan)) {
+                                testByteOperation.setIndex(LocationCoordinateMapper.getGrailFlag(zoneIndex, frontsideGrailScan));
+                            }
+                        }
+                        for (WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
+                            if (writeByteOperation.getIndex() == LocationCoordinateMapper.getOriginalGrailFlag(zoneIndex, frontsideGrailScan)) {
+                                writeByteOperation.setIndex(LocationCoordinateMapper.getGrailFlag(zoneIndex, frontsideGrailScan));
+                            }
                         }
                     }
-                    for (WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
-                        if (writeByteOperation.getIndex() == LocationCoordinateMapper.getOriginalGrailFlag(zoneIndex, front)) {
-                            writeByteOperation.setIndex(LocationCoordinateMapper.getGrailFlag(zoneIndex, front));
-                        }
-                    }
+                    return;
                 }
-                return;
             }
 
             if(languageBlock == 648) {
@@ -2246,28 +2251,42 @@ public final class GameDataTracker {
                     objects.add(AddObject.addAltSurfaceShopItemTimer(gameObject.getObjectContainer()));
                 }
                 else if(blockNumber == 132){
-                    // Untransformed Gyonin fish shop
-                    GameObject backupFishShop = AddObject.addBackupGyoninFishShop(gameObject);
-                    List<GameObject> objects = mapOfShopBlockToShopObjects.get(blockNumber);
-                    if (objects == null) {
-                        mapOfShopBlockToShopObjects.put(blockNumber, new ArrayList<>());
-                        objects = mapOfShopBlockToShopObjects.get(blockNumber);
+                    // Untransformed Mr. Fishman shop
+                    for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                        if (testByteOperation.getIndex() == 0x197) {
+                            // Keep existing even after the transformed shop appears.
+                            testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+                            break;
+                        }
+
+                        if(Settings.isFoolsNpc()) {
+                            mapOfNpcLocationToObject.put("NPCL: Mr. Fishman (Original)", gameObject);
+                        }
                     }
-                    objects.add(backupFishShop);
+                }
+                else if(blockNumber == 133){
+                    // Transformed Mr. Fishman shop
+                    gameObject.setX(180);
+                    gameObject.setY(1520);
+                    AddObject.addTransformedMrFishmanShopDoorGraphic(gameObject);
+
+                    if(Settings.isFoolsNpc()) {
+                        mapOfNpcLocationToObject.put("NPCL: Mr. Fishman (Alt)", gameObject);
+                    }
                 }
                 else if(blockNumber == 185){
                     if(Settings.isFoolsNpc()) {
-                        mapOfNpcLocationToObjects.put("NPCL: Yiegah Kungfu", gameObject);
+                        mapOfNpcLocationToObject.put("NPCL: Yiegah Kungfu", gameObject);
                     }
                 }
                 else if(blockNumber == 187){
                     if(Settings.isFoolsNpc()) {
-                        mapOfNpcLocationToObjects.put("NPCL: Arrogant Metagear", gameObject);
+                        mapOfNpcLocationToObject.put("NPCL: Arrogant Metagear", gameObject);
                     }
                 }
                 else if(blockNumber == 204){
                     if(Settings.isFoolsNpc()) {
-                        mapOfNpcLocationToObjects.put("NPCL: Sturdy Snake", gameObject);
+                        mapOfNpcLocationToObject.put("NPCL: Sturdy Snake", gameObject);
                     }
                }
             }
@@ -2330,6 +2349,9 @@ public final class GameDataTracker {
             else if(blockNumber == 678) {
                 // Priest Hidlyda - Spring NPC, 04-06-01
                 npcObjects.add(gameObject);
+                if(Settings.isFoolsNpc()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Hidlyda", gameObject);
+                }
             }
             else if(blockNumber == 679) {
                 // Priest Romancis - Inferno NPC, 05-03-02
@@ -5050,82 +5072,42 @@ public final class GameDataTracker {
         short shopItem3Flag = getFlag(shopItem3);
 
         // NOTE: only tolerates one sacred orb per shop
-        if(shopItem1.contains("Sacred Orb")) {
+        if(shopItem1.contains("Sacred Orb") || shopItem2.contains("Sacred Orb") || shopItem3.contains("Sacred Orb")) {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
-            writeShopInventory(noOrbShopBlock, "Weights", shopItem2, shopItem3, blocks,
-                    new ItemPriceCount((short)10, (short)5), itemPriceAndCount2, itemPriceAndCount3, littleBrotherShop, msxShop, true, random);
-
-            TestByteOperation testByteOperation;
-            for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
-                GameObject shopWithoutOrb = new GameObject(shopObject);
-                shopObject.getObjectContainer().getObjects().add(shopWithoutOrb);
-
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(shopItem1Flag);
-                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                testByteOperation.setValue((byte)2);
-                shopWithoutOrb.getTestByteOperations().add(testByteOperation);
-
-                shopWithoutOrb.getArgs().set(4, (short)(blocks.size() - 1));
-
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(shopItem1Flag);
-                testByteOperation.setOp(ByteOp.FLAG_LT);
-                testByteOperation.setValue((byte)2);
-                shopObject.getTestByteOperations().add(testByteOperation);
+            String newShopItem1 = shopItem1;
+            String newShopItem2 = shopItem2;
+            String newShopItem3 = shopItem3;
+            ItemPriceCount newItemPriceAndCount1 = itemPriceAndCount1;
+            ItemPriceCount newItemPriceAndCount2 = itemPriceAndCount2;
+            ItemPriceCount newItemPriceAndCount3 = itemPriceAndCount3;
+            short sacredOrbItemFlag;
+            if(shopItem1.contains("Sacred Orb")) {
+                newShopItem1 = "Weights";
+                newItemPriceAndCount1 = new ItemPriceCount((short)10, (short)5);
+                sacredOrbItemFlag = shopItem1Flag;
             }
-        }
-        else if(shopItem2.contains("Sacred Orb")) {
-            ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
-            blocks.add(noOrbShopBlock);
-            writeShopInventory(noOrbShopBlock, shopItem1, "Weights", shopItem3, blocks,
-                    itemPriceAndCount1, new ItemPriceCount((short)10, (short)5), itemPriceAndCount3, littleBrotherShop, msxShop, true, random);
-
-            TestByteOperation testByteOperation;
-            for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
-                GameObject shopWithoutOrb = new GameObject(shopObject);
-                shopObject.getObjectContainer().getObjects().add(shopWithoutOrb);
-
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(shopItem2Flag);
-                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                testByteOperation.setValue((byte)2);
-                shopWithoutOrb.getTestByteOperations().add(testByteOperation);
-
-                shopWithoutOrb.getArgs().set(4, (short)(blocks.size() - 1));
-
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(shopItem2Flag);
-                testByteOperation.setOp(ByteOp.FLAG_LT);
-                testByteOperation.setValue((byte)2);
-                shopObject.getTestByteOperations().add(testByteOperation);
+            else if(shopItem2.contains("Sacred Orb")) {
+                newShopItem2 = "Weights";
+                newItemPriceAndCount2 = new ItemPriceCount((short)10, (short)5);
+                sacredOrbItemFlag = shopItem2Flag;
             }
-        }
-        else if(shopItem3.contains("Sacred Orb")) {
-            ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
-            blocks.add(noOrbShopBlock);
-            writeShopInventory(noOrbShopBlock, shopItem1, shopItem2, "Weights", blocks,
-                    itemPriceAndCount1, itemPriceAndCount2, new ItemPriceCount((short)10, (short)5), littleBrotherShop, msxShop, true, random);
+            else { // if(shopItem3.contains("Sacred Orb")) {
+                newShopItem3 = "Weights";
+                newItemPriceAndCount3 = new ItemPriceCount((short)10, (short)5);
+                sacredOrbItemFlag = shopItem3Flag;
+            }
+            writeShopInventory(noOrbShopBlock, newShopItem1, newShopItem2, newShopItem3, blocks,
+                    newItemPriceAndCount1, newItemPriceAndCount2, newItemPriceAndCount3, littleBrotherShop, msxShop, true, random);
 
-            TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
                 GameObject shopWithoutOrb = new GameObject(shopObject);
                 shopObject.getObjectContainer().getObjects().add(shopWithoutOrb);
 
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(shopItem3Flag);
-                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                testByteOperation.setValue((byte)2);
-                shopWithoutOrb.getTestByteOperations().add(testByteOperation);
-
                 shopWithoutOrb.getArgs().set(4, (short)(blocks.size() - 1));
+                shopWithoutOrb.getTestByteOperations().add(new TestByteOperation(sacredOrbItemFlag, ByteOp.FLAG_EQUALS, 2));
 
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(shopItem3Flag);
-                testByteOperation.setOp(ByteOp.FLAG_LT);
-                testByteOperation.setValue((byte)2);
-                shopObject.getTestByteOperations().add(testByteOperation);
+                shopObject.getTestByteOperations().add(new TestByteOperation(sacredOrbItemFlag, ByteOp.FLAG_LT, 2));
             }
         }
 
@@ -5136,127 +5118,12 @@ public final class GameDataTracker {
 
         List<Short> newCounts  = new ArrayList<>();
         List<Short> newPrices  = new ArrayList<>();
-        if(itemPriceAndCount1 == null) {
-//            if(!Settings.isFoolsMode()) {
-                newPrices.add(shopBlock.getInventoryPriceList().getData().get(0));
-//            }
-            if ("Weights".equals(shopItem1)) {
-//                if(Settings.isFoolsMode()) {
-//                    newCounts.add((short)(random.nextInt(10) + 1));
-//                    newPrices.add((short)1);
-//                }
-//                else {
-                    newCounts.add((short) 5);
-//                }
-            }
-            else if (shopItem1.endsWith("Ammo")) {
-                newCounts.add(shopBlock.getInventoryCountList().getData().get(0));
-//                if(Settings.isFoolsMode()) {
-//                    newPrices.add(shopBlock.getInventoryPriceList().getData().get(0));
-//                }
-            } else {
-                newCounts.add((short) 1);
-//                if(Settings.isFoolsMode()) {
-//                    newPrices.add(shopBlock.getInventoryPriceList().getData().get(0));
-//                }
-            }
-        }
-        else {
-            if(itemPriceAndCount1.getPrice() == null) {
-                newPrices.add(shopBlock.getInventoryPriceList().getData().get(0));
-            }
-            else {
-                newPrices.add(itemPriceAndCount1.getPrice());
-            }
-
-            if(itemPriceAndCount1.getCount() == null) {
-                newCounts.add(shopBlock.getInventoryCountList().getData().get(0));
-            }
-            else {
-                newCounts.add(itemPriceAndCount1.getCount());
-            }
-        }
-
-        if(itemPriceAndCount2 == null) {
-//            if(!Settings.isFoolsMode()) {
-                newPrices.add(shopBlock.getInventoryPriceList().getData().get(1));
-//            }
-
-            if ("Weights".equals(shopItem2)) {
-//                if(Settings.isFoolsMode()) {
-//                    newCounts.add((short)(random.nextInt(10) + 1));
-//                    newPrices.add((short)1);
-//                }
-//                else {
-                    newCounts.add((short) 5);
-//                }
-            } else if (shopItem2.endsWith("Ammo")) {
-                newCounts.add(shopBlock.getInventoryCountList().getData().get(1));
-//                if(Settings.isFoolsMode()) {
-//                    newPrices.add(shopBlock.getInventoryPriceList().getData().get(1));
-//                }
-            } else {
-                newCounts.add((short) 1);
-//                if(Settings.isFoolsMode()) {
-//                    newPrices.add(shopBlock.getInventoryPriceList().getData().get(1));
-//                }
-            }
-        }
-        else {
-            if(itemPriceAndCount2.getPrice() == null) {
-                newPrices.add(shopBlock.getInventoryPriceList().getData().get(1));
-            }
-            else {
-                newPrices.add(itemPriceAndCount2.getPrice());
-            }
-
-            if(itemPriceAndCount2.getCount() == null) {
-                newCounts.add(shopBlock.getInventoryCountList().getData().get(1));
-            }
-            else {
-                newCounts.add(itemPriceAndCount2.getCount());
-            }
-        }
-
-        if(itemPriceAndCount3 == null) {
-//            if(!Settings.isFoolsMode()) {
-                newPrices.add(shopBlock.getInventoryPriceList().getData().get(2));
-//            }
-            if ("Weights".equals(shopItem3)) {
-//                if(Settings.isFoolsMode()) {
-//                    newCounts.add((short)(random.nextInt(10) + 1));
-//                    newPrices.add((short)1);
-//                }
-//                else {
-                    newCounts.add((short) 5);
-//                }
-            } else if (shopItem3.endsWith("Ammo")) {
-                newCounts.add(shopBlock.getInventoryCountList().getData().get(2));
-//                if(Settings.isFoolsMode()) {
-//                    newPrices.add(shopBlock.getInventoryPriceList().getData().get(2));
-//                }
-            } else {
-                newCounts.add((short) 1);
-//                if(Settings.isFoolsMode()) {
-//                    newPrices.add(shopBlock.getInventoryPriceList().getData().get(2));
-//                }
-            }
-        }
-        else {
-            if(itemPriceAndCount3.getPrice() == null) {
-                newPrices.add(shopBlock.getInventoryPriceList().getData().get(2));
-            }
-            else {
-                newPrices.add(itemPriceAndCount3.getPrice());
-            }
-
-            if(itemPriceAndCount3.getCount() == null) {
-                newCounts.add(shopBlock.getInventoryCountList().getData().get(2));
-            }
-            else {
-                newCounts.add(itemPriceAndCount3.getCount());
-            }
-        }
+        updatePriceAndCount(newPrices, newCounts, random, shopItem1, itemPriceAndCount1,
+                shopBlock.getInventoryPriceList().getData().get(0), shopBlock.getInventoryCountList().getData().get(0));
+        updatePriceAndCount(newPrices, newCounts, random, shopItem2, itemPriceAndCount2,
+                shopBlock.getInventoryPriceList().getData().get(1), shopBlock.getInventoryCountList().getData().get(1));
+        updatePriceAndCount(newPrices, newCounts, random, shopItem3, itemPriceAndCount3,
+                shopBlock.getInventoryPriceList().getData().get(2), shopBlock.getInventoryCountList().getData().get(2));
 
         shopBlock.getInventoryPriceList().getData().clear();
         shopBlock.getInventoryPriceList().getData().addAll(newPrices);
@@ -5317,6 +5184,52 @@ public final class GameDataTracker {
         bunemonData.add((short)262);
         bunemonData.add((short)32);
         updateBunemonText(bunemonData, shopItem3, shopBlock.getInventoryPriceList().getData().get(2));
+    }
+
+    public static void updatePriceAndCount(List<Short> newPrices, List<Short> newCounts, Random random,
+                                           String shopItem, ItemPriceCount existingItemPriceAndCount,
+                                           Short originalLocationPrice, Short originalLocationCount) {
+        if(existingItemPriceAndCount == null) {
+            if(!Settings.isFools2019Mode()) {
+                newPrices.add(originalLocationPrice);
+            }
+
+            if ("Weights".equals(shopItem)) {
+                if(Settings.isFools2019Mode()) {
+                    newCounts.add((short)(random.nextInt(10) + 1));
+                    newPrices.add((short)1);
+                }
+                else {
+                    newCounts.add((short) 5);
+                }
+            }
+            else if (shopItem.endsWith("Ammo")) {
+                newCounts.add(originalLocationCount);
+                if(Settings.isFools2019Mode()) {
+                    newPrices.add(originalLocationPrice);
+                }
+            } else {
+                newCounts.add((short) 1);
+                if(Settings.isFools2019Mode()) {
+                    newPrices.add(originalLocationPrice);
+                }
+            }
+        }
+        else {
+            if(existingItemPriceAndCount.getPrice() == null) {
+                newPrices.add(originalLocationPrice);
+            }
+            else {
+                newPrices.add(existingItemPriceAndCount.getPrice());
+            }
+
+            if(existingItemPriceAndCount.getCount() == null) {
+                newCounts.add(originalLocationCount);
+            }
+            else {
+                newCounts.add(existingItemPriceAndCount.getCount());
+            }
+        }
     }
 
     public static void updateXelpudIntro(List<Block> blocks) {
@@ -6557,7 +6470,7 @@ public final class GameDataTracker {
         List<GameObject> objectsToModify = mapOfDoorNameToBacksideDoor.get(doorToReplace);
         if(objectsToModify == null) {
             if("Door: F8".equals(doorWithCoordinateData)) {
-                AddObject.addGrailToggle(null);
+                AddObject.addGrailToggle(null, true);
             }
         }
         else {
@@ -6565,7 +6478,7 @@ public final class GameDataTracker {
                 replaceBacksideDoorFlags(gameObject, bossNumber, gateFlag, isDoorDisabledForEscape(doorToReplace));
                 replaceBacksideDoorArgs(gameObject, doorWithCoordinateData);
                 if("Door: F8".equals(doorWithCoordinateData)) {
-                    AddObject.addGrailToggle(gameObject.getObjectContainer());
+                    AddObject.addGrailToggle(gameObject.getObjectContainer(), true);
                 }
                 AddObject.addNumberlessBacksideDoorGraphic(gameObject);
                 if(bossNumber != null) {
@@ -6596,7 +6509,7 @@ public final class GameDataTracker {
     }
 
     public static void writeNpcDoor(String npcDoorLocation, String npc) {
-        GameObject doorToUpdate = mapOfNpcLocationToObjects.get(npcDoorLocation);
+        GameObject doorToUpdate = mapOfNpcLocationToObject.get(npcDoorLocation);
         NpcObjectUpdates.updateDoor(doorToUpdate, npc);
     }
 

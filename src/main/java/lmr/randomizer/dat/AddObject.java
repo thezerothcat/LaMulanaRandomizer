@@ -1329,77 +1329,41 @@ public final class AddObject {
         }
     }
 
-    public static GameObject addBackupGyoninFishShop(GameObject untransformedGyoninFishShop) {
-        ObjectContainer objectContainer = untransformedGyoninFishShop.getObjectContainer();
-        if(objectContainer instanceof Screen) {
-            GameObject backupFishShop = new GameObject(untransformedGyoninFishShop.getObjectContainer());
-            for (int i = 0; i < untransformedGyoninFishShop.getArgs().size(); i++) {
-                backupFishShop.getArgs().add(untransformedGyoninFishShop.getArgs().get(i));
-            }
-            TestByteOperation testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(407);
-            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-            testByteOperation.setValue((byte) 3);
-            backupFishShop.getTestByteOperations().add(testByteOperation);
+    public static void addTransformedMrFishmanShopDoorGraphic(GameObject mrFishmanShopDoor) {
+        GameObject backupFishNewDoorGraphic = new GameObject(mrFishmanShopDoor.getObjectContainer());
+        backupFishNewDoorGraphic.getTestByteOperations().add(new TestByteOperation(0x197, ByteOp.FLAG_EQUALS, 3));
+        backupFishNewDoorGraphic.getTestByteOperations().add(new TestByteOperation(0x0fe, ByteOp.FLAG_NOT_EQUAL, 3));
 
-            testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(254);
-            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-            testByteOperation.setValue((byte) 3);
-            backupFishShop.getTestByteOperations().add(testByteOperation);
+        backupFishNewDoorGraphic.getArgs().add((short)-1);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)260);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)40);
+        backupFishNewDoorGraphic.getArgs().add((short)40);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)1);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)255);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
 
-            backupFishShop.setId((short) 0xa0);
-            backupFishShop.setX(180);
-            backupFishShop.setY(1520);
+        backupFishNewDoorGraphic.setId((short) 0x93);
+        backupFishNewDoorGraphic.setX(180);
+        backupFishNewDoorGraphic.setY(1520);
 
-            untransformedGyoninFishShop.getObjectContainer().getObjects().add(backupFishShop);
-
-            GameObject backupFishNewDoorGraphic = new GameObject(untransformedGyoninFishShop.getObjectContainer());
-            testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(407);
-            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-            testByteOperation.setValue((byte) 3);
-            backupFishNewDoorGraphic.getTestByteOperations().add(testByteOperation);
-
-            testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(254);
-            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-            testByteOperation.setValue((byte) 3);
-            backupFishNewDoorGraphic.getTestByteOperations().add(testByteOperation);
-
-            backupFishNewDoorGraphic.getArgs().add((short)-1);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)260);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)40);
-            backupFishNewDoorGraphic.getArgs().add((short)40);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)1);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)255);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-
-            backupFishNewDoorGraphic.setId((short) 0x93);
-            backupFishNewDoorGraphic.setX(180);
-            backupFishNewDoorGraphic.setY(1520);
-
-            untransformedGyoninFishShop.getObjectContainer().getObjects().add(backupFishNewDoorGraphic);
-            return backupFishShop;
-        }
-        return null;
+        mrFishmanShopDoor.getObjectContainer().getObjects().add(backupFishNewDoorGraphic);
     }
 
     /**
@@ -2080,7 +2044,7 @@ public final class AddObject {
         backsideDoor.getObjectContainer().getObjects().add(mirrorCoverGraphic);
     }
 
-    public static void addGrailToggle(ObjectContainer objectContainer) {
+    public static void addGrailToggle(ObjectContainer objectContainer, boolean enableGrail) {
         if(objectContainer == null) {
             objectContainer = dimensionalExitScreen;
         }
@@ -2088,13 +2052,10 @@ public final class AddObject {
         grailToggle.setId((short)0xb7);
         grailToggle.setX(-1);
         grailToggle.setY(-1);
-        grailToggle.getArgs().add((short)1);
+        grailToggle.getArgs().add((short)(enableGrail ? 1 : 0));
 
-        TestByteOperation testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(0x382);
-        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-        testByteOperation.setValue((byte)0);
-        grailToggle.getTestByteOperations().add(testByteOperation);
+        // Disable during escape
+        grailToggle.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0));
 
         objectContainer.getObjects().add(0, grailToggle);
     }
@@ -6113,6 +6074,136 @@ public final class AddObject {
     }
 
     /**
+     * Add 0x96 object
+     */
+    public static void addExtendingSpikes(GameObject referenceObj, int flagIndex) {
+        GameObject extendingSpikes = new GameObject(referenceObj.getObjectContainer());
+
+        extendingSpikes.setId((short) 0x96);
+        extendingSpikes.setX(referenceObj.getX() - 20);
+        extendingSpikes.setY(referenceObj.getY() + 20);
+
+        extendingSpikes.getArgs().add((short)0);
+        extendingSpikes.getArgs().add((short)0);
+        extendingSpikes.getArgs().add((short)4);
+        extendingSpikes.getArgs().add((short)3);
+        extendingSpikes.getArgs().add((short)20);
+        extendingSpikes.getArgs().add((short)100);
+        extendingSpikes.getArgs().add((short)100);
+        extendingSpikes.getArgs().add((short)120);
+        extendingSpikes.getArgs().add((short)120);
+        extendingSpikes.getArgs().add((short)0);
+        extendingSpikes.getArgs().add((short)200);
+        extendingSpikes.getArgs().add((short)100);
+        extendingSpikes.getArgs().add((short)500);
+        extendingSpikes.getArgs().add((short)0);
+        extendingSpikes.getArgs().add((short)1);
+        extendingSpikes.getArgs().add((short)0);
+        extendingSpikes.getArgs().add((short)320);
+        extendingSpikes.getArgs().add((short)40);
+        extendingSpikes.getArgs().add((short)80);
+        extendingSpikes.getArgs().add((short)60);
+        extendingSpikes.getArgs().add((short)21);
+        extendingSpikes.getArgs().add((short)41);
+        extendingSpikes.getArgs().add((short)0);
+        extendingSpikes.getArgs().add((short)20);
+        extendingSpikes.getArgs().add((short)1);
+        extendingSpikes.getArgs().add((short)20);
+
+        extendingSpikes.getWriteByteOperations().add(new WriteByteOperation(flagIndex, ByteOp.ASSIGN_FLAG, 1));
+        extendingSpikes.getWriteByteOperations().add(new WriteByteOperation(flagIndex, ByteOp.ASSIGN_FLAG, 0));
+
+        referenceObj.getObjectContainer().getObjects().add(extendingSpikes);
+
+        GameObject failPuzzleSound = new GameObject(referenceObj.getObjectContainer());
+
+        failPuzzleSound.setId((short) 0x9b);
+        failPuzzleSound.setX(-1);
+        failPuzzleSound.setY(-1);
+
+        failPuzzleSound.getArgs().add((short)80);
+        failPuzzleSound.getArgs().add((short)120);
+        failPuzzleSound.getArgs().add((short)64);
+        failPuzzleSound.getArgs().add((short)0);
+        failPuzzleSound.getArgs().add((short)120);
+        failPuzzleSound.getArgs().add((short)64);
+        failPuzzleSound.getArgs().add((short)0);
+        failPuzzleSound.getArgs().add((short)25);
+        failPuzzleSound.getArgs().add((short)1);
+        failPuzzleSound.getArgs().add((short)5);
+        failPuzzleSound.getArgs().add((short)0);
+        failPuzzleSound.getArgs().add((short)10);
+        failPuzzleSound.getArgs().add((short)0);
+        failPuzzleSound.getArgs().add((short)0);
+        failPuzzleSound.getArgs().add((short)0);
+
+        failPuzzleSound.getTestByteOperations().add(new TestByteOperation(0xa7, ByteOp.FLAG_EQUALS, 2));
+        failPuzzleSound.getTestByteOperations().add(new TestByteOperation(flagIndex, ByteOp.FLAG_EQUALS, 1));
+
+        referenceObj.getObjectContainer().getObjects().add(0, failPuzzleSound);
+    }
+
+    public static void addZebuDais(ObjectContainer screen) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x08);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)120);
+        obj.getArgs().add((short)-1);
+        obj.getArgs().add((short)2);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)660);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)1);
+        obj.getArgs().add((short)10);
+        obj.getArgs().add((short)60);
+        obj.setX(360);
+        obj.setY(420);
+
+        if("Zebu".equals(Settings.getCurrentGiant())) {
+            obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
+            obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
+            obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+
+            addSuccessSound(screen);
+        }
+        else {
+            obj.getTestByteOperations().add(new TestByteOperation(0x009, ByteOp.FLAG_EQUALS, 0));
+            obj.getWriteByteOperations().add(new WriteByteOperation(0x009, ByteOp.ASSIGN_FLAG, 1));
+
+            addExtendingSpikes(obj, 0x009);
+        }
+        screen.getObjects().add(obj);
+    }
+
+    public static void addSuccessSound(ObjectContainer objectContainer) {
+        GameObject successSound = new GameObject(objectContainer);
+        successSound.setId((short)0x9b);
+        successSound.setX(-1);
+        successSound.setY(-1);
+        successSound.getArgs().add((short)30);
+        successSound.getArgs().add((short)120);
+        successSound.getArgs().add((short)64);
+        successSound.getArgs().add((short)0);
+        successSound.getArgs().add((short)120);
+        successSound.getArgs().add((short)64);
+        successSound.getArgs().add((short)0);
+        successSound.getArgs().add((short)25);
+        successSound.getArgs().add((short)1);
+        successSound.getArgs().add((short)5);
+        successSound.getArgs().add((short)0);
+        successSound.getArgs().add((short)10);
+        successSound.getArgs().add((short)0);
+        successSound.getArgs().add((short)0);
+        successSound.getArgs().add((short)0);
+
+        successSound.getTestByteOperations().add(new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2));
+        successSound.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
+        successSound.getTestByteOperations().add(new TestByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+
+        objectContainer.getObjects().add(0, successSound);
+    }
+
+    /**
      * Add 0x98 object
      * @param screen to add to
      * @param x position
@@ -6136,6 +6227,7 @@ public final class AddObject {
 
         screen.getObjects().add(warpDoor);
     }
+
     /**
      * Add 0x2e object
      * @param screen to add to

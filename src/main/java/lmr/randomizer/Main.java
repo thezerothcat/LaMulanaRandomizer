@@ -528,6 +528,7 @@ public class Main {
         determineStartingLocation(random);
         determineStartingWeapon(random);
         determineFoolsGameplay(random);
+        determineGiant(random);
 
         BacksideDoorRandomizer backsideDoorRandomizer = new BacksideDoorRandomizer();
         backsideDoorRandomizer.determineDoorDestinations(random);
@@ -1361,6 +1362,13 @@ public class Main {
 //        Settings.setCurrentBossCount(random.nextInt((Settings.isFools2021Mode() ? 4 : 5) - ankhJewelsRemoved) + 4); // todo: how do ankh jewels removed factor in?
         Settings.setCurrentBossCount(7);
         FileUtils.logFlush("Using random boss count: " + Settings.getCurrentBossCount());
+    }
+
+    private static void determineGiant(Random random) {
+        if(Settings.isFools2021Mode()) {
+            List<String> giants = Arrays.asList("Zebu", "Bado", "Migela", "Ledo", "Abuto", "Ji", "Ribu", "Sakit"); // not Futo
+            Settings.setCurrentGiant(giants.get(random.nextInt(giants.size())));
+        }
     }
 
     private static void determineRemovedItems(int totalItemsRemoved, Random random) {

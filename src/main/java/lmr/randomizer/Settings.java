@@ -21,6 +21,7 @@ public final class Settings {
     public static List<String> currentCursedChests;
     public static String currentStartingWeapon;
     public static Integer currentStartingLocation;
+    public static String currentGiant;
     public static Integer currentBossCount;
 
     private static Settings singleton = new Settings();
@@ -843,6 +844,14 @@ public final class Settings {
         singleton.currentStartingLocation = currentStartingLocation;
     }
 
+    public static String getCurrentGiant() {
+        return singleton.currentGiant == null ? "Futo" : singleton.currentGiant;
+    }
+
+    public static void setCurrentGiant(String currentGiant) {
+        singleton.currentGiant = currentGiant;
+    }
+
     public static List<String> getCurrentCursedChests() {
         if(singleton.randomizeCursedChests) {
             return singleton.currentCursedChests;
@@ -879,6 +888,10 @@ public final class Settings {
 //    }
 
     public static boolean isHalloweenMode() {
+        return false;
+    }
+
+    public static boolean isFools2019Mode() {
         return false;
     }
 
