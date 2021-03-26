@@ -450,6 +450,9 @@ public class HolidayModePlacements {
             customItemPlacement = new CustomItemPlacement("Coin: Twin (Escape)", "Pepper", null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
+            customItemPlacement = new CustomItemPlacement("Flare Gun", "Glove", null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
             customItemPlacement = new CustomItemPlacement("Shop 18 (Lil Bro) Item 1", "Weights", null, null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 

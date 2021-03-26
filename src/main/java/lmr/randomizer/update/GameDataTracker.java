@@ -7407,9 +7407,12 @@ public final class GameDataTracker {
             AddObject.addItemGive(objectToModify, inventoryArg, itemRandomizeGraphicsFlag, newWorldFlag);
         }
 
-        if(Settings.isFools2020Mode()) {
-            if(itemLocationData.getInventoryArg() == 11) {
+        if(itemLocationData.getInventoryArg() == 11) {
+            if(Settings.isFools2020Mode()) {
                 objectToModify.getTestByteOperations().add(new TestByteOperation(0x1b3, ByteOp.FLAG_GTEQ, 2));
+            }
+            if(Settings.isFools2021Mode()) {
+                objectToModify.getTestByteOperations().add(new TestByteOperation(0x1b7, ByteOp.FLAG_GTEQ, 2));
             }
         }
     }

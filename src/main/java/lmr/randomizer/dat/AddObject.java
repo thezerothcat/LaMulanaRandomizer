@@ -2514,7 +2514,7 @@ public final class AddObject {
         screen.getObjects().add(platform);
     }
 
-    public static void addInfernoFakeWeaponCover(Screen screen) {
+    public static void addInfernoFakeWeaponCover(Screen screen, List<TestByteOperation> tests) {
         GameObject weaponCover = new GameObject(screen);
         weaponCover.setId((short)0x93);
         weaponCover.setX(20);
@@ -2545,7 +2545,7 @@ public final class AddObject {
         weaponCover.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
         weaponCover.getArgs().add((short)1); // not0?
 
-        weaponCover.getTestByteOperations().add(new TestByteOperation(0x1b3, ByteOp.FLAG_LT, 2));
+        weaponCover.getTestByteOperations().addAll(tests);
 
         screen.getObjects().add(weaponCover);
     }

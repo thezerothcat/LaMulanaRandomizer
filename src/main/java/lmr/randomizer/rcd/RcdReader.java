@@ -353,6 +353,13 @@ public final class RcdReader {
                     else if (screen.getZoneIndex() == 1 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
                         obj.setY(obj.getY() + 120);
                     }
+                    else if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                        for(WriteByteOperation writeByteOperation : obj.getWriteByteOperations()) {
+                            if(writeByteOperation.getIndex() == 0x1b7) {
+                                writeByteOperation.setIndex(0x1b3);
+                            }
+                        }
+                    }
                     else if (screen.getZoneIndex() == 12 && screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
                         keepObject = false; // Remove Philosopher's Ocarina chest from Moonlight.
                     }
@@ -360,7 +367,7 @@ public final class RcdReader {
             }
         }
         else if(obj.getId() == 0x2d) {
-            if(Settings.isFools2020Mode()) {
+            if(Settings.isFools2020Mode() || Settings.isFools2021Mode()) {
                 // Remove weapon cover from Flare puzzle room
                 if(objectContainer instanceof Screen) {
                     Screen screen = (Screen)objectContainer;
@@ -2837,9 +2844,14 @@ public final class RcdReader {
                 }
             }
             else if(roomIndex == 4) {
-                if(Settings.isFools2020Mode()) {
-                    if(screenIndex == 0) {
-                        AddObject.addInfernoFakeWeaponCover(screen);
+                if(screenIndex == 0) {
+                    if(Settings.isFools2020Mode()) {
+                        AddObject.addInfernoFakeWeaponCover(screen,
+                                Arrays.asList(new TestByteOperation(0x1b3, ByteOp.FLAG_LT, 2)));
+                    }
+                    if(Settings.isFools2021Mode()) {
+                        AddObject.addInfernoFakeWeaponCover(screen,
+                                Arrays.asList(new TestByteOperation(0x1b7, ByteOp.FLAG_LT, 2)));
                     }
                 }
             }
