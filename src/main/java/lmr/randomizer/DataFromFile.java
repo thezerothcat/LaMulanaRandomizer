@@ -47,7 +47,7 @@ public final class DataFromFile {
             16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 37, 38, 39, 40, 41, 42, 43,
             44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
             71, 72, 73, 75, 76, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104);
-    public static List<Integer> STARTING_LOCATIONS = Arrays.asList(0, 2, 5, 7, -7, 8, 10, 11, 13, 16, 21);
+    public static List<Integer> STARTING_LOCATIONS = Arrays.asList(0, 1, 2, 5, 7, -7, 8, 10, 11, 13, 16, 21);
     public static List<String> NPC_LOCATIONS = Arrays.asList("Location: Surface [Main]", "Location: Gate of Guidance [Main]",
             "Location: Mausoleum of the Giants", "Location: Temple of the Sun [Sphinx]", "Location: Spring in the Sky [Main]",
             "Location: Inferno Cavern [Main]", "Location: Chamber of Extinction [Main]", "Location: Chamber of Extinction [Ankh Lower]",

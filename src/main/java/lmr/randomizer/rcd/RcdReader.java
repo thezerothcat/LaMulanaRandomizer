@@ -309,6 +309,37 @@ public final class RcdReader {
                             }
                         }
                     }
+                    else if(screen.getZoneIndex() == 1 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                        // Surface walls
+                        for (TestByteOperation testByteOperation: obj.getTestByteOperations()) {
+                            if (testByteOperation.getIndex() == 0x14b) {
+                                testByteOperation.setIndex(0x151);
+                            }
+                            else if (testByteOperation.getIndex() == 0x151) {
+                                testByteOperation.setIndex(0x14b);
+                            }
+                            else if (testByteOperation.getIndex() == 0x00b) {
+                                testByteOperation.setIndex(0x00d);
+                            }
+                            else if (testByteOperation.getIndex() == 0x00d) {
+                                testByteOperation.setIndex(0x00b);
+                            }
+                        }
+                        for (WriteByteOperation writeByteOperation : obj.getWriteByteOperations()) {
+                            if (writeByteOperation.getIndex() == 0x14b) {
+                                writeByteOperation.setIndex(0x151);
+                            }
+                            else if (writeByteOperation.getIndex() == 0x151) {
+                                writeByteOperation.setIndex(0x14b);
+                            }
+                            else if (writeByteOperation.getIndex() == 0x00b) {
+                                writeByteOperation.setIndex(0x00d);
+                            }
+                            else if (writeByteOperation.getIndex() == 0x00d) {
+                                writeByteOperation.setIndex(0x00b);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -318,6 +349,9 @@ public final class RcdReader {
                     Screen screen = (Screen)objectContainer;
                     if (screen.getZoneIndex() == 0 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
                         keepObject = false; // Remove Treasures chest from Guidance.
+                    }
+                    else if (screen.getZoneIndex() == 1 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                        obj.setY(obj.getY() + 120);
                     }
                     else if (screen.getZoneIndex() == 12 && screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
                         keepObject = false; // Remove Philosopher's Ocarina chest from Moonlight.
@@ -404,6 +438,20 @@ public final class RcdReader {
                                 keepObject = false;
                                 break;
                             }
+                        }
+                    }
+                }
+                else if(screen.getZoneIndex() == 1 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                    if(Settings.isFools2021Mode()) {
+                        if(obj.getWriteByteOperations().isEmpty()) {
+                            obj.getTestByteOperations().clear();
+                            obj.getTestByteOperations().add(new TestByteOperation(0x151, ByteOp.FLAG_EQUALS, 0));
+                            obj.getWriteByteOperations().add(new WriteByteOperation(0x151, ByteOp.ASSIGN_FLAG, 2));
+                        }
+                        else {
+                            obj.getTestByteOperations().clear();
+                            obj.getTestByteOperations().add(new TestByteOperation(0x14b, ByteOp.FLAG_EQUALS, 0));
+                            obj.getWriteByteOperations().clear();
                         }
                     }
                 }
@@ -1014,6 +1062,14 @@ public final class RcdReader {
                     Screen screen = (Screen) objectContainer;
                     if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 15 && screen.getScreenIndex() == 0) {
                         keepObject = false;
+                    }
+                }
+            }
+            if(Settings.isFools2021Mode()) {
+                if(objectContainer instanceof Screen) {
+                    Screen screen = (Screen) objectContainer;
+                    if(screen.getZoneIndex() == 1 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                        obj.setY(obj.getY() - 120);
                     }
                 }
             }
