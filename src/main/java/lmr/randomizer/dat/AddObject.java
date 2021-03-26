@@ -2301,7 +2301,7 @@ public final class AddObject {
         objectContainer.getObjects().add(bat);
     }
 
-    public static void addExplosion(ObjectContainer objectContainer, int xPos, int yPos, int newWorldFlag, int damage, boolean percentDamage) {
+    public static void addExplosion(ObjectContainer objectContainer, int xPos, int yPos, int explosionTriggerFlag, int damage, boolean percentDamage) {
         GameObject explosion = new GameObject(objectContainer);
         explosion.setId((short)0xb4);
         explosion.setX(xPos - 80);
@@ -2314,17 +2314,8 @@ public final class AddObject {
         explosion.getArgs().add((short)damage); // Damage
         explosion.getArgs().add((short)85); // sound effect select
 
-        TestByteOperation testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(newWorldFlag);
-        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-        testByteOperation.setValue((byte)1);
-        explosion.getTestByteOperations().add(testByteOperation);
-
-        WriteByteOperation writeByteOperation = new WriteByteOperation();
-        writeByteOperation.setIndex(newWorldFlag);
-        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
-        writeByteOperation.setValue(2);
-        explosion.getWriteByteOperations().add(writeByteOperation);
+        explosion.getTestByteOperations().add(new TestByteOperation(explosionTriggerFlag, ByteOp.FLAG_EQUALS, 1));
+        explosion.getWriteByteOperations().add(new WriteByteOperation(explosionTriggerFlag, ByteOp.ASSIGN_FLAG, 2));
 
         objectContainer.getObjects().add(explosion);
     }
@@ -6087,7 +6078,7 @@ public final class AddObject {
         extendingSpikes.getArgs().add((short)0);
         extendingSpikes.getArgs().add((short)4);
         extendingSpikes.getArgs().add((short)3);
-        extendingSpikes.getArgs().add((short)20);
+        extendingSpikes.getArgs().add((short)0); // Activation delay
         extendingSpikes.getArgs().add((short)100);
         extendingSpikes.getArgs().add((short)100);
         extendingSpikes.getArgs().add((short)120);
@@ -6147,7 +6138,7 @@ public final class AddObject {
         GameObject obj = new GameObject(screen);
         obj.setId((short)0x08);
         obj.getArgs().add((short)0);
-        obj.getArgs().add((short)120);
+        obj.getArgs().add((short)10); // Falling speed
         obj.getArgs().add((short)-1);
         obj.getArgs().add((short)2);
         obj.getArgs().add((short)0);

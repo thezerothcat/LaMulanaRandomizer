@@ -877,6 +877,11 @@ public final class Settings {
                 return String.format("Medicine of the Mind (%s)", Settings.getMedicineColor());
             }
         }
+        if(Settings.isFools2021Mode()) {
+            if("Woman Statue".equals(originalContents)) {
+                return "Maternity Statue";
+            }
+        }
 //        if("Djed Pillar".equals(originalContents)) {
 //            newContents = "Ankh Jewel (Extra)";
 //        }

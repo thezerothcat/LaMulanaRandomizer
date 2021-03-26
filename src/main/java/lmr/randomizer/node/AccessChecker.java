@@ -124,6 +124,14 @@ public class AccessChecker {
                 if(!accessedNodes.contains(requiredItem)) {
                     FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
                     if(accessedNodes.size() > 500 || Settings.isDetailedLoggingAttempt(attemptNumber)) {
+                        List<String> defeatedBosses = new ArrayList<>();
+                        for(String bossDefeat : DataFromFile.GUARDIAN_DEFEATED_EVENTS) {
+                            if(accessedNodes.contains(bossDefeat)) {
+                                defeatedBosses.add(bossDefeat);
+                            }
+                        }
+                        FileUtils.log("Bosses defeated: " + defeatedBosses.toString());
+                        FileUtils.log("Bosses accessible: " + accessibleBossNodes.toString());
                         List<String> logged = new ArrayList<>();
                         if (requiredItem.startsWith("Event:")) {
                             logAccess(requiredItem, logged);
@@ -171,6 +179,14 @@ public class AccessChecker {
             if(!accessedNodes.contains(requiredItem)) {
                 FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
                 if(accessedNodes.size() > 500 || Settings.isDetailedLoggingAttempt(attemptNumber)) {
+                    List<String> defeatedBosses = new ArrayList<>();
+                    for(String bossDefeat : DataFromFile.GUARDIAN_DEFEATED_EVENTS) {
+                        if(accessedNodes.contains(bossDefeat)) {
+                            defeatedBosses.add(bossDefeat);
+                        }
+                    }
+                    FileUtils.log("Bosses defeated: " + defeatedBosses.toString());
+                    FileUtils.log("Bosses accessible: " + accessibleBossNodes.toString());
                     List<String> logged = new ArrayList<>();
                     if (requiredItem.startsWith("Event:") || requiredItem.startsWith("Location:")) {
                         logAccess(requiredItem, logged);

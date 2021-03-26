@@ -438,7 +438,6 @@ public class HolidayModePlacements {
             DataFromFile.getCustomPlacementData().setAutomaticMantras(true);
             DataFromFile.getCustomPlacementData().setAlternateMotherAnkh(false);
             DataFromFile.getCustomPlacementData().setMedicineColor("Yellow");
-            DataFromFile.getCustomPlacementData().setStartingLocation(0);
 
             List<String> removedItems = DataFromFile.getCustomPlacementData().getRemovedItems();
             if (!removedItems.contains("Ankh Jewel (Chamber of Birth)")) {
@@ -458,6 +457,61 @@ public class HolidayModePlacements {
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
             customItemPlacement = new CustomItemPlacement("Shop 21 (Unsolvable) Item 1", "Weights", null, null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            // Sun
+            customItemPlacement = new CustomItemPlacement("Coin: Sun (Pyramid)", "Coin: Sun (Pyramid)", null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Ankh Jewel (Temple of the Sun)", "Ankh Jewel (Chamber of Birth)", null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Book of the Dead", "Map (Surface)", null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Bronze Mirror", "Map (Gate of Illusion)", null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Isis' Pendant", "Map (Temple of Moonlight)", null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Knife", "Map (Graveyard of the Giants)", null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Map (Temple of the Sun)", "Map (Gate of Guidance)", null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Sacred Orb (Temple of the Sun)", "Map (Endless Corridor)", null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Talisman", "Map (Dimensional Corridor)", null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 8 (Sun) Item 1", "Weights", null, null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 8 (Sun) Item 2", "Weights", null, null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 8 (Sun) Item 3", "Weights", null, null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 9 (Sun) Item 1", "Weights", null, null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 9 (Sun) Item 2", "Weights", null, null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 9 (Sun) Item 3", "Weights", null, null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 10 (Sun) Item 1", "Weights", null, null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 10 (Sun) Item 2", "Weights", null, null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 10 (Sun) Item 3", "Weights", null, null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
             List<CustomTransitionPlacement> transitions = DataFromFile.getCustomPlacementData().getCustomTransitionPlacements();

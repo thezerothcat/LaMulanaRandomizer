@@ -612,6 +612,24 @@ public final class RcdReader {
                     }
                 }
 
+                if(screen.getZoneIndex() == 17 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                    // Dimensional - Umu Dabrutu's room
+                    if (Settings.isFools2021Mode()) {
+                        if(obj.getY() > 300) {
+                            if(obj.getX() == 700) {
+                                obj.getArgs().set(4, (short)7);
+                                obj.getTestByteOperations().add(new TestByteOperation(0x008, ByteOp.FLAG_EQUALS, 0));
+                                obj.getWriteByteOperations().add(new WriteByteOperation(0x008, ByteOp.FLAG_EQUALS, 1));
+                            }
+                            else { // if(obj.getX() == 1200) {
+                                obj.getArgs().set(4, (short)7);
+                                obj.getTestByteOperations().add(new TestByteOperation(0x009, ByteOp.FLAG_EQUALS, 0));
+                                obj.getWriteByteOperations().add(new WriteByteOperation(0x009, ByteOp.FLAG_EQUALS, 1));
+                            }
+                        }
+                    }
+                }
+
                 if(screen.getZoneIndex() == 21 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
                     // Pot in retro surface now has coins
                     obj.getArgs().set(0, (short)1);
@@ -638,20 +656,32 @@ public final class RcdReader {
                             if("Migela".equals(Settings.getCurrentGiant())) {
                                 keepObject = false;
                             }
+                            else {
+                                obj.getArgs().set(4, (short)0); // Activation delay
+                            }
                         }
                         else if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
                             if("Bado".equals(Settings.getCurrentGiant())) {
                                 keepObject = false;
+                            }
+                            else {
+                                obj.getArgs().set(4, (short)0); // Activation delay
                             }
                         }
                         else if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 2) {
                             if("Ledo".equals(Settings.getCurrentGiant())) {
                                 keepObject = false;
                             }
+                            else {
+                                obj.getArgs().set(4, (short)0); // Activation delay
+                            }
                         }
                         else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
                             if("Abuto".equals(Settings.getCurrentGiant())) {
                                 keepObject = false;
+                            }
+                            else {
+                                obj.getArgs().set(4, (short)0); // Activation delay
                             }
                         }
                         else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
@@ -659,10 +689,16 @@ public final class RcdReader {
                                 if("Sakit".equals(Settings.getCurrentGiant())) {
                                     keepObject = false;
                                 }
+                                else {
+                                    obj.getArgs().set(4, (short)0); // Activation delay
+                                }
                             }
                             else { //if(obj.getX() == 1120) {
                                 if("Ji".equals(Settings.getCurrentGiant())) {
                                     keepObject = false;
+                                }
+                                else {
+                                    obj.getArgs().set(4, (short)0); // Activation delay
                                 }
                             }
                         }
@@ -686,9 +722,14 @@ public final class RcdReader {
                                     obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
                                     obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
                                 }
+                                else {
+                                    obj.getArgs().set(1, (short)10); // Falling speed
+                                }
                             }
                             else {
                                 // Futo
+                                obj.getArgs().set(1, (short)10); // Falling speed
+
                                 obj.getTestByteOperations().clear();
                                 obj.getTestByteOperations().add(new TestByteOperation(0x008, ByteOp.FLAG_EQUALS, 0));
 
@@ -707,6 +748,9 @@ public final class RcdReader {
                                 obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
                                 obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
                             }
+                            else {
+                                obj.getArgs().set(1, (short)10); // Falling speed
+                            }
                         }
                         else if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 2) {
                             if(obj.getY() == 340) {
@@ -719,6 +763,9 @@ public final class RcdReader {
                                     obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
                                     obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
                                 }
+                                else {
+                                    obj.getArgs().set(1, (short)10); // Falling speed
+                                }
                             }
                         }
                         else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
@@ -729,6 +776,9 @@ public final class RcdReader {
                                 obj.getWriteByteOperations().clear();
                                 obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
                                 obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                            }
+                            else {
+                                obj.getArgs().set(1, (short)10); // Falling speed
                             }
                         }
                         else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
@@ -742,6 +792,9 @@ public final class RcdReader {
                                     obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
                                     obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
                                 }
+                                else {
+                                    obj.getArgs().set(1, (short)10); // Falling speed
+                                }
                             }
                             else { //if(obj.getX() == 1140) {
                                 if("Ji".equals(Settings.getCurrentGiant())) {
@@ -752,6 +805,9 @@ public final class RcdReader {
                                     obj.getWriteByteOperations().clear();
                                     obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
                                     obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                                }
+                                else {
+                                    obj.getArgs().set(1, (short)10); // Falling speed
                                 }
                             }
                         }
@@ -2596,7 +2652,6 @@ public final class RcdReader {
                 AddObject.addHardmodeToggleWeights(screen);
             }
             if(roomIndex == 4 && screenIndex == 0) {
-                // Migela/Futo
                 AddObject.addZebuDais(screen);
             }
             if(roomIndex == 8 && screenIndex == 1) {
@@ -2613,6 +2668,8 @@ public final class RcdReader {
             if(roomIndex == 4 && screenIndex == 3) {
                 if(Settings.isFools2021Mode()) {
                     AddObject.addPot(screen, 40, 480, 1, new ArrayList<>(0));
+                    AddObject.addPot(screen, 40, 640, 1, new ArrayList<>(0));
+                    AddObject.addPot(screen, 40, 800, 1, new ArrayList<>(0));
                 }
             }
             else if(roomIndex == 4 && screenIndex == 5) {
@@ -2876,6 +2933,12 @@ public final class RcdReader {
                                     new TestByteOperation(0x0fd, ByteOp.FLAG_LT, 2),
                                     new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                }
+            }
+            else if(roomIndex == 9 && screenIndex == 1) {
+                if(Settings.isFools2021Mode()) {
+                    AddObject.addExplosion(screen, 700, 320, 0x008, 50, true);
+                    AddObject.addExplosion(screen, 1200, 400, 0x009, 50, true);
                 }
             }
             if(Settings.isFeatherlessMode()) {

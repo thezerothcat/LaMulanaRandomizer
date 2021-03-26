@@ -824,6 +824,18 @@ public final class GameDataTracker {
                 enemyObjects.add(gameObject);
             }
         }
+        else if (gameObject.getId() == 0x84) {
+            // Umu Dabrutu
+            if(Settings.isFools2021Mode()) {
+                gameObject.getArgs().set(3, (short)30); // HP
+            }
+        }
+        else if (gameObject.getId() == 0x85) {
+            // Urmahlullu
+            if(Settings.isFools2021Mode()) {
+                gameObject.getArgs().set(3, (short)30); // HP
+            }
+        }
 //        else if (gameObject.getId() == 0x87) {
 //            // Kuusarikku
 //            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
@@ -846,6 +858,13 @@ public final class GameDataTracker {
 //                }
 //            }
 //        }
+        else if (gameObject.getId() == 0x8a) {
+            // Mushnahhu
+            if(Settings.isFools2021Mode()) {
+                gameObject.getArgs().set(3, (short)1); // HP per worm
+//                gameObject.getArgs().set(4, (short)1); // Contact damage for worms
+            }
+        }
 //        else if (gameObject.getId() == 0x8d) {
 //            // Ushum
 //            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
@@ -2288,7 +2307,12 @@ public final class GameDataTracker {
                     if(Settings.isFoolsNpc()) {
                         mapOfNpcLocationToObject.put("NPCL: Sturdy Snake", gameObject);
                     }
-               }
+                }
+                else if(blockNumber == 321){
+                    if(Settings.isFoolsNpc()) {
+                        mapOfNpcLocationToObject.put("NPCL: Mechanical Efspi", gameObject);
+                    }
+                }
             }
             else if(blockNumber == 915) {
                 // Mini Doll conversation
@@ -2665,6 +2689,9 @@ public final class GameDataTracker {
             else if(blockNumber == 701) {
                 // Priest Laydoc - Ruin NPC, 14-00-01
                 npcObjects.add(gameObject);
+                if(Settings.isFoolsNpc()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Laydoc", gameObject);
+                }
             }
             else if(blockNumber == 702) {
                 // Priest Ashgine - Birth NPC, 16-01-00

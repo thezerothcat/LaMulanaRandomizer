@@ -36,6 +36,9 @@ public final class NpcObjectUpdates {
         if("NPC: Mr. Fishman (Alt)".equals(npcAssigned)) {
             return true;
         }
+        if("NPC: Mechanical Efspi".equals(npcAssigned)) {
+            return true;
+        }
         return false;
     }
 
@@ -54,6 +57,12 @@ public final class NpcObjectUpdates {
         }
         if("NPC: Mr. Fishman (Alt)".equals(npcAssigned)) {
             return 133;
+        }
+        if("NPC: Mechanical Efspi".equals(npcAssigned)) {
+            return 321;
+        }
+        if("NPC: Priest Laydoc".equals(npcAssigned)) {
+            return 701;
         }
         return 0;
     }

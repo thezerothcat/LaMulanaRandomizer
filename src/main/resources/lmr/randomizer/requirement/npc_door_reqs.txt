@@ -7,4 +7,17 @@ NPCL: Yiegah Kungfu => Location: Twin Labyrinths [Loop]
 #NPCL: Yiear Kungfu => Location: Twin Labyrinths [Loop], NPC: Yiegah Kungfu
 NPCL: Sturdy Snake => Location: Twin Labyrinths [Lower], Feather
 NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], State: Block Pushing, Feather, Attack: Bomb
+# Tower of Ruin
 NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], Glitch: Raindrop
+NPCL: Priest Laydoc => Location: Tower of Ruin [Southwest] # Surprisingly doesn't need boots
+NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Below, Feather
+NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Below, Grapple Claw
+NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Earth Spear, Feather
+NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Earth Spear, Grapple Claw
+NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Bomb, Grapple Claw
+NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Bomb, Feather
+NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Bomb, Boost: Item
+NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Rolling Shuriken, Grapple Claw
+NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Rolling Shuriken, Feather
+NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Caltrops, Feather
+NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Caltrops, Grapple Claw
