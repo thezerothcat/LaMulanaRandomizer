@@ -101,6 +101,8 @@ public final class Settings {
     private BossDifficulty bossDifficulty;
     private ShopRandomizationEnum shopRandomization;
 
+    public static byte[] goddessMsdBytes; // A way around doing msd edits properly.
+
     private Settings() {
         startingSeed = new Random().nextInt(Integer.MAX_VALUE);
         laMulanaBaseDir = "Please enter your La-Mulana install directory";

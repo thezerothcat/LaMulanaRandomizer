@@ -1669,7 +1669,42 @@ public final class RcdReader {
                 room.setHitMaskHeight(getField(msdBytes, msdByteIndex, 2).getShort());
                 msdByteIndex += 2;
 
-                msdByteIndex += room.getHitMaskWidth() * room.getHitMaskHeight();
+                if(Settings.isFools2021Mode() && zoneIndex == 13) {
+                    for(int i = 0; i < room.getHitMaskWidth() * room.getHitMaskHeight(); i ++) {
+                        byte hitMask = msdBytes[msdByteIndex + i];
+                        if(hitMask == 0x05) {
+                            msdBytes[msdByteIndex + i] = 0x10;
+                        }
+                        if(hitMask == 0x06) {
+                            msdBytes[msdByteIndex + i] = 0x11;
+                        }
+                        if(hitMask == 0x07) {
+                            msdBytes[msdByteIndex + i] = 0x12;
+                        }
+                        if(hitMask == 0x08) {
+                            msdBytes[msdByteIndex + i] = 0x13;
+                        }
+                        if(hitMask == 0x09) {
+                            msdBytes[msdByteIndex + i] = 0x14;
+                        }
+                        if(hitMask == 0x0a) {
+                            msdBytes[msdByteIndex + i] = 0x15;
+                        }
+                        if(hitMask == 0x0b) {
+                            msdBytes[msdByteIndex + i] = 0x16;
+                        }
+                        if(hitMask == 0x0c) {
+                            msdBytes[msdByteIndex + i] = 0x17;
+                        }
+                        if(hitMask == 0x0d) {
+                            msdBytes[msdByteIndex + i] = 0x18;
+                        }
+                    }
+                    msdByteIndex += room.getHitMaskWidth() * room.getHitMaskHeight();
+                }
+                else {
+                    msdByteIndex += room.getHitMaskWidth() * room.getHitMaskHeight();
+                }
 
                 for (int layerIndex = 0; layerIndex < room.getNumberOfLayers(); layerIndex++) {
                     short layerWidth = getField(msdBytes, msdByteIndex, 2).getShort();
@@ -1761,6 +1796,9 @@ public final class RcdReader {
                 zone.getRooms().add(room);
             }
             zones.add(zone);
+            if(Settings.isFools2021Mode() && zoneIndex == 13) {
+                Settings.goddessMsdBytes = msdBytes;
+            }
         }
         PotMover.addRemovedPots();
         return zones;

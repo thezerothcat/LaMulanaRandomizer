@@ -1211,6 +1211,19 @@ public class FileUtils {
         }
     }
 
+    public static void writeMsd() {
+        try {
+            DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(String.format("%d/map13.msd", Settings.getStartingSeed())));
+            for(byte msdByte : Settings.goddessMsdBytes) {
+                dataOutputStream.writeByte(msdByte);
+            }
+            dataOutputStream.flush();
+            dataOutputStream.close();
+        } catch (Exception ex) {
+
+        }
+    }
+
     public static void closeAll() {
         try {
             logWriter.flush();

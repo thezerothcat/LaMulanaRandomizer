@@ -258,6 +258,9 @@ public class Main {
             if(!backupDat()) {
                 return false; // Error messaging handled within
             }
+            if(!backupMsd()) {
+                return false; // Error messaging handled within
+            }
 
             progressDialog.updateProgress(15, Translations.getText("setup.dir"));
 
@@ -333,6 +336,33 @@ public class Main {
             return true;
         }
 
+        private boolean backupMsd() {
+            File msdFile = new File("map13.msd.bak");
+            if(!msdFile.exists()) {
+                File existingMsd = new File(Settings.getLaMulanaBaseDir(), "data/mapdata/map13.msd");
+                if(!existingMsd.exists()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Unable to find file " + existingMsd.getAbsolutePath(),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
+                try {
+                    // Make map13.msd backup
+                    FileOutputStream fileOutputStream = new FileOutputStream(new File("map13.msd.bak"));
+                    Files.copy(existingMsd.toPath(), fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                }
+                catch (Exception ex) {
+                    FileUtils.log("Unable to back up map13.msd: " + ex.getMessage());
+                    FileUtils.logException(ex);
+                    throw new RuntimeException("Unable to back up map13.msd. Please see logs for more information.");
+                }
+            }
+            return true;
+        }
+
         private boolean backupDat() {
             File datFile = new File(Settings.getBackupDatFile());
             if(!datFile.exists()) {
@@ -384,6 +414,14 @@ public class Main {
                 fileOutputStream.close();
                 FileUtils.logFlush("dat copy complete");
 
+                FileUtils.logFlush("Copying msd file from seed folder to La-Mulana install directory");
+                fileOutputStream = new FileOutputStream(new File(String.format("%s/data/mapdata/map13.msd",
+                        Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
+                Files.copy(new File(String.format("%s/map13.msd", Settings.getStartingSeed())).toPath(), fileOutputStream);
+                fileOutputStream.flush();
+                fileOutputStream.close();
+                FileUtils.logFlush("msd copy complete");
+
                 if(Settings.isSaveFileNeeded()) {
                     FileUtils.logFlush("Copying save file from seed folder to La-Mulana save directory");
                     File saveFile = new File(String.format("%s/lm_00.sav", Settings.getStartingSeed()));
@@ -415,11 +453,18 @@ public class Main {
                 fileOutputStream.flush();
                 fileOutputStream.close();
 
-                progressDialog.updateProgress(50, Translations.getText("restore.dat"));
+                progressDialog.updateProgress(30, Translations.getText("restore.dat"));
 
                 fileOutputStream = new FileOutputStream(new File(String.format("%s/data/language/%s/script_code.dat",
                         Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
                 Files.copy(new File(Settings.getBackupDatFile()).toPath(), fileOutputStream);
+                fileOutputStream.flush();
+                fileOutputStream.close();
+
+                progressDialog.updateProgress(60, Translations.getText("restore.msd"));
+
+                fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/map13.msd"));
+                Files.copy(new File("map13.msd.bak").toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
 
@@ -785,6 +830,10 @@ public class Main {
 
                 DatWriter.writeDat(datInfo);
                 FileUtils.logFlush("dat file successfully written");
+                FileUtils.logFlush("Writing msd file");
+
+                FileUtils.writeMsd();
+                FileUtils.logFlush("msd file successfully written");
                 if(Settings.isSaveFileNeeded()) {
                     backupSaves();
                     writeSaveFile();
@@ -1091,28 +1140,6 @@ public class Main {
 //                saveData[0x11 + 0x271] = 3;
 //            }
         }
-        if(Settings.isFools2021Mode()) {
-            saveData[0x11 + 0x178] = (byte)5; // ankh
-            saveData[0x11 + 0x064] = (byte)1; // guidance
-            saveData[0x11 + 0x065] = (byte)1; // maus
-            saveData[0x11 + 0x066] = (byte)1; // sun
-            saveData[0x11 + 0x067] = (byte)1; // spring
-            saveData[0x11 + 0x068] = (byte)1; // inferno
-            saveData[0x11 + 0x069] = (byte)1; // extinction
-            saveData[0x11 + 0x06a] = (byte)1; // twin-f
-            saveData[0x11 + 0x06b] = (byte)1; // endless
-            saveData[0x11 + 0x06d] = (byte)1; // illusion
-            saveData[0x11 + 0x06e] = (byte)1; // graveyard
-            saveData[0x11 + 0x06f] = (byte)1; // moonlight
-            saveData[0x11 + 0x070] = (byte)1; // goddess
-            saveData[0x11 + 0x071] = (byte)1; // ruin
-            saveData[0x11 + 0x072] = (byte)1; // birth
-            saveData[0x11 + 0x073] = (byte)1; // twin-b
-            saveData[0x11 + 0x074] = (byte)1; // dimensional
-            saveData[0x11 + 0x075] = (byte)1; // t-shrine
-
-            saveData[0x11 + 0x1cd] = (byte)1; // Default Extinction lighting
-        }
         if(Settings.isHalloweenMode()) {
             // Unlock Mulbruk so you can get Halloween hints.
             saveData[0x11 + 0x079] = (byte)1;
@@ -1156,6 +1183,28 @@ public class Main {
 
             // Default Extinction lighting
             saveData[0x11 + 0x1cd] = (byte)1;
+        }
+        if(Settings.isFools2021Mode()) {
+            saveData[0x11 + 0x178] = (byte)5; // ankh
+            saveData[0x11 + 0x064] = (byte)1; // guidance
+            saveData[0x11 + 0x065] = (byte)1; // maus
+            saveData[0x11 + 0x066] = (byte)1; // sun
+            saveData[0x11 + 0x067] = (byte)1; // spring
+            saveData[0x11 + 0x068] = (byte)1; // inferno
+            saveData[0x11 + 0x069] = (byte)1; // extinction
+            saveData[0x11 + 0x06a] = (byte)1; // twin-f
+            saveData[0x11 + 0x06b] = (byte)1; // endless
+            saveData[0x11 + 0x06d] = (byte)1; // illusion
+            saveData[0x11 + 0x06e] = (byte)1; // graveyard
+            saveData[0x11 + 0x06f] = (byte)1; // moonlight
+            saveData[0x11 + 0x070] = (byte)1; // goddess
+            saveData[0x11 + 0x071] = (byte)1; // ruin
+            saveData[0x11 + 0x072] = (byte)1; // birth
+            saveData[0x11 + 0x073] = (byte)1; // twin-b
+            saveData[0x11 + 0x074] = (byte)1; // dimensional
+            saveData[0x11 + 0x075] = (byte)1; // t-shrine
+
+            saveData[0x11 + 0x1cd] = (byte)1; // Default Extinction lighting
         }
 //        saveData[0x11 + 0x064] = 1;
 //        saveData[0x11 + 0x065] = 1;
