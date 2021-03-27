@@ -3440,22 +3440,34 @@ public final class RcdReader {
             if(Settings.isFools2021Mode()) {
                 if(roomIndex == 7 && screenIndex == 1) {
                     if("Bado".equals(Settings.getCurrentGiant())) {
-                        AddObject.addSuccessSound(screen);
+                        AddObject.addSuccessSound(screen, Arrays.asList(
+                                new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
+                                new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
+                                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
                     }
                 }
                 else if(roomIndex == 7 && screenIndex == 2) {
                     if("Ledo".equals(Settings.getCurrentGiant())) {
-                        AddObject.addSuccessSound(screen);
+                        AddObject.addSuccessSound(screen, Arrays.asList(
+                                new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
+                                new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
+                                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
                     }
                 }
                 else if(roomIndex == 8 && screenIndex == 0) {
                     if("Abuto".equals(Settings.getCurrentGiant())) {
-                        AddObject.addSuccessSound(screen);
+                        AddObject.addSuccessSound(screen, Arrays.asList(
+                                new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
+                                new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
+                                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
                     }
                 }
                 else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
                     if("Sakit".equals(Settings.getCurrentGiant()) || "Ji".equals(Settings.getCurrentGiant())) {
-                        AddObject.addSuccessSound(screen);
+                        AddObject.addSuccessSound(screen, Arrays.asList(
+                                new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
+                                new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
+                                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
                     }
                 }
             }

@@ -316,6 +316,7 @@ Exit: Twin Labyrinths [Lower] => Event: Twin Poison Cleared, Exit: Twin Labyrint
 Exit: Endless Corridor [1F] => Holy Grail
 Exit: Endless Corridor [1F] => State: Pre-Escape, Glitch: Raindrop
 Exit: Endless Corridor [1F] => Exit: Endless R1
+Exit: Endless Corridor [1F] => Exit: Endless L1 # Door left out of Endless
 Exit: Endless Corridor [1F] => Key of Eternity, Exit: Endless Corridor [2F]
 Exit: Endless Corridor [2F] => Holy Grail
 Exit: Endless Corridor [2F] => State: Pre-Escape, Glitch: Raindrop

@@ -1186,6 +1186,7 @@ public class Main {
         }
         if(Settings.isFools2021Mode()) {
             saveData[0x11 + 0x178] = (byte)5; // ankh
+
             saveData[0x11 + 0x064] = (byte)1; // guidance
             saveData[0x11 + 0x065] = (byte)1; // maus
             saveData[0x11 + 0x066] = (byte)1; // sun
@@ -1202,7 +1203,6 @@ public class Main {
             saveData[0x11 + 0x072] = (byte)1; // birth
             saveData[0x11 + 0x073] = (byte)1; // twin-b
             saveData[0x11 + 0x074] = (byte)1; // dimensional
-            saveData[0x11 + 0x075] = (byte)1; // t-shrine
 
             saveData[0x11 + 0x1cd] = (byte)1; // Default Extinction lighting
         }

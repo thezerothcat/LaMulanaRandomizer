@@ -1090,7 +1090,10 @@ public final class GameDataTracker {
                 }
                 else if(screen.getZoneIndex() == 8) {
                     // Endless
-                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                    if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Endless L1";
+                    }
+                    else if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
                         gateName = "Transition: Endless R1";
                     }
                     else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 3) {
@@ -5422,7 +5425,7 @@ public final class GameDataTracker {
         }
     }
 
-    public static void writeTransitionGate(String gateToUpdate, String gateDestination) {
+    public static void writeTransitionGate(String gateToUpdate, String gateDestination, boolean isEndlesL1Destination) {
         List<GameObject> objectsToModify = mapOfGateNameToTransitionGate.get(gateToUpdate);
         if(objectsToModify != null) {
             boolean firstObject = true;
@@ -5491,6 +5494,11 @@ public final class GameDataTracker {
                     // For every transition gate leading into Twin Labyrinths, the poison timer (but not the puzzle itself) will be reset,
                     // UNLESS this is a transition from the screen with the first dais into some other screen of Twin Labyrinths.
                     AddObject.addTwinLabsPoisonTimerRemoval(gameObject.getObjectContainer(), false);
+                    updateFirstObject = true;
+                }
+                if(firstObject && isEndlesL1Destination) {
+                    // Detector on the other side of the gate coming out of Endless corridor, to open the Map chest in Endless Corridor.
+                    AddObject.addEndlessCorridorLeftExitLemezaDetector(gameObject);
                     updateFirstObject = true;
                 }
                 if(firstObject && !LocationCoordinateMapper.isSurfaceStart() && "Transition: Surface R1".equals(gateToUpdate)) {
@@ -6392,11 +6400,7 @@ public final class GameDataTracker {
     private static void replaceTransitionGateFlags(GameObject gameObject, String gateToUpdate, String gateDestination) {
         if(gateToUpdate.equals("Transition: Illusion R2")) {
             // Add extra check for Fruit of Eden placed.
-            TestByteOperation testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(0x226);
-            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-            testByteOperation.setValue((byte)0);
-            gameObject.getTestByteOperations().add(testByteOperation);
+            gameObject.getTestByteOperations().add(new TestByteOperation(0x226, ByteOp.FLAG_NOT_EQUAL, 0));
         }
 
         if(gateDestination.startsWith("Transition: Shrine") && !"Transition: Shrine D3".equals(gateDestination)) {
@@ -6408,21 +6412,13 @@ public final class GameDataTracker {
                 testByteOperation.setValue((byte)9);
 
                 // Add extra check for not during escape, since escape door is different.
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(0x382);
-                testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-                testByteOperation.setValue((byte)1);
-                gameObject.getTestByteOperations().add(testByteOperation);
+                gameObject.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_NOT_EQUAL, 1));
             }
         }
         else if(gateDestination.equals("Transition: Illusion R1")
                 || gateDestination.equals("Transition: Illusion R2")) {
             // Add extra check for Fruit of Eden placed.
-            TestByteOperation testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(0x226);
-            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-            testByteOperation.setValue((byte)0);
-            gameObject.getTestByteOperations().add(testByteOperation);
+            gameObject.getTestByteOperations().add(new TestByteOperation(0x226, ByteOp.FLAG_NOT_EQUAL, 0));
         }
     }
 

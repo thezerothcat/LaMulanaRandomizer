@@ -13,6 +13,7 @@ import lmr.randomizer.update.GameObjectId;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class AddObject {
@@ -357,7 +358,7 @@ public final class AddObject {
     }
 
     /**
-     * Add a timer to set the flag for solving the Diary chest puzzle if the appropriate conditions are met.
+     * Add a lemeza detector to set the flag for making the goddess statue disappear.
      * @param transitionGate the gate to put the detector with
      */
     public static void addGoddessStatueLemezaDetector(GameObject transitionGate) {
@@ -385,6 +386,34 @@ public final class AddObject {
         obj.getWriteByteOperations().add(writeByteOperation);
 
         transitionGate.getObjectContainer().getObjects().add(obj);
+    }
+
+    /**
+     * Add a lemeza detector to set the flag for solving the Endless Corridor Map chest puzzle after leaving through the left exit of Endless Corridor
+     * @param transitionGate the gate to put the detector with
+     */
+    public static void addEndlessCorridorLeftExitLemezaDetector(GameObject transitionGate) {
+        GameObject obj = new GameObject(transitionGate.getObjectContainer());
+        obj.setId((short)0x14);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)2);
+        obj.getArgs().add((short)3);
+        obj.setX(transitionGate.getX() - 40);
+        obj.setY(transitionGate.getY() - 20);
+
+        obj.getTestByteOperations().add(new TestByteOperation(0x1f6, ByteOp.FLAG_EQUALS, 1));
+        obj.getWriteByteOperations().add(new WriteByteOperation(0x1f6, ByteOp.ASSIGN_FLAG, 2));
+        obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1)); // May need to add a sound effect, etc
+
+        transitionGate.getObjectContainer().getObjects().add(obj);
+
+        addSuccessSound(transitionGate.getObjectContainer(), Arrays.asList(
+                new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
+                new TestByteOperation(0x1f6, ByteOp.FLAG_EQUALS, 2),
+                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
     }
 
     /**
@@ -6155,7 +6184,10 @@ public final class AddObject {
             obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
             obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
 
-            addSuccessSound(screen);
+            addSuccessSound(screen, Arrays.asList(
+                    new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
+                    new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
+                    new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
         }
         else {
             obj.getTestByteOperations().add(new TestByteOperation(0x009, ByteOp.FLAG_EQUALS, 0));
@@ -6166,7 +6198,7 @@ public final class AddObject {
         screen.getObjects().add(obj);
     }
 
-    public static void addSuccessSound(ObjectContainer objectContainer) {
+    public static void addSuccessSound(ObjectContainer objectContainer, List<TestByteOperation> tests) {
         GameObject successSound = new GameObject(objectContainer);
         successSound.setId((short)0x9b);
         successSound.setX(-1);
@@ -6187,9 +6219,7 @@ public final class AddObject {
         successSound.getArgs().add((short)0);
         successSound.getArgs().add((short)0);
 
-        successSound.getTestByteOperations().add(new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2));
-        successSound.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
-        successSound.getTestByteOperations().add(new TestByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+        successSound.getTestByteOperations().addAll(tests);
 
         objectContainer.getObjects().add(0, successSound);
     }

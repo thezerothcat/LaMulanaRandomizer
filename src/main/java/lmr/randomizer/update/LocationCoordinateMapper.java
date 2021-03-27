@@ -397,9 +397,6 @@ public final class LocationCoordinateMapper {
             if(zone == 17) {
                 return 0xab9;
             }
-            if(zone == 18) {
-                return 0xaba;
-            }
         }
         return getOriginalGrailFlag(zone, front);
     }

@@ -36,6 +36,7 @@ Transition: Endless R1 => Location: Endless Corridor [1F]
 Transition: Endless U1 => Location: Endless Corridor [2F], Event: Giltoriyo Visited
 Transition: Endless D1 => Location: Endless Corridor [5F], State: Literacy, Event: Backbeard & Tai Sui Defeated, Attack: Chest
 Transition: Endless D1 => Location: Endless Corridor [5F], Glitch: Raindrop, Attack: Chest # There's a wall/row of pots between the left and right sides of 5F
+Transition: Endless L1 => Location: Endless Corridor [1F] # Door left out of Endless
 Transition: Shrine U1 => Location: True Shrine of the Mother
 Transition: Shrine U1 => Location: Shrine of the Mother [Main]
 Transition: Shrine D1 => Location: Shrine of the Mother [Lower]
