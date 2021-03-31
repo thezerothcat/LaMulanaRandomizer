@@ -2967,7 +2967,7 @@ public final class RcdReader {
             if(roomIndex == 5 && screenIndex == 1) {
                 if(Settings.isFools2021Mode()) {
                     AddObject.addFloatingItem(screen, 840, 400, 62, true,
-                            Arrays.asList(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0),
+                            Arrays.asList(new TestByteOperation(0x382, ByteOp.FLAG_GT, 0),
                                     new TestByteOperation(0xabd, ByteOp.FLAG_EQUALS, 0)),
                             Arrays.asList(new WriteByteOperation(0xabd, ByteOp.ASSIGN_FLAG, 1)));
                 }
