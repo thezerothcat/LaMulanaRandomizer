@@ -275,34 +275,68 @@ public final class DataFromFile {
                 if(!Settings.isFoolsGameplay() && itemName.startsWith("Ankh Jewel")) {
                     continue; // Don't remove ankh jewels unless it's allowed.
                 }
-                if("Holy Grail".equals(itemName) || "Dimensional Key".equals(itemName)
-                        || "Crystal Skull".equals(itemName) || "Pochette Key".equals(itemName)
+                if(Settings.isFools2021Mode()) {
+                    if(itemName.equals("Pepper")) {
+                        continue;
+                    }
+                    if(itemName.equals("Shell Horn")) {
+                        continue;
+                    }
+                    if(itemName.equals("guild.exe")) {
+                        continue;
+                    }
+                    if(itemName.equals("Buckler")) {
+                        continue;
+                    }
+                    if(itemName.equals("Fake Silver Shield")) {
+                        continue;
+                    }
+                    if(itemName.equals("Spaulder")) {
+                        continue;
+                    }
+                }
+                if("Crystal Skull".equals(itemName)) {
+                    if(!Settings.isFoolsGameplay()
+                        && (!Settings.isRandomizeTransitionGates() || !Settings.isRandomizeOneWayTransitions())) {
+                        // Crystal Skull is required for vanilla transitions Dimensional Corridor
+                        continue;
+                    }
+                }
+                if("Pochette Key".equals(itemName)) {
+                    if(!Settings.isFoolsGameplay()) {
+                        continue;
+                    }
+                }
+                if("Helmet".equals(itemName)) {
+                    if(!Settings.isFoolsGameplay()) {
+                        continue;
+                    }
+                }
+                if("Holy Grail".equals(itemName)
                         || "Philosopher's Ocarina".equals(itemName)
-                        || "Helmet".equals(itemName) || "Vessel".equals(itemName)
-                        || "Isis' Pendant".equals(itemName)
-                        || "Origin Seal".equals(itemName) || "Birth Seal".equals(itemName)
-                        || "Life Seal".equals(itemName) || "Death Seal".equals(itemName)) {
+                        || "Vessel".equals(itemName)
+                        || "Isis' Pendant".equals(itemName)) {
                     continue; // Things that should never be removed.
                 }
                 if(!Settings.isFeatherlessMode() && "Feather".equals(itemName)) {
                     continue;
                 }
-                if(Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
-                    continue; // Can't get Extinction grail without flares according to this logic.
+                if(!Settings.isFools2021Mode() && !Settings.isFoolsGameplay() && Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
+                    continue; // Can't get Extinction grail without flares according to this logic. Only matters if Extinction grail is required.
                 }
                 if(Settings.isRequireIceCapeForLava() && "Ice Cape".equals(itemName)) {
                     continue; // Needed for Viy
                 }
-                if(requireFruitOfEden && "Fruit of Eden".equals(itemName)) {
-                    continue; // Can't get Illusion grail without this.
+                if(!Settings.isFoolsGameplay() && requireFruitOfEden && "Fruit of Eden".equals(itemName)) {
+                    continue; // Can't get Illusion grail without this. Only matters if Illusion grail is required.
                 }
-                if(requireSerpentStaffAndChakrams && ("Chakram".equals(itemName) || "Serpent Staff".equals(itemName))) {
-                    continue; // Can't get Birth grail without these.
+                if(!Settings.isFoolsGameplay() && requireSerpentStaffAndChakrams && ("Chakram".equals(itemName) || "Serpent Staff".equals(itemName))) {
+                    continue; // Can't get Birth grail without these. Only matters if Birth grail is required.
                 }
                 if(requirePlaneModelAndTwinStatueAndLiteracy && ("Plane Model".equals(itemName) || "Twin Statue".equals(itemName))) {
                     continue; // Can't get to Birth grail area without Plane Model, Dimensional Corridor without Twin Statue.
                 }
-                if(requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
+                if(!Settings.isFoolsLogic() && requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
                     continue; // Earth Spear needed for Viy access. Bronze Mirror for VIY mantra statue.
                 }
                 if(Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName)) {

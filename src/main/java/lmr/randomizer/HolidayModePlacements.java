@@ -437,7 +437,6 @@ public class HolidayModePlacements {
         if(Settings.isFoolsGameplay()) {
             DataFromFile.getCustomPlacementData().setAutomaticMantras(true);
             DataFromFile.getCustomPlacementData().setAlternateMotherAnkh(false);
-            DataFromFile.getCustomPlacementData().setMedicineColor("Yellow");
 
             List<String> removedItems = DataFromFile.getCustomPlacementData().getRemovedItems();
             if (!removedItems.contains("Ankh Jewel (Chamber of Birth)")) {
@@ -453,13 +452,19 @@ public class HolidayModePlacements {
             customItemPlacement = new CustomItemPlacement("Flare Gun", "Glove", null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-            customItemPlacement = new CustomItemPlacement("Shop 18 (Lil Bro) Item 1", "Weights", null, null);
+            customItemPlacement = new CustomItemPlacement("Shop 18 (Lil Bro) Item 2", "Buckler", null, null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 18 (Lil Bro) Item 3", "Fake Silver Shield", null, null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 19 (Big Bro) Item 2", "Silver Shield", null, null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 19 (Big Bro) Item 3", "Angel Shield", null, null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
             customItemPlacement = new CustomItemPlacement("Shop 20 (Twin Labs) Item 1", "Weights", null, null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 21 (Unsolvable) Item 1", "Weights", null, null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
             // Sun
@@ -469,7 +474,7 @@ public class HolidayModePlacements {
             customItemPlacement = new CustomItemPlacement("Ankh Jewel (Temple of the Sun)", "Ankh Jewel (Chamber of Birth)", null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-            customItemPlacement = new CustomItemPlacement("Book of the Dead", "Map (Surface)", null);
+            customItemPlacement = new CustomItemPlacement("Book of the Dead", "xmailer.exe", null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
             customItemPlacement = new CustomItemPlacement("Bronze Mirror", "Map (Gate of Illusion)", null);
@@ -490,31 +495,40 @@ public class HolidayModePlacements {
             customItemPlacement = new CustomItemPlacement("Talisman", "Map (Dimensional Corridor)", null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-            customItemPlacement = new CustomItemPlacement("Shop 8 (Sun) Item 1", "Weights", null, null);
+            customItemPlacement = new CustomItemPlacement("Map (Shrine of the Mother)", "Map (Surface)", null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-            customItemPlacement = new CustomItemPlacement("Shop 8 (Sun) Item 2", "Weights", null, null);
+            customItemPlacement = new CustomItemPlacement("Shop 8 (Sun) Item 1", "Spaulder", null, null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-            customItemPlacement = new CustomItemPlacement("Shop 8 (Sun) Item 3", "Weights", null, null);
+            customItemPlacement = new CustomItemPlacement("Shop 8 (Sun) Item 2", "Spaulder", null, null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-            customItemPlacement = new CustomItemPlacement("Shop 9 (Sun) Item 1", "Weights", null, null);
+            customItemPlacement = new CustomItemPlacement("Shop 8 (Sun) Item 3", "Spaulder", null, null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-            customItemPlacement = new CustomItemPlacement("Shop 9 (Sun) Item 2", "Weights", null, null);
+            customItemPlacement = new CustomItemPlacement("Shop 9 (Sun) Item 1", "Spaulder", null, null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-            customItemPlacement = new CustomItemPlacement("Shop 9 (Sun) Item 3", "Weights", null, null);
+            customItemPlacement = new CustomItemPlacement("Shop 9 (Sun) Item 2", "Spaulder", null, null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-            customItemPlacement = new CustomItemPlacement("Shop 10 (Sun) Item 1", "Weights", null, null);
+            customItemPlacement = new CustomItemPlacement("Shop 9 (Sun) Item 3", "Spaulder", null, null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-            customItemPlacement = new CustomItemPlacement("Shop 10 (Sun) Item 2", "Weights", null, null);
+            customItemPlacement = new CustomItemPlacement("Shop 10 (Sun) Item 1", "Spaulder", null, null);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
-            customItemPlacement = new CustomItemPlacement("Shop 10 (Sun) Item 3", "Weights", null, null);
+            customItemPlacement = new CustomItemPlacement("Shop 10 (Sun) Item 2", "Spaulder", null, null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 10 (Sun) Item 3", "Spaulder", null, null);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 12 Alt (Spring) Item 1", "Weights", (short)50, (short)1);
+            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+
+            customItemPlacement = new CustomItemPlacement("Shop 12 Alt (Spring) Item 2", "Weights", (short)60, (short)1);
             DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
             List<CustomTransitionPlacement> transitions = DataFromFile.getCustomPlacementData().getCustomTransitionPlacements();
@@ -523,7 +537,7 @@ public class HolidayModePlacements {
             transitions.add(new CustomTransitionPlacement("Transition: Sun L1", "Transition: Sun R1"));
             transitions.add(new CustomTransitionPlacement("Transition: Sun R2", "Transition: Moonlight L1"));
             transitions.add(new CustomTransitionPlacement("Transition: Sun U1", "Transition: Shrine D3"));
-            doors.add(new CustomDoorPlacement("Door: F3", "Door: F8", null));
+            doors.add(new CustomDoorPlacement("Door: F3", "Door: F8", "Key Fairy"));
         }
     }
 }

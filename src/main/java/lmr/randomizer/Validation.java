@@ -751,13 +751,13 @@ public class Validation {
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-//            if(Settings.isAlternateMotherAnkh()) {
-//                JOptionPane.showMessageDialog(randomizerUI,
-//                        String.format("The setting \"%s\" is cannot be used in this mode",
-//                                Translations.getText("gameplay.alternateMotherAnkh")),
-//                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
-//                return false;
-//            }
+            if(Settings.isAlternateMotherAnkh()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("The setting \"%s\" is cannot be used in this mode",
+                                Translations.getText("gameplay.alternateMotherAnkh")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
         }
         return true;
     }

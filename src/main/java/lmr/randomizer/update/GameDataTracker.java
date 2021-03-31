@@ -2281,9 +2281,10 @@ public final class GameDataTracker {
                             break;
                         }
 
-                        if(Settings.isFoolsNpc()) {
-                            mapOfNpcLocationToObject.put("NPCL: Mr. Fishman (Original)", gameObject);
-                        }
+                    }
+
+                    if(Settings.isFoolsNpc()) {
+                        mapOfNpcLocationToObject.put("NPCL: Mr. Fishman (Original)", gameObject);
                     }
                 }
                 else if(blockNumber == 133){
@@ -6892,6 +6893,51 @@ public final class GameDataTracker {
 
     private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData,
                                             String newChestContentsItemName, int newWorldFlag, Integer itemRandomizeGraphicsFlag, boolean cursed, Random random) {
+        if(Settings.isFools2021Mode()) {
+            if(itemLocationData.getWorldFlag() == 0x090) {
+                // Ankh Jewel (Temple of the Sun)
+                itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                newChestContentsItemName = "Spaulder";
+                newWorldFlag = 0xabe;
+            }
+            if(itemLocationData.getWorldFlag() == 0x0ae) {
+                // Bronze Mirror
+                itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                newChestContentsItemName = "Spaulder";
+                newWorldFlag = 0xabf;
+            }
+            if(itemLocationData.getWorldFlag() == 0x0aa) {
+                // Isis' Pendant
+                itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                newChestContentsItemName = "Spaulder";
+                newWorldFlag = 0xac0;
+            }
+            if(itemLocationData.getWorldFlag() == 0x0d4) {
+                // Map (Temple of the Sun)
+                itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                newChestContentsItemName = "Spaulder";
+                newWorldFlag = 0xac2;
+            }
+            if(itemLocationData.getWorldFlag() == 0x0ca) {
+                // Sacred Orb (Temple of the Sun)
+                itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                newChestContentsItemName = "Spaulder";
+                newWorldFlag = 0xac3;
+            }
+            if(itemLocationData.getWorldFlag() == 0x18b) {
+                // Coin: Sun (Pyramid)
+                itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                newChestContentsItemName = "Spaulder";
+                newWorldFlag = 0xac5;
+            }
+            if(itemLocationData.getWorldFlag() == 0x0da) {
+                // Map (Shrine of the Mother)
+                itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                newChestContentsItemName = "Spaulder";
+                newWorldFlag = 0xac6;
+            }
+        }
+
         WriteByteOperation puzzleFlag = objectToModify.getWriteByteOperations().get(1);
         objectToModify.getWriteByteOperations().clear();
 
@@ -7034,7 +7080,7 @@ public final class GameDataTracker {
             AddObject.addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, 46);
         }
         else {
-            if(itemNewContentsData.getWorldFlag() == newWorldFlag) {
+            if(itemNewContentsData.getWorldFlag() == newWorldFlag || (Settings.isFools2021Mode() && newWorldFlag >= 0xabe && newWorldFlag <= 0xac6)) {
                 // Actual items
                 if(itemRandomizeGraphicsFlag == null) {
                     objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11)); // Item arg to indicate what the chest drops
@@ -7247,6 +7293,22 @@ public final class GameDataTracker {
         boolean isRemovedItem = itemNewContentsData.getWorldFlag() != newWorldFlag;
         boolean isTrapItem = !isRemovedItem && Settings.isRandomizeTrapItems()
                 && (newWorldFlag == 2777 || newWorldFlag == 2779 || newWorldFlag == 2780);
+
+        if(Settings.isFools2021Mode()) {
+            if(itemLocationData.getWorldFlag() == 0x07f) {
+                // Knife
+                inventoryArg = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder").getInventoryArg();
+                isRemovedItem = false;
+                newWorldFlag = 0xac1;
+            }
+            if(itemLocationData.getWorldFlag() == 0x0a4) {
+                // Talisman
+                inventoryArg = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder").getInventoryArg();
+                isRemovedItem = false;
+                newWorldFlag = 0xac4;
+            }
+        }
+
         if(isRemovedItem) {
             // Add handling for removed items.
             objectToModify.getArgs().set(1, inventoryArg);

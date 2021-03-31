@@ -44,6 +44,9 @@ public class EverythingShopRandomizer implements ShopRandomizer {
             if(MSX_SHOP_NAME.equals(shop)) {
                 unassignedShopItemLocations.add(String.format("%s Item 1", shop));
             }
+            else if(Settings.isFools2021Mode() && FISH_FAIRY_SHOP_NAME.equals(shop)) {
+                unassignedShopItemLocations.add(String.format("%s Item 3", shop));
+            }
             else {
                 for (int i = 0; i < 3; i++) {
                     unassignedShopItemLocations.add(String.format("%s Item %d", shop, i + 1));
@@ -118,7 +121,9 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                 if(!customLocation.startsWith(DataFromFile.CUSTOM_SHOP_NAME) || !LocationCoordinateMapper.isSurfaceStart()) {
                     mapOfShopInventoryItemToContents.put(customLocation, customItemPlacement.getContents());
                     unassignedShopItemLocations.remove(customLocation);
-                    itemRandomizer.removeItemFromUnplacedItems(customItemPlacement.getContents());
+                    if(!Settings.isFools2021Mode() || !"Spaulder".equals(customItemPlacement.getContents())) {
+                        itemRandomizer.removeItemFromUnplacedItems(customItemPlacement.getContents());
+                    }
                     if(customItemPlacement.getContents().contains("Sacred Orb")) {
                         shopsWithTransformations.add(customLocation.substring(0, customLocation.indexOf(')') + 1));
                     }
@@ -353,17 +358,19 @@ public class EverythingShopRandomizer implements ShopRandomizer {
             }
         }
 
-        // Guarantee weights at Little Brother's shop so there's a guaranteed way to unlock Big Brother's shop.
-        guaranteedWeightShopLocations.clear();
-        for(String location : unassignedShopItemLocations) {
-            if(location.contains(LITTLE_BROTHER_SHOP_NAME)) {
-                guaranteedWeightShopLocations.add(location);
+        if(!Settings.isFools2021Mode()) {
+            // Guarantee weights at Little Brother's shop so there's a guaranteed way to unlock Big Brother's shop.
+            guaranteedWeightShopLocations.clear();
+            for(String location : unassignedShopItemLocations) {
+                if(location.contains(LITTLE_BROTHER_SHOP_NAME)) {
+                    guaranteedWeightShopLocations.add(location);
+                }
             }
-        }
-        if(!guaranteedWeightShopLocations.isEmpty()) {
-            String littleBrotherShopWeightsLocation = guaranteedWeightShopLocations.get(random.nextInt(guaranteedWeightShopLocations.size()));
-            mapOfShopInventoryItemToContents.put(littleBrotherShopWeightsLocation, "Weights");
-            unassignedShopItemLocations.remove(littleBrotherShopWeightsLocation);
+            if(!guaranteedWeightShopLocations.isEmpty()) {
+                String littleBrotherShopWeightsLocation = guaranteedWeightShopLocations.get(random.nextInt(guaranteedWeightShopLocations.size()));
+                mapOfShopInventoryItemToContents.put(littleBrotherShopWeightsLocation, "Weights");
+                unassignedShopItemLocations.remove(littleBrotherShopWeightsLocation);
+            }
         }
 
         // Guarantee weights at the shop in Graveyard of the Giants, as mercy for people on long journeys across the backside areas
@@ -523,6 +530,11 @@ public class EverythingShopRandomizer implements ShopRandomizer {
                     || Settings.getStartingItemsIncludingCustom().contains(shopItem3)
                     || (Settings.isReplaceMapsWithWeights() && shopItem3.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(shopItem3))) {
                 shopItem3 = "Weights";
+            }
+
+            if(Settings.isFools2021Mode() && FISH_FAIRY_SHOP_NAME.equals(shopName)) {
+                shopItem1 = "Shell Horn";
+                shopItem2 = "guild.exe";
             }
 
             if(NON_MSX_SHOP_NAME.equals(shopName) || MSX_SHOP_NAME.equals(shopName)) {

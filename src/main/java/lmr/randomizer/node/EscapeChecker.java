@@ -183,7 +183,7 @@ public class EscapeChecker {
                 queuedUpdates.add(nodeName);
                 String reverseTransition = transitionGateRandomizer.getTransitionReverse(nodeName);
                 if(!accessedNodes.contains(reverseTransition) && !queuedUpdates.contains(reverseTransition)) {
-                    FileUtils.logDetail("Gained access to node " + reverseTransition, attemptNumber);
+                    FileUtils.logDetail("Gained access to node " + reverseTransition + " through reverse transition " + nodeName, attemptNumber);
                     queuedUpdates.add(reverseTransition);
                     if("Transition: Goddess L2".equals(reverseTransition) ) {
                         queuedUpdates.add("Event: Special Statue Removal");

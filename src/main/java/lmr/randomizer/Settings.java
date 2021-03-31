@@ -790,7 +790,7 @@ public final class Settings {
 
     public static Set<String> getRemovedItems() {
         Set<String> removedItems = new HashSet<>();
-        if(singleton.removeSpaulder) {
+        if(!Settings.isFools2021Mode() && singleton.removeSpaulder) {
             removedItems.add("Spaulder");
         }
         if(singleton.removeMainWeapons) {
@@ -926,7 +926,7 @@ public final class Settings {
     }
 
     public static boolean isAlternateMotherAnkh() {
-        return !Settings.isFools2021Mode() && (singleton.alternateMotherAnkh || DataFromFile.getCustomPlacementData().isAlternateMotherAnkh());
+        return singleton.alternateMotherAnkh || DataFromFile.getCustomPlacementData().isAlternateMotherAnkh();
     }
 
     public static void setAlternateMotherAnkh(boolean alternateMotherAnkh, boolean update) {

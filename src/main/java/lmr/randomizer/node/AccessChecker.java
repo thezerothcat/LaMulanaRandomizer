@@ -331,6 +331,7 @@ public class AccessChecker {
         String stateToUpdate = newState;
         if(fullValidation) {
             FileUtils.logDetail("Checking progress for node " + newState, attemptNumber);
+            FileUtils.flush();
             stateToUpdate = checkState(stateToUpdate);
             if(stateToUpdate == null) {
                 return;
@@ -355,7 +356,7 @@ public class AccessChecker {
                 for(String nodeName : mapOfRequirementsToNodeNameObject.get(stateToUpdate)) {
                     node = mapOfNodeNameToRequirementsObject.get(nodeName);
                     if(node != null && node.updateRequirements(stateToUpdate)) {
-                        FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
+                        FileUtils.logDetail("Gained access to node " + nodeName + " after acquiring " + stateToUpdate, attemptNumber);
                         handleNodeAccess(nodeName, node.getType(), fullValidation, attemptNumber);
                         nodesToRemove.add(nodeName);
                     }
@@ -370,7 +371,7 @@ public class AccessChecker {
             for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
                 node = mapOfNodeNameToRequirementsObject.get(nodeName);
                 if(node.updateRequirements(stateToUpdate)) {
-                    FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
+                    FileUtils.logDetail("Gained access to node " + nodeName + " after acquiring " + stateToUpdate, attemptNumber);
                     handleNodeAccess(nodeName, node.getType(), fullValidation, attemptNumber);
                     nodesToRemove.add(nodeName);
                 }
@@ -521,6 +522,7 @@ public class AccessChecker {
                 }
                 break;
             case NPC:
+                FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
                 queuedUpdates.add(nodeName);
                 break;
             case NPC_LOCATION:
@@ -581,7 +583,7 @@ public class AccessChecker {
                 queuedUpdates.add(nodeName);
                 String reverseTransition = transitionGateRandomizer.getTransitionReverse(nodeName);
                 if(!accessedNodes.contains(reverseTransition) && !queuedUpdates.contains(reverseTransition)) {
-                    FileUtils.logDetail("Gained access to node " + reverseTransition, attemptNumber);
+                    FileUtils.logDetail("Gained access to node " + reverseTransition + " through reverse transition " + nodeName, attemptNumber);
                     queuedUpdates.add(reverseTransition);
                     if("Transition: Goddess L2".equals(reverseTransition) ) {
                         queuedUpdates.add("Event: Special Statue Removal");

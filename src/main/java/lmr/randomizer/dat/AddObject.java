@@ -2963,6 +2963,72 @@ public final class AddObject {
         return punchyFist;
     }
 
+    public static void addEscapeTimer(Screen screen) {
+        // The escape timer itself
+        GameObject escapeTimer = new GameObject(screen);
+        escapeTimer.setId((short) 0xc5);
+        escapeTimer.setX(-1);
+        escapeTimer.setY(-1);
+
+        int timerMinutes;
+        int timerSeconds;
+        if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+            timerMinutes = 10;
+            timerSeconds = 31;
+        }
+        else {
+            timerMinutes = Settings.isRandomizeTransitionGates() ? 10 : 5;
+            timerSeconds = 0;
+        }
+
+        escapeTimer.getArgs().add((short)264);
+        escapeTimer.getArgs().add((short)20);
+        escapeTimer.getArgs().add((short)timerMinutes);
+        escapeTimer.getArgs().add((short)timerSeconds);
+        escapeTimer.getArgs().add((short)0);
+        escapeTimer.getArgs().add((short)10);
+        escapeTimer.getArgs().add((short)-1);
+        escapeTimer.getArgs().add((short)-1);
+        escapeTimer.getArgs().add((short)-1);
+        escapeTimer.getArgs().add((short)1000);
+        escapeTimer.getArgs().add((short)2746);
+        escapeTimer.getArgs().add((short)2747);
+
+        escapeTimer.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+        escapeTimer.getTestByteOperations().add(new TestByteOperation(0x403, ByteOp.FLAG_EQUALS, 0));
+
+        screen.getObjects().add(0, escapeTimer);
+
+        GameObject testTimer = new GameObject(screen);
+        testTimer.setId((short)0x0b);
+        testTimer.setX(-1);
+        testTimer.setY(-1);
+        testTimer.getArgs().add((short)0);
+        testTimer.getArgs().add((short)2);
+
+        testTimer.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+        testTimer.getTestByteOperations().add(new TestByteOperation(0x403, ByteOp.FLAG_EQUALS, 0));
+        testTimer.getWriteByteOperations().add(new WriteByteOperation(0x403, ByteOp.ASSIGN_FLAG, 1));
+
+        screen.getObjects().add(0, testTimer);
+
+        if(!Settings.isScreenshakeDisabled()) {
+            // Escape screen shake
+            GameObject escapeScreenShake = new GameObject(screen);
+            escapeScreenShake.setId((short) 0xc7);
+            escapeScreenShake.setX(-1);
+            escapeScreenShake.setY(-1);
+
+            escapeScreenShake.getArgs().add((short)-1);
+            escapeScreenShake.getArgs().add((short)0);
+
+            escapeScreenShake.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+            escapeScreenShake.getTestByteOperations().add(new TestByteOperation(0x403, ByteOp.FLAG_EQUALS, 0));
+
+            screen.getObjects().add(0, escapeScreenShake);
+        }
+    }
+
     public static void addEscapeTimer(Screen screen, int beginConditionFlag, int beginConditionValue) {
         // The escape timer itself
         GameObject escapeTimer = new GameObject(screen);
@@ -4186,6 +4252,24 @@ public final class AddObject {
         itemGive.getWriteByteOperations().add(itemGiveUpdate);
 
         referenceObj.getObjectContainer().getObjects().add(itemGive);
+    }
+
+    public static void addItemGive(Screen screen, int startingX, int startingY, int inventoryArg,
+                                   List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject itemGive = new GameObject(screen);
+        itemGive.setId((short) 0xb5);
+        itemGive.setX(startingX);
+        itemGive.setY(startingY);
+
+        itemGive.getArgs().add((short)inventoryArg);
+        itemGive.getArgs().add((short)32);
+        itemGive.getArgs().add((short)24);
+        itemGive.getArgs().add((short)39);
+
+        itemGive.getTestByteOperations().addAll(tests);
+        itemGive.getWriteByteOperations().addAll(updates);
+
+        screen.getObjects().add(itemGive);
     }
 
     public static void addGrailDetector(GameObject gameObject, int grailFlag) {

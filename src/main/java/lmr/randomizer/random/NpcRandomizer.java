@@ -18,19 +18,17 @@ public class NpcRandomizer {
             npcDoors.add("Sturdy Snake");
             npcDoors.add("Arrogant Metagear");
             List<String> npcs = new ArrayList<>();
-            npcs.add("Sturdy Snake");
             npcs.add("Arrogant Metagear");
 
             String doorLocation = npcDoors.remove(random.nextInt(npcDoors.size()));
             mapOfNpcDoorLocationToContents.put("NPCL: " + doorLocation, "NPC: Yiegah Kungfu");
 
-            mapOfNpcDoorLocationToContents.put("NPCL: Priest Hidlyda", "NPC: Mr. Fishman (Alt)");
-            mapOfNpcDoorLocationToContents.put("NPCL: Mr. Fishman (Original)", "NPC: Mr. Fishman (Original)");
-            mapOfNpcDoorLocationToContents.put("NPCL: Mr. Fishman (Alt)", "NPC: Mr. Fishman (Original)");
+            mapOfNpcDoorLocationToContents.put("NPCL: Priest Hidlyda", "NPC: Mr. Fishman (Original)");
+            mapOfNpcDoorLocationToContents.put("NPCL: Mr. Fishman (Original)", "NPC: Mr. Fishman (Alt)");
+            mapOfNpcDoorLocationToContents.put("NPCL: Mr. Fishman (Alt)", "NPC: Mr. Fishman (Alt)");
             mapOfNpcDoorLocationToContents.put("NPCL: Priest Laydoc", "NPC: Mechanical Efspi");
             mapOfNpcDoorLocationToContents.put("NPCL: Mechanical Efspi", "NPC: Priest Laydoc");
-
-            npcDoors.add("Yiegah Kungfu");
+            mapOfNpcDoorLocationToContents.put("NPCL: Yiegah Kungfu", "NPC: Sturdy Snake");
 
             String npc;
             while(!npcs.isEmpty()) {

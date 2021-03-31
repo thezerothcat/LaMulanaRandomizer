@@ -50,7 +50,21 @@ for fools 2020, 2730-2761 (aaa-ac9) for spaulders
 for fools 2020 & 2021, 2762 - 2766 = random item graphics flags (only 2762-2765 currently used)
 for fools 2020, 2767 / acf = feather flag
 
-for fools 20201, 2730-2746 (aaa-aba) for grail flags
+for fools 2021, 2730-2745 (aaa-ab9) for grail flags
+for fools 2021, 2746 (aba) for escape timer flag pt1
+for fools 2021, 2747 (abb) for escape timer flag pt2
+for fools 2021, 2748 (abc) for treasury zip spaulder
+for fools 2021, 2749 (abd) for endless pit spaulder
+for fools 2021, 2750 (abe) for Ankh Jewel (Temple of the Sun) spaulder
+for fools 2021, 2751 (abf) for bronze mirror spaulder
+for fools 2021, 2752 (ac0) for isis pendant spaulder
+for fools 2021, 2753 (ac1) for knife spaulder
+for fools 2021, 2754 (ac2) for map (sun) spaulder
+for fools 2021, 2755 (ac3) for sacred orb (sun) spaulder
+for fools 2021, 2756 (ac4) for talisman spaulder
+for fools 2021, 2757 (ac5) for coin sun spaulder
+for fools 2021, 2758 (ac6) for shrine map spaulder
+
 
 un-implemented features:
 inferno pushblock glove special: acb (2763)
