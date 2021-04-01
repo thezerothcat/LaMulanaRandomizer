@@ -15,8 +15,6 @@ public final class NpcObjectUpdates {
             // Handle special cases
             if("NPC: Yiegah Kungfu".equals(npcAssigned)) {
                 doorObject.getTestByteOperations().add(new TestByteOperation(0x1f0, ByteOp.FLAG_NOT_EQUAL, 1));
-                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x1f0, ByteOp.ASSIGN_FLAG, 2));
-                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
                 NpcObjectUpdates.addLittleBrotherScreenObjects(doorObject);
                 AddObject.setLittleBrotherShopScreen(doorObject.getObjectContainer());
             }
@@ -123,8 +121,8 @@ public final class NpcObjectUpdates {
         bigBrotherNotificationConversation.setY(doorObject.getY());
         bigBrotherNotificationConversation.getTestByteOperations().add(new TestByteOperation(0x1f0, ByteOp.FLAG_EQUALS, 1));
         bigBrotherNotificationConversation.getTestByteOperations().add(new TestByteOperation(0x0fe, ByteOp.FLAG_NOT_EQUAL, 3));
-        bigBrotherProgressTimer.getWriteByteOperations().add(new WriteByteOperation(0x1f0, ByteOp.ASSIGN_FLAG, 2));
-        bigBrotherProgressTimer.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+        bigBrotherNotificationConversation.getWriteByteOperations().add(new WriteByteOperation(0x1f0, ByteOp.ASSIGN_FLAG, 2));
+        bigBrotherNotificationConversation.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
         screen.getObjects().add(bigBrotherNotificationConversation);
     }
 }
