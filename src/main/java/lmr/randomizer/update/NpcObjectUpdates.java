@@ -18,6 +18,11 @@ public final class NpcObjectUpdates {
                 NpcObjectUpdates.addLittleBrotherScreenObjects(doorObject);
                 AddObject.setLittleBrotherShopScreen(doorObject.getObjectContainer());
             }
+            if(!doorObject.getTestByteOperations().isEmpty()) {
+                if(doorObject.getTestByteOperations().get(0).getIndex() == 0x1f0) {
+                    doorObject.getTestByteOperations().remove(0);
+                }
+            }
         }
     }
 
