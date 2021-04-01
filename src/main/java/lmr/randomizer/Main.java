@@ -1338,7 +1338,9 @@ public class Main {
         }
         if(Settings.isAllowMainWeaponStart()) {
             startingWeapons.add("Knife");
-            startingWeapons.add("Key Sword");
+            if(!Settings.isFools2021Mode()) {
+                startingWeapons.add("Key Sword");
+            }
             startingWeapons.add("Axe");
             startingWeapons.add("Katana");
         }

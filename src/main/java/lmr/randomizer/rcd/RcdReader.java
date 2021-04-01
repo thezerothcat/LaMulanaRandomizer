@@ -5925,6 +5925,11 @@ public final class RcdReader {
                     AddObject.addSphinxRemovalTimer(screen);
                 }
             }
+            if(Settings.isRandomizeTransitionGates()) {
+                if(roomIndex == 7 && screenIndex == 0) {
+                    AddObject.addWeightDoorTimer(screen, 0x032);
+                }
+            }
         }
         else if(zoneIndex == 4) {
             if(Settings.isHalloweenMode()) {
