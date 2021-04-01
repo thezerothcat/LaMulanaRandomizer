@@ -294,6 +294,18 @@ public final class DataFromFile {
                     if(itemName.equals("Spaulder")) {
                         continue;
                     }
+                    if(itemName.equals("Helmet")) {
+                        continue;
+                    }
+                    if(itemName.equals("Isis' Pendant")) {
+                        continue;
+                    }
+                    if(itemName.equals("miracle.exe")) {
+                        continue;
+                    }
+                    if(itemName.equals("mekuri.exe")) {
+                        continue;
+                    }
                 }
                 if("Crystal Skull".equals(itemName)) {
                     if(!Settings.isFoolsGameplay()

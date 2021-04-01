@@ -4930,11 +4930,20 @@ public final class GameDataTracker {
             gameObject.getArgs().add((short)80);
         }
         else if("Door: B8".equals(doorWithCoordinatesData)) {
-            gameObject.getArgs().add((short)8);
-            gameObject.getArgs().add((short)0);
-            gameObject.getArgs().add((short)1);
-            gameObject.getArgs().add((short)400);
-            gameObject.getArgs().add((short)180);
+            if(Settings.isFools2021Mode()) {
+                gameObject.getArgs().add((short)0);
+                gameObject.getArgs().add((short)0);
+                gameObject.getArgs().add((short)0);
+                gameObject.getArgs().add((short)320);
+                gameObject.getArgs().add((short)152);
+            }
+            else {
+                gameObject.getArgs().add((short)8);
+                gameObject.getArgs().add((short)0);
+                gameObject.getArgs().add((short)1);
+                gameObject.getArgs().add((short)400);
+                gameObject.getArgs().add((short)180);
+            }
         }
         else if("Door: B9".equals(doorWithCoordinatesData)) {
             gameObject.getArgs().add((short)6);

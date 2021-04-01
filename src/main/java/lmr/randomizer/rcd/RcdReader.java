@@ -660,6 +660,11 @@ public final class RcdReader {
         else if (obj.getId() == 0x00) {
             if(objectContainer instanceof Screen) {
                 Screen screen = (Screen)objectContainer;
+                if(Settings.isFools2021Mode() && screen.getZoneIndex() == 3) {
+                    obj.getArgs().set(0, (short)6);
+                    obj.getArgs().set(1, (short)80);
+                }
+
                 if(screen.getZoneIndex() == 10 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 2) {
                     if(obj.getArgs().get(0) == 3) {
                         // Shuriken pot
@@ -1972,6 +1977,15 @@ public final class RcdReader {
                 downExit.setScreenIndex((byte)1);
             }
         }
+        if(Settings.isFools2021Mode()) {
+            if(screen.getZoneIndex() == 3 && screen.getRoomIndex() == 6 && screen.getScreenIndex() == 0) {
+                // Prevent falling into Ellmac's pit
+                ScreenExit downExit = screen.getScreenExits().get(2);
+                downExit.setZoneIndex((byte)3);
+                downExit.setRoomIndex((byte)6);
+                downExit.setScreenIndex((byte)0);
+            }
+        }
         if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
             if(screen.getZoneIndex() == 23) {
                 if(screen.getRoomIndex() == 0) {
@@ -2781,7 +2795,21 @@ public final class RcdReader {
             else if(roomIndex == 0 && screenIndex == 1) {
                 // Sun grail screen
                 if(Settings.isFools2021Mode()) {
-                    AddObject.addWarp(screen, 640, 0, 32, 20, 9, 9, 0, 300, 392)
+                    AddObject.addWarp(screen, 640, 80, 32, 20, 9, 9, 0, 300, 392)
+                            .getTestByteOperations().add(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, (byte)0));
+                }
+            }
+            else if(roomIndex == 1 && screenIndex == 0) {
+                // Room right of Buer
+                if(Settings.isFools2021Mode()) {
+                    AddObject.addWarp(screen, 0, 0, 32, 24, 9, 9, 0, 300, 392)
+                            .getTestByteOperations().add(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, (byte)0));
+                }
+            }
+            else if(roomIndex == 1 && screenIndex == 1) {
+                // Room below grail / above Mulbruk
+                if(Settings.isFools2021Mode()) {
+                    AddObject.addWarp(screen, 640, 0, 32, 24, 9, 9, 0, 300, 392)
                             .getTestByteOperations().add(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, (byte)0));
                 }
             }
@@ -2798,11 +2826,24 @@ public final class RcdReader {
                     AddObject.addPot(screen, 40, 480, 1, Arrays.asList(new TestByteOperation(0x009, ByteOp.FLAG_EQUALS, 1)));
                 }
             }
+            else if(roomIndex == 4 && screenIndex == 5) {
+                // Sun room with Bronze Mirror chest
+                if(Settings.isFools2021Mode()) {
+                    AddObject.addWarp(screen, 1280, 480, 32, 24, 12, 8, 0, 20, 232)
+                            .getTestByteOperations().add(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, (byte)0));
+                }
+            }
             else if(roomIndex == 5 && screenIndex == 0) {
                 // Sun room with Bronze Mirror chest
                 if(Settings.isFools2021Mode()) {
                     AddObject.addWarp(screen, 0, 0, 28, 24, 12, 8, 0, 20, 232)
                             .getTestByteOperations().add(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, (byte)0));
+                }
+            }
+            else if(roomIndex == 6 && screenIndex == 0) {
+                // Backside door room
+                if(Settings.isFools2021Mode()) {
+                    AddObject.addLampStation(screen, 260, 60);
                 }
             }
             else if(roomIndex == 8 && screenIndex == 0) {

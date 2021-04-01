@@ -14,6 +14,9 @@ public final class NpcObjectUpdates {
 
             // Handle special cases
             if("NPC: Yiegah Kungfu".equals(npcAssigned)) {
+                doorObject.getTestByteOperations().add(new TestByteOperation(0x1f0, ByteOp.FLAG_NOT_EQUAL, 1));
+                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x1f0, ByteOp.ASSIGN_FLAG, 2));
+                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
                 NpcObjectUpdates.addLittleBrotherScreenObjects(doorObject);
                 AddObject.setLittleBrotherShopScreen(doorObject.getObjectContainer());
             }

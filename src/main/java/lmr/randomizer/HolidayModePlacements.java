@@ -537,7 +537,7 @@ public class HolidayModePlacements {
             transitions.add(new CustomTransitionPlacement("Transition: Sun L1", "Transition: Sun R1"));
             transitions.add(new CustomTransitionPlacement("Transition: Sun R2", "Transition: Moonlight L1"));
             transitions.add(new CustomTransitionPlacement("Transition: Sun U1", "Transition: Shrine D3"));
-            doors.add(new CustomDoorPlacement("Door: F3", "Door: F8", "Key Fairy"));
+            doors.add(new CustomDoorPlacement("Door: F3", "Door: F8", null));
         }
     }
 }

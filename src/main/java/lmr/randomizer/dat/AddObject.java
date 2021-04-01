@@ -6388,4 +6388,99 @@ public final class AddObject {
 
         screen.getObjects().add(amphisbaenaAnkh);
     }
+
+    /**
+     * Add discount lamp of time recharge station
+     * @param screen to add to
+     * @param x position
+     * @param y position
+     */
+    public static void addLampStation(Screen screen, int x, int y) {
+        GameObject lampDetector = new GameObject(screen);
+
+        lampDetector.setId((short) 0x14);
+        lampDetector.setX(x);
+        lampDetector.setY(y);
+
+        lampDetector.getArgs().add((short)1);
+        lampDetector.getArgs().add((short)0);
+        lampDetector.getArgs().add((short)0);
+        lampDetector.getArgs().add((short)0);
+        lampDetector.getArgs().add((short)2);
+        lampDetector.getArgs().add((short)3);
+
+//        lampDetector.getTestByteOperations().add(new TestByteOperation(0x09b, ByteOp.FLAG_NOT_EQUAL, 0));
+        lampDetector.getTestByteOperations().add(new TestByteOperation(0x34d, ByteOp.FLAG_EQUALS, 0));
+//        lampDetector.getTestByteOperations().add(new TestByteOperation(0x3ed, ByteOp.FLAG_EQUALS, 0));
+
+        lampDetector.getWriteByteOperations().add(new WriteByteOperation(0x34d, ByteOp.ASSIGN_FLAG, (byte)1));
+        lampDetector.getWriteByteOperations().add(new WriteByteOperation(0x3ed, ByteOp.ASSIGN_FLAG, (byte)1));
+
+        screen.getObjects().add(lampDetector);
+
+        GameObject lampGraphic = new GameObject(screen);
+        lampGraphic.setId((short)0x93);
+        lampGraphic.setX(x - 20);
+        lampGraphic.setY(y - 20);
+        lampGraphic.getArgs().add((short)-1);
+        lampGraphic.getArgs().add((short)3);
+        lampGraphic.getArgs().add((short)940);
+        lampGraphic.getArgs().add((short)140);
+        lampGraphic.getArgs().add((short)80);
+        lampGraphic.getArgs().add((short)80);
+        lampGraphic.getArgs().add((short)1);
+        lampGraphic.getArgs().add((short)1);
+        lampGraphic.getArgs().add((short)4);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)255);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)1);
+
+        screen.getObjects().add(lampGraphic);
+
+        GameObject lampFlame = new GameObject(screen);
+        lampFlame.setId((short)0x93);
+        lampFlame.setX(x + 20);
+        lampFlame.setY(y + 20);
+        lampFlame.getArgs().add((short)-1);
+        lampFlame.getArgs().add((short)3);
+        lampFlame.getArgs().add((short)280);
+        lampFlame.getArgs().add((short)112);
+        lampFlame.getArgs().add((short)20);
+        lampFlame.getArgs().add((short)20);
+        lampFlame.getArgs().add((short)1);
+        lampFlame.getArgs().add((short)1);
+        lampFlame.getArgs().add((short)4);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)255);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)1);
+
+//        lampFlame.getTestByteOperations().add(new TestByteOperation(0x09b, ByteOp.FLAG_NOT_EQUAL, 0));
+        lampFlame.getTestByteOperations().add(new TestByteOperation(0x34d, ByteOp.FLAG_EQUALS, 0));
+//        lampFlame.getTestByteOperations().add(new TestByteOperation(0x3ed, ByteOp.FLAG_EQUALS, 0));
+        screen.getObjects().add(lampFlame);
+    }
 }
