@@ -373,18 +373,20 @@ public class TransitionGateRandomizer {
 
         List<String> rightTransitions = new ArrayList<>();
         rightTransitions.add("Transition: Surface R1");
-        rightTransitions.add("Transition: Illusion R2");
         rightTransitions.add("Transition: Graveyard R1");
-        rightTransitions.add("Transition: Sun R1");
-        rightTransitions.add("Transition: Sun R2");
         rightTransitions.add("Transition: Inferno R1");
         rightTransitions.add("Transition: Ruin R1");
         rightTransitions.add("Transition: Ruin R2");
-        rightTransitions.add("Transition: Birth R1");
-        rightTransitions.add("Transition: Endless R1");
 
-        if(Settings.isRandomizeOneWayTransitions()) {
-            rightTransitions.add("Transition: Illusion R1");
+        if(!Settings.isFools2021Mode()) {
+            rightTransitions.add("Transition: Sun R1");
+            rightTransitions.add("Transition: Sun R2");
+            rightTransitions.add("Transition: Endless R1");
+            if(Settings.isRandomizeOneWayTransitions()) {
+                rightTransitions.add("Transition: Illusion R1");
+            }
+            rightTransitions.add("Transition: Illusion R2");
+            rightTransitions.add("Transition: Birth R1");
         }
 
         String chosenTransition = rightTransitions.get(random.nextInt(rightTransitions.size()));

@@ -821,7 +821,7 @@ public final class DatReader {
     private static Block buildGrailPointBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         Block grailPointsBlock = new Block(blockIndex);
         addBlockContentsToBlock(grailPointsBlock, dataInputStream, numberOfShortsInThisBlock);
-        if(!LocationCoordinateMapper.isSurfaceStart() || Settings.getCurrentStartingLocation() == 22) {
+        if(!LocationCoordinateMapper.isSurfaceStart() || Settings.isFools2021Mode() || Settings.getCurrentStartingLocation() == 22) {
             grailPointsBlock.getBlockContents().clear();
 
             boolean front = LocationCoordinateMapper.isFrontsideStart();
