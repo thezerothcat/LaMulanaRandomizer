@@ -111,7 +111,6 @@ Shop 15 (Ruin) => Location: Tower of Ruin [Grail], Attack: Caltrops, Grapple Cla
 Shop 15 (Ruin) => NPC: Mechanical Efspi, Setting: Fools2021
 Shop 16 (Extinction) => Location: Chamber of Extinction [Ankh Lower], Attack: Chest-Any
 Shop 17 (Birth) => Location: Chamber of Birth [West], Event: Mudmen Awakened
-Shop 18 (Lil Bro) => Location: Twin Labyrinths [Loop]
 Shop 18 (Lil Bro) => Location: Twin Labyrinths [Loop], Setting: Not Fools2021
 Shop 18 (Lil Bro) => NPC: Yiegah Kungfu, Setting: Fools2021
 Shop 19 (Big Bro) => Location: Twin Labyrinths [Loop], Setting: Not Fools2021
