@@ -1500,7 +1500,14 @@ public final class RcdReader {
                 else if (screen.getZoneIndex() == 7) {
                     if(screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
                         // Twin Labyrinths ladder that normally goes to Ellmac's room
-                        if(Settings.isRandomizeBosses()) {
+                        if(Settings.isFools2021Mode()) {
+                            obj.getArgs().set(0, (short)7);
+                            obj.getArgs().set(1, (short)0);
+                            obj.getArgs().set(2, (short)0);
+                            obj.getArgs().set(3, (short)480);
+                            obj.getArgs().set(4, (short)392);
+                        }
+                        else if(Settings.isRandomizeBosses()) {
                             obj.getArgs().set(0, (short)6);
                             obj.getArgs().set(1, (short)9);
                             obj.getArgs().set(2, (short)1);
@@ -1901,9 +1908,15 @@ public final class RcdReader {
         if(Settings.isFools2021Mode()) {
             // Transition to Ellmac
             if(screen.getZoneIndex() == 4 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
-                ScreenExit screenExit = screen.getScreenExits().get(3);
+                ScreenExit screenExit = screen.getScreenExits().get(2);
                 screenExit.setZoneIndex((byte)3);
                 screenExit.setRoomIndex((byte)8);
+                screenExit.setScreenIndex((byte)0);
+            }
+            if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                ScreenExit screenExit = screen.getScreenExits().get(0);
+                screenExit.setZoneIndex((byte)7);
+                screenExit.setRoomIndex((byte)0);
                 screenExit.setScreenIndex((byte)0);
             }
         }

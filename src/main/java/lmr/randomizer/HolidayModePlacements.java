@@ -437,6 +437,7 @@ public class HolidayModePlacements {
         if(Settings.isFoolsGameplay()) {
             DataFromFile.getCustomPlacementData().setAutomaticMantras(true);
             DataFromFile.getCustomPlacementData().setAlternateMotherAnkh(false);
+            DataFromFile.getCustomPlacementData().setMedicineColor("Yellow");
 
             List<String> removedItems = DataFromFile.getCustomPlacementData().getRemovedItems();
             if (!removedItems.contains("Ankh Jewel (Chamber of Birth)")) {
