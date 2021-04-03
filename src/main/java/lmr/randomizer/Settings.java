@@ -1014,7 +1014,7 @@ public final class Settings {
 
     public static boolean isSaveFileNeeded() {
         return isAllowMainWeaponStart() || isAllowSubweaponStart() || isRandomizeStartingLocation()
-                || Settings.isHalloweenMode() || isFools2020Mode();
+                || Settings.isHalloweenMode() || isFools2020Mode() || isFools2021Mode();
     }
 
     public static boolean isCheapConsumables() {
