@@ -709,6 +709,7 @@ public final class RcdReader {
         }
         else if (obj.getId() == 0x96) {
             if(Settings.isFools2021Mode()) {
+                // Adjust spikes for "foot of Futo" puzzle, if using a different giant. Zebu and Futo handled separately.
                 if(objectContainer instanceof Screen) {
                     Screen screen = (Screen)objectContainer;
                     if(screen.getZoneIndex() == 2) {
@@ -762,12 +763,21 @@ public final class RcdReader {
                                 }
                             }
                         }
+                        else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 2) {
+                            if("Ribu".equals(Settings.getCurrentGiant())) {
+                                keepObject = false;
+                            }
+                            else {
+                                obj.getArgs().set(4, (short)0); // Activation delay
+                            }
+                        }
                     }
                 }
             }
         }
         else if (obj.getId() == 0x08) {
             if(Settings.isFools2021Mode()) {
+                // Adjust dais for "foot of Futo" puzzle. Zebu handled separately.
                 if(objectContainer instanceof Screen) {
                     Screen screen = (Screen)objectContainer;
                     if(screen.getZoneIndex() == 2) {
@@ -869,6 +879,19 @@ public final class RcdReader {
                                 else {
                                     obj.getArgs().set(1, (short)10); // Falling speed
                                 }
+                            }
+                        }
+                        else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 2) {
+                            if("Ribu".equals(Settings.getCurrentGiant())) {
+                                obj.getTestByteOperations().clear();
+                                obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
+
+                                obj.getWriteByteOperations().clear();
+                                obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
+                                obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                            }
+                            else {
+                                obj.getArgs().set(1, (short)10); // Falling speed
                             }
                         }
                     }
@@ -5875,6 +5898,7 @@ public final class RcdReader {
                 }
             }
             if(Settings.isFools2021Mode()) {
+                // Add success sound to any screen except Futo/Migela (who already have one) or Zebu (who is addressed separately)
                 if(roomIndex == 7 && screenIndex == 1) {
                     if("Bado".equals(Settings.getCurrentGiant())) {
                         AddObject.addSuccessSound(screen, Arrays.asList(
@@ -5901,6 +5925,14 @@ public final class RcdReader {
                 }
                 else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
                     if("Sakit".equals(Settings.getCurrentGiant()) || "Ji".equals(Settings.getCurrentGiant())) {
+                        AddObject.addSuccessSound(screen, Arrays.asList(
+                                new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
+                                new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
+                                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
+                    }
+                }
+                else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 2) {
+                    if("Ribu".equals(Settings.getCurrentGiant())) {
                         AddObject.addSuccessSound(screen, Arrays.asList(
                                 new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
                                 new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
