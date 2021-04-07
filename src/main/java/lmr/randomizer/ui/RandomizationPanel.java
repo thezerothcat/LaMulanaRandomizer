@@ -14,6 +14,7 @@ public class RandomizationPanel extends JPanel {
     private JCheckBox randomizeEscapeChest;
     private JCheckBox randomizeCursedChests;
     private JCheckBox randomizeDracuetShop;
+    private JCheckBox randomizeSeals;
 
     private WeaponRandomizationPanel weaponRandomization;
     private ShopRandomizationRadio shopRandomization;
@@ -49,12 +50,16 @@ public class RandomizationPanel extends JPanel {
         randomizeDracuetShop = new JCheckBox();
         randomizeDracuetShop.setSelected(Settings.isRandomizeDracuetShop());
 
-        CheckboxContainer checkboxContainer = new CheckboxContainer(5, "gapy 0, insets 8 0 0 0");
+        randomizeSeals = new JCheckBox();
+        randomizeSeals.setSelected(Settings.isRandomizeSeals());
+
+        CheckboxContainer checkboxContainer = new CheckboxContainer(6, "gapy 0, insets 8 0 0 0");
         checkboxContainer.add(randomizeCoinChests);
         checkboxContainer.add(randomizeTrapItems);
         checkboxContainer.add(randomizeEscapeChest);
         checkboxContainer.add(randomizeCursedChests);
         checkboxContainer.add(randomizeDracuetShop);
+        checkboxContainer.add(randomizeSeals);
         add(checkboxContainer, "growx, wrap");
 
         updateTranslations();
@@ -67,6 +72,7 @@ public class RandomizationPanel extends JPanel {
         randomizeEscapeChest.setText(Translations.getText("randomization.randomizeEscapeChest"));
         randomizeCursedChests.setText(Translations.getText("randomization.randomizeCursedChests"));
         randomizeDracuetShop.setText(Translations.getText("randomization.randomizeDracuetShop"));
+        randomizeSeals.setText(Translations.getText("randomization.randomizeSeals"));
         weaponRandomization.updateTranslations();
         shopRandomization.updateTranslations();
         swimsuitRandomization.updateTranslations();
@@ -79,6 +85,7 @@ public class RandomizationPanel extends JPanel {
         Settings.setRandomizeEscapeChest(randomizeEscapeChest.isSelected(), true);
         Settings.setRandomizeCursedChests(randomizeCursedChests.isSelected(), true);
         Settings.setRandomizeDracuetShop(randomizeDracuetShop.isSelected(), true);
+        Settings.setRandomizeSeals(randomizeSeals.isSelected(), true);
         weaponRandomization.updateSettings();
         shopRandomization.updateSettings();
         swimsuitRandomization.updateSettings();
@@ -95,5 +102,6 @@ public class RandomizationPanel extends JPanel {
         randomizeEscapeChest.setSelected(Settings.isRandomizeEscapeChest());
         randomizeCursedChests.setSelected(Settings.isRandomizeCursedChests());
         randomizeDracuetShop.setSelected(Settings.isRandomizeDracuetShop());
+        randomizeSeals.setSelected(Settings.isRandomizeSeals());
     }
 }

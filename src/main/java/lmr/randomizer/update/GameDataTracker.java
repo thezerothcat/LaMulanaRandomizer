@@ -470,7 +470,7 @@ public final class GameDataTracker {
             objects.add(gameObject);
         }
         else if (gameObject.getId() == 0x34) {
-            if(Settings.isFoolsLogic()) {
+            if(Settings.isRandomizeSeals()) {
                 String sealNode = SealRandomizer.getSealNode(gameObject);
                 List<GameObject> seals = mapOfSealNodeToSealObjects.get(sealNode);
                 if(seals == null) {

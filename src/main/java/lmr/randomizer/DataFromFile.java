@@ -348,7 +348,7 @@ public final class DataFromFile {
                 if(requirePlaneModelAndTwinStatueAndLiteracy && ("Plane Model".equals(itemName) || "Twin Statue".equals(itemName))) {
                     continue; // Can't get to Birth grail area without Plane Model, Dimensional Corridor without Twin Statue.
                 }
-                if(!Settings.isFoolsLogic() && requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
+                if(!Settings.isRandomizeSeals() && requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
                     continue; // Earth Spear needed for Viy access. Bronze Mirror for VIY mantra statue.
                 }
                 if(Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName)) {

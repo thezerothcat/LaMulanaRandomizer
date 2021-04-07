@@ -792,7 +792,7 @@ public class Main {
                     FileUtils.logFlush("Updated puzzle flags");
                 }
 
-                if(Settings.isFoolsLogic()) {
+                if(Settings.isRandomizeSeals()) {
                     sealRandomizer.updateSeals();
                     FileUtils.logFlush("Updated seal data");
                 }

@@ -24,7 +24,7 @@ public class SealRandomizer {
     }
 
     public void assignSeals(Random random) {
-        if(Settings.isFoolsLogic()) {
+        if(Settings.isRandomizeSeals()) {
             originSeals.clear();
             birthSeals.clear();
             lifeSeals.clear();

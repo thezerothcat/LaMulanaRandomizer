@@ -12,9 +12,9 @@ import java.io.File;
 public class EventPanel extends JPanel {
     private JCheckBox holidayMode;
     private JCheckBox includeHT;
-    private JCheckBox foolsLogic;
-    private JCheckBox foolsNpc;
-    private JCheckBox foolsGameplay;
+    private JCheckBox fools2021Pt1;
+    private JCheckBox fools2021Pt2;
+    private JCheckBox fools2021Pt3;
     private JTextField graphicsPack;
     private JLabel graphicsPackLabel;
     private JButton chooseGraphicsButton;
@@ -33,17 +33,17 @@ public class EventPanel extends JPanel {
             includeHT.setSelected(Settings.isIncludeHellTempleNPCs());
         }
         if(Settings.isFools2021Mode()) {
-            foolsLogic = new JCheckBox();
-            foolsLogic.setSelected(true);
-            foolsLogic.setEnabled(false);
+            fools2021Pt1 = new JCheckBox();
+            fools2021Pt1.setSelected(true);
+            fools2021Pt1.setEnabled(false);
 
-            foolsNpc = new JCheckBox();
-            foolsNpc.setSelected(true);
-            foolsNpc.setEnabled(false);
+            fools2021Pt2 = new JCheckBox();
+            fools2021Pt2.setSelected(true);
+            fools2021Pt2.setEnabled(false);
 
-            foolsGameplay = new JCheckBox();
-            foolsGameplay.setSelected(true);
-            foolsGameplay.setEnabled(false);
+            fools2021Pt3 = new JCheckBox();
+            fools2021Pt3.setSelected(true);
+            fools2021Pt3.setEnabled(false);
         }
 
         CheckboxContainer checkboxContainer = new CheckboxContainer(1);
@@ -54,9 +54,9 @@ public class EventPanel extends JPanel {
             checkboxContainer.add(includeHT);
         }
         if(Settings.isFools2021Mode()) {
-            checkboxContainer.add(foolsLogic);
-            checkboxContainer.add(foolsNpc);
-            checkboxContainer.add(foolsGameplay);
+            checkboxContainer.add(fools2021Pt1);
+            checkboxContainer.add(fools2021Pt2);
+            checkboxContainer.add(fools2021Pt3);
         }
         add(checkboxContainer, "growx, wrap");
 
@@ -95,9 +95,9 @@ public class EventPanel extends JPanel {
             holidayMode.setText(Translations.getText("event.fools2020"));
         }
         else if(Settings.isFools2021Mode()) {
-            foolsLogic.setText(Translations.getText("randomization.fools2021"));
-            foolsNpc.setText(Translations.getText("randomization.npc.fools2021"));
-            foolsGameplay.setText(Translations.getText("gameplay.fools2021"));
+            fools2021Pt1.setText(Translations.getText("randomization.fools2021"));
+            fools2021Pt2.setText(Translations.getText("randomization.npc.fools2021"));
+            fools2021Pt3.setText(Translations.getText("gameplay.fools2021"));
         }
         if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
             graphicsPackLabel.setText(Translations.getText("settings.graphicsPack"));
@@ -109,11 +109,6 @@ public class EventPanel extends JPanel {
         if(Settings.isHalloweenMode()) {
             Settings.setIncludeHellTempleNPCs(includeHT.isSelected(), true);
         }
-        if(Settings.isFools2021Mode()) {
-            Settings.setFoolsLogic(foolsLogic.isSelected(), true);
-            Settings.setFoolsNpc(foolsNpc.isSelected(), true);
-            Settings.setFoolsGameplay(foolsGameplay.isSelected(), true);
-        }
         if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
             Settings.setGraphicsPack(graphicsPack.getText(), true);
         }
@@ -122,11 +117,6 @@ public class EventPanel extends JPanel {
     public void reloadSettings() {
         if(Settings.isHalloweenMode()) {
             includeHT.setSelected(Settings.isIncludeHellTempleNPCs());
-        }
-        if(Settings.isFools2021Mode()) {
-            foolsLogic.setSelected(Settings.isFoolsLogic());
-            foolsNpc.setSelected(Settings.isFoolsNpc());
-            foolsGameplay.setSelected(Settings.isFoolsGameplay());
         }
         if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
             graphicsPack.setText(Settings.getGraphicsPack());

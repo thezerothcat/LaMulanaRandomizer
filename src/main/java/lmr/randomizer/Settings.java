@@ -61,7 +61,7 @@ public final class Settings {
     private boolean bossCheckpoints;
     private boolean bossSpecificAnkhJewels;
     private boolean foolsGameplay;
-    private boolean foolsLogic;
+    private boolean randomizeSeals;
     private boolean foolsNpc;
     private boolean blockPushingRequiresGlove;
     private boolean screenshakeDisabled;
@@ -132,7 +132,7 @@ public final class Settings {
         randomizeNonBossDoors = false;
         bossSpecificAnkhJewels = false;
         foolsGameplay = false;
-        foolsLogic = false;
+        randomizeSeals = false;
         foolsNpc = false;
         blockPushingRequiresGlove = false;
         removeSpaulder = false;
@@ -604,7 +604,7 @@ public final class Settings {
     }
 
     public static boolean isFoolsGameplay() {
-        return false;
+        return isFools2021Mode();
     }
 
     public static void setFoolsGameplay(boolean foolsGameplay, boolean update) {
@@ -614,19 +614,19 @@ public final class Settings {
         singleton.foolsGameplay= foolsGameplay;
     }
 
-    public static boolean isFoolsLogic() {
-        return false;
+    public static boolean isRandomizeSeals() {
+        return isFools2021Mode() || singleton.randomizeSeals;
     }
 
-    public static void setFoolsLogic(boolean foolsLogic, boolean update) {
-        if(update && foolsLogic != singleton.foolsLogic) {
+    public static void setRandomizeSeals(boolean randomizeSeals, boolean update) {
+        if(update && randomizeSeals != singleton.randomizeSeals) {
             singleton.changed = true;
         }
-        singleton.foolsLogic = foolsLogic;
+        singleton.randomizeSeals = randomizeSeals;
     }
 
     public static boolean isFoolsNpc() {
-        return false;
+        return isFools2021Mode();
     }
 
     public static void setFoolsNpc(boolean foolsNpc, boolean update) {
@@ -1126,7 +1126,7 @@ public final class Settings {
 
         int booleanSettings2 = 0;
         booleanSettings2 |= processBooleanFlag.apply(singleton.foolsNpc, 10);
-        booleanSettings2 |= processBooleanFlag.apply(singleton.foolsLogic, 9);
+        booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeSeals, 9);
         booleanSettings2 |= processBooleanFlag.apply(singleton.foolsGameplay, 8);
         booleanSettings2 |= processBooleanFlag.apply(singleton.bossCheckpoints, 7);
         booleanSettings2 |= processBooleanFlag.apply(singleton.screenshakeDisabled, 6);
@@ -1217,7 +1217,7 @@ public final class Settings {
 
         int booleanSettingsFlag2 = Integer.parseInt(parts[10], 16);
         singleton.foolsNpc = getBoolFlagFromInt.apply(booleanSettingsFlag2, 10);
-        singleton.foolsLogic = getBoolFlagFromInt.apply(booleanSettingsFlag2, 9);
+        singleton.randomizeSeals = getBoolFlagFromInt.apply(booleanSettingsFlag2, 9);
         singleton.foolsGameplay = getBoolFlagFromInt.apply(booleanSettingsFlag2, 8);
         singleton.bossCheckpoints = getBoolFlagFromInt.apply(booleanSettingsFlag2, 7);
         singleton.screenshakeDisabled = getBoolFlagFromInt.apply(booleanSettingsFlag2, 6);
