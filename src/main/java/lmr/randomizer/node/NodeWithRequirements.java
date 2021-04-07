@@ -22,7 +22,7 @@ public class NodeWithRequirements {
         else if(name.startsWith("Setting:") || name.startsWith("Glitch:")) {
             type = NodeType.SETTING;
         }
-        else if(name.startsWith("Event:") || name.startsWith("State:") || name.startsWith("Fairy:") || name.startsWith("Attack:") || name.startsWith("Combo:")) {
+        else if(name.startsWith("Event:") || name.startsWith("State:") || name.startsWith("Fairy:") || name.startsWith("Attack:") || name.startsWith("Combo:") || name.startsWith("Seal:")) {
             type = NodeType.STATE;
         }
         else if(name.startsWith("Transition:")) {
@@ -30,6 +30,9 @@ public class NodeWithRequirements {
         }
         else if(name.startsWith("NPC:")) {
             type = NodeType.NPC;
+        }
+        else if(name.startsWith("NPCL:")) {
+            type = NodeType.NPC_LOCATION;
         }
         else if(name.startsWith("Shop")) {
             type = NodeType.SHOP;

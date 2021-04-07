@@ -785,27 +785,44 @@ public class FileUtils {
             }
             zipInputStream.closeEntry();
 
-            FileUtils.logFlush("Copying rcd file from seed folder to La-Mulana install directory");
-            FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/script.rcd"));
-            Files.copy(new File(String.format("%s/script.rcd", destinationFolder)).toPath(), fileOutputStream);
-            fileOutputStream.flush();
-            fileOutputStream.close();
-            FileUtils.logFlush("rcd copy complete");
+            File fileToCopy = new File(String.format("%s/script.rcd", destinationFolder));
+            if(fileToCopy.exists()) {
+                FileUtils.logFlush("Copying rcd file from seed folder to La-Mulana install directory");
+                FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/script.rcd"));
+                Files.copy(fileToCopy.toPath(), fileOutputStream);
+                fileOutputStream.flush();
+                fileOutputStream.close();
+                FileUtils.logFlush("rcd copy complete");
+            }
 
-            FileUtils.logFlush("Copying dat file from seed folder to La-Mulana install directory");
-            fileOutputStream = new FileOutputStream(new File(String.format("%s/data/language/%s/script_code.dat",
-                    Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
-            Files.copy(new File(String.format("%s/script_code.dat", destinationFolder)).toPath(), fileOutputStream);
-            fileOutputStream.flush();
-            fileOutputStream.close();
-            FileUtils.logFlush("dat copy complete");
+            fileToCopy = new File(String.format("%s/script_code.dat", destinationFolder));
+            if(fileToCopy.exists()) {
+                FileUtils.logFlush("Copying dat file from seed folder to La-Mulana install directory");
+                FileOutputStream fileOutputStream = new FileOutputStream(new File(String.format("%s/data/language/%s/script_code.dat",
+                        Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
+                Files.copy(fileToCopy.toPath(), fileOutputStream);
+                fileOutputStream.flush();
+                fileOutputStream.close();
+                FileUtils.logFlush("dat copy complete");
+            }
 
-            File saveFile = new File(destinationFolder, "lm_00.sav");
-            if(saveFile.exists()) {
+            fileToCopy = new File(String.format("%s/map13.msd", destinationFolder));
+            if(fileToCopy.exists()) {
+                FileUtils.logFlush("Copying msd file from seed folder to La-Mulana install directory");
+                FileOutputStream fileOutputStream = new FileOutputStream(new File(String.format("%s/data/mapdata/map13.msd",
+                        Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
+                Files.copy(fileToCopy.toPath(), fileOutputStream);
+                fileOutputStream.flush();
+                fileOutputStream.close();
+                FileUtils.logFlush("msd copy complete");
+            }
+
+            fileToCopy = new File(destinationFolder, "lm_00.sav");
+            if(fileToCopy.exists()) {
                 FileUtils.logFlush("Copying save file from seed folder to La-Mulana save directory");
-                fileOutputStream = new FileOutputStream(
+                FileOutputStream fileOutputStream = new FileOutputStream(
                         new File(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir())));
-                Files.copy(saveFile.toPath(), fileOutputStream);
+                Files.copy(fileToCopy.toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
             }
@@ -1206,6 +1223,19 @@ public class FileUtils {
     public static void flush() {
         try {
             logWriter.flush();
+        } catch (Exception ex) {
+
+        }
+    }
+
+    public static void writeMsd() {
+        try {
+            DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(String.format("%d/map13.msd", Settings.getStartingSeed())));
+            for(byte msdByte : Settings.goddessMsdBytes) {
+                dataOutputStream.writeByte(msdByte);
+            }
+            dataOutputStream.flush();
+            dataOutputStream.close();
         } catch (Exception ex) {
 
         }

@@ -26,6 +26,7 @@ public class TransitionGateRandomizer {
             transitionGateDestinationMap.clear();
             randomizeHorizontalTransitions(random);
             randomizeVerticalTransitions(random);
+            randomizeDuplicateTransition(random);
         }
         else if(transitionGateDestinationMap.isEmpty()) {
             transitionGateDestinationMap.put("Transition: Surface R1", "Transition: Guidance L1");
@@ -68,6 +69,7 @@ public class TransitionGateRandomizer {
             transitionGateDestinationMap.put("Transition: Endless R1", "Transition: Mausoleum L1");
             transitionGateDestinationMap.put("Transition: Endless D1", "Transition: Shrine U1");
             transitionGateDestinationMap.put("Transition: Endless U1", "Transition: Shrine D2");
+            transitionGateDestinationMap.put("Transition: Endless L1", "Transition: Endless R1");
 
             transitionGateDestinationMap.put("Transition: Shrine U1", "Transition: Endless D1");
             transitionGateDestinationMap.put("Transition: Shrine D1", "Transition: Extinction U1");
@@ -352,6 +354,45 @@ public class TransitionGateRandomizer {
         }
     }
 
+    private void randomizeDuplicateTransition(Random random) {
+        if(!Settings.isRandomizeOneWayTransitions()) {
+            transitionGateDestinationMap.put("Transition: Endless L1", "Transition: Endless R1");
+            return;
+        }
+
+        String chosenTransitionStart;
+        String chosenTransitionEnd;
+        for(CustomTransitionPlacement customTransitionPlacement : DataFromFile.getCustomPlacementData().getCustomTransitionPlacements()) {
+            chosenTransitionStart = customTransitionPlacement.getTargetTransition().replace("Transition ", "Transition: ");
+            if("Transition: Endless L1".equals(chosenTransitionStart)) {
+                chosenTransitionEnd = customTransitionPlacement.getDestinationTransition().replace("Transition ", "Transition: ");
+                transitionGateDestinationMap.put(chosenTransitionStart, chosenTransitionEnd);
+                return;
+            }
+        }
+
+        List<String> rightTransitions = new ArrayList<>();
+        rightTransitions.add("Transition: Surface R1");
+        rightTransitions.add("Transition: Graveyard R1");
+        rightTransitions.add("Transition: Inferno R1");
+        rightTransitions.add("Transition: Ruin R1");
+        rightTransitions.add("Transition: Ruin R2");
+
+        if(!Settings.isFools2021Mode()) {
+            rightTransitions.add("Transition: Sun R1");
+            rightTransitions.add("Transition: Sun R2");
+            rightTransitions.add("Transition: Endless R1");
+            if(Settings.isRandomizeOneWayTransitions()) {
+                rightTransitions.add("Transition: Illusion R1");
+            }
+            rightTransitions.add("Transition: Illusion R2");
+            rightTransitions.add("Transition: Birth R1");
+        }
+
+        String chosenTransition = rightTransitions.get(random.nextInt(rightTransitions.size()));
+        transitionGateDestinationMap.put("Transition: Endless L1", chosenTransition);
+    }
+
     public String getTransitionReverse(String transitionReached) {
         return transitionGateDestinationMap.get(transitionReached);
     }
@@ -363,8 +404,12 @@ public class TransitionGateRandomizer {
             return new ArrayList<>(0);
         }
         List<String> transitionExits = new ArrayList<>(transitionNames.size());
+        String endlessLeftDoorReverse = getTransitionReverse("Transition: Endless L1");
         for(String transitionName : transitionNames) {
             transitionExits.add(getTransitionReverse(transitionName).replace("Transition:", "Exit:"));
+            if(transitionName.equals(endlessLeftDoorReverse)) {
+                transitionExits.add("Exit: Endless L1");
+            }
         }
         if(!transitionExits.isEmpty()) {
             FileUtils.logDetail("Gained access to nodes " + transitionExits, attemptNumber);
@@ -373,8 +418,10 @@ public class TransitionGateRandomizer {
     }
 
     public void updateTransitions() {
+        String endlessL1Reverse = transitionGateDestinationMap.get("Transition: Endless L1");
         for(Map.Entry<String, String> gateStartAndEnd : transitionGateDestinationMap.entrySet()) {
-            GameDataTracker.writeTransitionGate(gateStartAndEnd.getKey(), gateStartAndEnd.getValue());
+            GameDataTracker.writeTransitionGate(gateStartAndEnd.getKey(), gateStartAndEnd.getValue(),
+                    endlessL1Reverse.equals(gateStartAndEnd.getKey()));
         }
     }
 
@@ -796,7 +843,7 @@ public class TransitionGateRandomizer {
                 "Transition: Inferno R1", "Transition: Inferno U1", "Transition: Inferno U2",
                 "Transition: Extinction L1", "Transition: Extinction L2", "Transition: Extinction U1", "Transition: Extinction U2", "Transition: Extinction U3",
                 "Transition: Twin U1", "Transition: Twin U2", "Transition: Twin U3", "Transition: Twin D1", "Transition: Twin D2",
-                "Transition: Endless R1", "Transition: Endless U1", "Transition: Endless D1",
+                "Transition: Endless L1", "Transition: Endless R1", "Transition: Endless U1", "Transition: Endless D1",
                 "Transition: Shrine U1", "Transition: Shrine D1", "Transition: Shrine D2", "Transition: Shrine D3",
                 "Transition: Illusion R1", "Transition: Illusion R2", "Transition: Illusion D1", "Transition: Illusion D2",
                 "Transition: Graveyard L1", "Transition: Graveyard R1", "Transition: Graveyard U1", "Transition: Graveyard U2", "Transition: Graveyard D1",

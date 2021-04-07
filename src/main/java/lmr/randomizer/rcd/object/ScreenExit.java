@@ -4,6 +4,11 @@ package lmr.randomizer.rcd.object;
  * Created by thezerothcat on 7/18/2017.
  */
 public class ScreenExit {
+    public static int UP = 0;
+    public static int RIGHT = 1;
+    public static int DOWN = 2;
+    public static int LEFT = 3;
+
     byte zoneIndex;
     byte roomIndex;
     byte screenIndex;

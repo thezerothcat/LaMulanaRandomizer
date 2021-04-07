@@ -1,5 +1,7 @@
 package lmr.randomizer.node;
 
+import lmr.randomizer.Settings;
+
 /**
  * Created by thezerothcat on 8/5/2017.
  */
@@ -18,8 +20,16 @@ public class AnkhJewelLockChecker implements Runnable {
         }
     }
 
-    public boolean isEnoughAnkhJewelsToDefeatAllAccessibleBosses() {
-        return accessChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses();
+    public boolean isAnkhJewelLock() {
+        if(accessChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
+            return false;
+        }
+        if(!Settings.isFoolsGameplay()) {
+            // Not enough jewels for all bosses, and all bosses are required.
+            return true;
+        }
+        // All bosses are not required, so it's only ankh jewel lock if we can't win from this state.
+        return !accessChecker.isSuccess(null);
     }
 
     public void logAnkhJewelLock() {

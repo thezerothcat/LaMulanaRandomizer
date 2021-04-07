@@ -1,9 +1,5 @@
-package lmr.randomizer.custom;
+package lmr.randomizer;
 
-import lmr.randomizer.DataFromFile;
-import lmr.randomizer.Main;
-import lmr.randomizer.Settings;
-import lmr.randomizer.Translations;
 import lmr.randomizer.node.CustomDoorPlacement;
 import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.node.CustomPlacementData;
@@ -14,12 +10,10 @@ import lmr.randomizer.random.TransitionGateRandomizer;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
-public class CustomPlacements {
+public class Validation {
     public static boolean validateCustomPlacements(Main.RandomizerUI randomizerUI) {
         CustomPlacementData customPlacementData = DataFromFile.getCustomPlacementData();
 
@@ -529,417 +523,243 @@ public class CustomPlacements {
         return true;
     }
 
-    public static void addHolidayPlacements() {
-        if(Settings.isHalloweenMode()) {
-            CustomItemPlacement customItemPlacement = new CustomItemPlacement("xmailer.exe", "Provocative Bathing Suit", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+    public static boolean validateRemovedItems(Main.RandomizerUI randomizerUI) {
+        Set<String> manuallyRemovedItems = new HashSet<>(DataFromFile.getCustomPlacementData().getRemovedItems());
+        if(Settings.isRemoveMainWeapons()) {
+            manuallyRemovedItems.addAll(DataFromFile.MAIN_WEAPONS);
+            manuallyRemovedItems.remove("Whip"); // Whip gets special treatment.
 
-            customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 3", "Buckler", (short)5, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-        } else if(Settings.isFools2020Mode()) {
-            DataFromFile.clearCustomPlacementData();
-            DataFromFile.getCustomPlacementData().setAlternateMotherAnkh(true);
-            DataFromFile.getCustomPlacementData().setMedicineColor("Yellow");
-            DataFromFile.getCustomPlacementData().setStartingWeapon("Whip");
-            DataFromFile.getCustomPlacementData().getStartingItems().add("mirai.exe");
-            if(Settings.getStartingItems().contains("Hermes' Boots")) {
-                DataFromFile.getCustomPlacementData().getStartingItems().add("Hermes' Boots");
+            if(!Settings.isAlternateMotherAnkh()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("The setting \"%s \" is required when removing Main Weapons", Translations.getText("gameplay.alternateMotherAnkh")),
+                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                return false;
             }
-            if(Settings.getStartingItems().contains("bunemon.exe")) {
-                DataFromFile.getCustomPlacementData().getStartingItems().add("bunemon.exe");
+            if(!Settings.isAllowSubweaponStart()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        "Starting with subweapon is required when removing Main Weapons",
+                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                return false;
             }
-            DataFromFile.getCustomPlacementData().setStartingLocation(1);
-
-            Settings.setRandomizeEscapeChest(true, false);
-            Settings.setRandomizeTransitionGates(false, false);
-            Settings.setRandomizeBacksideDoors(false, false);
-            Settings.setRandomizeNonBossDoors(false, false);
-            Settings.setRandomizeCoinChests(true, false);
-            Settings.setRandomizeTrapItems(true, false);
-            Settings.setRandomizeCursedChests(true, false);
-            Settings.setAllowWhipStart(true, false);
-            Settings.setShopRandomization(ShopRandomizationEnum.EVERYTHING.name(), false);
-            Settings.setRandomizeGraphics(false, false);
-            Settings.setMinRandomRemovedItems(0, false);
-            Settings.setMaxRandomRemovedItems(0, false);
-            Settings.setReplaceMapsWithWeights(false, false);
-            Settings.setRemoveSpaulder(false, false);
-            Settings.setRemoveMainWeapons(false, false);
-            Settings.getStartingItems().clear();
-            Settings.getInitiallyAccessibleItems().clear();
-            Settings.getRemovedItems().clear();
-            if(Settings.isRandomizeForbiddenTreasure() && !Settings.isHTFullRandom()) {
-                Settings.setHTFullRandom(true, false);
-            }
-
-            // Cursed chests
-            DataFromFile.getCustomPlacementData().getCursedChests().add("Glove");
-            DataFromFile.getCustomPlacementData().getCursedChests().add("Feather");
-            DataFromFile.getCustomPlacementData().getCursedChests().add("Magatama Jewel");
-            DataFromFile.getCustomPlacementData().getCursedChests().add("Dimensional Key");
-            DataFromFile.getCustomPlacementData().getCursedChests().add("Djed Pillar");
-            DataFromFile.getCustomPlacementData().getCursedChests().add("Coin: Twin (Escape)");
-
-            // Maps
-            CustomItemPlacement customItemPlacement = new CustomItemPlacement("Map (Gate of Guidance)", "Map (Gate of Guidance)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Map (Surface)", "Map (Surface)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            // Ankh jewels
-            customItemPlacement = new CustomItemPlacement("Ankh Jewel (Gate of Guidance)", "Ankh Jewel (Gate of Guidance)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Map (Mausoleum of the Giants)", "Map (Mausoleum of the Giants)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Ankh Jewel (Mausoleum of the Giants)", "Ankh Jewel (Mausoleum of the Giants)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Sacred Orb (Mausoleum of the Giants)", "Sacred Orb (Mausoleum of the Giants)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            // Sacred Orbs
-            customItemPlacement = new CustomItemPlacement("Sacred Orb (Surface)", "Sacred Orb (Surface)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Sacred Orb (Gate of Guidance)", "Sacred Orb (Gate of Guidance)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Sacred Orb (Dimensional Corridor)", "Coin: Guidance (Two)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Coin: Inferno (Spikes)", "Sacred Orb (Dimensional Corridor)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            // Weapons
-            customItemPlacement = new CustomItemPlacement("Axe", "Katana", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Bomb", "Key Sword", null); // Key sword not required in this
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Caltrops", "Caltrops", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Chain Whip", "Flare Gun", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Chakram", "Knife", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Earth Spear", "Chakram", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Flail Whip", "Flail Whip", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Flare Gun", "Glove", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Katana", "Axe", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Key Sword", "Earth Spear", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Knife", "Bomb", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Rolling Shuriken", "Rolling Shuriken", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Shuriken", "Shuriken", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            // Swap
-            customItemPlacement = new CustomItemPlacement("Coin: Twin (Lower)", "Ankh Jewel (Twin Labyrinths)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Ankh Jewel (Twin Labyrinths)", "Coin: Twin (Lower)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Gauntlet", "Silver Shield", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Glove", "Gauntlet", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Holy Grail", "Spaulder", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Spaulder", "Ankh Jewel (Extra)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Trap: Twin Ankh", "Holy Grail", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Feather", "Angel Shield", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("mirai.exe", "Chain Whip", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Coin: Twin (Escape)", "Feather", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Djed Pillar", "Dimensional Key", "Feather");
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Death Seal", "Cog of the Soul", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Cog of the Soul", "Coin: Guidance (One)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Dimensional Key", "Death Seal", "Feather");
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("yagostr.exe", "yagomap.exe", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("lamulana.exe", "guild.exe", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Perfume", "Djed Pillar", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            // Traps
-            customItemPlacement = new CustomItemPlacement("Trap: Inferno Orb", "Trap: Inferno Orb", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Trap: Exploding", "Trap: Exploding", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Angel Shield", "Trap: Twin Ankh", "Angel Shield");
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Silver Shield", "Trap: Graveyard", "Silver Shield");
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            // Other
-            customItemPlacement = new CustomItemPlacement("Coin: Surface (Waterfall)", "Coin: Surface (Waterfall)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Coin: Surface (Seal)", "Coin: Surface (Seal)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Coin: Surface (Ruin Path)", "Coin: Surface (Ruin Path)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Coin: Guidance (One)", "Coin: Guidance (One)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Coin: Guidance (Two)", "Coin: Guidance (Two)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("Coin: Guidance (Trap)", "Coin: Guidance (Trap)", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            customItemPlacement = new CustomItemPlacement("beolamu.exe", "beolamu.exe", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Birth Seal", "Birth Seal", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Book of the Dead", "Book of the Dead", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Bronze Mirror", "Bronze Mirror", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            if(Settings.isRandomizeForbiddenTreasure()) {
-                customItemPlacement = new CustomItemPlacement("bunplus.com", "Ice Cape", null);
-                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            }
-
-            customItemPlacement = new CustomItemPlacement("Cog of the Soul", "Coin: Spring", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Coin: Graveyard", "Coin: Graveyard", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Crystal Skull", "Crystal Skull", "Feather");
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("deathv.exe", "deathv.exe", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Diary", "Diary", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("emusic.exe", "emusic.exe", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Eye of Truth", "Eye of Truth", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Coin: Illusion (Katana)", "Fairy Clothes", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Fruit of Eden", "Fruit of Eden", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Grapple Claw", "Grapple Claw", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            if(Settings.isRandomizeForbiddenTreasure()) {
-                customItemPlacement = new CustomItemPlacement("Ice Cape", "Provocative Bathing Suit", null);
-                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            }
-            else {
-                customItemPlacement = new CustomItemPlacement("Ice Cape", "Ice Cape", null);
-                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            }
-
-            customItemPlacement = new CustomItemPlacement("Life Seal", "Life Seal", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Map (Endless Corridor)", "Isis' Pendant", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Key of Eternity", "Key of Eternity", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("mantra.exe", "mantra.exe", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Magatama Jewel", "Magatama Jewel", "Feather");
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("mekuri.exe", "mekuri.exe", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("mirai.exe", "mirai.exe", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Mulana Talisman", "Mulana Talisman", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Scalesphere", "Origin Seal", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Pepper", "Pepper", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Philosopher's Ocarina", "Philosopher's Ocarina", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Plane Model", "Plane Model", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Pochette Key", "Pochette Key", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            if(Settings.isRandomizeForbiddenTreasure()) {
-                customItemPlacement = new CustomItemPlacement("Provocative Bathing Suit", "bunplus.com", null);
-                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            }
-            else {
-                customItemPlacement = new CustomItemPlacement("bunplus.com", "bunplus.com", null);
-                DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-            }
-
-            customItemPlacement = new CustomItemPlacement("Ring", "Ring", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Serpent Staff", "Serpent Staff", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shell Horn", "Shell Horn", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Talisman", "Talisman", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Treasures", "Treasures", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Twin Statue", "Twin Statue", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Vessel", "Vessel", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Woman Statue", "Woman Statue", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("xmailer.exe", "xmailer.exe", null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            // Shops
-            customItemPlacement = new CustomItemPlacement("Shop 1 (Surface) Item 1", "Hand Scanner", (short)10, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 1 (Surface) Item 2", "Pistol Ammo", (short)400, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 1 (Surface) Item 3", "Shuriken Ammo", (short)10, (short)10);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 1", "Weights", (short)10, (short)5);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 2", "reader.exe", (short)50, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 3", "yagostr.exe", (short)20, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 2 Alt (Surface) Item 1", "Bracelet", null, null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 3 (Surface) Item 1", "Buckler", (short)10, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 3 (Surface) Item 2", "Waterproof Case", (short)50, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 3 (Surface) Item 3", "Pistol", (short)100, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 4 (Guidance) Item 1", "Shuriken Ammo", (short)10, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 4 (Guidance) Item 2", "lamulana.exe", (short)60, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 4 (Guidance) Item 3", "Weights", (short)10, (short)5);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 5 (Illusion) Item 1", "move.exe", null, null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 6 (Mausoleum) Item 1", "Hermes' Boots", (short)60, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 7 (Graveyard) Item 2", "Fake Silver Shield", (short)150, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 8 (Sun) Item 3", "bunemon.exe", (short)50, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 9 (Sun) Item 1", "Scriptures", (short)250, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 11 (Moonlight) Item 1", "Heatproof Case", (short)250, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 11 (Moonlight) Item 3", "Pistol Ammo", (short)4, (short)6);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 12 (Spring) Item 3", "capstar.exe", (short)200, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 13 (Goddess) Item 1", "torude.exe", (short)200, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 13 (Goddess) Item 2", "Weights", null, null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 13 (Goddess) Item 3", "Weights", null, null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 14 (Inferno) Item 1", "randc.exe", (short)150, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 15 (Ruin) Item 1", "miracle.exe", (short)200, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 17 (Birth) Item 2", "Ankh Jewel (Chamber of Birth)", null, null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 18 (Lil Bro) Item 1", "Dragon Bone", (short)60, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 18 (Lil Bro) Item 2", "Weights", (short)1, (short)50);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 18 (Lil Bro) Item 3", "Weights", (short)50, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 19 (Big Bro) Item 1", "Map (Shrine of the Mother)", (short)100, (short)1);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 20 (Twin Labs) Item 1", "Weights", null, null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 20 (Twin Labs) Item 2", "Weights", null, null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 20 (Twin Labs) Item 3", "Weights", null, null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 21 (Unsolvable) Item 1", "Lamp of Time", null, null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
-
-            customItemPlacement = new CustomItemPlacement("Shop 21 (Unsolvable) Item 2", "Helmet", null, null);
-            DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
         }
+        int ankhJewelsRemoved = 0;
+        for (String item : manuallyRemovedItems) {
+            if(item.contains("Ankh Jewel")) {
+                ankhJewelsRemoved += 1;
+            }
+        }
+        if(!Settings.isFoolsGameplay() && ankhJewelsRemoved > 0) {
+            JOptionPane.showMessageDialog(randomizerUI,
+                    "Current settings do not allow Ankh Jewels to be removed",
+                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if(Settings.isFoolsGameplay() && ankhJewelsRemoved > 4) {
+            JOptionPane.showMessageDialog(randomizerUI,
+                    "Current settings do not allow more than 4 Ankh Jewels to be removed",
+                    "Custom placement error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if((Settings.getMinRandomRemovedItems() + manuallyRemovedItems.size() > 99)) {
+            JOptionPane.showMessageDialog(randomizerUI,
+                    "Minimum removed item count is too high with custom placement settings. A minimum of " + (99 - manuallyRemovedItems.size()) + " will be used instead.",
+                    "Randomizer error", JOptionPane.WARNING_MESSAGE);
+            Settings.setMinRandomRemovedItems(99 - manuallyRemovedItems.size(), false);
+        }
+        if((Settings.getMaxRandomRemovedItems() + manuallyRemovedItems.size() > 99)) {
+            JOptionPane.showMessageDialog(randomizerUI,
+                    "Maximum removed item count is too high with custom placement settings. A maximum of " + (99 - manuallyRemovedItems.size()) + " will be used instead.",
+                    "Randomizer error", JOptionPane.WARNING_MESSAGE);
+            Settings.setMaxRandomRemovedItems(99 - manuallyRemovedItems.size(), false);
+        }
+        return true;
+    }
+
+
+    public static boolean validateInstallDir(Main.RandomizerUI randomizerUI) {
+        if(Settings.getLaMulanaBaseDir() != null && !Settings.getLaMulanaBaseDir().isEmpty()
+                && new File(Settings.getLaMulanaBaseDir()).exists()) {
+            return true;
+        }
+        JOptionPane.showMessageDialog(randomizerUI,
+                "Unable to find La-Mulana install directory",
+                "Randomizer error", JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+
+    public static boolean validateSaveDir(Main.RandomizerUI randomizerUI) {
+        if(Settings.getLaMulanaSaveDir() != null && !Settings.getLaMulanaSaveDir().isEmpty()
+                        && new File(Settings.getLaMulanaSaveDir()).exists()) {
+            return true;
+        }
+        JOptionPane.showMessageDialog(randomizerUI,
+                "Unable to find La-Mulana save directory",
+                "Randomizer error", JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+
+    public static boolean validateGraphicsPack(Main.RandomizerUI randomizerUI) {
+        if("HALLOWEEN".equals(Settings.getGraphicsPack())) {
+            JOptionPane.showMessageDialog(randomizerUI,
+                    String.format("HALLOWEEN cannot be used as %s. Please select a folder from which the HALLOWEEN graphics should be created.", Translations.getText("settings.graphicsPack")),
+                    "Randomizer error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if("FOOLS2020".equals(Settings.getGraphicsPack())) {
+            JOptionPane.showMessageDialog(randomizerUI,
+                    String.format("FOOLS2020 cannot be used as %s. Please select a folder from which the FOOLS2020 graphics should be created.", Translations.getText("settings.graphicsPack")),
+                    "Randomizer error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean validateSettingCombinations(Main.RandomizerUI randomizerUI) {
+        if(!Settings.isAllowWhipStart() && !Settings.isAllowMainWeaponStart() && !Settings.isAllowSubweaponStart()) {
+            JOptionPane.showMessageDialog(randomizerUI,
+                    "Starting without a weapon is not currently enabled",
+                    "Randomizer error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if(Settings.isRandomizeEnemies() && Settings.getEnabledDamageBoosts().contains("Enemy")) {
+            JOptionPane.showMessageDialog(randomizerUI,
+                    String.format("The setting \"%s\" cannot be used with the setting \"%s\"",
+                            Translations.getText("enemies.randomizeEnemies"),
+                            Translations.getText("dboost.Enemy")),
+                    "Randomizer error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if(Settings.isRequireFullAccess() && Settings.isRemoveMainWeapons()) {
+            JOptionPane.showMessageDialog(randomizerUI,
+                    "The setting \"Require all items to be accessible\" cannot be used when removing Main Weapons",
+                    "Randomizer error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if(Settings.isRandomizeStartingLocation()) {
+            if(!ShopRandomizationEnum.EVERYTHING.equals(Settings.getShopRandomization())) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("Please enable %s %s when using %s", Translations.getText("randomization.randomizeShops"), Translations.getText("randomization.randomizeShops.everything"), Translations.getText("randomization.randomizeStartingLocation")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean validateHalloween(Main.RandomizerUI randomizerUI) {
+        if(Settings.isHalloweenMode()){
+            if(Settings.isRequireFullAccess()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("The setting \"%s\" cannot be used with this mode",
+                                Translations.getText("logic.requireFullAccess.short")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+//                if(!Settings.isRandomizeEnemies()) {
+//                    JOptionPane.showMessageDialog(this,
+//                            String.format("The setting \"%s\" is required for this mode",
+//                                    Translations.getText("enemies.randomizeEnemies")),
+//                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+//                    return false;
+//                }
+//                if(!Settings.isRandomizeStartingLocation()) {
+//                    JOptionPane.showMessageDialog(this,
+//                            String.format("The setting \"%s\" is required for this mode",
+//                                    Translations.getText("randomization.randomizeStartingLocation")),
+//                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
+//                    return false;
+//                }
+            if(Settings.getEnabledDamageBoosts().contains("Enemy")) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("The setting \"%s\" cannot be used with this mode",
+                                Translations.getText("dboost.Enemy")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean validateFools2020(Main.RandomizerUI randomizerUI) {
+        if(Settings.isFools2020Mode()) {
+            if(Settings.isRequireFullAccess()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("The setting \"%s\" cannot be used with this mode",
+                                Translations.getText("logic.requireFullAccess.short")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(!Settings.isRandomizeTrapItems()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("The setting \"%s\" is required for this mode",
+                                Translations.getText("randomization.randomizeTrapItems")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(!Settings.isRandomizeCoinChests()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("The setting \"%s\" is required for this mode",
+                                Translations.getText("randomization.randomizeCoinChests")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean validateFools2021(Main.RandomizerUI randomizerUI) {
+        if(Settings.isFools2021Mode()) {
+            if(Settings.isRequireFullAccess()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("The setting \"%s\" cannot be used with this mode",
+                                Translations.getText("logic.requireFullAccess.short")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(!Settings.isRandomizeCoinChests()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("The setting \"%s\" is required for this mode",
+                                Translations.getText("randomization.randomizeCoinChests")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(!Settings.isRandomizeTransitionGates()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("The setting \"%s\" is required for this mode",
+                                Translations.getText("randomization.randomizeTransitionGates")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(!Settings.isRandomizeOneWayTransitions()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("The setting \"%s\" is required for this mode",
+                                Translations.getText("randomization.randomizeOneWayTransitions")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(!Settings.isRandomizeBacksideDoors()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("The setting \"%s\" is required for this mode",
+                                Translations.getText("randomization.randomizeBacksideDoors")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(!Settings.isRandomizeNonBossDoors()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("The setting \"%s\" is required for this mode",
+                                Translations.getText("randomization.randomizeNonBossDoors")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(Settings.isAlternateMotherAnkh()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("The setting \"%s\" is cannot be used in this mode",
+                                Translations.getText("gameplay.alternateMotherAnkh")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        return true;
     }
 
     private static boolean isValidLocation(String location) {

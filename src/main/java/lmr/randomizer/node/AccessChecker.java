@@ -3,10 +3,7 @@ package lmr.randomizer.node;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
-import lmr.randomizer.random.BacksideDoorRandomizer;
-import lmr.randomizer.random.ItemRandomizer;
-import lmr.randomizer.random.ShopRandomizer;
-import lmr.randomizer.random.TransitionGateRandomizer;
+import lmr.randomizer.random.*;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.util.*;
@@ -30,6 +27,8 @@ public class AccessChecker {
     private ShopRandomizer shopRandomizer;
     private BacksideDoorRandomizer backsideDoorRandomizer;
     private TransitionGateRandomizer transitionGateRandomizer;
+    private SealRandomizer sealRandomizer;
+    private NpcRandomizer npcRandomizer;
 
     private int numberOfAccessibleAnkhJewels;
     private int numberOfCollectedAnkhJewels;
@@ -47,6 +46,8 @@ public class AccessChecker {
         this.mapOfRequirementsToNodeNameObject = copyNodeNameMap(accessChecker.mapOfRequirementsToNodeNameObject);
         this.itemRandomizer = copyAll ? new ItemRandomizer(accessChecker.itemRandomizer) : accessChecker.itemRandomizer;
         this.shopRandomizer = copyAll ? accessChecker.shopRandomizer.copy() : accessChecker.shopRandomizer;
+        this.sealRandomizer = accessChecker.sealRandomizer;
+        this.npcRandomizer = accessChecker.npcRandomizer;
         this.backsideDoorRandomizer = new BacksideDoorRandomizer(accessChecker.backsideDoorRandomizer);
         this.transitionGateRandomizer = accessChecker.transitionGateRandomizer; // Might need to copy at some point, but currently this only keeps a map/doesn't track state.
         this.accessedNodes = new HashSet<>(accessChecker.accessedNodes);
@@ -123,6 +124,14 @@ public class AccessChecker {
                 if(!accessedNodes.contains(requiredItem)) {
                     FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
                     if(accessedNodes.size() > 500 || Settings.isDetailedLoggingAttempt(attemptNumber)) {
+                        List<String> defeatedBosses = new ArrayList<>();
+                        for(String bossDefeat : DataFromFile.GUARDIAN_DEFEATED_EVENTS) {
+                            if(accessedNodes.contains(bossDefeat)) {
+                                defeatedBosses.add(bossDefeat);
+                            }
+                        }
+                        FileUtils.log("Bosses defeated: " + defeatedBosses.toString());
+                        FileUtils.log("Bosses accessible: " + accessibleBossNodes.toString());
                         List<String> logged = new ArrayList<>();
                         if (requiredItem.startsWith("Event:")) {
                             logAccess(requiredItem, logged);
@@ -170,6 +179,14 @@ public class AccessChecker {
             if(!accessedNodes.contains(requiredItem)) {
                 FileUtils.log("Win requirement not accessible: " + requiredItem + ", accessed nodes = " + accessedNodes.size());
                 if(accessedNodes.size() > 500 || Settings.isDetailedLoggingAttempt(attemptNumber)) {
+                    List<String> defeatedBosses = new ArrayList<>();
+                    for(String bossDefeat : DataFromFile.GUARDIAN_DEFEATED_EVENTS) {
+                        if(accessedNodes.contains(bossDefeat)) {
+                            defeatedBosses.add(bossDefeat);
+                        }
+                    }
+                    FileUtils.log("Bosses defeated: " + defeatedBosses.toString());
+                    FileUtils.log("Bosses accessible: " + accessibleBossNodes.toString());
                     List<String> logged = new ArrayList<>();
                     if (requiredItem.startsWith("Event:") || requiredItem.startsWith("Location:")) {
                         logAccess(requiredItem, logged);
@@ -314,6 +331,7 @@ public class AccessChecker {
         String stateToUpdate = newState;
         if(fullValidation) {
             FileUtils.logDetail("Checking progress for node " + newState, attemptNumber);
+            FileUtils.flush();
             stateToUpdate = checkState(stateToUpdate);
             if(stateToUpdate == null) {
                 return;
@@ -331,11 +349,14 @@ public class AccessChecker {
             if("Bronze Mirror".equals(stateToUpdate)) {
                 queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(stateToUpdate, attemptNumber));
             }
+            if("Origin Seal".equals(stateToUpdate) || "Birth Seal".equals(stateToUpdate) || "Life Seal".equals(stateToUpdate) || "Death Seal".equals(stateToUpdate)) {
+                queuedUpdates.addAll(sealRandomizer.getNodesForSeal(stateToUpdate));
+            }
             if(mapOfRequirementsToNodeNameObject.containsKey(stateToUpdate)) {
                 for(String nodeName : mapOfRequirementsToNodeNameObject.get(stateToUpdate)) {
                     node = mapOfNodeNameToRequirementsObject.get(nodeName);
                     if(node != null && node.updateRequirements(stateToUpdate)) {
-                        FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
+                        FileUtils.logDetail("Gained access to node " + nodeName + " after acquiring " + stateToUpdate, attemptNumber);
                         handleNodeAccess(nodeName, node.getType(), fullValidation, attemptNumber);
                         nodesToRemove.add(nodeName);
                     }
@@ -343,10 +364,14 @@ public class AccessChecker {
             }
         }
         else { // When not doing full validation, just use old version of this check.  It's slower but this doesn't happen many times per loop so not a big deal
+            if("Origin Seal".equals(stateToUpdate) || "Birth Seal".equals(stateToUpdate) || "Life Seal".equals(stateToUpdate) || "Death Seal".equals(stateToUpdate)) {
+                // Included for non-full validation on the off chance that someone starts with one or more seals via custom placements/plando.
+                queuedUpdates.addAll(sealRandomizer.getNodesForSeal(stateToUpdate));
+            }
             for(String nodeName : mapOfNodeNameToRequirementsObject.keySet()) {
                 node = mapOfNodeNameToRequirementsObject.get(nodeName);
                 if(node.updateRequirements(stateToUpdate)) {
-                    FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
+                    FileUtils.logDetail("Gained access to node " + nodeName + " after acquiring " + stateToUpdate, attemptNumber);
                     handleNodeAccess(nodeName, node.getType(), fullValidation, attemptNumber);
                     nodesToRemove.add(nodeName);
                 }
@@ -415,6 +440,7 @@ public class AccessChecker {
                 || stateToUpdate.contains("Viy Defeated") || stateToUpdate.contains("Baphomet Defeated")
                 || stateToUpdate.contains("Palenque Defeated") || stateToUpdate.contains("Tiamat Defeated")) {
             bossesDefeated += 1;
+            queuedUpdates.add("Bosses Defeated: " + bossesDefeated);
         }
         return stateToUpdate;
     }
@@ -496,7 +522,11 @@ public class AccessChecker {
                 }
                 break;
             case NPC:
+                FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
                 queuedUpdates.add(nodeName);
+                break;
+            case NPC_LOCATION:
+                queuedUpdates.add(npcRandomizer.getNpc(nodeName));
                 break;
             case MAP_LOCATION:
                 queuedUpdates.add(nodeName);
@@ -553,7 +583,7 @@ public class AccessChecker {
                 queuedUpdates.add(nodeName);
                 String reverseTransition = transitionGateRandomizer.getTransitionReverse(nodeName);
                 if(!accessedNodes.contains(reverseTransition) && !queuedUpdates.contains(reverseTransition)) {
-                    FileUtils.logDetail("Gained access to node " + reverseTransition, attemptNumber);
+                    FileUtils.logDetail("Gained access to node " + reverseTransition + " through reverse transition " + nodeName, attemptNumber);
                     queuedUpdates.add(reverseTransition);
                     if("Transition: Goddess L2".equals(reverseTransition) ) {
                         queuedUpdates.add("Event: Special Statue Removal");
@@ -591,10 +621,28 @@ public class AccessChecker {
                 return false;
             }
         }
-        else if(item.contains("Sacred Orb")) {
-            item = "Sacred Orb";
-            if(location.contains("Shop") && shopRandomizer.shopHasTransformation(location)) {
+        else if(item.contains("Key Sword")) {
+            if(Settings.isFools2021Mode()
+                    && ("Shop 12 (Spring)".equals(location) || "Shop 12 Alt (Spring)".equals(location)
+                    || "Shop 18 (Lil Bro)".equals(location) || "Shop 20 (Twin Labs)".equals(location)
+                    || "Shop 21 (Unsolvable)".equals(location))) {
+                // Avoid dealing with Key Sword mantra timer.
                 return false;
+            }
+        }
+        else if(item.contains("Sacred Orb")) { // todo: should probably not do this check if it's a removed item
+            item = "Sacred Orb";
+            if(location.contains("Shop")) {
+                if(shopRandomizer.shopHasTransformation(location)) {
+                    return false;
+                }
+                if(Settings.isFools2021Mode()
+                        && ("Shop 12 (Spring)".equals(location) || "Shop 12 Alt (Spring)".equals(location)
+                        || "Shop 18 (Lil Bro)".equals(location) || "Shop 20 (Twin Labs)".equals(location)
+                        || "Shop 21 (Unsolvable)".equals(location))) {
+                    // Avoid dealing with shop transformations.
+                    return false;
+                }
             }
             if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
                 return false;
@@ -691,6 +739,14 @@ public class AccessChecker {
         this.transitionGateRandomizer = transitionGateRandomizer;
     }
 
+    public void setSealRandomizer(SealRandomizer sealRandomizer) {
+        this.sealRandomizer = sealRandomizer;
+    }
+
+    public void setNpcRandomizer(NpcRandomizer npcRandomizer) {
+        this.npcRandomizer = npcRandomizer;
+    }
+
     public boolean updateForBosses() {
         List<Thread> threads = new ArrayList<>(accessibleBossNodes.size());
         List<AnkhJewelLockChecker> ankhJewelLockCheckers = new ArrayList<>();
@@ -712,7 +768,7 @@ public class AccessChecker {
         }
 
         for(AnkhJewelLockChecker ankhJewelLockChecker : ankhJewelLockCheckers) {
-            if(!ankhJewelLockChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
+            if(ankhJewelLockChecker.isAnkhJewelLock()) {
                 ankhJewelLockChecker.logAnkhJewelLock();
                 return false;
             }

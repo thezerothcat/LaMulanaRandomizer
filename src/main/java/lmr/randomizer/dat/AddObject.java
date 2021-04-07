@@ -13,6 +13,7 @@ import lmr.randomizer.update.GameObjectId;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class AddObject {
@@ -48,13 +49,13 @@ public final class AddObject {
 
     /**
      * Convenience for adding a timer object to any screen.
-     * @param screen to add the timer object to
+     * @param objectContainer to add the timer object to
      * @param delaySeconds seconds to wait before the timer runs its updates
      * @param tests tests to put on the timer object
      * @param updates updates the timer object should make when all of its tests pass
      */
-    public static void addTimer(Screen screen, int delaySeconds, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
-        GameObject obj = new GameObject(screen);
+    public static void addSecondsTimer(ObjectContainer objectContainer, int delaySeconds, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject obj = new GameObject(objectContainer);
         obj.setId((short)0x0b);
         obj.getArgs().add((short)delaySeconds);
         obj.getArgs().add((short)0);
@@ -63,7 +64,29 @@ public final class AddObject {
 
         obj.getTestByteOperations().addAll(tests);
         obj.getWriteByteOperations().addAll(updates);
-        screen.getObjects().add(0, obj);
+        objectContainer.getObjects().add(0, obj);
+    }
+
+    /**
+     * Convenience for adding a timer object to any screen.
+     * @param objectContainer to add the timer object to
+     * @param delayFrames seconds to wait before the timer runs its updates
+     * @param tests tests to put on the timer object
+     * @param updates updates the timer object should make when all of its tests pass
+     */
+    public static GameObject addFramesTimer(ObjectContainer objectContainer, int delayFrames,
+                                            List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject obj = new GameObject(objectContainer);
+        obj.setId((short)0x0b);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)delayFrames);
+        obj.setX(-1);
+        obj.setY(-1);
+
+        obj.getTestByteOperations().addAll(tests);
+        obj.getWriteByteOperations().addAll(updates);
+        objectContainer.getObjects().add(0, obj);
+        return obj;
     }
 
     public static void addFloatingItem(Screen screen, int x, int y, int itemArg, boolean realItem, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
@@ -336,7 +359,7 @@ public final class AddObject {
     }
 
     /**
-     * Add a timer to set the flag for solving the Diary chest puzzle if the appropriate conditions are met.
+     * Add a lemeza detector to set the flag for making the goddess statue disappear.
      * @param transitionGate the gate to put the detector with
      */
     public static void addGoddessStatueLemezaDetector(GameObject transitionGate) {
@@ -364,6 +387,34 @@ public final class AddObject {
         obj.getWriteByteOperations().add(writeByteOperation);
 
         transitionGate.getObjectContainer().getObjects().add(obj);
+    }
+
+    /**
+     * Add a lemeza detector to set the flag for solving the Endless Corridor Map chest puzzle after leaving through the left exit of Endless Corridor
+     * @param transitionGate the gate to put the detector with
+     */
+    public static void addEndlessCorridorLeftExitLemezaDetector(GameObject transitionGate) {
+        GameObject obj = new GameObject(transitionGate.getObjectContainer());
+        obj.setId((short)0x14);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)2);
+        obj.getArgs().add((short)3);
+        obj.setX(transitionGate.getX() - 40);
+        obj.setY(transitionGate.getY() - 20);
+
+        obj.getTestByteOperations().add(new TestByteOperation(0x1f6, ByteOp.FLAG_EQUALS, 1));
+        obj.getWriteByteOperations().add(new WriteByteOperation(0x1f6, ByteOp.ASSIGN_FLAG, 2));
+        obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1)); // May need to add a sound effect, etc
+
+        transitionGate.getObjectContainer().getObjects().add(obj);
+
+        addSuccessSound(transitionGate.getObjectContainer(), Arrays.asList(
+                new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
+                new TestByteOperation(0x1f6, ByteOp.FLAG_EQUALS, 2),
+                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
     }
 
     /**
@@ -510,25 +561,25 @@ public final class AddObject {
             obj.setY(-1);
 
             TestByteOperation testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(853 + i);
+            testByteOperation.setIndex(0x355 + i);
             testByteOperation.setOp(ByteOp.FLAG_EQUALS);
             testByteOperation.setValue((byte)0);
             obj.getTestByteOperations().add(testByteOperation);
 
             testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(199 + i);
+            testByteOperation.setIndex(0x0c7 + i);
             testByteOperation.setOp(ByteOp.FLAG_EQUALS);
             testByteOperation.setValue((byte)2);
             obj.getTestByteOperations().add(testByteOperation);
 
             WriteByteOperation writeByteOperation = new WriteByteOperation();
-            writeByteOperation.setIndex(853 + i);
+            writeByteOperation.setIndex(0x355 + i);
             writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
             writeByteOperation.setValue((byte)1);
             obj.getWriteByteOperations().add(writeByteOperation);
 
             writeByteOperation = new WriteByteOperation();
-            writeByteOperation.setIndex(852);
+            writeByteOperation.setIndex(0x354);
             writeByteOperation.setOp(ByteOp.ADD_FLAG);
             writeByteOperation.setValue((byte)1);
             obj.getWriteByteOperations().add(writeByteOperation);
@@ -1308,77 +1359,41 @@ public final class AddObject {
         }
     }
 
-    public static GameObject addBackupGyoninFishShop(GameObject untransformedGyoninFishShop) {
-        ObjectContainer objectContainer = untransformedGyoninFishShop.getObjectContainer();
-        if(objectContainer instanceof Screen) {
-            GameObject backupFishShop = new GameObject(untransformedGyoninFishShop.getObjectContainer());
-            for (int i = 0; i < untransformedGyoninFishShop.getArgs().size(); i++) {
-                backupFishShop.getArgs().add(untransformedGyoninFishShop.getArgs().get(i));
-            }
-            TestByteOperation testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(407);
-            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-            testByteOperation.setValue((byte) 3);
-            backupFishShop.getTestByteOperations().add(testByteOperation);
+    public static void addTransformedMrFishmanShopDoorGraphic(GameObject mrFishmanShopDoor) {
+        GameObject backupFishNewDoorGraphic = new GameObject(mrFishmanShopDoor.getObjectContainer());
+        backupFishNewDoorGraphic.getTestByteOperations().add(new TestByteOperation(0x197, ByteOp.FLAG_EQUALS, 3));
+        backupFishNewDoorGraphic.getTestByteOperations().add(new TestByteOperation(0x0fe, ByteOp.FLAG_NOT_EQUAL, 3));
 
-            testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(254);
-            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-            testByteOperation.setValue((byte) 3);
-            backupFishShop.getTestByteOperations().add(testByteOperation);
+        backupFishNewDoorGraphic.getArgs().add((short)-1);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)260);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)40);
+        backupFishNewDoorGraphic.getArgs().add((short)40);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)1);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)255);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
+        backupFishNewDoorGraphic.getArgs().add((short)0);
 
-            backupFishShop.setId((short) 0xa0);
-            backupFishShop.setX(180);
-            backupFishShop.setY(1520);
+        backupFishNewDoorGraphic.setId((short) 0x93);
+        backupFishNewDoorGraphic.setX(180);
+        backupFishNewDoorGraphic.setY(1520);
 
-            untransformedGyoninFishShop.getObjectContainer().getObjects().add(backupFishShop);
-
-            GameObject backupFishNewDoorGraphic = new GameObject(untransformedGyoninFishShop.getObjectContainer());
-            testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(407);
-            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-            testByteOperation.setValue((byte) 3);
-            backupFishNewDoorGraphic.getTestByteOperations().add(testByteOperation);
-
-            testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(254);
-            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-            testByteOperation.setValue((byte) 3);
-            backupFishNewDoorGraphic.getTestByteOperations().add(testByteOperation);
-
-            backupFishNewDoorGraphic.getArgs().add((short)-1);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)260);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)40);
-            backupFishNewDoorGraphic.getArgs().add((short)40);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)1);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)255);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-            backupFishNewDoorGraphic.getArgs().add((short)0);
-
-            backupFishNewDoorGraphic.setId((short) 0x93);
-            backupFishNewDoorGraphic.setX(180);
-            backupFishNewDoorGraphic.setY(1520);
-
-            untransformedGyoninFishShop.getObjectContainer().getObjects().add(backupFishNewDoorGraphic);
-            return backupFishShop;
-        }
-        return null;
+        mrFishmanShopDoor.getObjectContainer().getObjects().add(backupFishNewDoorGraphic);
     }
 
     /**
@@ -2059,7 +2074,7 @@ public final class AddObject {
         backsideDoor.getObjectContainer().getObjects().add(mirrorCoverGraphic);
     }
 
-    public static void addGrailToggle(ObjectContainer objectContainer) {
+    public static void addGrailToggle(ObjectContainer objectContainer, boolean enableGrail, TestByteOperation... tests) {
         if(objectContainer == null) {
             objectContainer = dimensionalExitScreen;
         }
@@ -2067,13 +2082,13 @@ public final class AddObject {
         grailToggle.setId((short)0xb7);
         grailToggle.setX(-1);
         grailToggle.setY(-1);
-        grailToggle.getArgs().add((short)1);
+        grailToggle.getArgs().add((short)(enableGrail ? 1 : 0));
 
-        TestByteOperation testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(0x382);
-        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-        testByteOperation.setValue((byte)0);
-        grailToggle.getTestByteOperations().add(testByteOperation);
+        // Disable during escape
+        grailToggle.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0));
+        for(TestByteOperation test : tests) {
+            grailToggle.getTestByteOperations().add(test);
+        }
 
         objectContainer.getObjects().add(0, grailToggle);
     }
@@ -2284,17 +2299,8 @@ public final class AddObject {
         noItemSoundEffect.setX(-1);
         noItemSoundEffect.setY(-1);
 
-        TestByteOperation testFlag = new TestByteOperation();
-        testFlag.setIndex(newWorldFlag);
-        testFlag.setOp(ByteOp.FLAG_GT);
-        testFlag.setValue((byte)0);
-        noItemSoundEffect.getTestByteOperations().add(testFlag);
-
-        testFlag = new TestByteOperation();
-        testFlag.setIndex(screenFlag);
-        testFlag.setOp(ByteOp.FLAG_EQUALS);
-        testFlag.setValue((byte)1);
-        noItemSoundEffect.getTestByteOperations().add(testFlag);
+        noItemSoundEffect.getTestByteOperations().add(new TestByteOperation(newWorldFlag, ByteOp.FLAG_GT, 0));
+        noItemSoundEffect.getTestByteOperations().add(new TestByteOperation(screenFlag, ByteOp.FLAG_EQUALS, 1));
 
         objectContainer.getObjects().add(0, noItemSoundEffect);
     }
@@ -2319,7 +2325,7 @@ public final class AddObject {
         objectContainer.getObjects().add(bat);
     }
 
-    public static void addExplosion(ObjectContainer objectContainer, int xPos, int yPos, int newWorldFlag, int damage, boolean percentDamage) {
+    public static void addExplosion(ObjectContainer objectContainer, int xPos, int yPos, int explosionTriggerFlag, int damage, boolean percentDamage) {
         GameObject explosion = new GameObject(objectContainer);
         explosion.setId((short)0xb4);
         explosion.setX(xPos - 80);
@@ -2332,17 +2338,8 @@ public final class AddObject {
         explosion.getArgs().add((short)damage); // Damage
         explosion.getArgs().add((short)85); // sound effect select
 
-        TestByteOperation testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(newWorldFlag);
-        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-        testByteOperation.setValue((byte)1);
-        explosion.getTestByteOperations().add(testByteOperation);
-
-        WriteByteOperation writeByteOperation = new WriteByteOperation();
-        writeByteOperation.setIndex(newWorldFlag);
-        writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
-        writeByteOperation.setValue(2);
-        explosion.getWriteByteOperations().add(writeByteOperation);
+        explosion.getTestByteOperations().add(new TestByteOperation(explosionTriggerFlag, ByteOp.FLAG_EQUALS, 1));
+        explosion.getWriteByteOperations().add(new WriteByteOperation(explosionTriggerFlag, ByteOp.ASSIGN_FLAG, 2));
 
         objectContainer.getObjects().add(explosion);
     }
@@ -2379,24 +2376,28 @@ public final class AddObject {
      * Add a pot to a screen
      * @param screen the screen to add the objects to
      * @param graphic
+     * @param dropType
+     * @param dropQuantity
+     * @param updates
      */
-    public static void addPot(ObjectContainer screen, int x, int y, int graphic, List<TestByteOperation> tests) {
+    public static void addPot(ObjectContainer screen, int x, int y, PotGraphic graphic, DropType dropType, int dropQuantity, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
         GameObject addedPot = new GameObject(screen);
         addedPot.setId((short) 0x0);
         addedPot.setX(x);
         addedPot.setY(y);
 
-        addedPot.getArgs().add((short)0);
-        addedPot.getArgs().add((short)0);
+        addedPot.getArgs().add(dropType.getValue());
+        addedPot.getArgs().add((short)dropQuantity);
         addedPot.getArgs().add((short)-1);
         addedPot.getArgs().add((short)1);
-        addedPot.getArgs().add((short)graphic);
+        addedPot.getArgs().add(graphic.getGraphic());
         addedPot.getArgs().add((short)105);
         addedPot.getArgs().add((short)35);
         addedPot.getArgs().add((short)17);
         addedPot.getArgs().add((short)0);
 
         addedPot.getTestByteOperations().addAll(tests);
+        addedPot.getWriteByteOperations().addAll(updates);
 
         screen.getObjects().add(addedPot);
     }
@@ -2541,7 +2542,7 @@ public final class AddObject {
         screen.getObjects().add(platform);
     }
 
-    public static void addInfernoFakeWeaponCover(Screen screen) {
+    public static void addInfernoFakeWeaponCover(Screen screen, List<TestByteOperation> tests) {
         GameObject weaponCover = new GameObject(screen);
         weaponCover.setId((short)0x93);
         weaponCover.setX(20);
@@ -2572,7 +2573,7 @@ public final class AddObject {
         weaponCover.getArgs().add((short)0); // blend (0=normal, 1= add, 2=...14=)
         weaponCover.getArgs().add((short)1); // not0?
 
-        weaponCover.getTestByteOperations().add(new TestByteOperation(0x1b3, ByteOp.FLAG_LT, 2));
+        weaponCover.getTestByteOperations().addAll(tests);
 
         screen.getObjects().add(weaponCover);
     }
@@ -2959,6 +2960,72 @@ public final class AddObject {
         screen.getObjects().add(punchyFist);
 
         return punchyFist;
+    }
+
+    public static void addEscapeTimer(Screen screen) {
+        // The escape timer itself
+        GameObject escapeTimer = new GameObject(screen);
+        escapeTimer.setId((short) 0xc5);
+        escapeTimer.setX(-1);
+        escapeTimer.setY(-1);
+
+        int timerMinutes;
+        int timerSeconds;
+        if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+            timerMinutes = 10;
+            timerSeconds = 31;
+        }
+        else {
+            timerMinutes = Settings.isRandomizeTransitionGates() ? 10 : 5;
+            timerSeconds = 0;
+        }
+
+        escapeTimer.getArgs().add((short)264);
+        escapeTimer.getArgs().add((short)20);
+        escapeTimer.getArgs().add((short)timerMinutes);
+        escapeTimer.getArgs().add((short)timerSeconds);
+        escapeTimer.getArgs().add((short)0);
+        escapeTimer.getArgs().add((short)10);
+        escapeTimer.getArgs().add((short)-1);
+        escapeTimer.getArgs().add((short)-1);
+        escapeTimer.getArgs().add((short)-1);
+        escapeTimer.getArgs().add((short)1000);
+        escapeTimer.getArgs().add((short)2746);
+        escapeTimer.getArgs().add((short)2747);
+
+        escapeTimer.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+        escapeTimer.getTestByteOperations().add(new TestByteOperation(0x403, ByteOp.FLAG_EQUALS, 0));
+
+        screen.getObjects().add(0, escapeTimer);
+
+        GameObject testTimer = new GameObject(screen);
+        testTimer.setId((short)0x0b);
+        testTimer.setX(-1);
+        testTimer.setY(-1);
+        testTimer.getArgs().add((short)0);
+        testTimer.getArgs().add((short)2);
+
+        testTimer.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+        testTimer.getTestByteOperations().add(new TestByteOperation(0x403, ByteOp.FLAG_EQUALS, 0));
+        testTimer.getWriteByteOperations().add(new WriteByteOperation(0x403, ByteOp.ASSIGN_FLAG, 1));
+
+        screen.getObjects().add(0, testTimer);
+
+        if(!Settings.isScreenshakeDisabled()) {
+            // Escape screen shake
+            GameObject escapeScreenShake = new GameObject(screen);
+            escapeScreenShake.setId((short) 0xc7);
+            escapeScreenShake.setX(-1);
+            escapeScreenShake.setY(-1);
+
+            escapeScreenShake.getArgs().add((short)-1);
+            escapeScreenShake.getArgs().add((short)0);
+
+            escapeScreenShake.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+            escapeScreenShake.getTestByteOperations().add(new TestByteOperation(0x403, ByteOp.FLAG_EQUALS, 0));
+
+            screen.getObjects().add(0, escapeScreenShake);
+        }
     }
 
     public static void addEscapeTimer(Screen screen, int beginConditionFlag, int beginConditionValue) {
@@ -4184,6 +4251,24 @@ public final class AddObject {
         itemGive.getWriteByteOperations().add(itemGiveUpdate);
 
         referenceObj.getObjectContainer().getObjects().add(itemGive);
+    }
+
+    public static void addItemGive(Screen screen, int startingX, int startingY, int inventoryArg,
+                                   List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject itemGive = new GameObject(screen);
+        itemGive.setId((short) 0xb5);
+        itemGive.setX(startingX);
+        itemGive.setY(startingY);
+
+        itemGive.getArgs().add((short)inventoryArg);
+        itemGive.getArgs().add((short)32);
+        itemGive.getArgs().add((short)24);
+        itemGive.getArgs().add((short)39);
+
+        itemGive.getTestByteOperations().addAll(tests);
+        itemGive.getWriteByteOperations().addAll(updates);
+
+        screen.getObjects().add(itemGive);
     }
 
     public static void addGrailDetector(GameObject gameObject, int grailFlag) {
@@ -6020,5 +6105,381 @@ public final class AddObject {
         writeByteOperation.setValue(1);
         sphinxRemovalTimer.getWriteByteOperations().add(writeByteOperation);
         screen.getObjects().add(0, sphinxRemovalTimer);
+    }
+
+    /**
+     * Add 0x95 object
+     * @param screen to add to
+     * @param x position
+     * @param y position
+     */
+    public static void addEyeOfDivineRetribution(Screen screen, int x, int y) {
+        GameObject eyeOfDivineRetribution = new GameObject(screen);
+        eyeOfDivineRetribution.setId((short)0x95);
+        eyeOfDivineRetribution.setX(x);
+        eyeOfDivineRetribution.setY(y);
+
+        eyeOfDivineRetribution.getArgs().add((short)10); // Flag 0x000a
+        eyeOfDivineRetribution.getArgs().add((short)0); // 0 = percent hp; 1 = flat damage
+        eyeOfDivineRetribution.getArgs().add((short)100); // Damage is percent or flat depending on previous arg.
+        screen.getObjects().add(eyeOfDivineRetribution);
+    }
+
+    /**
+     * Add 0xa9 object
+     * @param screen to add to
+     * @param x position
+     * @param y position
+     */
+    public static void addPushableBlock(Screen screen, int x, int y, List<TestByteOperation> tests) {
+        GameObject pushableBlock = new GameObject(screen);
+        pushableBlock.setId((short)0xa9);
+        pushableBlock.setX(x);
+        pushableBlock.setY(y);
+
+        pushableBlock.getArgs().add((short)1); // Push damage
+        pushableBlock.getArgs().add((short)1); // Fall damage
+
+        pushableBlock.getTestByteOperations().addAll(tests);
+
+        screen.getObjects().add(pushableBlock);
+    }
+
+    /**
+     * Add 0x12 object
+     * @param screen to add to
+     * @param x position
+     * @param y position
+     */
+    public static void addHitbox(Screen screen, int x, int y, int width, int height, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        GameObject hitbox = new GameObject(screen);
+        hitbox.setId((short)0x12);
+        hitbox.setX(x);
+        hitbox.setY(y);
+
+        hitbox.getArgs().add((short)0); // visual 1:dust >1: star
+        hitbox.getArgs().add((short)1); // 0:hp 1:hits
+        hitbox.getArgs().add((short)1); // health
+        hitbox.getArgs().add((short)4); // direction: 0 - up 1 - right 2 - down 3 - left 4 - any
+        hitbox.getArgs().add((short)18); // weapon type: 0-15 same as word, 16 all main 17 all sub 18 all 19 none
+        hitbox.getArgs().add((short)0); // Update Type - 0= break: update all 4 / wrongwep: update none; 1= break: update 0,2 / wrongwep: update 1,3
+        hitbox.getArgs().add((short)width); // hitbox sizex
+        hitbox.getArgs().add((short)height); // hitbox sizey
+        hitbox.getArgs().add((short)105); // Hit Success Sound Effect (-1 for silent)
+        hitbox.getArgs().add((short)104); // Hit Fail Sound Effect (-1 for silent)
+        hitbox.getArgs().add((short)1); // dust1 density 1
+        hitbox.getArgs().add((short)2); // dust2 density 2
+
+        hitbox.getTestByteOperations().addAll(tests);
+        hitbox.getWriteByteOperations().addAll(updates);
+
+        screen.getObjects().add(hitbox);
+    }
+
+    /**
+     * Add 0x96 object
+     */
+    public static void addExtendingSpikes(GameObject referenceObj, int flagIndex) {
+        GameObject extendingSpikes = new GameObject(referenceObj.getObjectContainer());
+
+        extendingSpikes.setId((short) 0x96);
+        extendingSpikes.setX(referenceObj.getX() - 20);
+        extendingSpikes.setY(referenceObj.getY() + 20);
+
+        extendingSpikes.getArgs().add((short)0);
+        extendingSpikes.getArgs().add((short)0);
+        extendingSpikes.getArgs().add((short)4);
+        extendingSpikes.getArgs().add((short)3);
+        extendingSpikes.getArgs().add((short)0); // Activation delay
+        extendingSpikes.getArgs().add((short)100);
+        extendingSpikes.getArgs().add((short)100);
+        extendingSpikes.getArgs().add((short)120);
+        extendingSpikes.getArgs().add((short)120);
+        extendingSpikes.getArgs().add((short)0);
+        extendingSpikes.getArgs().add((short)200);
+        extendingSpikes.getArgs().add((short)100);
+        extendingSpikes.getArgs().add((short)500);
+        extendingSpikes.getArgs().add((short)0);
+        extendingSpikes.getArgs().add((short)1);
+        extendingSpikes.getArgs().add((short)0);
+        extendingSpikes.getArgs().add((short)320);
+        extendingSpikes.getArgs().add((short)40);
+        extendingSpikes.getArgs().add((short)80);
+        extendingSpikes.getArgs().add((short)60);
+        extendingSpikes.getArgs().add((short)21);
+        extendingSpikes.getArgs().add((short)41);
+        extendingSpikes.getArgs().add((short)0);
+        extendingSpikes.getArgs().add((short)20);
+        extendingSpikes.getArgs().add((short)1);
+        extendingSpikes.getArgs().add((short)20);
+
+        extendingSpikes.getWriteByteOperations().add(new WriteByteOperation(flagIndex, ByteOp.ASSIGN_FLAG, 1));
+        extendingSpikes.getWriteByteOperations().add(new WriteByteOperation(flagIndex, ByteOp.ASSIGN_FLAG, 0));
+
+        referenceObj.getObjectContainer().getObjects().add(extendingSpikes);
+
+        GameObject failPuzzleSound = new GameObject(referenceObj.getObjectContainer());
+
+        failPuzzleSound.setId((short) 0x9b);
+        failPuzzleSound.setX(-1);
+        failPuzzleSound.setY(-1);
+
+        failPuzzleSound.getArgs().add((short)80);
+        failPuzzleSound.getArgs().add((short)120);
+        failPuzzleSound.getArgs().add((short)64);
+        failPuzzleSound.getArgs().add((short)0);
+        failPuzzleSound.getArgs().add((short)120);
+        failPuzzleSound.getArgs().add((short)64);
+        failPuzzleSound.getArgs().add((short)0);
+        failPuzzleSound.getArgs().add((short)25);
+        failPuzzleSound.getArgs().add((short)1);
+        failPuzzleSound.getArgs().add((short)5);
+        failPuzzleSound.getArgs().add((short)0);
+        failPuzzleSound.getArgs().add((short)10);
+        failPuzzleSound.getArgs().add((short)0);
+        failPuzzleSound.getArgs().add((short)0);
+        failPuzzleSound.getArgs().add((short)0);
+
+        failPuzzleSound.getTestByteOperations().add(new TestByteOperation(0xa7, ByteOp.FLAG_EQUALS, 2));
+        failPuzzleSound.getTestByteOperations().add(new TestByteOperation(flagIndex, ByteOp.FLAG_EQUALS, 1));
+
+        referenceObj.getObjectContainer().getObjects().add(0, failPuzzleSound);
+    }
+
+    public static void addZebuDais(ObjectContainer screen) {
+        GameObject obj = new GameObject(screen);
+        obj.setId((short)0x08);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)10); // Falling speed
+        obj.getArgs().add((short)-1);
+        obj.getArgs().add((short)2);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)660);
+        obj.getArgs().add((short)0);
+        obj.getArgs().add((short)1);
+        obj.getArgs().add((short)10);
+        obj.getArgs().add((short)60);
+        obj.setX(360);
+        obj.setY(420);
+
+        if("Zebu".equals(Settings.getCurrentGiant())) {
+            obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
+            obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
+            obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+
+            addSuccessSound(screen, Arrays.asList(
+                    new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
+                    new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
+                    new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
+        }
+        else {
+            obj.getTestByteOperations().add(new TestByteOperation(0x009, ByteOp.FLAG_EQUALS, 0));
+            obj.getWriteByteOperations().add(new WriteByteOperation(0x009, ByteOp.ASSIGN_FLAG, 1));
+
+            addExtendingSpikes(obj, 0x009);
+        }
+        screen.getObjects().add(obj);
+    }
+
+    public static void addSuccessSound(ObjectContainer objectContainer, List<TestByteOperation> tests) {
+        GameObject successSound = new GameObject(objectContainer);
+        successSound.setId((short)0x9b);
+        successSound.setX(-1);
+        successSound.setY(-1);
+        successSound.getArgs().add((short)30);
+        successSound.getArgs().add((short)120);
+        successSound.getArgs().add((short)64);
+        successSound.getArgs().add((short)0);
+        successSound.getArgs().add((short)120);
+        successSound.getArgs().add((short)64);
+        successSound.getArgs().add((short)0);
+        successSound.getArgs().add((short)25);
+        successSound.getArgs().add((short)1);
+        successSound.getArgs().add((short)5);
+        successSound.getArgs().add((short)0);
+        successSound.getArgs().add((short)10);
+        successSound.getArgs().add((short)0);
+        successSound.getArgs().add((short)0);
+        successSound.getArgs().add((short)0);
+
+        successSound.getTestByteOperations().addAll(tests);
+
+        objectContainer.getObjects().add(0, successSound);
+    }
+
+    /**
+     * Add 0x98 object
+     * @param screen to add to
+     * @param x position
+     * @param y position
+     */
+    public static void addWarpDoor(Screen screen, int x, int y, int destZone, int destRoom, int destScreen, int destX, int destY, List<TestByteOperation> tests) {
+        GameObject warpDoor = new GameObject(screen);
+
+        warpDoor.setId((short) 0x98);
+        warpDoor.setX(x);
+        warpDoor.setY(y);
+
+        warpDoor.getArgs().add((short)0); // Interaction type: 0 = press up. 1 = press down.
+        warpDoor.getArgs().add((short)destZone); // Destination field
+        warpDoor.getArgs().add((short)destRoom); // Destination room
+        warpDoor.getArgs().add((short)destScreen); // Destination screen
+        warpDoor.getArgs().add((short)destX); // Destination screen X
+        warpDoor.getArgs().add((short)destY); // Destination screen Y
+
+        warpDoor.getTestByteOperations().addAll(tests);
+
+        screen.getObjects().add(warpDoor);
+    }
+
+    /**
+     * Add 0x2e object
+     * @param screen to add to
+     * @param x position
+     * @param y position
+     */
+    public static void addAmphisbaenaAnkh(Screen screen, int x, int y, int damage, List<TestByteOperation> tests) {
+        GameObject amphisbaenaAnkh = new GameObject(screen);
+
+        amphisbaenaAnkh.setId((short) 0x2e);
+        amphisbaenaAnkh.setX(x);
+        amphisbaenaAnkh.setY(y);
+
+        amphisbaenaAnkh.getArgs().add((short)0); // Boss type (0=amphisbaena)
+        amphisbaenaAnkh.getArgs().add((short)0); // Speed
+        amphisbaenaAnkh.getArgs().add((short)4); // Health
+        amphisbaenaAnkh.getArgs().add((short)damage); // Contact Damage
+        amphisbaenaAnkh.getArgs().add((short)1); // Flame Speed
+        amphisbaenaAnkh.getArgs().add((short)damage); // Flame Damage
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)-1);
+        amphisbaenaAnkh.getArgs().add((short)-1);
+        amphisbaenaAnkh.getArgs().add((short)1519);
+        amphisbaenaAnkh.getArgs().add((short)0);
+        amphisbaenaAnkh.getArgs().add((short)-1);
+        amphisbaenaAnkh.getArgs().add((short)-1);
+        amphisbaenaAnkh.getArgs().add((short)1519);
+        amphisbaenaAnkh.getArgs().add((short)0);
+
+        amphisbaenaAnkh.getTestByteOperations().addAll(tests);
+
+        amphisbaenaAnkh.getWriteByteOperations().add(new WriteByteOperation(0x0f6, ByteOp.ASSIGN_FLAG, (byte)1));
+        amphisbaenaAnkh.getWriteByteOperations().add(new WriteByteOperation(0x0f6, ByteOp.ASSIGN_FLAG, (byte)2));
+        amphisbaenaAnkh.getWriteByteOperations().add(new WriteByteOperation(0x0f6, ByteOp.ASSIGN_FLAG, (byte)3));
+        amphisbaenaAnkh.getWriteByteOperations().add(new WriteByteOperation(0x133, ByteOp.ASSIGN_FLAG, (byte)6));
+
+        screen.getObjects().add(amphisbaenaAnkh);
+    }
+
+    /**
+     * Add discount lamp of time recharge station
+     * @param screen to add to
+     * @param x position
+     * @param y position
+     */
+    public static void addLampStation(Screen screen, int x, int y) {
+        GameObject lampDetector = new GameObject(screen);
+
+        lampDetector.setId((short) 0x14);
+        lampDetector.setX(x);
+        lampDetector.setY(y);
+
+        lampDetector.getArgs().add((short)1);
+        lampDetector.getArgs().add((short)0);
+        lampDetector.getArgs().add((short)0);
+        lampDetector.getArgs().add((short)0);
+        lampDetector.getArgs().add((short)2);
+        lampDetector.getArgs().add((short)3);
+
+//        lampDetector.getTestByteOperations().add(new TestByteOperation(0x09b, ByteOp.FLAG_NOT_EQUAL, 0));
+        lampDetector.getTestByteOperations().add(new TestByteOperation(0x34d, ByteOp.FLAG_EQUALS, 0));
+//        lampDetector.getTestByteOperations().add(new TestByteOperation(0x3ed, ByteOp.FLAG_EQUALS, 0));
+
+        lampDetector.getWriteByteOperations().add(new WriteByteOperation(0x34d, ByteOp.ASSIGN_FLAG, (byte)1));
+        lampDetector.getWriteByteOperations().add(new WriteByteOperation(0x3ed, ByteOp.ASSIGN_FLAG, (byte)1));
+
+        screen.getObjects().add(lampDetector);
+
+        GameObject lampGraphic = new GameObject(screen);
+        lampGraphic.setId((short)0x93);
+        lampGraphic.setX(x - 20);
+        lampGraphic.setY(y - 20);
+        lampGraphic.getArgs().add((short)-1);
+        lampGraphic.getArgs().add((short)3);
+        lampGraphic.getArgs().add((short)940);
+        lampGraphic.getArgs().add((short)140);
+        lampGraphic.getArgs().add((short)80);
+        lampGraphic.getArgs().add((short)80);
+        lampGraphic.getArgs().add((short)1);
+        lampGraphic.getArgs().add((short)1);
+        lampGraphic.getArgs().add((short)4);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)255);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)0);
+        lampGraphic.getArgs().add((short)1);
+
+        screen.getObjects().add(lampGraphic);
+
+        GameObject lampFlame = new GameObject(screen);
+        lampFlame.setId((short)0x93);
+        lampFlame.setX(x + 20);
+        lampFlame.setY(y + 20);
+        lampFlame.getArgs().add((short)-1);
+        lampFlame.getArgs().add((short)3);
+        lampFlame.getArgs().add((short)280);
+        lampFlame.getArgs().add((short)112);
+        lampFlame.getArgs().add((short)20);
+        lampFlame.getArgs().add((short)20);
+        lampFlame.getArgs().add((short)1);
+        lampFlame.getArgs().add((short)1);
+        lampFlame.getArgs().add((short)4);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)255);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)0);
+        lampFlame.getArgs().add((short)1);
+
+//        lampFlame.getTestByteOperations().add(new TestByteOperation(0x09b, ByteOp.FLAG_NOT_EQUAL, 0));
+        lampFlame.getTestByteOperations().add(new TestByteOperation(0x34d, ByteOp.FLAG_EQUALS, 0));
+//        lampFlame.getTestByteOperations().add(new TestByteOperation(0x3ed, ByteOp.FLAG_EQUALS, 0));
+        screen.getObjects().add(lampFlame);
     }
 }

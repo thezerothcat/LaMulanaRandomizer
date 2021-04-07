@@ -21,6 +21,8 @@ public final class Settings {
     public static List<String> currentCursedChests;
     public static String currentStartingWeapon;
     public static Integer currentStartingLocation;
+    public static String currentGiant;
+    public static Integer currentBossCount;
 
     private static Settings singleton = new Settings();
 
@@ -58,6 +60,9 @@ public final class Settings {
     private boolean ushumgalluAssist;
     private boolean bossCheckpoints;
     private boolean bossSpecificAnkhJewels;
+    private boolean foolsGameplay;
+    private boolean foolsLogic;
+    private boolean foolsNpc;
     private boolean blockPushingRequiresGlove;
     private boolean screenshakeDisabled;
 
@@ -96,6 +101,8 @@ public final class Settings {
     private BossDifficulty bossDifficulty;
     private ShopRandomizationEnum shopRandomization;
 
+    public static byte[] goddessMsdBytes; // A way around doing msd edits properly.
+
     private Settings() {
         startingSeed = new Random().nextInt(Integer.MAX_VALUE);
         laMulanaBaseDir = "Please enter your La-Mulana install directory";
@@ -124,6 +131,9 @@ public final class Settings {
         randomizeBacksideDoors = false;
         randomizeNonBossDoors = false;
         bossSpecificAnkhJewels = false;
+        foolsGameplay = false;
+        foolsLogic = false;
+        foolsNpc = false;
         blockPushingRequiresGlove = false;
         removeSpaulder = false;
         replaceMapsWithWeights = false;
@@ -398,7 +408,7 @@ public final class Settings {
     }
 
     public static boolean isRandomizeEscapeChest() {
-        return singleton.randomizeEscapeChest;
+        return Settings.isFools2021Mode() || singleton.randomizeEscapeChest;
     }
 
     public static void setRandomizeEscapeChest(boolean randomizeEscapeChest, boolean update) {
@@ -593,6 +603,39 @@ public final class Settings {
         singleton.bossSpecificAnkhJewels = bossSpecificAnkhJewels;
     }
 
+    public static boolean isFoolsGameplay() {
+        return false;
+    }
+
+    public static void setFoolsGameplay(boolean foolsGameplay, boolean update) {
+        if(update && foolsGameplay != singleton.foolsGameplay) {
+            singleton.changed = true;
+        }
+        singleton.foolsGameplay= foolsGameplay;
+    }
+
+    public static boolean isFoolsLogic() {
+        return false;
+    }
+
+    public static void setFoolsLogic(boolean foolsLogic, boolean update) {
+        if(update && foolsLogic != singleton.foolsLogic) {
+            singleton.changed = true;
+        }
+        singleton.foolsLogic = foolsLogic;
+    }
+
+    public static boolean isFoolsNpc() {
+        return false;
+    }
+
+    public static void setFoolsNpc(boolean foolsNpc, boolean update) {
+        if(update && foolsNpc != singleton.foolsNpc) {
+            singleton.changed = true;
+        }
+        singleton.foolsNpc = foolsNpc;
+    }
+
     public static boolean isBlockPushingRequiresGlove() {
         return singleton.blockPushingRequiresGlove;
     }
@@ -747,7 +790,7 @@ public final class Settings {
 
     public static Set<String> getRemovedItems() {
         Set<String> removedItems = new HashSet<>();
-        if(singleton.removeSpaulder) {
+        if(!Settings.isFools2021Mode() && singleton.removeSpaulder) {
             removedItems.add("Spaulder");
         }
         if(singleton.removeMainWeapons) {
@@ -803,6 +846,14 @@ public final class Settings {
         singleton.currentStartingLocation = currentStartingLocation;
     }
 
+    public static String getCurrentGiant() {
+        return singleton.currentGiant == null ? "Futo" : singleton.currentGiant;
+    }
+
+    public static void setCurrentGiant(String currentGiant) {
+        singleton.currentGiant = currentGiant;
+    }
+
     public static List<String> getCurrentCursedChests() {
         if(singleton.randomizeCursedChests) {
             return singleton.currentCursedChests;
@@ -814,10 +865,23 @@ public final class Settings {
         singleton.currentCursedChests = currentCursedChests;
     }
 
+    public static int getCurrentBossCount() {
+        return singleton.currentBossCount == null ? 8 : singleton.currentBossCount;
+    }
+
+    public static void setCurrentBossCount(int currentBossCount) {
+        singleton.currentBossCount = currentBossCount;
+    }
+
     public static String getUpdatedContents(String originalContents) {
         if("Vessel".equals(originalContents)) {
             if(Settings.getMedicineColor() != null) {
                 return String.format("Medicine of the Mind (%s)", Settings.getMedicineColor());
+            }
+        }
+        if(Settings.isFools2021Mode()) {
+            if("Woman Statue".equals(originalContents)) {
+                return "Maternity Statue";
             }
         }
 //        if("Djed Pillar".equals(originalContents)) {
@@ -834,12 +898,20 @@ public final class Settings {
         return false;
     }
 
+    public static boolean isFools2019Mode() {
+        return false;
+    }
+
     public static boolean isFools2020Mode() {
         return false;
     }
 
-    public static boolean isFeatherlessMode() {
+    public static boolean isFools2021Mode() {
         return false;
+    }
+
+    public static boolean isFeatherlessMode() {
+        return isFools2020Mode();
     }
 
     public static boolean isIncludeHellTempleNPCs() {
@@ -885,7 +957,7 @@ public final class Settings {
     }
 
     public static boolean isRandomizeBosses() {
-        return singleton.randomizeBosses;
+        return !isFools2021Mode() && singleton.randomizeBosses;
     }
 
     public static void setRandomizeBosses(boolean randomizeBosses, boolean update) {
@@ -942,7 +1014,11 @@ public final class Settings {
 
     public static boolean isSaveFileNeeded() {
         return isAllowMainWeaponStart() || isAllowSubweaponStart() || isRandomizeStartingLocation()
-                || Settings.isHalloweenMode() || isFools2020Mode();
+                || Settings.isHalloweenMode() || isFools2020Mode() || isFools2021Mode();
+    }
+
+    public static boolean isCheapConsumables() {
+        return isFools2020Mode() || isFools2021Mode();
     }
 
     public static void saveSettings() {
@@ -1049,6 +1125,9 @@ public final class Settings {
         int bossDifficulty = singleton.bossDifficulty.ordinal();
 
         int booleanSettings2 = 0;
+        booleanSettings2 |= processBooleanFlag.apply(singleton.foolsNpc, 10);
+        booleanSettings2 |= processBooleanFlag.apply(singleton.foolsLogic, 9);
+        booleanSettings2 |= processBooleanFlag.apply(singleton.foolsGameplay, 8);
         booleanSettings2 |= processBooleanFlag.apply(singleton.bossCheckpoints, 7);
         booleanSettings2 |= processBooleanFlag.apply(singleton.screenshakeDisabled, 6);
         booleanSettings2 |= processBooleanFlag.apply(singleton.includeHellTempleNPCs, 5);
@@ -1137,6 +1216,9 @@ public final class Settings {
         int maxRandomRemovedItems = Integer.parseInt(parts[9],16);
 
         int booleanSettingsFlag2 = Integer.parseInt(parts[10], 16);
+        singleton.foolsNpc = getBoolFlagFromInt.apply(booleanSettingsFlag2, 10);
+        singleton.foolsLogic = getBoolFlagFromInt.apply(booleanSettingsFlag2, 9);
+        singleton.foolsGameplay = getBoolFlagFromInt.apply(booleanSettingsFlag2, 8);
         singleton.bossCheckpoints = getBoolFlagFromInt.apply(booleanSettingsFlag2, 7);
         singleton.screenshakeDisabled = getBoolFlagFromInt.apply(booleanSettingsFlag2, 6);
         singleton.includeHellTempleNPCs = getBoolFlagFromInt.apply(booleanSettingsFlag2, 5);

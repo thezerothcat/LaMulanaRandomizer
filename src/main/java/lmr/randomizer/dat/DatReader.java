@@ -164,11 +164,9 @@ public final class DatReader {
 
             BlockStringData softwareCostDisplay = new BlockStringData();
             populateBlockStringData(softwareCostDisplay, dataInputStream);
-            if(Settings.isFools2020Mode()) {
-                if(softwareIndex == 18) {
-                    softwareCostDisplay.getData().clear();
-                    softwareCostDisplay.getData().addAll(FileUtils.stringToData(Translations.getText("software.cost.mirai")));
-                }
+            if(softwareIndex == 18) {
+                softwareCostDisplay.getData().clear();
+                softwareCostDisplay.getData().addAll(FileUtils.stringToData(Translations.getText("software.cost.mirai")));
             }
 
             block.getBlockContents().add(softwareCostDisplay);
@@ -823,7 +821,7 @@ public final class DatReader {
     private static Block buildGrailPointBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         Block grailPointsBlock = new Block(blockIndex);
         addBlockContentsToBlock(grailPointsBlock, dataInputStream, numberOfShortsInThisBlock);
-        if(!LocationCoordinateMapper.isSurfaceStart() || Settings.getCurrentStartingLocation() == 22) {
+        if(!LocationCoordinateMapper.isSurfaceStart() || Settings.isFools2021Mode() || Settings.getCurrentStartingLocation() == 22) {
             grailPointsBlock.getBlockContents().clear();
 
             boolean front = LocationCoordinateMapper.isFrontsideStart();
@@ -892,6 +890,37 @@ public final class DatReader {
             }
         }
         return htMapBlock;
+    }
+
+    private static Block buildGiantSacredOrbSkeletonScanBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        Block block = new Block(blockIndex);
+        addBlockContentsToBlock(block, dataInputStream, numberOfShortsInThisBlock);
+        if(Settings.isFools2021Mode()) {
+            BlockContents lastEntry = block.getBlockContents().get(block.getBlockContents().size() - 1);
+            block.getBlockContents().clear();
+            for (Short singleCharacter : FileUtils.stringToData(String.format(Translations.getText("event.fools2021.giants"), Settings.getCurrentGiant(), Settings.getCurrentGiant()))) {
+                block.getBlockContents().add(new BlockSingleData(singleCharacter));
+            }
+            block.getBlockContents().add(new BlockSingleData((short)0x00a));
+            block.getBlockContents().add(lastEntry);
+        }
+        return block;
+    }
+
+    private static Block buildEmailBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        Block block = new Block(blockIndex);
+        addBlockContentsToBlock(block, dataInputStream, numberOfShortsInThisBlock);
+        if(Settings.isFools2021Mode()) {
+            block.getBlockContents().clear();
+            for (Short singleCharacter : FileUtils.stringToData(Translations.getText("event.fools2021.mailTitle"))) {
+                block.getBlockContents().add(new BlockSingleData(singleCharacter));
+            }
+            block.getBlockContents().add(new BlockSingleData((short)0x00a));
+            for (Short singleCharacter : FileUtils.stringToData(Translations.getText("event.fools2021.mailText"))) {
+                block.getBlockContents().add(new BlockSingleData(singleCharacter));
+            }
+        }
+        return block;
     }
 
     private static Block buildFairyQueenFirstConversationBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
@@ -1240,11 +1269,18 @@ public final class DatReader {
             else if(blockIndex == 0x1c) {
                 block = buildHTMapBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
+            else if(blockIndex == 88 && Settings.isFools2021Mode()) {
+                // Strength lies at the foot of Futo
+                block = buildGiantSacredOrbSkeletonScanBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
             else if(blockIndex == 0xd7 && Settings.isHalloweenMode()) {
                 block = buildFairyQueenFirstConversationBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             else if(blockIndex == 0xda && Settings.isHalloweenMode()) {
                 block = buildFairyQueenLastConversationBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
+            else if((blockIndex >= 0x1ac && blockIndex <= 0x1d5) || (blockIndex == 0x16d || blockIndex == 0x2cb || blockIndex == 0x3c3)) {
+                block = buildEmailBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             else if(blockIndex == 671 || blockIndex == 672 || blockIndex == 673 || blockIndex == 674 || blockIndex == 675 || blockIndex == 677 || blockIndex == 678 || blockIndex == 679
                     || blockIndex == 680 || blockIndex == 681 || blockIndex == 683 || blockIndex == 689

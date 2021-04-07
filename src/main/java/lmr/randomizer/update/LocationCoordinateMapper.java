@@ -345,11 +345,68 @@ public final class LocationCoordinateMapper {
     }
 
     public static short getGrailFlag(int zone, boolean front) {
+        if(Settings.isFools2021Mode()) {
+            if(zone == 0) {
+                return 0xaaa;
+            }
+            if(zone == 1) {
+                return 0xad3;
+            }
+            if(zone == 2) {
+                return 0xaab;
+            }
+            if(zone == 3) {
+                return 0xaac;
+            }
+            if(zone == 4) {
+                return 0xaad;
+            }
+            if(zone == 5) {
+                return 0xaae;
+            }
+            if(zone == 6) {
+                return 0xaaf;
+            }
+            if(zone == 7) {
+                return front ? (short)0xab0 : 0xab8;
+            }
+            if(zone == 8) {
+                return 0xab1;
+            }
+            if(zone == 9) {
+                return 0x06c;
+            }
+            if(zone == 10) {
+                return 0xab2;
+            }
+            if(zone == 11) {
+                return 0xab3;
+            }
+            if(zone == 12) {
+                return 0xab4;
+            }
+            if(zone == 13) {
+                return 0xab5;
+            }
+            if(zone == 14) {
+                return 0xab6;
+            }
+            if(zone == 15 || zone == 16) {
+                return 0xab7;
+            }
+            if(zone == 17) {
+                return 0xab9;
+            }
+        }
+        return getOriginalGrailFlag(zone, front);
+    }
+
+    public static short getOriginalGrailFlag(int zone, boolean front) {
         if(zone == 0) {
             return 0x064;
         }
         if(zone == 1) {
-            return 0xad3;
+            return 0xad3; // Technically not original but one doesn't exist.
         }
         if(zone == 2) {
             return 0x065;

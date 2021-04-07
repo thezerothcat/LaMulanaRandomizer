@@ -7,8 +7,8 @@ import lmr.randomizer.dat.shop.BlockStringData;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.random.EnemyRandomizer;
+import lmr.randomizer.random.SealRandomizer;
 import lmr.randomizer.rcd.object.*;
-import lmr.randomizer.Settings;
 
 import java.util.*;
 
@@ -23,8 +23,11 @@ public final class GameDataTracker {
     private static Map<String, List<GameObject>> mapOfDoorNameToBacksideDoor = new HashMap<>();
     private static Map<String, List<GameObject>> mapOfGateNameToTransitionGate = new HashMap<>();
     private static Map<String, Screen> mapOfTransitionNameToScreen = new HashMap<>();
+    private static Map<String, List<GameObject>> mapOfSealNodeToSealObjects = new HashMap<>();
+    private static Map<String, GameObject> mapOfNpcLocationToObject = new HashMap<>();
     private static List<GameObject> enemyObjects = new ArrayList<>();
     private static List<GameObject> npcObjects = new ArrayList<>();
+    private static List<GameObject> edenDaises = new ArrayList<>();
 
     private static GameObject subweaponPot;
     private static GameObject customShop;
@@ -42,9 +45,11 @@ public final class GameDataTracker {
         mapOfDoorNameToBacksideDoor.clear();
         mapOfGateNameToTransitionGate.clear();
         mapOfTransitionNameToScreen.clear();
+        mapOfNpcLocationToObject.clear();
         mantraTablets.clear();
         enemyObjects.clear();
         npcObjects.clear();
+        edenDaises.clear();
         customShop = null;
 
         mapOfWorldFlagToAssignedReplacementFlag.clear();
@@ -71,7 +76,22 @@ public final class GameDataTracker {
     }
 
     public static void addObject(GameObject gameObject) {
-        if (gameObject.getId() == 0x2c) {
+        if (gameObject.getId() == 0x23) {
+            // Steam effect
+            if(Settings.isFools2021Mode()) {
+                if(gameObject.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) gameObject.getObjectContainer();
+                    if(screen.getZoneIndex() == 11 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                            if(testByteOperation.getIndex() == 0x3b5) {
+                                testByteOperation.setValue((byte)(testByteOperation.getValue() == 1 ? 0 : 1));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else if (gameObject.getId() == 0x2c) {
             int worldFlag;
             short inventoryArg;
 
@@ -106,11 +126,7 @@ public final class GameDataTracker {
                         }
                     }
                     // Require showing Talisman to Xelpud (normally required for Shawn to appear)
-                    TestByteOperation flagTest = new TestByteOperation();
-                    flagTest.setIndex(2796);
-                    flagTest.setOp(ByteOp.FLAG_GTEQ);
-                    flagTest.setValue((byte)2);
-                    gameObject.getTestByteOperations().add(flagTest);
+                    gameObject.getTestByteOperations().add(new TestByteOperation(2796, ByteOp.FLAG_GTEQ, 2));
                 }
             }
 
@@ -125,30 +141,10 @@ public final class GameDataTracker {
                 worldFlag = 2777;
 
                 gameObject.getWriteByteOperations().clear();
-
-                flagUpdate = new WriteByteOperation();
-                flagUpdate.setIndex(2777);
-                flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
-                flagUpdate.setValue(2);
-                gameObject.getWriteByteOperations().add(flagUpdate);
-
-                flagUpdate = new WriteByteOperation();
-                flagUpdate.setIndex(2776);
-                flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
-                flagUpdate.setValue(1);
-                gameObject.getWriteByteOperations().add(flagUpdate);
-
-                flagUpdate = new WriteByteOperation();
-                flagUpdate.setIndex(2777);
-                flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
-                flagUpdate.setValue(2);
-                gameObject.getWriteByteOperations().add(flagUpdate);
-
-                flagUpdate = new WriteByteOperation();
-                flagUpdate.setIndex(2777);
-                flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
-                flagUpdate.setValue(2);
-                gameObject.getWriteByteOperations().add(flagUpdate);
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(2777, ByteOp.ASSIGN_FLAG, 2));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(2776, ByteOp.ASSIGN_FLAG, 1));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(2777, ByteOp.ASSIGN_FLAG, 2));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(2777, ByteOp.ASSIGN_FLAG, 2));
             }
             else if(Settings.isRandomizeTrapItems() && flagUpdate.getIndex() == 522) {
                 // Replace world flag for Illusion trap chest
@@ -202,6 +198,21 @@ public final class GameDataTracker {
                 }
             }
         }
+        else if (gameObject.getId() == 0xad) {
+            // Hot spring
+            if(Settings.isFools2021Mode()) {
+                if(gameObject.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) gameObject.getObjectContainer();
+                    if(screen.getZoneIndex() == 11 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                            if(testByteOperation.getIndex() == 0x3b5) {
+                                testByteOperation.setValue((byte)(testByteOperation.getValue() == 1 ? 0 : 1));
+                            }
+                        }
+                    }
+                }
+            }
+        }
         else if (gameObject.getId() == 0xb9) {
             if(Settings.isBlockPushingRequiresGlove()) {
                 Screen screen = (Screen)gameObject.getObjectContainer();
@@ -221,46 +232,16 @@ public final class GameDataTracker {
             }
         }
         else if (gameObject.getId() == 0x2e) {
+            Screen screen = (Screen)gameObject.getObjectContainer();
             if(Settings.isBossSpecificAnkhJewels()) {
-                Screen screen = (Screen)gameObject.getObjectContainer();
-                int ankhFlag = 0;
-                if(screen.getZoneIndex() == 0) {
-                    ankhFlag = getAnkhFlag(1);
-                }
-                else if(screen.getZoneIndex() == 2) {
-                    ankhFlag = getAnkhFlag(2);
-                }
-                else if(screen.getZoneIndex() == 3) {
-                    ankhFlag = getAnkhFlag(3);
-                }
-                else if(screen.getZoneIndex() == 4) {
-                    ankhFlag = getAnkhFlag(4);
-                }
-                else if(screen.getZoneIndex() == 5) {
-                    ankhFlag = getAnkhFlag(5);
-                }
-                else if(screen.getZoneIndex() == 6) {
-                    ankhFlag = getAnkhFlag(6);
-                }
-                else if(screen.getZoneIndex() == 7) {
-                    ankhFlag = getAnkhFlag(7);
-                }
-                else if(screen.getZoneIndex() == 17) {
-                    ankhFlag = getAnkhFlag(8);
-                }
+                int ankhFlag = getAnkhFlag(screen.getZoneIndex());
 
                 for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
                     if(testByteOperation.getIndex() == 0x16a && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())) {
                         AddObject.addBossSpecificAnkhCover(gameObject, ankhFlag);
                     }
                 }
-
-                // Don't spawn ankh without jewel collected.
-                TestByteOperation testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(ankhFlag);
-                testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-                testByteOperation.setValue((byte) 0);
-                gameObject.getTestByteOperations().add(testByteOperation);
+                gameObject.getTestByteOperations().add(new TestByteOperation(ankhFlag, ByteOp.FLAG_NOT_EQUAL, (byte) 0)); // Don't spawn ankh without jewel collected.
             }
 //            if(Settings.isFoolsMode()) {
 //                Screen screen = (Screen) gameObject.getObjectContainer();
@@ -282,9 +263,9 @@ public final class GameDataTracker {
 //                    gameObject.getArgs().set(28, (short)22);
 //                }
 //            }
-            if(Settings.isRandomizeBosses()) {
-                Screen screen = (Screen) gameObject.getObjectContainer();
-                if(screen.getZoneIndex() == 0) {
+            if(screen.getZoneIndex() == 0) {
+                // Amphisbaena ankh
+                if(Settings.isRandomizeBosses()) {
                     for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
                         if(testByteOperation.getIndex() == 0x133) {
                             testByteOperation.setIndex(0x1b4);
@@ -298,7 +279,9 @@ public final class GameDataTracker {
                         }
                     }
                 }
-                else if(screen.getZoneIndex() == 3) {
+            }
+            else if(screen.getZoneIndex() == 3) {
+                if(Settings.isRandomizeBosses()) {
                     gameObject.getArgs().set(24, (short)3);
                     gameObject.getArgs().set(25, (short)402);
                     gameObject.getArgs().set(26, (short)508);
@@ -306,7 +289,9 @@ public final class GameDataTracker {
                     gameObject.getArgs().set(29, (short)402);
                     gameObject.getArgs().set(30, (short)508);
                 }
-                else if(screen.getZoneIndex() == 5) {
+            }
+            else if(screen.getZoneIndex() == 5) {
+                if(Settings.isRandomizeBosses()) {
                     for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
                         if(testByteOperation.getIndex() == 0x1b4) {
                             testByteOperation.setIndex(0x133);
@@ -320,7 +305,9 @@ public final class GameDataTracker {
                         }
                     }
                 }
-                else if(screen.getZoneIndex() == 6) {
+            }
+            else if(screen.getZoneIndex() == 6) {
+                if(Settings.isRandomizeBosses()) {
                     gameObject.getArgs().set(24, (short)7);
                     gameObject.getArgs().set(25, (short)0);
                     gameObject.getArgs().set(26, (short)1500);
@@ -481,6 +468,17 @@ public final class GameDataTracker {
                 objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
             }
             objects.add(gameObject);
+        }
+        else if (gameObject.getId() == 0x34) {
+            if(Settings.isFoolsLogic()) {
+                String sealNode = SealRandomizer.getSealNode(gameObject);
+                List<GameObject> seals = mapOfSealNodeToSealObjects.get(sealNode);
+                if(seals == null) {
+                    seals = new ArrayList<>();
+                    mapOfSealNodeToSealObjects.put(sealNode, seals);
+                }
+                seals.add(gameObject);
+            }
         }
         else if (gameObject.getId() == 0x35) {
             if(Settings.isRandomizeEnemies()) {
@@ -663,6 +661,13 @@ public final class GameDataTracker {
                 enemyObjects.add(gameObject);
             }
         }
+        else if (gameObject.getId() == 0x61) {
+            // Chi You
+//            if(Settings.isFools2021Mode()) {
+//                gameObject.getArgs().set(3, (short)1);
+//                gameObject.getArgs().set(12, (short)1);
+//            }
+        }
         else if (gameObject.getId() == 0x62) {
             if(Settings.isRandomizeEnemies()) {
                 enemyObjects.add(gameObject);
@@ -795,6 +800,18 @@ public final class GameDataTracker {
                 enemyObjects.add(gameObject);
             }
         }
+        else if (gameObject.getId() == 0x84) {
+            // Umu Dabrutu
+            if(Settings.isFools2021Mode()) {
+                gameObject.getArgs().set(3, (short)30); // HP
+            }
+        }
+        else if (gameObject.getId() == 0x85) {
+            // Urmahlullu
+            if(Settings.isFools2021Mode()) {
+                gameObject.getArgs().set(3, (short)30); // HP
+            }
+        }
 //        else if (gameObject.getId() == 0x87) {
 //            // Kuusarikku
 //            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
@@ -817,6 +834,13 @@ public final class GameDataTracker {
 //                }
 //            }
 //        }
+        else if (gameObject.getId() == 0x8a) {
+            // Mushnahhu
+            if(Settings.isFools2021Mode()) {
+                gameObject.getArgs().set(3, (short)1); // HP per worm
+//                gameObject.getArgs().set(4, (short)1); // Contact damage for worms
+            }
+        }
 //        else if (gameObject.getId() == 0x8d) {
 //            // Ushum
 //            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
@@ -887,6 +911,9 @@ public final class GameDataTracker {
                 short worldFlag;
                 if(itemArg == 93) {
                     worldFlag = 234;
+                    if(Settings.isFools2021Mode()) {
+                        gameObject.getTestByteOperations().add(new TestByteOperation(0x1c2, ByteOp.FLAG_EQUALS, 3));
+                    }
                 }
                 else if(itemArg == 94) {
                     worldFlag = 235;
@@ -1039,7 +1066,10 @@ public final class GameDataTracker {
                 }
                 else if(screen.getZoneIndex() == 8) {
                     // Endless
-                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                    if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Endless L1";
+                    }
+                    else if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
                         gateName = "Transition: Endless R1";
                     }
                     else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 3) {
@@ -1331,6 +1361,19 @@ public final class GameDataTracker {
                 }
             }
         } else if (gameObject.getId() == 0x0e) {
+            if(Settings.isFools2021Mode()) {
+                if(gameObject.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) gameObject.getObjectContainer();
+                    if(screen.getZoneIndex() == 11 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                            if(testByteOperation.getIndex() == 0x3b5) {
+                                testByteOperation.setValue((byte)(testByteOperation.getValue() == 1 ? 0 : 1));
+                            }
+                        }
+                    }
+                }
+            }
+
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                 if (flagTest.getIndex() == 335) {
                     // deathv stuff
@@ -1525,7 +1568,7 @@ public final class GameDataTracker {
             }
         } else if (gameObject.getId() == 0x9c) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                if (flagTest.getIndex() == 552) {
+                if (flagTest.getIndex() == 0x228) {
                     // Using Pepper to spawn Treasures chest
                     flagTest.setIndex(259);
                     flagTest.setOp(ByteOp.FLAG_LTEQ);
@@ -1952,6 +1995,30 @@ public final class GameDataTracker {
                     gameObject.getWriteByteOperations().get(0).setIndex(47);
                     break;
                 }
+                else if(flagTest.getIndex() == 0x270) {
+                    // Eden chest 1
+                    if (Settings.isFools2021Mode()) {
+                        edenDaises.add(gameObject);
+                    }
+                }
+                else if(flagTest.getIndex() == 0x29c) {
+                    // Eden chest 2
+                    if (Settings.isFools2021Mode()) {
+                        edenDaises.add(gameObject);
+                    }
+                }
+                else if(flagTest.getIndex() == 0x29d) {
+                    // Eden chest 3
+                    if (Settings.isFools2021Mode()) {
+                        edenDaises.add(gameObject);
+                    }
+                }
+                else if(flagTest.getIndex() == 0x29e) {
+                    // Eden chest 4
+                    if (Settings.isFools2021Mode()) {
+                        edenDaises.add(gameObject);
+                    }
+                }
                 else if(Settings.isRandomizeTrapItems()) {
                     if(gameObject.getObjectContainer() instanceof Screen) {
                         Screen screen = (Screen) gameObject.getObjectContainer();
@@ -1969,6 +2036,27 @@ public final class GameDataTracker {
                             }
                             objects.add(gameObject);
                             break;
+                        }
+                    }
+                }
+            }
+            if(Settings.isFools2021Mode()) {
+                if(gameObject.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) gameObject.getObjectContainer();
+                    if (screen.getZoneIndex() == 10 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 0) {
+                        if(gameObject.getY() == 340) {
+                            gameObject.getTestByteOperations().clear();
+                            gameObject.getWriteByteOperations().clear();
+
+                            if(gameObject.getX() == 280) {
+                                gameObject.getTestByteOperations().add(new TestByteOperation(0x000, ByteOp.FLAG_EQUALS, 0));
+                                gameObject.getTestByteOperations().add(new TestByteOperation(0x227, ByteOp.FLAG_EQUALS, 0));
+                                gameObject.getWriteByteOperations().add(new WriteByteOperation(0x000, ByteOp.ASSIGN_FLAG, 1));
+                                gameObject.getWriteByteOperations().add(new WriteByteOperation(0x227, ByteOp.ASSIGN_FLAG, 1));
+                            }
+                            else {
+                                gameObject.getArgs().set(2, (short)0);
+                            }
                         }
                     }
                 }
@@ -2013,6 +2101,27 @@ public final class GameDataTracker {
                     AddObject.addHotspring(gameObject);
                 }
             }
+
+            if(gameObject.getObjectContainer() instanceof Screen) {
+                if (Settings.isFools2021Mode()) {
+                    int languageBlock = gameObject.getArgs().get(0);
+                    int zoneIndex = ((Screen)gameObject.getObjectContainer()).getZoneIndex();
+                    boolean front = (languageBlock == 41 || languageBlock == 75 || languageBlock == 104 || languageBlock == 136
+                            || languageBlock == 149 || languageBlock == 170 || languageBlock == 188 || languageBlock == 221)
+                            || (languageBlock == 231 && zoneIndex == 9);
+                    // Swap out original for custom flags
+                    for (TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                        if (testByteOperation.getIndex() == LocationCoordinateMapper.getOriginalGrailFlag(zoneIndex, front)) {
+                            testByteOperation.setIndex(LocationCoordinateMapper.getGrailFlag(zoneIndex, front));
+                        }
+                    }
+                    for (WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
+                        if (writeByteOperation.getIndex() == LocationCoordinateMapper.getOriginalGrailFlag(zoneIndex, front)) {
+                            writeByteOperation.setIndex(LocationCoordinateMapper.getGrailFlag(zoneIndex, front));
+                        }
+                    }
+                }
+            }
         } else if (gameObject.getId() == 0x9e) {
             if(LocationCoordinateMapper.getStartingZone() == 16) {
                 Screen screen = (Screen) gameObject.getObjectContainer();
@@ -2027,108 +2136,37 @@ public final class GameDataTracker {
             }
 
             int languageBlock = gameObject.getArgs().get(0);
-            if(Settings.isAutomaticGrailPoints()) {
-                if(languageBlock == 41 || languageBlock == 75 || languageBlock == 104 || languageBlock == 136
-                        || languageBlock == 149 || languageBlock == 170 || languageBlock == 188 || languageBlock == 221
-                        || languageBlock == 250 || languageBlock == 275 || languageBlock == 291 || languageBlock == 305
-                        || languageBlock == 323 || languageBlock == 339 || languageBlock == 206 || languageBlock == 358) {
-                    // Grail points for:
-                    // Gate of Guidance, Mausoleum of the Giants, Temple of the Sun, Spring in the Sky,
-                    // Inferno Cavern, Chamber of Extinction, Twin Labyrinths (Front), Endless Corridor,
-                    // Gate of Illusion, Graveyard of the Giants, Temple of Moonlight, Tower of the Goddess,
-                    // Tower of Ruin, Chamber of Birth, Twin Labyrinths (Back), Dimensional Corridor
-                    AddObject.addGrailDetector(gameObject, getGrailFlag(languageBlock));
-                    return;
-                }
-                else if(languageBlock == 231) {
-                    if(gameObject.getObjectContainer() instanceof Screen) {
-                        if(((Screen)gameObject.getObjectContainer()).getZoneIndex() == 9) {
-                            // Shrine of the Mother (Front)
-                            AddObject.addGrailDetector(gameObject, 108);
-                            return;
+            if(gameObject.getObjectContainer() instanceof Screen) {
+                int zoneIndex = ((Screen)gameObject.getObjectContainer()).getZoneIndex();
+                boolean frontsideGrailScan = (languageBlock == 41 || languageBlock == 75 || languageBlock == 104 || languageBlock == 136
+                        || languageBlock == 149 || languageBlock == 170 || languageBlock == 188 || languageBlock == 221)
+                        || (languageBlock == 231 && zoneIndex == 9);
+                boolean backsideGrailScan = languageBlock == 250 || languageBlock == 275 || languageBlock == 291 || languageBlock == 305
+                        || languageBlock == 323 || languageBlock == 339 || languageBlock == 206 || languageBlock == 358
+                        || (languageBlock == 231 && zoneIndex != 9);
+
+                if(frontsideGrailScan || backsideGrailScan) {
+                    if(Settings.isAutomaticGrailPoints()) {
+                        AddObject.addGrailDetector(gameObject, LocationCoordinateMapper.getGrailFlag(zoneIndex, frontsideGrailScan));
+                    }
+                    if (Settings.isFools2021Mode()) {
+                        // Swap out original for custom flags
+                        for (TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                            if (testByteOperation.getIndex() == LocationCoordinateMapper.getOriginalGrailFlag(zoneIndex, frontsideGrailScan)) {
+                                testByteOperation.setIndex(LocationCoordinateMapper.getGrailFlag(zoneIndex, frontsideGrailScan));
+                            }
                         }
-                        else {
-                            // Shrine of the Mother (Back)
-                            AddObject.addGrailDetector(gameObject, 117);
-                            return;
+                        for (WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
+                            if (writeByteOperation.getIndex() == LocationCoordinateMapper.getOriginalGrailFlag(zoneIndex, frontsideGrailScan)) {
+                                writeByteOperation.setIndex(LocationCoordinateMapper.getGrailFlag(zoneIndex, frontsideGrailScan));
+                            }
                         }
                     }
+                    return;
                 }
             }
 
-            if(languageBlock == 223) {
-                // Tablet for MARDUK mantra
-                List<GameObject> objects = mantraTablets.get("MARDUK");
-                if (objects == null) {
-                    mantraTablets.put("MARDUK", new ArrayList<>());
-                    objects = mantraTablets.get("MARDUK");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 200) {
-                // Tablet for SABBAT mantra
-                List<GameObject> objects = mantraTablets.get("SABBAT");
-                if (objects == null) {
-                    mantraTablets.put("SABBAT", new ArrayList<>());
-                    objects = mantraTablets.get("SABBAT");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 172) {
-                // Tablet for MU mantra
-                List<GameObject> objects = mantraTablets.get("MU");
-                if (objects == null) {
-                    mantraTablets.put("MU", new ArrayList<>());
-                    objects = mantraTablets.get("MU");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 153) {
-                // Tablet for VIY mantra
-                List<GameObject> objects = mantraTablets.get("VIY");
-                if (objects == null) {
-                    mantraTablets.put("VIY", new ArrayList<>());
-                    objects = mantraTablets.get("VIY");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 313) {
-                // Tablet for BAHRUN mantra
-                List<GameObject> objects = mantraTablets.get("BAHRUN");
-                if (objects == null) {
-                    mantraTablets.put("BAHRUN", new ArrayList<>());
-                    objects = mantraTablets.get("BAHRUN");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 115) {
-                // Tablet for WEDJET mantra
-                List<GameObject> objects = mantraTablets.get("WEDJET");
-                if (objects == null) {
-                    mantraTablets.put("WEDJET", new ArrayList<>());
-                    objects = mantraTablets.get("WEDJET");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 282) {
-                // Tablet for ABUTO mantra
-                List<GameObject> objects = mantraTablets.get("ABUTO");
-                if (objects == null) {
-                    mantraTablets.put("ABUTO", new ArrayList<>());
-                    objects = mantraTablets.get("ABUTO");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 72) {
-                // Tablet for LAMULANA mantra
-                List<GameObject> objects = mantraTablets.get("LAMULANA");
-                if (objects == null) {
-                    mantraTablets.put("LAMULANA", new ArrayList<>());
-                    objects = mantraTablets.get("LAMULANA");
-                }
-                objects.add(gameObject);
-            }
-            else if(languageBlock == 648) {
+            if(languageBlock == 648) {
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 292 && flagTest.getValue() == 4) {
                         flagTest.setIndex(2794);
@@ -2211,15 +2249,50 @@ public final class GameDataTracker {
                     objects.add(AddObject.addAltSurfaceShopItemTimer(gameObject.getObjectContainer()));
                 }
                 else if(blockNumber == 132){
-                   // Untransformed Gyonin fish shop
-                   GameObject backupFishShop = AddObject.addBackupGyoninFishShop(gameObject);
-                   List<GameObject> objects = mapOfShopBlockToShopObjects.get(blockNumber);
-                   if (objects == null) {
-                       mapOfShopBlockToShopObjects.put(blockNumber, new ArrayList<>());
-                       objects = mapOfShopBlockToShopObjects.get(blockNumber);
-                   }
-                   objects.add(backupFishShop);
-               }
+                    // Untransformed Mr. Fishman shop
+                    for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
+                        if (testByteOperation.getIndex() == 0x197) {
+                            // Keep existing even after the transformed shop appears.
+                            testByteOperation.setOp(ByteOp.FLAG_GTEQ);
+                            break;
+                        }
+
+                    }
+
+                    if(Settings.isFoolsNpc()) {
+                        mapOfNpcLocationToObject.put("NPCL: Mr. Fishman (Original)", gameObject);
+                    }
+                }
+                else if(blockNumber == 133){
+                    // Transformed Mr. Fishman shop
+                    gameObject.setX(180);
+                    gameObject.setY(1520);
+                    AddObject.addTransformedMrFishmanShopDoorGraphic(gameObject);
+
+                    if(Settings.isFoolsNpc()) {
+                        mapOfNpcLocationToObject.put("NPCL: Mr. Fishman (Alt)", gameObject);
+                    }
+                }
+                else if(blockNumber == 185){
+                    if(Settings.isFoolsNpc()) {
+                        mapOfNpcLocationToObject.put("NPCL: Yiegah Kungfu", gameObject);
+                    }
+                }
+                else if(blockNumber == 187){
+                    if(Settings.isFoolsNpc()) {
+                        mapOfNpcLocationToObject.put("NPCL: Arrogant Metagear", gameObject);
+                    }
+                }
+                else if(blockNumber == 204){
+                    if(Settings.isFoolsNpc()) {
+                        mapOfNpcLocationToObject.put("NPCL: Sturdy Snake", gameObject);
+                    }
+                }
+                else if(blockNumber == 321){
+                    if(Settings.isFoolsNpc()) {
+                        mapOfNpcLocationToObject.put("NPCL: Mechanical Efspi", gameObject);
+                    }
+                }
             }
             else if(blockNumber == 915) {
                 // Mini Doll conversation
@@ -2280,6 +2353,9 @@ public final class GameDataTracker {
             else if(blockNumber == 678) {
                 // Priest Hidlyda - Spring NPC, 04-06-01
                 npcObjects.add(gameObject);
+                if(Settings.isFoolsNpc()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Hidlyda", gameObject);
+                }
             }
             else if(blockNumber == 679) {
                 // Priest Romancis - Inferno NPC, 05-03-02
@@ -2593,6 +2669,9 @@ public final class GameDataTracker {
             else if(blockNumber == 701) {
                 // Priest Laydoc - Ruin NPC, 14-00-01
                 npcObjects.add(gameObject);
+                if(Settings.isFoolsNpc()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Laydoc", gameObject);
+                }
             }
             else if(blockNumber == 702) {
                 // Priest Ashgine - Birth NPC, 16-01-00
@@ -3389,8 +3468,8 @@ public final class GameDataTracker {
                     }
                     break;
                 }
-                else if(Settings.isBlockPushingRequiresGlove()) {
-                    if(flagTest.getIndex() == 0x28d) {
+                else if(flagTest.getIndex() == 0x28d) {
+                    if(Settings.isBlockPushingRequiresGlove()) {
                         flagTest.setIndex(0xacc);
                     }
                 }
@@ -3629,84 +3708,32 @@ public final class GameDataTracker {
         }
     }
 
-    private static int getAnkhFlag(int bossNumber) {
-        if(bossNumber == 1) {
+    private static int getAnkhFlag(int zoneIndex) {
+        if(zoneIndex == 0) {
             return 0x08e;
         }
-        if(bossNumber == 2) {
+        if(zoneIndex == 2) {
             return 0x08f;
         }
-        if(bossNumber == 3) {
+        if(zoneIndex == 3) {
             return 0x090;
         }
-        if(bossNumber == 4) {
+        if(zoneIndex == 4) {
             return 0x091;
         }
-        if(bossNumber == 5) {
+        if(zoneIndex == 5) {
             return 0x092;
         }
-        if(bossNumber == 6) {
+        if(zoneIndex == 6) {
             return 0x093;
         }
-        if(bossNumber == 7) {
+        if(zoneIndex == 7) {
             return 0x094;
         }
-        if(bossNumber == 8) {
+        if(zoneIndex == 17) {
             return 0x095;
         }
         return 0;
-    }
-
-    private static int getGrailFlag(int languageBlock) {
-        if(languageBlock == 41) {
-            return 100;
-        }
-        else if(languageBlock == 75) {
-            return 101;
-        }
-        else if(languageBlock == 104) {
-            return 102;
-        }
-        else if(languageBlock == 136) {
-            return 103;
-        }
-        else if(languageBlock == 149) {
-            return 104;
-        }
-        else if(languageBlock == 170) {
-            return 105;
-        }
-        else if(languageBlock == 188) {
-            return 106;
-        }
-        else if(languageBlock == 221) {
-            return 107;
-        }
-        else if(languageBlock == 250) {
-            return 109;
-        }
-        else if(languageBlock == 275) {
-            return 110;
-        }
-        else if(languageBlock == 291) {
-            return 111;
-        }
-        else if(languageBlock == 305) {
-            return 112;
-        }
-        else if(languageBlock == 323) {
-            return 113;
-        }
-        else if(languageBlock == 339) {
-            return 114;
-        }
-        else if(languageBlock == 206) {
-            return 115;
-        }
-        else if(languageBlock == 358) {
-            return 116;
-        }
-        throw new RuntimeException();
     }
 
     public static void addBlock(Block block) {
@@ -4765,11 +4792,20 @@ public final class GameDataTracker {
             gameObject.getArgs().add((short)80);
         }
         else if("Door: B8".equals(doorWithCoordinatesData)) {
-            gameObject.getArgs().add((short)8);
-            gameObject.getArgs().add((short)0);
-            gameObject.getArgs().add((short)1);
-            gameObject.getArgs().add((short)400);
-            gameObject.getArgs().add((short)180);
+            if(Settings.isFools2021Mode()) {
+                gameObject.getArgs().add((short)0);
+                gameObject.getArgs().add((short)0);
+                gameObject.getArgs().add((short)0);
+                gameObject.getArgs().add((short)320);
+                gameObject.getArgs().add((short)152);
+            }
+            else {
+                gameObject.getArgs().add((short)8);
+                gameObject.getArgs().add((short)0);
+                gameObject.getArgs().add((short)1);
+                gameObject.getArgs().add((short)400);
+                gameObject.getArgs().add((short)180);
+            }
         }
         else if("Door: B9".equals(doorWithCoordinatesData)) {
             gameObject.getArgs().add((short)6);
@@ -4938,82 +4974,42 @@ public final class GameDataTracker {
         short shopItem3Flag = getFlag(shopItem3);
 
         // NOTE: only tolerates one sacred orb per shop
-        if(shopItem1.contains("Sacred Orb")) {
+        if(shopItem1.contains("Sacred Orb") || shopItem2.contains("Sacred Orb") || shopItem3.contains("Sacred Orb")) {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
             blocks.add(noOrbShopBlock);
-            writeShopInventory(noOrbShopBlock, "Weights", shopItem2, shopItem3, blocks,
-                    new ItemPriceCount((short)10, (short)5), itemPriceAndCount2, itemPriceAndCount3, littleBrotherShop, msxShop, true, random);
-
-            TestByteOperation testByteOperation;
-            for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
-                GameObject shopWithoutOrb = new GameObject(shopObject);
-                shopObject.getObjectContainer().getObjects().add(shopWithoutOrb);
-
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(shopItem1Flag);
-                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                testByteOperation.setValue((byte)2);
-                shopWithoutOrb.getTestByteOperations().add(testByteOperation);
-
-                shopWithoutOrb.getArgs().set(4, (short)(blocks.size() - 1));
-
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(shopItem1Flag);
-                testByteOperation.setOp(ByteOp.FLAG_LT);
-                testByteOperation.setValue((byte)2);
-                shopObject.getTestByteOperations().add(testByteOperation);
+            String newShopItem1 = shopItem1;
+            String newShopItem2 = shopItem2;
+            String newShopItem3 = shopItem3;
+            ItemPriceCount newItemPriceAndCount1 = itemPriceAndCount1;
+            ItemPriceCount newItemPriceAndCount2 = itemPriceAndCount2;
+            ItemPriceCount newItemPriceAndCount3 = itemPriceAndCount3;
+            short sacredOrbItemFlag;
+            if(shopItem1.contains("Sacred Orb")) {
+                newShopItem1 = "Weights";
+                newItemPriceAndCount1 = new ItemPriceCount((short)10, (short)5);
+                sacredOrbItemFlag = shopItem1Flag;
             }
-        }
-        else if(shopItem2.contains("Sacred Orb")) {
-            ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
-            blocks.add(noOrbShopBlock);
-            writeShopInventory(noOrbShopBlock, shopItem1, "Weights", shopItem3, blocks,
-                    itemPriceAndCount1, new ItemPriceCount((short)10, (short)5), itemPriceAndCount3, littleBrotherShop, msxShop, true, random);
-
-            TestByteOperation testByteOperation;
-            for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
-                GameObject shopWithoutOrb = new GameObject(shopObject);
-                shopObject.getObjectContainer().getObjects().add(shopWithoutOrb);
-
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(shopItem2Flag);
-                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                testByteOperation.setValue((byte)2);
-                shopWithoutOrb.getTestByteOperations().add(testByteOperation);
-
-                shopWithoutOrb.getArgs().set(4, (short)(blocks.size() - 1));
-
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(shopItem2Flag);
-                testByteOperation.setOp(ByteOp.FLAG_LT);
-                testByteOperation.setValue((byte)2);
-                shopObject.getTestByteOperations().add(testByteOperation);
+            else if(shopItem2.contains("Sacred Orb")) {
+                newShopItem2 = "Weights";
+                newItemPriceAndCount2 = new ItemPriceCount((short)10, (short)5);
+                sacredOrbItemFlag = shopItem2Flag;
             }
-        }
-        else if(shopItem3.contains("Sacred Orb")) {
-            ShopBlock noOrbShopBlock = new ShopBlock(shopBlock, blocks.size());
-            blocks.add(noOrbShopBlock);
-            writeShopInventory(noOrbShopBlock, shopItem1, shopItem2, "Weights", blocks,
-                    itemPriceAndCount1, itemPriceAndCount2, new ItemPriceCount((short)10, (short)5), littleBrotherShop, msxShop, true, random);
+            else { // if(shopItem3.contains("Sacred Orb")) {
+                newShopItem3 = "Weights";
+                newItemPriceAndCount3 = new ItemPriceCount((short)10, (short)5);
+                sacredOrbItemFlag = shopItem3Flag;
+            }
+            writeShopInventory(noOrbShopBlock, newShopItem1, newShopItem2, newShopItem3, blocks,
+                    newItemPriceAndCount1, newItemPriceAndCount2, newItemPriceAndCount3, littleBrotherShop, msxShop, true, random);
 
-            TestByteOperation testByteOperation;
             for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
                 GameObject shopWithoutOrb = new GameObject(shopObject);
                 shopObject.getObjectContainer().getObjects().add(shopWithoutOrb);
 
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(shopItem3Flag);
-                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                testByteOperation.setValue((byte)2);
-                shopWithoutOrb.getTestByteOperations().add(testByteOperation);
-
                 shopWithoutOrb.getArgs().set(4, (short)(blocks.size() - 1));
+                shopWithoutOrb.getTestByteOperations().add(new TestByteOperation(sacredOrbItemFlag, ByteOp.FLAG_EQUALS, 2));
 
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(shopItem3Flag);
-                testByteOperation.setOp(ByteOp.FLAG_LT);
-                testByteOperation.setValue((byte)2);
-                shopObject.getTestByteOperations().add(testByteOperation);
+                shopObject.getTestByteOperations().add(new TestByteOperation(sacredOrbItemFlag, ByteOp.FLAG_LT, 2));
             }
         }
 
@@ -5024,127 +5020,12 @@ public final class GameDataTracker {
 
         List<Short> newCounts  = new ArrayList<>();
         List<Short> newPrices  = new ArrayList<>();
-        if(itemPriceAndCount1 == null) {
-//            if(!Settings.isFoolsMode()) {
-                newPrices.add(shopBlock.getInventoryPriceList().getData().get(0));
-//            }
-            if ("Weights".equals(shopItem1)) {
-//                if(Settings.isFoolsMode()) {
-//                    newCounts.add((short)(random.nextInt(10) + 1));
-//                    newPrices.add((short)1);
-//                }
-//                else {
-                    newCounts.add((short) 5);
-//                }
-            }
-            else if (shopItem1.endsWith("Ammo")) {
-                newCounts.add(shopBlock.getInventoryCountList().getData().get(0));
-//                if(Settings.isFoolsMode()) {
-//                    newPrices.add(shopBlock.getInventoryPriceList().getData().get(0));
-//                }
-            } else {
-                newCounts.add((short) 1);
-//                if(Settings.isFoolsMode()) {
-//                    newPrices.add(shopBlock.getInventoryPriceList().getData().get(0));
-//                }
-            }
-        }
-        else {
-            if(itemPriceAndCount1.getPrice() == null) {
-                newPrices.add(shopBlock.getInventoryPriceList().getData().get(0));
-            }
-            else {
-                newPrices.add(itemPriceAndCount1.getPrice());
-            }
-
-            if(itemPriceAndCount1.getCount() == null) {
-                newCounts.add(shopBlock.getInventoryCountList().getData().get(0));
-            }
-            else {
-                newCounts.add(itemPriceAndCount1.getCount());
-            }
-        }
-
-        if(itemPriceAndCount2 == null) {
-//            if(!Settings.isFoolsMode()) {
-                newPrices.add(shopBlock.getInventoryPriceList().getData().get(1));
-//            }
-
-            if ("Weights".equals(shopItem2)) {
-//                if(Settings.isFoolsMode()) {
-//                    newCounts.add((short)(random.nextInt(10) + 1));
-//                    newPrices.add((short)1);
-//                }
-//                else {
-                    newCounts.add((short) 5);
-//                }
-            } else if (shopItem2.endsWith("Ammo")) {
-                newCounts.add(shopBlock.getInventoryCountList().getData().get(1));
-//                if(Settings.isFoolsMode()) {
-//                    newPrices.add(shopBlock.getInventoryPriceList().getData().get(1));
-//                }
-            } else {
-                newCounts.add((short) 1);
-//                if(Settings.isFoolsMode()) {
-//                    newPrices.add(shopBlock.getInventoryPriceList().getData().get(1));
-//                }
-            }
-        }
-        else {
-            if(itemPriceAndCount2.getPrice() == null) {
-                newPrices.add(shopBlock.getInventoryPriceList().getData().get(1));
-            }
-            else {
-                newPrices.add(itemPriceAndCount2.getPrice());
-            }
-
-            if(itemPriceAndCount2.getCount() == null) {
-                newCounts.add(shopBlock.getInventoryCountList().getData().get(1));
-            }
-            else {
-                newCounts.add(itemPriceAndCount2.getCount());
-            }
-        }
-
-        if(itemPriceAndCount3 == null) {
-//            if(!Settings.isFoolsMode()) {
-                newPrices.add(shopBlock.getInventoryPriceList().getData().get(2));
-//            }
-            if ("Weights".equals(shopItem3)) {
-//                if(Settings.isFoolsMode()) {
-//                    newCounts.add((short)(random.nextInt(10) + 1));
-//                    newPrices.add((short)1);
-//                }
-//                else {
-                    newCounts.add((short) 5);
-//                }
-            } else if (shopItem3.endsWith("Ammo")) {
-                newCounts.add(shopBlock.getInventoryCountList().getData().get(2));
-//                if(Settings.isFoolsMode()) {
-//                    newPrices.add(shopBlock.getInventoryPriceList().getData().get(2));
-//                }
-            } else {
-                newCounts.add((short) 1);
-//                if(Settings.isFoolsMode()) {
-//                    newPrices.add(shopBlock.getInventoryPriceList().getData().get(2));
-//                }
-            }
-        }
-        else {
-            if(itemPriceAndCount3.getPrice() == null) {
-                newPrices.add(shopBlock.getInventoryPriceList().getData().get(2));
-            }
-            else {
-                newPrices.add(itemPriceAndCount3.getPrice());
-            }
-
-            if(itemPriceAndCount3.getCount() == null) {
-                newCounts.add(shopBlock.getInventoryCountList().getData().get(2));
-            }
-            else {
-                newCounts.add(itemPriceAndCount3.getCount());
-            }
-        }
+        updatePriceAndCount(newPrices, newCounts, random, shopItem1, itemPriceAndCount1,
+                shopBlock.getInventoryPriceList().getData().get(0), shopBlock.getInventoryCountList().getData().get(0));
+        updatePriceAndCount(newPrices, newCounts, random, shopItem2, itemPriceAndCount2,
+                shopBlock.getInventoryPriceList().getData().get(1), shopBlock.getInventoryCountList().getData().get(1));
+        updatePriceAndCount(newPrices, newCounts, random, shopItem3, itemPriceAndCount3,
+                shopBlock.getInventoryPriceList().getData().get(2), shopBlock.getInventoryCountList().getData().get(2));
 
         shopBlock.getInventoryPriceList().getData().clear();
         shopBlock.getInventoryPriceList().getData().addAll(newPrices);
@@ -5205,6 +5086,52 @@ public final class GameDataTracker {
         bunemonData.add((short)262);
         bunemonData.add((short)32);
         updateBunemonText(bunemonData, shopItem3, shopBlock.getInventoryPriceList().getData().get(2));
+    }
+
+    public static void updatePriceAndCount(List<Short> newPrices, List<Short> newCounts, Random random,
+                                           String shopItem, ItemPriceCount existingItemPriceAndCount,
+                                           Short originalLocationPrice, Short originalLocationCount) {
+        if(existingItemPriceAndCount == null) {
+            if(!Settings.isFools2019Mode()) {
+                newPrices.add(originalLocationPrice);
+            }
+
+            if ("Weights".equals(shopItem)) {
+                if(Settings.isFools2019Mode()) {
+                    newCounts.add((short)(random.nextInt(10) + 1));
+                    newPrices.add((short)1);
+                }
+                else {
+                    newCounts.add((short) 5);
+                }
+            }
+            else if (shopItem.endsWith("Ammo")) {
+                newCounts.add(originalLocationCount);
+                if(Settings.isFools2019Mode()) {
+                    newPrices.add(originalLocationPrice);
+                }
+            } else {
+                newCounts.add((short) 1);
+                if(Settings.isFools2019Mode()) {
+                    newPrices.add(originalLocationPrice);
+                }
+            }
+        }
+        else {
+            if(existingItemPriceAndCount.getPrice() == null) {
+                newPrices.add(originalLocationPrice);
+            }
+            else {
+                newPrices.add(existingItemPriceAndCount.getPrice());
+            }
+
+            if(existingItemPriceAndCount.getCount() == null) {
+                newCounts.add(originalLocationCount);
+            }
+            else {
+                newCounts.add(existingItemPriceAndCount.getCount());
+            }
+        }
     }
 
     public static void updateXelpudIntro(List<Block> blocks) {
@@ -5370,7 +5297,7 @@ public final class GameDataTracker {
         }
     }
 
-    public static void writeTransitionGate(String gateToUpdate, String gateDestination) {
+    public static void writeTransitionGate(String gateToUpdate, String gateDestination, boolean isEndlesL1Destination) {
         List<GameObject> objectsToModify = mapOfGateNameToTransitionGate.get(gateToUpdate);
         if(objectsToModify != null) {
             boolean firstObject = true;
@@ -5386,43 +5313,69 @@ public final class GameDataTracker {
                 replaceTransitionGateFlags(gameObject, gateToUpdate, gateDestination); // Update flags on the gate, as needed.
 
                 if(!"Transition: Sun R2".equals(gateToUpdate) && !"Transition: Extinction L2".equals(gateToUpdate)) {
+                    // Both of these screen edges have more than one door; the screen transition is based on Sun R1 and Extinction L1, respectively
                     updateScreenTransition(gameObject, gateDestination);
                 }
                 if(firstObject && "Transition: Illusion R2".equals(gateToUpdate)) {
+                    // Block leading out of Illusion
                     AddObject.addIllusionFruitBlockHorizontal(gameObject, true);
                     updateFirstObject = true;
                 }
                 if(firstObject
                         && ("Transition: Illusion R1".equals(gateDestination)
                         || "Transition: Illusion R2".equals(gateDestination))) {
+                    // Block leading into Illusion
                     AddObject.addIllusionFruitBlockHorizontal(gameObject, "Transition: Illusion R2".equals(gateDestination));
                     updateFirstObject = true;
                 }
                 if(firstObject && "Transition: Illusion D1".equals(gateDestination)) {
+                    // Block leading into Illusion
                     AddObject.addIllusionFruitBlockVertical(gameObject);
                     updateFirstObject = true;
                 }
+                if(firstObject && Settings.isFools2021Mode() && "Transition: Guidance L1".equals(gateDestination)) {
+                    // Add timer for fools' rando 2021 to ensure a flag sequence behaves as intended.
+                    // Ensure the process of falling blocks triggered by Pepper is reset if unfinished.
+                    AddObject.addFramesTimer(gameObject.getObjectContainer(), 0,
+                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_GT, 0),
+                                    new TestByteOperation(0x137, ByteOp.FLAG_LT, 5)),
+                            Arrays.asList(new WriteByteOperation(0x137, ByteOp.ASSIGN_FLAG, 1)));
+                    updateFirstObject = true;
+                }
                 if(firstObject && "Transition: Sun L1".equals(gateDestination)) {
+                    // Timer on the other side of the gate leading into Buer's room, to mark that the ceiling can now be broken (not allowed during the boss fight).
                     AddObject.addIsisRoomCeilingTimer(gameObject.getObjectContainer());
                     updateFirstObject = true;
                 }
                 if(firstObject && "Transition: Goddess L2".equals(gateDestination)) {
+                    // Timer on the other side of the gate leading into the lower of the left Goddess exits, to mark that the statue should be removed.
                     AddObject.addGoddessStatueLemezaDetector(gameObject);
                     updateFirstObject = true;
                 }
                 if(firstObject && "Transition: Goddess D1".equals(gateDestination)) {
+                    // Timer on the other side of the gate leading into the shield statue's room in Goddess, marking that the shield has been thrown and the statue should not exist upon returning.
                     AddObject.addGoddessShieldTimer(gameObject.getObjectContainer());
                     updateFirstObject = true;
                 }
                 if(firstObject && "Transition: Birth R1".equals(gateDestination)) {
+                    // Block leading into Skanda's room.
                     AddObject.addSkandaBlock(gameObject);
                     updateFirstObject = true;
                 }
                 if(firstObject && gateDestination.contains("Transition: Twin ") && !gateToUpdate.equals("Transition: Twin U2")) {
+                    // For every transition gate leading into Twin Labyrinths, the poison timer (but not the puzzle itself) will be reset,
+                    // UNLESS this is a transition from the screen with the first dais into some other screen of Twin Labyrinths.
                     AddObject.addTwinLabsPoisonTimerRemoval(gameObject.getObjectContainer(), false);
                     updateFirstObject = true;
                 }
+                if(firstObject && isEndlesL1Destination) {
+                    // Detector on the other side of the gate coming out of Endless corridor, to open the Map chest in Endless Corridor.
+                    AddObject.addEndlessCorridorLeftExitLemezaDetector(gameObject);
+                    updateFirstObject = true;
+                }
                 if(firstObject && !LocationCoordinateMapper.isSurfaceStart() && "Transition: Surface R1".equals(gateToUpdate)) {
+                    // Transition gate leading from Surface into some other location. If non-random start, the player may be trapped in the un-opened entryway
+                    // and forcibly raindropped somewhere unintended if a warp is not provided before the passageway has been opened on the Surface side.
                     GameObject warp = AddObject.addWarp((Screen)gameObject.getObjectContainer(), 1220, 340, 4, 7, 0, 0, 0, 20, 312);
                     replaceTransitionGateArgs(warp, gateDestination); // First update the transitions so we can make a correct copy of the gate if needed.
 
@@ -6319,11 +6272,7 @@ public final class GameDataTracker {
     private static void replaceTransitionGateFlags(GameObject gameObject, String gateToUpdate, String gateDestination) {
         if(gateToUpdate.equals("Transition: Illusion R2")) {
             // Add extra check for Fruit of Eden placed.
-            TestByteOperation testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(0x226);
-            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-            testByteOperation.setValue((byte)0);
-            gameObject.getTestByteOperations().add(testByteOperation);
+            gameObject.getTestByteOperations().add(new TestByteOperation(0x226, ByteOp.FLAG_NOT_EQUAL, 0));
         }
 
         if(gateDestination.startsWith("Transition: Shrine") && !"Transition: Shrine D3".equals(gateDestination)) {
@@ -6335,21 +6284,13 @@ public final class GameDataTracker {
                 testByteOperation.setValue((byte)9);
 
                 // Add extra check for not during escape, since escape door is different.
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(0x382);
-                testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-                testByteOperation.setValue((byte)1);
-                gameObject.getTestByteOperations().add(testByteOperation);
+                gameObject.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_NOT_EQUAL, 1));
             }
         }
         else if(gateDestination.equals("Transition: Illusion R1")
                 || gateDestination.equals("Transition: Illusion R2")) {
             // Add extra check for Fruit of Eden placed.
-            TestByteOperation testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(0x226);
-            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-            testByteOperation.setValue((byte)0);
-            gameObject.getTestByteOperations().add(testByteOperation);
+            gameObject.getTestByteOperations().add(new TestByteOperation(0x226, ByteOp.FLAG_NOT_EQUAL, 0));
         }
     }
 
@@ -6424,7 +6365,7 @@ public final class GameDataTracker {
         List<GameObject> objectsToModify = mapOfDoorNameToBacksideDoor.get(doorToReplace);
         if(objectsToModify == null) {
             if("Door: F8".equals(doorWithCoordinateData)) {
-                AddObject.addGrailToggle(null);
+                AddObject.addGrailToggle(null, true);
             }
         }
         else {
@@ -6432,7 +6373,7 @@ public final class GameDataTracker {
                 replaceBacksideDoorFlags(gameObject, bossNumber, gateFlag, isDoorDisabledForEscape(doorToReplace));
                 replaceBacksideDoorArgs(gameObject, doorWithCoordinateData);
                 if("Door: F8".equals(doorWithCoordinateData)) {
-                    AddObject.addGrailToggle(gameObject.getObjectContainer());
+                    AddObject.addGrailToggle(gameObject.getObjectContainer(), true);
                 }
                 AddObject.addNumberlessBacksideDoorGraphic(gameObject);
                 if(bossNumber != null) {
@@ -6453,6 +6394,18 @@ public final class GameDataTracker {
                 }
             }
         }
+    }
+
+    public static void writeSeals(String sealNode, short sealNumber) {
+        List<GameObject> seals = mapOfSealNodeToSealObjects.get(sealNode);
+        for (GameObject sealToUpdate : seals) {
+            sealToUpdate.getArgs().set(0, sealNumber);
+        }
+    }
+
+    public static void writeNpcDoor(String npcDoorLocation, String npc) {
+        GameObject doorToUpdate = mapOfNpcLocationToObject.get(npcDoorLocation);
+        NpcObjectUpdates.updateDoor(doorToUpdate, npc);
     }
 
     private static Integer getBossFlag(Integer bossNumber) {
@@ -6754,32 +6707,66 @@ public final class GameDataTracker {
                 WriteByteOperation puzzleFlag = gameObject.getWriteByteOperations().get(1);
                 gameObject.getWriteByteOperations().clear();
 
-                WriteByteOperation updateFlag = new WriteByteOperation();
-                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-                updateFlag.setIndex(0xacf);
-                updateFlag.setValue(2);
-                gameObject.getWriteByteOperations().add(updateFlag);
-
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(0xacf, ByteOp.ASSIGN_FLAG, 2));
                 gameObject.getWriteByteOperations().add(puzzleFlag);
-
-                updateFlag = new WriteByteOperation();
-                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-                updateFlag.setIndex(0xacf);
-                updateFlag.setValue(1);
-                gameObject.getWriteByteOperations().add(updateFlag);
-
-                updateFlag = new WriteByteOperation();
-                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-                updateFlag.setIndex(0xacf);
-                updateFlag.setValue(2);
-                gameObject.getWriteByteOperations().add(updateFlag);
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(0xacf, ByteOp.ASSIGN_FLAG, 1));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(0xacf, ByteOp.ASSIGN_FLAG, 2));
             }
         }
+        AddObject.addGrailToggle(featherScreen, false, new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2));
+        AddObject.addFramesTimer(featherScreen, 0,
+                Arrays.asList(new TestByteOperation(0xaca, ByteOp.FLAG_EQUALS, 0),
+                        new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)),
+                Arrays.asList(new WriteByteOperation(0xaca, ByteOp.ASSIGN_FLAG, 1),
+                        new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1)));
+        AddObject.addPot(featherScreen, 220, 20, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addSuccessSound(featherScreen,  Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2),
+                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
+
+        Screen argusScreen = getScreen(argusRoom.getScreens(), 1);
+
+        AddObject.addPot(argusScreen, 900, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 940, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 980, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1020, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1060, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addPot(argusScreen, 920, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 960, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1000, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1040, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addPot(argusScreen, 940, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 980, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1020, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addPot(argusScreen, 960, 200, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1000, 200, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addPot(argusScreen, 980, 160, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addFloatingItem(argusScreen, 980, 0, 53, false,
+                Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(0xaca, ByteOp.FLAG_EQUALS, 1)),
+                Arrays.asList(new WriteByteOperation(0xaca, ByteOp.ASSIGN_FLAG, 2),
+                        new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1)));
+        AddObject.addNoItemSoundEffect(argusScreen, 0xaca, 0x00b);
+
+        Screen nextToArgusScreen = getScreen(argusRoom.getScreens(), 0);
+        AddObject.addGrailToggle(nextToArgusScreen, true);
 
         Zone mulbrukZone = getZone(rcdInfo, 3);
         Room mulbrukRoom = getRoom(mulbrukZone.getRooms(), 3);
         Screen mulbrukScreen = getScreen(mulbrukRoom.getScreens(), 0);
         AddObject.addFoolsMulbrukBlocks(mulbrukScreen, datInfo);
+
+        Zone tiamatZone = getZone(rcdInfo, 17);
+        Room tiamatRoom = getRoom(tiamatZone.getRooms(), 9);
+        Screen dimensionalGrailScreen = getScreen(tiamatRoom.getScreens(), 0);
+
+        AddObject.addPot(dimensionalGrailScreen, 300, 400, PotGraphic.DIMENSIONAL,
+                DropType.FLARE_GUN_AMMO, 80, Arrays.asList(new TestByteOperation(64, ByteOp.FLAG_EQUALS, 1)),
+                new ArrayList<>(0));
     }
 
     private static Zone getZone(List<Zone> zones, int zoneIndex) {
@@ -6811,6 +6798,51 @@ public final class GameDataTracker {
 
     private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData,
                                             String newChestContentsItemName, int newWorldFlag, Integer itemRandomizeGraphicsFlag, boolean cursed, Random random) {
+        if(Settings.isFools2021Mode()) {
+            if(itemLocationData.getWorldFlag() == 0x090) {
+                // Ankh Jewel (Temple of the Sun)
+                itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                newChestContentsItemName = "Spaulder";
+                newWorldFlag = 0xabe;
+            }
+            if(itemLocationData.getWorldFlag() == 0x0ae) {
+                // Bronze Mirror
+                itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                newChestContentsItemName = "Spaulder";
+                newWorldFlag = 0xabf;
+            }
+            if(itemLocationData.getWorldFlag() == 0x0aa) {
+                // Isis' Pendant
+                itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                newChestContentsItemName = "Spaulder";
+                newWorldFlag = 0xac0;
+            }
+            if(itemLocationData.getWorldFlag() == 0x0d4) {
+                // Map (Temple of the Sun)
+                itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                newChestContentsItemName = "Spaulder";
+                newWorldFlag = 0xac2;
+            }
+            if(itemLocationData.getWorldFlag() == 0x0ca) {
+                // Sacred Orb (Temple of the Sun)
+                itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                newChestContentsItemName = "Spaulder";
+                newWorldFlag = 0xac3;
+            }
+            if(itemLocationData.getWorldFlag() == 0x18b) {
+                // Coin: Sun (Pyramid)
+                itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                newChestContentsItemName = "Spaulder";
+                newWorldFlag = 0xac5;
+            }
+            if(itemLocationData.getWorldFlag() == 0x0da) {
+                // Map (Shrine of the Mother)
+                itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
+                newChestContentsItemName = "Spaulder";
+                newWorldFlag = 0xac6;
+            }
+        }
+
         WriteByteOperation puzzleFlag = objectToModify.getWriteByteOperations().get(1);
         objectToModify.getWriteByteOperations().clear();
 
@@ -6953,7 +6985,7 @@ public final class GameDataTracker {
             AddObject.addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, 46);
         }
         else {
-            if(itemNewContentsData.getWorldFlag() == newWorldFlag) {
+            if(itemNewContentsData.getWorldFlag() == newWorldFlag || (Settings.isFools2021Mode() && newWorldFlag >= 0xabe && newWorldFlag <= 0xac6)) {
                 // Actual items
                 if(itemRandomizeGraphicsFlag == null) {
                     objectToModify.getArgs().set(0, (short)(itemNewContentsData.getInventoryArg() + 11)); // Item arg to indicate what the chest drops
@@ -7166,6 +7198,22 @@ public final class GameDataTracker {
         boolean isRemovedItem = itemNewContentsData.getWorldFlag() != newWorldFlag;
         boolean isTrapItem = !isRemovedItem && Settings.isRandomizeTrapItems()
                 && (newWorldFlag == 2777 || newWorldFlag == 2779 || newWorldFlag == 2780);
+
+        if(Settings.isFools2021Mode()) {
+            if(itemLocationData.getWorldFlag() == 0x07f) {
+                // Knife
+                inventoryArg = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder").getInventoryArg();
+                isRemovedItem = false;
+                newWorldFlag = 0xac1;
+            }
+            if(itemLocationData.getWorldFlag() == 0x0a4) {
+                // Talisman
+                inventoryArg = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder").getInventoryArg();
+                isRemovedItem = false;
+                newWorldFlag = 0xac4;
+            }
+        }
+
         if(isRemovedItem) {
             // Add handling for removed items.
             objectToModify.getArgs().set(1, inventoryArg);
@@ -7322,9 +7370,12 @@ public final class GameDataTracker {
             AddObject.addItemGive(objectToModify, inventoryArg, itemRandomizeGraphicsFlag, newWorldFlag);
         }
 
-        if(Settings.isFools2020Mode()) {
-            if(itemLocationData.getInventoryArg() == 11) {
+        if(itemLocationData.getInventoryArg() == 11) {
+            if(Settings.isFools2020Mode()) {
                 objectToModify.getTestByteOperations().add(new TestByteOperation(0x1b3, ByteOp.FLAG_GTEQ, 2));
+            }
+            if(Settings.isFools2021Mode()) {
+                objectToModify.getTestByteOperations().add(new TestByteOperation(0x1b7, ByteOp.FLAG_GTEQ, 2));
             }
         }
     }
@@ -7379,6 +7430,59 @@ public final class GameDataTracker {
         }
         else if("Pistol".equals(weapon)) {
             subweaponPot.getArgs().set(0, (short)10);
+        }
+    }
+
+    public static void updateEdenDaises(Random random) {
+        if (edenDaises.size() == 4) {
+            List<GameObject> updatedDaises = new ArrayList<>(edenDaises);
+            for (int i = 0; i < 4; i++) {
+                GameObject dais = updatedDaises.remove(random.nextInt(updatedDaises.size()));
+                if (i == 0) {
+                    dais.setX(160);
+                    dais.setY(180);
+                    for(TestByteOperation testByteOperation : dais.getTestByteOperations()) {
+                        if (testByteOperation.getIndex() == 0x270 || testByteOperation.getIndex() == 0x29c
+                            || testByteOperation.getIndex() == 0x29d || testByteOperation.getIndex() == 0x29e) {
+                            testByteOperation.setIndex(0x270);
+                            break;
+                        }
+                    }
+                }
+                else if (i == 1) {
+                    dais.setX(320);
+                    dais.setY(180);
+                    for(TestByteOperation testByteOperation : dais.getTestByteOperations()) {
+                        if (testByteOperation.getIndex() == 0x270 || testByteOperation.getIndex() == 0x29c
+                            || testByteOperation.getIndex() == 0x29d || testByteOperation.getIndex() == 0x29e) {
+                            testByteOperation.setIndex(0x29c);
+                            break;
+                        }
+                    }
+                }
+                else if (i == 2) {
+                    dais.setX(320);
+                    dais.setY(340);
+                    for(TestByteOperation testByteOperation : dais.getTestByteOperations()) {
+                        if (testByteOperation.getIndex() == 0x270 || testByteOperation.getIndex() == 0x29c
+                            || testByteOperation.getIndex() == 0x29d || testByteOperation.getIndex() == 0x29e) {
+                            testByteOperation.setIndex(0x29d);
+                            break;
+                        }
+                    }
+                }
+                else { // if (i == 3)
+                    dais.setX(320);
+                    dais.setY(260);
+                    for(TestByteOperation testByteOperation : dais.getTestByteOperations()) {
+                        if (testByteOperation.getIndex() == 0x270 || testByteOperation.getIndex() == 0x29c
+                            || testByteOperation.getIndex() == 0x29d || testByteOperation.getIndex() == 0x29e) {
+                            testByteOperation.setIndex(0x29e);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 

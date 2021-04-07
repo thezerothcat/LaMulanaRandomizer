@@ -47,7 +47,7 @@ public final class DataFromFile {
             16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 37, 38, 39, 40, 41, 42, 43,
             44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
             71, 72, 73, 75, 76, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104);
-    public static List<Integer> STARTING_LOCATIONS = Arrays.asList(0, 2, 5, 7, -7, 8, 10, 11, 13, 16, 21);
+    public static List<Integer> STARTING_LOCATIONS = Arrays.asList(0, 1, 2, 5, 7, -7, 8, 10, 11, 13, 16, 21);
     public static List<String> NPC_LOCATIONS = Arrays.asList("Location: Surface [Main]", "Location: Gate of Guidance [Main]",
             "Location: Mausoleum of the Giants", "Location: Temple of the Sun [Sphinx]", "Location: Spring in the Sky [Main]",
             "Location: Inferno Cavern [Main]", "Location: Chamber of Extinction [Main]", "Location: Chamber of Extinction [Ankh Lower]",
@@ -67,8 +67,8 @@ public final class DataFromFile {
 
     public static String CUSTOM_SHOP_NAME = "Shop 0 (Default)";
 
-    public static int FIRST_AVAILABLE_RANDOM_GRAPHICS_FLAG = Settings.isFools2020Mode() ? 2762 : 2730;
-    public static int LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG = Settings.isFools2020Mode() ? 2766 : 2760;
+    public static int FIRST_AVAILABLE_RANDOM_GRAPHICS_FLAG = (Settings.isFools2020Mode() || Settings.isFools2021Mode()) ? 2762 : 2730;
+    public static int LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG = (Settings.isFools2020Mode() || Settings.isFools2021Mode()) ? 2765 : 2760;
 
     private static List<String> allShops;
     private static List<String> allItems;
@@ -272,37 +272,83 @@ public final class DataFromFile {
             boolean requirePlaneModelAndTwinStatueAndLiteracy = !Settings.getEnabledGlitches().contains("Raindrop");
             boolean requireEarthSpearAndBronzeMirror = !Settings.getEnabledGlitches().contains("Lamp Glitch") && !Settings.getEnabledGlitches().contains("Raindrop");
             for(String itemName : getAllItems()) {
-                if(itemName.startsWith("Ankh Jewel")) {
-                    continue; // Never remove an ankh jewel.
+                if(!Settings.isFoolsGameplay() && itemName.startsWith("Ankh Jewel")) {
+                    continue; // Don't remove ankh jewels unless it's allowed.
                 }
-                if("Holy Grail".equals(itemName) || "Dimensional Key".equals(itemName)
-                        || "Crystal Skull".equals(itemName) || "Pochette Key".equals(itemName)
+                if(Settings.isFools2021Mode()) {
+                    if(itemName.equals("Pepper")) {
+                        continue;
+                    }
+                    if(itemName.equals("Shell Horn")) {
+                        continue;
+                    }
+                    if(itemName.equals("guild.exe")) {
+                        continue;
+                    }
+                    if(itemName.equals("Buckler")) {
+                        continue;
+                    }
+                    if(itemName.equals("Fake Silver Shield")) {
+                        continue;
+                    }
+                    if(itemName.equals("Spaulder")) {
+                        continue;
+                    }
+                    if(itemName.equals("Helmet")) {
+                        continue;
+                    }
+                    if(itemName.equals("Isis' Pendant")) {
+                        continue;
+                    }
+                    if(itemName.equals("miracle.exe")) {
+                        continue;
+                    }
+                    if(itemName.equals("mekuri.exe")) {
+                        continue;
+                    }
+                }
+                if("Crystal Skull".equals(itemName)) {
+                    if(!Settings.isFoolsGameplay()
+                        && (!Settings.isRandomizeTransitionGates() || !Settings.isRandomizeOneWayTransitions())) {
+                        // Crystal Skull is required for vanilla transitions Dimensional Corridor
+                        continue;
+                    }
+                }
+                if("Pochette Key".equals(itemName)) {
+                    if(!Settings.isFoolsGameplay()) {
+                        continue;
+                    }
+                }
+                if("Helmet".equals(itemName)) {
+                    if(!Settings.isFoolsGameplay()) {
+                        continue;
+                    }
+                }
+                if("Holy Grail".equals(itemName)
                         || "Philosopher's Ocarina".equals(itemName)
-                        || "Helmet".equals(itemName) || "Vessel".equals(itemName)
-                        || "Isis' Pendant".equals(itemName)
-                        || "Origin Seal".equals(itemName) || "Birth Seal".equals(itemName)
-                        || "Life Seal".equals(itemName) || "Death Seal".equals(itemName)) {
+                        || "Vessel".equals(itemName)
+                        || "Isis' Pendant".equals(itemName)) {
                     continue; // Things that should never be removed.
                 }
                 if(!Settings.isFeatherlessMode() && "Feather".equals(itemName)) {
                     continue;
                 }
-                if(Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
-                    continue; // Can't get Extinction grail without flares according to this logic.
+                if(!Settings.isFools2021Mode() && !Settings.isFoolsGameplay() && Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
+                    continue; // Can't get Extinction grail without flares according to this logic. Only matters if Extinction grail is required.
                 }
                 if(Settings.isRequireIceCapeForLava() && "Ice Cape".equals(itemName)) {
                     continue; // Needed for Viy
                 }
-                if(requireFruitOfEden && "Fruit of Eden".equals(itemName)) {
-                    continue; // Can't get Illusion grail without this.
+                if(!Settings.isFoolsGameplay() && requireFruitOfEden && "Fruit of Eden".equals(itemName)) {
+                    continue; // Can't get Illusion grail without this. Only matters if Illusion grail is required.
                 }
-                if(requireSerpentStaffAndChakrams && ("Chakram".equals(itemName) || "Serpent Staff".equals(itemName))) {
-                    continue; // Can't get Birth grail without these.
+                if(!Settings.isFoolsGameplay() && requireSerpentStaffAndChakrams && ("Chakram".equals(itemName) || "Serpent Staff".equals(itemName))) {
+                    continue; // Can't get Birth grail without these. Only matters if Birth grail is required.
                 }
                 if(requirePlaneModelAndTwinStatueAndLiteracy && ("Plane Model".equals(itemName) || "Twin Statue".equals(itemName))) {
                     continue; // Can't get to Birth grail area without Plane Model, Dimensional Corridor without Twin Statue.
                 }
-                if(requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
+                if(!Settings.isFoolsLogic() && requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
                     continue; // Earth Spear needed for Viy access. Bronze Mirror for VIY mantra statue.
                 }
                 if(Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName)) {
@@ -370,6 +416,9 @@ public final class DataFromFile {
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/transition_reqs.txt", true);
             if(Settings.isHalloweenMode()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/npc_reqs.txt", true);
+            }
+            if(Settings.isFoolsNpc()) {
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/npc_door_reqs.txt", true);
             }
             if(!Settings.getEnabledGlitches().isEmpty()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/glitch_reqs.txt", true);

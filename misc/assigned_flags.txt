@@ -37,18 +37,35 @@ mulbruk:
 924 / ? = escape block, no check for swimsuit status
 926 / ? = escape block if mulbruk has swimsuit
 
-for Halloween, acd = secret shop unlocked
-for Halloween, ace = mulbruk conversation flag
-aab (2732): HT unlock fairy npc, should have been with the other group but wasn't, oops
+for Halloween, acd (2765) = secret shop unlocked
+for Halloween, ace (2766) = mulbruk conversation flag
+aab (2731): HT unlock fairy npc, should have been with the other group but wasn't, oops
 aac (2733): mulbruk > 0 = not spoken, 1 = did intro, 2 = ready to talk about HT, 3 = HT unlocked
 aad (2734): H4 tracking
 aae (2735): dracuet
 aaf-ac9 (2735-2761): halloween npc
 aca = halloween npc count
 
-for fools 2020, 2730-2761 for spaulders
-for fools 2020, 2762 - 2766 = random item graphics flags (only 2762-2765 currently used)
+for fools 2020, 2730-2761 (aaa-ac9) for spaulders
+for fools 2020, 2762 (aca) for spaulder following fakefeather
+for fools 2020 & 2021, 2763 - 2766 = random item graphics flags (only 2763-2765 currently used?)
 for fools 2020, 2767 / acf = feather flag
+
+for fools 2021, 2730-2745 (aaa-ab9) for grail flags
+for fools 2021, 2746 (aba) for escape timer flag pt1
+for fools 2021, 2747 (abb) for escape timer flag pt2
+for fools 2021, 2748 (abc) for treasury zip spaulder
+for fools 2021, 2749 (abd) for endless pit spaulder
+for fools 2021, 2750 (abe) for Ankh Jewel (Temple of the Sun) spaulder
+for fools 2021, 2751 (abf) for bronze mirror spaulder
+for fools 2021, 2752 (ac0) for isis pendant spaulder
+for fools 2021, 2753 (ac1) for knife spaulder
+for fools 2021, 2754 (ac2) for map (sun) spaulder
+for fools 2021, 2755 (ac3) for sacred orb (sun) spaulder
+for fools 2021, 2756 (ac4) for talisman spaulder
+for fools 2021, 2757 (ac5) for coin sun spaulder
+for fools 2021, 2758 (ac6) for shrine map spaulder
+
 
 un-implemented features:
 inferno pushblock glove special: acb (2763)
