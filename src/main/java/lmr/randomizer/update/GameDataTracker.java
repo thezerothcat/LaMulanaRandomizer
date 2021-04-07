@@ -126,11 +126,7 @@ public final class GameDataTracker {
                         }
                     }
                     // Require showing Talisman to Xelpud (normally required for Shawn to appear)
-                    TestByteOperation flagTest = new TestByteOperation();
-                    flagTest.setIndex(2796);
-                    flagTest.setOp(ByteOp.FLAG_GTEQ);
-                    flagTest.setValue((byte)2);
-                    gameObject.getTestByteOperations().add(flagTest);
+                    gameObject.getTestByteOperations().add(new TestByteOperation(2796, ByteOp.FLAG_GTEQ, 2));
                 }
             }
 
@@ -145,30 +141,10 @@ public final class GameDataTracker {
                 worldFlag = 2777;
 
                 gameObject.getWriteByteOperations().clear();
-
-                flagUpdate = new WriteByteOperation();
-                flagUpdate.setIndex(2777);
-                flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
-                flagUpdate.setValue(2);
-                gameObject.getWriteByteOperations().add(flagUpdate);
-
-                flagUpdate = new WriteByteOperation();
-                flagUpdate.setIndex(2776);
-                flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
-                flagUpdate.setValue(1);
-                gameObject.getWriteByteOperations().add(flagUpdate);
-
-                flagUpdate = new WriteByteOperation();
-                flagUpdate.setIndex(2777);
-                flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
-                flagUpdate.setValue(2);
-                gameObject.getWriteByteOperations().add(flagUpdate);
-
-                flagUpdate = new WriteByteOperation();
-                flagUpdate.setIndex(2777);
-                flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
-                flagUpdate.setValue(2);
-                gameObject.getWriteByteOperations().add(flagUpdate);
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(2777, ByteOp.ASSIGN_FLAG, 2));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(2776, ByteOp.ASSIGN_FLAG, 1));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(2777, ByteOp.ASSIGN_FLAG, 2));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(2777, ByteOp.ASSIGN_FLAG, 2));
             }
             else if(Settings.isRandomizeTrapItems() && flagUpdate.getIndex() == 522) {
                 // Replace world flag for Illusion trap chest
@@ -6731,32 +6707,66 @@ public final class GameDataTracker {
                 WriteByteOperation puzzleFlag = gameObject.getWriteByteOperations().get(1);
                 gameObject.getWriteByteOperations().clear();
 
-                WriteByteOperation updateFlag = new WriteByteOperation();
-                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-                updateFlag.setIndex(0xacf);
-                updateFlag.setValue(2);
-                gameObject.getWriteByteOperations().add(updateFlag);
-
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(0xacf, ByteOp.ASSIGN_FLAG, 2));
                 gameObject.getWriteByteOperations().add(puzzleFlag);
-
-                updateFlag = new WriteByteOperation();
-                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-                updateFlag.setIndex(0xacf);
-                updateFlag.setValue(1);
-                gameObject.getWriteByteOperations().add(updateFlag);
-
-                updateFlag = new WriteByteOperation();
-                updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-                updateFlag.setIndex(0xacf);
-                updateFlag.setValue(2);
-                gameObject.getWriteByteOperations().add(updateFlag);
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(0xacf, ByteOp.ASSIGN_FLAG, 1));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(0xacf, ByteOp.ASSIGN_FLAG, 2));
             }
         }
+        AddObject.addGrailToggle(featherScreen, false, new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2));
+        AddObject.addFramesTimer(featherScreen, 0,
+                Arrays.asList(new TestByteOperation(0xaca, ByteOp.FLAG_EQUALS, 0),
+                        new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)),
+                Arrays.asList(new WriteByteOperation(0xaca, ByteOp.ASSIGN_FLAG, 1),
+                        new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1)));
+        AddObject.addPot(featherScreen, 220, 20, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addSuccessSound(featherScreen,  Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2),
+                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
+
+        Screen argusScreen = getScreen(argusRoom.getScreens(), 1);
+
+        AddObject.addPot(argusScreen, 900, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 940, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 980, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1020, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1060, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addPot(argusScreen, 920, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 960, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1000, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1040, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addPot(argusScreen, 940, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 980, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1020, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addPot(argusScreen, 960, 200, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1000, 200, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addPot(argusScreen, 980, 160, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addFloatingItem(argusScreen, 980, 0, 53, false,
+                Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(0xaca, ByteOp.FLAG_EQUALS, 1)),
+                Arrays.asList(new WriteByteOperation(0xaca, ByteOp.ASSIGN_FLAG, 2),
+                        new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1)));
+        AddObject.addNoItemSoundEffect(argusScreen, 0xaca, 0x00b);
+
+        Screen nextToArgusScreen = getScreen(argusRoom.getScreens(), 0);
+        AddObject.addGrailToggle(nextToArgusScreen, true);
 
         Zone mulbrukZone = getZone(rcdInfo, 3);
         Room mulbrukRoom = getRoom(mulbrukZone.getRooms(), 3);
         Screen mulbrukScreen = getScreen(mulbrukRoom.getScreens(), 0);
         AddObject.addFoolsMulbrukBlocks(mulbrukScreen, datInfo);
+
+        Zone tiamatZone = getZone(rcdInfo, 17);
+        Room tiamatRoom = getRoom(tiamatZone.getRooms(), 9);
+        Screen dimensionalGrailScreen = getScreen(tiamatRoom.getScreens(), 0);
+
+        AddObject.addPot(dimensionalGrailScreen, 300, 400, PotGraphic.DIMENSIONAL,
+                DropType.FLARE_GUN_AMMO, 80, Arrays.asList(new TestByteOperation(64, ByteOp.FLAG_EQUALS, 1)),
+                new ArrayList<>(0));
     }
 
     private static Zone getZone(List<Zone> zones, int zoneIndex) {

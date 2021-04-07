@@ -414,13 +414,15 @@ public class Main {
                 fileOutputStream.close();
                 FileUtils.logFlush("dat copy complete");
 
-                FileUtils.logFlush("Copying msd file from seed folder to La-Mulana install directory");
-                fileOutputStream = new FileOutputStream(new File(String.format("%s/data/mapdata/map13.msd",
-                        Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
-                Files.copy(new File(String.format("%s/map13.msd", Settings.getStartingSeed())).toPath(), fileOutputStream);
-                fileOutputStream.flush();
-                fileOutputStream.close();
-                FileUtils.logFlush("msd copy complete");
+                if(Settings.isFools2021Mode()) {
+                    FileUtils.logFlush("Copying msd file from seed folder to La-Mulana install directory");
+                    fileOutputStream = new FileOutputStream(new File(String.format("%s/data/mapdata/map13.msd",
+                            Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
+                    Files.copy(new File(String.format("%s/map13.msd", Settings.getStartingSeed())).toPath(), fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                    FileUtils.logFlush("msd copy complete");
+                }
 
                 if(Settings.isSaveFileNeeded()) {
                     FileUtils.logFlush("Copying save file from seed folder to La-Mulana save directory");
@@ -832,7 +834,9 @@ public class Main {
                 FileUtils.logFlush("dat file successfully written");
                 FileUtils.logFlush("Writing msd file");
 
-                FileUtils.writeMsd();
+                if(Settings.isFools2021Mode()) {
+                    FileUtils.writeMsd();
+                }
                 FileUtils.logFlush("msd file successfully written");
                 if(Settings.isSaveFileNeeded()) {
                     backupSaves();
@@ -954,14 +958,15 @@ public class Main {
         if(Settings.isFeatherlessMode()) {
             startingNodes.add("Setting: Featherless");
         }
+
         if(Settings.isFools2021Mode()) {
             startingNodes.add("Setting: Fools2021");
         } else {
             startingNodes.add("Setting: Not Fools2021");
         }
-        if(Settings.isFoolsGameplay()) {
-            startingNodes.add("Setting: " + Settings.getCurrentBossCount() + " Bosses");
-        }
+
+        startingNodes.add("Setting: " + Settings.getCurrentBossCount() + " Bosses");
+
         if(!Settings.getEnabledGlitches().contains("Raindrop")) {
             startingNodes.add("Setting: No Raindrop");
         }

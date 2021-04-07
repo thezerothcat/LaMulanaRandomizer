@@ -74,7 +74,8 @@ public final class AddObject {
      * @param tests tests to put on the timer object
      * @param updates updates the timer object should make when all of its tests pass
      */
-    public static GameObject addFramesTimer(ObjectContainer objectContainer, int delayFrames, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+    public static GameObject addFramesTimer(ObjectContainer objectContainer, int delayFrames,
+                                            List<TestByteOperation> tests, List<WriteByteOperation> updates) {
         GameObject obj = new GameObject(objectContainer);
         obj.setId((short)0x0b);
         obj.getArgs().add((short)0);
@@ -2073,7 +2074,7 @@ public final class AddObject {
         backsideDoor.getObjectContainer().getObjects().add(mirrorCoverGraphic);
     }
 
-    public static void addGrailToggle(ObjectContainer objectContainer, boolean enableGrail) {
+    public static void addGrailToggle(ObjectContainer objectContainer, boolean enableGrail, TestByteOperation... tests) {
         if(objectContainer == null) {
             objectContainer = dimensionalExitScreen;
         }
@@ -2085,6 +2086,9 @@ public final class AddObject {
 
         // Disable during escape
         grailToggle.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0));
+        for(TestByteOperation test : tests) {
+            grailToggle.getTestByteOperations().add(test);
+        }
 
         objectContainer.getObjects().add(0, grailToggle);
     }
@@ -2295,17 +2299,8 @@ public final class AddObject {
         noItemSoundEffect.setX(-1);
         noItemSoundEffect.setY(-1);
 
-        TestByteOperation testFlag = new TestByteOperation();
-        testFlag.setIndex(newWorldFlag);
-        testFlag.setOp(ByteOp.FLAG_GT);
-        testFlag.setValue((byte)0);
-        noItemSoundEffect.getTestByteOperations().add(testFlag);
-
-        testFlag = new TestByteOperation();
-        testFlag.setIndex(screenFlag);
-        testFlag.setOp(ByteOp.FLAG_EQUALS);
-        testFlag.setValue((byte)1);
-        noItemSoundEffect.getTestByteOperations().add(testFlag);
+        noItemSoundEffect.getTestByteOperations().add(new TestByteOperation(newWorldFlag, ByteOp.FLAG_GT, 0));
+        noItemSoundEffect.getTestByteOperations().add(new TestByteOperation(screenFlag, ByteOp.FLAG_EQUALS, 1));
 
         objectContainer.getObjects().add(0, noItemSoundEffect);
     }
@@ -2381,24 +2376,28 @@ public final class AddObject {
      * Add a pot to a screen
      * @param screen the screen to add the objects to
      * @param graphic
+     * @param dropType
+     * @param dropQuantity
+     * @param updates
      */
-    public static void addPot(ObjectContainer screen, int x, int y, int graphic, List<TestByteOperation> tests) {
+    public static void addPot(ObjectContainer screen, int x, int y, PotGraphic graphic, DropType dropType, int dropQuantity, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
         GameObject addedPot = new GameObject(screen);
         addedPot.setId((short) 0x0);
         addedPot.setX(x);
         addedPot.setY(y);
 
-        addedPot.getArgs().add((short)0);
-        addedPot.getArgs().add((short)0);
+        addedPot.getArgs().add(dropType.getValue());
+        addedPot.getArgs().add((short)dropQuantity);
         addedPot.getArgs().add((short)-1);
         addedPot.getArgs().add((short)1);
-        addedPot.getArgs().add((short)graphic);
+        addedPot.getArgs().add(graphic.getGraphic());
         addedPot.getArgs().add((short)105);
         addedPot.getArgs().add((short)35);
         addedPot.getArgs().add((short)17);
         addedPot.getArgs().add((short)0);
 
         addedPot.getTestByteOperations().addAll(tests);
+        addedPot.getWriteByteOperations().addAll(updates);
 
         screen.getObjects().add(addedPot);
     }

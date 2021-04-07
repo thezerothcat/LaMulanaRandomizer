@@ -1884,6 +1884,14 @@ public final class RcdReader {
                             AddObject.setMulbrukScreen(screen);
                         }
                     }
+                    else if(zoneIndex == 7) {
+                        if(roomIndex == 3 && screenIndex == 2) {
+                            if(!Settings.isFoolsNpc()) {
+                                // This gets set elsewhere if NPCs are randomized.
+                                AddObject.setLittleBrotherShopScreen(screen);
+                            }
+                        }
+                    }
                     else if(zoneIndex == 8) {
                         if(roomIndex == 0 && screenIndex == 1) {
                             AddObject.setDimensionalExitScreen(screen);
@@ -2852,14 +2860,14 @@ public final class RcdReader {
             else if(roomIndex == 4 && screenIndex == 3) {
                 // Sun room with Sacred Orb chest
                 if(Settings.isFools2021Mode()) {
-                    AddObject.addPot(screen, 40, 480, 1, new ArrayList<>(0));
-                    AddObject.addPot(screen, 40, 640, 1, new ArrayList<>(0));
-                    AddObject.addPot(screen, 40, 800, 1, new ArrayList<>(0));
+                    AddObject.addPot(screen, 40, 480, PotGraphic.SUN, DropType.NOTHING, 0, new ArrayList<>(0), new ArrayList<>(0));
+                    AddObject.addPot(screen, 40, 640, PotGraphic.SUN, DropType.NOTHING, 0, new ArrayList<>(0), new ArrayList<>(0));
+                    AddObject.addPot(screen, 40, 800, PotGraphic.SUN, DropType.NOTHING, 0, new ArrayList<>(0), new ArrayList<>(0));
 
                     AddObject.addLemezaDetector(screen, 0, 600, 6, 4,
                             Arrays.asList(new TestByteOperation(0x009, ByteOp.FLAG_EQUALS, 0)),
                             Arrays.asList(new WriteByteOperation(0x009, ByteOp.ASSIGN_FLAG, 1)));
-                    AddObject.addPot(screen, 40, 480, 1, Arrays.asList(new TestByteOperation(0x009, ByteOp.FLAG_EQUALS, 1)));
+                    AddObject.addPot(screen, 40, 480, PotGraphic.SUN, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0x009, ByteOp.FLAG_EQUALS, 1)), new ArrayList<>(0));
                 }
             }
             else if(roomIndex == 4 && screenIndex == 5) {
@@ -3004,8 +3012,8 @@ public final class RcdReader {
             if(Settings.isFeatherlessMode()) {
                 if(roomIndex == 1 && screenIndex == 1) {
                     // Land on Spriggan without feather
-                    AddObject.addPot(screen, 780, 400, 5,
-                            Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                    AddObject.addPot(screen, 780, 400, PotGraphic.EXTINCTION_POT,
+                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
         }
@@ -3022,8 +3030,8 @@ public final class RcdReader {
             else if(roomIndex == 10 && screenIndex == 1) {
                 if(Settings.isFeatherlessMode()) {
                     // Access to Dimensional without Feather
-                    AddObject.addPot(screen, 840, 320, 6,
-                            Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                    AddObject.addPot(screen, 840, 320, PotGraphic.TWIN_LABYRINTHS,
+                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
             else if(roomIndex == 3 && screenIndex == 2) {
@@ -3053,7 +3061,7 @@ public final class RcdReader {
         else if(zoneIndex == 9) {
             if(roomIndex == 7 && screenIndex == 0) {
                 if(Settings.isFeatherlessMode()) {
-                    AddObject.addPot(screen, 280, 240, 8, new ArrayList<>(0));
+                    AddObject.addPot(screen, 280, 240, PotGraphic.SHRINE, DropType.NOTHING, 0, new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
             else if(roomIndex == 8 && screenIndex == 1) {
@@ -3088,18 +3096,18 @@ public final class RcdReader {
             if(Settings.isFeatherlessMode()) {
                 if(roomIndex == 1 && screenIndex == 0) {
                     // For not having to damage boost up Gate of Illusion to Cog of the Soul
-                    AddObject.addPot(screen, 580, 280, 10,
-                            Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                    AddObject.addPot(screen, 580, 280, PotGraphic.ILLUSION,
+                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
             if(Settings.isFools2020Mode()) {
                 if(roomIndex == 0 && screenIndex == 0) {
                     // Ladder attack!
-                    AddObject.addPot(screen, 580, 280, 10, new ArrayList<>());
+                    AddObject.addPot(screen, 580, 280, PotGraphic.ILLUSION, DropType.NOTHING, 0, new ArrayList<>(), new ArrayList<>(0));
                 }
                 else if(roomIndex == 8 && screenIndex == 0) {
                     // Ladder attack!
-                    AddObject.addPot(screen, 580, 280, 10, new ArrayList<>());
+                    AddObject.addPot(screen, 580, 280, PotGraphic.ILLUSION, DropType.NOTHING, 0, new ArrayList<>(), new ArrayList<>(0));
                 }
             }
         }
@@ -3115,10 +3123,10 @@ public final class RcdReader {
                 if(roomIndex == 8) {
                     if(screenIndex == 1) {
                         // Troll pot on the way to Nuwa
-                        AddObject.addPot(screen, 940, 280, 14, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2),
+                        AddObject.addPot(screen, 940, 280, PotGraphic.RUIN, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2),
                                 new TestByteOperation(0x369, ByteOp.FLAG_GTEQ, 1),
                                 new TestByteOperation(0x265, ByteOp.FLAG_GTEQ, 1),
-                                new TestByteOperation(0x298, ByteOp.FLAG_GTEQ, 1)));
+                                new TestByteOperation(0x298, ByteOp.FLAG_GTEQ, 1)), new ArrayList<>(0));
                     }
                 }
             }
@@ -3126,10 +3134,10 @@ public final class RcdReader {
                 if(roomIndex == 8) {
                     if(screenIndex == 2) {
                         // Nuwa assist
-                        AddObject.addPot(screen, 1840, 180, 14,
-                                Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
-                        AddObject.addPot(screen, 1840, 220, 14,
-                                Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                        AddObject.addPot(screen, 1840, 180, PotGraphic.RUIN,
+                                DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                        AddObject.addPot(screen, 1840, 220, PotGraphic.RUIN,
+                                DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                     }
                 }
             }
@@ -3138,10 +3146,10 @@ public final class RcdReader {
             if(Settings.isFeatherlessMode() && !Settings.getEnabledGlitches().contains("Raindrop")) {
                 if(roomIndex == 2 && screenIndex == 1) {
                     // Access to Palenque without Feather
-                    AddObject.addPot(screen, 20, 760, 15,
-                            Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
-                    AddObject.addPot(screen, 20, 800, 15,
-                            Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                    AddObject.addPot(screen, 20, 760, PotGraphic.BIRTH,
+                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                    AddObject.addPot(screen, 20, 800, PotGraphic.BIRTH,
+                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
         }
@@ -3168,10 +3176,10 @@ public final class RcdReader {
             }
             if(Settings.isFeatherlessMode()) {
                 if(roomIndex == 0 && screenIndex == 1) {
-                    AddObject.addPot(screen, 500, 680, 16,
-                            Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
-                    AddObject.addPot(screen, 500, 720, 16,
-                            Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0));
+                    AddObject.addPot(screen, 500, 680, PotGraphic.DIMENSIONAL,
+                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                    AddObject.addPot(screen, 500, 720, PotGraphic.DIMENSIONAL,
+                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
         }

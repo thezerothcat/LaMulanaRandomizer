@@ -40,6 +40,13 @@ public final class EnemyRandomizer {
         replaceEnemyParams(enemyObject, getEnemyId(enemyObject, zoneIndex), zoneIndex);
     }
 
+    public void modifyAnkh(GameObject ankh) {
+        if(ankh.getId() != 0x2e) {
+            return;
+        }
+        setAnkhArgs(ankh);
+    }
+
     private int getEnemyId(GameObject enemyObject, int zoneIndex) {
         int enemyId = (int)enemyObject.getId();
         if(enemyId == 0x87 || enemyId == 0x88 || enemyId == 0x8d || enemyId == 0x8e || enemyId == 0x45 || enemyId == 0x2a) {
@@ -2048,6 +2055,69 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)60); // UNKNOWN
         enemy.getArgs().add((short)16); // UNKNOWN
         enemy.getArgs().add((short)0); // UNKNOWN
+    }
+
+    private void setAnkhArgs(GameObject ankh) {
+        // Arg 0 is boss, vanilla uses 0-7, 8 (mom) is valid.
+        if(ankh.getArgs().get(0) == 7) {
+            setTiamatArgs(ankh);
+        }
+    }
+
+    private void setTiamatArgs(GameObject ankh) {
+        ankh.getArgs().clear();
+        if(Settings.isAutomaticHardmode()) {
+            // Hard mode Tiamat
+            ankh.getArgs().set(1, (short)3); // Speed
+            ankh.getArgs().set(2, (short)300); // Health
+            ankh.getArgs().set(3, (short)64); // Contact damage
+            ankh.getArgs().set(4, (short)1); // Red Fireball speed
+            ankh.getArgs().set(5, (short)24); // Red Fireball damage
+            ankh.getArgs().set(6, (short)2); // Blue Fireball speed
+            ankh.getArgs().set(7, (short)32); // Blue Fireball damage
+            ankh.getArgs().set(8, (short)2); // Purple Fireball speed
+            ankh.getArgs().set(9, (short)48); // Purple Fireball damage
+            ankh.getArgs().set(10, (short)180); // Waterfall damage
+            ankh.getArgs().set(11, (short)200); // Big Laser damage
+            ankh.getArgs().set(12, (short)24); // Green Laser damage
+            ankh.getArgs().set(13, (short)55); // Laser duration/length
+            ankh.getArgs().set(14, (short)3); // Purple spray proj speed
+            ankh.getArgs().set(15, (short)16); // Purple spray damage
+            ankh.getArgs().set(16, (short)260); // 2nd phase health threshold
+            ankh.getArgs().set(17, (short)160); // 3rd phase health threshold
+            ankh.getArgs().set(18, (short)55); // Flag to set at beginning of fight (removes red glowing circles)
+            ankh.getArgs().set(19, (short)1); // Flag value
+            ankh.getArgs().set(20, (short)61); // Flag that makes the doors move
+            ankh.getArgs().set(21, (short)64); // Flag that makes Tiamat spawn
+            ankh.getArgs().set(22, (short)0);
+            ankh.getArgs().set(23, (short)0);
+        }
+        else {
+            // Normal mode Tiamat
+            ankh.getArgs().set(1, (short)2); // Speed
+            ankh.getArgs().set(2, (short)260); // Health
+            ankh.getArgs().set(3, (short)32); // Contact damage
+            ankh.getArgs().set(4, (short)0); // Red Fireball speed
+            ankh.getArgs().set(5, (short)12); // Red Fireball damage
+            ankh.getArgs().set(6, (short)2); // Blue Fireball speed
+            ankh.getArgs().set(7, (short)24); // Blue Fireball damage
+            ankh.getArgs().set(8, (short)1); // Purple Fireball speed
+            ankh.getArgs().set(9, (short)32); // Purple Fireball damage
+            ankh.getArgs().set(10, (short)120); // Waterfall damage
+            ankh.getArgs().set(11, (short)150); // Big Laser damage
+            ankh.getArgs().set(12, (short)12); // Green Laser damage
+            ankh.getArgs().set(13, (short)70); // Laser duration/length
+            ankh.getArgs().set(14, (short)3); // Purple spray proj speed
+            ankh.getArgs().set(15, (short)16); // Purple spray damage
+            ankh.getArgs().set(16, (short)200); // 2nd phase health threshold
+            ankh.getArgs().set(17, (short)100); // 3rd phase health threshold
+            ankh.getArgs().set(18, (short)55); // Flag to set at beginning of fight (removes red glowing circles)
+            ankh.getArgs().set(19, (short)1); // Flag value
+            ankh.getArgs().set(20, (short)61); // Flag that makes the doors move
+            ankh.getArgs().set(21, (short)64); // Flag that makes Tiamat spawn
+            ankh.getArgs().set(22, (short)0);
+            ankh.getArgs().set(23, (short)0);
+        }
     }
 
     private boolean isGroundEnemy(GameObject enemyObject) {

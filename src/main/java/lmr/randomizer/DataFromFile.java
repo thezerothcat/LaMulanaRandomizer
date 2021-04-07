@@ -68,7 +68,7 @@ public final class DataFromFile {
     public static String CUSTOM_SHOP_NAME = "Shop 0 (Default)";
 
     public static int FIRST_AVAILABLE_RANDOM_GRAPHICS_FLAG = (Settings.isFools2020Mode() || Settings.isFools2021Mode()) ? 2762 : 2730;
-    public static int LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG = (Settings.isFools2020Mode() || Settings.isFools2021Mode()) ? 2766 : 2760;
+    public static int LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG = (Settings.isFools2020Mode() || Settings.isFools2021Mode()) ? 2765 : 2760;
 
     private static List<String> allShops;
     private static List<String> allItems;

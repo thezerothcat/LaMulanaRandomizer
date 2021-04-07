@@ -47,7 +47,8 @@ aaf-ac9 (2735-2761): halloween npc
 aca = halloween npc count
 
 for fools 2020, 2730-2761 (aaa-ac9) for spaulders
-for fools 2020 & 2021, 2762 - 2766 = random item graphics flags (only 2762-2765 currently used)
+for fools 2020, 2762 (aca) for spaulder following fakefeather
+for fools 2020 & 2021, 2763 - 2766 = random item graphics flags (only 2763-2765 currently used?)
 for fools 2020, 2767 / acf = feather flag
 
 for fools 2021, 2730-2745 (aaa-ab9) for grail flags

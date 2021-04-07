@@ -604,7 +604,7 @@ public final class Settings {
     }
 
     public static boolean isFoolsGameplay() {
-        return singleton.foolsGameplay;
+        return false;
     }
 
     public static void setFoolsGameplay(boolean foolsGameplay, boolean update) {
@@ -615,7 +615,7 @@ public final class Settings {
     }
 
     public static boolean isFoolsLogic() {
-        return singleton.foolsLogic;
+        return false;
     }
 
     public static void setFoolsLogic(boolean foolsLogic, boolean update) {
@@ -626,7 +626,7 @@ public final class Settings {
     }
 
     public static boolean isFoolsNpc() {
-        return singleton.foolsNpc;
+        return false;
     }
 
     public static void setFoolsNpc(boolean foolsNpc, boolean update) {
@@ -903,15 +903,15 @@ public final class Settings {
     }
 
     public static boolean isFools2020Mode() {
-        return false;
-    }
-
-    public static boolean isFools2021Mode() {
         return true;
     }
 
-    public static boolean isFeatherlessMode() {
+    public static boolean isFools2021Mode() {
         return false;
+    }
+
+    public static boolean isFeatherlessMode() {
+        return isFools2020Mode();
     }
 
     public static boolean isIncludeHellTempleNPCs() {
