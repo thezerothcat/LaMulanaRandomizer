@@ -108,6 +108,7 @@ Event: Ox-head & Horse-face Defeated => Axe
 Event: Pazuzu Defeated => Attack: Far
 Event: Pazuzu Defeated => Katana
 Event: Pazuzu Defeated => Attack: Shuriken
+Event: Pazuzu Defeated => Attack: Earth Spear, Feather
 Event: Pazuzu Defeated => Attack: Flare Gun, State: 1-Orb HP
 Event: Pazuzu Defeated => Attack: Chakram
 Event: Pazuzu Defeated => Attack: Pistol

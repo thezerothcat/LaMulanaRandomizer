@@ -238,6 +238,11 @@ public class MoneyChecker {
                 if(nodeName.startsWith("Fairy:")) {
                     queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
                 }
+                if("Event: Skanda Block Removed".equals(nodeName) || "Event: Illusion Unlocked".equals(nodeName)) {
+                    if(transitionGateRandomizer.isEndlessL1Open(nodeName)) {
+                        queuedUpdates.add("State: Endless L1 Open");
+                    }
+                }
                 break;
             case EXIT:
                 queuedUpdates.add(nodeName);

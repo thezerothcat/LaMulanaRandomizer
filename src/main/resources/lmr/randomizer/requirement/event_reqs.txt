@@ -107,6 +107,7 @@ Event: Shrine Transformed => Setting: 6 Bosses, Bosses Defeated: 6
 Event: Shrine Transformed => Setting: 7 Bosses, Bosses Defeated: 7
 Event: Shrine Transformed => Setting: 8 Bosses, Bosses Defeated: 8
 Event: Skanda Accessible => Location: Chamber of Birth [Skanda], Location: Chamber of Birth [Dance], Event: Mudmen Awakened
+Event: Skanda Block Removed => Event: Skanda Accessible, Event: Skanda Defeated
 Event: Tiamat All Children Defeated => Event: Tiamat Angel Shield Children Defeated, Event: Tiamat Left Side Children Defeated, Event: Tiamat Right Side Children Defeated, Event: Ushumgallu Defeated, Event: Mushussu Defeated # Girtablilu doesn't count because having the ability to clear the others makes it pretty free
 Event: Twin Poison Cleared => Location: Twin Labyrinths [Poison 1], Twin Statue
 Event: Twin Poison Cleared => Location: Twin Labyrinths [Upper Grail], State: Frontside Warp, State: Pre-Escape, Glitch: Raindrop # Frontside Warp lets you start with a refreshed timer and do the second poison room first so the timer is a non-issue

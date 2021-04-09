@@ -633,6 +633,9 @@ public class Main {
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer, sealRandomizer, npcRandomizer);
 
             List<String> startingNodes = getStartingNodes();
+            if(transitionGateRandomizer.isEndlessL1Open(null)) {
+                startingNodes.add("State: Endless L1 Open");
+            }
 
             if(!initiallyAccessibleItems.isEmpty()) {
                 DataFromFile.clearInitialLocations();
@@ -1443,15 +1446,15 @@ public class Main {
             Settings.setCurrentRemovedItems(removedItems);
             return;
         }
-        int removedAnkhJewels = 0;
-        for(String item : removedItems) {
-            if(item.startsWith("Ankh Jewel (")) {
-                removedAnkhJewels += 1;
-            }
-        }
-        if(removedAnkhJewels >= (8 - Settings.getCurrentBossCount())) {
-            filterAnkhJewels(removableItems);
-        }
+//        int removedAnkhJewels = 0;
+//        for(String item : removedItems) {
+//            if(item.startsWith("Ankh Jewel (")) {
+//                removedAnkhJewels += 1;
+//            }
+//        }
+//        if(removedAnkhJewels >= (8 - Settings.getCurrentBossCount())) {
+//            filterAnkhJewels(removableItems);
+//        }
 
         boolean objectZipEnabled = Settings.getEnabledGlitches().contains("Object Zip");
         boolean catPauseEnabled = Settings.getEnabledGlitches().contains("Cat Pause");
@@ -1466,13 +1469,13 @@ public class Main {
         List<String> mainWeapons = new ArrayList<>(DataFromFile.MAIN_WEAPONS);
         mainWeapons.remove("Whip");
         List<String> subweaponOnlyItems = new ArrayList<>(Arrays.asList("Caltrops", "Flare Gun", "Bomb", "Feather", "Ring"));
-        List<String> itemsRequiredForBosses = new ArrayList<>(Arrays.asList("Helmet", "Pochette Key"));
-        if(Settings.isRequireIceCapeForLava()) {
-            itemsRequiredForBosses.add("Ice Cape"); // Viy
-        }
-        if(!lampGlitchEnabled) {
-            itemsRequiredForBosses.add("Bronze Mirror"); // Viy
-        }
+//        List<String> itemsRequiredForBosses = new ArrayList<>(Arrays.asList("Helmet", "Pochette Key"));
+//        if(Settings.isRequireIceCapeForLava()) {
+//            itemsRequiredForBosses.add("Ice Cape"); // Viy
+//        }
+//        if(!lampGlitchEnabled) {
+//            itemsRequiredForBosses.add("Bronze Mirror"); // Viy
+//        }
 
         boolean subweaponOnly = isSubweaponOnly(); // Preliminary check based on custom placements; currently this cannot happen randomly.
         if(isSubweaponOnly()) {
@@ -1480,7 +1483,8 @@ public class Main {
         }
 
         for(String removedItem : removedItems) {
-            orbRemoved = filterRemovableItems(removedItem, removableItems, objectZipEnabled, easierBosses, lampGlitchEnabled, requireKeyFairyCombo, catPauseEnabled, lamulanaMantraRequired, subweaponOnly, orbRemoved, mainWeapons, easierWeapons, subweaponOnlyItems, easierSubweaponsForPalenque, itemsRequiredForBosses);
+//            orbRemoved = filterRemovableItems(removedItem, removableItems, objectZipEnabled, easierBosses, lampGlitchEnabled, requireKeyFairyCombo, catPauseEnabled, lamulanaMantraRequired, subweaponOnly, orbRemoved, mainWeapons, easierWeapons, subweaponOnlyItems, easierSubweaponsForPalenque, itemsRequiredForBosses);
+            orbRemoved = filterRemovableItems(removedItem, removableItems, objectZipEnabled, easierBosses, lampGlitchEnabled, requireKeyFairyCombo, catPauseEnabled, lamulanaMantraRequired, subweaponOnly, orbRemoved, mainWeapons, easierWeapons, subweaponOnlyItems, easierSubweaponsForPalenque);
         }
 
         if(removableItems.isEmpty()) {
@@ -1495,32 +1499,34 @@ public class Main {
             if(!removedItems.contains(removedItem)) {
                 removedItems.add(removedItem);
                 removableItems.remove(removedItem);
-                orbRemoved = filterRemovableItems(removedItem, removableItems, objectZipEnabled, easierBosses, lampGlitchEnabled, requireKeyFairyCombo, catPauseEnabled, lamulanaMantraRequired, subweaponOnly, orbRemoved, mainWeapons, easierWeapons, subweaponOnlyItems, easierSubweaponsForPalenque, itemsRequiredForBosses);
-                if(removedItem.startsWith("Ankh Jewel (")) {
-                    removedAnkhJewels += 1;
-                    if (removedAnkhJewels >= 8 - Settings.getCurrentBossCount()) {
-                        filterAnkhJewels(removableItems);
-                    }
-                }
+//                orbRemoved = filterRemovableItems(removedItem, removableItems, objectZipEnabled, easierBosses, lampGlitchEnabled, requireKeyFairyCombo, catPauseEnabled, lamulanaMantraRequired, subweaponOnly, orbRemoved, mainWeapons, easierWeapons, subweaponOnlyItems, easierSubweaponsForPalenque, itemsRequiredForBosses);
+                orbRemoved = filterRemovableItems(removedItem, removableItems, objectZipEnabled, easierBosses, lampGlitchEnabled, requireKeyFairyCombo, catPauseEnabled, lamulanaMantraRequired, subweaponOnly, orbRemoved, mainWeapons, easierWeapons, subweaponOnlyItems, easierSubweaponsForPalenque);
+//                if(removedItem.startsWith("Ankh Jewel (")) {
+//                    removedAnkhJewels += 1;
+//                    if (removedAnkhJewels >= 8 - Settings.getCurrentBossCount()) {
+//                        filterAnkhJewels(removableItems);
+//                    }
+//                }
                 ++chosenRemovedItems;
             }
         }
         Settings.setCurrentRemovedItems(removedItems);
     }
 
-    private static void filterAnkhJewels(List<String> removableItems) {
-        removableItems.remove("Ankh Jewel (Gate of Guidance)");
-        removableItems.remove("Ankh Jewel (Mausoleum of the Giants)");
-        removableItems.remove("Ankh Jewel (Temple of the Sun)");
-        removableItems.remove("Ankh Jewel (Spring in the Sky)");
-        removableItems.remove("Ankh Jewel (Tower of Ruin)");
-        removableItems.remove("Ankh Jewel (Chamber of Birth)");
-        removableItems.remove("Ankh Jewel (Twin Labyrinths)");
-        removableItems.remove("Ankh Jewel (Dimensional Corridor)");
-        removableItems.remove("Ankh Jewel (Extra)");
-    }
+//    private static void filterAnkhJewels(List<String> removableItems) {
+//        removableItems.remove("Ankh Jewel (Gate of Guidance)");
+//        removableItems.remove("Ankh Jewel (Mausoleum of the Giants)");
+//        removableItems.remove("Ankh Jewel (Temple of the Sun)");
+//        removableItems.remove("Ankh Jewel (Spring in the Sky)");
+//        removableItems.remove("Ankh Jewel (Tower of Ruin)");
+//        removableItems.remove("Ankh Jewel (Chamber of Birth)");
+//        removableItems.remove("Ankh Jewel (Twin Labyrinths)");
+//        removableItems.remove("Ankh Jewel (Dimensional Corridor)");
+//        removableItems.remove("Ankh Jewel (Extra)");
+//    }
 
-    private static boolean filterRemovableItems(String removedItem, List<String> removableItems, boolean objectZipEnabled, boolean easierBosses, boolean lampGlitchEnabled, boolean requireKeyFairyCombo, boolean catPauseEnabled, boolean lamulanaMantraRequired, boolean subweaponOnly, boolean orbRemoved, List<String> mainWeapons, List<String> easierWeapons, List<String> subweaponOnlyItems, List<String> easierSubweaponsForPalenque, List<String> itemsRequiredForBosses) {
+//    private static boolean filterRemovableItems(String removedItem, List<String> removableItems, boolean objectZipEnabled, boolean easierBosses, boolean lampGlitchEnabled, boolean requireKeyFairyCombo, boolean catPauseEnabled, boolean lamulanaMantraRequired, boolean subweaponOnly, boolean orbRemoved, List<String> mainWeapons, List<String> easierWeapons, List<String> subweaponOnlyItems, List<String> easierSubweaponsForPalenque, List<String> itemsRequiredForBosses) {
+    private static boolean filterRemovableItems(String removedItem, List<String> removableItems, boolean objectZipEnabled, boolean easierBosses, boolean lampGlitchEnabled, boolean requireKeyFairyCombo, boolean catPauseEnabled, boolean lamulanaMantraRequired, boolean subweaponOnly, boolean orbRemoved, List<String> mainWeapons, List<String> easierWeapons, List<String> subweaponOnlyItems, List<String> easierSubweaponsForPalenque) {
         if("Twin Statue".equals(removedItem)) {
             // Raindropping needed to reach Dimensional Corridor
             removableItems.remove("Hermes' Boots");
@@ -1610,21 +1616,21 @@ public class Main {
             if(!lampGlitchEnabled) {
                 removableItems.remove("Hermes' Boots");
                 removableItems.remove("Grapple Claw");
-                if(itemsRequiredForBosses.contains("Bronze Mirror")) {
-                    for(String item : itemsRequiredForBosses) {
-                        if(!"Ice Cape".equals(item)) {
-                            itemsRequiredForBosses.remove(item);
-                            removableItems.remove(item);
-                        }
-                    }
-                    if(itemsRequiredForBosses.contains("Ice Cape")) {
-                        itemsRequiredForBosses.clear();
-                        itemsRequiredForBosses.add("Ice Cape");
-                    }
-                    else {
-                        itemsRequiredForBosses.add("Ice Cape");
-                    }
-                }
+//                if(itemsRequiredForBosses.contains("Bronze Mirror")) {
+//                    for(String item : itemsRequiredForBosses) {
+//                        if(!"Ice Cape".equals(item)) {
+//                            itemsRequiredForBosses.remove(item);
+//                            removableItems.remove(item);
+//                        }
+//                    }
+//                    if(itemsRequiredForBosses.contains("Ice Cape")) {
+//                        itemsRequiredForBosses.clear();
+//                        itemsRequiredForBosses.add("Ice Cape");
+//                    }
+//                    else {
+//                        itemsRequiredForBosses.add("Ice Cape");
+//                    }
+//                }
             }
         }
         else if("Ring".equals(removedItem)) {
@@ -1634,36 +1640,36 @@ public class Main {
                 removableItems.remove(mainWeapons.get(0));
             }
         }
-        else if("Ice Cape".equals(removedItem)) {
-            if(itemsRequiredForBosses.contains("Ice Cape")) {
-                for(String item : itemsRequiredForBosses) {
-                    if(!"Bronze Mirror".equals(item)) {
-                        removableItems.remove(item);
-                    }
-                }
-
-                if(itemsRequiredForBosses.contains("Bronze Mirror")) {
-                    itemsRequiredForBosses.clear();
-                    itemsRequiredForBosses.add("Bronze Mirror");
-                }
-                else {
-                    itemsRequiredForBosses.add("Bronze Mirror");
-                }
-            }
-        }
-        else if("Helmet".equals(removedItem)) {
-            // todo: deal with boss swap
-            for(String item : itemsRequiredForBosses) {
-                removableItems.remove(item);
-            }
-            itemsRequiredForBosses.clear();
-        }
-        else if("Pochette Key".equals(removedItem)) {
-            for(String item : itemsRequiredForBosses) {
-                removableItems.remove(item);
-            }
-            itemsRequiredForBosses.clear();
-        }
+//        else if("Ice Cape".equals(removedItem)) {
+//            if(itemsRequiredForBosses.contains("Ice Cape")) {
+//                for(String item : itemsRequiredForBosses) {
+//                    if(!"Bronze Mirror".equals(item)) {
+//                        removableItems.remove(item);
+//                    }
+//                }
+//
+//                if(itemsRequiredForBosses.contains("Bronze Mirror")) {
+//                    itemsRequiredForBosses.clear();
+//                    itemsRequiredForBosses.add("Bronze Mirror");
+//                }
+//                else {
+//                    itemsRequiredForBosses.add("Bronze Mirror");
+//                }
+//            }
+//        }
+//        else if("Helmet".equals(removedItem)) {
+//            // todo: deal with boss swap
+//            for(String item : itemsRequiredForBosses) {
+//                removableItems.remove(item);
+//            }
+//            itemsRequiredForBosses.clear();
+//        }
+//        else if("Pochette Key".equals(removedItem)) {
+//            for(String item : itemsRequiredForBosses) {
+//                removableItems.remove(item);
+//            }
+//            itemsRequiredForBosses.clear();
+//        }
         else if(DataFromFile.MAIN_WEAPONS.contains(removedItem)) {
             mainWeapons.remove(removedItem);
             if(Settings.isSubweaponOnlyLogic()) {

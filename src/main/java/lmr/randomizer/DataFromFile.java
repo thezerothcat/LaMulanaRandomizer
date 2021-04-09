@@ -308,21 +308,22 @@ public final class DataFromFile {
                     }
                 }
                 if("Crystal Skull".equals(itemName)) {
-                    if(!Settings.isFoolsGameplay()
-                        && (!Settings.isRandomizeTransitionGates() || !Settings.isRandomizeOneWayTransitions())) {
+//                    if(!Settings.isFoolsGameplay()
+//                        && (!Settings.isRandomizeTransitionGates() || !Settings.isRandomizeOneWayTransitions())) {
+                    if(!Settings.isRandomizeTransitionGates() || !Settings.isRandomizeOneWayTransitions()) {
                         // Crystal Skull is required for vanilla transitions Dimensional Corridor
                         continue;
                     }
                 }
                 if("Pochette Key".equals(itemName)) {
-                    if(!Settings.isFoolsGameplay()) {
+//                    if(!Settings.isFoolsGameplay()) {
                         continue;
-                    }
+//                    }
                 }
                 if("Helmet".equals(itemName)) {
-                    if(!Settings.isFoolsGameplay()) {
+//                    if(!Settings.isFoolsGameplay()) {
                         continue;
-                    }
+//                    }
                 }
                 if("Holy Grail".equals(itemName)
                         || "Philosopher's Ocarina".equals(itemName)
@@ -333,7 +334,7 @@ public final class DataFromFile {
                 if(!Settings.isFeatherlessMode() && "Feather".equals(itemName)) {
                     continue;
                 }
-                if(!Settings.isFools2021Mode() && !Settings.isFoolsGameplay() && Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
+                if(!Settings.isFoolsGameplay() && Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
                     continue; // Can't get Extinction grail without flares according to this logic. Only matters if Extinction grail is required.
                 }
                 if(Settings.isRequireIceCapeForLava() && "Ice Cape".equals(itemName)) {
@@ -348,7 +349,8 @@ public final class DataFromFile {
                 if(requirePlaneModelAndTwinStatueAndLiteracy && ("Plane Model".equals(itemName) || "Twin Statue".equals(itemName))) {
                     continue; // Can't get to Birth grail area without Plane Model, Dimensional Corridor without Twin Statue.
                 }
-                if(!Settings.isRandomizeSeals() && requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
+//                if(!Settings.isFoolsGameplay() && requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
+                if(requireEarthSpearAndBronzeMirror && ("Earth Spear".equals(itemName) || "Bronze Mirror".equals(itemName))) {
                     continue; // Earth Spear needed for Viy access. Bronze Mirror for VIY mantra statue.
                 }
                 if(Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName)) {

@@ -173,6 +173,11 @@ public class EscapeChecker {
                 if(DataFromFile.GUARDIAN_DEFEATED_EVENTS.contains(nodeName) || nodeName.startsWith("Fairy:")) {
                     queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, null));
                 }
+                if("Event: Skanda Block Removed".equals(nodeName) || "Event: Illusion Unlocked".equals(nodeName)) {
+                    if(transitionGateRandomizer.isEndlessL1Open(nodeName)) {
+                        queuedUpdates.add("State: Endless L1 Open");
+                    }
+                }
                 break;
             case EXIT:
                 queuedUpdates.add(nodeName);

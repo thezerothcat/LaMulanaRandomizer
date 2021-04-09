@@ -86,7 +86,9 @@ public class NodeWithRequirements {
                 requirementSet.add("Fruit of Eden");
             }
             if(requirementSet.contains("Event: Mulbruk Awakened")) {
-                requirementSet.add("Origin Seal");
+                if(!Settings.isRandomizeSeals()) {
+                    requirementSet.add("Origin Seal");
+                }
             }
             if(requirementSet.contains("Event: Mudmen Awakened")) {
                 requirementSet.add("Cog of the Soul");
@@ -96,7 +98,9 @@ public class NodeWithRequirements {
             }
             if(requirementSet.contains("Event: Flooded Spring in the Sky")) {
                 requirementSet.add("Helmet");
-                requirementSet.add("Origin Seal");
+                if(!Settings.isRandomizeSeals()) {
+                    requirementSet.add("Origin Seal");
+                }
             }
             if(requirementSet.contains("Event: Remove Shrine Skulls")) {
                 requirementSet.add("Dragon Bone");

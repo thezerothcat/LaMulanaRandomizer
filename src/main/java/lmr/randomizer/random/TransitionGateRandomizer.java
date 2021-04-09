@@ -397,6 +397,20 @@ public class TransitionGateRandomizer {
         return transitionGateDestinationMap.get(transitionReached);
     }
 
+    public boolean isEndlessL1Open(String nodeName) {
+        String reverseTransition = transitionGateDestinationMap.get("Transition: Endless L1");
+        if(reverseTransition.equals("Transition: Birth R1")) {
+            return "Event: Skanda Block Removed".equals(nodeName);
+        }
+        else if(reverseTransition.equals("Transition: Illusion R1")
+                || reverseTransition.equals("Transition: Illusion R2")) {
+            return "Event: Illusion Unlocked".equals(nodeName);
+        }
+        else {
+            return true;
+        }
+    }
+
     public List<String> getTransitionExits(String nodeName, Integer attemptNumber) {
         String locationName = nodeName.replace("Exit:", "Location:");
         List<String> transitionNames = getGatesFromLocation(locationName);
