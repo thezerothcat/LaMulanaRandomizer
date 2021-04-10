@@ -547,6 +547,12 @@ public class FileUtils {
             else if(line.startsWith("bossCheckpoints")) {
                 Settings.setBossCheckpoints(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("randomizeSeals")) {
+                Settings.setRandomizeSeals(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("randomizeNpcs")) {
+                Settings.setRandomizeNpcs(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("blockPushingRequiresGlove")) {
                 Settings.setBlockPushingRequiresGlove(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -700,6 +706,12 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("bossCheckpoints=%s", Settings.isBossCheckpoints()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeSeals=%s", Settings.isRandomizeSeals()));
+        writer.newLine();
+
+        writer.write(String.format("randomizeNpcs=%s", Settings.isRandomizeNpcs()));
         writer.newLine();
 
         writer.write(String.format("includeHellTempleNPCs=%s", Settings.isIncludeHellTempleNPCs()));

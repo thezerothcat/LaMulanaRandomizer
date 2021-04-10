@@ -139,6 +139,9 @@ public final class NpcObjectUpdates {
         if("NPC: Priest Xanado".equals(npcAssigned)) {
             return 675;
         }
+        if("NPC: Priest Hidlyda".equals(npcAssigned)) {
+            return 678;
+        }
         if("NPC: Priest Romancis".equals(npcAssigned)) {
             return 679;
         }
