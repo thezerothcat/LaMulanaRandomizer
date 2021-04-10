@@ -168,6 +168,9 @@ public final class DataFromFile {
             if(!Settings.isRandomizeXmailer()) {
                 nonRandomizedItems.add("xmailer.exe");
             }
+            if(!Settings.isRandomizeEscapeChest()) {
+                nonRandomizedItems.add("Coin: Twin (Escape)");
+            }
             if(nonRandomizedItems == null) {
                 nonRandomizedItems = new ArrayList<>(0);
             }
