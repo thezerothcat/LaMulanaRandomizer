@@ -27,10 +27,34 @@ public final class NpcObjectUpdates {
     }
 
     private static boolean isShop(String npcAssigned) {
+        if("NPC: Penadvent of ghost".equals(npcAssigned)) {
+            return true;
+        }
+        if("NPC: Greedy Charlie".equals(npcAssigned)) {
+            return true;
+        }
+        if("NPC: Shalom III".equals(npcAssigned)) {
+            return true;
+        }
+        if("NPC: Usas VI".equals(npcAssigned)) {
+            return true;
+        }
+        if("NPC: Kingvalley I".equals(npcAssigned)) {
+            return true;
+        }
+        if("NPC: Hot-blooded Nemesistwo".equals(npcAssigned)) {
+            return true;
+        }
+        if("NPC: Operator Combaker".equals(npcAssigned)) {
+            return true;
+        }
+        if("NPC: Affected Knimare".equals(npcAssigned)) {
+            return true;
+        }
         if("NPC: Yiegah Kungfu".equals(npcAssigned)) {
             return true;
         }
-        if("NPC: Sturdy Snake".equals(npcAssigned)) {
+        if("NPC: Arrogant Sturdy Snake".equals(npcAssigned)) {
             return true;
         }
         if("NPC: Arrogant Metagear".equals(npcAssigned)) {
@@ -42,20 +66,47 @@ public final class NpcObjectUpdates {
         if("NPC: Mr. Fishman (Alt)".equals(npcAssigned)) {
             return true;
         }
+        if("NPC: Mover Athleland".equals(npcAssigned)) {
+            return true;
+        }
+        if("NPC: Kingvalley II".equals(npcAssigned)) {
+            return true;
+        }
+        if("NPC: Energetic Belmont".equals(npcAssigned)) {
+            return true;
+        }
         if("NPC: Mechanical Efspi".equals(npcAssigned)) {
+            return true;
+        }
+        if("NPC: Tailor Dracuet".equals(npcAssigned)) {
             return true;
         }
         return false;
     }
 
     private static short getConversationArg(String npcAssigned) {
+        if("NPC: Penadvent of ghost".equals(npcAssigned)) {
+            return 39;
+        }
+        if("NPC: Greedy Charlie".equals(npcAssigned)) {
+            return 74;
+        }
+        if("NPC: Shalom III".equals(npcAssigned)) {
+            return 100;
+        }
+        if("NPC: Usas VI".equals(npcAssigned)) {
+            return 102;
+        }
+        if("NPC: Kingvalley I".equals(npcAssigned)) {
+            return 103;
+        }
         if("NPC: Yiegah Kungfu".equals(npcAssigned)) {
             return 185;
         }
         if("NPC: Arrogant Metagear".equals(npcAssigned)) {
             return 187;
         }
-        if("NPC: Sturdy Snake".equals(npcAssigned)) {
+        if("NPC: Arrogant Sturdy Snake".equals(npcAssigned)) {
             return 204;
         }
         if("NPC: Mr. Fishman (Original)".equals(npcAssigned)) {
@@ -64,11 +115,56 @@ public final class NpcObjectUpdates {
         if("NPC: Mr. Fishman (Alt)".equals(npcAssigned)) {
             return 133;
         }
+        if("NPC: Operator Combaker".equals(npcAssigned)) {
+            return 167;
+        }
+        if("NPC: Affected Knimare".equals(npcAssigned)) {
+            return 220;
+        }
+        if("NPC: Mover Athleland".equals(npcAssigned)) {
+            return 244;
+        }
+        if("NPC: Kingvalley II".equals(npcAssigned)) {
+            return 290;
+        }
+        if("NPC: Energetic Belmont".equals(npcAssigned)) {
+            return 303;
+        }
         if("NPC: Mechanical Efspi".equals(npcAssigned)) {
             return 321;
         }
+        if("NPC: Hot-blooded Nemesistwo".equals(npcAssigned)) {
+            return 470;
+        }
+        if("NPC: Priest Xanado".equals(npcAssigned)) {
+            return 675;
+        }
+        if("NPC: Priest Romancis".equals(npcAssigned)) {
+            return 679;
+        }
+        if("NPC: Priest Aramo".equals(npcAssigned)) {
+            return 680;
+        }
+        if("NPC: Priest Jaguarfiv".equals(npcAssigned)) {
+            return 683;
+        }
+        if("NPC: Giant Thexde".equals(npcAssigned)) {
+            return 696;
+        }
         if("NPC: Priest Laydoc".equals(npcAssigned)) {
             return 701;
+        }
+        if("NPC: Priest Ashgine".equals(npcAssigned)) {
+            return 702;
+        }
+        if("NPC: Priest Madomono".equals(npcAssigned)) {
+            return 718;
+        }
+        if("NPC: Priest Gailious".equals(npcAssigned)) {
+            return 723;
+        }
+        if("NPC: Tailor Dracuet".equals(npcAssigned)) {
+            return 1008;
         }
         return 0;
     }

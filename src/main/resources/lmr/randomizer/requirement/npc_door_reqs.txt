@@ -1,12 +1,51 @@
+# Gate of Guidance
+NPCL: Penadvent of ghost => Location: Gate of Guidance [Main] # Shop 4 (Guidance)
+# Mausoleum
+NPCL: Priest Xanado => Location: Mausoleum of the Giants # generic NPC up by hardmode tablet, 2-2-0
+NPCL: Greedy Charlie => Location: Mausoleum of the Giants, Attack: Chest-Any
+# Temple of the Sun
+NPCL: Priest Madomono => Location: Temple of the Sun [Sphinx]
+NPCL: Shalom III => Location: Temple of the Sun [Main], Attack: Shuriken
+NPCL: Shalom III => Location: Temple of the Sun [Main], Attack: Chakram, Feather
+NPCL: Shalom III => Location: Temple of the Sun [Main], Attack: Bomb
+NPCL: Shalom III => Location: Temple of the Sun [Main], Feather, Attack: Forward
+NPCL: Shalom III => Location: Temple of the Sun [Main], Glitch: Cat Pause # Have to pause both sides since there are two pots in the way
+NPCL: Shalom III => Location: Temple of the Sun [Main], Hermes' Boots, Boost: Item, Attack: Bomb
+NPCL: Shalom III => Location: Temple of the Sun [Main], Hermes' Boots, Boost: Enemy
+NPCL: Usas VI => Location: Temple of the Sun [Main], Attack: Chest
+NPCL: Kingvalley I => Location: Temple of the Sun [Main], Seal: D1, Feather
+NPCL: Kingvalley I => Location: Temple of the Sun [Main], Seal: D1, Boost: Item, Attack: Bomb
 # Spring in the Sky
 NPCL: Priest Hidlyda => Location: Spring in the Sky [Main], State: Can Open Spring NPC Wall, State: Can Escape Spring NPC
 NPCL: Mr. Fishman (Original) => Location: Spring in the Sky [Main], Location: Spring in the Sky [Upper], Helmet, Seal: O4
 NPCL: Mr. Fishman (Alt) => Location: Spring in the Sky [Main], Location: Spring in the Sky [Upper], Helmet, Seal: O4, Fairy: Spring in the Sky
+# Inferno Cavern
+NPCL: Priest Gailious => Location: Inferno Cavern [Main]
+NPCL: Priest Romancis => Location: Inferno Cavern [Main], State: Can Reach Pazuzu, State: Block Pushing
+NPCL: Priest Romancis => Location: Inferno Cavern [Main], Seal: B2, State: Lamp, State: Block Pushing
+NPCL: Hot-blooded Nemesistwo => Location: Inferno Cavern [Main], Attack: Chest-Any
+# Chamber of Extinction
+NPCL: Priest Aramo => Location: Chamber of Extinction [Main], Attack: Chest-Any
+NPCL: Operator Combaker => Location: Chamber of Extinction [Ankh Lower], Attack: Chest-Any
 # Twin Labyrinths
 NPCL: Yiegah Kungfu => Location: Twin Labyrinths [Loop]
 #NPCL: Yiear Kungfu => Location: Twin Labyrinths [Loop], NPC: Yiegah Kungfu
-NPCL: Sturdy Snake => Location: Twin Labyrinths [Lower], Feather
+NPCL: Arrogant Sturdy Snake => Location: Twin Labyrinths [Lower], Feather
 NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], State: Block Pushing, Feather, Attack: Bomb
+NPCL: Priest Jaguarfiv => Location: Twin Labyrinths [Poseidon]
+# Endless Corridor
+NPCL: Affected Knimare => Location: Endless Corridor [1F], Seal: O6
+# Gate of Illusion
+NPCL: Mover Athleland => Location: Gate of Illusion [Middle]
+# Graveyard of the Giants
+NPCL: Giant Thexde => Location: Graveyard of the Giants [East], Feather
+# Temple of Moonlight
+NPCL: Kingvalley II => Location: Temple of Moonlight [Southeast], Attack: Bomb
+NPCL: Kingvalley II => Location: Temple of Moonlight [Southeast], Attack: Forward, Glitch: Cat Pause
+# Tower of the Goddess
+NPCL: Energetic Belmont => Location: Tower of the Goddess [Lamp], Event: Flooded Tower of the Goddess, State: Lamp, Exit: Tower of the Goddess [Lamp]
+NPCL: Energetic Belmont => Location: Tower of the Goddess [Lamp], Event: Flooded Tower of the Goddess, State: Lamp, Anchor, Exit: Tower of the Goddess [Lower]
+NPCL: Energetic Belmont => Location: Tower of the Goddess [Lower], Glitch: Raindrop, Feather, Anchor # Anchor as a precaution in case Tower of the Goddess has already been flooded
 # Tower of Ruin
 NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], Glitch: Raindrop
 NPCL: Priest Laydoc => Location: Tower of Ruin [Southwest] # Surprisingly doesn't need boots
@@ -21,3 +60,7 @@ NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Rolling Shuri
 NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Rolling Shuriken, Feather
 NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Caltrops, Feather
 NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Caltrops, Grapple Claw
+# Chamber of Birth
+NPCL: Priest Ashgine => Location: Chamber of Birth [West]
+# HT
+NPCL: Tailor Dracuet => Location: Hell Temple [Shop]

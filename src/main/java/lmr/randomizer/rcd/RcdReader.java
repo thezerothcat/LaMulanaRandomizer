@@ -178,7 +178,7 @@ public final class RcdReader {
             }
 
             if(obj.getObjectContainer() instanceof Screen) {
-                if(Settings.isFoolsNpc()) {
+                if(Settings.isRandomizeNpcs()) {
                     Screen screen = ((Screen)obj.getObjectContainer());
                     if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 2) {
                         for(WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
@@ -588,7 +588,7 @@ public final class RcdReader {
                 // Low-score version of Mulbruk which could interfere with getting Book of the Dead.
                 keepObject = false;
             }
-            else if(obj.getArgs().get(4) == 682 && Settings.isFoolsNpc()) {
+            else if(obj.getArgs().get(4) == 682 && Settings.isRandomizeNpcs()) {
                 // Conversation to inform of unlocking Big Brother's shop, to be removed and re-added if shuffling NPCs for simplicity.
                 keepObject = false;
             }
@@ -1161,7 +1161,7 @@ public final class RcdReader {
                     }
                 }
             }
-            if(Settings.isFoolsNpc()) {
+            if(Settings.isRandomizeNpcs()) {
                 if(obj.getObjectContainer() instanceof Screen) {
                     Screen screen = ((Screen)obj.getObjectContainer());
                     if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 2) {
@@ -1904,7 +1904,7 @@ public final class RcdReader {
                     }
                     else if(zoneIndex == 7) {
                         if(roomIndex == 3 && screenIndex == 2) {
-                            if(!Settings.isFoolsNpc()) {
+                            if(!Settings.isRandomizeNpcs()) {
                                 // This gets set elsewhere if NPCs are randomized.
                                 AddObject.setLittleBrotherShopScreen(screen);
                             }

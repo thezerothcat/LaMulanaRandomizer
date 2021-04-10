@@ -419,7 +419,7 @@ public final class DataFromFile {
             if(Settings.isHalloweenMode()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/npc_reqs.txt", true);
             }
-            if(Settings.isFoolsNpc()) {
+            if(Settings.isRandomizeNpcs()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/npc_door_reqs.txt", true);
             }
             if(!Settings.getEnabledGlitches().isEmpty()) {

@@ -2237,6 +2237,31 @@ public final class GameDataTracker {
                         }
                     }
                 }
+                else if(blockNumber == 39) {
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Penadvent of ghost", gameObject);
+                    }
+                }
+                else if(blockNumber == 74) {
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Greedy Charlie", gameObject);
+                    }
+                }
+                else if(blockNumber == 100) {
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Shalom III", gameObject);
+                    }
+                }
+                else if(blockNumber == 102) {
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Usas VI", gameObject);
+                    }
+                }
+                else if(blockNumber == 103) {
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Kingvalley I", gameObject);
+                    }
+                }
                 else if(blockNumber == 490) {
                     // MSX2 shop
                     GameObjectId gameObjectId = new GameObjectId((short) 76, 742);
@@ -2259,7 +2284,7 @@ public final class GameDataTracker {
 
                     }
 
-                    if(Settings.isFoolsNpc()) {
+                    if(Settings.isRandomizeNpcs()) {
                         mapOfNpcLocationToObject.put("NPCL: Mr. Fishman (Original)", gameObject);
                     }
                 }
@@ -2269,28 +2294,63 @@ public final class GameDataTracker {
                     gameObject.setY(1520);
                     AddObject.addTransformedMrFishmanShopDoorGraphic(gameObject);
 
-                    if(Settings.isFoolsNpc()) {
+                    if(Settings.isRandomizeNpcs()) {
                         mapOfNpcLocationToObject.put("NPCL: Mr. Fishman (Alt)", gameObject);
                     }
                 }
+                else if(blockNumber == 167){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Operator Combaker", gameObject);
+                    }
+                }
                 else if(blockNumber == 185){
-                    if(Settings.isFoolsNpc()) {
+                    if(Settings.isRandomizeNpcs()) {
                         mapOfNpcLocationToObject.put("NPCL: Yiegah Kungfu", gameObject);
                     }
                 }
                 else if(blockNumber == 187){
-                    if(Settings.isFoolsNpc()) {
+                    if(Settings.isRandomizeNpcs()) {
                         mapOfNpcLocationToObject.put("NPCL: Arrogant Metagear", gameObject);
                     }
                 }
                 else if(blockNumber == 204){
-                    if(Settings.isFoolsNpc()) {
-                        mapOfNpcLocationToObject.put("NPCL: Sturdy Snake", gameObject);
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Arrogant Sturdy Snake", gameObject);
+                    }
+                }
+                else if(blockNumber == 220){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Affected Knimare", gameObject);
+                    }
+                }
+                else if(blockNumber == 244){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Mover Athleland", gameObject);
+                    }
+                }
+                else if(blockNumber == 290){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Kingvalley II", gameObject);
+                    }
+                }
+                else if(blockNumber == 303){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Energetic Belmont", gameObject);
                     }
                 }
                 else if(blockNumber == 321){
-                    if(Settings.isFoolsNpc()) {
+                    if(Settings.isRandomizeNpcs()) {
                         mapOfNpcLocationToObject.put("NPCL: Mechanical Efspi", gameObject);
+                    }
+                }
+                else if(blockNumber == 470){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Hot-blooded Nemesistwo", gameObject);
+                    }
+                }
+                else if(blockNumber == 1008){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Tailor Dracuet", gameObject);
                     }
                 }
             }
@@ -2338,6 +2398,9 @@ public final class GameDataTracker {
             else if(blockNumber == 675) {
                 // Priest Xanado - Mausoleum NPC, 02-02-00
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Xanado", gameObject);
+                }
             }
             else if(blockNumber == 677) {
                 // Philosopher Giltoriyo - Spring NPC, 04-00-01
@@ -2353,17 +2416,23 @@ public final class GameDataTracker {
             else if(blockNumber == 678) {
                 // Priest Hidlyda - Spring NPC, 04-06-01
                 npcObjects.add(gameObject);
-                if(Settings.isFoolsNpc()) {
+                if(Settings.isRandomizeNpcs()) {
                     mapOfNpcLocationToObject.put("NPCL: Priest Hidlyda", gameObject);
                 }
             }
             else if(blockNumber == 679) {
                 // Priest Romancis - Inferno NPC, 05-03-02
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Romancis", gameObject);
+                }
             }
             else if(blockNumber == 680) {
                 // Priest Aramo - Extinction NPC, 06-06-00
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Aramo", gameObject);
+                }
             }
             else if(blockNumber == 681) {
                 // Priest Triton - Extinction NPC, 06-09-01
@@ -2384,6 +2453,9 @@ public final class GameDataTracker {
             else if(blockNumber == 683) {
                 // Priest Jaguarfiv - Twin Labs NPC, 07-10-01
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Jaguarfiv", gameObject);
+                }
             }
             else if(blockNumber == 684) {
                 // Fairy Queen - Endless NPC, 08-01-00
@@ -2416,23 +2488,9 @@ public final class GameDataTracker {
             else if(blockNumber == 686) {
                 if(Settings.isHalloweenMode()) {
                     gameObject.getTestByteOperations().clear();
-                    TestByteOperation testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(0x1f5);
-                    testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                    testByteOperation.setValue((byte)2);
-                    gameObject.getTestByteOperations().add(testByteOperation);
-
-                    testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(0x0aa);
-                    testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                    testByteOperation.setValue((byte)2);
-                    gameObject.getTestByteOperations().add(testByteOperation);
-
-                    testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(0x0fe);
-                    testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-                    testByteOperation.setValue((byte)3);
-                    gameObject.getTestByteOperations().add(testByteOperation);
+                    gameObject.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_EQUALS, 2));
+                    gameObject.getTestByteOperations().add(new TestByteOperation(0x0aa, ByteOp.FLAG_EQUALS, 2));
+                    gameObject.getTestByteOperations().add(new TestByteOperation(0x0fe, ByteOp.FLAG_NOT_EQUAL, 3));
 
                     for(WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
                         if(writeByteOperation.getIndex() == 0x1f5) {
@@ -2456,23 +2514,9 @@ public final class GameDataTracker {
             else if(blockNumber == 687) {
                 if(Settings.isHalloweenMode()) {
                     gameObject.getTestByteOperations().clear();
-                    TestByteOperation testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(0x1f5);
-                    testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                    testByteOperation.setValue((byte)2);
-                    gameObject.getTestByteOperations().add(testByteOperation);
-
-                    testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(0x0aa);
-                    testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-                    testByteOperation.setValue((byte)2);
-                    gameObject.getTestByteOperations().add(testByteOperation);
-
-                    testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(0x0fe);
-                    testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-                    testByteOperation.setValue((byte)3);
-                    gameObject.getTestByteOperations().add(testByteOperation);
+                    gameObject.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_EQUALS, 2));
+                    gameObject.getTestByteOperations().add(new TestByteOperation(0x0aa, ByteOp.FLAG_NOT_EQUAL, 2));
+                    gameObject.getTestByteOperations().add(new TestByteOperation(0x0fe, ByteOp.FLAG_NOT_EQUAL, 3));
                 }
             }
             else if(blockNumber == 688) {
@@ -2480,17 +2524,8 @@ public final class GameDataTracker {
                     gameObject.getArgs().set(4, (short)687);
 
                     gameObject.getTestByteOperations().clear();
-                    TestByteOperation testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(0x1f5);
-                    testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                    testByteOperation.setValue((byte)3);
-                    gameObject.getTestByteOperations().add(testByteOperation);
-
-                    testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(0x0fe);
-                    testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-                    testByteOperation.setValue((byte)3);
-                    gameObject.getTestByteOperations().add(testByteOperation);
+                    gameObject.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_EQUALS, 3));
+                    gameObject.getTestByteOperations().add(new TestByteOperation(0x0fe, ByteOp.FLAG_NOT_EQUAL, 3));
 
                     gameObject.getWriteByteOperations().clear();
                 }
@@ -2657,6 +2692,9 @@ public final class GameDataTracker {
             else if(blockNumber == 696) {
                 // Giant Thexde - Graveyard NPC, 11-07-00
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Giant Thexde", gameObject);
+                }
             }
             else if(blockNumber == 698) {
                 // Philosopher Alsedana - Moonlight NPC, 12-06-00
@@ -2669,13 +2707,16 @@ public final class GameDataTracker {
             else if(blockNumber == 701) {
                 // Priest Laydoc - Ruin NPC, 14-00-01
                 npcObjects.add(gameObject);
-                if(Settings.isFoolsNpc()) {
+                if(Settings.isRandomizeNpcs()) {
                     mapOfNpcLocationToObject.put("NPCL: Priest Laydoc", gameObject);
                 }
             }
             else if(blockNumber == 702) {
                 // Priest Ashgine - Birth NPC, 16-01-00
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Ashgine", gameObject);
+                }
             }
             else if(blockNumber == 704) {
                 // Philosopher Fobos - Dimensional NPC, 17-02-00
@@ -2685,11 +2726,7 @@ public final class GameDataTracker {
                 // Philosopher Fobos - Dimensional NPC, 17-02-00
                 // Post-Medicine version of Fobos
                 if(Settings.isHalloweenMode()) {
-                    TestByteOperation testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(getNpcConversationFlag((short)704));
-                    testByteOperation.setOp(ByteOp.FLAG_GT);
-                    testByteOperation.setValue((byte)0);
-                    gameObject.getTestByteOperations().add(testByteOperation);
+                    gameObject.getTestByteOperations().add(new TestByteOperation(getNpcConversationFlag((short)704), ByteOp.FLAG_GT, 0));
                 }
             }
             else if(blockNumber == 706) {
@@ -2715,20 +2752,22 @@ public final class GameDataTracker {
             else if(blockNumber == 714) {
                 if(Settings.isHalloweenMode()) {
                     // 8bit Fairy - conversation needs added test
-                    TestByteOperation testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(getNpcConversationFlag((short)710));
-                    testByteOperation.setOp(ByteOp.FLAG_GT);
-                    testByteOperation.setValue((byte)0);
-                    gameObject.getTestByteOperations().add(testByteOperation);
+                    gameObject.getTestByteOperations().add(new TestByteOperation(getNpcConversationFlag((short)710), ByteOp.FLAG_GT, 0));
                 }
             }
             else if(blockNumber == 718) {
                 // Priest Madomono - Sun NPC, 03-04-02
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Madomono", gameObject);
+                }
             }
             else if(blockNumber == 723) {
                 // Priest Gailious - Inferno NPC, 05-02-01
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Gailious", gameObject);
+                }
             }
             else if(blockNumber == 726) {
                 // Tailor Dracuet - Guidance NPC, 00-06-00
@@ -2785,11 +2824,7 @@ public final class GameDataTracker {
             }
             else if(blockNumber == 990) {
                 // Mulbruk misc conversation priority below Book of the Dead
-                TestByteOperation testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(810);
-                testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-                testByteOperation.setValue((byte)1);
-                gameObject.getTestByteOperations().add(testByteOperation);
+                gameObject.getTestByteOperations().add(new TestByteOperation(810, ByteOp.FLAG_NOT_EQUAL, 1));
             }
             else if(blockNumber == 1011) {
                 // Dracuet Provocative Bathing Suit conversation - needs to depend on HT item instead.

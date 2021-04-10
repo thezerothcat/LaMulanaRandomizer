@@ -769,7 +769,7 @@ public class Main {
                 itemRandomizer.updateFiles(random);
                 FileUtils.logFlush("Updated item location data");
 
-                if(Settings.isFoolsNpc()) {
+                if(Settings.isRandomizeNpcs()) {
                     // This must happen before shop data randomized in order to get the correct shop screen for little brother
                     npcRandomizer.updateNpcs();
                     FileUtils.logFlush("Updated NPCs");
