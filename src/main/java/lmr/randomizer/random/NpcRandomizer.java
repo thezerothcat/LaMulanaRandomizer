@@ -172,6 +172,94 @@ public class NpcRandomizer {
         return mapOfNpcDoorLocationToContents.get(npcLocation);
     }
 
+    public String getShopNpcLocation(String shopName) {
+        if("Shop 1 (Surface)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Modro");
+        }
+        if("Shop 2 (Surface)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Nebur (Original)");
+        }
+        if("Shop 2 Alt (Surface)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Nebur (Alt)");
+        }
+        if("Shop 3 (Surface)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Sidro");
+        }
+        if("Shop 4 (Guidance)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Penadvent of ghost");
+        }
+        if("Shop 5 (Illusion)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Mover Athleland");
+        }
+        if("Shop 6 (Mausoleum)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Greedy Charlie");
+        }
+        if("Shop 7 (Graveyard)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Giant Mopiran");
+        }
+        if("Shop 8 (Sun)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Shalom III");
+        }
+        if("Shop 9 (Sun)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Usas VI");
+        }
+        if("Shop 10 (Sun)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Kingvalley I");
+        }
+        if("Shop 11 (Moonlight)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Kingvalley II");
+        }
+        if("Shop 12 (Spring)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Mr. Fishman (Original)");
+        }
+        if("Shop 12 Alt (Spring)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Mr. Fishman (Alt)");
+        }
+        if("Shop 13 (Goddess)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Energetic Belmont");
+        }
+        if("Shop 14 (Inferno)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Hot-blooded Nemesistwo");
+        }
+        if("Shop 15 (Ruin)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Mechanical Efspi");
+        }
+        if("Shop 16 (Extinction)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Operator Combaker");
+        }
+        if("Shop 17 (Birth)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Mud Man Qubert");
+        }
+        if("Shop 18 (Lil Bro)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Yiegah Kungfu");
+        }
+        if("Shop 19 (Big Bro)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Yiear Kungfu");
+        }
+        if("Shop 20 (Twin Labs)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Arrogant Sturdy Snake");
+        }
+        if("Shop 21 (Unsolvable)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Arrogant Metagear");
+        }
+        if("Shop 22 (Endless)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Affected Knimare");
+        }
+        if("Shop 23 (HT)".equals(shopName)) {
+            return findDoorLocationForNpc("NPC: Tailor Dracuet");
+        }
+        return null;
+    }
+
+    private String findDoorLocationForNpc(String npc) {
+        for(String npcLocation : mapOfNpcDoorLocationToContents.keySet()) {
+            if(mapOfNpcDoorLocationToContents.get(npcLocation).equals(npc)) {
+                return npcLocation;
+            }
+        }
+        return npc.replace("NPC:", "NPCL:");
+    }
+
     public void updateNpcs() {
         for (String npcDoorLocation : mapOfNpcDoorLocationToContents.keySet()) {
             GameDataTracker.writeNpcDoor(npcDoorLocation, mapOfNpcDoorLocationToContents.get(npcDoorLocation));

@@ -7,7 +7,9 @@ import lmr.randomizer.dat.shop.BlockStringData;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.random.EnemyRandomizer;
+import lmr.randomizer.random.NpcRandomizer;
 import lmr.randomizer.random.SealRandomizer;
+import lmr.randomizer.random.ShopRandomizer;
 import lmr.randomizer.rcd.object.*;
 
 import java.util.*;
@@ -5003,7 +5005,7 @@ public final class GameDataTracker {
 
     public static void writeShopInventory(ShopBlock shopBlock, String shopItem1, String shopItem2, String shopItem3, List<Block> blocks,
                                           ItemPriceCount itemPriceAndCount1, ItemPriceCount itemPriceAndCount2, ItemPriceCount itemPriceAndCount3,
-                                          boolean littleBrotherShop, boolean msxShop, boolean recursive, Random random) {
+                                          String shopName, boolean recursive, NpcRandomizer npcRandomizer, Random random) {
         short shopItem1Flag = getFlag(shopItem1);
         short shopItem2Flag = getFlag(shopItem2);
         short shopItem3Flag = getFlag(shopItem3);
@@ -5035,16 +5037,30 @@ public final class GameDataTracker {
                 sacredOrbItemFlag = shopItem3Flag;
             }
             writeShopInventory(noOrbShopBlock, newShopItem1, newShopItem2, newShopItem3, blocks,
-                    newItemPriceAndCount1, newItemPriceAndCount2, newItemPriceAndCount3, littleBrotherShop, msxShop, true, random);
+                    newItemPriceAndCount1, newItemPriceAndCount2, newItemPriceAndCount3, shopName, true, npcRandomizer, random);
 
-            for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
-                GameObject shopWithoutOrb = new GameObject(shopObject);
-                shopObject.getObjectContainer().getObjects().add(shopWithoutOrb);
+            String shuffledNpcLocation = Settings.isRandomizeNpcs() ? npcRandomizer.getShopNpcLocation(shopName) : null;
+            GameObject originalShopObject = shuffledNpcLocation == null ? null : mapOfNpcLocationToObject.get(shuffledNpcLocation);
+            if(originalShopObject == null) {
+                // Use old path for computing shop object.
+                for(GameObject shopObject : mapOfShopBlockToShopObjects.get(shopBlock.getBlockNumber())) {
+                    GameObject shopWithoutOrb = new GameObject(shopObject);
+                    shopObject.getObjectContainer().getObjects().add(shopWithoutOrb);
+
+                    shopWithoutOrb.getArgs().set(4, (short)(blocks.size() - 1));
+                    shopWithoutOrb.getTestByteOperations().add(new TestByteOperation(sacredOrbItemFlag, ByteOp.FLAG_EQUALS, 2));
+
+                    shopObject.getTestByteOperations().add(new TestByteOperation(sacredOrbItemFlag, ByteOp.FLAG_LT, 2));
+                }
+            }
+            else {
+                GameObject shopWithoutOrb = new GameObject(originalShopObject);
+                originalShopObject.getObjectContainer().getObjects().add(shopWithoutOrb);
 
                 shopWithoutOrb.getArgs().set(4, (short)(blocks.size() - 1));
                 shopWithoutOrb.getTestByteOperations().add(new TestByteOperation(sacredOrbItemFlag, ByteOp.FLAG_EQUALS, 2));
 
-                shopObject.getTestByteOperations().add(new TestByteOperation(sacredOrbItemFlag, ByteOp.FLAG_LT, 2));
+                originalShopObject.getTestByteOperations().add(new TestByteOperation(sacredOrbItemFlag, ByteOp.FLAG_LT, 2));
             }
         }
 
@@ -5073,7 +5089,7 @@ public final class GameDataTracker {
         shopBlock.getFlagList().getData().add(shopItem2Flag);
         shopBlock.getFlagList().getData().add(shopItem3Flag);
 
-        if(littleBrotherShop) {
+        if(ShopRandomizer.LITTLE_BROTHER_SHOP_NAME.equals(shopName)) {
             // Little Brother's shop
             if(!"Weights".equals(shopItem1) && !shopItem1.endsWith("Ammo")) {
                 AddObject.addLittleBrotherShopTimer(shopItem1Flag);
@@ -5092,7 +5108,7 @@ public final class GameDataTracker {
             shopBlock.getExitFlagList().getData().add(shopItem3Flag);
         }
 
-        if(msxShop) {
+        if(ShopRandomizer.MSX_SHOP_NAME.equals(shopName)) {
             // MSX2 shop
             BlockStringData blockStringData = shopBlock.getString(6);
             blockStringData.getData().clear();

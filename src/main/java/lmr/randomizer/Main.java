@@ -629,7 +629,7 @@ public class Main {
             npcRandomizer.determineNpcLocations(random);
 
             ItemRandomizer itemRandomizer = new ItemRandomizer();
-            ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer);
+            ShopRandomizer shopRandomizer = buildShopRandomizer(itemRandomizer, npcRandomizer);
             AccessChecker accessChecker = buildAccessChecker(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer, sealRandomizer, npcRandomizer);
 
             List<String> startingNodes = getStartingNodes();
@@ -1295,7 +1295,7 @@ public class Main {
         return saveData;
     }
 
-    private static ShopRandomizer buildShopRandomizer(ItemRandomizer itemRandomizer) {
+    private static ShopRandomizer buildShopRandomizer(ItemRandomizer itemRandomizer, NpcRandomizer npcRandomizer) {
         ShopRandomizer shopRandomizer;
         if(ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())) {
             shopRandomizer = new CategorizedShopRandomizer();
@@ -1306,6 +1306,7 @@ public class Main {
 
         itemRandomizer.setShopRandomizer(shopRandomizer);
         shopRandomizer.setItemRandomizer(itemRandomizer);
+        shopRandomizer.setNpcRandomizer(npcRandomizer);
         return shopRandomizer;
     }
 

@@ -1,18 +1,16 @@
 package lmr.randomizer.random;
 
-import lmr.randomizer.*;
+import lmr.randomizer.DataFromFile;
+import lmr.randomizer.ItemPriceCount;
+import lmr.randomizer.Settings;
 import lmr.randomizer.dat.Block;
 import lmr.randomizer.dat.shop.ShopBlock;
-import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.node.MoneyChecker;
-import lmr.randomizer.Settings;
 import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.GameObjectId;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -20,20 +18,7 @@ import java.util.*;
  *
  * Currently only randomizes unique items. Should probably eventually randomize ammo options also.
  */
-public class CategorizedShopRandomizer implements ShopRandomizer {
-    private static final String MSX_SHOP_NAME = "Shop 2 Alt (Surface)";
-    private static final String NON_MSX_SHOP_NAME = "Shop 2 (Surface)";
-    private static final String FISH_FAIRY_SHOP_NAME = "Shop 12 Alt (Spring)";
-
-    private AccessChecker accessChecker;
-    private ItemRandomizer itemRandomizer; // Not needed for this version of the randomizer?
-
-    private Map<String, String> mapOfShopInventoryItemToContents = new HashMap<>(); // The thing we're trying to build.
-    private List<String> unassignedShopItemLocations = new ArrayList<>(); // Shop locations which still need something placed.
-    private List<String> randomizedShops;
-
-    private List<String> shopsWithTransformations;
-
+public class CategorizedShopRandomizer extends ShopRandomizer {
     public CategorizedShopRandomizer() {
         randomizedShops = new ArrayList<>(DataFromFile.getAllShops());
 
@@ -66,6 +51,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         shopsWithTransformations.add(MSX_SHOP_NAME);
     }
 
+    @Override
     public ShopRandomizer copy() {
         CategorizedShopRandomizer other = new CategorizedShopRandomizer();
         other.randomizedShops = new ArrayList<>(this.randomizedShops);
@@ -75,10 +61,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         return other;
     }
 
-    public List<String> getUnassignedShopItemLocations() {
-        return unassignedShopItemLocations;
-    }
-
+    @Override
     public void placeNonRandomizedItems() {
         List<String> originalShopContents;
         String originalShopItem;
@@ -137,60 +120,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         mapOfShopInventoryItemToContents.put("Shop 1 (Surface) Item 3", Settings.getCurrentStartingWeapon() + " Ammo");
     }
 
-    public List<String> getShopItems(String shopName) {
-        List<String> shopItems = new ArrayList<>();
-        String shopItem;
-        for (int i = 1; i <= 3; i++) {
-            shopItem = mapOfShopInventoryItemToContents.get(String.format("%s Item %d", shopName, i));
-            if (shopItem != null && !"Weights".equals(shopItem)) {
-                shopItems.add(shopItem);
-            }
-        }
-        return shopItems;
-    }
-
-    public boolean placeRequiredItem(String item, List<String> shopLocationOptions, int locationIndex) {
-        String location = shopLocationOptions.get(locationIndex);
-        if(accessChecker.validRequirements(item, location)) {
-            mapOfShopInventoryItemToContents.put(location, item);
-            shopLocationOptions.remove(location);
-            unassignedShopItemLocations.remove(location);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean placeItem(String item, int locationIndex) {
-        String location = unassignedShopItemLocations.get(locationIndex);
-        if(accessChecker.validRequirements(item, location)) {
-            mapOfShopInventoryItemToContents.put(location, item);
-            unassignedShopItemLocations.remove(location);
-            if(item.contains("Sacred Orb")) {
-                shopsWithTransformations.add(location.substring(0, location.indexOf(")") + 1));
-            }
-            return true;
-        }
-        return false;
-    }
-
     @Override
-    public boolean shopHasTransformation(String shopName) {
-        return shopsWithTransformations.contains(shopName);
-    }
-
-    public List<String> getInitialUnassignedShopItemLocations() {
-        List<String> initialUnassigned = new ArrayList<>();
-        List<String> initialShops = DataFromFile.getInitialShops();
-        for(String shopName : initialShops) {
-            for(String unassigned : unassignedShopItemLocations) {
-                if(unassigned.contains(shopName)) {
-                    initialUnassigned.add(unassigned);
-                }
-            }
-        }
-        return initialUnassigned;
-    }
-
     public List<String> getPlacedShopItems() {
         List<String> placedItems = new ArrayList<>();
         for(Map.Entry<String, String> locationAndItem : mapOfShopInventoryItemToContents.entrySet()) {
@@ -211,51 +141,12 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
         return placedItems;
     }
 
+    @Override
     public void determineItemTypes(Random random) {
         // Item types remain the same with this mode of randomization.
     }
 
     @Override
-    public String findNameOfShopNodeContainingItem(String itemToLookFor) {
-        for(Map.Entry<String, String> shopNameAndContents : mapOfShopInventoryItemToContents.entrySet()) {
-            if(shopNameAndContents.getValue().equals(itemToLookFor)) {
-                return shopNameAndContents.getKey().substring(0, shopNameAndContents.getKey().indexOf(")") + 1);
-            }
-        }
-        return null;
-    }
-
-    public void outputLocations(int attemptNumber) throws IOException {
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/shops.txt", Settings.getStartingSeed()));
-        if (writer == null) {
-            return;
-        }
-
-
-        String location;
-        for(String shop : randomizedShops) {
-            for (int i = 1; i <= 3; i++) {
-                location = String.format("%s Item %d", shop, i);
-                if(mapOfShopInventoryItemToContents.containsKey(location)) {
-                    String itemName = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(location));
-                    boolean removedItem = Settings.getCurrentRemovedItems().contains(itemName)
-                            || Settings.getRemovedItems().contains(itemName)
-                            || Settings.getStartingItemsIncludingCustom().contains(itemName)
-                            || (Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName));
-                    writer.write(Translations.getShopItemText(shop, i) + ": " + Translations.getItemText(itemName, removedItem));
-                    writer.newLine();
-                }
-                else {
-                    writer.write(Translations.getShopItemText(shop, i) + ": (unchanged)");
-                    writer.newLine();
-                }
-            }
-        }
-
-        writer.flush();
-        writer.close();
-    }
-
     public void updateFiles(List<Block> blocks, boolean subweaponOnly, MoneyChecker moneyChecker, Random random) {
         String shopItem1;
         String shopItem2;
@@ -312,7 +203,7 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
                     getItemPriceCount(subweaponOnly, shopItem1, String.format("%s Item 1", shopName), moneyChecker, random),
                     getItemPriceCount(subweaponOnly, shopItem2, String.format("%s Item 2", shopName), moneyChecker, random),
                     getItemPriceCount(subweaponOnly, shopItem3, String.format("%s Item 3", shopName), moneyChecker, random),
-                    "Shop 18 (Lil Bro)".equals(shopName), MSX_SHOP_NAME.equals(shopName), false, random);
+                    shopName, false, npcRandomizer, random);
         }
     }
 
@@ -374,13 +265,5 @@ public class CategorizedShopRandomizer implements ShopRandomizer {
             return new ItemPriceCount((short)(int)(shopPrice - 5 * random.nextInt(2)), null);
         }
         return null;
-    }
-
-    public void setAccessChecker(AccessChecker accessChecker) {
-        this.accessChecker = accessChecker;
-    }
-
-    public void setItemRandomizer(ItemRandomizer itemRandomizer) {
-        this.itemRandomizer = itemRandomizer;
     }
 }
