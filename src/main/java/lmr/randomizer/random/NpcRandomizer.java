@@ -51,6 +51,19 @@ public class NpcRandomizer {
             mapOfNpcDoorLocationToContents.put("NPCL: Kingvalley II", "NPC: Kingvalley II");
             mapOfNpcDoorLocationToContents.put("NPCL: Energetic Belmont", "NPC: Energetic Belmont");
             mapOfNpcDoorLocationToContents.put("NPCL: Tailor Dracuet", "NPC: Tailor Dracuet");
+            mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Giltoriyo", "NPC: Philosopher Giltoriyo");
+            mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Alsedana", "NPC: Philosopher Alsedana");
+            mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Samaranta", "NPC: Philosopher Samaranta");
+            mapOfNpcDoorLocationToContents.put("NPCL: Hiner", "NPC: Hiner");
+            mapOfNpcDoorLocationToContents.put("NPCL: Moger", "NPC: Moger");
+            mapOfNpcDoorLocationToContents.put("NPCL: Sidro", "NPC: Sidro");
+            mapOfNpcDoorLocationToContents.put("NPCL: Modro", "NPC: Modro");
+            mapOfNpcDoorLocationToContents.put("NPCL: Mud Man Qubert", "NPC: Mud Man Qubert");
+            mapOfNpcDoorLocationToContents.put("NPCL: Priest Zarnac", "NPC: Priest Zarnac");
+            mapOfNpcDoorLocationToContents.put("NPCL: 8bit Elder", "NPC: 8bit Elder");
+            mapOfNpcDoorLocationToContents.put("NPCL: duplex", "NPC: duplex");
+            mapOfNpcDoorLocationToContents.put("NPCL: Samieru", "NPC: Samieru");
+            mapOfNpcDoorLocationToContents.put("NPCL: Naramura", "NPC: Naramura");
 
             String npc;
             while(!npcs.isEmpty()) {
@@ -88,6 +101,19 @@ public class NpcRandomizer {
             npcDoors.add("Energetic Belmont");
             npcDoors.add("Arrogant Metagear");
             npcDoors.add("Arrogant Sturdy Snake");
+            npcDoors.add("Philosopher Giltoriyo");
+            npcDoors.add("Philosopher Alsedana");
+            npcDoors.add("Philosopher Samaranta");
+            npcDoors.add("Hiner");
+            npcDoors.add("Moger");
+            npcDoors.add("Sidro");
+            npcDoors.add("Modro");
+            npcDoors.add("Mud Man Qubert");
+            npcDoors.add("Priest Zarnac");
+            npcDoors.add("8bit Elder");
+            npcDoors.add("duplex");
+            npcDoors.add("Samieru");
+            npcDoors.add("Naramura");
 
             List<String> npcs = new ArrayList<>();
             npcs.add("Priest Hidlyda");
@@ -117,6 +143,19 @@ public class NpcRandomizer {
             npcs.add("Energetic Belmont");
             npcs.add("Arrogant Metagear");
             npcs.add("Arrogant Sturdy Snake");
+            npcs.add("Philosopher Giltoriyo");
+            npcs.add("Philosopher Alsedana");
+            npcs.add("Philosopher Samaranta");
+            npcs.add("Hiner");
+            npcs.add("Moger");
+            npcs.add("Sidro");
+            npcs.add("Modro");
+            npcs.add("Mud Man Qubert");
+            npcs.add("Priest Zarnac");
+            npcs.add("8bit Elder");
+            npcs.add("duplex");
+            npcs.add("Samieru");
+            npcs.add("Naramura");
 
             if(Settings.isRandomizeDracuetShop()) {
                 npcDoors.add("Tailor Dracuet");
@@ -165,7 +204,40 @@ public class NpcRandomizer {
             mapOfNpcDoorLocationToContents.put("NPCL: Kingvalley II", "NPC: Kingvalley II");
             mapOfNpcDoorLocationToContents.put("NPCL: Energetic Belmont", "NPC: Energetic Belmont");
             mapOfNpcDoorLocationToContents.put("NPCL: Tailor Dracuet", "NPC: Tailor Dracuet");
+
+            mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Giltoriyo", "NPC: Philosopher Giltoriyo");
+            mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Alsedana", "NPC: Philosopher Alsedana");
+            mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Samaranta", "NPC: Philosopher Samaranta");
+            mapOfNpcDoorLocationToContents.put("NPCL: Hiner", "NPC: Hiner");
+            mapOfNpcDoorLocationToContents.put("NPCL: Moger", "NPC: Moger");
+            mapOfNpcDoorLocationToContents.put("NPCL: Sidro", "NPC: Sidro");
+            mapOfNpcDoorLocationToContents.put("NPCL: Modro", "NPC: Modro");
+            mapOfNpcDoorLocationToContents.put("NPCL: Mud Man Qubert", "NPC: Mud Man Qubert");
+            mapOfNpcDoorLocationToContents.put("NPCL: Priest Zarnac", "NPC: Priest Zarnac");
+            mapOfNpcDoorLocationToContents.put("NPCL: 8bit Elder", "NPC: 8bit Elder");
+            mapOfNpcDoorLocationToContents.put("NPCL: duplex", "NPC: duplex");
+            mapOfNpcDoorLocationToContents.put("NPCL: Samieru", "NPC: Samieru");
+            mapOfNpcDoorLocationToContents.put("NPCL: Naramura", "NPC: Naramura");
         }
+
+//        mapOfNpcDoorLocationToContents.put("NPCL: Priest Triton", "NPC: Priest Triton");
+//        mapOfNpcDoorLocationToContents.put("NPCL: 8bit Fairy", "NPC: 8bit Fairy");
+//
+//        mapOfNpcDoorLocationToContents.put("NPCL: Former Mekuri Master", "NPC: Former Mekuri Master");
+//        mapOfNpcDoorLocationToContents.put("NPCL: Priest Alest", "NPC: Priest Alest");
+//        mapOfNpcDoorLocationToContents.put("NPCL: Mr. Slushfund", "NPC: Mr. Slushfund");
+//
+//        mapOfNpcDoorLocationToContents.put("NPCL: Nebur (Original)", "NPC: Nebur (Original)");
+//        mapOfNpcDoorLocationToContents.put("NPCL: Nebur (Alt)", "NPC: Nebur (Alt)");
+//        mapOfNpcDoorLocationToContents.put("NPCL: Yiear Kungfu", "NPC: Yiear Kungfu");
+//        mapOfNpcDoorLocationToContents.put("NPCL: Giant Mopiran", "NPC: Giant Mopiran");
+//
+//        mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Fobos", "NPC: Philosopher Fobos");
+//
+//        mapOfNpcDoorLocationToContents.put("NPCL: Xelpud", "NPC: Xelpud");
+//        mapOfNpcDoorLocationToContents.put("NPCL: Mulbruk", "NPC: Mulbruk");
+//        mapOfNpcDoorLocationToContents.put("NPCL: The Fairy Queen", "NPC: The Fairy Queen");
+//        mapOfNpcDoorLocationToContents.put("NPCL: Stray fairy", "NPC: Stray fairy");
     }
 
     public String getNpc(String npcLocation) {

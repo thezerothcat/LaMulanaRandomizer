@@ -1399,7 +1399,7 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-                else if(flagTest.getIndex() == 299 && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == 0x12b && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 8) {
                         // MARDUK tablet effect
@@ -2239,6 +2239,16 @@ public final class GameDataTracker {
                         }
                     }
                 }
+                else if(blockNumber == 35) {
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Sidro", gameObject);
+                    }
+                }
+                else if(blockNumber == 36) {
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Modro", gameObject);
+                    }
+                }
                 else if(blockNumber == 39) {
                     if(Settings.isRandomizeNpcs()) {
                         mapOfNpcLocationToObject.put("NPCL: Penadvent of ghost", gameObject);
@@ -2320,6 +2330,11 @@ public final class GameDataTracker {
                         mapOfNpcLocationToObject.put("NPCL: Arrogant Sturdy Snake", gameObject);
                     }
                 }
+                else if(blockNumber == 205){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Yiear Kungfu", gameObject);
+                    }
+                }
                 else if(blockNumber == 220){
                     if(Settings.isRandomizeNpcs()) {
                         mapOfNpcLocationToObject.put("NPCL: Affected Knimare", gameObject);
@@ -2328,6 +2343,11 @@ public final class GameDataTracker {
                 else if(blockNumber == 244){
                     if(Settings.isRandomizeNpcs()) {
                         mapOfNpcLocationToObject.put("NPCL: Mover Athleland", gameObject);
+                    }
+                }
+                else if(blockNumber == 272){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Giant Mopiran", gameObject);
                     }
                 }
                 else if(blockNumber == 290){
@@ -2343,6 +2363,11 @@ public final class GameDataTracker {
                 else if(blockNumber == 321){
                     if(Settings.isRandomizeNpcs()) {
                         mapOfNpcLocationToObject.put("NPCL: Mechanical Efspi", gameObject);
+                    }
+                }
+                else if(blockNumber == 337){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Mud Man Qubert", gameObject);
                     }
                 }
                 else if(blockNumber == 470){
@@ -2376,14 +2401,23 @@ public final class GameDataTracker {
             else if(blockNumber == 671) {
                 // Hiner - Surface NPC, 01-00-02
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Hiner", gameObject);
+                }
             }
             else if(blockNumber == 672) {
                 // Moger - Surface NPC, 01-02-00
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Moger", gameObject);
+                }
             }
             else if(blockNumber == 673) {
                 // Former Mekuri Master - Surface NPC, 01-07-00
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Former Mekuri Master", gameObject);
+                }
 
                 GameObjectId gameObjectId = new GameObjectId((short) 100, 241);
                 List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
@@ -2396,6 +2430,9 @@ public final class GameDataTracker {
             else if(blockNumber == 674) {
                 // Priest Zarnac - Guidance NPC, 00-04-01
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Zarnac", gameObject);
+                }
             }
             else if(blockNumber == 675) {
                 // Priest Xanado - Mausoleum NPC, 02-02-00
@@ -2410,9 +2447,13 @@ public final class GameDataTracker {
 
                 // Giltoriyo mantra conversation
                 for (WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
-                    if(flagUpdate.getIndex() == 299) {
-                        flagUpdate.setIndex(2795);
+                    if(flagUpdate.getIndex() == 0x12b) {
+                        flagUpdate.setIndex(0xaeb);
                     }
+                }
+
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Philosopher Giltoriyo", gameObject);
                 }
             }
             else if(blockNumber == 678) {
@@ -2439,6 +2480,10 @@ public final class GameDataTracker {
             else if(blockNumber == 681) {
                 // Priest Triton - Extinction NPC, 06-09-01
                 npcObjects.add(gameObject);
+
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Triton", gameObject);
+                }
 
                 if(Settings.isHalloweenMode()) {
                     for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
@@ -2643,6 +2688,9 @@ public final class GameDataTracker {
             if(blockNumber == 693) {
                 // Priest Alest - Illusion NPC, 10-08-01
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Alest", gameObject);
+                }
 
                 // Mini Doll conversation
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
@@ -2663,6 +2711,9 @@ public final class GameDataTracker {
             else if(blockNumber == 694) {
                 // Stray fairy - Illusion NPC, 10-00-01
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Stray fairy", gameObject);
+                }
 
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                     if (flagTest.getIndex() == 570) {
@@ -2701,10 +2752,16 @@ public final class GameDataTracker {
             else if(blockNumber == 698) {
                 // Philosopher Alsedana - Moonlight NPC, 12-06-00
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Philosopher Alsedana", gameObject);
+                }
             }
             else if(blockNumber == 700) {
                 // Philosopher Samaranta - Goddess NPC, 13-05-01
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Philosopher Samaranta", gameObject);
+                }
             }
             else if(blockNumber == 701) {
                 // Priest Laydoc - Ruin NPC, 14-00-01
@@ -2734,22 +2791,37 @@ public final class GameDataTracker {
             else if(blockNumber == 706) {
                 // 8bit Elder - Gate of Time NPC, 21-00-00
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: 8bit Elder", gameObject);
+                }
             }
             else if(blockNumber == 707) {
                 // duplex - Illusion NPC, 10-02-02
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: duplex", gameObject);
+                }
             }
             else if(blockNumber == 708) {
                 // Samieru - Moonlight NPC, 12-03-00
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Samieru", gameObject);
+                }
             }
             else if(blockNumber == 709) {
                 // Naramura - Goddess NPC, 13-06-03
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Naramura", gameObject);
+                }
             }
             else if(blockNumber == 710) {
                 // 8bit Fairy - Gate of Time NPC, 20-00-01
                 npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: 8bit Fairy", gameObject);
+                }
             }
             else if(blockNumber == 714) {
                 if(Settings.isHalloweenMode()) {
@@ -2988,7 +3060,7 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-                else if(flagTest.getIndex() == 299 && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == 0x12b && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 8) {
                         // MARDUK tablet effect
@@ -3305,19 +3377,14 @@ public final class GameDataTracker {
                         gameObject.getTestByteOperations().add(testByteOperation);
                     }
                 }
-                else if (flagTest.getIndex() == 299) {
+                else if (flagTest.getIndex() == 0x12b) {
                     // Timers related to MARDUK mantra. Some other timers have been removed in RcdReader.
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 8) {
                         flagTest.setOp(ByteOp.FLAG_LTEQ);
 
                         // Add test for Giltoriyo conversation
-                        TestByteOperation testByteOperation = new TestByteOperation();
-                        testByteOperation.setIndex(2795);
-                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                        testByteOperation.setValue((byte)1);
-
-                        gameObject.getTestByteOperations().add(testByteOperation);
+                        gameObject.getTestByteOperations().add(new TestByteOperation(2795, ByteOp.FLAG_EQUALS, 1)); // 0xaeb
                         break;
                     }
 
@@ -3335,12 +3402,7 @@ public final class GameDataTracker {
                         flagTest.setOp(ByteOp.FLAG_LTEQ);
 
                         // Add test for Giltoriyo conversation
-                        TestByteOperation testByteOperation = new TestByteOperation();
-                        testByteOperation.setIndex(2795);
-                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                        testByteOperation.setValue((byte)1);
-
-                        gameObject.getTestByteOperations().add(testByteOperation);
+                        gameObject.getTestByteOperations().add(new TestByteOperation(2795, ByteOp.FLAG_EQUALS, 1)); // 0xaeb
                         break;
                     }
 
@@ -3358,12 +3420,7 @@ public final class GameDataTracker {
                         flagTest.setOp(ByteOp.FLAG_LTEQ);
 
                         // Add test for Giltoriyo conversation
-                        TestByteOperation testByteOperation = new TestByteOperation();
-                        testByteOperation.setIndex(2795);
-                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                        testByteOperation.setValue((byte)1);
-
-                        gameObject.getTestByteOperations().add(testByteOperation);
+                        gameObject.getTestByteOperations().add(new TestByteOperation(2795, ByteOp.FLAG_EQUALS, 1)); // 0xaeb
                         break;
                     }
 
@@ -3403,12 +3460,7 @@ public final class GameDataTracker {
                         flagTest.setOp(ByteOp.FLAG_LTEQ);
 
                         // Add test for Giltoriyo conversation
-                        TestByteOperation testByteOperation = new TestByteOperation();
-                        testByteOperation.setIndex(2795);
-                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                        testByteOperation.setValue((byte)1);
-
-                        gameObject.getTestByteOperations().add(testByteOperation);
+                        gameObject.getTestByteOperations().add(new TestByteOperation(2795, ByteOp.FLAG_EQUALS, 1)); // 0xaeb
                         break;
                     }
 
@@ -3426,12 +3478,7 @@ public final class GameDataTracker {
                         flagTest.setOp(ByteOp.FLAG_LTEQ);
 
                         // Add test for Giltoriyo conversation
-                        TestByteOperation testByteOperation = new TestByteOperation();
-                        testByteOperation.setIndex(2795);
-                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                        testByteOperation.setValue((byte)1);
-
-                        gameObject.getTestByteOperations().add(testByteOperation);
+                        gameObject.getTestByteOperations().add(new TestByteOperation(2795, ByteOp.FLAG_EQUALS, 1)); // 0xaeb
                         break;
                     }
 
@@ -3449,12 +3496,7 @@ public final class GameDataTracker {
                         flagTest.setOp(ByteOp.FLAG_LTEQ);
 
                         // Add test for Giltoriyo conversation
-                        TestByteOperation testByteOperation = new TestByteOperation();
-                        testByteOperation.setIndex(2795);
-                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                        testByteOperation.setValue((byte)1);
-
-                        gameObject.getTestByteOperations().add(testByteOperation);
+                        gameObject.getTestByteOperations().add(new TestByteOperation(2795, ByteOp.FLAG_EQUALS, 1)); // 0xaeb
                         break;
                     }
 
@@ -3473,12 +3515,7 @@ public final class GameDataTracker {
                             flagTest.setOp(ByteOp.FLAG_LTEQ);
 
                             // Add test for Giltoriyo conversation
-                            TestByteOperation testByteOperation = new TestByteOperation();
-                            testByteOperation.setIndex(2795);
-                            testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                            testByteOperation.setValue((byte)1);
-
-                            gameObject.getTestByteOperations().add(testByteOperation);
+                            gameObject.getTestByteOperations().add(new TestByteOperation(2795, ByteOp.FLAG_EQUALS, 1)); // 0xaeb
 
                             List<GameObject> objects = mantraTablets.get("LAMULANA");
                             if (objects == null) {
@@ -6456,7 +6493,7 @@ public final class GameDataTracker {
 
     public static void writeNpcDoor(String npcDoorLocation, String npc) {
         GameObject doorToUpdate = mapOfNpcLocationToObject.get(npcDoorLocation);
-        NpcObjectUpdates.updateDoor(doorToUpdate, npc);
+        NpcObjectUpdates.updateDoor(doorToUpdate, npcDoorLocation, npc);
     }
 
     private static Integer getBossFlag(Integer bossNumber) {

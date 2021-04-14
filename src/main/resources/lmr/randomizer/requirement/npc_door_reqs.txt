@@ -1,4 +1,10 @@
+# Surface
+NPCL: Sidro => Location: Surface [Main]
+NPCL: Modro => Location: Surface [Main]
+NPCL: Hiner => Location: Surface [Main]
+NPCL: Moger => Location: Surface [Main]
 # Gate of Guidance
+NPCL: Priest Zarnac => Location: Gate of Guidance [Main]
 NPCL: Penadvent of ghost => Location: Gate of Guidance [Main] # Shop 4 (Guidance)
 # Mausoleum
 NPCL: Priest Xanado => Location: Mausoleum of the Giants # generic NPC up by hardmode tablet, 2-2-0
@@ -17,6 +23,7 @@ NPCL: Kingvalley I => Location: Temple of the Sun [Main], Seal: D1, Feather
 NPCL: Kingvalley I => Location: Temple of the Sun [Main], Seal: D1, Boost: Item, Attack: Bomb
 # Spring in the Sky
 NPCL: Priest Hidlyda => Location: Spring in the Sky [Main], State: Can Open Spring NPC Wall, State: Can Escape Spring NPC
+NPCL: Philosopher Giltoriyo => Location: Spring in the Sky [Main]
 NPCL: Mr. Fishman (Original) => Location: Spring in the Sky [Main], Location: Spring in the Sky [Upper], Helmet, Seal: O4
 NPCL: Mr. Fishman (Alt) => Location: Spring in the Sky [Main], Location: Spring in the Sky [Upper], Helmet, Seal: O4, Fairy: Spring in the Sky
 # Inferno Cavern
@@ -36,13 +43,18 @@ NPCL: Priest Jaguarfiv => Location: Twin Labyrinths [Poseidon]
 # Endless Corridor
 NPCL: Affected Knimare => Location: Endless Corridor [1F], Seal: O6
 # Gate of Illusion
+NPCL: duplex => State: Dev Rooms, Location: Gate of Illusion [Grail], State: Can Reach Chi You, State: Can Stop Chi You Sacrifices, Event: Chi You Defeated, Attack: Forward
 NPCL: Mover Athleland => Location: Gate of Illusion [Middle]
 # Graveyard of the Giants
 NPCL: Giant Thexde => Location: Graveyard of the Giants [East], Feather
 # Temple of Moonlight
+NPCL: Philosopher Alsedana => Location: Temple of Moonlight [Pyramid]
+NPCL: Samieru => State: Dev Rooms, State: Can Solve Axe Puzzle, State: Can Break Samieru Floor
 NPCL: Kingvalley II => Location: Temple of Moonlight [Southeast], Attack: Bomb
 NPCL: Kingvalley II => Location: Temple of Moonlight [Southeast], Attack: Forward, Glitch: Cat Pause
 # Tower of the Goddess
+NPCL: Philosopher Samaranta => Location: Tower of the Goddess [Lower], Event: Flooded Tower of the Goddess
+NPCL: Naramura => State: Dev Rooms, Location: Tower of the Goddess [Lower]
 NPCL: Energetic Belmont => Location: Tower of the Goddess [Lamp], Event: Flooded Tower of the Goddess, State: Lamp, Exit: Tower of the Goddess [Lamp]
 NPCL: Energetic Belmont => Location: Tower of the Goddess [Lamp], Event: Flooded Tower of the Goddess, State: Lamp, Anchor, Exit: Tower of the Goddess [Lower]
 NPCL: Energetic Belmont => Location: Tower of the Goddess [Lower], Glitch: Raindrop, Feather, Anchor # Anchor as a precaution in case Tower of the Goddess has already been flooded
@@ -62,5 +74,8 @@ NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Caltrops, Fea
 NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Caltrops, Grapple Claw
 # Chamber of Birth
 NPCL: Priest Ashgine => Location: Chamber of Birth [West]
+NPCL: Mud Man Qubert => Location: Chamber of Birth [West], Event: Mudmen Awakened
+# Gate of Time (Surface)
+NPCL: 8bit Elder => Location: Gate of Time [Surface]
 # HT
 NPCL: Tailor Dracuet => Location: Hell Temple [Shop]

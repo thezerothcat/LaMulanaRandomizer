@@ -63,6 +63,7 @@ Bronze Mirror => Location: Temple of the Sun [East], Glitch: Raindrop, State: Ca
 Bronze Mirror => Location: Temple of the Sun [East], Event: Flooded Temple of the Sun, Location: Chamber of Extinction [Map], State: Can Break Normal Bronze Mirror Pots # Vanilla-style logic
 Bronze Mirror => Location: Temple of the Sun [East], Glitch: Lamp Glitch, Holy Grail, State: Can Break Normal Bronze Mirror Pots # Lamp Glitch into the Bronze Mirror spot and warp out when the lamp expires
 Bronze Mirror => Location: Temple of the Sun [East], Glitch: Lamp Glitch, Location: Chamber of Extinction [Map], State: Can Break Normal Bronze Mirror Pots # Open the passage, but use Lamp Glitch to compensate for lack of flooding
+Bronze Mirror => Location: Temple of the Sun [East], Glitch: Cat Pause, Location: Chamber of Extinction [Map], Feather, Attack: Chest # Cat Pause, break the pot up front to spawn the dais, then use Feather to hop into the area and use the dais / grab the chest
 bunplus.com => Location: Inferno Cavern [Main], Attack: Forward
 Caltrops => Location: Spring in the Sky [Main]
 Chain Whip => Location: Inferno Cavern [Main], State: Can Reach Pazuzu, State: Block Pushing, Event: Pazuzu Defeated

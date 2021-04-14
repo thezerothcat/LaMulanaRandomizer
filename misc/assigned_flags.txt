@@ -66,6 +66,7 @@ for fools 2021, 2756 (ac4) for talisman spaulder
 for fools 2021, 2757 (ac5) for coin sun spaulder
 for fools 2021, 2758 (ac6) for shrine map spaulder
 
+replaceable flag: 2e3 is used on retrosurface to close xelpud's tent after talking to him; only 3 uses in rcd so it'd be easy to remove
 
 un-implemented features:
 inferno pushblock glove special: acb (2763)

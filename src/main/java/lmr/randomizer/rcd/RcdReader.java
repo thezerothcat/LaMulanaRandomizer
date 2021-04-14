@@ -238,7 +238,7 @@ public final class RcdReader {
                         keepObject = false;
                         break;
                     }
-                    else if(updateFlag.getIndex() == 299) {
+                    else if(updateFlag.getIndex() == 0x12b) {
                         // Timer for MARDUK mantra update
                         if(objectContainer instanceof Screen) {
                             int zoneIndex = ((Screen) objectContainer).getZoneIndex();
@@ -587,6 +587,13 @@ public final class RcdReader {
             else if(obj.getArgs().get(4) == 719) {
                 // Low-score version of Mulbruk which could interfere with getting Book of the Dead.
                 keepObject = false;
+            }
+            else if(obj.getArgs().get(4) == 676 && Settings.isRandomizeNpcs()) {
+                Screen screen = (Screen)obj.getObjectContainer();
+                if(screen.getZoneIndex() == 4 || screen.getZoneIndex() == 12 || screen.getZoneIndex() == 13) {
+                    // Giltoriyo, Alsedana, Samaranta conversations without Philosopher's Ocarina
+                    keepObject = false;
+                }
             }
             else if(obj.getArgs().get(4) == 682 && Settings.isRandomizeNpcs()) {
                 // Conversation to inform of unlocking Big Brother's shop, to be removed and re-added if shuffling NPCs for simplicity.
