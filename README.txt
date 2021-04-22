@@ -1,6 +1,10 @@
 Please see the wiki page on github for information on how to use the randomizer, and other things you may need to know about it.
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
+2.25
+-----------------------------
+Added random seals and partial NPC shuffle. Randomized Endless Corridor's left exit as a one-way transition. Assorted bug fixes.
+
 2.24
 -----------------------------
 Added a quicksave for Mother's ankh. Fixed a few bugs.
