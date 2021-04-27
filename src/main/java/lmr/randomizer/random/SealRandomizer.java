@@ -21,6 +21,38 @@ public class SealRandomizer {
         birthSeals = new ArrayList<>();
         lifeSeals = new ArrayList<>();
         deathSeals = new ArrayList<>();
+
+        if(!Settings.isRandomizeSeals()) {
+            originSeals.add("Seal: O1");
+            originSeals.add("Seal: O2");
+            originSeals.add("Seal: O3");
+            originSeals.add("Seal: O4");
+            originSeals.add("Seal: O5");
+            originSeals.add("Seal: O6");
+            originSeals.add("Seal: O7");
+            originSeals.add("Seal: O8");
+            birthSeals.add("Seal: B1");
+            birthSeals.add("Seal: B2");
+            birthSeals.add("Seal: B3");
+            birthSeals.add("Seal: B4");
+            birthSeals.add("Seal: B5");
+            birthSeals.add("Seal: B6");
+            birthSeals.add("Seal: B7");
+            lifeSeals.add("Seal: L1");
+            lifeSeals.add("Seal: L2");
+            lifeSeals.add("Seal: L3");
+            lifeSeals.add("Seal: L4");
+            lifeSeals.add("Seal: L5");
+            lifeSeals.add("Seal: L6");
+            lifeSeals.add("Seal: L7");
+            lifeSeals.add("Seal: L8");
+            deathSeals.add("Seal: D1");
+            deathSeals.add("Seal: D2");
+            deathSeals.add("Seal: D3");
+            deathSeals.add("Seal: D4");
+            deathSeals.add("Seal: D5");
+            deathSeals.add("Seal: D6");
+        }
     }
 
     public void assignSeals(Random random) {
@@ -97,37 +129,6 @@ public class SealRandomizer {
                     deathSeals.add("Seal: D" + i);
                 }
             }
-        }
-        else {
-            originSeals.add("Seal: O1");
-            originSeals.add("Seal: O2");
-            originSeals.add("Seal: O3");
-            originSeals.add("Seal: O4");
-            originSeals.add("Seal: O5");
-            originSeals.add("Seal: O6");
-            originSeals.add("Seal: O7");
-            originSeals.add("Seal: O8");
-            birthSeals.add("Seal: B1");
-            birthSeals.add("Seal: B2");
-            birthSeals.add("Seal: B3");
-            birthSeals.add("Seal: B4");
-            birthSeals.add("Seal: B5");
-            birthSeals.add("Seal: B6");
-            birthSeals.add("Seal: B7");
-            lifeSeals.add("Seal: L1");
-            lifeSeals.add("Seal: L2");
-            lifeSeals.add("Seal: L3");
-            lifeSeals.add("Seal: L4");
-            lifeSeals.add("Seal: L5");
-            lifeSeals.add("Seal: L6");
-            lifeSeals.add("Seal: L7");
-            lifeSeals.add("Seal: L8");
-            deathSeals.add("Seal: D1");
-            deathSeals.add("Seal: D2");
-            deathSeals.add("Seal: D3");
-            deathSeals.add("Seal: D4");
-            deathSeals.add("Seal: D5");
-            deathSeals.add("Seal: D6");
         }
     }
 

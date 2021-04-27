@@ -449,26 +449,35 @@ public class Main {
         private void restore() {
             try {
                 progressDialog.updateProgress(0, Translations.getText("restore.rcd"));
+                FileOutputStream fileOutputStream;
 
-                FileOutputStream fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/script.rcd"));
-                Files.copy(new File("script.rcd.bak").toPath(), fileOutputStream);
-                fileOutputStream.flush();
-                fileOutputStream.close();
+                File backupFile = new File("script.rcd.bak");
+                if(backupFile.exists()) {
+                    fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/script.rcd"));
+                    Files.copy(backupFile.toPath(), fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                }
 
                 progressDialog.updateProgress(30, Translations.getText("restore.dat"));
 
-                fileOutputStream = new FileOutputStream(new File(String.format("%s/data/language/%s/script_code.dat",
-                        Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
-                Files.copy(new File(Settings.getBackupDatFile()).toPath(), fileOutputStream);
-                fileOutputStream.flush();
-                fileOutputStream.close();
-
+                backupFile = new File(Settings.getBackupDatFile());
+                if(backupFile.exists()) {
+                    fileOutputStream = new FileOutputStream(new File(String.format("%s/data/language/%s/script_code.dat",
+                            Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
+                    Files.copy(backupFile.toPath(), fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                }
                 progressDialog.updateProgress(60, Translations.getText("restore.msd"));
 
-                fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/map13.msd"));
-                Files.copy(new File("map13.msd.bak").toPath(), fileOutputStream);
-                fileOutputStream.flush();
-                fileOutputStream.close();
+                backupFile = new File("map13.msd.bak");
+                if(backupFile.exists()) {
+                    fileOutputStream = new FileOutputStream(new File(Settings.getLaMulanaBaseDir() + "/data/mapdata/map13.msd"));
+                    Files.copy(backupFile.toPath(), fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                }
 
                 progressDialog.updateProgress(100, Translations.getText("restore.done"));
 
