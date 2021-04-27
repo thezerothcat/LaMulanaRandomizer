@@ -334,6 +334,9 @@ public final class DataFromFile {
                         || "Isis' Pendant".equals(itemName)) {
                     continue; // Things that should never be removed.
                 }
+                if(!Settings.isRandomizeSeals() && itemName.endsWith(" Seal")) {
+                    continue;
+                }
                 if(!Settings.isFeatherlessMode() && "Feather".equals(itemName)) {
                     continue;
                 }
