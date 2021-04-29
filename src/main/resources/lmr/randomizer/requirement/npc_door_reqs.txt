@@ -39,13 +39,17 @@ NPCL: Yiegah Kungfu => Location: Twin Labyrinths [Loop]
 #NPCL: Yiear Kungfu => Location: Twin Labyrinths [Loop], NPC: Yiegah Kungfu
 NPCL: Arrogant Sturdy Snake => Location: Twin Labyrinths [Lower], Feather
 NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], State: Block Pushing, Feather, Attack: Bomb
+NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], Glitch: Raindrop
+#NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], Setting: Featherless, Attack: Bomb
 NPCL: Priest Jaguarfiv => Location: Twin Labyrinths [Poseidon]
 # Endless Corridor
+NPCL: The Fairy Queen => Location: Endless Corridor [1F]
 NPCL: Affected Knimare => Location: Endless Corridor [1F], Seal: O6
 # Gate of Illusion
 NPCL: duplex => State: Dev Rooms, Location: Gate of Illusion [Grail], State: Can Reach Chi You, State: Can Stop Chi You Sacrifices, Event: Chi You Defeated, Attack: Forward
 NPCL: Mover Athleland => Location: Gate of Illusion [Middle]
 # Graveyard of the Giants
+NPCL: Giant Mopiran => Location: Graveyard of the Giants [West]
 NPCL: Giant Thexde => Location: Graveyard of the Giants [East], Feather
 # Temple of Moonlight
 NPCL: Philosopher Alsedana => Location: Temple of Moonlight [Pyramid]
@@ -59,7 +63,6 @@ NPCL: Energetic Belmont => Location: Tower of the Goddess [Lamp], Event: Flooded
 NPCL: Energetic Belmont => Location: Tower of the Goddess [Lamp], Event: Flooded Tower of the Goddess, State: Lamp, Anchor, Exit: Tower of the Goddess [Lower]
 NPCL: Energetic Belmont => Location: Tower of the Goddess [Lower], Glitch: Raindrop, Feather, Anchor # Anchor as a precaution in case Tower of the Goddess has already been flooded
 # Tower of Ruin
-NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], Glitch: Raindrop
 NPCL: Priest Laydoc => Location: Tower of Ruin [Southwest] # Surprisingly doesn't need boots
 NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Below, Feather
 NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Below, Grapple Claw
@@ -75,6 +78,8 @@ NPCL: Mechanical Efspi => Location: Tower of Ruin [Grail], Attack: Caltrops, Gra
 # Chamber of Birth
 NPCL: Priest Ashgine => Location: Chamber of Birth [West]
 NPCL: Mud Man Qubert => Location: Chamber of Birth [West], Event: Mudmen Awakened
+# Dimensional Corridor
+NPCL: Philosopher Fobos => Location: Dimensional Corridor [Grail], Event: Tiamat Left Side Children Defeated
 # Gate of Time (Surface)
 NPCL: 8bit Elder => Location: Gate of Time [Surface]
 # HT

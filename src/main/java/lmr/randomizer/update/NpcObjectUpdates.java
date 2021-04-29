@@ -57,6 +57,19 @@ public final class NpcObjectUpdates {
                 doorObject.getTestByteOperations().add(new TestByteOperation(0x0b5, ByteOp.FLAG_EQUALS, 2));
                 doorObject.getWriteByteOperations().add(new WriteByteOperation(0x08b, ByteOp.ASSIGN_FLAG, 1)); // Trigger for spawning Scales of the Heart puzzle room Philosopher ladder
             }
+            if("NPC: Philosopher Fobos".equals(npcAssigned)) {
+                addFobosDoors(doorObject); // Do this before adding tests, so we can carry over any tests based on the location.
+                doorObject.getTestByteOperations().add(new TestByteOperation(0x0b5, ByteOp.FLAG_EQUALS, 2));
+                doorObject.getTestByteOperations().add(new TestByteOperation(0x34f, ByteOp.FLAG_EQUALS, 1)); // Medicine puzzle solved
+                doorObject.getTestByteOperations().add(new TestByteOperation(0x10d, ByteOp.FLAG_NOT_EQUAL, 0)); // Fobos spoken to
+            }
+            if("NPC: The Fairy Queen".equals(npcAssigned)) {
+                addFairyQueenDoors(doorObject); // Do this before adding tests, so we can carry over any tests based on the location.
+                doorObject.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_LTEQ, 1)); // Fairy Queen conversation progress
+                doorObject.getTestByteOperations().add(new TestByteOperation(0x0aa, ByteOp.FLAG_EQUALS, 2)); // Isis' Pendant collected
+                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x1f5, ByteOp.ASSIGN_FLAG, 2)); // Fairy Queen conversation progress
+                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x118, ByteOp.ASSIGN_FLAG, 1)); // Fairy points active
+            }
             if("NPC: Naramura".equals(npcDoorLocation)) {
                 doorObject.getWriteByteOperations().add(new WriteByteOperation(0x388, ByteOp.ASSIGN_FLAG, 1)); // Flag indicating Naramura has been spoken to
             }
@@ -66,17 +79,11 @@ public final class NpcObjectUpdates {
             if("NPC: Samieru".equals(npcDoorLocation)) {
                 doorObject.getWriteByteOperations().add(new WriteByteOperation(0x38a, ByteOp.ASSIGN_FLAG, 1)); // Flag indicating Samieru has been spoken to
             }
-
-            // Add test to close shop during escape sequence
-            doorObject.getTestByteOperations().add(new TestByteOperation(0x0fe, ByteOp.FLAG_NOT_EQUAL, 3));
         }
     }
 
     private static boolean isShop(String npcAssigned) {
-        if("NPC: Nebur (Original)".equals(npcAssigned)) {
-            return true;
-        }
-        if("NPC: Nebur (Alt)".equals(npcAssigned)) {
+        if("NPC: Nebur".equals(npcAssigned)) {
             return true;
         }
         if("NPC: Sidro".equals(npcAssigned)) {
@@ -152,11 +159,8 @@ public final class NpcObjectUpdates {
     }
 
     private static short getConversationArg(String npcAssigned) {
-        if("NPC: Nebur (Original)".equals(npcAssigned)) {
-            return 34;
-        }
-        if("NPC: Nebur (Alt)".equals(npcAssigned)) {
-            return 490;
+        if("NPC: Nebur".equals(npcAssigned)) {
+            return 34; // 490 for Alt
         }
         if("NPC: Sidro".equals(npcAssigned)) {
             return 35;
@@ -257,6 +261,12 @@ public final class NpcObjectUpdates {
         if("NPC: Priest Jaguarfiv".equals(npcAssigned)) {
             return 683;
         }
+        if("NPC: The Fairy Queen".equals(npcAssigned)) {
+            return 686;
+        }
+        if("NPC: Mr. Slushfund".equals(npcAssigned)) {
+            return 689;
+        }
         if("NPC: Priest Alest".equals(npcAssigned)) {
             return 693;
         }
@@ -277,6 +287,9 @@ public final class NpcObjectUpdates {
         }
         if("NPC: Priest Ashgine".equals(npcAssigned)) {
             return 702;
+        }
+        if("NPC: Philosopher Fobos".equals(npcAssigned)) {
+            return 705;
         }
         if("NPC: 8bit Elder".equals(npcAssigned)) {
             return 706;
@@ -357,7 +370,6 @@ public final class NpcObjectUpdates {
         bigBrotherNotificationConversation.setX(doorObject.getX());
         bigBrotherNotificationConversation.setY(doorObject.getY());
         bigBrotherNotificationConversation.getTestByteOperations().add(new TestByteOperation(0x1f0, ByteOp.FLAG_EQUALS, 1));
-        bigBrotherNotificationConversation.getTestByteOperations().add(new TestByteOperation(0x0fe, ByteOp.FLAG_NOT_EQUAL, 3));
         bigBrotherNotificationConversation.getWriteByteOperations().add(new WriteByteOperation(0x1f0, ByteOp.ASSIGN_FLAG, 2));
         bigBrotherNotificationConversation.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
         screen.getObjects().add(bigBrotherNotificationConversation);
@@ -382,7 +394,127 @@ public final class NpcObjectUpdates {
             philosopherStoneConversation.getTestByteOperations().add(testByteOperation);
         }
         philosopherStoneConversation.getTestByteOperations().add(new TestByteOperation(0x0b5, ByteOp.FLAG_LTEQ, 1)); // Using <= 1 rather than == 0 in case of a chest check setting to 1
-        philosopherStoneConversation.getTestByteOperations().add(new TestByteOperation(0x0fe, ByteOp.FLAG_NOT_EQUAL, 3));
         doorObject.getObjectContainer().getObjects().add(philosopherStoneConversation);
+    }
+
+    /**
+     * @param doorObject the base npc door object, to use as a positional reference
+     */
+    public static void addFobosDoors(GameObject doorObject) {
+        addPhilosopherStoneDoor(doorObject);
+        GameObject fobosConversation = new GameObject(doorObject.getObjectContainer());
+        fobosConversation.setId((short)0xa0);
+        fobosConversation.getArgs().add((short)0);
+        fobosConversation.getArgs().add((short)0);
+        fobosConversation.getArgs().add((short)0);
+        fobosConversation.getArgs().add((short)0);
+        fobosConversation.getArgs().add((short)704);
+        fobosConversation.getArgs().add((short)0);
+        fobosConversation.getArgs().add((short)0);
+        fobosConversation.setX(doorObject.getX());
+        fobosConversation.setY(doorObject.getY());
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            fobosConversation.getTestByteOperations().add(testByteOperation);
+        }
+        fobosConversation.getTestByteOperations().add(new TestByteOperation(0x0b5, ByteOp.FLAG_EQUALS, 2)); // Philosopher's Ocarina collected
+        fobosConversation.getTestByteOperations().add(new TestByteOperation(0x10d, ByteOp.FLAG_EQUALS, 0)); // Fobos not yet spoken to
+        fobosConversation.getWriteByteOperations().add(new WriteByteOperation(0x10d, ByteOp.ASSIGN_FLAG, 1)); // Trigger for Shrine of the Mother ladder
+        doorObject.getObjectContainer().getObjects().add(fobosConversation);
+
+        fobosConversation = new GameObject(doorObject.getObjectContainer());
+        fobosConversation.setId((short)0xa0);
+        fobosConversation.getArgs().add((short)0);
+        fobosConversation.getArgs().add((short)0);
+        fobosConversation.getArgs().add((short)0);
+        fobosConversation.getArgs().add((short)0);
+        fobosConversation.getArgs().add((short)704);
+        fobosConversation.getArgs().add((short)0);
+        fobosConversation.getArgs().add((short)0);
+        fobosConversation.setX(doorObject.getX());
+        fobosConversation.setY(doorObject.getY());
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            fobosConversation.getTestByteOperations().add(testByteOperation);
+        }
+        fobosConversation.getTestByteOperations().add(new TestByteOperation(0x0b5, ByteOp.FLAG_EQUALS, 2)); // Philosopher's Ocarina collected
+        fobosConversation.getTestByteOperations().add(new TestByteOperation(0x34f, ByteOp.FLAG_EQUALS, 0)); // Medicine puzzle not solved
+        fobosConversation.getTestByteOperations().add(new TestByteOperation(0x10d, ByteOp.FLAG_NOT_EQUAL, 0)); // Fobos spoken to
+        doorObject.getObjectContainer().getObjects().add(fobosConversation);
+    }
+
+    /**
+     * @param doorObject the base npc door object, to use as a positional reference
+     */
+    public static void addFairyQueenDoors(GameObject doorObject) {
+        GameObject fairyQueenConveration = new GameObject(doorObject.getObjectContainer());
+        fairyQueenConveration.setId((short)0xa0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)685);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.setX(doorObject.getX());
+        fairyQueenConveration.setY(doorObject.getY());
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            fairyQueenConveration.getTestByteOperations().add(testByteOperation);
+        }
+        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_LTEQ, 1)); // Fairy Queen conversation progress
+        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(0x0aa, ByteOp.FLAG_LTEQ, 1)); // Isis' Pendant not found
+        doorObject.getObjectContainer().getObjects().add(fairyQueenConveration);
+
+        fairyQueenConveration = new GameObject(doorObject.getObjectContainer());
+        fairyQueenConveration.setId((short)0xa0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)687);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.setX(doorObject.getX());
+        fairyQueenConveration.setY(doorObject.getY());
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            fairyQueenConveration.getTestByteOperations().add(testByteOperation);
+        }
+        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_EQUALS, 2)); // Fairy Queen conversation progress; fairy points unlocked
+        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(0x2d5, ByteOp.FLAG_EQUALS, 0)); // Fairy block in True Shrine hasn't spawned yet
+        doorObject.getObjectContainer().getObjects().add(fairyQueenConveration);
+
+        fairyQueenConveration = new GameObject(doorObject.getObjectContainer());
+        fairyQueenConveration.setId((short)0xa0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)688);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.setX(doorObject.getX());
+        fairyQueenConveration.setY(doorObject.getY());
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            fairyQueenConveration.getTestByteOperations().add(testByteOperation);
+        }
+        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_EQUALS, 2)); // Fairy Queen conversation progress; fairy points unlocked
+        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(0x2d5, ByteOp.FLAG_EQUALS, 1)); // Fairy block in True Shrine has spawned
+        fairyQueenConveration.getWriteByteOperations().add(new WriteByteOperation(0x2d5, ByteOp.ASSIGN_FLAG, 2)); // Fairy block in True Shrine will be removed when you go there
+        doorObject.getObjectContainer().getObjects().add(fairyQueenConveration);
+
+        fairyQueenConveration = new GameObject(doorObject.getObjectContainer());
+        fairyQueenConveration.setId((short)0xa0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)985);
+        fairyQueenConveration.getArgs().add((short)0);
+        fairyQueenConveration.getArgs().add((short)1);
+        fairyQueenConveration.setX(doorObject.getX());
+        fairyQueenConveration.setY(doorObject.getY());
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            fairyQueenConveration.getTestByteOperations().add(testByteOperation);
+        }
+        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(0x2d5, ByteOp.FLAG_EQUALS, 2)); // Fairy block in True Shrine will be removed when you go there (have had the previous conversation)
+        doorObject.getObjectContainer().getObjects().add(fairyQueenConveration);
     }
 }

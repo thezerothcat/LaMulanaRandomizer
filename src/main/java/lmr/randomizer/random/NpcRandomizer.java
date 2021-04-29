@@ -1,6 +1,8 @@
 package lmr.randomizer.random;
 
+import lmr.randomizer.DataFromFile;
 import lmr.randomizer.Settings;
+import lmr.randomizer.node.CustomNPCPlacement;
 import lmr.randomizer.update.GameDataTracker;
 
 import java.util.*;
@@ -48,12 +50,15 @@ public class NpcRandomizer {
             mapOfNpcDoorLocationToContents.put("NPCL: Operator Combaker", "NPC: Operator Combaker");
             mapOfNpcDoorLocationToContents.put("NPCL: Affected Knimare", "NPC: Affected Knimare");
             mapOfNpcDoorLocationToContents.put("NPCL: Mover Athleland", "NPC: Mover Athleland");
+            mapOfNpcDoorLocationToContents.put("NPCL: Giant Mopiran", "NPC: Giant Mopiran");
             mapOfNpcDoorLocationToContents.put("NPCL: Kingvalley II", "NPC: Kingvalley II");
             mapOfNpcDoorLocationToContents.put("NPCL: Energetic Belmont", "NPC: Energetic Belmont");
             mapOfNpcDoorLocationToContents.put("NPCL: Tailor Dracuet", "NPC: Tailor Dracuet");
             mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Giltoriyo", "NPC: Philosopher Giltoriyo");
             mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Alsedana", "NPC: Philosopher Alsedana");
             mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Samaranta", "NPC: Philosopher Samaranta");
+            mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Fobos", "NPC: Philosopher Fobos");
+            mapOfNpcDoorLocationToContents.put("NPCL: The Fairy Queen", "NPC: The Fairy Queen");
             mapOfNpcDoorLocationToContents.put("NPCL: Hiner", "NPC: Hiner");
             mapOfNpcDoorLocationToContents.put("NPCL: Moger", "NPC: Moger");
             mapOfNpcDoorLocationToContents.put("NPCL: Sidro", "NPC: Sidro");
@@ -97,6 +102,7 @@ public class NpcRandomizer {
             npcDoors.add("Operator Combaker");
             npcDoors.add("Affected Knimare");
             npcDoors.add("Mover Athleland");
+            npcDoors.add("Giant Mopiran");
             npcDoors.add("Kingvalley II");
             npcDoors.add("Energetic Belmont");
             npcDoors.add("Arrogant Metagear");
@@ -104,6 +110,8 @@ public class NpcRandomizer {
             npcDoors.add("Philosopher Giltoriyo");
             npcDoors.add("Philosopher Alsedana");
             npcDoors.add("Philosopher Samaranta");
+            npcDoors.add("Philosopher Fobos");
+            npcDoors.add("The Fairy Queen");
             npcDoors.add("Hiner");
             npcDoors.add("Moger");
             npcDoors.add("Sidro");
@@ -139,6 +147,7 @@ public class NpcRandomizer {
             npcs.add("Operator Combaker");
             npcs.add("Affected Knimare");
             npcs.add("Mover Athleland");
+            npcs.add("Giant Mopiran");
             npcs.add("Kingvalley II");
             npcs.add("Energetic Belmont");
             npcs.add("Arrogant Metagear");
@@ -146,6 +155,8 @@ public class NpcRandomizer {
             npcs.add("Philosopher Giltoriyo");
             npcs.add("Philosopher Alsedana");
             npcs.add("Philosopher Samaranta");
+            npcs.add("Philosopher Fobos");
+            npcs.add("The Fairy Queen");
             npcs.add("Hiner");
             npcs.add("Moger");
             npcs.add("Sidro");
@@ -163,6 +174,12 @@ public class NpcRandomizer {
             }
             else {
                 mapOfNpcDoorLocationToContents.put("NPCL: Tailor Dracuet", "NPC: Tailor Dracuet");
+            }
+
+            for(CustomNPCPlacement customNPCPlacement : DataFromFile.getCustomPlacementData().getCustomNPCPlacements()) {
+                mapOfNpcDoorLocationToContents.put("NPCL: " + customNPCPlacement.getNpcLocation(), "NPC: " + customNPCPlacement.getNpcDoorContents());
+                npcDoors.remove(customNPCPlacement.getNpcLocation());
+                npcs.remove(customNPCPlacement.getNpcDoorContents());
             }
 
             String doorLocation;
@@ -201,6 +218,7 @@ public class NpcRandomizer {
             mapOfNpcDoorLocationToContents.put("NPCL: Operator Combaker", "NPC: Operator Combaker");
             mapOfNpcDoorLocationToContents.put("NPCL: Affected Knimare", "NPC: Affected Knimare");
             mapOfNpcDoorLocationToContents.put("NPCL: Mover Athleland", "NPC: Mover Athleland");
+            mapOfNpcDoorLocationToContents.put("NPCL: Giant Mopiran", "NPC: Giant Mopiran");
             mapOfNpcDoorLocationToContents.put("NPCL: Kingvalley II", "NPC: Kingvalley II");
             mapOfNpcDoorLocationToContents.put("NPCL: Energetic Belmont", "NPC: Energetic Belmont");
             mapOfNpcDoorLocationToContents.put("NPCL: Tailor Dracuet", "NPC: Tailor Dracuet");
@@ -208,6 +226,8 @@ public class NpcRandomizer {
             mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Giltoriyo", "NPC: Philosopher Giltoriyo");
             mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Alsedana", "NPC: Philosopher Alsedana");
             mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Samaranta", "NPC: Philosopher Samaranta");
+            mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Fobos", "NPC: Philosopher Fobos");
+            mapOfNpcDoorLocationToContents.put("NPCL: The Fairy Queen", "NPC: The Fairy Queen");
             mapOfNpcDoorLocationToContents.put("NPCL: Hiner", "NPC: Hiner");
             mapOfNpcDoorLocationToContents.put("NPCL: Moger", "NPC: Moger");
             mapOfNpcDoorLocationToContents.put("NPCL: Sidro", "NPC: Sidro");
@@ -227,16 +247,11 @@ public class NpcRandomizer {
 //        mapOfNpcDoorLocationToContents.put("NPCL: Priest Alest", "NPC: Priest Alest");
 //        mapOfNpcDoorLocationToContents.put("NPCL: Mr. Slushfund", "NPC: Mr. Slushfund");
 //
-//        mapOfNpcDoorLocationToContents.put("NPCL: Nebur (Original)", "NPC: Nebur (Original)");
-//        mapOfNpcDoorLocationToContents.put("NPCL: Nebur (Alt)", "NPC: Nebur (Alt)");
+//        mapOfNpcDoorLocationToContents.put("NPCL: Nebur", "NPC: Nebur");
 //        mapOfNpcDoorLocationToContents.put("NPCL: Yiear Kungfu", "NPC: Yiear Kungfu");
-//        mapOfNpcDoorLocationToContents.put("NPCL: Giant Mopiran", "NPC: Giant Mopiran");
-//
-//        mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Fobos", "NPC: Philosopher Fobos");
 //
 //        mapOfNpcDoorLocationToContents.put("NPCL: Xelpud", "NPC: Xelpud");
 //        mapOfNpcDoorLocationToContents.put("NPCL: Mulbruk", "NPC: Mulbruk");
-//        mapOfNpcDoorLocationToContents.put("NPCL: The Fairy Queen", "NPC: The Fairy Queen");
 //        mapOfNpcDoorLocationToContents.put("NPCL: Stray fairy", "NPC: Stray fairy");
     }
 
@@ -249,10 +264,10 @@ public class NpcRandomizer {
             return findDoorLocationForNpc("NPC: Modro");
         }
         if("Shop 2 (Surface)".equals(shopName)) {
-            return findDoorLocationForNpc("NPC: Nebur (Original)");
+            return findDoorLocationForNpc("NPC: Nebur");
         }
         if("Shop 2 Alt (Surface)".equals(shopName)) {
-            return findDoorLocationForNpc("NPC: Nebur (Alt)");
+            return findDoorLocationForNpc("NPC: Nebur");
         }
         if("Shop 3 (Surface)".equals(shopName)) {
             return findDoorLocationForNpc("NPC: Sidro");

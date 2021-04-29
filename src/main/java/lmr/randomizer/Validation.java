@@ -1,9 +1,6 @@
 package lmr.randomizer;
 
-import lmr.randomizer.node.CustomDoorPlacement;
-import lmr.randomizer.node.CustomItemPlacement;
-import lmr.randomizer.node.CustomPlacementData;
-import lmr.randomizer.node.CustomTransitionPlacement;
+import lmr.randomizer.node.*;
 import lmr.randomizer.random.ItemRandomizer;
 import lmr.randomizer.random.ShopRandomizationEnum;
 import lmr.randomizer.random.TransitionGateRandomizer;
@@ -273,6 +270,41 @@ public class Validation {
                     }
                 }
                 placedTargetAndDestination.put(customTransitionPlacement.getTargetTransition(), customTransitionPlacement.getDestinationTransition());
+            }
+        }
+        if(!customPlacementData.getCustomNPCPlacements().isEmpty()) {
+            if(!Settings.isRandomizeNpcs()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        "Please enable the setting \"" + Translations.getText("randomization.randomizeNpcs") + "\"",
+                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            for(CustomNPCPlacement customNPCPlacement : customPlacementData.getCustomNPCPlacements()) {
+                if(!isValidNpc(customNPCPlacement.getNpcLocation())) {
+                    JOptionPane.showMessageDialog(randomizerUI,
+                            "NPC " + customNPCPlacement.getNpcLocation().replaceAll("^NPCL?:? ", "") + " is invalid",
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(!isValidNpc(customNPCPlacement.getNpcDoorContents())) {
+                    JOptionPane.showMessageDialog(randomizerUI,
+                            "NPC " + customNPCPlacement.getNpcLocation().replaceAll("^NPCL?:? ", "") + " is invalid",
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if("Tailor Dracuet".equals(customNPCPlacement.getNpcLocation()) && !Settings.isRandomizeDracuetShop()) {
+                    JOptionPane.showMessageDialog(randomizerUI,
+                            "Please enable the setting \"" + Translations.getText("randomization.randomizeDracuetShop") + "\"",
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if("Tailor Dracuet".equals(customNPCPlacement.getNpcDoorContents()) && !Settings.isRandomizeDracuetShop()) {
+                    JOptionPane.showMessageDialog(randomizerUI,
+                            "Please enable the setting \"" + Translations.getText("randomization.randomizeDracuetShop") + "\"",
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
             }
         }
         if(Settings.isRequireFullAccess() && !customPlacementData.getRemovedItems().isEmpty()) {
@@ -815,6 +847,61 @@ public class Validation {
                 || (TransitionGateRandomizer.getTransitionList().contains(formattedTransition)
                 && !formattedTransition.startsWith("Transition: Sun R")
                 && !formattedTransition.startsWith("Transition: Extinction L"));
+    }
+
+    private static boolean isValidNpc(String npcName) {
+        return "Nebur".equals(npcName)
+                || "Sidro".equals(npcName)
+                || "Modro".equals(npcName)
+                || "Penadvent of ghost".equals(npcName)
+                || "Greedy Charlie".equals(npcName)
+                || "Shalom III".equals(npcName)
+                || "Usas VI".equals(npcName)
+                || "Kingvalley I".equals(npcName)
+                || "Mr. Fishman (Original)".equals(npcName)
+                || "Mr. Fishman (Alt)".equals(npcName)
+                || "Operator Combaker".equals(npcName)
+                || "Yiegah Kungfu".equals(npcName)
+                || "Arrogant Metagear".equals(npcName)
+                || "Arrogant Sturdy Snake".equals(npcName)
+//                || "Yiear Kungfu".equals(npcName)
+                || "Affected Knimare".equals(npcName)
+                || "Mover Athleland".equals(npcName)
+                || "Giant Mopiran".equals(npcName)
+                || "Kingvalley II".equals(npcName)
+                || "Energetic Belmont".equals(npcName)
+                || "Mechanical Efspi".equals(npcName)
+                || "Mud Man Qubert".equals(npcName)
+                || "Hot-blooded Nemesistwo".equals(npcName)
+                || "Hiner".equals(npcName)
+                || "Moger".equals(npcName)
+//                || "Former Mekuri Master".equals(npcName)
+                || "Priest Zarnac".equals(npcName)
+                || "Priest Xanado".equals(npcName)
+                || "Philosopher Giltoriyo".equals(npcName)
+                || "Priest Hidlyda".equals(npcName)
+                || "Priest Romancis".equals(npcName)
+                || "Priest Aramo".equals(npcName)
+//                || "Priest Triton".equals(npcName)
+                || "Priest Jaguarfiv".equals(npcName)
+                || "The Fairy Queen".equals(npcName)
+//                || "Mr. Slushfund".equals(npcName)
+//                || "Priest Alest".equals(npcName)
+//                || "Stray fairy".equals(npcName)
+                || "Giant Thexde".equals(npcName)
+                || "Philosopher Alsedana".equals(npcName)
+                || "Philosopher Samaranta".equals(npcName)
+                || "Priest Laydoc".equals(npcName)
+                || "Priest Ashgine".equals(npcName)
+                || "Philosopher Fobos".equals(npcName)
+                || "8bit Elder".equals(npcName)
+                || "duplex".equals(npcName)
+                || "Samieru".equals(npcName)
+                || "Naramura".equals(npcName)
+//                || "8bit Fairy".equals(npcName)
+                || "Priest Madomono".equals(npcName)
+                || "Priest Gailious".equals(npcName)
+                || "Tailor Dracuet".equals(npcName);
     }
 
     private static boolean isOneWayTransition(String transition) {

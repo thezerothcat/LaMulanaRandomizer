@@ -2533,6 +2533,11 @@ public final class GameDataTracker {
                 }
             }
             else if(blockNumber == 686) {
+                // The Fairy Queen - Endless NPC, 08-01-00
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: The Fairy Queen", gameObject);
+                }
+
                 if(Settings.isHalloweenMode()) {
                     gameObject.getTestByteOperations().clear();
                     gameObject.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_EQUALS, 2));
@@ -2784,6 +2789,9 @@ public final class GameDataTracker {
             else if(blockNumber == 705) {
                 // Philosopher Fobos - Dimensional NPC, 17-02-00
                 // Post-Medicine version of Fobos
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Philosopher Fobos", gameObject);
+                }
                 if(Settings.isHalloweenMode()) {
                     gameObject.getTestByteOperations().add(new TestByteOperation(getNpcConversationFlag((short)704), ByteOp.FLAG_GT, 0));
                 }

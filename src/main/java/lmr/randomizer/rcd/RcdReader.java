@@ -589,11 +589,8 @@ public final class RcdReader {
                 keepObject = false;
             }
             else if(obj.getArgs().get(4) == 676 && Settings.isRandomizeNpcs()) {
-                Screen screen = (Screen)obj.getObjectContainer();
-                if(screen.getZoneIndex() == 4 || screen.getZoneIndex() == 12 || screen.getZoneIndex() == 13) {
-                    // Giltoriyo, Alsedana, Samaranta conversations without Philosopher's Ocarina
-                    keepObject = false;
-                }
+                // Giltoriyo, Alsedana, Samaranta, Fobos conversations without Philosopher's Ocarina
+                keepObject = false;
             }
             else if(obj.getArgs().get(4) == 682 && Settings.isRandomizeNpcs()) {
                 // Conversation to inform of unlocking Big Brother's shop, to be removed and re-added if shuffling NPCs for simplicity.
@@ -603,12 +600,24 @@ public final class RcdReader {
                 // First Fairy Queen conversation, completely unneeded for randomizer outside of Halloween.
                 keepObject = false;
             }
-            else if(obj.getArgs().get(4) == 685 && Settings.isHalloweenMode()) {
-                // Halloween doesn't need this Fairy Queen conversation.
+            else if(obj.getArgs().get(4) == 685 && (Settings.isRandomizeNpcs() || Settings.isHalloweenMode())) {
+                // Halloween doesn't need this Fairy Queen conversation. Also to be removed and re-added if shuffling NPCs for simplicity.
                 keepObject = false;
             }
-            else if(obj.getArgs().get(4) == 985 && Settings.isHalloweenMode()) {
-                // Halloween doesn't need this Fairy Queen conversation either.
+            else if(obj.getArgs().get(4) == 687 && Settings.isRandomizeNpcs()) {
+                // Fairy Queen conversation, to be removed and re-added if shuffling NPCs for simplicity.
+                keepObject = false;
+            }
+            else if(obj.getArgs().get(4) == 688 && Settings.isRandomizeNpcs()) {
+                // Fairy Queen conversation, to be removed and re-added if shuffling NPCs for simplicity.
+                keepObject = false;
+            }
+            else if(obj.getArgs().get(4) == 704 && Settings.isRandomizeNpcs()) {
+                // Giltoriyo, Alsedana, Samaranta, Fobos conversations without Philosopher's Ocarina
+                keepObject = false;
+            }
+            else if(obj.getArgs().get(4) == 985 && (Settings.isRandomizeNpcs() || Settings.isHalloweenMode())) {
+                // Halloween doesn't need this Fairy Queen conversation either. Also to be removed and re-added if shuffling NPCs for simplicity.
                 keepObject = false;
             }
             else if(obj.getArgs().get(4) == 913) {
