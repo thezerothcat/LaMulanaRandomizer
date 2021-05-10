@@ -1,5 +1,7 @@
 package lmr.randomizer.rcd.object;
 
+import lmr.randomizer.FileUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,13 @@ public class GameObject {
 
     public GameObject(ObjectContainer objectContainer) {
         this.objectContainer = objectContainer;
+    }
+
+    public GameObject(ObjectContainer objectContainer, int paramCount) {
+        this.objectContainer = objectContainer;
+        for(int i = 0; i < paramCount; i++) {
+            args.add((short)0);
+        }
     }
 
     public GameObject(GameObject objectToCopy) {
@@ -86,6 +95,26 @@ public class GameObject {
 
     public ObjectContainer getObjectContainer() {
         return objectContainer;
+    }
+
+    public void addTests(TestByteOperation... tests) {
+        for(TestByteOperation test : tests) {
+            testByteOperations.add(test);
+        }
+        if(testByteOperations.size() > 4) {
+            FileUtils.logFlush("Attempted to add more than 4 tests to object:\n" + toString());
+            throw new RuntimeException("Too many tests on rcd object");
+        }
+    }
+
+    public void addUpdates(WriteByteOperation... updates) {
+        for(WriteByteOperation update : updates) {
+            writeByteOperations.add(update);
+        }
+        if(writeByteOperations.size() > 4) {
+            FileUtils.logFlush("Attempted to add more than 4 tests to object:\n" + toString());
+            throw new RuntimeException("Too many tests on rcd object");
+        }
     }
 
     @Override
