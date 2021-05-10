@@ -168,15 +168,6 @@ public final class GameDataTracker {
             objects.add(gameObject);
         }
         else if (gameObject.getId() == 0xa9) {
-            if(Settings.isBlockPushingRequiresGlove()) {
-                Screen screen = (Screen)gameObject.getObjectContainer();
-                if(screen.getZoneIndex() == 5 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
-                    AddObject.addInfernoPushableBlockReplacements(gameObject);
-                }
-                else if(screen.getZoneIndex() != 12 || screen.getRoomIndex() != 7 || screen.getScreenIndex() != 0) {
-                    AddObject.addPushableBlockBlockage(gameObject);
-                }
-            }
             if(Settings.isFools2020Mode()) {
                 if(gameObject.getObjectContainer() instanceof Screen) {
                     Screen screen = (Screen) gameObject.getObjectContainer();
@@ -212,24 +203,6 @@ public final class GameDataTracker {
                             }
                         }
                     }
-                }
-            }
-        }
-        else if (gameObject.getId() == 0xb9) {
-            if(Settings.isBlockPushingRequiresGlove()) {
-                Screen screen = (Screen)gameObject.getObjectContainer();
-                int zone = screen.getZoneIndex();
-                if(zone == 1) {
-                    AddObject.addPushableBlockBlockage(gameObject);
-                }
-                else if(zone == 3 || zone == 10) {
-                    AddObject.addPushableBlockBlockage(gameObject);
-                }
-                else if(zone == 14 && screen.getRoomIndex() == 2) {
-                    TestByteOperation pushableBlockTest = gameObject.getTestByteOperations().get(0);
-                    pushableBlockTest.setIndex(0xacc);
-
-                    AddObject.addRuinGloveTimer(gameObject.getObjectContainer());
                 }
             }
         }
@@ -1349,19 +1322,6 @@ public final class GameDataTracker {
             if(flagIndexToRemove != null) {
                 gameObject.getTestByteOperations().remove((int)flagIndexToRemove);
             }
-
-            if(Settings.isBlockPushingRequiresGlove()) {
-                Screen screen = (Screen)gameObject.getObjectContainer();
-                if (screen.getZoneIndex() == 14 && screen.getRoomIndex() == 2 && screen.getScreenIndex() == 0) {
-                    for(WriteByteOperation writeByteOperation: gameObject.getWriteByteOperations()) {
-                        if (writeByteOperation.getIndex() == 0x28d) {
-                            AddObject.addWallCopy(gameObject, 2);
-                            AddObject.addWallCopy(gameObject, 3);
-                            break;
-                        }
-                    }
-                }
-            }
         } else if (gameObject.getId() == 0x0e) {
             if(Settings.isFools2021Mode()) {
                 if(gameObject.getObjectContainer() instanceof Screen) {
@@ -2080,13 +2040,13 @@ public final class GameDataTracker {
                     gameObject.getWriteByteOperations().clear();
 
                     TestByteOperation testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(0xad3);
+                    testByteOperation.setIndex(FlagConstants.TABLET_SURFACE_GRAIL);
                     testByteOperation.setOp(ByteOp.FLAG_EQUALS);
                     testByteOperation.setValue((byte)1);
                     gameObject.getTestByteOperations().add(testByteOperation);
 
                     WriteByteOperation writeByteOperation = new WriteByteOperation();
-                    writeByteOperation.setIndex(0xad3);
+                    writeByteOperation.setIndex(FlagConstants.TABLET_SURFACE_GRAIL);
                     writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
                     writeByteOperation.setValue((byte)1);
                     gameObject.getWriteByteOperations().add(writeByteOperation);
@@ -3024,17 +2984,6 @@ public final class GameDataTracker {
                     }
                 }
 
-                if(Settings.isBlockPushingRequiresGlove()) {
-                    if(flagTest.getIndex() == 0x28d) {
-                        if (gameObject.getArgs().get(2) != 360 || gameObject.getArgs().get(3) != 520) {
-                            // The blockage on the Ruin pushblock can disappear as normal, but the pushability needs to be modified.
-                            if(flagTest.getValue() == 0 || flagTest.getValue() == 2) {
-                                flagTest.setIndex(0xacc);
-                            }
-                        }
-                    }
-                }
-
                 if (flagTest.getIndex() == 241) {
                     // mekuri tent-closing effect
                     GameObjectId gameObjectId = new GameObjectId((short) 100, 241);
@@ -3339,11 +3288,6 @@ public final class GameDataTracker {
                         backsideDoors.add(gameObject);
                     }
                 }
-                else if(Settings.isBlockPushingRequiresGlove()) {
-                    if(flagUpdate.getIndex() == 0x28d) {
-                        flagUpdate.setIndex(0xacc);
-                    }
-                }
             }
             for(int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
                 TestByteOperation flagTest = gameObject.getTestByteOperations().get(i);
@@ -3549,11 +3493,6 @@ public final class GameDataTracker {
                         }
                     }
                     break;
-                }
-                else if(flagTest.getIndex() == 0x28d) {
-                    if(Settings.isBlockPushingRequiresGlove()) {
-                        flagTest.setIndex(0xacc);
-                    }
                 }
 //                else if(flagTest.getIndex() == 267 && flagTest.getValue() == 1) {
 //                    // Timer to track wait time with Woman Statue and give Maternity Statue

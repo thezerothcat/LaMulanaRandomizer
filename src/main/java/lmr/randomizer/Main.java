@@ -964,9 +964,6 @@ public class Main {
         if(!Settings.isRequireFlaresForExtinction()) {
             startingNodes.add("Setting: Flareless Extinction");
         }
-        if(!Settings.isBlockPushingRequiresGlove()) {
-            startingNodes.add("Setting: Normal Pushing");
-        }
         if(Settings.isFeatherlessMode()) {
             startingNodes.add("Setting: Featherless");
         }

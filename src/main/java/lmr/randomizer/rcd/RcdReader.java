@@ -2753,7 +2753,7 @@ public final class RcdReader {
             }
             else if(zoneIndex == 21) {
                 // Retro Surface start.
-                GameObject grailTablet = AddObject.addSpecialGrailTablet(screen);
+                GameObject grailTablet = AddObject.addRetroSurfaceGrailTablet(screen);
                 AddObject.addHotspring(grailTablet);
                 GameDataTracker.setCustomShop(AddObject.addRetroSurfaceShop(screen));
             }

@@ -328,6 +328,24 @@ public class FileUtils {
                                 customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomTransitionPlacements().add(new CustomTransitionPlacement(target, assignment));
                             }
+                            else if(line.contains("NPC")) {
+                                customPlacementData.setCustomized(true);
+                                target = target.replaceAll("NPC:? ", "");
+                                assignment = assignment.replaceAll("NPC:? ", "");
+                                if("Fairy Queen".equals(target)) {
+                                    target = "The Fairy Queen";
+                                }
+                                if("Fairy Queen".equals(assignment)) {
+                                    assignment = "The Fairy Queen";
+                                }
+                                if("Philosophers Fobos".equals(target)) {
+                                    target = "Philosopher Fobos";
+                                }
+                                if("Philosophers Fobos".equals(assignment)) {
+                                    assignment = "Philosopher Fobos";
+                                }
+                                customPlacementData.getCustomNPCPlacements().add(new CustomNPCPlacement(target, assignment));
+                            }
                             else {
                                 customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomItemPlacements().add(
@@ -553,9 +571,6 @@ public class FileUtils {
             else if(line.startsWith("randomizeNpcs")) {
                 Settings.setRandomizeNpcs(Boolean.valueOf(line.split("=")[1]), false);
             }
-            else if(line.startsWith("blockPushingRequiresGlove")) {
-                Settings.setBlockPushingRequiresGlove(Boolean.valueOf(line.split("=")[1]), false);
-            }
             else if(line.startsWith("screenshakeDisabled")) {
                 Settings.setScreenshakeDisabled(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -715,9 +730,6 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("includeHellTempleNPCs=%s", Settings.isIncludeHellTempleNPCs()));
-        writer.newLine();
-
-        writer.write(String.format("blockPushingRequiresGlove=%s", Settings.isBlockPushingRequiresGlove()));
         writer.newLine();
 
         writer.write(String.format("screenshakeDisabled=%s", Settings.isScreenshakeDisabled()));

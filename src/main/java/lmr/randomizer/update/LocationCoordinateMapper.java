@@ -1,5 +1,6 @@
 package lmr.randomizer.update;
 
+import lmr.randomizer.FlagConstants;
 import lmr.randomizer.Settings;
 
 public final class LocationCoordinateMapper {
@@ -99,9 +100,9 @@ public final class LocationCoordinateMapper {
         }
         if(zone == 23) {
 //            return 18;
-            return 22;
+//            return 22;
 //            return 14;
-//            return 0;
+            return 0; // Entrance door
         }
         if(zone == 24) {
             return 2;
@@ -350,7 +351,7 @@ public final class LocationCoordinateMapper {
                 return 0xaaa;
             }
             if(zone == 1) {
-                return 0xad3;
+                return FlagConstants.TABLET_SURFACE_GRAIL;
             }
             if(zone == 2) {
                 return 0xaab;
@@ -406,7 +407,7 @@ public final class LocationCoordinateMapper {
             return 0x064;
         }
         if(zone == 1) {
-            return 0xad3; // Technically not original but one doesn't exist.
+            return FlagConstants.TABLET_SURFACE_GRAIL; // Technically not used for the Surface grail, but it did apply for tablet glow.
         }
         if(zone == 2) {
             return 0x065;

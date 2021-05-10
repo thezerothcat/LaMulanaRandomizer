@@ -63,7 +63,6 @@ public final class Settings {
     private boolean foolsGameplay;
     private boolean randomizeSeals;
     private boolean randomizeNpcs;
-    private boolean blockPushingRequiresGlove;
     private boolean screenshakeDisabled;
 
     private boolean alternateMotherAnkh;
@@ -134,7 +133,6 @@ public final class Settings {
         foolsGameplay = false;
         randomizeSeals = false;
         randomizeNpcs = false;
-        blockPushingRequiresGlove = false;
         removeSpaulder = false;
         replaceMapsWithWeights = false;
         automaticHardmode = false;
@@ -636,17 +634,6 @@ public final class Settings {
         singleton.randomizeNpcs = randomizeNpcs;
     }
 
-    public static boolean isBlockPushingRequiresGlove() {
-        return singleton.blockPushingRequiresGlove;
-    }
-
-    public static void setBlockPushingRequiresGlove(boolean blockPushingRequiresGlove, boolean update) {
-        if(update && blockPushingRequiresGlove != singleton.blockPushingRequiresGlove) {
-            singleton.changed = true;
-        }
-        singleton.blockPushingRequiresGlove = blockPushingRequiresGlove;
-    }
-
     public static boolean isScreenshakeDisabled() {
         return singleton.screenshakeDisabled;
     }
@@ -910,6 +897,10 @@ public final class Settings {
         return false;
     }
 
+    public static boolean isFools2022Mode() {
+        return true;
+    }
+
     public static boolean isFeatherlessMode() {
         return isFools2020Mode();
     }
@@ -1131,7 +1122,7 @@ public final class Settings {
         booleanSettings2 |= processBooleanFlag.apply(singleton.bossCheckpoints, 7);
         booleanSettings2 |= processBooleanFlag.apply(singleton.screenshakeDisabled, 6);
         booleanSettings2 |= processBooleanFlag.apply(singleton.includeHellTempleNPCs, 5);
-        booleanSettings2 |= processBooleanFlag.apply(singleton.blockPushingRequiresGlove, 4);
+        booleanSettings2 |= processBooleanFlag.apply(false, 4); // todo: put something else here
         booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeGraphics, 3);
         booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeEnemies, 2);
         booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeBosses, 1);
@@ -1222,7 +1213,7 @@ public final class Settings {
         singleton.bossCheckpoints = getBoolFlagFromInt.apply(booleanSettingsFlag2, 7);
         singleton.screenshakeDisabled = getBoolFlagFromInt.apply(booleanSettingsFlag2, 6);
         singleton.includeHellTempleNPCs = getBoolFlagFromInt.apply(booleanSettingsFlag2, 5);
-        singleton.blockPushingRequiresGlove = getBoolFlagFromInt.apply(booleanSettingsFlag2, 4);
+        // todo: put something else here - getBoolFlagFromInt.apply(booleanSettingsFlag2, 4);
         singleton.randomizeGraphics = getBoolFlagFromInt.apply(booleanSettingsFlag2, 3);
         singleton.randomizeEnemies = getBoolFlagFromInt.apply(booleanSettingsFlag2, 2);
         singleton.randomizeBosses = getBoolFlagFromInt.apply(booleanSettingsFlag2, 1);
