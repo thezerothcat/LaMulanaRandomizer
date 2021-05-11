@@ -147,7 +147,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(0), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 2);
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(FlagConstants.XELPUD_TALISMAN_CONVOS, ByteOp.FLAG_GTEQ, 3)));
+        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_TALISMAN_FOUND, ByteOp.FLAG_GTEQ, 3)));
         Assert.assertTrue(containsTest(gameObject, new TestByteOperation(536, ByteOp.FLAG_GTEQ, 1)));
         Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(537, ByteOp.ASSIGN_FLAG, 2)));
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 2);

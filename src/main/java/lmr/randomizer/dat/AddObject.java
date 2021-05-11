@@ -113,9 +113,9 @@ public final class AddObject {
      */
     public static void addDiaryChestConditionTimer(Screen screen) {
         FlagTimer obj = new FlagTimer(screen);
-        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.XELPUD_TALISMAN_CONVOS, ByteOp.FLAG_GTEQ, 3));
-        obj.getTestByteOperations().add(new TestByteOperation(536, ByteOp.FLAG_GTEQ, 1));
-        obj.getWriteByteOperations().add(new WriteByteOperation(537, ByteOp.ASSIGN_FLAG, 2));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_TALISMAN_FOUND, ByteOp.FLAG_GTEQ, 3));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.SHRINE_DRAGON_BONE, ByteOp.FLAG_GTEQ, 1));
+        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SHRINE_DIARY_CHEST, ByteOp.ASSIGN_FLAG, 2));
         screen.getObjects().add(0, obj);
     }
 
@@ -126,12 +126,12 @@ public final class AddObject {
     public static void addPalenqueMSX2Timer(Screen screen) {
         FlagTimer obj = new FlagTimer(screen);
         obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 4));
-        obj.getTestByteOperations().add(new TestByteOperation(0x21d, ByteOp.FLAG_EQUALS, 0));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_MSX2, ByteOp.FLAG_EQUALS, 0));
         obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0));
 
-        obj.getWriteByteOperations().add(new WriteByteOperation(0x21d, ByteOp.ASSIGN_FLAG, 1));
-        obj.getWriteByteOperations().add(new WriteByteOperation(0x317, ByteOp.ASSIGN_FLAG, 1));
-        obj.getWriteByteOperations().add(new WriteByteOperation(0x328, ByteOp.ADD_FLAG, 1));
+        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_MSX2, ByteOp.ASSIGN_FLAG, 1));
+        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAIL_43, ByteOp.ASSIGN_FLAG, 1));
+        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAIL_COUNT, ByteOp.ADD_FLAG, 1));
 
         screen.getObjects().add(0, obj);
     }
@@ -159,13 +159,13 @@ public final class AddObject {
     public static void addTwinLabsPoisonTimerRemoval(ObjectContainer screen, boolean resetPuzzle) {
         FlagTimer obj = new FlagTimer(screen);
 
-        obj.getTestByteOperations().add(new TestByteOperation(0x1dc, ByteOp.FLAG_LTEQ, 1));
-        obj.getTestByteOperations().add(new TestByteOperation(0x1d7, ByteOp.FLAG_NOT_EQUAL, 0));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.TWINS_RELEASED, ByteOp.FLAG_LTEQ, 1));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.TWINS_POISON, ByteOp.FLAG_NOT_EQUAL, 0));
 
-        obj.getWriteByteOperations().add(new WriteByteOperation(0x1d7, ByteOp.ASSIGN_FLAG, 0));
+        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.TWINS_POISON, ByteOp.ASSIGN_FLAG, 0));
 
         if(resetPuzzle) {
-            obj.getWriteByteOperations().add(new WriteByteOperation(0x1dc, ByteOp.ASSIGN_FLAG, 0));
+            obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.TWINS_RELEASED, ByteOp.ASSIGN_FLAG, 0));
         }
 
         screen.getObjects().add(0, obj);
@@ -178,9 +178,9 @@ public final class AddObject {
     public static void addIsisRoomCeilingTimer(ObjectContainer screen) {
         FlagTimer obj = new FlagTimer(screen);
 
-        obj.getTestByteOperations().add(new TestByteOperation(0x17a, ByteOp.FLAG_EQUALS, 1));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.BUER_STATE, ByteOp.FLAG_EQUALS, 1));
 
-        obj.getWriteByteOperations().add(new WriteByteOperation(0x17a, ByteOp.ASSIGN_FLAG, 2));
+        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.BUER_STATE, ByteOp.ASSIGN_FLAG, 2));
 
         screen.getObjects().add(0, obj);
     }
@@ -192,11 +192,11 @@ public final class AddObject {
     public static void addGoddessShieldTimer(ObjectContainer screen) {
         FlagTimer obj = new FlagTimer(screen);
 
-        obj.getTestByteOperations().add(new TestByteOperation(0x284, ByteOp.FLAG_GTEQ, 2));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.GODDESS_STATUE_SHIELD, ByteOp.FLAG_GTEQ, 2));
         obj.getTestByteOperations().add(new TestByteOperation(0x34e, ByteOp.FLAG_EQUALS, 0));
 
         obj.getWriteByteOperations().add(new WriteByteOperation(0x34e, ByteOp.ASSIGN_FLAG, 12));
-        obj.getWriteByteOperations().add(new WriteByteOperation(0x284, ByteOp.ASSIGN_FLAG, 3));
+        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.GODDESS_STATUE_SHIELD, ByteOp.ASSIGN_FLAG, 3));
 
         screen.getObjects().add(0, obj);
     }
@@ -207,8 +207,8 @@ public final class AddObject {
      */
     public static void addGoddessStatueLemezaDetector(GameObject transitionGate) {
         addLemezaDetector(transitionGate.getObjectContainer(), transitionGate.getX() - 40, transitionGate.getY() - 20, 2, 3,
-                Arrays.asList(new TestByteOperation(0x278, ByteOp.FLAG_EQUALS, 0)),
-                Arrays.asList(new WriteByteOperation(0x278, ByteOp.ASSIGN_FLAG, 1)));
+                Arrays.asList(new TestByteOperation(FlagConstants.GODDESS_STATUE_RUIN, ByteOp.FLAG_EQUALS, 0)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.GODDESS_STATUE_RUIN, ByteOp.ASSIGN_FLAG, 1)));
     }
 
     /**
@@ -217,13 +217,13 @@ public final class AddObject {
      */
     public static void addEndlessCorridorLeftExitLemezaDetector(GameObject transitionGate) {
         addLemezaDetector(transitionGate.getObjectContainer(), transitionGate.getX() - 40, transitionGate.getY() - 20, 2, 3,
-                Arrays.asList(new TestByteOperation(0x1f6, ByteOp.FLAG_EQUALS, 1)),
-                Arrays.asList(new WriteByteOperation(0x1f6, ByteOp.ASSIGN_FLAG, 2),
+                Arrays.asList(new TestByteOperation(FlagConstants.ENDLESS_PUZZLE_MAP_CHEST, ByteOp.FLAG_EQUALS, 1)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.ENDLESS_PUZZLE_MAP_CHEST, ByteOp.ASSIGN_FLAG, 2),
                         new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1)));
 
         addSuccessSound(transitionGate.getObjectContainer(), Arrays.asList(
                 new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
-                new TestByteOperation(0x1f6, ByteOp.FLAG_EQUALS, 2),
+                new TestByteOperation(FlagConstants.ENDLESS_PUZZLE_MAP_CHEST, ByteOp.FLAG_EQUALS, 2),
                 new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
     }
 
@@ -234,9 +234,9 @@ public final class AddObject {
     public static void addMoonlightPassageTimer(Screen screen) {
         FlagTimer obj = new FlagTimer(screen);
 
-        obj.getTestByteOperations().add(new TestByteOperation(606, ByteOp.FLAG_EQUALS, 1));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.MOONLIGHT_TO_TWIN_BREAKABLE_FLOOR, ByteOp.FLAG_EQUALS, 1));
 
-        obj.getWriteByteOperations().add(new WriteByteOperation(606, ByteOp.ASSIGN_FLAG, 0));
+        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MOONLIGHT_TO_TWIN_BREAKABLE_FLOOR, ByteOp.ASSIGN_FLAG, 0));
 
         screen.getObjects().add(0, obj);
     }
@@ -248,9 +248,9 @@ public final class AddObject {
     public static void addFlailWhipPuzzleTimer(Screen screen) {
         FlagTimer obj = new FlagTimer(screen);
 
-        obj.getTestByteOperations().add(new TestByteOperation(635, ByteOp.FLAG_EQUALS, 1));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.GODDESS_PUZZLE_FLAIL_WHIP, ByteOp.FLAG_EQUALS, 1));
 
-        obj.getWriteByteOperations().add(new WriteByteOperation(635, ByteOp.ASSIGN_FLAG, 0));
+        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.GODDESS_PUZZLE_FLAIL_WHIP, ByteOp.ASSIGN_FLAG, 0));
 
         screen.getObjects().add(0, obj);
     }
@@ -266,9 +266,9 @@ public final class AddObject {
         FlagTimer obj = new FlagTimer(screen);
         obj.setDelayFrames(30);
 
-        obj.getTestByteOperations().add(new TestByteOperation(706, ByteOp.FLAG_EQUALS, 1));
-        obj.getTestByteOperations().add(new TestByteOperation(722, ByteOp.FLAG_EQUALS, 0));
-        obj.getTestByteOperations().add(new TestByteOperation(748, ByteOp.FLAG_GTEQ, 11));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.DIMENSIONAL_CHILDREN_PARITY, ByteOp.FLAG_EQUALS, 1));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.DIMENSIONAL_ANGEL_SHIELD_DAIS_LEFT, ByteOp.FLAG_EQUALS, 0));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.DIMENSIONAL_CHILDREN_DEAD, ByteOp.FLAG_GTEQ, 11));
 
         obj.getWriteByteOperations().add(new WriteByteOperation(0, ByteOp.ASSIGN_FLAG, 1));
 
@@ -278,9 +278,9 @@ public final class AddObject {
         obj = new FlagTimer(screen);
         obj.setDelayFrames(30);
 
-        obj.getTestByteOperations().add(new TestByteOperation(706, ByteOp.FLAG_EQUALS, 0));
-        obj.getTestByteOperations().add(new TestByteOperation(723, ByteOp.FLAG_EQUALS, 0));
-        obj.getTestByteOperations().add(new TestByteOperation(748, ByteOp.FLAG_GTEQ, 11));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.DIMENSIONAL_CHILDREN_PARITY, ByteOp.FLAG_EQUALS, 0));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.DIMENSIONAL_ANGEL_SHIELD_DAIS_RIGHT, ByteOp.FLAG_EQUALS, 0));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.DIMENSIONAL_CHILDREN_DEAD, ByteOp.FLAG_GTEQ, 11));
 
         obj.getWriteByteOperations().add(new WriteByteOperation(0, ByteOp.ASSIGN_FLAG, 1));
 
@@ -319,7 +319,7 @@ public final class AddObject {
             killTimer.getTestByteOperations().add(new TestByteOperation(0xad0, ByteOp.FLAG_EQUALS, 1));
         }
 
-        killTimer.getWriteByteOperations().add(new WriteByteOperation(0x3e9, ByteOp.ASSIGN_FLAG, 1));
+        killTimer.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.KILL_FLAG, ByteOp.ASSIGN_FLAG, 1));
 
         screen.getObjects().add(0, killTimer);
     }
@@ -332,9 +332,9 @@ public final class AddObject {
         FlagTimer timer = new FlagTimer(screen);
 
         timer.getTestByteOperations().add(new TestByteOperation(0xad0, ByteOp.FLAG_EQUALS, 1));
-        timer.getTestByteOperations().add(new TestByteOperation(0x07c, ByteOp.FLAG_EQUALS, 0));
+        timer.getTestByteOperations().add(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.FLAG_EQUALS, 0));
 
-        timer.getWriteByteOperations().add(new WriteByteOperation(0x07c, ByteOp.ASSIGN_FLAG, 1));
+        timer.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.ASSIGN_FLAG, 1));
 
         screen.getObjects().add(0, timer);
     }
@@ -345,11 +345,11 @@ public final class AddObject {
      */
     public static void addLowerUntrueShrineBackupDoor(Screen screen) {
         addWarpDoor(screen, 260, 800,9, 8, 1, 300, 320,
-                Arrays.asList(new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9)));
+                Arrays.asList(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9)));
 
         GraphicsTextureDraw backupShrineDoorGraphic = new GraphicsTextureDraw(screen, 240, 760);
 
-        backupShrineDoorGraphic.getTestByteOperations().add(new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9));
+        backupShrineDoorGraphic.getTestByteOperations().add(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9));
 
         backupShrineDoorGraphic.setLayer(-1);
         backupShrineDoorGraphic.setImageFile("01effect.png");
@@ -371,11 +371,11 @@ public final class AddObject {
      */
     public static void addUpperUntrueShrineBackupDoor(Screen screen) {
         addWarpDoor(screen, 340, 80,9, 0, 0, 340, 92,
-                Arrays.asList(new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9)));
+                Arrays.asList(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9)));
 
         GraphicsTextureDraw backupShrineDoorGraphic = new GraphicsTextureDraw(screen, 320, 40);
 
-        backupShrineDoorGraphic.getTestByteOperations().add(new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9));
+        backupShrineDoorGraphic.getTestByteOperations().add(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9));
 
         backupShrineDoorGraphic.setLayer(-1);
         backupShrineDoorGraphic.setImageFile("01effect.png");
@@ -397,11 +397,11 @@ public final class AddObject {
      */
     public static void addSealUntrueShrineBackupDoor(Screen screen) {
         addWarpDoor(screen, 500, 400,9, 9, 0, 300, 332,
-                Arrays.asList(new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9)));
+                Arrays.asList(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9)));
 
         GraphicsTextureDraw backupShrineDoorGraphic = new GraphicsTextureDraw(screen, 480, 360);
 
-        backupShrineDoorGraphic.getTestByteOperations().add(new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9));
+        backupShrineDoorGraphic.getTestByteOperations().add(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9));
 
         backupShrineDoorGraphic.setLayer(-1);
         backupShrineDoorGraphic.setImageFile("01effect.png");
@@ -545,10 +545,10 @@ public final class AddObject {
     public static void addAutomaticTranslationsTimer(Screen screen) {
         FlagTimer automaticTranslationTimer = new FlagTimer(screen);
 
-        automaticTranslationTimer.getTestByteOperations().add(new TestByteOperation(746, ByteOp.FLAG_EQUALS, 0));
+        automaticTranslationTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.ANCIENT_LAMULANESE_LEARNED, ByteOp.FLAG_EQUALS, 0));
 
-        automaticTranslationTimer.getWriteByteOperations().add(new WriteByteOperation(741, ByteOp.ASSIGN_FLAG, 3));
-        automaticTranslationTimer.getWriteByteOperations().add(new WriteByteOperation(746, ByteOp.ASSIGN_FLAG, 1));
+        automaticTranslationTimer.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.TRANSLATION_TABLETS_READ, ByteOp.ASSIGN_FLAG, 3));
+        automaticTranslationTimer.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.ANCIENT_LAMULANESE_LEARNED, ByteOp.ASSIGN_FLAG, 1));
 
         screen.getObjects().add(0, automaticTranslationTimer);
     }
@@ -556,9 +556,9 @@ public final class AddObject {
     public static void addAutomaticMantrasTimer(ObjectContainer screen) {
         FlagTimer mantraTimer = new FlagTimer(screen);
 
-        mantraTimer.getTestByteOperations().add(new TestByteOperation(292, ByteOp.FLAG_NOT_EQUAL, 4));
+        mantraTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRA_FINAL, ByteOp.FLAG_NOT_EQUAL, 4));
 
-        WriteByteOperation writeByteOperation = new WriteByteOperation(292, ByteOp.ASSIGN_FLAG, 4);
+        WriteByteOperation writeByteOperation = new WriteByteOperation(FlagConstants.MANTRA_FINAL, ByteOp.ASSIGN_FLAG, 4);
         mantraTimer.getWriteByteOperations().add(writeByteOperation);
 
         screen.getObjects().add(0, mantraTimer);
@@ -784,9 +784,9 @@ public final class AddObject {
         obj.setWidth(40);
         obj.setHeight(40);
 
-        obj.getTestByteOperations().add(new TestByteOperation(0x1c9, ByteOp.FLAG_EQUALS, 0));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.KEY_FAIRY_DOOR_UNLOCKED, ByteOp.FLAG_EQUALS, 0));
 
-        obj.getWriteByteOperations().add(new WriteByteOperation(0x1c9, ByteOp.ASSIGN_FLAG, 1));
+        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.KEY_FAIRY_DOOR_UNLOCKED, ByteOp.ASSIGN_FLAG, 1));
         obj.getWriteByteOperations().add(new WriteByteOperation(0x029, ByteOp.ASSIGN_FLAG, 1));
         obj.getWriteByteOperations().add(new WriteByteOperation(0x38c, ByteOp.ASSIGN_FLAG, 1));
 
@@ -905,7 +905,7 @@ public final class AddObject {
 
         addSuccessSound(objectContainer, Arrays.asList(
                 new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
-                new TestByteOperation(0x1c9, ByteOp.FLAG_EQUALS, 1),
+                new TestByteOperation(FlagConstants.KEY_FAIRY_DOOR_UNLOCKED, ByteOp.FLAG_EQUALS, 1),
                 new TestByteOperation(0x029, ByteOp.FLAG_EQUALS, 1)));
     }
 
@@ -1032,8 +1032,8 @@ public final class AddObject {
         // Handles the case where the shop item can be obtained somewhere else and you already have it.
         // Without this timer, the shop could potentially be unable to transform back to its original state.
         return addFramesTimer(objectContainer, 0,
-                Arrays.asList(new TestByteOperation(742, ByteOp.FLAG_EQUALS, 1)),
-                Arrays.asList(new WriteByteOperation(742, ByteOp.ASSIGN_FLAG, 2)));
+                Arrays.asList(new TestByteOperation(FlagConstants.WF_MSX2, ByteOp.FLAG_EQUALS, 1)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.WF_MSX2, ByteOp.ASSIGN_FLAG, 2)));
     }
 
     public static void addLittleBrotherShopTimer(short shopItemFlag) {
@@ -1049,8 +1049,8 @@ public final class AddObject {
      */
     public static void addSurfaceCoverDetector(ObjectContainer screen) {
         addLemezaDetector(screen, 420, 1340, 3, 5,
-                Arrays.asList(new TestByteOperation(0x14c, ByteOp.FLAG_EQUALS, 0)),
-                Arrays.asList(new WriteByteOperation(0x14c, ByteOp.ASSIGN_FLAG, (byte)1)));
+                Arrays.asList(new TestByteOperation(FlagConstants.SURFACE_UNDERPATH_VISIBLE, ByteOp.FLAG_EQUALS, 0)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.SURFACE_UNDERPATH_VISIBLE, ByteOp.ASSIGN_FLAG, (byte)1)));
     }
 
     /**
@@ -1061,17 +1061,17 @@ public final class AddObject {
         // Timer to trigger Xelpud Diary conversation (gives Mulana Talisman) if you enter his screen with the Diary.
         addFramesTimer(objectContainer, 0,
                 Arrays.asList(
-                        new TestByteOperation(260, ByteOp.FLAG_EQUALS, 2),
-                        new TestByteOperation(2797, ByteOp.FLAG_EQUALS, 0)),
-                Arrays.asList(new WriteByteOperation(2797, ByteOp.ASSIGN_FLAG, 1)));
+                        new TestByteOperation(FlagConstants.WF_DIARY, ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_DIARY_FOUND, ByteOp.FLAG_EQUALS, 0)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_DIARY_FOUND, ByteOp.ASSIGN_FLAG, 1)));
 
         // Timer to trigger Xelpud Talisman conversation (allows Diary chest appearance) if you enter his screen with the Talisman.
         addFramesTimer(objectContainer, 0,
                 Arrays.asList(
-                        new TestByteOperation(164, ByteOp.FLAG_EQUALS, 2),
-                        new TestByteOperation(2796, ByteOp.FLAG_EQUALS, 0),
-                        new TestByteOperation(0x07c, ByteOp.FLAG_GTEQ, 1)),
-                Arrays.asList(new WriteByteOperation(2796, ByteOp.ASSIGN_FLAG, 1)));
+                        new TestByteOperation(FlagConstants.WF_TALISMAN, ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_TALISMAN_FOUND, ByteOp.FLAG_EQUALS, 0),
+                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.FLAG_GTEQ, 1)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_TALISMAN_FOUND, ByteOp.ASSIGN_FLAG, 1)));
     }
 
     /**
@@ -1081,8 +1081,8 @@ public final class AddObject {
      */
     public static void addGrailWarpTimers(ObjectContainer objectContainer) {
         addFramesTimer(objectContainer, 0,
-                Arrays.asList(new TestByteOperation(0x06c, ByteOp.FLAG_EQUALS, 0)),
-                Arrays.asList(new WriteByteOperation(0x06c, ByteOp.ASSIGN_FLAG, 1)));
+                Arrays.asList(new TestByteOperation(FlagConstants.TABLET_GRAIL_SHRINE_FRONT, ByteOp.FLAG_EQUALS, 0)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.TABLET_GRAIL_SHRINE_FRONT, ByteOp.ASSIGN_FLAG, 1)));
     }
 
     /**
@@ -1272,8 +1272,8 @@ public final class AddObject {
         weightWaster.setRiseSpeed(60);
 
         weightWaster.addTests(
-                new TestByteOperation(0x1f0, ByteOp.FLAG_LT, 2),
-                new TestByteOperation(0x1ea, ByteOp.FLAG_GT, 0));
+                new TestByteOperation(FlagConstants.BIG_BROTHER_UNLOCKED, ByteOp.FLAG_LT, 2),
+                new TestByteOperation(FlagConstants.LITTLE_BROTHER_PURCHASES, ByteOp.FLAG_GT, 0));
 
         screen.getObjects().add(weightWaster);
     }
@@ -1286,9 +1286,9 @@ public final class AddObject {
     public static void addFloodedTowerShortcutTimer(ObjectContainer screen) {
         addFramesTimer(screen, 0,
                 Arrays.asList(
-                        new TestByteOperation(404, ByteOp.FLAG_EQUALS, 1), // Check that the tower has been flooded.
-                        new TestByteOperation(182, ByteOp.FLAG_EQUALS, 2)), // Check that feather has been found, otherwise it's not possible to get down before flooding the tower anyway.
-                Arrays.asList(new WriteByteOperation(877, ByteOp.ASSIGN_FLAG, 1)));
+                        new TestByteOperation(FlagConstants.SPRING_LEFT_HATCH, ByteOp.FLAG_EQUALS, 1), // Check that the tower has been flooded.
+                        new TestByteOperation(FlagConstants.WF_FEATHER, ByteOp.FLAG_EQUALS, 2)), // Check that feather has been found, otherwise it's not possible to get down before flooding the tower anyway.
+                Arrays.asList(new WriteByteOperation(FlagConstants.GODDESS_PIPES_SHORTCUT, ByteOp.ASSIGN_FLAG, 1)));
     }
 
     /**
@@ -1298,11 +1298,11 @@ public final class AddObject {
     public static void addMedicineStatueTimer(ObjectContainer screen) {
         addFramesTimer(screen, 0,
                 Arrays.asList(
-                        new TestByteOperation(2772, ByteOp.FLAG_EQUALS, 0),
-                        new TestByteOperation(0x34f, ByteOp.FLAG_EQUALS, 0)),
+                        new TestByteOperation(FlagConstants.WRONG_COLOR_MEDICINE, ByteOp.FLAG_EQUALS, 0),
+                        new TestByteOperation(FlagConstants.MEDICINE_PUZZLE_SOLVED, ByteOp.FLAG_EQUALS, 0)),
                 Arrays.asList(
-                        new WriteByteOperation(0x34f, ByteOp.ASSIGN_FLAG, 1),
-                        new WriteByteOperation(2772, ByteOp.ASSIGN_FLAG, 1)));
+                        new WriteByteOperation(FlagConstants.MEDICINE_PUZZLE_SOLVED, ByteOp.ASSIGN_FLAG, 1),
+                        new WriteByteOperation(FlagConstants.WRONG_COLOR_MEDICINE, ByteOp.ASSIGN_FLAG, 1)));
     }
 
     /**
@@ -1527,15 +1527,15 @@ public final class AddObject {
 
         escapeTimer.addTests(
                 new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1),
-                new TestByteOperation(0x403, ByteOp.FLAG_EQUALS, 0));
+                new TestByteOperation(FlagConstants.ESCAPE_TRIGGERED, ByteOp.FLAG_EQUALS, 0));
 
         screen.getObjects().add(0, escapeTimer);
 
         addFramesTimer(screen, 2,
                 Arrays.asList(
                         new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1),
-                        new TestByteOperation(0x403, ByteOp.FLAG_EQUALS, 0)),
-                Arrays.asList(new WriteByteOperation(0x403, ByteOp.ASSIGN_FLAG, 1)));
+                        new TestByteOperation(FlagConstants.ESCAPE_TRIGGERED, ByteOp.FLAG_EQUALS, 0)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.ESCAPE_TRIGGERED, ByteOp.ASSIGN_FLAG, 1)));
 
         if(!Settings.isScreenshakeDisabled()) {
             // Escape screen shake
@@ -1545,7 +1545,7 @@ public final class AddObject {
 
             escapeScreenShake.addTests(
                     new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1),
-                    new TestByteOperation(0x403, ByteOp.FLAG_EQUALS, 0));
+                    new TestByteOperation(FlagConstants.ESCAPE_TRIGGERED, ByteOp.FLAG_EQUALS, 0));
 
             screen.getObjects().add(0, escapeScreenShake);
         }
@@ -1577,7 +1577,7 @@ public final class AddObject {
 
         escapeTimer.addTests(
                 new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1),
-                new TestByteOperation(0x403, ByteOp.FLAG_EQUALS, 0));
+                new TestByteOperation(FlagConstants.ESCAPE_TRIGGERED, ByteOp.FLAG_EQUALS, 0));
 
         screen.getObjects().add(0, escapeTimer);
 
@@ -1589,7 +1589,7 @@ public final class AddObject {
 
             escapeScreenShake.addTests(
                     new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1),
-                    new TestByteOperation(0x403, ByteOp.FLAG_EQUALS, 0));
+                    new TestByteOperation(FlagConstants.ESCAPE_TRIGGERED, ByteOp.FLAG_EQUALS, 0));
 
             screen.getObjects().add(0, escapeScreenShake);
         }
@@ -1610,8 +1610,8 @@ public final class AddObject {
         addFramesTimer(screen, 2,
                 Arrays.asList(
                         new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1),
-                        new TestByteOperation(0x403, ByteOp.FLAG_EQUALS, 0)),
-                Arrays.asList(new WriteByteOperation(0x403, ByteOp.ASSIGN_FLAG, 1)));
+                        new TestByteOperation(FlagConstants.ESCAPE_TRIGGERED, ByteOp.FLAG_EQUALS, 0)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.ESCAPE_TRIGGERED, ByteOp.ASSIGN_FLAG, 1)));
     }
 
     public static void addNpcConversationTimer(Screen screen, int flag) {
@@ -1862,7 +1862,7 @@ public final class AddObject {
         platform3.getArgs().add((short)150); // 17- (100-240) Platform Speed
         screen.getObjects().add(platform3);
 
-        TestByteOperation testByteOperation = new TestByteOperation(0x7f1, ByteOp.FLAG_EQUALS, 2);
+        TestByteOperation testByteOperation = new TestByteOperation(FlagConstants.THE_BOSS_STATE, ByteOp.FLAG_EQUALS, 2);
         platform1.getTestByteOperations().add(testByteOperation);
 //        platform2.getTestByteOperations().add(testByteOperation);
         platform3.getTestByteOperations().add(testByteOperation);
@@ -2398,17 +2398,17 @@ public final class AddObject {
         basicGate.getObjectContainer().getObjects().add(trueShrineGate);
     }
 
-    public static void addShrineMapSoundEffect(ObjectContainer objectContainer) { // todo: what's up with 2798?
+    public static void addShrineMapSoundEffect(ObjectContainer objectContainer) {
         addSuccessSound(objectContainer, Arrays.asList(
-                new TestByteOperation(218, ByteOp.FLAG_EQUALS, 2),
+                new TestByteOperation(FlagConstants.WF_MAP_SHRINE, ByteOp.FLAG_EQUALS, 2),
                 new TestByteOperation(42, ByteOp.FLAG_EQUALS, 1)));
 
         addFramesTimer(objectContainer, 0,
                 Arrays.asList(
-                        new TestByteOperation(2798, ByteOp.FLAG_EQUALS, 0),
-                        new TestByteOperation(218, ByteOp.FLAG_EQUALS, 2)),
+                        new TestByteOperation(FlagConstants.SOUND_EFFECT_PLAYED_SHRINE_MAP, ByteOp.FLAG_EQUALS, 0),
+                        new TestByteOperation(FlagConstants.WF_MAP_SHRINE, ByteOp.FLAG_EQUALS, 2)),
                 Arrays.asList(
-                        new WriteByteOperation(2798, ByteOp.ASSIGN_FLAG, 1),
+                        new WriteByteOperation(FlagConstants.SOUND_EFFECT_PLAYED_SHRINE_MAP, ByteOp.ASSIGN_FLAG, 1),
                         new WriteByteOperation(42, ByteOp.ASSIGN_FLAG, 1)));
 
     }
@@ -2418,8 +2418,8 @@ public final class AddObject {
                 Arrays.asList(
                         new TestByteOperation(FlagConstants.MOTHER_STATE, ByteOp.FLAG_EQUALS, 2),
                         new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0),
-                        new TestByteOperation(0xad2, ByteOp.FLAG_EQUALS, 0)),
-                Arrays.asList(new WriteByteOperation(0xad2, ByteOp.ASSIGN_FLAG, 1)));
+                        new TestByteOperation(FlagConstants.MOTHER_ANKH_JEWEL_RECOVERY, ByteOp.FLAG_EQUALS, 0)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.MOTHER_ANKH_JEWEL_RECOVERY, ByteOp.ASSIGN_FLAG, 1)));
     }
 
     public static void addMotherAnkhJewelItemGive(Screen screen) {
@@ -2430,10 +2430,10 @@ public final class AddObject {
         itemGive.setHeight(16);
         itemGive.setSoundEffect(39);
 
-        itemGive.addTests(new TestByteOperation(0xad2, ByteOp.FLAG_EQUALS, 1));
+        itemGive.addTests(new TestByteOperation(FlagConstants.MOTHER_ANKH_JEWEL_RECOVERY, ByteOp.FLAG_EQUALS, 1));
 
         itemGive.addUpdates(
-                new WriteByteOperation(0xad2, ByteOp.ASSIGN_FLAG, 0),
+                new WriteByteOperation(FlagConstants.MOTHER_ANKH_JEWEL_RECOVERY, ByteOp.ASSIGN_FLAG, 0),
                 new WriteByteOperation(FlagConstants.MOTHER_STATE, ByteOp.ASSIGN_FLAG, 1));
 
         screen.getObjects().add(itemGive);
@@ -2605,7 +2605,7 @@ public final class AddObject {
         obj.setImageY(0);
         obj.setStandardLadder();
         obj.setArg7(1);
-        obj.addTests(new TestByteOperation(0x2cc, ByteOp.FLAG_EQUALS, 2));
+        obj.addTests(new TestByteOperation(FlagConstants.USHUMGALLU_STATE, ByteOp.FLAG_EQUALS, 2));
         screen.getObjects().add(obj);
     }
 
@@ -3175,15 +3175,15 @@ public final class AddObject {
         bookOfTheDeadConversation.getArgs().set(4, (short)bookMasterNpcBlock.getBlockNumber());
         bookOfTheDeadConversation.getTestByteOperations().clear();
         bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_NOT_EQUAL, 1));
-        bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(0x32a, ByteOp.FLAG_EQUALS, 1));
-        bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(0x391, ByteOp.FLAG_GTEQ, 1));
+        bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_BOOK, ByteOp.FLAG_EQUALS, 1));
+        bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_AWAKE, ByteOp.FLAG_GTEQ, 1));
 
         GameObject optionConversation = new GameObject(escapeConversationNormal);
         optionConversation.getArgs().set(4, (short)optionMasterNpcBlock.getBlockNumber());
         optionConversation.getTestByteOperations().clear();
         optionConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_NOT_EQUAL, 1)); // Option to quit
-        optionConversation.getTestByteOperations().add(new TestByteOperation(0x32a, ByteOp.FLAG_NOT_EQUAL, 1));
-        optionConversation.getTestByteOperations().add(new TestByteOperation(0x391, ByteOp.FLAG_GTEQ, 1));
+        optionConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_BOOK, ByteOp.FLAG_NOT_EQUAL, 1));
+        optionConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_AWAKE, ByteOp.FLAG_GTEQ, 1));
 
         mulbrukScreen.getObjects().clear();
         mulbrukScreen.getObjects().addAll(keptObjects);
@@ -3454,8 +3454,8 @@ public final class AddObject {
         htSkipDais.setArg8(10);
         htSkipDais.setRiseSpeed(60);
 
-        htSkipDais.getTestByteOperations().add(new TestByteOperation(0x70d, ByteOp.FLAG_EQUALS, 0));
-        htSkipDais.getWriteByteOperations().add(new WriteByteOperation(0x70d, ByteOp.ASSIGN_FLAG, 1));
+        htSkipDais.getTestByteOperations().add(new TestByteOperation(FlagConstants.HT_PUZZLE_ROOM33_PILLARS, ByteOp.FLAG_EQUALS, 0));
+        htSkipDais.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.HT_PUZZLE_ROOM33_PILLARS, ByteOp.ASSIGN_FLAG, 1));
 
         screen.getObjects().add(htSkipDais);
     }
@@ -3569,7 +3569,7 @@ public final class AddObject {
                 Arrays.asList(
                         new WriteByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.ADD_FLAG, 1),
                         new WriteByteOperation(otherFlag, ByteOp.ASSIGN_FLAG, 1),
-                        new WriteByteOperation(0x07b, ByteOp.ADD_FLAG, 8)));
+                        new WriteByteOperation(FlagConstants.SCORE, ByteOp.ADD_FLAG, 8)));
 
         if(bossFlag == FlagConstants.PALENQUE_STATE) {
             bossTimer1.getWriteByteOperations().add(new WriteByteOperation(0x3b8, ByteOp.ASSIGN_FLAG, 3));
@@ -3580,8 +3580,8 @@ public final class AddObject {
                 Arrays.asList(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 8)),
                 Arrays.asList(
                         new WriteByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.ASSIGN_FLAG, 9),
-                        new WriteByteOperation(0x07b, ByteOp.ASSIGN_FLAG, 200),
-                        new WriteByteOperation(0x06c, ByteOp.ASSIGN_FLAG, 0),
+                        new WriteByteOperation(FlagConstants.SCORE, ByteOp.ASSIGN_FLAG, 200),
+                        new WriteByteOperation(FlagConstants.TABLET_GRAIL_SHRINE_FRONT, ByteOp.ASSIGN_FLAG, 0),
                         new WriteByteOperation(0x2e1, ByteOp.ASSIGN_FLAG, 1)));
     }
 
@@ -3593,10 +3593,10 @@ public final class AddObject {
         // todo: is this really meant to be seconds rather than frames?
         addSecondsTimer(screen, 4,
                 Arrays.asList(
-                        new TestByteOperation(0x173, ByteOp.FLAG_GTEQ, 1),
-                        new TestByteOperation(0x173, ByteOp.FLAG_LT, 5)),
+                        new TestByteOperation(FlagConstants.SPHINX_DESTROYED, ByteOp.FLAG_GTEQ, 1),
+                        new TestByteOperation(FlagConstants.SPHINX_DESTROYED, ByteOp.FLAG_LT, 5)),
                 Arrays.asList(
-                        new WriteByteOperation(0x173, ByteOp.ASSIGN_FLAG, 5),
+                        new WriteByteOperation(FlagConstants.SPHINX_DESTROYED, ByteOp.ASSIGN_FLAG, 5),
                         new WriteByteOperation(0x17d, ByteOp.ASSIGN_FLAG, 1)));
     }
 
@@ -3721,13 +3721,13 @@ public final class AddObject {
         obj.setY(420);
 
         if("Zebu".equals(Settings.getCurrentGiant())) {
-            obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
-            obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
+            obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 0));
+            obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.ASSIGN_FLAG, 1));
             obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
 
             addSuccessSound(screen, Arrays.asList(
-                    new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
-                    new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
+                    new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
+                    new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
                     new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
         }
         else {
@@ -3751,13 +3751,13 @@ public final class AddObject {
 //        obj.setRiseSpeed(60);
 //
 //        if("Zebu".equals(Settings.getCurrentGiant())) {
-//            obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
-//            obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
+//            obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 0));
+//            obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.ASSIGN_FLAG, 1));
 //            obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
 //
 //            addSuccessSound(screen, Arrays.asList(
 //                    new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
-//                    new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
+//                    new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
 //                    new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
 //        }
 //        else {
@@ -3861,8 +3861,8 @@ public final class AddObject {
      */
     public static void addLampStation(Screen screen, int x, int y) {
         LemezaDetector lampDetector = addLemezaDetector(screen, x, y, 2, 3,
-                Arrays.asList(new TestByteOperation(0x34d, ByteOp.FLAG_EQUALS, 0)),
-                Arrays.asList(new WriteByteOperation(0x34d, ByteOp.ASSIGN_FLAG, (byte)1),
+                Arrays.asList(new TestByteOperation(FlagConstants.LAMP_OF_TIME_STATE, ByteOp.FLAG_EQUALS, 0)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.LAMP_OF_TIME_STATE, ByteOp.ASSIGN_FLAG, (byte)1),
                         new WriteByteOperation(0x3ed, ByteOp.ASSIGN_FLAG, (byte)1)));
         lampDetector.setSecondsWait(1);
 //        lampDetector.getTestByteOperations().add(new TestByteOperation(0x09b, ByteOp.FLAG_NOT_EQUAL, 0));
@@ -3895,7 +3895,7 @@ public final class AddObject {
         lampFlame.setArg23(1);
 
 //        lampFlame.getTestByteOperations().add(new TestByteOperation(0x09b, ByteOp.FLAG_NOT_EQUAL, 0));
-        lampFlame.getTestByteOperations().add(new TestByteOperation(0x34d, ByteOp.FLAG_EQUALS, 0));
+        lampFlame.getTestByteOperations().add(new TestByteOperation(FlagConstants.LAMP_OF_TIME_STATE, ByteOp.FLAG_EQUALS, 0));
 //        lampFlame.getTestByteOperations().add(new TestByteOperation(0x3ed, ByteOp.FLAG_EQUALS, 0));
         screen.getObjects().add(lampFlame);
     }
