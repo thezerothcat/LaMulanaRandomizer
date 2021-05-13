@@ -267,7 +267,7 @@ public class AddObjectTest {
         Assert.assertEquals(gameObject.getArgs().size(), 2);
         Assert.assertTrue(containsTest(gameObject, new TestByteOperation(0x284, ByteOp.FLAG_GTEQ, 2)));
         Assert.assertTrue(containsTest(gameObject, new TestByteOperation(0x34e, ByteOp.FLAG_EQUALS, 0)));
-        Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x34e, ByteOp.ASSIGN_FLAG, 12)));
+        Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x34e, ByteOp.ASSIGN_FLAG, 1)));
         Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x284, ByteOp.ASSIGN_FLAG, 3)));
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 2);
         Assert.assertEquals(gameObject.getWriteByteOperations().size(), 2);

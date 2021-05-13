@@ -36,7 +36,7 @@ NPCL: Priest Aramo => Location: Chamber of Extinction [Main], Attack: Chest-Any
 NPCL: Operator Combaker => Location: Chamber of Extinction [Ankh Lower], Attack: Chest-Any
 # Twin Labyrinths
 NPCL: Yiegah Kungfu => Location: Twin Labyrinths [Loop]
-#NPCL: Yiear Kungfu => Location: Twin Labyrinths [Loop], NPC: Yiegah Kungfu
+NPCL: Yiear Kungfu => Location: Twin Labyrinths [Loop], NPC: Yiegah Kungfu
 NPCL: Arrogant Sturdy Snake => Location: Twin Labyrinths [Lower], Feather
 NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], State: Block Pushing, Feather, Attack: Bomb
 NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], Glitch: Raindrop

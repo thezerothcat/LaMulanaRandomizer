@@ -864,7 +864,7 @@ public class Validation {
                 || "Yiegah Kungfu".equals(npcName)
                 || "Arrogant Metagear".equals(npcName)
                 || "Arrogant Sturdy Snake".equals(npcName)
-//                || "Yiear Kungfu".equals(npcName)
+                || "Yiear Kungfu".equals(npcName)
                 || "Affected Knimare".equals(npcName)
                 || "Mover Athleland".equals(npcName)
                 || "Giant Mopiran".equals(npcName)

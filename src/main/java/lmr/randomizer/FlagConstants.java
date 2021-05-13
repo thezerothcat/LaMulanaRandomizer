@@ -294,6 +294,7 @@ public final class FlagConstants {
 
     // Mail flags
     public static final int MAIL_COUNT = 0x328;
+    public static final int MAIL_07 = 0x2f3;
     public static final int MAIL_43 = 0x317;
 
     // Screen flags

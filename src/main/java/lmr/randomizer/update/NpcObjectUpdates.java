@@ -29,6 +29,9 @@ public final class NpcObjectUpdates {
             if("NPCL: Mr. Fishman (Alt)".equals(npcDoorLocation)) {
                 doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.FISH_SHOP_UNLOCKS, ByteOp.FLAG_EQUALS, 3));
             }
+            if("NPCL: Yiear Kungfu".equals(npcDoorLocation)) {
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.BIG_BROTHER_UNLOCKED, ByteOp.FLAG_GTEQ, 1));
+            }
             if("NPCL: Mud Man Qubert".equals(npcDoorLocation)) {
                 doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.COG_MUDMEN_STATE, ByteOp.FLAG_EQUALS, 4));
             }

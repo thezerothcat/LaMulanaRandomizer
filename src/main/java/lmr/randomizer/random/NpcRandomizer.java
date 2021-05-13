@@ -31,6 +31,7 @@ public class NpcRandomizer {
             mapOfNpcDoorLocationToContents.put("NPCL: Priest Laydoc", "NPC: Mechanical Efspi");
             mapOfNpcDoorLocationToContents.put("NPCL: Mechanical Efspi", "NPC: Priest Laydoc");
             mapOfNpcDoorLocationToContents.put("NPCL: Yiegah Kungfu", "NPC: Arrogant Sturdy Snake");
+            mapOfNpcDoorLocationToContents.put("NPCL: Yiear Kungfu", "NPC: Yiear Kungfu");
 
             mapOfNpcDoorLocationToContents.put("NPCL: Priest Xanado", "NPC: Priest Xanado");
             mapOfNpcDoorLocationToContents.put("NPCL: Priest Romancis", "NPC: Priest Romancis");
@@ -85,6 +86,7 @@ public class NpcRandomizer {
             npcDoors.add("Priest Laydoc");
             npcDoors.add("Mechanical Efspi");
             npcDoors.add("Yiegah Kungfu");
+            npcDoors.add("Yiear Kungfu");
             npcDoors.add("Priest Xanado");
             npcDoors.add("Priest Romancis");
             npcDoors.add("Priest Aramo");
@@ -130,6 +132,7 @@ public class NpcRandomizer {
             npcs.add("Priest Laydoc");
             npcs.add("Mechanical Efspi");
             npcs.add("Yiegah Kungfu");
+            npcs.add("Yiear Kungfu");
             npcs.add("Priest Xanado");
             npcs.add("Priest Romancis");
             npcs.add("Priest Aramo");
@@ -192,6 +195,7 @@ public class NpcRandomizer {
         }
         else {
             mapOfNpcDoorLocationToContents.put("NPCL: Yiegah Kungfu", "NPC: Yiegah Kungfu");
+            mapOfNpcDoorLocationToContents.put("NPCL: Yiear Kungfu", "NPC: Yiear Kungfu");
             mapOfNpcDoorLocationToContents.put("NPCL: Arrogant Sturdy Snake", "NPC: Arrogant Sturdy Snake");
             mapOfNpcDoorLocationToContents.put("NPCL: Arrogant Metagear", "NPC: Arrogant Metagear");
             mapOfNpcDoorLocationToContents.put("NPCL: Priest Hidlyda", "NPC: Priest Hidlyda");
@@ -248,7 +252,6 @@ public class NpcRandomizer {
 //        mapOfNpcDoorLocationToContents.put("NPCL: Mr. Slushfund", "NPC: Mr. Slushfund");
 //
 //        mapOfNpcDoorLocationToContents.put("NPCL: Nebur", "NPC: Nebur");
-//        mapOfNpcDoorLocationToContents.put("NPCL: Yiear Kungfu", "NPC: Yiear Kungfu");
 //
 //        mapOfNpcDoorLocationToContents.put("NPCL: Xelpud", "NPC: Xelpud");
 //        mapOfNpcDoorLocationToContents.put("NPCL: Mulbruk", "NPC: Mulbruk");
