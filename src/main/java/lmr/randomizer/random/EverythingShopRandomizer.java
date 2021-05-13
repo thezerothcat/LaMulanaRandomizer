@@ -249,9 +249,15 @@ public class EverythingShopRandomizer extends ShopRandomizer {
         // Guarantee weight shop on the Surface
         List<String> guaranteedWeightShopLocations = new ArrayList<>();
         if(LocationCoordinateMapper.isSurfaceStart()) {
-            for(String location : unassignedShopItemLocations) {
-                if(location.contains("Surface") && !location.contains(MSX_SHOP_NAME)) {
-                    guaranteedWeightShopLocations.add(location);
+            if(Settings.isRandomizeNpcs()) {
+                guaranteedWeightShopLocations.add(NON_MSX_SHOP_NAME + " Item 2");
+                guaranteedWeightShopLocations.add(NON_MSX_SHOP_NAME + " Item 3");
+            }
+            else {
+                for(String location : unassignedShopItemLocations) {
+                    if(location.contains("Surface") && !location.contains(MSX_SHOP_NAME)) {
+                        guaranteedWeightShopLocations.add(location);
+                    }
                 }
             }
             if(!guaranteedWeightShopLocations.isEmpty()) {
