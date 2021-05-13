@@ -192,11 +192,11 @@ public final class AddObject {
     public static void addGoddessShieldTimer(ObjectContainer screen) {
         FlagTimer obj = new FlagTimer(screen);
 
-        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.GODDESS_STATUE_SHIELD, ByteOp.FLAG_GTEQ, 2));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.GODDESS_STATUE_SHIELD_ANIMATION, ByteOp.FLAG_GTEQ, 2));
         obj.getTestByteOperations().add(new TestByteOperation(0x34e, ByteOp.FLAG_EQUALS, 0));
 
         obj.getWriteByteOperations().add(new WriteByteOperation(0x34e, ByteOp.ASSIGN_FLAG, 12));
-        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.GODDESS_STATUE_SHIELD, ByteOp.ASSIGN_FLAG, 3));
+        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.GODDESS_STATUE_SHIELD_ANIMATION, ByteOp.ASSIGN_FLAG, 3));
 
         screen.getObjects().add(0, obj);
     }
@@ -1299,9 +1299,9 @@ public final class AddObject {
         addFramesTimer(screen, 0,
                 Arrays.asList(
                         new TestByteOperation(FlagConstants.WRONG_COLOR_MEDICINE, ByteOp.FLAG_EQUALS, 0),
-                        new TestByteOperation(FlagConstants.MEDICINE_PUZZLE_SOLVED, ByteOp.FLAG_EQUALS, 0)),
+                        new TestByteOperation(FlagConstants.MEDICINE_SOLVED, ByteOp.FLAG_EQUALS, 0)),
                 Arrays.asList(
-                        new WriteByteOperation(FlagConstants.MEDICINE_PUZZLE_SOLVED, ByteOp.ASSIGN_FLAG, 1),
+                        new WriteByteOperation(FlagConstants.MEDICINE_SOLVED, ByteOp.ASSIGN_FLAG, 1),
                         new WriteByteOperation(FlagConstants.WRONG_COLOR_MEDICINE, ByteOp.ASSIGN_FLAG, 1)));
     }
 
@@ -3454,8 +3454,8 @@ public final class AddObject {
         htSkipDais.setArg8(10);
         htSkipDais.setRiseSpeed(60);
 
-        htSkipDais.getTestByteOperations().add(new TestByteOperation(FlagConstants.HT_PUZZLE_ROOM33_PILLARS, ByteOp.FLAG_EQUALS, 0));
-        htSkipDais.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.HT_PUZZLE_ROOM33_PILLARS, ByteOp.ASSIGN_FLAG, 1));
+        htSkipDais.getTestByteOperations().add(new TestByteOperation(FlagConstants.HT_SOLVED_ROOM33_PILLARS, ByteOp.FLAG_EQUALS, 0));
+        htSkipDais.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.HT_SOLVED_ROOM33_PILLARS, ByteOp.ASSIGN_FLAG, 1));
 
         screen.getObjects().add(htSkipDais);
     }

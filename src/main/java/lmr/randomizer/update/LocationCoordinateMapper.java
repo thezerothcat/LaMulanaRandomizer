@@ -351,7 +351,7 @@ public final class LocationCoordinateMapper {
                 return 0xaaa;
             }
             if(zone == 1) {
-                return FlagConstants.TABLET_SURFACE_GRAIL;
+                return FlagConstants.TABLET_GRAIL_SURFACE;
             }
             if(zone == 2) {
                 return 0xaab;
@@ -407,7 +407,7 @@ public final class LocationCoordinateMapper {
             return 0x064;
         }
         if(zone == 1) {
-            return FlagConstants.TABLET_SURFACE_GRAIL; // Technically not used for the Surface grail, but it did apply for tablet glow.
+            return FlagConstants.TABLET_GRAIL_SURFACE; // Technically not used for the Surface grail, but it did apply for tablet glow.
         }
         if(zone == 2) {
             return 0x065;

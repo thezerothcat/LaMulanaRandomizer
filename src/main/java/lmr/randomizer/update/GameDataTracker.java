@@ -2040,13 +2040,13 @@ public final class GameDataTracker {
                     gameObject.getWriteByteOperations().clear();
 
                     TestByteOperation testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(FlagConstants.TABLET_SURFACE_GRAIL);
+                    testByteOperation.setIndex(FlagConstants.TABLET_GRAIL_SURFACE);
                     testByteOperation.setOp(ByteOp.FLAG_EQUALS);
                     testByteOperation.setValue((byte)1);
                     gameObject.getTestByteOperations().add(testByteOperation);
 
                     WriteByteOperation writeByteOperation = new WriteByteOperation();
-                    writeByteOperation.setIndex(FlagConstants.TABLET_SURFACE_GRAIL);
+                    writeByteOperation.setIndex(FlagConstants.TABLET_GRAIL_SURFACE);
                     writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
                     writeByteOperation.setValue((byte)1);
                     gameObject.getWriteByteOperations().add(writeByteOperation);
