@@ -85,7 +85,7 @@ public final class GameDataTracker {
                     Screen screen = (Screen) gameObject.getObjectContainer();
                     if(screen.getZoneIndex() == 11 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
                         for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-                            if(testByteOperation.getIndex() == 0x3b5) {
+                            if(testByteOperation.getIndex() == FlagConstants.GRAVEYARD_HOT_SPRING) {
                                 testByteOperation.setValue((byte)(testByteOperation.getValue() == 1 ? 0 : 1));
                             }
                         }
@@ -112,46 +112,46 @@ public final class GameDataTracker {
                 if(inventoryArg == 24) {
                     // Cog of the Soul chest
                     TestByteOperation cogChestTest = gameObject.getTestByteOperations().get(0);
-                    cogChestTest.setIndex(2799);
+                    cogChestTest.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
                     WriteByteOperation cogPuzzleFlag = gameObject.getWriteByteOperations().get(1);
-                    cogPuzzleFlag.setIndex(2799);
+                    cogPuzzleFlag.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
                 }
                 else if(inventoryArg == 72) {
                     // Diary chest
                     for(TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                        if(flagTest.getIndex() == 539) {
+                        if(flagTest.getIndex() == FlagConstants.SHRINE_SHAWN) {
                             // Require skull walls removed (normally required for Shawn to appear) instead of directly requiring Shawn's appearance
-                            flagTest.setIndex(536);
+                            flagTest.setIndex(FlagConstants.SHRINE_DRAGON_BONE);
                             flagTest.setOp(ByteOp.FLAG_EQUALS);
                             flagTest.setValue((byte)1);
                             break;
                         }
                     }
                     // Require showing Talisman to Xelpud (normally required for Shawn to appear)
-                    gameObject.getTestByteOperations().add(new TestByteOperation(2796, ByteOp.FLAG_GTEQ, 2));
+                    gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_TALISMAN_FOUND, ByteOp.FLAG_GTEQ, 2));
                 }
             }
 
             WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(0);
-            if(flagUpdate.getIndex() == 333) {
+            if(flagUpdate.getIndex() == FlagConstants.SURFACE_PUZZLE_SEAL_COIN_CHEST) {
                 // Replace world flag for Life Seal coin chest, which is a bit special
-                worldFlag = 2707;
+                worldFlag = FlagConstants.WF_COIN_SURFACE_SEAL;
             }
-            else if(Settings.isRandomizeTrapItems() && flagUpdate.getIndex() == 60) {
+            else if(Settings.isRandomizeTrapItems() && flagUpdate.getIndex() == FlagConstants.ROOM_FLAG_3C) {
                 // Replace world flag for Graveyard trap chest, and add a full set of update flags since it only has one.
                 inventoryArg = 0;
-                worldFlag = 2777;
+                worldFlag = FlagConstants.WF_TRAP_GRAVEYARD;
 
                 gameObject.getWriteByteOperations().clear();
-                gameObject.getWriteByteOperations().add(new WriteByteOperation(2777, ByteOp.ASSIGN_FLAG, 2));
-                gameObject.getWriteByteOperations().add(new WriteByteOperation(2776, ByteOp.ASSIGN_FLAG, 1));
-                gameObject.getWriteByteOperations().add(new WriteByteOperation(2777, ByteOp.ASSIGN_FLAG, 2));
-                gameObject.getWriteByteOperations().add(new WriteByteOperation(2777, ByteOp.ASSIGN_FLAG, 2));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.WF_TRAP_GRAVEYARD, ByteOp.ASSIGN_FLAG, 2));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.GRAVEYARD_PUZZLE_TRAP_CHEST, ByteOp.ASSIGN_FLAG, 1));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.WF_TRAP_GRAVEYARD, ByteOp.ASSIGN_FLAG, 2));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.WF_TRAP_GRAVEYARD, ByteOp.ASSIGN_FLAG, 2));
             }
-            else if(Settings.isRandomizeTrapItems() && flagUpdate.getIndex() == 522) {
+            else if(Settings.isRandomizeTrapItems() && flagUpdate.getIndex() == FlagConstants.ILLUSION_PUZZLE_EXPLODING_CHEST) {
                 // Replace world flag for Illusion trap chest
                 inventoryArg = 0;
-                worldFlag = 2778;
+                worldFlag = FlagConstants.WF_TRAP_ILLUSION;
             }
             else {
                 worldFlag = gameObject.getWriteByteOperations().get(0).getIndex();
@@ -198,7 +198,7 @@ public final class GameDataTracker {
                     Screen screen = (Screen) gameObject.getObjectContainer();
                     if(screen.getZoneIndex() == 11 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
                         for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-                            if(testByteOperation.getIndex() == 0x3b5) {
+                            if(testByteOperation.getIndex() == FlagConstants.GRAVEYARD_HOT_SPRING) {
                                 testByteOperation.setValue((byte)(testByteOperation.getValue() == 1 ? 0 : 1));
                             }
                         }
@@ -209,14 +209,14 @@ public final class GameDataTracker {
         else if (gameObject.getId() == 0x2e) {
             Screen screen = (Screen)gameObject.getObjectContainer();
             if(Settings.isBossSpecificAnkhJewels()) {
-                int ankhFlag = getAnkhFlag(screen.getZoneIndex());
+                int ankhJewelFlag = getAnkhJewelFlag(screen.getZoneIndex());
 
                 for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-                    if(testByteOperation.getIndex() == 0x16a && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())) {
-                        AddObject.addBossSpecificAnkhCover(gameObject, ankhFlag);
+                    if(testByteOperation.getIndex() == FlagConstants.HARDMODE && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())) {
+                        AddObject.addBossSpecificAnkhCover(gameObject, ankhJewelFlag);
                     }
                 }
-                gameObject.getTestByteOperations().add(new TestByteOperation(ankhFlag, ByteOp.FLAG_NOT_EQUAL, (byte) 0)); // Don't spawn ankh without jewel collected.
+                gameObject.getTestByteOperations().add(new TestByteOperation(ankhJewelFlag, ByteOp.FLAG_NOT_EQUAL, (byte) 0)); // Don't spawn ankh without jewel collected.
             }
 //            if(Settings.isFoolsMode()) {
 //                Screen screen = (Screen) gameObject.getObjectContainer();
@@ -242,14 +242,14 @@ public final class GameDataTracker {
                 // Amphisbaena ankh
                 if(Settings.isRandomizeBosses()) {
                     for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-                        if(testByteOperation.getIndex() == 0x133) {
-                            testByteOperation.setIndex(0x1b4);
+                        if(testByteOperation.getIndex() == FlagConstants.AMPHISBAENA_ANKH_PUZZLE) {
+                            testByteOperation.setIndex(FlagConstants.VIY_ANKH_PUZZLE);
                             testByteOperation.setValue((byte)4);
                         }
                     }
                     for(WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
-                        if(writeByteOperation.getIndex() == 0x133) {
-                            writeByteOperation.setIndex(0x1b4);
+                        if(writeByteOperation.getIndex() == FlagConstants.AMPHISBAENA_ANKH_PUZZLE) {
+                            writeByteOperation.setIndex(FlagConstants.VIY_ANKH_PUZZLE);
                             writeByteOperation.setValue(5);
                         }
                     }
@@ -268,14 +268,14 @@ public final class GameDataTracker {
             else if(screen.getZoneIndex() == 5) {
                 if(Settings.isRandomizeBosses()) {
                     for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-                        if(testByteOperation.getIndex() == 0x1b4) {
-                            testByteOperation.setIndex(0x133);
+                        if(testByteOperation.getIndex() == FlagConstants.VIY_ANKH_PUZZLE) {
+                            testByteOperation.setIndex(FlagConstants.AMPHISBAENA_ANKH_PUZZLE);
                             testByteOperation.setValue((byte)5);
                         }
                     }
                     for(WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
-                        if(writeByteOperation.getIndex() == 0x1b4) {
-                            writeByteOperation.setIndex(0x133);
+                        if(writeByteOperation.getIndex() == FlagConstants.VIY_ANKH_PUZZLE) {
+                            writeByteOperation.setIndex(FlagConstants.AMPHISBAENA_ANKH_PUZZLE);
                             writeByteOperation.setValue(6);
                         }
                     }
@@ -289,7 +289,7 @@ public final class GameDataTracker {
                     gameObject.getArgs().set(27, (short)2);
 
                     for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-                        if(testByteOperation.getIndex() == 0x16a && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())) {
+                        if(testByteOperation.getIndex() == FlagConstants.HARDMODE && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())) {
                             AddObject.addTwinLabsDoor(gameObject);
                         }
                     }
@@ -310,8 +310,8 @@ public final class GameDataTracker {
                 Screen screen = (Screen) gameObject.getObjectContainer();
                 if(screen.getZoneIndex() == 0 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
                     for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-                        if(testByteOperation.getIndex() == 0x133) {
-                            testByteOperation.setIndex(0x1b4);
+                        if(testByteOperation.getIndex() == FlagConstants.AMPHISBAENA_ANKH_PUZZLE) {
+                            testByteOperation.setIndex(FlagConstants.VIY_ANKH_PUZZLE);
                             testByteOperation.setValue((byte)4);
                         }
                     }
@@ -327,8 +327,8 @@ public final class GameDataTracker {
 //                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
 //                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
 //                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-//                                if (flagUpdate.getIndex() == 0x000) {
-//                                    flagUpdate.setIndex(0xaad);
+//                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
+//                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
 //                                }
 //                            }
 //                        }
@@ -341,8 +341,8 @@ public final class GameDataTracker {
                 Screen screen = (Screen) gameObject.getObjectContainer();
                 if(screen.getZoneIndex() == 5 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
                     for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-                        if(testByteOperation.getIndex() == 0x1b4) {
-                            testByteOperation.setIndex(0x133);
+                        if(testByteOperation.getIndex() == FlagConstants.VIY_ANKH_PUZZLE) {
+                            testByteOperation.setIndex(FlagConstants.AMPHISBAENA_ANKH_PUZZLE);
                             testByteOperation.setValue((byte)5);
                         }
                     }
@@ -429,7 +429,7 @@ public final class GameDataTracker {
                 // Remove LAMULANA mantra check on the Key Sword floating item
                 Integer flagToRemoveIndex = null;
                 for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
-                    if (gameObject.getTestByteOperations().get(i).getIndex() == 292) {
+                    if (gameObject.getTestByteOperations().get(i).getIndex() == FlagConstants.MANTRA_FINAL) {
                         flagToRemoveIndex = i;
                         break;
                     }
@@ -480,8 +480,8 @@ public final class GameDataTracker {
                 Screen screen = (Screen) gameObject.getObjectContainer();
                 if(screen.getZoneIndex() == 5 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
                     for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-                        if(testByteOperation.getIndex() == 0x1b4) {
-                            testByteOperation.setIndex(0x133);
+                        if(testByteOperation.getIndex() == FlagConstants.VIY_ANKH_PUZZLE) {
+                            testByteOperation.setIndex(FlagConstants.AMPHISBAENA_ANKH_PUZZLE);
                             testByteOperation.setValue((byte)5);
                         }
                     }
@@ -562,8 +562,8 @@ public final class GameDataTracker {
 //                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
 //                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
 //                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-//                                if (flagUpdate.getIndex() == 0x000) {
-//                                    flagUpdate.setIndex(0xaad);
+//                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
+//                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
 //                                }
 //                            }
 //                        }
@@ -662,8 +662,8 @@ public final class GameDataTracker {
 //                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
 //                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
 //                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-//                                if (flagUpdate.getIndex() == 0x000) {
-//                                    flagUpdate.setIndex(0xaad);
+//                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
+//                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
 //                                }
 //                            }
 //                        }
@@ -731,8 +731,8 @@ public final class GameDataTracker {
 //                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
 //                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
 //                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-//                                if (flagUpdate.getIndex() == 0x000) {
-//                                    flagUpdate.setIndex(0xaad);
+//                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
+//                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
 //                                }
 //                            }
 //                        }
@@ -765,8 +765,8 @@ public final class GameDataTracker {
 //                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
 //                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
 //                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-//                                if (flagUpdate.getIndex() == 0x000) {
-//                                    flagUpdate.setIndex(0xaad);
+//                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
+//                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
 //                                }
 //                            }
 //                        }
@@ -824,7 +824,7 @@ public final class GameDataTracker {
 //                    if(screen.getZoneIndex() == 24) {
 //                        Integer flagToRemoveIndex = null;
 //                        for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
-//                            if (gameObject.getTestByteOperations().get(i).getIndex() == 0x016) {
+//                            if (gameObject.getTestByteOperations().get(i).getIndex() == FlagConstants.SCREEN_FLAG_16) {
 //                                flagToRemoveIndex = i;
 //                                break;
 //                            }
@@ -847,8 +847,8 @@ public final class GameDataTracker {
 //                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
 //                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
 //                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-//                                if (flagUpdate.getIndex() == 0x000) {
-//                                    flagUpdate.setIndex(0xaad);
+//                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
+//                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
 //                                }
 //                            }
 //                        }
@@ -861,7 +861,7 @@ public final class GameDataTracker {
             short itemArg = gameObject.getArgs().get(0);
             if(itemArg == 70) {
                 // Surface map item give
-                GameObjectId gameObjectId = new GameObjectId((short) 70, 209);
+                GameObjectId gameObjectId = new GameObjectId((short) 70, FlagConstants.WF_MAP_SURFACE);
                 List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                 if (objects == null) {
                     mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -871,7 +871,7 @@ public final class GameDataTracker {
             }
             else if(itemArg == 81) {
                 // Maternity Doll item give
-                GameObjectId gameObjectId = new GameObjectId((short) 81, 267);
+                GameObjectId gameObjectId = new GameObjectId((short) 81, FlagConstants.WF_MATERNITY_STATUE);
                 List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                 if (objects == null) {
                     mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -885,16 +885,16 @@ public final class GameDataTracker {
             if(itemArg == 93 || itemArg == 94 || itemArg == 95) {
                 short worldFlag;
                 if(itemArg == 93) {
-                    worldFlag = 234;
+                    worldFlag = FlagConstants.WF_SOFTWARE_MANTRA;
                     if(Settings.isFools2021Mode()) {
-                        gameObject.getTestByteOperations().add(new TestByteOperation(0x1c2, ByteOp.FLAG_EQUALS, 3));
+                        gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.EXTINCTION_PERMA_LIGHT, ByteOp.FLAG_EQUALS, 3));
                     }
                 }
                 else if(itemArg == 94) {
-                    worldFlag = 235;
+                    worldFlag = FlagConstants.WF_SOFTWARE_EMUSIC;
                 }
                 else {
-                    worldFlag = 236;
+                    worldFlag = FlagConstants.WF_SOFTWARE_BEOLAMU;
                 }
                 GameObjectId gameObjectId = new GameObjectId((short) itemArg, worldFlag);
                 List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
@@ -1242,9 +1242,9 @@ public final class GameDataTracker {
             TestByteOperation flagTest;
             for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
                 flagTest = gameObject.getTestByteOperations().get(i);
-                if (flagTest.getIndex() == 335) {
+                if (flagTest.getIndex() == FlagConstants.WF_SOFTWARE_DEATHV) {
                     // deathv stuff
-                    GameObjectId gameObjectId = new GameObjectId((short) 96, 335);
+                    GameObjectId gameObjectId = new GameObjectId((short) 96, FlagConstants.WF_SOFTWARE_DEATHV);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -1253,9 +1253,9 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-                else if (flagTest.getIndex() == 219) {
+                else if (flagTest.getIndex() == FlagConstants.WF_MAP_ILLUSION) {
                     // Gate of Illusion Map stuff
-                    GameObjectId gameObjectId = new GameObjectId((short) 70, 219);
+                    GameObjectId gameObjectId = new GameObjectId((short) 70, FlagConstants.WF_MAP_ILLUSION);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -1264,58 +1264,58 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-                else if (flagTest.getIndex() == 377) {
+                else if (flagTest.getIndex() == FlagConstants.SUN_WATCHTOWER_LIGHTS) {
                     // Turning on the lights in Temple of the Sun; moved in versions after 1.3 and should be restored
                     gameObject.setX(400);
                     break;
                 }
-                else if (flagTest.getIndex() == 435) {
+                else if (flagTest.getIndex() == FlagConstants.INFERNO_PUZZLE_FLARE_GUN) {
                     // Breakable wall to Flare Gun room; hitbox is inside the wall and makes subweapon breaking a bit awkward
                     gameObject.getArgs().set(6, (short)4); // Extend wall hitbox
                 }
-                else if (flagTest.getIndex() == 501) {
+                else if (flagTest.getIndex() == FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES) {
                     // Breakable ceiling to Isis' Pendant room
                     flagIndexToRemove = i;
                     break;
                 }
-                else if(flagTest.getIndex() == 591) {
+                else if(flagTest.getIndex() == FlagConstants.GRAVEYARD_WALL_SNAPSHOTS_MURAL) {
                     // emusic wall - not requiring precise hitbox
                     gameObject.getArgs().set(3, (short)4);
                 }
-                else if (flagTest.getIndex() == 610) {
+                else if (flagTest.getIndex() == FlagConstants.MOONLIGHT_3_WOMEN_FACES) {
                     // Moon-Gazing Pit faces - extend hitbox to make things a bit easier
                     gameObject.setX(gameObject.getX() - 20);
                     gameObject.getArgs().set(6, (short)(gameObject.getArgs().get(6) + 1)); // Extend wall hitbox
                 }
-                else if(flagTest.getIndex() == 695) {
+                else if(flagTest.getIndex() == FlagConstants.TRUE_SHRINE_TENTACLE) {
                     // Main-weapon-only tentacle blocking access to Mother ankh
                     gameObject.getArgs().set(4, (short)18);
                     break;
                 }
-                else if(flagTest.getIndex() == 877) {
+                else if(flagTest.getIndex() == FlagConstants.GODDESS_PIPES_SHORTCUT) {
                     // Main-weapon-only wall in Tower of the Goddess
                     gameObject.getArgs().set(4, (short)18);
                     break;
                 }
-                else if(flagTest.getIndex() == 0x23f) {
+                else if(flagTest.getIndex() == FlagConstants.GRAVEYARD_ILLUSION_LADDER_BLOCKAGE) {
                     // Main-weapon-only blockage of the ice block in Graveyard of the Giants, needed to access the up-ladder
                     gameObject.getArgs().set(4, (short)18);
                     break;
                 }
-                else if(flagTest.getIndex() == 0x256) {
+                else if(flagTest.getIndex() == FlagConstants.MOONLIGHT_DEV_ROOM_BREAKABLE_FLOOR) {
                     // Moonlight dev room floor
                     gameObject.getArgs().set(3, (short)4); // Any direction, to be more bomb-friendly.
                     break;
                 }
-                else if(flagTest.getIndex() == 2033) {
+                else if(flagTest.getIndex() == FlagConstants.THE_BOSS_STATE) {
                     // Trigger for The Boss ankh, coded as a wall that triggers stuff when broken
                     gameObject.getArgs().set(4, (short)18);
                     break;
                 }
-                else if(flagTest.getIndex() == 296) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_VIY) {
                     // Breakable snake statue in Inferno Cavern spike area
                     gameObject.getArgs().set(6, (short)2); // Extend wall hitbox
-                    flagTest.setIndex(2795);
+                    flagTest.setIndex(FlagConstants.MANTRAS_UNLOCKED);
                     flagTest.setValue((byte)1);
                 }
             }
@@ -1328,7 +1328,7 @@ public final class GameDataTracker {
                     Screen screen = (Screen) gameObject.getObjectContainer();
                     if(screen.getZoneIndex() == 11 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
                         for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-                            if(testByteOperation.getIndex() == 0x3b5) {
+                            if(testByteOperation.getIndex() == FlagConstants.GRAVEYARD_HOT_SPRING) {
                                 testByteOperation.setValue((byte)(testByteOperation.getValue() == 1 ? 0 : 1));
                             }
                         }
@@ -1337,9 +1337,9 @@ public final class GameDataTracker {
             }
 
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                if (flagTest.getIndex() == 335) {
+                if (flagTest.getIndex() == FlagConstants.WF_SOFTWARE_DEATHV) {
                     // deathv stuff
-                    GameObjectId gameObjectId = new GameObjectId((short) 96, 335);
+                    GameObjectId gameObjectId = new GameObjectId((short) 96, FlagConstants.WF_SOFTWARE_DEATHV);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -1348,9 +1348,9 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-                else if (flagTest.getIndex() == 219) {
+                else if (flagTest.getIndex() == FlagConstants.WF_MAP_ILLUSION) {
                     // Gate of Illusion Map stuff
-                    GameObjectId gameObjectId = new GameObjectId((short) 70, 219);
+                    GameObjectId gameObjectId = new GameObjectId((short) 70, FlagConstants.WF_MAP_ILLUSION);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -1359,7 +1359,7 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-                else if(flagTest.getIndex() == 0x12b && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_MARDUK && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 8) {
                         // MARDUK tablet effect
@@ -1372,7 +1372,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 298 && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_SABBAT && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 7) {
                         // SABBAT tablet effect
@@ -1385,7 +1385,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 297 && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_MU && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6) {
                         // MU tablet effect
@@ -1398,7 +1398,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 296 && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_VIY && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5) {
                         // VIY tablet effect
@@ -1411,7 +1411,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 295 && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_BAHRUN && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 13) {
                         // BAHRUN tablet effect
@@ -1424,7 +1424,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 294 && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_WEDJET && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3) {
                         // WEDJET tablet effect
@@ -1437,7 +1437,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 293 && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_ABUTO && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 11) {
                         // ABUTO tablet effect
@@ -1450,7 +1450,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 292) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_FINAL) {
                     if(flagTest.getValue() == 2) {
                         if (gameObject.getObjectContainer() instanceof Screen
                                 && ((Screen) gameObject.getObjectContainer()).getZoneIndex() == 0) {
@@ -1465,18 +1465,18 @@ public final class GameDataTracker {
                         }
                     }
                     else if (flagTest.getValue() == 3) {
-                        flagTest.setIndex(2794);
+                        flagTest.setIndex(FlagConstants.MANTRA_LAMULANA);
                         flagTest.setOp(ByteOp.FLAG_LT);
                         flagTest.setValue((byte)1);
                         break;
                     }
                     else if (flagTest.getValue() == 4) {
-                        flagTest.setIndex(2794);
+                        flagTest.setIndex(FlagConstants.MANTRA_LAMULANA);
                         flagTest.setValue((byte)1);
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 570) {
+                else if(flagTest.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
                     if(flagTest.getValue() == 3) {
                         if(ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
                             flagTest.setOp(ByteOp.FLAG_LTEQ);
@@ -1490,19 +1490,19 @@ public final class GameDataTracker {
                         }
                     }
                     else if(flagTest.getValue() != 4) {
-                        flagTest.setIndex(2799);
+                        flagTest.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 0x14c) {
+                else if(flagTest.getIndex() == FlagConstants.SURFACE_UNDERPATH_VISIBLE) {
                     gameObject.getArgs().set(4, (short)2);
                 }
             }
         } else if (gameObject.getId() == 0x9b) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                if (flagTest.getIndex() == 218) {
+                if (flagTest.getIndex() == FlagConstants.WF_MAP_SHRINE) {
                     // Shrine of the Mother Map stuff
-                    GameObjectId gameObjectId = new GameObjectId((short) 70, 218);
+                    GameObjectId gameObjectId = new GameObjectId((short) 70, FlagConstants.WF_MAP_SHRINE);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -1511,9 +1511,9 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-                else if(flagTest.getIndex() == 267) {
+                else if(flagTest.getIndex() == FlagConstants.WF_MATERNITY_STATUE) {
                     // Timer to play Shell Horn sound when being given Maternity Statue equivalent
-                    GameObjectId gameObjectId = new GameObjectId((short) 81, 267);
+                    GameObjectId gameObjectId = new GameObjectId((short) 81, FlagConstants.WF_MATERNITY_STATUE);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -1521,22 +1521,22 @@ public final class GameDataTracker {
                     }
                     objects.add(gameObject);
                 }
-                else if(flagTest.getIndex() == 292) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_FINAL) {
                     // This is based on the LAMULANA mantra being recited, but we have a new flag for that.
-                    flagTest.setIndex(2794);
+                    flagTest.setIndex(FlagConstants.MANTRA_LAMULANA);
                     flagTest.setValue((byte)1);
                     break;
                 }
             }
         } else if (gameObject.getId() == 0x9c) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                if (flagTest.getIndex() == 0x228) {
+                if (flagTest.getIndex() == FlagConstants.MR_SLUSHFUND_CONVERSATION) {
                     // Using Pepper to spawn Treasures chest
-                    flagTest.setIndex(259);
+                    flagTest.setIndex(FlagConstants.WF_TREASURES);
                     flagTest.setOp(ByteOp.FLAG_LTEQ);
                     flagTest.setValue((byte)1);
 
-                    GameObjectId gameObjectId = new GameObjectId((short) 71, 259);
+                    GameObjectId gameObjectId = new GameObjectId((short) 71, FlagConstants.WF_TREASURES);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -1545,7 +1545,7 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-                else if(flagTest.getIndex() == 570) {
+                else if(flagTest.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
                     if(flagTest.getValue() == 3) {
                         if(ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
                             flagTest.setOp(ByteOp.FLAG_LTEQ);
@@ -1559,7 +1559,7 @@ public final class GameDataTracker {
                         }
                     }
                     else if(flagTest.getValue() != 4) {
-                        flagTest.setIndex(2799);
+                        flagTest.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
                         break;
                     }
                 }
@@ -1590,7 +1590,7 @@ public final class GameDataTracker {
                         doorName = "Door: F5";
 
                         if(!Settings.isRandomizeNonBossDoors()) {
-                            GameObject added = AddObject.addMissingBacksideDoorCover(gameObject, 0x153);
+                            GameObject added = AddObject.addMissingBacksideDoorCover(gameObject, FlagConstants.VIY_GATE_OPEN);
                             List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
                             if(backsideDoors == null) {
                                 backsideDoors = new ArrayList<>();
@@ -1623,7 +1623,7 @@ public final class GameDataTracker {
                                 Integer flagIndexToRemove = null;
                                 for(int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
                                     TestByteOperation testByteOperation = gameObject.getTestByteOperations().get(i);
-                                    if(testByteOperation.getIndex() == 0x382) {
+                                    if(testByteOperation.getIndex() == FlagConstants.ESCAPE) {
                                         flagIndexToRemove = i;
                                         break;
                                     }
@@ -1634,16 +1634,16 @@ public final class GameDataTracker {
                             }
                             if(Settings.isRandomizeNonBossDoors()) {
                                 doorName = "Door: F9";
-                                replaceBacksideDoorFlags(gameObject, 0x0fb, 0x1d0, false);
+                                replaceBacksideDoorFlags(gameObject, FlagConstants.PALENQUE_STATE, FlagConstants.PALENQUE_GATE_OPEN, false);
                             }
                         }
                         else {
                             // Chamber of Extinction [Magatama Left] => Chamber of Birth [Northeast]
                             doorName = "Door: F6";
-                            replaceBacksideDoorFlags(gameObject, 0x0fb, 0x1d0, false);
+                            replaceBacksideDoorFlags(gameObject, FlagConstants.PALENQUE_STATE, FlagConstants.PALENQUE_GATE_OPEN, false);
 
                             if(!Settings.isRandomizeNonBossDoors()) {
-                                GameObject added = AddObject.addMissingBacksideDoorTimerAndSound(screen, 0x0fb, 0x1d0);
+                                GameObject added = AddObject.addMissingBacksideDoorTimerAndSound(screen, FlagConstants.PALENQUE_STATE, FlagConstants.PALENQUE_GATE_OPEN);
                                 List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
                                 if(backsideDoors == null) {
                                     backsideDoors = new ArrayList<>();
@@ -1651,7 +1651,7 @@ public final class GameDataTracker {
                                 }
                                 backsideDoors.add(added);
 
-                                added = AddObject.addMissingBacksideDoorCover(gameObject, 0x1d0);
+                                added = AddObject.addMissingBacksideDoorCover(gameObject, FlagConstants.PALENQUE_GATE_OPEN);
                                 backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
                                 if(backsideDoors == null) {
                                     backsideDoors = new ArrayList<>();
@@ -1659,7 +1659,7 @@ public final class GameDataTracker {
                                 }
                                 backsideDoors.add(added);
 
-                                added = AddObject.addMissingBacksideMirrorTimerAndSound(gameObject.getObjectContainer(), 0x2b9);
+                                added = AddObject.addMissingBacksideMirrorTimerAndSound(gameObject.getObjectContainer(), FlagConstants.PALENQUE_GATE_MIRROR_COVER);
                                 backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
                                 if(backsideDoors == null) {
                                     backsideDoors = new ArrayList<>();
@@ -1667,7 +1667,7 @@ public final class GameDataTracker {
                                 }
                                 backsideDoors.add(added);
 
-                                added = AddObject.addMissingBacksideDoorMirrorCoverGraphic(gameObject, 0x2b9, true);
+                                added = AddObject.addMissingBacksideDoorMirrorCoverGraphic(gameObject, FlagConstants.PALENQUE_GATE_MIRROR_COVER, true);
                                 backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
                                 if(backsideDoors == null) {
                                     backsideDoors = new ArrayList<>();
@@ -1703,10 +1703,10 @@ public final class GameDataTracker {
                         else {
                             // Tower of Ruin [Top] => Inferno Cavern [Spikes]
                             doorName = "Door: B7";
-                            replaceBacksideDoorFlags(gameObject, 0x0fc, 0x1c0, false);
+                            replaceBacksideDoorFlags(gameObject, FlagConstants.BAPHOMET_STATE, FlagConstants.BAPHOMET_GATE_OPEN, false);
 
                             if(!Settings.isRandomizeNonBossDoors()) {
-                                GameObject added = AddObject.addMissingBacksideDoorTimerAndSound(screen, 0x0fc, 0x1c0);
+                                GameObject added = AddObject.addMissingBacksideDoorTimerAndSound(screen, FlagConstants.BAPHOMET_STATE, FlagConstants.BAPHOMET_GATE_OPEN);
                                 List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
                                 if(backsideDoors == null) {
                                     backsideDoors = new ArrayList<>();
@@ -1714,7 +1714,7 @@ public final class GameDataTracker {
                                 }
                                 backsideDoors.add(added);
 
-                                added = AddObject.addMissingBacksideDoorCover(gameObject, 0x1c0);
+                                added = AddObject.addMissingBacksideDoorCover(gameObject, FlagConstants.BAPHOMET_GATE_OPEN);
                                 backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
                                 if(backsideDoors == null) {
                                     backsideDoors = new ArrayList<>();
@@ -1722,7 +1722,7 @@ public final class GameDataTracker {
                                 }
                                 backsideDoors.add(added);
 
-                                added = AddObject.addMissingBacksideMirrorTimerAndSound(gameObject.getObjectContainer(), 0x3b7);
+                                added = AddObject.addMissingBacksideMirrorTimerAndSound(gameObject.getObjectContainer(), FlagConstants.BAPHOMET_GATE_MIRROR_COVER);
                                 backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
                                 if(backsideDoors == null) {
                                     backsideDoors = new ArrayList<>();
@@ -1730,7 +1730,7 @@ public final class GameDataTracker {
                                 }
                                 backsideDoors.add(added);
 
-                                added = AddObject.addMissingBacksideDoorMirrorCoverGraphic(gameObject, 0x3b7, false);
+                                added = AddObject.addMissingBacksideDoorMirrorCoverGraphic(gameObject, FlagConstants.BAPHOMET_GATE_MIRROR_COVER, false);
                                 backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
                                 if(backsideDoors == null) {
                                     backsideDoors = new ArrayList<>();
@@ -1767,7 +1767,7 @@ public final class GameDataTracker {
                     // Re-enable backside door during the escape
                     Integer flagTestToRemove = null;
                     for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
-                        if (gameObject.getTestByteOperations().get(i).getIndex() == 0x0fe) {
+                        if (gameObject.getTestByteOperations().get(i).getIndex() == FlagConstants.MOTHER_STATE) {
                             flagTestToRemove = i;
                             break;
                         }
@@ -1792,10 +1792,10 @@ public final class GameDataTracker {
 //                            replacementDoor.getArgs().add((short)926);
 //                            replacementDoor.getArgs().add((short)0);
 //                            replacementDoor.getArgs().add((short)1);
-//                            replacementDoor.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+//                            replacementDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1));
 //                            gameObject.getObjectContainer().getObjects().add(replacementDoor);
 //
-//                            gameObject.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0));
+//                            gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0));
 //                        }
 //                    }
 //                }
@@ -1805,7 +1805,7 @@ public final class GameDataTracker {
             // Fighting Anubis shouldn't prevent Mulbruk from giving you Book of the Dead.
             Integer flagUpdateToRemove = null;
             for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                if (gameObject.getWriteByteOperations().get(i).getIndex() == 810) {
+                if (gameObject.getWriteByteOperations().get(i).getIndex() == FlagConstants.MULBRUK_CONVERSATION_BOOK) {
                     flagUpdateToRemove = i;
                     break;
                 }
@@ -1816,9 +1816,9 @@ public final class GameDataTracker {
         }
         else if (gameObject.getId() == 0x11) {
             for (WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
-                if (flagUpdate.getIndex() == 218) {
+                if (flagUpdate.getIndex() == FlagConstants.WF_MAP_SHRINE) {
                     // Shrine of the Mother Map stuff
-                    GameObjectId gameObjectId = new GameObjectId((short) 70, 218);
+                    GameObjectId gameObjectId = new GameObjectId((short) 70, FlagConstants.WF_MAP_SHRINE);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -1827,14 +1827,14 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-                else if(flagUpdate.getIndex() == 433) {
+                else if(flagUpdate.getIndex() == FlagConstants.INFERNO_CHAIN_WHIP_CRUSHER_LEFT) {
                     // Chain Whip puzzle crusher
-                    flagUpdate.setIndex(46);
+                    flagUpdate.setIndex(FlagConstants.SCREEN_FLAG_2E);
                     break;
                 }
-                else if(flagUpdate.getIndex() == 434) {
+                else if(flagUpdate.getIndex() == FlagConstants.INFERNO_CHAIN_WHIP_CRUSHER_RIGHT) {
                     // Chain Whip puzzle crusher
-                    flagUpdate.setIndex(47);
+                    flagUpdate.setIndex(FlagConstants.SCREEN_FLAG_2F);
                     break;
                 }
             }
@@ -1845,12 +1845,12 @@ public final class GameDataTracker {
             if(objectContainer instanceof Screen) {
                 Screen screen = (Screen)objectContainer;
                 if(screen.getZoneIndex() == 3 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
-                    if(gameObject.getTestByteOperations().get(0).getIndex() == 387) {
+                    if(gameObject.getTestByteOperations().get(0).getIndex() == FlagConstants.SUN_MAP_CHEST_LADDER_DESPAWNED) {
                         gameObject.getWriteByteOperations().remove(0);
                     }
-                    else if(gameObject.getTestByteOperations().get(0).getIndex() == 392) {
+                    else if(gameObject.getTestByteOperations().get(0).getIndex() == FlagConstants.SUN_MAP_CHEST_LADDER_RESTORED) {
                         WriteByteOperation writeByteOperation = new WriteByteOperation();
-                        writeByteOperation.setIndex(387);
+                        writeByteOperation.setIndex(FlagConstants.SUN_MAP_CHEST_LADDER_DESPAWNED);
                         writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
                         writeByteOperation.setValue(1);
                         gameObject.getWriteByteOperations().add(writeByteOperation);
@@ -1860,7 +1860,7 @@ public final class GameDataTracker {
             if(Settings.isFools2020Mode()) {
                 boolean lampOfTimeDetector = false;
                 for(WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
-                    if(writeByteOperation.getIndex() == 0x34d && ByteOp.ASSIGN_FLAG.equals(writeByteOperation.getOp()) && writeByteOperation.getValue() == 1) {
+                    if(writeByteOperation.getIndex() == FlagConstants.LAMP_OF_TIME_STATE && ByteOp.ASSIGN_FLAG.equals(writeByteOperation.getOp()) && writeByteOperation.getValue() == 1) {
                         // Lemeza detector for Lamp of Time light
                         lampOfTimeDetector = true;
                         break;
@@ -1868,15 +1868,15 @@ public final class GameDataTracker {
                 }
                 if(lampOfTimeDetector) {
                     gameObject.getWriteByteOperations().clear();
-                    gameObject.getWriteByteOperations().add(new WriteByteOperation(42, ByteOp.ASSIGN_FLAG, 1));
-                    AddObject.addExplosion(gameObject.getObjectContainer(), gameObject.getX(), gameObject.getY(), 42, 15, true);
+                    gameObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_2A, ByteOp.ASSIGN_FLAG, 1)); // todo: probably should pick a different flag
+                    AddObject.addExplosion(gameObject.getObjectContainer(), gameObject.getX(), gameObject.getY(), FlagConstants.SCREEN_FLAG_2A, 15, true);
                 }
             }
         } else if (gameObject.getId() == 0x33) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                if (flagTest.getIndex() == 180) {
+                if (flagTest.getIndex() == FlagConstants.WF_PLANE_MODEL) {
                     // Plane Model stuff
-                    GameObjectId gameObjectId = new GameObjectId((short) 51, 180);
+                    GameObjectId gameObjectId = new GameObjectId((short) 51, FlagConstants.WF_PLANE_MODEL);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -1889,9 +1889,9 @@ public final class GameDataTracker {
         } else if (gameObject.getId() == 0x71) {
             // Vimana
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                if (flagTest.getIndex() == 180) {
+                if (flagTest.getIndex() == FlagConstants.WF_PLANE_MODEL) {
                     // Plane Model stuff
-                    GameObjectId gameObjectId = new GameObjectId((short) 51, 180);
+                    GameObjectId gameObjectId = new GameObjectId((short) 51, FlagConstants.WF_PLANE_MODEL);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -1904,7 +1904,7 @@ public final class GameDataTracker {
             if(Settings.isFools2020Mode()) {
                 List<TestByteOperation> testsToUse = new ArrayList<>();
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                    if (flagTest.getIndex() == 0x0b4) {
+                    if (flagTest.getIndex() == FlagConstants.WF_PLANE_MODEL) {
                         // Don't stop spawning after you get the chest.
                         continue;
                     }
@@ -1921,9 +1921,9 @@ public final class GameDataTracker {
             }
         } else if (gameObject.getId() == 0x08) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                if (flagTest.getIndex() == 229) {
+                if (flagTest.getIndex() == FlagConstants.WF_SOFTWARE_YAGOSTR) {
                     // yagostr dais
-                    GameObjectId gameObjectId = new GameObjectId((short) 88, 229);
+                    GameObjectId gameObjectId = new GameObjectId((short) 88, FlagConstants.WF_SOFTWARE_YAGOSTR);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -1932,9 +1932,9 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-                else if(flagTest.getIndex() == 144) {
+                else if(flagTest.getIndex() == FlagConstants.WF_ANKH_JEWEL_SUN) {
                     // Temple of the Sun Ankh Jewel trap dais
-                    GameObjectId gameObjectId = new GameObjectId((short) 19, 144);
+                    GameObjectId gameObjectId = new GameObjectId((short) 19, FlagConstants.WF_ANKH_JEWEL_SUN);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -1943,39 +1943,39 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-                else if(flagTest.getIndex() == 433) {
+                else if(flagTest.getIndex() == FlagConstants.INFERNO_CHAIN_WHIP_CRUSHER_LEFT) {
                     // Chain Whip puzzle crusher
-                    flagTest.setIndex(46);
+                    flagTest.setIndex(FlagConstants.SCREEN_FLAG_2E);
 
-                    gameObject.getWriteByteOperations().get(0).setIndex(46);
+                    gameObject.getWriteByteOperations().get(0).setIndex(FlagConstants.SCREEN_FLAG_2E);
                     break;
                 }
-                else if(flagTest.getIndex() == 434) {
+                else if(flagTest.getIndex() == FlagConstants.INFERNO_CHAIN_WHIP_CRUSHER_RIGHT) {
                     // Chain Whip puzzle crusher
-                    flagTest.setIndex(47);
+                    flagTest.setIndex(FlagConstants.SCREEN_FLAG_2F);
 
-                    gameObject.getWriteByteOperations().get(0).setIndex(47);
+                    gameObject.getWriteByteOperations().get(0).setIndex(FlagConstants.SCREEN_FLAG_2F);
                     break;
                 }
-                else if(flagTest.getIndex() == 0x270) {
+                else if(flagTest.getIndex() == FlagConstants.MOONLIGHT_SCAN_DANCING_MAN) {
                     // Eden chest 1
                     if (Settings.isFools2021Mode()) {
                         edenDaises.add(gameObject);
                     }
                 }
-                else if(flagTest.getIndex() == 0x29c) {
+                else if(flagTest.getIndex() == FlagConstants.MOONLIGHT_SCAN_HANDS) {
                     // Eden chest 2
                     if (Settings.isFools2021Mode()) {
                         edenDaises.add(gameObject);
                     }
                 }
-                else if(flagTest.getIndex() == 0x29d) {
+                else if(flagTest.getIndex() == FlagConstants.MOONLIGHT_SCAN_TRAP) {
                     // Eden chest 3
                     if (Settings.isFools2021Mode()) {
                         edenDaises.add(gameObject);
                     }
                 }
-                else if(flagTest.getIndex() == 0x29e) {
+                else if(flagTest.getIndex() == FlagConstants.MOONLIGHT_SCAN_FACE) {
                     // Eden chest 4
                     if (Settings.isFools2021Mode()) {
                         edenDaises.add(gameObject);
@@ -1986,11 +1986,11 @@ public final class GameDataTracker {
                         Screen screen = (Screen) gameObject.getObjectContainer();
                         if (screen.getZoneIndex() == 11 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 3) {
                             // Graveyard trap chest dais
-                            gameObject.getTestByteOperations().get(0).setIndex(2776);
-                            gameObject.getWriteByteOperations().get(0).setIndex(2776);
+                            gameObject.getTestByteOperations().get(0).setIndex(FlagConstants.GRAVEYARD_PUZZLE_TRAP_CHEST);
+                            gameObject.getWriteByteOperations().get(0).setIndex(FlagConstants.GRAVEYARD_PUZZLE_TRAP_CHEST);
                             gameObject.getWriteByteOperations().remove(1);
 
-                            GameObjectId gameObjectId = new GameObjectId((short) 0, 2777);
+                            GameObjectId gameObjectId = new GameObjectId((short) 0, FlagConstants.WF_TRAP_GRAVEYARD);
                             List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                             if (objects == null) {
                                 mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -2011,10 +2011,10 @@ public final class GameDataTracker {
                             gameObject.getWriteByteOperations().clear();
 
                             if(gameObject.getX() == 280) {
-                                gameObject.getTestByteOperations().add(new TestByteOperation(0x000, ByteOp.FLAG_EQUALS, 0));
-                                gameObject.getTestByteOperations().add(new TestByteOperation(0x227, ByteOp.FLAG_EQUALS, 0));
-                                gameObject.getWriteByteOperations().add(new WriteByteOperation(0x000, ByteOp.ASSIGN_FLAG, 1));
-                                gameObject.getWriteByteOperations().add(new WriteByteOperation(0x227, ByteOp.ASSIGN_FLAG, 1));
+                                gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_0, ByteOp.FLAG_EQUALS, 0));
+                                gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.ILLUSION_PROGRESS_SKELETON_DAIS_TO_ELEVATOR, ByteOp.FLAG_EQUALS, 0));
+                                gameObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_0, ByteOp.ASSIGN_FLAG, 1));
+                                gameObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.ILLUSION_PROGRESS_SKELETON_DAIS_TO_ELEVATOR, ByteOp.ASSIGN_FLAG, 1));
                             }
                             else {
                                 gameObject.getArgs().set(2, (short)0);
@@ -2130,8 +2130,8 @@ public final class GameDataTracker {
 
             if(languageBlock == 648) {
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                    if (flagTest.getIndex() == 292 && flagTest.getValue() == 4) {
-                        flagTest.setIndex(2794);
+                    if (flagTest.getIndex() == FlagConstants.MANTRA_FINAL && flagTest.getValue() == 4) {
+                        flagTest.setIndex(FlagConstants.MANTRA_LAMULANA);
                         flagTest.setValue((byte)1);
                         break;
                     }
@@ -2139,9 +2139,9 @@ public final class GameDataTracker {
             }
             else {
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                    if (flagTest.getIndex() == 209) {
+                    if (flagTest.getIndex() == FlagConstants.WF_MAP_SURFACE) {
                         // Surface map scan effect?
-                        GameObjectId gameObjectId = new GameObjectId((short) 70, 209);
+                        GameObjectId gameObjectId = new GameObjectId((short) 70, FlagConstants.WF_MAP_SURFACE);
                         List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                         if (objects == null) {
                             mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -2150,7 +2150,7 @@ public final class GameDataTracker {
                         objects.add(gameObject);
                         break;
                     }
-                    else if(flagTest.getIndex() == 570) {
+                    else if(flagTest.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
                         if(flagTest.getValue() == 3) {
                             if(ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
                                 flagTest.setOp(ByteOp.FLAG_LTEQ);
@@ -2164,7 +2164,7 @@ public final class GameDataTracker {
                             }
                         }
                         else if(flagTest.getValue() != 4) {
-                            flagTest.setIndex(2799);
+                            flagTest.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
                             break;
                         }
                     }
@@ -2187,8 +2187,8 @@ public final class GameDataTracker {
                 if(blockNumber == 34) {
                     // Shop before/after buying the MSX2
                     for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                        if (flagTest.getIndex() == 742) {
-                            GameObjectId gameObjectId = new GameObjectId((short) 76, 742);
+                        if (flagTest.getIndex() == FlagConstants.WF_MSX2) {
+                            GameObjectId gameObjectId = new GameObjectId((short) 76, FlagConstants.WF_MSX2);
                             List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                             if (objects == null) {
                                 mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -2236,7 +2236,7 @@ public final class GameDataTracker {
                 }
                 else if(blockNumber == 490) {
                     // MSX2 shop
-                    GameObjectId gameObjectId = new GameObjectId((short) 76, 742);
+                    GameObjectId gameObjectId = new GameObjectId((short) 76, FlagConstants.WF_MSX2);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -2248,7 +2248,7 @@ public final class GameDataTracker {
                 else if(blockNumber == 132){
                     // Untransformed Mr. Fishman shop
                     for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-                        if (testByteOperation.getIndex() == 0x197) {
+                        if (testByteOperation.getIndex() == FlagConstants.FISH_SHOP_UNLOCKS) {
                             // Keep existing even after the transformed shop appears.
                             testByteOperation.setOp(ByteOp.FLAG_GTEQ);
                             break;
@@ -2344,10 +2344,10 @@ public final class GameDataTracker {
             else if(blockNumber == 915) {
                 // Mini Doll conversation
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                    if (flagTest.getIndex() == 554) {
-                        flagTest.setIndex(152); // Normally this goes off a flag related to proving yourself small, but we'd rather check if we have the Mini Doll for safer shuffling.
+                    if (flagTest.getIndex() == FlagConstants.PROVE_THOU_ART_SMALL) {
+                        flagTest.setIndex(FlagConstants.WF_MINI_DOLL); // Normally this goes off a flag related to proving yourself small, but we'd rather check if we have the Mini Doll for safer shuffling.
 
-                        GameObjectId gameObjectId = new GameObjectId((short) 22, 152);
+                        GameObjectId gameObjectId = new GameObjectId((short) 22, FlagConstants.WF_MINI_DOLL);
                         List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                         if (objects == null) {
                             mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -2379,7 +2379,7 @@ public final class GameDataTracker {
                     mapOfNpcLocationToObject.put("NPCL: Former Mekuri Master", gameObject);
                 }
 
-                GameObjectId gameObjectId = new GameObjectId((short) 100, 241);
+                GameObjectId gameObjectId = new GameObjectId((short) 100, FlagConstants.WF_SOFTWARE_MEKURI);
                 List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                 if (objects == null) {
                     mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -2407,8 +2407,8 @@ public final class GameDataTracker {
 
                 // Giltoriyo mantra conversation
                 for (WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
-                    if(flagUpdate.getIndex() == 0x12b) {
-                        flagUpdate.setIndex(0xaeb);
+                    if(flagUpdate.getIndex() == FlagConstants.MANTRA_MARDUK) {
+                        flagUpdate.setIndex(FlagConstants.MANTRAS_UNLOCKED);
                     }
                 }
 
@@ -2447,9 +2447,9 @@ public final class GameDataTracker {
 
                 if(Settings.isHalloweenMode()) {
                     for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                        if (flagTest.getIndex() == 0x1c3) {
+                        if (flagTest.getIndex() == FlagConstants.PALENQUE_ANKH_PUZZLE) {
                             // Fix conversation to be based on whether the Palenque fight is active, rather than whether the ankh is present.
-                            flagTest.setIndex(0x0fb);
+                            flagTest.setIndex(FlagConstants.PALENQUE_STATE);
                             flagTest.setOp(ByteOp.FLAG_NOT_EQUAL);
                             flagTest.setValue((byte)2);
                             break;
@@ -2469,7 +2469,7 @@ public final class GameDataTracker {
                 if(Settings.isHalloweenMode()) {
                     Integer flagToRemoveIndex = null;
                     for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 0x1f5) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES) {
                             flagToRemoveIndex = i;
                             break;
                         }
@@ -2482,7 +2482,7 @@ public final class GameDataTracker {
             else if(blockNumber == 685) {
                 if(!Settings.isHalloweenMode()) {
                     for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                        if (flagTest.getIndex() == 501) {
+                        if (flagTest.getIndex() == FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES) {
                             // The first conversation with the Fairy Queen is removed. Subsequent conversations must
                             // therefore not require the first one to have happened, so we'll make the conversation
                             // check for flag value <= 1 instead of == 1
@@ -2500,12 +2500,12 @@ public final class GameDataTracker {
 
                 if(Settings.isHalloweenMode()) {
                     gameObject.getTestByteOperations().clear();
-                    gameObject.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_EQUALS, 2));
-                    gameObject.getTestByteOperations().add(new TestByteOperation(0x0aa, ByteOp.FLAG_EQUALS, 2));
-                    gameObject.getTestByteOperations().add(new TestByteOperation(0x0fe, ByteOp.FLAG_NOT_EQUAL, 3));
+                    gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.FLAG_EQUALS, 2));
+                    gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_ISIS_PENDANT, ByteOp.FLAG_EQUALS, 2));
+                    gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.MOTHER_STATE, ByteOp.FLAG_NOT_EQUAL, 3));
 
                     for(WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
-                        if(writeByteOperation.getIndex() == 0x1f5) {
+                        if(writeByteOperation.getIndex() == FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES) {
                             writeByteOperation.setValue(3);
                             break;
                         }
@@ -2513,7 +2513,7 @@ public final class GameDataTracker {
                 }
                 else {
                     for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                        if (flagTest.getIndex() == 501) {
+                        if (flagTest.getIndex() == FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES) {
                             // The first conversation with the Fairy Queen is removed. Subsequent conversations must
                             // therefore not require the first one to have happened, so we'll make the conversation
                             // check for flag value <= 1 instead of == 1
@@ -2526,9 +2526,9 @@ public final class GameDataTracker {
             else if(blockNumber == 687) {
                 if(Settings.isHalloweenMode()) {
                     gameObject.getTestByteOperations().clear();
-                    gameObject.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_EQUALS, 2));
-                    gameObject.getTestByteOperations().add(new TestByteOperation(0x0aa, ByteOp.FLAG_NOT_EQUAL, 2));
-                    gameObject.getTestByteOperations().add(new TestByteOperation(0x0fe, ByteOp.FLAG_NOT_EQUAL, 3));
+                    gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.FLAG_EQUALS, 2));
+                    gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_ISIS_PENDANT, ByteOp.FLAG_NOT_EQUAL, 2));
+                    gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.MOTHER_STATE, ByteOp.FLAG_NOT_EQUAL, 3));
                 }
             }
             else if(blockNumber == 688) {
@@ -2536,8 +2536,8 @@ public final class GameDataTracker {
                     gameObject.getArgs().set(4, (short)687);
 
                     gameObject.getTestByteOperations().clear();
-                    gameObject.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_EQUALS, 3));
-                    gameObject.getTestByteOperations().add(new TestByteOperation(0x0fe, ByteOp.FLAG_NOT_EQUAL, 3));
+                    gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.FLAG_EQUALS, 3));
+                    gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.MOTHER_STATE, ByteOp.FLAG_NOT_EQUAL, 3));
 
                     gameObject.getWriteByteOperations().clear();
                 }
@@ -2546,15 +2546,15 @@ public final class GameDataTracker {
                 // Mr. Slushfund - Illusion NPC, 10-08-00
                 // Conversation to receive Pepper
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                    if (flagTest.getIndex() == 552) {
-                        flagTest.setIndex(2784);
+                    if (flagTest.getIndex() == FlagConstants.MR_SLUSHFUND_CONVERSATION) {
+                        flagTest.setIndex(FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER);
                         flagTest.setOp(ByteOp.FLAG_EQUALS);
                         flagTest.setValue((byte)0);
                         break;
                     }
                 }
 
-                GameObjectId gameObjectId = new GameObjectId((short) 30, 2702);
+                GameObjectId gameObjectId = new GameObjectId((short) 30, FlagConstants.WF_PEPPER);
                 List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                 if (objects == null) {
                     mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -2567,9 +2567,9 @@ public final class GameDataTracker {
             else if(blockNumber == 690) {
                 // Conversation after receiving Pepper if you don't have Treasures
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                    if (flagTest.getIndex() == 552) {
+                    if (flagTest.getIndex() == FlagConstants.MR_SLUSHFUND_CONVERSATION) {
                         // Swap out the Pepper/Treasures/Anchor combo flag with Pepper received flag
-                        flagTest.setIndex(2784);
+                        flagTest.setIndex(FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER);
                         flagTest.setOp(ByteOp.FLAG_GT);
                         flagTest.setValue((byte)0);
                         break;
@@ -2588,13 +2588,13 @@ public final class GameDataTracker {
             else if(blockNumber == 691) {
                 // Conversation to give Treasures and receive Anchor
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                    if (flagTest.getIndex() == 552) {
+                    if (flagTest.getIndex() == FlagConstants.MR_SLUSHFUND_CONVERSATION) {
                         // Swap out the Pepper/Treasures/Anchor combo flag with Anchor custom world flag
-                        flagTest.setIndex(2706);
+                        flagTest.setIndex(FlagConstants.WF_ANCHOR);
                         flagTest.setOp(ByteOp.FLAG_LT);
                         flagTest.setValue((byte)2);
 
-                        GameObjectId gameObjectId = new GameObjectId((short) 50, 2706);
+                        GameObjectId gameObjectId = new GameObjectId((short) 50, FlagConstants.WF_ANCHOR);
                         List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                         if (objects == null) {
                             mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -2617,13 +2617,13 @@ public final class GameDataTracker {
             else if(blockNumber == 692) {
                 // Conversation after receiving both Pepper and Anchor
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                    if (flagTest.getIndex() == 552) {
+                    if (flagTest.getIndex() == FlagConstants.MR_SLUSHFUND_CONVERSATION) {
                         // Swap out the Pepper/Treasures/Anchor combo flag with Anchor custom world flag
-                        flagTest.setIndex(2706);
+                        flagTest.setIndex(FlagConstants.WF_ANCHOR);
                         flagTest.setOp(ByteOp.FLAG_GTEQ);
                         flagTest.setValue((byte)2);
 
-                        GameObjectId gameObjectId = new GameObjectId((short) 50, 2706);
+                        GameObjectId gameObjectId = new GameObjectId((short) 50, FlagConstants.WF_ANCHOR);
                         List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                         if (objects == null) {
                             mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -2635,7 +2635,7 @@ public final class GameDataTracker {
                 }
                 // Add a check for Pepper conversation (otherwise we could get this conversation before being given Pepper).
                 TestByteOperation pepperCheck = new TestByteOperation();
-                pepperCheck.setIndex(2784);
+                pepperCheck.setIndex(FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER);
                 pepperCheck.setOp(ByteOp.FLAG_GT);
                 pepperCheck.setValue((byte)0);
 
@@ -2659,10 +2659,10 @@ public final class GameDataTracker {
 
                 // Mini Doll conversation
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                    if (flagTest.getIndex() == 554) {
-                        flagTest.setIndex(152); // Normally this goes off a flag related to proving yourself small, but we'd rather check if we have the Mini Doll for safer shuffling.
+                    if (flagTest.getIndex() == FlagConstants.PROVE_THOU_ART_SMALL) {
+                        flagTest.setIndex(FlagConstants.WF_MINI_DOLL); // Normally this goes off a flag related to proving yourself small, but we'd rather check if we have the Mini Doll for safer shuffling.
 
-                        GameObjectId gameObjectId = new GameObjectId((short) 22, 152);
+                        GameObjectId gameObjectId = new GameObjectId((short) 22, FlagConstants.WF_MINI_DOLL);
                         List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                         if (objects == null) {
                             mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -2681,29 +2681,29 @@ public final class GameDataTracker {
                 }
 
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                    if (flagTest.getIndex() == 570) {
+                    if (flagTest.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
                         // Swap out the original Cog of the Soul puzzle flag for the custom flag
-                        flagTest.setIndex(2799);
+                        flagTest.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
                     }
                 }
                 for(WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
-                    if (flagUpdate.getIndex() == 570) {
+                    if (flagUpdate.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
                         // Swap out the original Cog of the Soul puzzle flag for the custom flag
-                        flagUpdate.setIndex(2799);
+                        flagUpdate.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
                     }
                 }
             }
             else if(blockNumber == 695) {
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                    if (flagTest.getIndex() == 570) {
+                    if (flagTest.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
                         // Swap out the original Cog of the Soul puzzle flag for the custom flag
-                        flagTest.setIndex(2799);
+                        flagTest.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
                     }
                 }
                 for(WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
-                    if (flagUpdate.getIndex() == 570) {
+                    if (flagUpdate.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
                         // Swap out the original Cog of the Soul puzzle flag for the custom flag
-                        flagUpdate.setIndex(2799);
+                        flagUpdate.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
                     }
                 }
             }
@@ -2838,7 +2838,7 @@ public final class GameDataTracker {
                 // Remove the flags that prevent normal Xelpud convos if he leaves for the Diary puzzle
                 Integer flagToRemoveIndex = null;
                 for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
-                    if (gameObject.getTestByteOperations().get(i).getIndex() == 537) {
+                    if (gameObject.getTestByteOperations().get(i).getIndex() == FlagConstants.SHRINE_DIARY_CHEST) {
                         flagToRemoveIndex = i;
                         break;
                     }
@@ -2853,10 +2853,10 @@ public final class GameDataTracker {
                 Integer flagToRemoveIndex = null;
                 for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
                     TestByteOperation flagTest = gameObject.getTestByteOperations().get(i);
-                    if (flagTest.getIndex() == 874) {
+                    if (flagTest.getIndex() == FlagConstants.MULBRUK_BIKINI_ENDING) {
                         flagToRemoveIndex = i;
                     }
-                    else if(flagTest.getIndex() == 123 && flagTest.getValue() == 56) {
+                    else if(flagTest.getIndex() == FlagConstants.SCORE && flagTest.getValue() == 56) {
                         flagTest.setValue((byte)0);
                     }
                 }
@@ -2866,11 +2866,11 @@ public final class GameDataTracker {
             }
             else if(blockNumber == 990) {
                 // Mulbruk misc conversation priority below Book of the Dead
-                gameObject.getTestByteOperations().add(new TestByteOperation(810, ByteOp.FLAG_NOT_EQUAL, 1));
+                gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_BOOK, ByteOp.FLAG_NOT_EQUAL, 1));
             }
             else if(blockNumber == 1011) {
                 // Dracuet Provocative Bathing Suit conversation - needs to depend on HT item instead.
-                GameObjectId gameObjectId = new GameObjectId((short) 74, 262);
+                GameObjectId gameObjectId = new GameObjectId((short) 74, FlagConstants.WF_PROVOCATIVE_BATHING_SUIT);
                 List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                 if (objects == null) {
                     mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -2880,7 +2880,7 @@ public final class GameDataTracker {
             }
             else if(blockNumber == 1013) {
                 // Mulbruk Provocative Bathing Suit conversation - needs to depend on HT item instead.
-                GameObjectId gameObjectId = new GameObjectId((short) 74, 262);
+                GameObjectId gameObjectId = new GameObjectId((short) 74, FlagConstants.WF_PROVOCATIVE_BATHING_SUIT);
                 List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                 if (objects == null) {
                     mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -2892,7 +2892,7 @@ public final class GameDataTracker {
                 // Remove the flags that prevent normal Mulbruk convos if you have Forbidden Treasure/Provocative Bathing Suit
                 Integer flagToRemoveIndex = null;
                 for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
-                    if (gameObject.getTestByteOperations().get(i).getIndex() == 874) {
+                    if (gameObject.getTestByteOperations().get(i).getIndex() == FlagConstants.MULBRUK_BIKINI_ENDING) {
                         flagToRemoveIndex = i;
                         break;
                     }
@@ -2904,7 +2904,7 @@ public final class GameDataTracker {
         } else if (gameObject.getId() == 0x92) {
             if(Settings.isFools2020Mode()) {
                 for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                    if(flagTest.getIndex() == 0x1cd) {
+                    if(flagTest.getIndex() == FlagConstants.EXTINCTION_TEMP_LIGHT) {
                         flagTest.setValue((byte)(flagTest.getValue() == 0 ? 1 : 0));
                     }
                 }
@@ -2912,7 +2912,7 @@ public final class GameDataTracker {
         } else if (gameObject.getId() == 0x93) {
             for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
                 if(!Settings.isRandomizeNonBossDoors()) {
-                    if(flagTest.getIndex() == 0x15c || flagTest.getIndex() == 0x15d) {
+                    if(flagTest.getIndex() == FlagConstants.AMPHISBAENA_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.AMPHISBAENA_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0
                                 ? "Door: F1" : "Door: B1";
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -2922,7 +2922,7 @@ public final class GameDataTracker {
                         }
                         backsideDoors.add(gameObject);
                     }
-                    else if(flagTest.getIndex() == 0x16d || flagTest.getIndex() == 0x16e) {
+                    else if(flagTest.getIndex() == FlagConstants.SAKIT_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.SAKIT_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 2
                                 ? "Door: F2" : "Door: B2";
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -2932,7 +2932,7 @@ public final class GameDataTracker {
                         }
                         backsideDoors.add(gameObject);
                     }
-                    else if(flagTest.getIndex() == 0x175 || flagTest.getIndex() == 0x176) {
+                    else if(flagTest.getIndex() == FlagConstants.ELLMAC_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.ELLMAC_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3
                                 ? "Door: F3" : "Door: B3";
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -2942,7 +2942,7 @@ public final class GameDataTracker {
                         }
                         backsideDoors.add(gameObject);
                     }
-                    else if(flagTest.getIndex() == 0x1bd || flagTest.getIndex() == 0x1be) {
+                    else if(flagTest.getIndex() == FlagConstants.BAHAMUT_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.BAHAMUT_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
                                 ? "Door: F4" : "Door: B4";
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -2952,7 +2952,7 @@ public final class GameDataTracker {
                         }
                         backsideDoors.add(gameObject);
                     }
-                    else if(flagTest.getIndex() == 0x152 || flagTest.getIndex() == 0x153) {
+                    else if(flagTest.getIndex() == FlagConstants.VIY_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.VIY_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 1
                                 ? "Door: F5" : "Door: B5";
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -2962,7 +2962,7 @@ public final class GameDataTracker {
                         }
                         backsideDoors.add(gameObject);
                     }
-                    else if(flagTest.getIndex() == 0x2b9 || flagTest.getIndex() == 0x1d0) {
+                    else if(flagTest.getIndex() == FlagConstants.PALENQUE_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.PALENQUE_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6
                                 ? "Door: F6" : "Door: B6";
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -2972,7 +2972,7 @@ public final class GameDataTracker {
                         }
                         backsideDoors.add(gameObject);
                     }
-                    else if(flagTest.getIndex() == 0x3b7 || flagTest.getIndex() == 0x1c0) {
+                    else if(flagTest.getIndex() == FlagConstants.BAPHOMET_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.BAPHOMET_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
                                 ? "Door: F7" : "Door: B7";
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -2984,9 +2984,9 @@ public final class GameDataTracker {
                     }
                 }
 
-                if (flagTest.getIndex() == 241) {
+                if (flagTest.getIndex() == FlagConstants.WF_SOFTWARE_MEKURI) {
                     // mekuri tent-closing effect
-                    GameObjectId gameObjectId = new GameObjectId((short) 100, 241);
+                    GameObjectId gameObjectId = new GameObjectId((short) 100, FlagConstants.WF_SOFTWARE_MEKURI);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -2995,9 +2995,9 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-                else if(flagTest.getIndex() == 171) {
+                else if(flagTest.getIndex() == FlagConstants.WF_CRUCIFIX) {
                     // Crucifix puzzle lit torches
-                    GameObjectId gameObjectId = new GameObjectId((short) 42, 171);
+                    GameObjectId gameObjectId = new GameObjectId((short) 42, FlagConstants.WF_CRUCIFIX);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -3006,9 +3006,9 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-                else if(flagTest.getIndex() == 262) {
+                else if(flagTest.getIndex() == FlagConstants.WF_PROVOCATIVE_BATHING_SUIT) {
                     // HT Dracuet stuff
-                    GameObjectId gameObjectId = new GameObjectId((short) 74, 262);
+                    GameObjectId gameObjectId = new GameObjectId((short) 74, FlagConstants.WF_PROVOCATIVE_BATHING_SUIT);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -3017,7 +3017,7 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     break;
                 }
-                else if(flagTest.getIndex() == 0x12b && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_MARDUK && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 8) {
                         // MARDUK tablet effect
@@ -3030,7 +3030,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 298 && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_SABBAT && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 7) {
                         // SABBAT tablet effect
@@ -3043,7 +3043,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 297 && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_MU && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6) {
                         // MU tablet effect
@@ -3056,7 +3056,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 296 && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_VIY && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5) {
                         // VIY tablet effect
@@ -3069,7 +3069,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 295 && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_BAHRUN && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 13) {
                         // BAHRUN tablet effect
@@ -3082,7 +3082,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 294 && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_WEDJET && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3) {
                         // WEDJET tablet effect
@@ -3095,7 +3095,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 293 && flagTest.getValue() == 2) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_ABUTO && flagTest.getValue() == 2) {
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 11) {
                         // ABUTO tablet effect
@@ -3108,7 +3108,7 @@ public final class GameDataTracker {
                         break;
                     }
                 }
-                else if(flagTest.getIndex() == 292) {
+                else if(flagTest.getIndex() == FlagConstants.MANTRA_FINAL) {
                     if(flagTest.getValue() == 2) {
                         if(gameObject.getObjectContainer() instanceof Screen
                                 && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0) {
@@ -3123,11 +3123,11 @@ public final class GameDataTracker {
                         }
                     }
                     else if(flagTest.getValue() == 4) {
-                        flagTest.setIndex(2794);
+                        flagTest.setIndex(FlagConstants.MANTRA_LAMULANA);
                         flagTest.setValue((byte)1);
                     }
                 }
-                else if(flagTest.getIndex() == 570) {
+                else if(flagTest.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
                     if(flagTest.getValue() == 3) {
                         if(ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
                             flagTest.setOp(ByteOp.FLAG_LTEQ);
@@ -3141,7 +3141,7 @@ public final class GameDataTracker {
                         }
                     }
                     else if(flagTest.getValue() != 4) {
-                        flagTest.setIndex(2799);
+                        flagTest.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
                         break;
                     }
                 }
@@ -3153,8 +3153,8 @@ public final class GameDataTracker {
                     if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
                         for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
                             TestByteOperation flagTest = gameObject.getTestByteOperations().get(i);
-                            if (flagTest.getIndex() == 0x000) {
-                                flagTest.setIndex(0xaad);
+                            if (flagTest.getIndex() == FlagConstants.SCREEN_FLAG_0) {
+                                flagTest.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
                                 break;
                             }
                         }
@@ -3167,7 +3167,7 @@ public final class GameDataTracker {
                     if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 2) {
                         for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
                             TestByteOperation flagTest = gameObject.getTestByteOperations().get(i);
-                            if (flagTest.getIndex() == 0x1ea) {
+                            if (flagTest.getIndex() == FlagConstants.LITTLE_BROTHER_PURCHASES) {
                                 flagTest.setValue((byte)4);
                                 break;
                             }
@@ -3177,19 +3177,19 @@ public final class GameDataTracker {
             }
             // Timer objects
             for (WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
-                if (flagUpdate.getIndex() == 554 && flagUpdate.getValue() == 3) {
+                if (flagUpdate.getIndex() == FlagConstants.PROVE_THOU_ART_SMALL && flagUpdate.getValue() == 3) {
                     // Becoming small
                     for(TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                        if (flagTest.getIndex() == 554 && ByteOp.FLAG_EQUALS.equals(flagTest.getOp()) && flagTest.getValue() == 2) {
+                        if (flagTest.getIndex() == FlagConstants.PROVE_THOU_ART_SMALL && ByteOp.FLAG_EQUALS.equals(flagTest.getOp()) && flagTest.getValue() == 2) {
                             flagTest.setOp(ByteOp.FLAG_LTEQ);
                             return;
                         }
                     }
                 }
-                else if(flagUpdate.getIndex() == 844) {
+                else if(flagUpdate.getIndex() == FlagConstants.HT_UNLOCK_PROGRESS_EARLY) {
                     if(flagUpdate.getValue() == 8) {
                         // Mulbruk swimsuit conversation timer.
-                        GameObjectId gameObjectId = new GameObjectId((short) 74, 262);
+                        GameObjectId gameObjectId = new GameObjectId((short) 74, FlagConstants.WF_PROVOCATIVE_BATHING_SUIT);
                         List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                         if (objects == null) {
                             mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -3204,7 +3204,7 @@ public final class GameDataTracker {
                             // Get rid of 8-boss requirement on HT.
                             Integer flagToRemoveIndex = null;
                             for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
-                                if (gameObject.getTestByteOperations().get(i).getIndex() == 258) {
+                                if (gameObject.getTestByteOperations().get(i).getIndex() == FlagConstants.BOSSES_SHRINE_TRANSFORM) {
                                     flagToRemoveIndex = i;
                                     break;
                                 }
@@ -3217,7 +3217,7 @@ public final class GameDataTracker {
                     }
                 }
                 else if(!Settings.isRandomizeNonBossDoors()) {
-                    if(flagUpdate.getIndex() == 0x15c || flagUpdate.getIndex() == 0x15d) {
+                    if(flagUpdate.getIndex() == FlagConstants.AMPHISBAENA_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.AMPHISBAENA_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0
                                 ? "Door: F1" : "Door: B1";
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -3227,7 +3227,7 @@ public final class GameDataTracker {
                         }
                         backsideDoors.add(gameObject);
                     }
-                    else if(flagUpdate.getIndex() == 0x16d || flagUpdate.getIndex() == 0x16e) {
+                    else if(flagUpdate.getIndex() == FlagConstants.SAKIT_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.SAKIT_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 2
                                 ? "Door: F2" : "Door: B2";
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -3237,7 +3237,7 @@ public final class GameDataTracker {
                         }
                         backsideDoors.add(gameObject);
                     }
-                    else if(flagUpdate.getIndex() == 0x175 || flagUpdate.getIndex() == 0x176) {
+                    else if(flagUpdate.getIndex() == FlagConstants.ELLMAC_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.ELLMAC_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3
                                 ? "Door: F3" : "Door: B3";
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -3247,7 +3247,7 @@ public final class GameDataTracker {
                         }
                         backsideDoors.add(gameObject);
                     }
-                    else if(flagUpdate.getIndex() == 0x1bd || flagUpdate.getIndex() == 0x1be) {
+                    else if(flagUpdate.getIndex() == FlagConstants.BAHAMUT_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.BAHAMUT_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
                                 ? "Door: F4" : "Door: B4";
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -3257,7 +3257,7 @@ public final class GameDataTracker {
                         }
                         backsideDoors.add(gameObject);
                     }
-                    else if(flagUpdate.getIndex() == 0x152 || flagUpdate.getIndex() == 0x153) {
+                    else if(flagUpdate.getIndex() == FlagConstants.VIY_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.VIY_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 1
                                 ? "Door: F5" : "Door: B5";
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -3267,7 +3267,7 @@ public final class GameDataTracker {
                         }
                         backsideDoors.add(gameObject);
                     }
-                    else if(flagUpdate.getIndex() == 0x2b9 || flagUpdate.getIndex() == 0x1d0) {
+                    else if(flagUpdate.getIndex() == FlagConstants.PALENQUE_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.PALENQUE_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6
                                 ? "Door: F6" : "Door: B6";
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -3277,7 +3277,7 @@ public final class GameDataTracker {
                         }
                         backsideDoors.add(gameObject);
                     }
-                    else if(flagUpdate.getIndex() == 0x3b7 || flagUpdate.getIndex() == 0x1c0) {
+                    else if(flagUpdate.getIndex() == FlagConstants.BAPHOMET_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.BAPHOMET_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
                                 ? "Door: F7" : "Door: B7";
                         List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
@@ -3291,9 +3291,9 @@ public final class GameDataTracker {
             }
             for(int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
                 TestByteOperation flagTest = gameObject.getTestByteOperations().get(i);
-                if(flagTest.getIndex() == 260) {
+                if(flagTest.getIndex() == FlagConstants.WF_DIARY) {
                     // Timers related to Diary puzzle
-                    GameObjectId gameObjectId = new GameObjectId((short) 72, 260);
+                    GameObjectId gameObjectId = new GameObjectId((short) 72, FlagConstants.WF_DIARY);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -3302,9 +3302,9 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     return;
                 }
-                else if(flagTest.getIndex() == 742) {
+                else if(flagTest.getIndex() == FlagConstants.WF_MSX2) {
                     // Timer related to MSX2 shop
-                    GameObjectId gameObjectId = new GameObjectId((short) 76, 742);
+                    GameObjectId gameObjectId = new GameObjectId((short) 76, FlagConstants.WF_MSX2);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -3313,12 +3313,12 @@ public final class GameDataTracker {
                     objects.add(gameObject);
                     return;
                 }
-                else if(flagTest.getIndex() == 123 && flagTest.getValue() == 56) {
+                else if(flagTest.getIndex() == FlagConstants.SCORE && flagTest.getValue() == 56) {
                     // Mulbruk score check timer - if you don't have the right score, the timer won't set the flag to
                     // spawn the Mulbruk conversation object that would let you get Book of the Dead.
                     flagTest.setValue((byte)0);
                 }
-                else if(flagTest.getIndex() == 0x2b8 && flagTest.getValue() == 0) {
+                else if(flagTest.getIndex() == FlagConstants.GATE_OF_TIME_FAIRY_UNKNOWN && flagTest.getValue() == 0) {
                     // 8bit Fairy timer test for some conversations
                     if(Settings.isHalloweenMode()) {
                         // 8bit Fairy - conversation needs added test
@@ -3329,14 +3329,14 @@ public final class GameDataTracker {
                         gameObject.getTestByteOperations().add(testByteOperation);
                     }
                 }
-                else if (flagTest.getIndex() == 0x12b) {
+                else if (flagTest.getIndex() == FlagConstants.MANTRA_MARDUK) {
                     // Timers related to MARDUK mantra. Some other timers have been removed in RcdReader.
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 8) {
                         flagTest.setOp(ByteOp.FLAG_LTEQ);
 
                         // Add test for Giltoriyo conversation
-                        gameObject.getTestByteOperations().add(new TestByteOperation(2795, ByteOp.FLAG_EQUALS, 1)); // 0xaeb
+                        gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
                         break;
                     }
 
@@ -3347,14 +3347,14 @@ public final class GameDataTracker {
                     }
                     objects.add(gameObject);
                 }
-                else if (flagTest.getIndex() == 298) {
+                else if (flagTest.getIndex() == FlagConstants.MANTRA_SABBAT) {
                     // Timers related to SABBAT mantra. Some other timers have been removed in RcdReader.
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 7) {
                         flagTest.setOp(ByteOp.FLAG_LTEQ);
 
                         // Add test for Giltoriyo conversation
-                        gameObject.getTestByteOperations().add(new TestByteOperation(2795, ByteOp.FLAG_EQUALS, 1)); // 0xaeb
+                        gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
                         break;
                     }
 
@@ -3365,14 +3365,14 @@ public final class GameDataTracker {
                     }
                     objects.add(gameObject);
                 }
-                else if (flagTest.getIndex() == 297) {
+                else if (flagTest.getIndex() == FlagConstants.MANTRA_MU) {
                     // Timers related to MU mantra.
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6) {
                         flagTest.setOp(ByteOp.FLAG_LTEQ);
 
                         // Add test for Giltoriyo conversation
-                        gameObject.getTestByteOperations().add(new TestByteOperation(2795, ByteOp.FLAG_EQUALS, 1)); // 0xaeb
+                        gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
                         break;
                     }
 
@@ -3383,13 +3383,13 @@ public final class GameDataTracker {
                     }
                     objects.add(gameObject);
                 }
-                else if (flagTest.getIndex() == 425) {
+                else if (flagTest.getIndex() == FlagConstants.INFERNO_VIY_MANTRA_STATUE) {
                     // Timer related to VIY mantra/statue combo.
 //                    if(gameObject.getObjectContainer() instanceof Screen
 //                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5) {
 //                        // Add test for Giltoriyo conversation
 //                        TestByteOperation testByteOperation = new TestByteOperation();
-//                        testByteOperation.setIndex(2795);
+//                        testByteOperation.setIndex(FlagConstants.MANTRAS_UNLOCKED);
 //                        testByteOperation.setOp(ByteOp.FLAG_EQUALS);
 //                        testByteOperation.setValue((byte)1);
 //
@@ -3405,14 +3405,14 @@ public final class GameDataTracker {
                     }
                     objects.add(gameObject);
                 }
-                else if (flagTest.getIndex() == 295) {
+                else if (flagTest.getIndex() == FlagConstants.MANTRA_BAHRUN) {
                     // Timers related to BAHRUN mantra.
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 13) {
                         flagTest.setOp(ByteOp.FLAG_LTEQ);
 
                         // Add test for Giltoriyo conversation
-                        gameObject.getTestByteOperations().add(new TestByteOperation(2795, ByteOp.FLAG_EQUALS, 1)); // 0xaeb
+                        gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
                         break;
                     }
 
@@ -3423,14 +3423,14 @@ public final class GameDataTracker {
                     }
                     objects.add(gameObject);
                 }
-                else if (flagTest.getIndex() == 294) {
+                else if (flagTest.getIndex() == FlagConstants.MANTRA_WEDJET) {
                     // Timers related to WEDJET mantra.
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3) {
                         flagTest.setOp(ByteOp.FLAG_LTEQ);
 
                         // Add test for Giltoriyo conversation
-                        gameObject.getTestByteOperations().add(new TestByteOperation(2795, ByteOp.FLAG_EQUALS, 1)); // 0xaeb
+                        gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
                         break;
                     }
 
@@ -3441,14 +3441,14 @@ public final class GameDataTracker {
                     }
                     objects.add(gameObject);
                 }
-                else if (flagTest.getIndex() == 293) {
+                else if (flagTest.getIndex() == FlagConstants.MANTRA_ABUTO) {
                     // Timers related to ABUTO mantra.
                     if(gameObject.getObjectContainer() instanceof Screen
                             && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 11) {
                         flagTest.setOp(ByteOp.FLAG_LTEQ);
 
                         // Add test for Giltoriyo conversation
-                        gameObject.getTestByteOperations().add(new TestByteOperation(2795, ByteOp.FLAG_EQUALS, 1)); // 0xaeb
+                        gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
                         break;
                     }
 
@@ -3459,7 +3459,7 @@ public final class GameDataTracker {
                     }
                     objects.add(gameObject);
                 }
-                else if (flagTest.getIndex() == 292) {
+                else if (flagTest.getIndex() == FlagConstants.MANTRA_FINAL) {
                     // Timers related to LAMULANA mantra.
                     if(flagTest.getValue() == 1) {
                         if(gameObject.getObjectContainer() instanceof Screen
@@ -3467,7 +3467,7 @@ public final class GameDataTracker {
                             flagTest.setOp(ByteOp.FLAG_LTEQ);
 
                             // Add test for Giltoriyo conversation
-                            gameObject.getTestByteOperations().add(new TestByteOperation(2795, ByteOp.FLAG_EQUALS, 1)); // 0xaeb
+                            gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
 
                             List<GameObject> objects = mantraTablets.get("LAMULANA");
                             if (objects == null) {
@@ -3479,24 +3479,24 @@ public final class GameDataTracker {
                         }
                     }
                     else if(flagTest.getValue() == 4) {
-                        flagTest.setIndex(2794);
+                        flagTest.setIndex(FlagConstants.MANTRA_LAMULANA);
                         flagTest.setValue((byte)1);
                     }
                 }
-                else if(flagTest.getIndex() == 570) {
+                else if(flagTest.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
                     // Timer to update Cog of the Soul puzzle.
-                    flagTest.setIndex(2799);
+                    flagTest.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
                     for(WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
-                        if(writeByteOperation.getIndex() == 570) {
-                            writeByteOperation.setIndex(2799);
+                        if(writeByteOperation.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
+                            writeByteOperation.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
                             break;
                         }
                     }
                     break;
                 }
-//                else if(flagTest.getIndex() == 267 && flagTest.getValue() == 1) {
+//                else if(flagTest.getIndex() == FlagConstants.WF_MATERNITY_STATUE && flagTest.getValue() == 1) {
 //                    // Timer to track wait time with Woman Statue and give Maternity Statue
-//                    GameObjectId gameObjectId = new GameObjectId((short) 81, 267);
+//                    GameObjectId gameObjectId = new GameObjectId((short) 81, FlagConstants.WF_MATERNITY_STATUE);
 //                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
 //                    if (objects == null) {
 //                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -3507,9 +3507,9 @@ public final class GameDataTracker {
             }
         } else if (gameObject.getId() == 0xbb) {
             for(TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                if(flagTest.getIndex() == 260) {
+                if(flagTest.getIndex() == FlagConstants.WF_DIARY) {
                     // Diary puzzle pillar
-                    GameObjectId gameObjectId = new GameObjectId((short) 72, 260);
+                    GameObjectId gameObjectId = new GameObjectId((short) 72, FlagConstants.WF_DIARY);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -3522,9 +3522,9 @@ public final class GameDataTracker {
         }
         else if(gameObject.getId() == 0x0a) {
             for(WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
-                if(flagUpdate.getIndex() == 143) {
+                if(flagUpdate.getIndex() == FlagConstants.WF_ANKH_JEWEL_MAUSOLEUM) {
                     // Mausoleum Ankh Jewel chest trap
-                    GameObjectId gameObjectId = new GameObjectId((short) 19, 143);
+                    GameObjectId gameObjectId = new GameObjectId((short) 19, FlagConstants.WF_ANKH_JEWEL_MAUSOLEUM);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                     if (objects == null) {
                         mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
@@ -3552,7 +3552,7 @@ public final class GameDataTracker {
                     // Reciting MARDUK won't un-recite SABBAT
                     Integer flagToRemoveIndex = null;
                     for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 298) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == FlagConstants.MANTRA_SABBAT) {
                             flagToRemoveIndex = i;
                             break;
                         }
@@ -3565,7 +3565,7 @@ public final class GameDataTracker {
                     // Reciting SABBAT won't un-recite MU
                     Integer flagToRemoveIndex = null;
                     for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 297) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == FlagConstants.MANTRA_MU) {
                             flagToRemoveIndex = i;
                             break;
                         }
@@ -3578,7 +3578,7 @@ public final class GameDataTracker {
                     // Reciting MU won't un-recite VIY, and statue won't be dependent on it either.
                     Integer flagToRemoveIndex = null;
                     for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 296) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == FlagConstants.MANTRA_VIY) {
                             flagToRemoveIndex = i;
                             break;
                         }
@@ -3591,7 +3591,7 @@ public final class GameDataTracker {
                     // Reciting VIY won't un-recite BAHRUN
                     Integer flagToRemoveIndex = null;
                     for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 295) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == FlagConstants.MANTRA_BAHRUN) {
                             flagToRemoveIndex = i;
                             break;
                         }
@@ -3604,7 +3604,7 @@ public final class GameDataTracker {
                     // Reciting BAHRUN won't un-recite WEDJET
                     Integer flagToRemoveIndex = null;
                     for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 294) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == FlagConstants.MANTRA_WEDJET) {
                             flagToRemoveIndex = i;
                             break;
                         }
@@ -3617,7 +3617,7 @@ public final class GameDataTracker {
                     // Reciting WEDJET won't un-recite ABUTO
                     Integer flagToRemoveIndex = null;
                     for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 293) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == FlagConstants.MANTRA_ABUTO) {
                             flagToRemoveIndex = i;
                             break;
                         }
@@ -3630,7 +3630,7 @@ public final class GameDataTracker {
                     // Reciting ABUTO won't un-recite LAMULANA
                     Integer flagToRemoveIndex = null;
                     for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-                        if (gameObject.getWriteByteOperations().get(i).getIndex() == 292) {
+                        if (gameObject.getWriteByteOperations().get(i).getIndex() == FlagConstants.MANTRA_FINAL) {
                             flagToRemoveIndex = i;
                             break;
                         }
@@ -3642,8 +3642,8 @@ public final class GameDataTracker {
                 else if(mantraNumber == 9) {
                     // Reciting LAMULANA won't update the flag that upgrades the Key Sword until we're ready.
                     for (WriteByteOperation writeByteOperation : gameObject.getWriteByteOperations()) {
-                        if (writeByteOperation.getIndex() == 292) {
-                            writeByteOperation.setIndex(2794);
+                        if (writeByteOperation.getIndex() == FlagConstants.MANTRA_FINAL) {
+                            writeByteOperation.setIndex(FlagConstants.MANTRA_LAMULANA);
                             writeByteOperation.setValue(1);
                             break;
                         }
@@ -3662,7 +3662,7 @@ public final class GameDataTracker {
                 testByteOperation.setOp(ByteOp.FLAG_EQUALS);
                 if(mantraNumber == 9) {
                     // We've swapped out this flag, so use the replaced one.
-                    testByteOperation.setIndex(2794);
+                    testByteOperation.setIndex(FlagConstants.MANTRA_LAMULANA);
                     testByteOperation.setValue((byte)1);
                 }
                 else {
@@ -3713,13 +3713,13 @@ public final class GameDataTracker {
                 mantraTimer.getTestByteOperations().add(testByteOperation);
 
                 testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(292);
+                testByteOperation.setIndex(FlagConstants.MANTRA_FINAL);
                 testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
                 testByteOperation.setValue((byte)4);
                 mantraTimer.getTestByteOperations().add(testByteOperation);
 
                 writeByteOperation = new WriteByteOperation();
-                writeByteOperation.setIndex(292);
+                writeByteOperation.setIndex(FlagConstants.MANTRA_FINAL);
                 writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
                 writeByteOperation.setValue(4);
                 mantraTimer.getWriteByteOperations().add(writeByteOperation);
@@ -3729,30 +3729,30 @@ public final class GameDataTracker {
         }
     }
 
-    private static int getAnkhFlag(int zoneIndex) {
+    private static int getAnkhJewelFlag(int zoneIndex) {
         if(zoneIndex == 0) {
-            return 0x08e;
+            return FlagConstants.WF_ANKH_JEWEL_GUIDANCE;
         }
         if(zoneIndex == 2) {
-            return 0x08f;
+            return FlagConstants.WF_ANKH_JEWEL_MAUSOLEUM;
         }
         if(zoneIndex == 3) {
-            return 0x090;
+            return FlagConstants.WF_ANKH_JEWEL_SUN;
         }
         if(zoneIndex == 4) {
-            return 0x091;
+            return FlagConstants.WF_ANKH_JEWEL_SPRING;
         }
         if(zoneIndex == 5) {
-            return 0x092;
+            return FlagConstants.WF_ANKH_JEWEL_RUIN;
         }
         if(zoneIndex == 6) {
-            return 0x093;
+            return FlagConstants.WF_ANKH_JEWEL_BIRTH;
         }
         if(zoneIndex == 7) {
-            return 0x094;
+            return FlagConstants.WF_ANKH_JEWEL_TWIN;
         }
         if(zoneIndex == 17) {
-            return 0x095;
+            return FlagConstants.WF_ANKH_JEWEL_DIMENSIONAL;
         }
         return 0;
     }
@@ -3761,7 +3761,7 @@ public final class GameDataTracker {
         if(block.getBlockNumber() == 37) {
             // mekuri.exe
             short inventoryArg = (short) (100);
-            int worldFlag = 241;
+            int worldFlag = FlagConstants.WF_SOFTWARE_MEKURI;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
@@ -3774,7 +3774,7 @@ public final class GameDataTracker {
         else if(block.getBlockNumber() == 245) {
             // Conversation to receive Pepper
             short inventoryArg = (short) (30);
-            int worldFlag = 2702;
+            int worldFlag = FlagConstants.WF_PEPPER;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             // Add custom conversation flag so we don't have to worry about order of operations for
@@ -3783,14 +3783,14 @@ public final class GameDataTracker {
                 BlockContents blockContents = block.getBlockContents().get(i);
                 if(blockContents instanceof BlockFlagData) {
                     BlockFlagData blockFlagData = (BlockFlagData) blockContents;
-                    if(blockFlagData.getWorldFlag() == 552) {
+                    if(blockFlagData.getWorldFlag() == FlagConstants.MR_SLUSHFUND_CONVERSATION) {
                         blockContentIndex = i;
                     }
                 }
             }
 
             block.getBlockContents().add(blockContentIndex,
-                    new BlockFlagData((short)0x0040, (short)2784, (short)1));
+                    new BlockFlagData((short)0x0040, (short)FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER, (short)1));
 
             List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
             if (blocks == null) {
@@ -3802,7 +3802,7 @@ public final class GameDataTracker {
         else if(block.getBlockNumber() == 247) {
             // Conversation to give Treasures and receive Anchor
             short inventoryArg = (short) (50);
-            int worldFlag = 2706;
+            int worldFlag = FlagConstants.WF_ANCHOR;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
@@ -3815,7 +3815,7 @@ public final class GameDataTracker {
         else if(block.getBlockNumber() == 249) {
             // Mini Doll
             short inventoryArg = (short) (22);
-            int worldFlag = 152;
+            int worldFlag = FlagConstants.WF_MINI_DOLL;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
@@ -3828,7 +3828,7 @@ public final class GameDataTracker {
         else if(block.getBlockNumber() == 364) {
             // xmailer.exe
             short inventoryArg = (short) (86);
-            int worldFlag = 227;
+            int worldFlag = FlagConstants.WF_SOFTWARE_XMAILER;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             updateXmailerBlock(block.getBlockContents());
@@ -3847,14 +3847,14 @@ public final class GameDataTracker {
                 BlockContents blockContents = block.getBlockContents().get(i);
                 if(blockContents instanceof BlockFlagData) {
                     BlockFlagData blockFlagData = (BlockFlagData) blockContents;
-                    if(blockFlagData.getWorldFlag() == 740) {
+                    if(blockFlagData.getWorldFlag() == FlagConstants.CONVERSATION_CANT_LEAVE) {
                         blockContentIndex = i;
                     }
                 }
             }
 
             block.getBlockContents().add(blockContentIndex,
-                    new BlockFlagData((short)0x0040, (short)2796, (short)2));
+                    new BlockFlagData((short)0x0040, (short)FlagConstants.XELPUD_CONVERSATION_TALISMAN_FOUND, (short)2));
             block.getBlockContents().add(blockContentIndex,
                     new BlockFlagData((short)0x0040, (short)807, (short)1));
         }
@@ -3865,7 +3865,7 @@ public final class GameDataTracker {
                 BlockContents blockContents = block.getBlockContents().get(i);
                 if(blockContents instanceof BlockFlagData) {
                     BlockFlagData blockFlagData = (BlockFlagData) blockContents;
-                    if(blockFlagData.getWorldFlag() == 537) {
+                    if(blockFlagData.getWorldFlag() == FlagConstants.SHRINE_DIARY_CHEST) {
                         flagIndexToRemove = i;
                     }
                 }
@@ -3880,19 +3880,19 @@ public final class GameDataTracker {
                 BlockContents blockContents = block.getBlockContents().get(i);
                 if(blockContents instanceof BlockFlagData) {
                     BlockFlagData blockFlagData = (BlockFlagData) blockContents;
-                    if(blockFlagData.getWorldFlag() == 740) {
+                    if(blockFlagData.getWorldFlag() == FlagConstants.CONVERSATION_CANT_LEAVE) {
                         blockContentIndex = i;
                     }
                 }
             }
 
             block.getBlockContents().add(blockContentIndex,
-                    new BlockFlagData((short)0x0040, (short)2796, (short)3));
+                    new BlockFlagData((short)0x0040, (short)FlagConstants.XELPUD_CONVERSATION_TALISMAN_FOUND, (short)3));
         }
         else if(block.getBlockNumber() == 371) {
             // Mulana Talisman
             short inventoryArg = (short) (73);
-            int worldFlag = 261;
+            int worldFlag = FlagConstants.WF_MULANA_TALISMAN;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
@@ -3910,14 +3910,14 @@ public final class GameDataTracker {
                 BlockContents blockContents = block.getBlockContents().get(i);
                 if(blockContents instanceof BlockFlagData) {
                     blockFlagData = (BlockFlagData) blockContents;
-                    if(blockFlagData.getWorldFlag() == 261) {
-                        blockFlagData.setWorldFlag((short)2797);
+                    if(blockFlagData.getWorldFlag() == FlagConstants.WF_MULANA_TALISMAN) {
+                        blockFlagData.setWorldFlag((short)FlagConstants.XELPUD_CONVERSATION_DIARY_FOUND);
                         blockFlagData.setFlagValue((short)2);
                         flagIndexOfMulanaTalisman = i;
                     }
                 }
             }
-            blockFlagData = new BlockFlagData((short)0x0040, (short)261, (short)2);
+            blockFlagData = new BlockFlagData((short)0x0040, (short)FlagConstants.WF_MULANA_TALISMAN, (short)2);
             block.getBlockContents().add(flagIndexOfMulanaTalisman, blockFlagData);
 
             // Get rid of Diary puzzle flag.
@@ -3926,7 +3926,7 @@ public final class GameDataTracker {
                 BlockContents blockContents = block.getBlockContents().get(i);
                 if(blockContents instanceof BlockFlagData) {
                     blockFlagData = (BlockFlagData) blockContents;
-                    if(blockFlagData.getWorldFlag() == 530) {
+                    if(blockFlagData.getWorldFlag() == FlagConstants.SHRINE_PUZZLE_DIARY_CHEST) {
                         flagIndexToRemove = i;
                     }
                 }
@@ -3938,7 +3938,7 @@ public final class GameDataTracker {
         else if(block.getBlockNumber() == 397) {
             // Book of the Dead
             short inventoryArg = (short) (54);
-            int worldFlag = 2703;
+            int worldFlag = FlagConstants.WF_BOOK_OF_THE_DEAD;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
@@ -3956,7 +3956,7 @@ public final class GameDataTracker {
                 BlockContents blockContents = block.getBlockContents().get(i);
                 if(blockContents instanceof BlockFlagData) {
                     blockFlagData = (BlockFlagData) blockContents;
-                    if(blockFlagData.getWorldFlag() == 810) {
+                    if(blockFlagData.getWorldFlag() == FlagConstants.MULBRUK_CONVERSATION_BOOK) {
                         flagIndexOfConversationFlagUpdate = i;
                     }
                 }
@@ -4006,7 +4006,7 @@ public final class GameDataTracker {
             checkBlock.getFlagCheckReferences().remove((int)cmdToRemoveIndex4);
 
             BlockListData blockListData = new BlockListData((short)78, (short)4);
-            blockListData.getData().add((short)2797);
+            blockListData.getData().add((short)FlagConstants.XELPUD_CONVERSATION_DIARY_FOUND);
             blockListData.getData().add((short)1);
             blockListData.getData().add((short)371);
             blockListData.getData().add((short)0); // Disabling repeat for Mulana Talisman in case it's an ankh jewel or something.
@@ -4014,7 +4014,7 @@ public final class GameDataTracker {
 
             // Xelpud pillar conversation possible as soon as Talisman conversation
             blockListData = new BlockListData((short)78, (short)4);
-            blockListData.getData().add((short)2796);
+            blockListData.getData().add((short)FlagConstants.XELPUD_CONVERSATION_TALISMAN_FOUND);
             blockListData.getData().add((short)2);
             blockListData.getData().add((short)370);
             blockListData.getData().add((short)0);
@@ -4022,7 +4022,7 @@ public final class GameDataTracker {
 
             // Changing Talisman conversation to use a custom flag instead of a held item check
             blockListData = new BlockListData((short)78, (short)4);
-            blockListData.getData().add((short)2796);
+            blockListData.getData().add((short)FlagConstants.XELPUD_CONVERSATION_TALISMAN_FOUND);
             blockListData.getData().add((short)1);
             blockListData.getData().add((short)369);
             blockListData.getData().add((short)0);
@@ -4030,7 +4030,7 @@ public final class GameDataTracker {
 
             // Changing xmailer conversation to use a custom flag
             blockListData = new BlockListData((short)78, (short)4);
-            blockListData.getData().add((short)0xad0);
+            blockListData.getData().add((short)FlagConstants.XELPUD_CONVERSATION_INTRO);
             blockListData.getData().add((short)0);
             blockListData.getData().add((short)364);
             blockListData.getData().add((short)0);
@@ -4071,7 +4071,7 @@ public final class GameDataTracker {
         else if(block.getBlockNumber() == 716) {
             // Surface map
             short inventoryArg = (short) (70);
-            int worldFlag = 209;
+            int worldFlag = FlagConstants.WF_MAP_SURFACE;
             GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
             List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
@@ -4088,7 +4088,7 @@ public final class GameDataTracker {
             }
             else {
                 short inventoryArg = (short) (74);
-                int worldFlag = 262;
+                int worldFlag = FlagConstants.WF_PROVOCATIVE_BATHING_SUIT;
                 GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
 
                 List<Block> blocks = mapOfChestIdentifyingInfoToBlock.get(gameObjectId);
@@ -4136,7 +4136,7 @@ public final class GameDataTracker {
                         Integer flagIndexToRemove = null;
                         for(int i = 0; i < newNpcObject.getTestByteOperations().size(); i++) {
                             TestByteOperation testByteOperation = newNpcObject.getTestByteOperations().get(i);
-                            if(testByteOperation.getIndex() == 0x0f1) {
+                            if(testByteOperation.getIndex() == FlagConstants.WF_SOFTWARE_MEKURI) {
                                 flagIndexToRemove = i;
                                 break;
                             }
@@ -4151,7 +4151,7 @@ public final class GameDataTracker {
                         Integer flagIndexToRemove = null;
                         for(int i = 0; i < newNpcObject.getTestByteOperations().size(); i++) {
                             TestByteOperation testByteOperation = newNpcObject.getTestByteOperations().get(i);
-                            if(testByteOperation.getIndex() != 0x0fe) {
+                            if(testByteOperation.getIndex() != FlagConstants.MOTHER_STATE) {
                                 // The other flag might be shuffled, but there are only two.
                                 flagIndexToRemove = i;
                                 break;
@@ -4166,7 +4166,7 @@ public final class GameDataTracker {
                         Integer flagIndexToRemove = null;
                         for(int i = 0; i < newNpcObject.getTestByteOperations().size(); i++) {
                             TestByteOperation testByteOperation = newNpcObject.getTestByteOperations().get(i);
-                            if(testByteOperation.getIndex() == 0x34f) {
+                            if(testByteOperation.getIndex() == FlagConstants.MEDICINE_SOLVED) {
                                 flagIndexToRemove = i;
                                 break;
                             }
@@ -4180,7 +4180,7 @@ public final class GameDataTracker {
                         Integer flagIndexToRemove = null;
                         for(int i = 0; i < newNpcObject.getTestByteOperations().size(); i++) {
                             TestByteOperation testByteOperation = newNpcObject.getTestByteOperations().get(i);
-                            if(testByteOperation.getIndex() == 0x2b8) {
+                            if(testByteOperation.getIndex() == FlagConstants.GATE_OF_TIME_FAIRY_UNKNOWN) {
                                 flagIndexToRemove = i;
                                 break;
                             }
@@ -4192,7 +4192,7 @@ public final class GameDataTracker {
                         flagIndexToRemove = null;
                         for(int i = 0; i < newNpcObject.getTestByteOperations().size(); i++) {
                             TestByteOperation testByteOperation = newNpcObject.getTestByteOperations().get(i);
-                            if(testByteOperation.getIndex() == 0x0fd) {
+                            if(testByteOperation.getIndex() == FlagConstants.TIAMAT_STATE) {
                                 flagIndexToRemove = i;
                                 break;
                             }
@@ -4206,7 +4206,7 @@ public final class GameDataTracker {
                         Integer flagIndexToRemove = null;
                         for(int i = 0; i < newNpcObject.getTestByteOperations().size(); i++) {
                             TestByteOperation testByteOperation = newNpcObject.getTestByteOperations().get(i);
-                            if(testByteOperation.getIndex() == 0x3ba) {
+                            if(testByteOperation.getIndex() == FlagConstants.HT_UNLOCK_CHAIN_PRIMARY) {
                                 flagIndexToRemove = i;
                                 break;
                             }
@@ -4241,7 +4241,7 @@ public final class GameDataTracker {
             final int totalNpcCount = Settings.isIncludeHellTempleNPCs() ? 29 : 28;
             for(int i = 28; i >= 0; i--) {
                 BlockListData blockListData = new BlockListData((short)78, (short)4);
-                blockListData.getData().add((short)0xaca);
+                blockListData.getData().add((short)FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT);
                 blockListData.getData().add((short)i);
                 blockListData.getData().add((short)AddObject.addNpcCountBlock(datBlocks, i, totalNpcCount));
                 blockListData.getData().add((short)0);
@@ -4249,7 +4249,7 @@ public final class GameDataTracker {
             }
             if(Settings.isIncludeHellTempleNPCs()) {
                 BlockListData blockListData = new BlockListData((short)78, (short)4);
-                blockListData.getData().add((short)0xaca);
+                blockListData.getData().add((short)FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT);
                 blockListData.getData().add((short)29);
                 blockListData.getData().add((short)AddObject.addAllNpcsBlock(datBlocks));
                 blockListData.getData().add((short)0);
@@ -4274,7 +4274,7 @@ public final class GameDataTracker {
                 else if(blockNum == 0x189) {
                     updateMulbrukIntroBlock(datBlocks.get(0x189).getBlockContents(), 0x189);
                     BlockListData mulbrukBlockListData = new BlockListData((short)78, (short)4);
-                    mulbrukBlockListData.getData().add((short)0xaac);
+                    mulbrukBlockListData.getData().add((short)FlagConstants.CUSTOM_HALLOWEEN_MULBRUK_CONVERSATION);
                     mulbrukBlockListData.getData().add((short)0);
                     mulbrukBlockListData.getData().add((short)0x189);
                     mulbrukBlockListData.getData().add((short)1);
@@ -4291,7 +4291,7 @@ public final class GameDataTracker {
 
             if(Settings.isIncludeHellTempleNPCs()) {
                 BlockListData blockListData = new BlockListData((short)78, (short)4);
-                blockListData.getData().add((short)0xaac);
+                blockListData.getData().add((short)FlagConstants.CUSTOM_HALLOWEEN_MULBRUK_CONVERSATION);
                 blockListData.getData().add((short)2);
                 blockListData.getData().add((short)AddObject.addMulbrukHTBlock(datBlocks, npcHintCount + 1));
                 blockListData.getData().add((short)0);
@@ -4309,7 +4309,7 @@ public final class GameDataTracker {
                 // Add to flag-based.
                 short hintBlock = (short)AddObject.addNpcHintBlock(datBlocks, i, true);
                 BlockListData blockListData = new BlockListData((short)78, (short)4);
-                blockListData.getData().add((short)0xace);
+                blockListData.getData().add((short)FlagConstants.CUSTOM_HALLOWEEN_MULBRUK_HINT);
                 blockListData.getData().add((short)(i - 1));
                 blockListData.getData().add(hintBlock);
                 blockListData.getData().add((short)0);
@@ -4329,7 +4329,7 @@ public final class GameDataTracker {
             }
             short hintBlock = (short)AddObject.addDevRoomHintBlock(datBlocks, true);
             BlockListData blockListData = new BlockListData((short)78, (short)4);
-            blockListData.getData().add((short)0xace);
+            blockListData.getData().add((short)FlagConstants.CUSTOM_HALLOWEEN_MULBRUK_HINT);
             blockListData.getData().add((short)npcHintCount);
             blockListData.getData().add(hintBlock);
             blockListData.getData().add((short)0);
@@ -4384,7 +4384,7 @@ public final class GameDataTracker {
             return 0xabf;
         }
         if(conversationBlockNumber == 684) {
-            return 0x1f5;
+            return FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES;
         }
         if(conversationBlockNumber == 689) {
             return 0xabe;
@@ -4443,7 +4443,7 @@ public final class GameDataTracker {
     public static void updateXmailerBlock(List<BlockContents> xelpudBlockContents) {
         if(Settings.isHalloweenMode()) {
             xelpudBlockContents.clear();
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
+            xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
             xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xaa7, (short) 1));
             List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.intro1"));
             for (Short shortCharacter : stringCharacters) {
@@ -4508,12 +4508,12 @@ public final class GameDataTracker {
                 xelpudBlockContents.add(new BlockSingleData(shortCharacter));
             }
 
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xad0, (short) 1)); // Talked to xelpud flag
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
+            xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)FlagConstants.XELPUD_CONVERSATION_INTRO, (short)1)); // Talked to xelpud flag
+            xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)0)); // Can-exit flag
         }
         else if(Settings.isFools2020Mode()) {
             xelpudBlockContents.clear();
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
+            xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
             xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xaa7, (short) 1));
             List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.intro1"));
             for (Short shortCharacter : stringCharacters) {
@@ -4544,8 +4544,8 @@ public final class GameDataTracker {
                 xelpudBlockContents.add(new BlockSingleData(shortCharacter));
             }
 
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xad0, (short) 1)); // Talked to xelpud flag
-            xelpudBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
+            xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short) FlagConstants.XELPUD_CONVERSATION_INTRO, (short) 1)); // Talked to xelpud flag
+            xelpudBlockContents.add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)0)); // Can-exit flag
         }
         else {
             // Set value of world flag to 2 instead of 1
@@ -4553,11 +4553,11 @@ public final class GameDataTracker {
                 BlockContents blockContents = xelpudBlockContents.get(i);
                 if(blockContents instanceof BlockFlagData) {
                     BlockFlagData blockFlagData = (BlockFlagData) blockContents;
-                    if(blockFlagData.getWorldFlag() == 0x0e3) {
+                    if(blockFlagData.getWorldFlag() == FlagConstants.WF_SOFTWARE_XMAILER) {
                         blockFlagData.setFlagValue((short)2);
                     }
-                    else if(blockFlagData.getWorldFlag() == 0x07c) {
-                        blockFlagData.setWorldFlag((short)0xad0);
+                    else if(blockFlagData.getWorldFlag() == FlagConstants.XELPUD_CONVERSATION_GENERAL) {
+                        blockFlagData.setWorldFlag((short)FlagConstants.XELPUD_CONVERSATION_INTRO);
                         blockFlagData.setFlagValue((short)1);
                     }
                 }
@@ -4567,7 +4567,7 @@ public final class GameDataTracker {
 
     public static void updateSwimsuitBlock(List<BlockContents> swimsuitBlockContents) {
         swimsuitBlockContents.clear();
-        swimsuitBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
+        swimsuitBlockContents.add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
         swimsuitBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xaa7, (short) 1));
         List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.dracuet1"));
         for (Short shortCharacter : stringCharacters) {
@@ -4576,8 +4576,8 @@ public final class GameDataTracker {
         swimsuitBlockContents.add(new BlockItemData((short) 0x0042, (short) 74)); // Swimsuit
         swimsuitBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0x7ea, (short) 1)); // Solve room 27 so you can get out
         swimsuitBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0x7f8, (short) 1)); // Solve room 27 so you can get out
-        swimsuitBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0x36a, (short) 1)); // Mulbruk Halloween costume
-        swimsuitBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0x106, (short) 1)); // Mulbruk Halloween costume
+        swimsuitBlockContents.add(new BlockFlagData((short)0x0040, (short)FlagConstants.MULBRUK_BIKINI_ENDING, (short)1)); // Mulbruk Halloween costume
+        swimsuitBlockContents.add(new BlockFlagData((short)0x0040, (short)FlagConstants.WF_PROVOCATIVE_BATHING_SUIT, (short)1)); // Mulbruk Halloween costume
         swimsuitBlockContents.add(new BlockSingleData((short) 0x0044)); // {CLS}
 
         stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.dracuet2"));
@@ -4585,14 +4585,14 @@ public final class GameDataTracker {
             swimsuitBlockContents.add(new BlockSingleData(shortCharacter));
         }
 
-        swimsuitBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xaae, (short) 1)); // Dracuet flag
-        swimsuitBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
+        swimsuitBlockContents.add(new BlockFlagData((short)0x0040, (short)FlagConstants.CUSTOM_HALLOWEEN_FINAL_DRACUET, (short)1)); // Dracuet flag
+        swimsuitBlockContents.add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)0)); // Can-exit flag
     }
 
     public static void updateMulbrukIntroBlock(List<BlockContents> mulbrukBlockContents, int repeatBlock) {
         mulbrukBlockContents.clear();
-        mulbrukBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
-        mulbrukBlockContents.add(new BlockFlagData((short) 0x0040, (short) 0xaac, (short) 1));
+        mulbrukBlockContents.add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
+        mulbrukBlockContents.add(new BlockFlagData((short)0x0040, (short)FlagConstants.CUSTOM_HALLOWEEN_MULBRUK_CONVERSATION, (short) 1));
         List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.mulbruk1"));
         for (Short shortCharacter : stringCharacters) {
             mulbrukBlockContents.add(new BlockSingleData(shortCharacter));
@@ -4632,7 +4632,7 @@ public final class GameDataTracker {
             mulbrukBlockContents.add(new BlockSingleData(shortCharacter));
         }
         mulbrukBlockContents.add(new BlockSingleData((short) 0x0044)); // {CLS}
-        mulbrukBlockContents.add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
+        mulbrukBlockContents.add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)0)); // Can-exit flag
 
         // Allow repeat
         stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.repeat"));
@@ -4689,7 +4689,7 @@ public final class GameDataTracker {
 
         if(motherCheck && !Settings.isRandomizeTransitionGates()) {
             testByteOperation = new TestByteOperation();
-            testByteOperation.setIndex(0x0fe);
+            testByteOperation.setIndex(FlagConstants.MOTHER_STATE);
             testByteOperation.setValue((byte) 3);
             testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
             gameObject.getTestByteOperations().add(testByteOperation);
@@ -4847,7 +4847,7 @@ public final class GameDataTracker {
         gameObject.getTestByteOperations().add(testByteOperation);
 
         testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(0x0ae);
+        testByteOperation.setIndex(FlagConstants.WF_BRONZE_MIRROR);
         testByteOperation.setValue((byte)2);
         testByteOperation.setOp(ByteOp.FLAG_EQUALS);
         gameObject.getTestByteOperations().add(testByteOperation);
@@ -4867,7 +4867,7 @@ public final class GameDataTracker {
         gameObject.getWriteByteOperations().add(writeByteOperation);
 
         writeByteOperation = new WriteByteOperation();
-        writeByteOperation.setIndex(useSpecialFlag ? 0x00c : 0x029);
+        writeByteOperation.setIndex(useSpecialFlag ? FlagConstants.SCREEN_FLAG_C : FlagConstants.SCREEN_FLAG_29);
         writeByteOperation.setValue((byte) 1);
         writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
         gameObject.getWriteByteOperations().add(writeByteOperation);
@@ -4877,7 +4877,7 @@ public final class GameDataTracker {
         gameObject.getTestByteOperations().clear();
 
         TestByteOperation testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(0x0ae);
+        testByteOperation.setIndex(FlagConstants.WF_BRONZE_MIRROR);
         testByteOperation.setValue((byte)2);
         testByteOperation.setOp(ByteOp.FLAG_EQUALS);
         gameObject.getTestByteOperations().add(testByteOperation);
@@ -4897,7 +4897,7 @@ public final class GameDataTracker {
         gameObject.getWriteByteOperations().add(writeByteOperation);
 
         writeByteOperation = new WriteByteOperation();
-        writeByteOperation.setIndex(0x028);
+        writeByteOperation.setIndex(FlagConstants.SCREEN_FLAG_28);
         writeByteOperation.setValue((byte) 1);
         writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
         gameObject.getWriteByteOperations().add(writeByteOperation);
@@ -4913,7 +4913,7 @@ public final class GameDataTracker {
         gameObject.getTestByteOperations().add(testByteOperation);
 
         testByteOperation = new TestByteOperation();
-        testByteOperation.setIndex(0x0ae);
+        testByteOperation.setIndex(FlagConstants.WF_BRONZE_MIRROR);
         testByteOperation.setValue((byte)2);
         testByteOperation.setOp(ByteOp.FLAG_EQUALS);
         gameObject.getTestByteOperations().add(testByteOperation);
@@ -4960,7 +4960,7 @@ public final class GameDataTracker {
                 if(blockContents instanceof BlockFlagData) {
                     BlockFlagData flagData = (BlockFlagData) blockContents;
                     if(flagData.getWorldFlag() == itemLocationData.getWorldFlag()) {
-                        if(flagData.getWorldFlag() == 209) {
+                        if(flagData.getWorldFlag() == FlagConstants.WF_MAP_SURFACE) {
                             // Surface map
                             flagData.setFlagValue((short)1);
                         }
@@ -4969,10 +4969,10 @@ public final class GameDataTracker {
                         }
                         flagData.setWorldFlag((short)itemNewContentsData.getWorldFlag());
                     }
-                    else if(flagData.getWorldFlag() == 552) {
+                    else if(flagData.getWorldFlag() == FlagConstants.MR_SLUSHFUND_CONVERSATION) {
                         // The flag for the Pepper/Treasures/Anchor sequence is being replaced with custom world flags,
                         // but it won't show up in the block as a thing that matches the world flag, so special case!
-                        // Note: There is no case where we see a flag 552 and want to keep it.
+                        // Note: There is no case where we see a flag 0x228 and want to keep it.
                         flagData.setWorldFlag((short)itemNewContentsData.getWorldFlag());
                         flagData.setFlagValue((short)2);
                     }
@@ -5171,14 +5171,14 @@ public final class GameDataTracker {
 
     public static void updateXelpudIntro(List<Block> blocks) {
         Block introBlock = new Block(blocks.size());
-        introBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
+        introBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
         List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("text.xelpudWarn"));
         for (Short shortCharacter : stringCharacters) {
             introBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        introBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 0xad1, (short)2));
-        introBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 0xad0, (short)1));
-        introBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0));
+        introBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.RANDOMIZER_SAVE_LOADED, (short)2));
+        introBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.XELPUD_CONVERSATION_INTRO, (short)1));
+        introBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)0));
 
         blocks.add(introBlock);
 
@@ -5186,7 +5186,7 @@ public final class GameDataTracker {
 
         // Changing xmailer conversation to use a custom flag instead of a held item check
         BlockListData blockListData = new BlockListData((short)78, (short)4);
-        blockListData.getData().add((short)0xad1);
+        blockListData.getData().add((short)FlagConstants.RANDOMIZER_SAVE_LOADED);
         blockListData.getData().add((short)0);
         blockListData.getData().add((short)introBlock.getBlockNumber());
         blockListData.getData().add((short)0);
@@ -5372,9 +5372,9 @@ public final class GameDataTracker {
                     // Add timer for fools' rando 2021 to ensure a flag sequence behaves as intended.
                     // Ensure the process of falling blocks triggered by Pepper is reset if unfinished.
                     AddObject.addFramesTimer(gameObject.getObjectContainer(), 0,
-                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_GT, 0),
-                                    new TestByteOperation(0x137, ByteOp.FLAG_LT, 5)),
-                            Arrays.asList(new WriteByteOperation(0x137, ByteOp.ASSIGN_FLAG, 1)));
+                            Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_GT, 0),
+                                    new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_LT, 5)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.ASSIGN_FLAG, 1)));
                     updateFirstObject = true;
                 }
                 if(firstObject && "Transition: Sun L1".equals(gateDestination)) {
@@ -5415,7 +5415,7 @@ public final class GameDataTracker {
                     replaceTransitionGateArgs(warp, gateDestination); // First update the transitions so we can make a correct copy of the gate if needed.
 
                     TestByteOperation warpTest = new TestByteOperation();
-                    warpTest.setIndex(0x414);
+                    warpTest.setIndex(FlagConstants.SURFACE_RUINS_FRONT_DOOR_OPEN);
                     warpTest.setValue((byte) 0);
                     warpTest.setOp(ByteOp.FLAG_EQUALS);
                     warp.getTestByteOperations().add(warpTest);
@@ -6307,25 +6307,25 @@ public final class GameDataTracker {
     private static void replaceTransitionGateFlags(GameObject gameObject, String gateToUpdate, String gateDestination) {
         if(gateToUpdate.equals("Transition: Illusion R2")) {
             // Add extra check for Fruit of Eden placed.
-            gameObject.getTestByteOperations().add(new TestByteOperation(0x226, ByteOp.FLAG_NOT_EQUAL, 0));
+            gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.EDEN_UNLOCKED, ByteOp.FLAG_NOT_EQUAL, 0));
         }
 
         if(gateDestination.startsWith("Transition: Shrine") && !"Transition: Shrine D3".equals(gateDestination)) {
             TestByteOperation testByteOperation = gameObject.getTestByteOperations().get(0);
             if(testByteOperation.getValue() != 1) {
                 // Non-escape door
-                testByteOperation.setIndex(0x102);
+                testByteOperation.setIndex(FlagConstants.BOSSES_SHRINE_TRANSFORM);
                 testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
                 testByteOperation.setValue((byte)9);
 
                 // Add extra check for not during escape, since escape door is different.
-                gameObject.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_NOT_EQUAL, 1));
+                gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_NOT_EQUAL, 1));
             }
         }
         else if(gateDestination.equals("Transition: Illusion R1")
                 || gateDestination.equals("Transition: Illusion R2")) {
             // Add extra check for Fruit of Eden placed.
-            gameObject.getTestByteOperations().add(new TestByteOperation(0x226, ByteOp.FLAG_NOT_EQUAL, 0));
+            gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.EDEN_UNLOCKED, ByteOp.FLAG_NOT_EQUAL, 0));
         }
     }
 
@@ -6385,10 +6385,10 @@ public final class GameDataTracker {
 
     private static boolean isMirrorFlagObject(GameObject gameObject) {
         for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-            if(testByteOperation.getIndex() == 0x15c || testByteOperation.getIndex() == 0x16d
-                    || testByteOperation.getIndex() == 0x175 || testByteOperation.getIndex() == 0x1bd
-                    || testByteOperation.getIndex() == 0x152 || testByteOperation.getIndex() == 0x2b9
-                    || testByteOperation.getIndex() == 0x3b7) {
+            if(testByteOperation.getIndex() == FlagConstants.AMPHISBAENA_GATE_MIRROR_COVER || testByteOperation.getIndex() == FlagConstants.SAKIT_GATE_MIRROR_COVER
+                    || testByteOperation.getIndex() == FlagConstants.ELLMAC_GATE_MIRROR_COVER || testByteOperation.getIndex() == FlagConstants.BAHAMUT_GATE_MIRROR_COVER
+                    || testByteOperation.getIndex() == FlagConstants.VIY_GATE_MIRROR_COVER || testByteOperation.getIndex() == FlagConstants.PALENQUE_GATE_MIRROR_COVER
+                    || testByteOperation.getIndex() == FlagConstants.BAPHOMET_GATE_MIRROR_COVER) {
                 return true;
             }
         }
@@ -6415,7 +6415,7 @@ public final class GameDataTracker {
                     if(bossNumber == 9) {
                         AddObject.addKeyFairyDoorTimerAndSounds(gameObject.getObjectContainer());
                         AddObject.addBacksideDoorKeyFairyPoint(gameObject);
-                        AddObject.addAnimatedDoorCover(gameObject, 0x1c9, false);
+                        AddObject.addAnimatedDoorCover(gameObject, FlagConstants.KEY_FAIRY_DOOR_UNLOCKED, false);
                         AddObject.addBossNumberGraphicV2(gameObject, bossNumber, null);
                     }
                     else {
@@ -6448,31 +6448,31 @@ public final class GameDataTracker {
             return null;
         }
         if(bossNumber == 1) {
-            return 0x0f6;
+            return FlagConstants.AMPHISBAENA_STATE;
         }
         if(bossNumber == 2) {
-            return 0x0f7;
+            return FlagConstants.SAKIT_STATE;
         }
         if(bossNumber == 3) {
-            return 0x0f8;
+            return FlagConstants.ELLMAC_STATE;
         }
         if(bossNumber == 4) {
-            return 0x0f9;
+            return FlagConstants.BAHAMUT_STATE;
         }
         if(bossNumber == 5) {
-            return 0x0fa;
+            return FlagConstants.VIY_STATE;
         }
         if(bossNumber == 6) {
-            return 0x0fb;
+            return FlagConstants.PALENQUE_STATE;
         }
         if(bossNumber == 7) {
-            return 0x0fc;
+            return FlagConstants.BAPHOMET_STATE;
         }
 //        if(bossNumber == 8) {
-//            return 0x0fd;
+//            return FlagConstants.TIAMAT_STATE;
 //        }
         if(bossNumber == 9) {
-            return 0x1c9;
+            return FlagConstants.KEY_FAIRY_DOOR_UNLOCKED;
         }
         return null;
     }
@@ -6482,50 +6482,50 @@ public final class GameDataTracker {
             return null;
         }
         if(bossNumber == 1) {
-            return 0x15d;
+            return FlagConstants.AMPHISBAENA_GATE_OPEN;
         }
         if(bossNumber == 2) {
-            return 0x16e;
+            return FlagConstants.SAKIT_GATE_OPEN;
         }
         if(bossNumber == 3) {
-            return 0x176;
+            return FlagConstants.ELLMAC_GATE_OPEN;
         }
         if(bossNumber == 4) {
-            return 0x1be;
+            return FlagConstants.BAHAMUT_GATE_OPEN;
         }
         if(bossNumber == 5) {
-            return 0x153;
+            return FlagConstants.VIY_GATE_OPEN;
         }
         if(bossNumber == 6) {
-            return 0x1d0;
+            return FlagConstants.PALENQUE_GATE_OPEN;
         }
         if(bossNumber == 7) {
-            return 0x1c0;
+            return FlagConstants.BAPHOMET_GATE_OPEN;
         }
         return null;
     }
 
     private static int getMirrorCoverFlag(Integer bossNumber) {
         if(bossNumber == 1) {
-            return 0x15c;
+            return FlagConstants.AMPHISBAENA_GATE_MIRROR_COVER;
         }
         if(bossNumber == 2) {
-            return 0x16d;
+            return FlagConstants.SAKIT_GATE_MIRROR_COVER;
         }
         if(bossNumber == 3) {
-            return 0x175;
+            return FlagConstants.ELLMAC_GATE_MIRROR_COVER;
         }
         if(bossNumber == 4) {
-            return 0x1bd;
+            return FlagConstants.BAHAMUT_GATE_MIRROR_COVER;
         }
         if(bossNumber == 5) {
-            return 0x152;
+            return FlagConstants.VIY_GATE_MIRROR_COVER;
         }
         if(bossNumber == 6) {
-            return 0x2b9;
+            return FlagConstants.PALENQUE_GATE_MIRROR_COVER;
         }
         if(bossNumber == 7) {
-            return 0x3b7;
+            return FlagConstants.BAPHOMET_GATE_MIRROR_COVER;
         }
         return 0;
     }
@@ -6592,7 +6592,7 @@ public final class GameDataTracker {
             return;
         }
         boolean isRemovedItem = itemNewContentsData.getWorldFlag() != newWorldFlag;
-        boolean isTrapItem = Settings.isRandomizeTrapItems() && (newWorldFlag == 2777 || newWorldFlag == 2779 || newWorldFlag == 2780);
+        boolean isTrapItem = Settings.isRandomizeTrapItems() && (newWorldFlag == FlagConstants.WF_TRAP_GRAVEYARD || newWorldFlag == FlagConstants.WF_TRAP_INFERNO || newWorldFlag == FlagConstants.WF_TRAP_TWIN);
         boolean randomizeGraphics = isRandomizeGraphicsAllowed && !isRemovedItem && !isTrapItem && !chestContents.startsWith("Coin:")
                 && (getCustomItemGraphic(chestContents) != 0 || (isRandomGraphicsAvailable() && random.nextBoolean()));
         Integer itemRandomizeGraphicsFlag = randomizeGraphics ? getRandomizeGraphicsFlag(newWorldFlag) : null;
@@ -6742,50 +6742,50 @@ public final class GameDataTracker {
                 WriteByteOperation puzzleFlag = gameObject.getWriteByteOperations().get(1);
                 gameObject.getWriteByteOperations().clear();
 
-                gameObject.getWriteByteOperations().add(new WriteByteOperation(0xacf, ByteOp.ASSIGN_FLAG, 2));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.ASSIGN_FLAG, 2));
                 gameObject.getWriteByteOperations().add(puzzleFlag);
-                gameObject.getWriteByteOperations().add(new WriteByteOperation(0xacf, ByteOp.ASSIGN_FLAG, 1));
-                gameObject.getWriteByteOperations().add(new WriteByteOperation(0xacf, ByteOp.ASSIGN_FLAG, 2));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.ASSIGN_FLAG, 1));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.ASSIGN_FLAG, 2));
             }
         }
-        AddObject.addGrailToggle(featherScreen, false, new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2));
+        AddObject.addGrailToggle(featherScreen, false, new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2));
         AddObject.addFramesTimer(featherScreen, 0,
-                Arrays.asList(new TestByteOperation(0xaca, ByteOp.FLAG_EQUALS, 0),
-                        new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)),
-                Arrays.asList(new WriteByteOperation(0xaca, ByteOp.ASSIGN_FLAG, 1),
-                        new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1)));
-        AddObject.addPot(featherScreen, 220, 20, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
-        AddObject.addSuccessSound(featherScreen,  Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2),
-                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
+                Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_SPAULDER, ByteOp.FLAG_EQUALS, 0),
+                        new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.CUSTOM_WF_SPAULDER, ByteOp.ASSIGN_FLAG, 1),
+                        new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1)));
+        AddObject.addPot(featherScreen, 220, 20, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addSuccessSound(featherScreen,  Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2),
+                new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
 
         Screen argusScreen = getScreen(argusRoom.getScreens(), 1);
 
-        AddObject.addPot(argusScreen, 900, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
-        AddObject.addPot(argusScreen, 940, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
-        AddObject.addPot(argusScreen, 980, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
-        AddObject.addPot(argusScreen, 1020, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
-        AddObject.addPot(argusScreen, 1060, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 900, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 940, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 980, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1020, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1060, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
 
-        AddObject.addPot(argusScreen, 920, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
-        AddObject.addPot(argusScreen, 960, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
-        AddObject.addPot(argusScreen, 1000, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
-        AddObject.addPot(argusScreen, 1040, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 920, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 960, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1000, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1040, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
 
-        AddObject.addPot(argusScreen, 940, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
-        AddObject.addPot(argusScreen, 980, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
-        AddObject.addPot(argusScreen, 1020, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 940, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 980, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1020, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
 
-        AddObject.addPot(argusScreen, 960, 200, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
-        AddObject.addPot(argusScreen, 1000, 200, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 960, 200, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1000, 200, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
 
-        AddObject.addPot(argusScreen, 980, 160, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 980, 160, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
 
         AddObject.addFloatingItem(argusScreen, 980, 0, 53, false,
-                Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2),
-                        new TestByteOperation(0xaca, ByteOp.FLAG_EQUALS, 1)),
-                Arrays.asList(new WriteByteOperation(0xaca, ByteOp.ASSIGN_FLAG, 2),
-                        new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1)));
-        AddObject.addNoItemSoundEffect(argusScreen, 0xaca, 0x00b);
+                Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(FlagConstants.CUSTOM_WF_SPAULDER, ByteOp.FLAG_EQUALS, 1)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.CUSTOM_WF_SPAULDER, ByteOp.ASSIGN_FLAG, 2),
+                        new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1)));
+        AddObject.addNoItemSoundEffect(argusScreen, FlagConstants.CUSTOM_WF_SPAULDER, FlagConstants.SCREEN_FLAG_B);
 
         Screen nextToArgusScreen = getScreen(argusRoom.getScreens(), 0);
         AddObject.addGrailToggle(nextToArgusScreen, true);
@@ -6800,7 +6800,7 @@ public final class GameDataTracker {
         Screen dimensionalGrailScreen = getScreen(tiamatRoom.getScreens(), 0);
 
         AddObject.addPot(dimensionalGrailScreen, 300, 400, PotGraphic.DIMENSIONAL,
-                DropType.FLARE_GUN_AMMO, 80, Arrays.asList(new TestByteOperation(64, ByteOp.FLAG_EQUALS, 1)),
+                DropType.FLARE_GUN_AMMO, 80, Arrays.asList(new TestByteOperation(FlagConstants.ROOM_FLAG_40, ByteOp.FLAG_EQUALS, 1)),
                 new ArrayList<>(0));
     }
 
@@ -6834,43 +6834,43 @@ public final class GameDataTracker {
     private static void updateChestContents(GameObject objectToModify, GameObjectId itemLocationData, GameObjectId itemNewContentsData,
                                             String newChestContentsItemName, int newWorldFlag, Integer itemRandomizeGraphicsFlag, boolean cursed, Random random) {
         if(Settings.isFools2021Mode()) {
-            if(itemLocationData.getWorldFlag() == 0x090) {
+            if(itemLocationData.getWorldFlag() == FlagConstants.WF_ANKH_JEWEL_SUN) {
                 // Ankh Jewel (Temple of the Sun)
                 itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
                 newChestContentsItemName = "Spaulder";
                 newWorldFlag = 0xabe;
             }
-            if(itemLocationData.getWorldFlag() == 0x0ae) {
+            if(itemLocationData.getWorldFlag() == FlagConstants.WF_BRONZE_MIRROR) {
                 // Bronze Mirror
                 itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
                 newChestContentsItemName = "Spaulder";
                 newWorldFlag = 0xabf;
             }
-            if(itemLocationData.getWorldFlag() == 0x0aa) {
+            if(itemLocationData.getWorldFlag() == FlagConstants.WF_ISIS_PENDANT) {
                 // Isis' Pendant
                 itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
                 newChestContentsItemName = "Spaulder";
                 newWorldFlag = 0xac0;
             }
-            if(itemLocationData.getWorldFlag() == 0x0d4) {
+            if(itemLocationData.getWorldFlag() == FlagConstants.WF_MAP_SUN) {
                 // Map (Temple of the Sun)
                 itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
                 newChestContentsItemName = "Spaulder";
                 newWorldFlag = 0xac2;
             }
-            if(itemLocationData.getWorldFlag() == 0x0ca) {
+            if(itemLocationData.getWorldFlag() == FlagConstants.WF_SACRED_ORB_SUN) {
                 // Sacred Orb (Temple of the Sun)
                 itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
                 newChestContentsItemName = "Spaulder";
                 newWorldFlag = 0xac3;
             }
-            if(itemLocationData.getWorldFlag() == 0x18b) {
+            if(itemLocationData.getWorldFlag() == FlagConstants.WF_COIN_SUN) {
                 // Coin: Sun (Pyramid)
                 itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
                 newChestContentsItemName = "Spaulder";
                 newWorldFlag = 0xac5;
             }
-            if(itemLocationData.getWorldFlag() == 0x0da) {
+            if(itemLocationData.getWorldFlag() == FlagConstants.WF_MAP_SHRINE) {
                 // Map (Shrine of the Mother)
                 itemNewContentsData = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder");
                 newChestContentsItemName = "Spaulder";
@@ -6913,7 +6913,7 @@ public final class GameDataTracker {
 
             updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ADD_FLAG);
-            updateFlag.setIndex(119); // Coin chest tracking
+            updateFlag.setIndex(FlagConstants.TOTAL_COIN_CHESTS); // Coin chest tracking
             updateFlag.setValue(1);
             objectToModify.getWriteByteOperations().add(updateFlag);
         }
@@ -6937,12 +6937,12 @@ public final class GameDataTracker {
             WriteByteOperation updateFlag = new WriteByteOperation();
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
             updateFlag.setIndex(newWorldFlag);
-            updateFlag.setValue(newWorldFlag == 2778 ? 2 : 1);
+            updateFlag.setValue(newWorldFlag == FlagConstants.WF_TRAP_ILLUSION ? 2 : 1);
             objectToModify.getWriteByteOperations().add(updateFlag);
 
             objectToModify.getWriteByteOperations().add(puzzleFlag);
 
-            if(newWorldFlag == 2778) {
+            if(newWorldFlag == FlagConstants.WF_TRAP_ILLUSION) {
                 objectToModify.getArgs().set(0, (short)0); // Nothing
                 objectToModify.getArgs().set(1, (short)1); // Quantity is irrelevant
                 if(Settings.isRandomizeGraphics()) {
@@ -7005,19 +7005,19 @@ public final class GameDataTracker {
 
                 updateFlag = new WriteByteOperation();
                 updateFlag.setOp(ByteOp.ASSIGN_FLAG);
-                updateFlag.setIndex(46);
+                updateFlag.setIndex(FlagConstants.SCREEN_FLAG_2E);
                 updateFlag.setValue(1);
                 objectToModify.getWriteByteOperations().add(updateFlag);
 
                 int xPos = objectToModify.getX();
                 int yPos = objectToModify.getY();
-                AddObject.addBat(objectToModify.getObjectContainer(), xPos - 20, yPos, 46);
-                AddObject.addBat(objectToModify.getObjectContainer(), xPos + 20, yPos, 46);
-                AddObject.addBat(objectToModify.getObjectContainer(), xPos, yPos - 20, 46);
-                AddObject.addBat(objectToModify.getObjectContainer(), xPos, yPos + 20, 46);
+                AddObject.addBat(objectToModify.getObjectContainer(), xPos - 20, yPos, FlagConstants.SCREEN_FLAG_2E);
+                AddObject.addBat(objectToModify.getObjectContainer(), xPos + 20, yPos, FlagConstants.SCREEN_FLAG_2E);
+                AddObject.addBat(objectToModify.getObjectContainer(), xPos, yPos - 20, FlagConstants.SCREEN_FLAG_2E);
+                AddObject.addBat(objectToModify.getObjectContainer(), xPos, yPos + 20, FlagConstants.SCREEN_FLAG_2E);
             }
 
-            AddObject.addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, 46);
+            AddObject.addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, FlagConstants.SCREEN_FLAG_2E);
         }
         else {
             if(itemNewContentsData.getWorldFlag() == newWorldFlag || (Settings.isFools2021Mode() && newWorldFlag >= 0xabe && newWorldFlag <= 0xac6)) {
@@ -7232,16 +7232,16 @@ public final class GameDataTracker {
         short inventoryArg = itemNewContentsData.getInventoryArg();
         boolean isRemovedItem = itemNewContentsData.getWorldFlag() != newWorldFlag;
         boolean isTrapItem = !isRemovedItem && Settings.isRandomizeTrapItems()
-                && (newWorldFlag == 2777 || newWorldFlag == 2779 || newWorldFlag == 2780);
+                && (newWorldFlag == FlagConstants.WF_TRAP_GRAVEYARD || newWorldFlag == FlagConstants.WF_TRAP_INFERNO || newWorldFlag == FlagConstants.WF_TRAP_TWIN);
 
         if(Settings.isFools2021Mode()) {
-            if(itemLocationData.getWorldFlag() == 0x07f) {
+            if(itemLocationData.getWorldFlag() == FlagConstants.WF_KNIFE) {
                 // Knife
                 inventoryArg = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder").getInventoryArg();
                 isRemovedItem = false;
                 newWorldFlag = 0xac1;
             }
-            if(itemLocationData.getWorldFlag() == 0x0a4) {
+            if(itemLocationData.getWorldFlag() == FlagConstants.WF_TALISMAN) {
                 // Talisman
                 inventoryArg = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Spaulder").getInventoryArg();
                 isRemovedItem = false;
@@ -7277,7 +7277,7 @@ public final class GameDataTracker {
             }
 
             WriteByteOperation updateFlag = new WriteByteOperation();
-            updateFlag.setIndex(43);
+            updateFlag.setIndex(FlagConstants.SCREEN_FLAG_2B);
             updateFlag.setOp(ByteOp.ASSIGN_FLAG);
             updateFlag.setValue(1);
             objectToModify.getWriteByteOperations().add(updateFlag);
@@ -7285,12 +7285,12 @@ public final class GameDataTracker {
             if(Settings.isFools2020Mode()) {
                 int xPos = objectToModify.getX();
                 int yPos = objectToModify.getY();
-                AddObject.addBat(objectToModify.getObjectContainer(), xPos - 20, yPos, 43);
-                AddObject.addBat(objectToModify.getObjectContainer(), xPos + 20, yPos, 43);
-                AddObject.addBat(objectToModify.getObjectContainer(), xPos, yPos - 20, 43);
-                AddObject.addBat(objectToModify.getObjectContainer(), xPos, yPos + 20, 43);
+                AddObject.addBat(objectToModify.getObjectContainer(), xPos - 20, yPos, FlagConstants.SCREEN_FLAG_2B);
+                AddObject.addBat(objectToModify.getObjectContainer(), xPos + 20, yPos, FlagConstants.SCREEN_FLAG_2B);
+                AddObject.addBat(objectToModify.getObjectContainer(), xPos, yPos - 20, FlagConstants.SCREEN_FLAG_2B);
+                AddObject.addBat(objectToModify.getObjectContainer(), xPos, yPos + 20, FlagConstants.SCREEN_FLAG_2B);
             }
-            AddObject.addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, 43);
+            AddObject.addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, FlagConstants.SCREEN_FLAG_2B);
         }
         else if(isTrapItem) {
             // Trap items
@@ -7332,18 +7332,18 @@ public final class GameDataTracker {
                 writeByteOperation = new WriteByteOperation();
                 objectToModify.getWriteByteOperations().add(writeByteOperation);
             }
-            writeByteOperation.setIndex(43);
+            writeByteOperation.setIndex(FlagConstants.SCREEN_FLAG_2B);
             writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
             writeByteOperation.setValue((byte)1);
 
             int xPos = objectToModify.getX();
             int yPos = objectToModify.getY();
-            AddObject.addBat(objectToModify.getObjectContainer(), xPos - 20, yPos, 43);
-            AddObject.addBat(objectToModify.getObjectContainer(), xPos + 20, yPos, 43);
-            AddObject.addBat(objectToModify.getObjectContainer(), xPos, yPos - 20, 43);
-            AddObject.addBat(objectToModify.getObjectContainer(), xPos, yPos + 20, 43);
+            AddObject.addBat(objectToModify.getObjectContainer(), xPos - 20, yPos, FlagConstants.SCREEN_FLAG_2B);
+            AddObject.addBat(objectToModify.getObjectContainer(), xPos + 20, yPos, FlagConstants.SCREEN_FLAG_2B);
+            AddObject.addBat(objectToModify.getObjectContainer(), xPos, yPos - 20, FlagConstants.SCREEN_FLAG_2B);
+            AddObject.addBat(objectToModify.getObjectContainer(), xPos, yPos + 20, FlagConstants.SCREEN_FLAG_2B);
 
-            AddObject.addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, 43);
+            AddObject.addNoItemSoundEffect(objectToModify.getObjectContainer(), newWorldFlag, FlagConstants.SCREEN_FLAG_2B);
         }
         else if(itemRandomizeGraphicsFlag == null) {
             objectToModify.getArgs().set(1, inventoryArg);
@@ -7407,10 +7407,10 @@ public final class GameDataTracker {
 
         if(itemLocationData.getInventoryArg() == 11) {
             if(Settings.isFools2020Mode()) {
-                objectToModify.getTestByteOperations().add(new TestByteOperation(0x1b3, ByteOp.FLAG_GTEQ, 2));
+                objectToModify.getTestByteOperations().add(new TestByteOperation(FlagConstants.INFERNO_PUZZLE_FLARE_GUN, ByteOp.FLAG_GTEQ, 2));
             }
             if(Settings.isFools2021Mode()) {
-                objectToModify.getTestByteOperations().add(new TestByteOperation(0x1b7, ByteOp.FLAG_GTEQ, 2));
+                objectToModify.getTestByteOperations().add(new TestByteOperation(FlagConstants.INFERNO_PUZZLE_ICE_CAPE_CHEST, ByteOp.FLAG_GTEQ, 2));
             }
         }
     }
@@ -7477,9 +7477,9 @@ public final class GameDataTracker {
                     dais.setX(160);
                     dais.setY(180);
                     for(TestByteOperation testByteOperation : dais.getTestByteOperations()) {
-                        if (testByteOperation.getIndex() == 0x270 || testByteOperation.getIndex() == 0x29c
-                            || testByteOperation.getIndex() == 0x29d || testByteOperation.getIndex() == 0x29e) {
-                            testByteOperation.setIndex(0x270);
+                        if (testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_DANCING_MAN || testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_HANDS
+                            || testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_TRAP || testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_FACE) {
+                            testByteOperation.setIndex(FlagConstants.MOONLIGHT_SCAN_DANCING_MAN);
                             break;
                         }
                     }
@@ -7488,9 +7488,9 @@ public final class GameDataTracker {
                     dais.setX(320);
                     dais.setY(180);
                     for(TestByteOperation testByteOperation : dais.getTestByteOperations()) {
-                        if (testByteOperation.getIndex() == 0x270 || testByteOperation.getIndex() == 0x29c
-                            || testByteOperation.getIndex() == 0x29d || testByteOperation.getIndex() == 0x29e) {
-                            testByteOperation.setIndex(0x29c);
+                        if (testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_DANCING_MAN || testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_HANDS
+                            || testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_TRAP || testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_FACE) {
+                            testByteOperation.setIndex(FlagConstants.MOONLIGHT_SCAN_HANDS);
                             break;
                         }
                     }
@@ -7499,9 +7499,9 @@ public final class GameDataTracker {
                     dais.setX(320);
                     dais.setY(340);
                     for(TestByteOperation testByteOperation : dais.getTestByteOperations()) {
-                        if (testByteOperation.getIndex() == 0x270 || testByteOperation.getIndex() == 0x29c
-                            || testByteOperation.getIndex() == 0x29d || testByteOperation.getIndex() == 0x29e) {
-                            testByteOperation.setIndex(0x29d);
+                        if (testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_DANCING_MAN || testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_HANDS
+                            || testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_TRAP || testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_FACE) {
+                            testByteOperation.setIndex(FlagConstants.MOONLIGHT_SCAN_TRAP);
                             break;
                         }
                     }
@@ -7510,9 +7510,9 @@ public final class GameDataTracker {
                     dais.setX(320);
                     dais.setY(260);
                     for(TestByteOperation testByteOperation : dais.getTestByteOperations()) {
-                        if (testByteOperation.getIndex() == 0x270 || testByteOperation.getIndex() == 0x29c
-                            || testByteOperation.getIndex() == 0x29d || testByteOperation.getIndex() == 0x29e) {
-                            testByteOperation.setIndex(0x29e);
+                        if (testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_DANCING_MAN || testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_HANDS
+                            || testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_TRAP || testByteOperation.getIndex() == FlagConstants.MOONLIGHT_SCAN_FACE) {
+                            testByteOperation.setIndex(FlagConstants.MOONLIGHT_SCAN_FACE);
                             break;
                         }
                     }

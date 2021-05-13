@@ -348,55 +348,55 @@ public final class LocationCoordinateMapper {
     public static short getGrailFlag(int zone, boolean front) {
         if(Settings.isFools2021Mode()) {
             if(zone == 0) {
-                return 0xaaa;
+                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_GUIDANCE;
             }
             if(zone == 1) {
                 return FlagConstants.TABLET_GRAIL_SURFACE;
             }
             if(zone == 2) {
-                return 0xaab;
+                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_MAUSOLEUM;
             }
             if(zone == 3) {
-                return 0xaac;
+                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_SUN;
             }
             if(zone == 4) {
-                return 0xaad;
+                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_SPRING;
             }
             if(zone == 5) {
-                return 0xaae;
+                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_INFERNO;
             }
             if(zone == 6) {
-                return 0xaaf;
+                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_EXTINCTION;
             }
             if(zone == 7) {
-                return front ? (short)0xab0 : 0xab8;
+                return front ? (short)FlagConstants.CUSTOM_FOOLS2021_GRAIL_TWIN_FRONT : FlagConstants.CUSTOM_FOOLS2021_GRAIL_TWIN_BACK;
             }
             if(zone == 8) {
-                return 0xab1;
+                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_ENDLESS;
             }
             if(zone == 9) {
-                return 0x06c;
+                return FlagConstants.TABLET_GRAIL_SHRINE_FRONT;
             }
             if(zone == 10) {
-                return 0xab2;
+                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_ILLUSION;
             }
             if(zone == 11) {
-                return 0xab3;
+                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_GRAVEYARD;
             }
             if(zone == 12) {
-                return 0xab4;
+                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_MOONLIGHT;
             }
             if(zone == 13) {
-                return 0xab5;
+                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_GODDESS;
             }
             if(zone == 14) {
-                return 0xab6;
+                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_RUIN;
             }
             if(zone == 15 || zone == 16) {
-                return 0xab7;
+                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_BIRTH;
             }
             if(zone == 17) {
-                return 0xab9;
+                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_DIMENSIONAL;
             }
         }
         return getOriginalGrailFlag(zone, front);
@@ -404,58 +404,58 @@ public final class LocationCoordinateMapper {
 
     public static short getOriginalGrailFlag(int zone, boolean front) {
         if(zone == 0) {
-            return 0x064;
+            return FlagConstants.TABLET_GRAIL_GUIDANCE;
         }
         if(zone == 1) {
             return FlagConstants.TABLET_GRAIL_SURFACE; // Technically not used for the Surface grail, but it did apply for tablet glow.
         }
         if(zone == 2) {
-            return 0x065;
+            return FlagConstants.TABLET_GRAIL_MAUSOLEUM;
         }
         if(zone == 3) {
-            return 0x066;
+            return FlagConstants.TABLET_GRAIL_SUN;
         }
         if(zone == 4) {
-            return 0x067;
+            return FlagConstants.TABLET_GRAIL_SPRING;
         }
         if(zone == 5) {
-            return 0x068;
+            return FlagConstants.TABLET_GRAIL_INFERNO;
         }
         if(zone == 6) {
-            return 0x069;
+            return FlagConstants.TABLET_GRAIL_EXTINCTION;
         }
         if(zone == 7) {
-            return front ? (short)0x06a : 0x073;
+            return front ? (short)FlagConstants.TABLET_GRAIL_TWIN_FRONT : FlagConstants.TABLET_GRAIL_TWIN_BACK;
         }
         if(zone == 8) {
-            return 0x06b;
+            return FlagConstants.TABLET_GRAIL_ENDLESS;
         }
         if(zone == 9) {
-            return 0x06c;
+            return FlagConstants.TABLET_GRAIL_SHRINE_FRONT;
         }
         if(zone == 10) {
-            return 0x06d;
+            return FlagConstants.TABLET_GRAIL_ILLUSION;
         }
         if(zone == 11) {
-            return 0x06e;
+            return FlagConstants.TABLET_GRAIL_GRAVEYARD;
         }
         if(zone == 12) {
-            return 0x06f;
+            return FlagConstants.TABLET_GRAIL_MOONLIGHT;
         }
         if(zone == 13) {
-            return 0x070;
+            return FlagConstants.TABLET_GRAIL_GODDESS;
         }
         if(zone == 14) {
-            return 0x071;
+            return FlagConstants.TABLET_GRAIL_RUIN;
         }
         if(zone == 15 || zone == 16) {
-            return 0x072;
+            return FlagConstants.TABLET_GRAIL_BIRTH;
         }
         if(zone == 17) {
-            return 0x074;
+            return FlagConstants.TABLET_GRAIL_DIMENSIONAL;
         }
         if(zone == 18) {
-            return 0x075;
+            return FlagConstants.TABLET_GRAIL_SHRINE_BACK;
         }
 //        if(zone == 19) {
 //            return 0xacf; // Retro mausoleum

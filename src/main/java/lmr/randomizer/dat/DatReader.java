@@ -1,9 +1,6 @@
 package lmr.randomizer.dat;
 
-import lmr.randomizer.DataFromFile;
-import lmr.randomizer.FileUtils;
-import lmr.randomizer.Settings;
-import lmr.randomizer.Translations;
+import lmr.randomizer.*;
 import lmr.randomizer.dat.conversation.CheckBlock;
 import lmr.randomizer.dat.shop.BlockCmdSingle;
 import lmr.randomizer.dat.shop.BlockStringData;
@@ -932,13 +929,13 @@ public final class DatReader {
         }
 
         Block halloweenBlock = new Block(blockIndex);
-        halloweenBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
+        halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
         List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.text1"));
         for (Short shortCharacter : stringCharacters) {
             halloweenBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
         halloweenBlock.getBlockContents().add(new BlockItemData((short)0x0042, (short)84)); // Secret Treasure of Life
-        halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)0x1f5, (short)1));
+        halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, (short)1));
         halloweenBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
 
         stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.text2"));
@@ -946,7 +943,7 @@ public final class DatReader {
             halloweenBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
 
-        halloweenBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
+        halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)0)); // Can-exit flag
 
         return halloweenBlock;
     }
@@ -960,13 +957,13 @@ public final class DatReader {
         }
 
         Block halloweenBlock = new Block(blockIndex);
-        halloweenBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 1));
+        halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
         List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.fairyqueen"));
         for (Short shortCharacter : stringCharacters) {
             halloweenBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
 
-        halloweenBlock.getBlockContents().add(new BlockFlagData((short) 0x0040, (short) 740, (short) 0)); // Can-exit flag
+        halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)0)); // Can-exit flag
 
         return halloweenBlock;
     }
@@ -1302,7 +1299,7 @@ public final class DatReader {
                     BlockContents blockContents;
                     for(int i = 0; i < block.getBlockContents().size(); i++) {
                         blockContents = block.getBlockContents().get(i);
-                        if(blockContents instanceof BlockFlagData && ((BlockFlagData) blockContents).getWorldFlag() == 554) {
+                        if(blockContents instanceof BlockFlagData && ((BlockFlagData) blockContents).getWorldFlag() == FlagConstants.PROVE_THOU_ART_SMALL) {
                             becomingSmallFlagIndex = i;
                         }
                     }

@@ -1,9 +1,6 @@
 package lmr.randomizer.random;
 
-import lmr.randomizer.DataFromFile;
-import lmr.randomizer.FileUtils;
-import lmr.randomizer.Settings;
-import lmr.randomizer.Translations;
+import lmr.randomizer.*;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.update.GameDataTracker;
@@ -403,58 +400,58 @@ public class ItemRandomizer {
         }
         if("Whip".equals(newContents)
                 && (Settings.getCurrentRemovedItems().contains("Whip") || Settings.getRemovedItems().contains("Whip"))) {
-            return 2773;
+            return 0xad5;
         }
         if(Settings.isReplaceMapsWithWeights()
-                && itemNewContentsData.getInventoryArg() == 70 && itemNewContentsData.getWorldFlag() != 218
+                && itemNewContentsData.getInventoryArg() == 70 && itemNewContentsData.getWorldFlag() != FlagConstants.WF_MAP_SHRINE
                 && !DataFromFile.FLOATING_ITEM_LOCATIONS.contains(itemLocation)) {
-            if(itemNewContentsData.getWorldFlag() == 209) {
-                return 2708; // Surface map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_SURFACE) {
+                return FlagConstants.REMOVED_MAP_SURFACE; // Surface map
             }
-            if(itemNewContentsData.getWorldFlag() == 210) {
-                return 2709; // Guidance map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_GUIDANCE) {
+                return FlagConstants.REMOVED_MAP_GUIDANCE; // Guidance map
             }
-            if(itemNewContentsData.getWorldFlag() == 211) {
-                return 2710; // Mausoleum map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_MAUSOLEUM) {
+                return FlagConstants.REMOVED_MAP_MAUSOLEUM; // Mausoleum map
             }
-            if(itemNewContentsData.getWorldFlag() == 212) {
-                return 2711; // Sun map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_SUN) {
+                return FlagConstants.REMOVED_MAP_SUN; // Sun map
             }
-            if(itemNewContentsData.getWorldFlag() == 213) {
-                return 2712; // Spring map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_SPRING) {
+                return FlagConstants.REMOVED_MAP_SPRING; // Spring map
             }
-            if(itemNewContentsData.getWorldFlag() == 214) {
-                return 2713; // Inferno map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_INFERNO) {
+                return FlagConstants.REMOVED_MAP_INFERNO; // Inferno map
             }
-            if(itemNewContentsData.getWorldFlag() == 215) {
-                return 2714; // Extinction map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_EXTINCTION) {
+                return FlagConstants.REMOVED_MAP_EXTINCTION; // Extinction map
             }
-            if(itemNewContentsData.getWorldFlag() == 216) {
-                return 2715; // Twin Labyrinths map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_TWIN) {
+                return FlagConstants.REMOVED_MAP_TWIN; // Twin Labyrinths map
             }
-            if(itemNewContentsData.getWorldFlag() == 217) {
-                return 2716; // Endless map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_ENDLESS) {
+                return FlagConstants.REMOVED_MAP_ENDLESS; // Endless map
             }
-            if(itemNewContentsData.getWorldFlag() == 219) {
-                return 2717; // Illusion map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_ILLUSION) {
+                return FlagConstants.REMOVED_MAP_ILLUSION; // Illusion map
             }
-            if(itemNewContentsData.getWorldFlag() == 220) {
-                return 2718; // Graveyard map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_GRAVEYARD) {
+                return FlagConstants.REMOVED_MAP_GRAVEYARD; // Graveyard map
             }
-            if(itemNewContentsData.getWorldFlag() == 221) {
-                return 2719; // Moonlight map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_MOONLIGHT) {
+                return FlagConstants.REMOVED_MAP_MOONLIGHT; // Moonlight map
             }
-            if(itemNewContentsData.getWorldFlag() == 222) {
-                return 2720; // Goddess map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_GODDESS) {
+                return FlagConstants.REMOVED_MAP_GODDESS; // Goddess map
             }
-            if(itemNewContentsData.getWorldFlag() == 223) {
-                return 2721; // Ruin map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_RUIN) {
+                return FlagConstants.REMOVED_MAP_RUIN; // Ruin map
             }
-            if(itemNewContentsData.getWorldFlag() == 224) {
-                return 2722; // Birth map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_BIRTH) {
+                return FlagConstants.REMOVED_MAP_BIRTH; // Birth map
             }
-            if(itemNewContentsData.getWorldFlag() == 225) {
-                return 2723; // Dimensional map
+            if(itemNewContentsData.getWorldFlag() == FlagConstants.WF_MAP_DIMENSIONAL) {
+                return FlagConstants.REMOVED_MAP_DIMENSIONAL; // Dimensional map
             }
         }
         if(Settings.getCurrentRemovedItems().contains(newContents)

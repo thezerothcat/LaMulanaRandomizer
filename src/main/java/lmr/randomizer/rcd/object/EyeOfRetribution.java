@@ -1,5 +1,7 @@
 package lmr.randomizer.rcd.object;
 
+import lmr.randomizer.FlagConstants;
+
 /**
  * 0x95 Eye of Divine Retribution args Not Reversed, Tested
  *     0 - 10  - flag
@@ -16,7 +18,7 @@ public class EyeOfRetribution extends GameObject {
     }
 
     public void setDefaults() {
-        setTriggerFlag(0x00a);
+        setTriggerFlag(FlagConstants.SCREEN_FLAG_A);
         setPercentDamage(30);
     }
 

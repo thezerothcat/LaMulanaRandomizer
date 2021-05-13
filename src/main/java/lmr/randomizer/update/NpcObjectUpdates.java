@@ -1,5 +1,6 @@
 package lmr.randomizer.update;
 
+import lmr.randomizer.FlagConstants;
 import lmr.randomizer.dat.AddObject;
 import lmr.randomizer.rcd.object.*;
 
@@ -17,67 +18,67 @@ public final class NpcObjectUpdates {
 
             // Handle special cases for location of door
             if("NPCL: Sidro".equals(npcDoorLocation) || "NPCL: Modro".equals(npcDoorLocation) || "NPCL: Hiner".equals(npcDoorLocation) || "NPCL: Moger".equals(npcDoorLocation)) {
-                doorObject.getTestByteOperations().add(new TestByteOperation(0xad0, ByteOp.FLAG_EQUALS, 1)); // Flag for having talked to Xelpud to open Surface tents
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_INTRO, ByteOp.FLAG_EQUALS, 1)); // Flag for having talked to Xelpud to open Surface tents
             }
 //            if("NPCL: Priest Zarnac".equals(npcDoorLocation)) {
-//                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x017, ByteOp.ASSIGN_FLAG, 1));
+//                doorObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_17, ByteOp.ASSIGN_FLAG, 1));
 //            }
             if("NPCL: Mr. Fishman (Original)".equals(npcDoorLocation)) {
-                doorObject.getTestByteOperations().add(new TestByteOperation(0x197, ByteOp.FLAG_GTEQ, 2));
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.FISH_SHOP_UNLOCKS, ByteOp.FLAG_GTEQ, 2));
             }
             if("NPCL: Mr. Fishman (Alt)".equals(npcDoorLocation)) {
-                doorObject.getTestByteOperations().add(new TestByteOperation(0x197, ByteOp.FLAG_EQUALS, 3));
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.FISH_SHOP_UNLOCKS, ByteOp.FLAG_EQUALS, 3));
             }
             if("NPCL: Mud Man Qubert".equals(npcDoorLocation)) {
-                doorObject.getTestByteOperations().add(new TestByteOperation(0x23a, ByteOp.FLAG_EQUALS, 4));
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.COG_MUDMEN_STATE, ByteOp.FLAG_EQUALS, 4));
             }
             if("NPCL: Naramura".equals(npcDoorLocation) || "NPCL: duplex".equals(npcDoorLocation) || "NPCL: Samieru".equals(npcDoorLocation)) {
-                doorObject.getTestByteOperations().add(new TestByteOperation(0x348, ByteOp.FLAG_EQUALS, 1)); // Flag automatically set when dev room software combo is activated.
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.DEV_ROOM_COMBO, ByteOp.FLAG_EQUALS, 1)); // Flag automatically set when dev room software combo is activated.
             }
 
             // Handle special cases for door contents
             if("NPC: Yiegah Kungfu".equals(npcAssigned)) {
-                doorObject.getTestByteOperations().add(new TestByteOperation(0x1f0, ByteOp.FLAG_NOT_EQUAL, 1));
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.BIG_BROTHER_UNLOCKED, ByteOp.FLAG_NOT_EQUAL, 1));
                 addLittleBrotherScreenObjects(doorObject);
                 AddObject.setLittleBrotherShopScreen(doorObject.getObjectContainer());
             }
             if("NPC: Philosopher Giltoriyo".equals(npcAssigned)) {
                 addPhilosopherStoneDoor(doorObject); // Do this before adding tests, so we can carry over any tests based on the location.
-                doorObject.getTestByteOperations().add(new TestByteOperation(0x0b5, ByteOp.FLAG_EQUALS, 2));
-                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x078, ByteOp.ASSIGN_FLAG, 1)); // Trigger for spawning Endless Corridor Philosopher ladder
-                doorObject.getWriteByteOperations().add(new WriteByteOperation(0xaeb, ByteOp.ASSIGN_FLAG, 1)); // Trigger for spawning MARDUK mantra, changed in randomizer from 0x12b
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2));
+                doorObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.GILTORIYO_LADDER, ByteOp.ASSIGN_FLAG, 1)); // Trigger for spawning Endless Corridor Philosopher ladder
+                doorObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.ASSIGN_FLAG, 1)); // Trigger for spawning MARDUK mantra, changed in randomizer from 0x12b
             }
             if("NPC: Philosopher Alsedana".equals(npcAssigned)) {
                 addPhilosopherStoneDoor(doorObject); // Do this before adding tests, so we can carry over any tests based on the location.
-                doorObject.getTestByteOperations().add(new TestByteOperation(0x0b5, ByteOp.FLAG_EQUALS, 2));
-                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x07a, ByteOp.ASSIGN_FLAG, 1)); // Trigger for spawning Nuwa's pyramid Philosopher ladder
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2));
+                doorObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.ALSEDANA_LADDER, ByteOp.ASSIGN_FLAG, 1)); // Trigger for spawning Nuwa's pyramid Philosopher ladder
             }
             if("NPC: Philosopher Samaranta".equals(npcAssigned)) {
                 addPhilosopherStoneDoor(doorObject); // Do this before adding tests, so we can carry over any tests based on the location.
-                doorObject.getTestByteOperations().add(new TestByteOperation(0x0b5, ByteOp.FLAG_EQUALS, 2));
-                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x08b, ByteOp.ASSIGN_FLAG, 1)); // Trigger for spawning Scales of the Heart puzzle room Philosopher ladder
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2));
+                doorObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SAMARANTA_LADDER, ByteOp.ASSIGN_FLAG, 1)); // Trigger for spawning Scales of the Heart puzzle room Philosopher ladder
             }
             if("NPC: Philosopher Fobos".equals(npcAssigned)) {
                 addFobosDoors(doorObject); // Do this before adding tests, so we can carry over any tests based on the location.
-                doorObject.getTestByteOperations().add(new TestByteOperation(0x0b5, ByteOp.FLAG_EQUALS, 2));
-                doorObject.getTestByteOperations().add(new TestByteOperation(0x34f, ByteOp.FLAG_EQUALS, 1)); // Medicine puzzle solved
-                doorObject.getTestByteOperations().add(new TestByteOperation(0x10d, ByteOp.FLAG_NOT_EQUAL, 0)); // Fobos spoken to
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2));
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.MEDICINE_SOLVED, ByteOp.FLAG_EQUALS, 1)); // Medicine puzzle solved
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.FOBOS_LADDER, ByteOp.FLAG_NOT_EQUAL, 0)); // Fobos spoken to
             }
             if("NPC: The Fairy Queen".equals(npcAssigned)) {
                 addFairyQueenDoors(doorObject); // Do this before adding tests, so we can carry over any tests based on the location.
-                doorObject.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_LTEQ, 1)); // Fairy Queen conversation progress
-                doorObject.getTestByteOperations().add(new TestByteOperation(0x0aa, ByteOp.FLAG_EQUALS, 2)); // Isis' Pendant collected
-                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x1f5, ByteOp.ASSIGN_FLAG, 2)); // Fairy Queen conversation progress
-                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x118, ByteOp.ASSIGN_FLAG, 1)); // Fairy points active
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.FLAG_LTEQ, 1)); // Fairy Queen conversation progress
+                doorObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_ISIS_PENDANT, ByteOp.FLAG_EQUALS, 2)); // Isis' Pendant collected
+                doorObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.ASSIGN_FLAG, 2)); // Fairy Queen conversation progress
+                doorObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.FAIRY_POINTS_ACTIVE, ByteOp.ASSIGN_FLAG, 1)); // Fairy points active
             }
             if("NPC: Naramura".equals(npcDoorLocation)) {
-                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x388, ByteOp.ASSIGN_FLAG, 1)); // Flag indicating Naramura has been spoken to
+                doorObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.NARAMURA_SPOKEN, ByteOp.ASSIGN_FLAG, 1)); // Flag indicating Naramura has been spoken to
             }
             if("NPC: duplex".equals(npcDoorLocation)) {
-                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x389, ByteOp.ASSIGN_FLAG, 1)); // Flag indicating duplex has been spoken to
+                doorObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.DUPLEX_SPOKEN, ByteOp.ASSIGN_FLAG, 1)); // Flag indicating duplex has been spoken to
             }
             if("NPC: Samieru".equals(npcDoorLocation)) {
-                doorObject.getWriteByteOperations().add(new WriteByteOperation(0x38a, ByteOp.ASSIGN_FLAG, 1)); // Flag indicating Samieru has been spoken to
+                doorObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SAMIERU_SPOKEN, ByteOp.ASSIGN_FLAG, 1)); // Flag indicating Samieru has been spoken to
             }
         }
     }
@@ -329,9 +330,9 @@ public final class NpcObjectUpdates {
         bigBrotherProgressTimer.getArgs().add((short)0);
         bigBrotherProgressTimer.setX(-1);
         bigBrotherProgressTimer.setY(-1);
-        bigBrotherProgressTimer.getTestByteOperations().add(new TestByteOperation(0x1ea, ByteOp.FLAG_GTEQ, 3));
-        bigBrotherProgressTimer.getTestByteOperations().add(new TestByteOperation(0x1f0, ByteOp.FLAG_EQUALS, 0));
-        bigBrotherProgressTimer.getWriteByteOperations().add(new WriteByteOperation(0x1f0, ByteOp.ASSIGN_FLAG, 1));
+        bigBrotherProgressTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.LITTLE_BROTHER_PURCHASES, ByteOp.FLAG_GTEQ, 3));
+        bigBrotherProgressTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.BIG_BROTHER_UNLOCKED, ByteOp.FLAG_EQUALS, 0));
+        bigBrotherProgressTimer.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.BIG_BROTHER_UNLOCKED, ByteOp.ASSIGN_FLAG, 1));
         screen.getObjects().add(0, bigBrotherProgressTimer);
 
         GameObject bigBrotherSoundEffect = new GameObject(screen);
@@ -353,9 +354,9 @@ public final class NpcObjectUpdates {
         bigBrotherSoundEffect.getArgs().add((short)0);
         bigBrotherSoundEffect.setX(-1);
         bigBrotherSoundEffect.setY(-1);
-        bigBrotherSoundEffect.getTestByteOperations().add(new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2));
-        bigBrotherSoundEffect.getTestByteOperations().add(new TestByteOperation(0x1f0, ByteOp.FLAG_EQUALS, 2));
-        bigBrotherSoundEffect.getTestByteOperations().add(new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1));
+        bigBrotherSoundEffect.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2));
+        bigBrotherSoundEffect.getTestByteOperations().add(new TestByteOperation(FlagConstants.BIG_BROTHER_UNLOCKED, ByteOp.FLAG_EQUALS, 2));
+        bigBrotherSoundEffect.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1));
         screen.getObjects().add(0, bigBrotherSoundEffect);
 
         GameObject bigBrotherNotificationConversation = new GameObject(screen);
@@ -369,9 +370,9 @@ public final class NpcObjectUpdates {
         bigBrotherNotificationConversation.getArgs().add((short)0);
         bigBrotherNotificationConversation.setX(doorObject.getX());
         bigBrotherNotificationConversation.setY(doorObject.getY());
-        bigBrotherNotificationConversation.getTestByteOperations().add(new TestByteOperation(0x1f0, ByteOp.FLAG_EQUALS, 1));
-        bigBrotherNotificationConversation.getWriteByteOperations().add(new WriteByteOperation(0x1f0, ByteOp.ASSIGN_FLAG, 2));
-        bigBrotherNotificationConversation.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+        bigBrotherNotificationConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.BIG_BROTHER_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
+        bigBrotherNotificationConversation.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.BIG_BROTHER_UNLOCKED, ByteOp.ASSIGN_FLAG, 2));
+        bigBrotherNotificationConversation.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
         screen.getObjects().add(bigBrotherNotificationConversation);
     }
 
@@ -393,7 +394,7 @@ public final class NpcObjectUpdates {
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
             philosopherStoneConversation.getTestByteOperations().add(testByteOperation);
         }
-        philosopherStoneConversation.getTestByteOperations().add(new TestByteOperation(0x0b5, ByteOp.FLAG_LTEQ, 1)); // Using <= 1 rather than == 0 in case of a chest check setting to 1
+        philosopherStoneConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_LTEQ, 1)); // Using <= 1 rather than == 0 in case of a chest check setting to 1
         doorObject.getObjectContainer().getObjects().add(philosopherStoneConversation);
     }
 
@@ -416,9 +417,9 @@ public final class NpcObjectUpdates {
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
             fobosConversation.getTestByteOperations().add(testByteOperation);
         }
-        fobosConversation.getTestByteOperations().add(new TestByteOperation(0x0b5, ByteOp.FLAG_EQUALS, 2)); // Philosopher's Ocarina collected
-        fobosConversation.getTestByteOperations().add(new TestByteOperation(0x10d, ByteOp.FLAG_EQUALS, 0)); // Fobos not yet spoken to
-        fobosConversation.getWriteByteOperations().add(new WriteByteOperation(0x10d, ByteOp.ASSIGN_FLAG, 1)); // Trigger for Shrine of the Mother ladder
+        fobosConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2)); // Philosopher's Ocarina collected
+        fobosConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.FOBOS_LADDER, ByteOp.FLAG_EQUALS, 0)); // Fobos not yet spoken to
+        fobosConversation.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.FOBOS_LADDER, ByteOp.ASSIGN_FLAG, 1)); // Trigger for Shrine of the Mother ladder
         doorObject.getObjectContainer().getObjects().add(fobosConversation);
 
         fobosConversation = new GameObject(doorObject.getObjectContainer());
@@ -435,9 +436,9 @@ public final class NpcObjectUpdates {
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
             fobosConversation.getTestByteOperations().add(testByteOperation);
         }
-        fobosConversation.getTestByteOperations().add(new TestByteOperation(0x0b5, ByteOp.FLAG_EQUALS, 2)); // Philosopher's Ocarina collected
-        fobosConversation.getTestByteOperations().add(new TestByteOperation(0x34f, ByteOp.FLAG_EQUALS, 0)); // Medicine puzzle not solved
-        fobosConversation.getTestByteOperations().add(new TestByteOperation(0x10d, ByteOp.FLAG_NOT_EQUAL, 0)); // Fobos spoken to
+        fobosConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2)); // Philosopher's Ocarina collected
+        fobosConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MEDICINE_SOLVED, ByteOp.FLAG_EQUALS, 0)); // Medicine puzzle not solved
+        fobosConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.FOBOS_LADDER, ByteOp.FLAG_NOT_EQUAL, 0)); // Fobos spoken to
         doorObject.getObjectContainer().getObjects().add(fobosConversation);
     }
 
@@ -459,8 +460,8 @@ public final class NpcObjectUpdates {
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
             fairyQueenConveration.getTestByteOperations().add(testByteOperation);
         }
-        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_LTEQ, 1)); // Fairy Queen conversation progress
-        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(0x0aa, ByteOp.FLAG_LTEQ, 1)); // Isis' Pendant not found
+        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.FLAG_LTEQ, 1)); // Fairy Queen conversation progress
+        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_ISIS_PENDANT, ByteOp.FLAG_LTEQ, 1)); // Isis' Pendant not found
         doorObject.getObjectContainer().getObjects().add(fairyQueenConveration);
 
         fairyQueenConveration = new GameObject(doorObject.getObjectContainer());
@@ -477,8 +478,8 @@ public final class NpcObjectUpdates {
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
             fairyQueenConveration.getTestByteOperations().add(testByteOperation);
         }
-        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_EQUALS, 2)); // Fairy Queen conversation progress; fairy points unlocked
-        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(0x2d5, ByteOp.FLAG_EQUALS, 0)); // Fairy block in True Shrine hasn't spawned yet
+        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.FLAG_EQUALS, 2)); // Fairy Queen conversation progress; fairy points unlocked
+        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(FlagConstants.SHRINE_FAIRY_BLOCK, ByteOp.FLAG_EQUALS, 0)); // Fairy block in True Shrine hasn't spawned yet
         doorObject.getObjectContainer().getObjects().add(fairyQueenConveration);
 
         fairyQueenConveration = new GameObject(doorObject.getObjectContainer());
@@ -495,9 +496,9 @@ public final class NpcObjectUpdates {
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
             fairyQueenConveration.getTestByteOperations().add(testByteOperation);
         }
-        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(0x1f5, ByteOp.FLAG_EQUALS, 2)); // Fairy Queen conversation progress; fairy points unlocked
-        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(0x2d5, ByteOp.FLAG_EQUALS, 1)); // Fairy block in True Shrine has spawned
-        fairyQueenConveration.getWriteByteOperations().add(new WriteByteOperation(0x2d5, ByteOp.ASSIGN_FLAG, 2)); // Fairy block in True Shrine will be removed when you go there
+        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.FLAG_EQUALS, 2)); // Fairy Queen conversation progress; fairy points unlocked
+        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(FlagConstants.SHRINE_FAIRY_BLOCK, ByteOp.FLAG_EQUALS, 1)); // Fairy block in True Shrine has spawned
+        fairyQueenConveration.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SHRINE_FAIRY_BLOCK, ByteOp.ASSIGN_FLAG, 2)); // Fairy block in True Shrine will be removed when you go there
         doorObject.getObjectContainer().getObjects().add(fairyQueenConveration);
 
         fairyQueenConveration = new GameObject(doorObject.getObjectContainer());
@@ -514,7 +515,7 @@ public final class NpcObjectUpdates {
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
             fairyQueenConveration.getTestByteOperations().add(testByteOperation);
         }
-        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(0x2d5, ByteOp.FLAG_EQUALS, 2)); // Fairy block in True Shrine will be removed when you go there (have had the previous conversation)
+        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(FlagConstants.SHRINE_FAIRY_BLOCK, ByteOp.FLAG_EQUALS, 2)); // Fairy block in True Shrine will be removed when you go there (have had the previous conversation)
         doorObject.getObjectContainer().getObjects().add(fairyQueenConveration);
     }
 }

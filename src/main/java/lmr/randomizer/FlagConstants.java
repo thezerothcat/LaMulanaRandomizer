@@ -369,8 +369,22 @@ public final class FlagConstants {
     public static final int CUSTOM_XMAILER_RECEIVED = 0xabb; // Incremented when given xmailer after the timer runs out
     public static final int CUSTOM_FOOLS2021_TREASURY_SPAULDER = 0xabc; // Spaulder "reward" for doing treasury zip
     public static final int CUSTOM_FOOLS2021_ENDLESS_5F_SPAULDER = 0xabd; // Spaulder "reward" at the bottom of Endless Corridor during the escape sequence.
+    public static final int CUSTOM_FOOLS2021_GRAIL_GUIDANCE = 0xaaa; // Grail flag for Gate of Guidance warp, to avoid requiring the location for empowered grail.
+    public static final int CUSTOM_FOOLS2021_GRAIL_MAUSOLEUM = 0xaab; // Grail flag for Mausoleum of the Giants warp, to avoid requiring the location for empowered grail.
+    public static final int CUSTOM_FOOLS2021_GRAIL_SUN = 0xaac; // Grail flag for Temple of the Sun warp, to avoid requiring the location for empowered grail.
     public static final int CUSTOM_FOOLS2021_GRAIL_SPRING = 0xaad; // Grail flag for Spring in the Sky warp, to avoid requiring the location for empowered grail.
     public static final int CUSTOM_FOOLS2021_GRAIL_INFERNO = 0xaae; // Grail flag for Inferno Cavern warp, to avoid requiring the location for empowered grail.
+    public static final int CUSTOM_FOOLS2021_GRAIL_EXTINCTION = 0xaaf; // Grail flag for Chamber of Extinction warp, to avoid requiring the location for empowered grail.
+    public static final int CUSTOM_FOOLS2021_GRAIL_TWIN_FRONT = 0xab0; // Grail flag for Twin Labyrinths frontside warp, to avoid requiring the location for empowered grail.
+    public static final int CUSTOM_FOOLS2021_GRAIL_ENDLESS = 0xab1; // Grail flag for Endless Corridor warp, to avoid requiring the location for empowered grail.
+    public static final int CUSTOM_FOOLS2021_GRAIL_ILLUSION = 0xab2; // Grail flag for Gate of Illusion warp, to avoid requiring the location for empowered grail.
+    public static final int CUSTOM_FOOLS2021_GRAIL_GRAVEYARD = 0xab3; // Grail flag for Graveyard of the Giants warp, to avoid requiring the location for empowered grail.
+    public static final int CUSTOM_FOOLS2021_GRAIL_MOONLIGHT = 0xab4; // Grail flag for Temple of Moonlight warp, to avoid requiring the location for empowered grail.
+    public static final int CUSTOM_FOOLS2021_GRAIL_GODDESS = 0xab5; // Grail flag for Tower of the Goddess warp, to avoid requiring the location for empowered grail.
+    public static final int CUSTOM_FOOLS2021_GRAIL_RUIN = 0xab6; // Grail flag for Tower of Ruin warp, to avoid requiring the location for empowered grail.
+    public static final int CUSTOM_FOOLS2021_GRAIL_BIRTH = 0xab7; // Grail flag for Chamber of Birth warp, to avoid requiring the location for empowered grail.
+    public static final int CUSTOM_FOOLS2021_GRAIL_TWIN_BACK = 0xab8; // Grail flag for Twin Labyrinths backside warp, to avoid requiring the location for empowered grail.
+    public static final int CUSTOM_FOOLS2021_GRAIL_DIMENSIONAL = 0xab9; // Grail flag for Dimensional Corridor warp, to avoid requiring the location for empowered grail.
 
     private FlagConstants() { }
 }

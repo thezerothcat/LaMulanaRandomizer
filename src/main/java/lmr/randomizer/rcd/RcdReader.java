@@ -2,6 +2,7 @@ package lmr.randomizer.rcd;
 
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
+import lmr.randomizer.FlagConstants;
 import lmr.randomizer.Settings;
 import lmr.randomizer.dat.AddObject;
 import lmr.randomizer.random.ShopRandomizationEnum;
@@ -93,7 +94,7 @@ public final class RcdReader {
                         Integer flagIndexToRemove = null;
                         for(int i = 0; i < obj.getTestByteOperations().size(); i++) {
                             TestByteOperation testByteOperation = obj.getTestByteOperations().get(i);
-                            if(testByteOperation.getIndex() == 0x226) {
+                            if(testByteOperation.getIndex() == FlagConstants.EDEN_UNLOCKED) {
                                 flagIndexToRemove = i;
                                 break;
                             }
@@ -125,7 +126,7 @@ public final class RcdReader {
                     int zoneIndex = ((Screen)obj.getObjectContainer()).getZoneIndex();
                     if(zoneIndex != 3 && zoneIndex != 7) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                            if(testByteOperation.getIndex() == 0x1d7) {
+                            if(testByteOperation.getIndex() == FlagConstants.TWINS_POISON) {
                                 keepObject = false;
                                 break;
                             }
@@ -135,7 +136,7 @@ public final class RcdReader {
                     if(zoneIndex == 1) {
                         // Surface timer for resetting HT unlock
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                            if (testByteOperation.getIndex() == 0x3ba
+                            if (testByteOperation.getIndex() == FlagConstants.HT_UNLOCK_CHAIN_PRIMARY
                                     && ByteOp.FLAG_GTEQ.equals(testByteOperation.getOp())
                                     && testByteOperation.getValue() == 3) {
                                 keepObject = false;
@@ -145,7 +146,7 @@ public final class RcdReader {
                     }
                     else if(zoneIndex == 5) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                            if (testByteOperation.getIndex() == 0x17a && testByteOperation.getValue() == 1) {
+                            if (testByteOperation.getIndex() == FlagConstants.BUER_STATE && testByteOperation.getValue() == 1) {
                                 keepObject = false;
                                 break;
                             }
@@ -153,7 +154,7 @@ public final class RcdReader {
                     }
                     else if(zoneIndex == 11) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                            if (testByteOperation.getIndex() == 0x284 && testByteOperation.getValue() == 2) {
+                            if (testByteOperation.getIndex() == FlagConstants.GODDESS_STATUE_SHIELD_ANIMATION && testByteOperation.getValue() == 2) {
                                 keepObject = false;
                                 break;
                             }
@@ -164,14 +165,14 @@ public final class RcdReader {
 
             if(Settings.isRandomizeNonBossDoors()) {
                 for (WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
-                    if(flagUpdate.getIndex() == 0x15c || flagUpdate.getIndex() == 0x15d
-                            || flagUpdate.getIndex() == 0x16d || flagUpdate.getIndex() == 0x16e
-                            || flagUpdate.getIndex() == 0x175 || flagUpdate.getIndex() == 0x176
-                            || flagUpdate.getIndex() == 0x1bd || flagUpdate.getIndex() == 0x1be
-                            || flagUpdate.getIndex() == 0x152 || flagUpdate.getIndex() == 0x153
-                            || flagUpdate.getIndex() == 0x2b9 || flagUpdate.getIndex() == 0x1d0
-                            || flagUpdate.getIndex() == 0x3b7 || flagUpdate.getIndex() == 0x1c0
-                            || flagUpdate.getIndex() == 0x38c) {
+                    if(flagUpdate.getIndex() == FlagConstants.AMPHISBAENA_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.AMPHISBAENA_GATE_OPEN
+                            || flagUpdate.getIndex() == FlagConstants.SAKIT_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.SAKIT_GATE_OPEN
+                            || flagUpdate.getIndex() == FlagConstants.ELLMAC_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.ELLMAC_GATE_OPEN
+                            || flagUpdate.getIndex() == FlagConstants.BAHAMUT_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.BAHAMUT_GATE_OPEN
+                            || flagUpdate.getIndex() == FlagConstants.VIY_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.VIY_GATE_OPEN
+                            || flagUpdate.getIndex() == FlagConstants.PALENQUE_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.PALENQUE_GATE_OPEN
+                            || flagUpdate.getIndex() == FlagConstants.BAPHOMET_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.BAPHOMET_GATE_OPEN
+                            || flagUpdate.getIndex() == FlagConstants.KEY_FAIRY_DOOR_UNLOCKED_V2) {
                         keepObject = false;
                     }
                 }
@@ -182,7 +183,7 @@ public final class RcdReader {
                     Screen screen = ((Screen)obj.getObjectContainer());
                     if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 2) {
                         for(WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
-                            if(flagUpdate.getIndex() == 0x1f0) {
+                            if(flagUpdate.getIndex() == FlagConstants.BIG_BROTHER_UNLOCKED) {
                                 // Remove unneeded timer on original Little Brother screen
                                 keepObject = false;
                                 break;
@@ -194,7 +195,7 @@ public final class RcdReader {
                 if(Settings.isFools2021Mode()) {
                     boolean found = false;
                     for(WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
-                        if(flagUpdate.getIndex() == 0x1cd) {
+                        if(flagUpdate.getIndex() == FlagConstants.EXTINCTION_TEMP_LIGHT) {
                             found = true;
                             break;
                         }
@@ -205,9 +206,9 @@ public final class RcdReader {
 
                         // Add reverse lighting timer
                         AddObject.addSecondsTimer(obj.getObjectContainer(), seconds,
-                                Arrays.asList(new TestByteOperation(0x1c2, ByteOp.FLAG_NOT_EQUAL, 3),
-                                        new TestByteOperation(0x1cd, ByteOp.FLAG_EQUALS, 0)),
-                                Arrays.asList(new WriteByteOperation(0x1cd, ByteOp.ASSIGN_FLAG, 1)));
+                                Arrays.asList(new TestByteOperation(FlagConstants.EXTINCTION_PERMA_LIGHT, ByteOp.FLAG_NOT_EQUAL, 3),
+                                        new TestByteOperation(FlagConstants.EXTINCTION_TEMP_LIGHT, ByteOp.FLAG_EQUALS, 0)),
+                                Arrays.asList(new WriteByteOperation(FlagConstants.EXTINCTION_TEMP_LIGHT, ByteOp.ASSIGN_FLAG, 1)));
                     }
                 }
             }
@@ -216,7 +217,7 @@ public final class RcdReader {
                 // Timers for unlocking true shrine, normally set value from 8 to 9
                 boolean addTest = false;
                 for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                    if (testByteOperation.getIndex() == 0x102
+                    if (testByteOperation.getIndex() == FlagConstants.BOSSES_SHRINE_TRANSFORM
                            && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())
                            && testByteOperation.getValue() == 8) {
                         addTest = true;
@@ -226,19 +227,19 @@ public final class RcdReader {
                     }
                 }
                 if(addTest) {
-                    obj.getTestByteOperations().add(new TestByteOperation(0x102, ByteOp.FLAG_GTEQ, Settings.getCurrentBossCount()));
+                    obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_GTEQ, Settings.getCurrentBossCount()));
                 }
             }
 
             if(!(objectContainer instanceof Zone)) {
                 for (int i = 0; i < obj.getWriteByteOperations().size(); i++) {
                     WriteByteOperation updateFlag = obj.getWriteByteOperations().get(i);
-                    if (updateFlag.getIndex() == 852) {
+                    if (updateFlag.getIndex() == FlagConstants.SACRED_ORB_COUNT) {
                         // Sacred orb flag for heal rate
                         keepObject = false;
                         break;
                     }
-                    else if(updateFlag.getIndex() == 0x12b) {
+                    else if(updateFlag.getIndex() == FlagConstants.MANTRA_MARDUK) {
                         // Timer for MARDUK mantra update
                         if(objectContainer instanceof Screen) {
                             int zoneIndex = ((Screen) objectContainer).getZoneIndex();
@@ -248,24 +249,24 @@ public final class RcdReader {
                             }
                         }
                     }
-                    else if(updateFlag.getIndex() == 141) {
+                    else if(updateFlag.getIndex() == FlagConstants.WF_ANGEL_SHIELD) {
                         // Get rid of Angel Shield shop timer on Graveyard alt shop screen (alt shop has been removed).
                         keepObject = false;
                         break;
                     }
-                    else if(updateFlag.getIndex() == 157) {
+                    else if(updateFlag.getIndex() == FlagConstants.WF_VANILLA_DRAGON_BONE) {
                         // Get rid of Dragon Bone shop timer. We're using a different flag for Dragon Bone
                         // since the base game's flag was bugged and fixing it could have unexpected effects,
                         // but it still doesn't hurt to get rid of this thing.
                         keepObject = false;
                         break;
                     }
-                    else if(updateFlag.getIndex() == 261) {
+                    else if(updateFlag.getIndex() == FlagConstants.WF_MULANA_TALISMAN) {
                         // Get rid of Mulana Talisman timer related to Xelpud conversation. We're using different flags for that.
                         keepObject = false;
                         break;
                     }
-                    else if(updateFlag.getIndex() == 537 && updateFlag.getValue() == 1) {
+                    else if(updateFlag.getIndex() == FlagConstants.SHRINE_DIARY_CHEST && updateFlag.getValue() == 1) {
                         // With changed event flow for Xelpud pillar/Diary chest, this timer isn't needed
                         keepObject = false;
                         break;
@@ -279,7 +280,7 @@ public final class RcdReader {
                     Screen screen = (Screen)obj.getObjectContainer();
                     if (screen.getZoneIndex() == 11 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                            if (testByteOperation.getIndex() == 0x226) {
+                            if (testByteOperation.getIndex() == FlagConstants.EDEN_UNLOCKED) {
                                 keepObject = false;
                                 break;
                             }
@@ -304,7 +305,7 @@ public final class RcdReader {
                             || screen.getRoomIndex() == 5 && screen.getScreenIndex() == 1
                             || screen.getRoomIndex() == 6 && screen.getScreenIndex() == 0) {
                             for (WriteByteOperation writeByteOperation : obj.getWriteByteOperations()) {
-                                if (writeByteOperation.getIndex() == 0x00a) {
+                                if (writeByteOperation.getIndex() == FlagConstants.SCREEN_FLAG_A) {
                                     // Retribution trigger wall in Moonlight pyramid
                                     keepObject = false;
                                     break;
@@ -315,31 +316,31 @@ public final class RcdReader {
                     else if(screen.getZoneIndex() == 1 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
                         // Surface walls
                         for (TestByteOperation testByteOperation: obj.getTestByteOperations()) {
-                            if (testByteOperation.getIndex() == 0x14b) {
-                                testByteOperation.setIndex(0x151);
+                            if (testByteOperation.getIndex() == FlagConstants.SURFACE_PUZZLE_WATERFALL_WALL_SACRED_ORB) {
+                                testByteOperation.setIndex(FlagConstants.SURFACE_WATERFALL_WALL_BATS);
                             }
-                            else if (testByteOperation.getIndex() == 0x151) {
-                                testByteOperation.setIndex(0x14b);
+                            else if (testByteOperation.getIndex() == FlagConstants.SURFACE_WATERFALL_WALL_BATS) {
+                                testByteOperation.setIndex(FlagConstants.SURFACE_PUZZLE_WATERFALL_WALL_SACRED_ORB);
                             }
-                            else if (testByteOperation.getIndex() == 0x00b) {
-                                testByteOperation.setIndex(0x00d);
+                            else if (testByteOperation.getIndex() == FlagConstants.SCREEN_FLAG_B) {
+                                testByteOperation.setIndex(FlagConstants.SCREEN_FLAG_D);
                             }
-                            else if (testByteOperation.getIndex() == 0x00d) {
-                                testByteOperation.setIndex(0x00b);
+                            else if (testByteOperation.getIndex() == FlagConstants.SCREEN_FLAG_D) {
+                                testByteOperation.setIndex(FlagConstants.SCREEN_FLAG_B);
                             }
                         }
                         for (WriteByteOperation writeByteOperation : obj.getWriteByteOperations()) {
-                            if (writeByteOperation.getIndex() == 0x14b) {
-                                writeByteOperation.setIndex(0x151);
+                            if (writeByteOperation.getIndex() == FlagConstants.SURFACE_PUZZLE_WATERFALL_WALL_SACRED_ORB) {
+                                writeByteOperation.setIndex(FlagConstants.SURFACE_WATERFALL_WALL_BATS);
                             }
-                            else if (writeByteOperation.getIndex() == 0x151) {
-                                writeByteOperation.setIndex(0x14b);
+                            else if (writeByteOperation.getIndex() == FlagConstants.SURFACE_WATERFALL_WALL_BATS) {
+                                writeByteOperation.setIndex(FlagConstants.SURFACE_PUZZLE_WATERFALL_WALL_SACRED_ORB);
                             }
-                            else if (writeByteOperation.getIndex() == 0x00b) {
-                                writeByteOperation.setIndex(0x00d);
+                            else if (writeByteOperation.getIndex() == FlagConstants.SCREEN_FLAG_B) {
+                                writeByteOperation.setIndex(FlagConstants.SCREEN_FLAG_D);
                             }
-                            else if (writeByteOperation.getIndex() == 0x00d) {
-                                writeByteOperation.setIndex(0x00b);
+                            else if (writeByteOperation.getIndex() == FlagConstants.SCREEN_FLAG_D) {
+                                writeByteOperation.setIndex(FlagConstants.SCREEN_FLAG_B);
                             }
                         }
                     }
@@ -360,8 +361,8 @@ public final class RcdReader {
                     else if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
                         // Swap flags for Ice Cape chest in Inferno Cavern.
                         for(WriteByteOperation writeByteOperation : obj.getWriteByteOperations()) {
-                            if(writeByteOperation.getIndex() == 0x1b7) {
-                                writeByteOperation.setIndex(0x1b3);
+                            if(writeByteOperation.getIndex() == FlagConstants.INFERNO_PUZZLE_ICE_CAPE_CHEST) {
+                                writeByteOperation.setIndex(FlagConstants.INFERNO_PUZZLE_FLARE_GUN);
                             }
                         }
                     }
@@ -389,14 +390,14 @@ public final class RcdReader {
                     Screen screen = (Screen)objectContainer;
                     if (screen.getZoneIndex() == 0 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                            if (testByteOperation.getIndex() == 0x16a && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp()) && testByteOperation.getValue() == 2) {
+                            if (testByteOperation.getIndex() == FlagConstants.HARDMODE && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp()) && testByteOperation.getValue() == 2) {
                                 // Delete the hardmode variant of Amphisbaena ankh
                                 keepObject = false;
                                 break;
                             }
                         }
                         if(keepObject) {
-                            obj.getTestByteOperations().add(new TestByteOperation(0x354, ByteOp.FLAG_EQUALS, 0));
+                            obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.SACRED_ORB_COUNT, ByteOp.FLAG_EQUALS, 0));
 
                             // Reduce health
                             obj.getArgs().set(2, (short)4);
@@ -430,7 +431,7 @@ public final class RcdReader {
                 Integer flagIndexToRemove = null;
                 for(int i = 0; i < obj.getTestByteOperations().size(); i++) {
                     TestByteOperation testByteOperation = obj.getTestByteOperations().get(i);
-                    if(testByteOperation.getIndex() == 0x0fe) {
+                    if(testByteOperation.getIndex() == FlagConstants.MOTHER_STATE) {
                         flagIndexToRemove = i;
                         break;
                     }
@@ -447,7 +448,7 @@ public final class RcdReader {
                     if(Settings.isRandomizeTransitionGates()) {
                         // Guidance to Surface escape blockage
                         for (TestByteOperation flagTest : obj.getTestByteOperations()) {
-                            if(flagTest.getIndex() == 0x0fe && flagTest.getValue() == 3) {
+                            if(flagTest.getIndex() == FlagConstants.MOTHER_STATE && flagTest.getValue() == 3) {
                                 keepObject = false;
                                 break;
                             }
@@ -459,12 +460,12 @@ public final class RcdReader {
                     if(Settings.isFools2021Mode()) {
                         if(obj.getWriteByteOperations().isEmpty()) {
                             obj.getTestByteOperations().clear();
-                            obj.getTestByteOperations().add(new TestByteOperation(0x151, ByteOp.FLAG_EQUALS, 0));
-                            obj.getWriteByteOperations().add(new WriteByteOperation(0x151, ByteOp.ASSIGN_FLAG, 2));
+                            obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.SURFACE_WATERFALL_WALL_BATS, ByteOp.FLAG_EQUALS, 0));
+                            obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SURFACE_WATERFALL_WALL_BATS, ByteOp.ASSIGN_FLAG, 2));
                         }
                         else {
                             obj.getTestByteOperations().clear();
-                            obj.getTestByteOperations().add(new TestByteOperation(0x14b, ByteOp.FLAG_EQUALS, 0));
+                            obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.SURFACE_PUZZLE_WATERFALL_WALL_SACRED_ORB, ByteOp.FLAG_EQUALS, 0));
                             obj.getWriteByteOperations().clear();
                         }
                     }
@@ -472,7 +473,7 @@ public final class RcdReader {
                 else if(screen.getZoneIndex() == 3 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
                     // Temple of the Sun Map chest ladder stuff
                     TestByteOperation testByteOperation = new TestByteOperation();
-                    testByteOperation.setIndex(12);
+                    testByteOperation.setIndex(FlagConstants.SCREEN_FLAG_C);
                     testByteOperation.setOp(ByteOp.FLAG_EQUALS);
                     testByteOperation.setValue((byte)0);
                     obj.getTestByteOperations().add(testByteOperation);
@@ -481,7 +482,7 @@ public final class RcdReader {
                     if(Settings.isRandomizeTransitionGates()) {
                         // Spring to Surface escape blockage
                         for (TestByteOperation flagTest : obj.getTestByteOperations()) {
-                            if (flagTest.getIndex() == 0x0fe && flagTest.getValue() == 3) {
+                            if (flagTest.getIndex() == FlagConstants.MOTHER_STATE && flagTest.getValue() == 3) {
                                 keepObject = false;
                                 break;
                             }
@@ -492,7 +493,7 @@ public final class RcdReader {
                     if(screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
                         if (Settings.isRandomizeTransitionGates()) {
                             for (TestByteOperation flagTest : obj.getTestByteOperations()) {
-                                if(flagTest.getIndex() == 0x0fe && flagTest.getValue() == 3) {
+                                if(flagTest.getIndex() == FlagConstants.MOTHER_STATE && flagTest.getValue() == 3) {
                                     keepObject = false;
                                     break;
                                 }
@@ -502,7 +503,7 @@ public final class RcdReader {
                     if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
                         if (Settings.isRandomizeTransitionGates()) {
                             for (TestByteOperation flagTest : obj.getTestByteOperations()) {
-                                if (flagTest.getIndex() == 0x382 && flagTest.getValue() == 1) {
+                                if (flagTest.getIndex() == FlagConstants.ESCAPE && flagTest.getValue() == 1) {
                                     keepObject = false;
                                     break;
                                 }
@@ -510,7 +511,7 @@ public final class RcdReader {
                         }
                         if (Settings.isRandomizeNonBossDoors()) {
                             for (TestByteOperation flagTest : obj.getTestByteOperations()) {
-                                if (flagTest.getIndex() == 0x1c9 && flagTest.getValue() == 1) {
+                                if (flagTest.getIndex() == FlagConstants.KEY_FAIRY_DOOR_UNLOCKED && flagTest.getValue() == 1) {
                                     keepObject = false;
                                     break;
                                 }
@@ -521,7 +522,7 @@ public final class RcdReader {
                 else if(screen.getZoneIndex() == 11 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
                     if(Settings.isRandomizeTransitionGates()) {
                         for (TestByteOperation flagTest : obj.getTestByteOperations()) {
-                            if(flagTest.getIndex() == 0x0fe && flagTest.getValue() == 3) {
+                            if(flagTest.getIndex() == FlagConstants.MOTHER_STATE && flagTest.getValue() == 3) {
                                 keepObject = false;
                                 break;
                             }
@@ -532,7 +533,7 @@ public final class RcdReader {
                     if(Settings.isFools2021Mode()) {
                         // Graveyard hot spring
                         for (TestByteOperation flagTest : obj.getTestByteOperations()) {
-                            if(flagTest.getIndex() == 0x3b5 && flagTest.getValue() == 1) {
+                            if(flagTest.getIndex() == FlagConstants.GRAVEYARD_HOT_SPRING && flagTest.getValue() == 1) {
                                 keepObject = false;
                                 break;
                             }
@@ -542,7 +543,7 @@ public final class RcdReader {
                 else if(screen.getZoneIndex() == 12 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
                     if(Settings.isRandomizeTransitionGates()) {
                         for (TestByteOperation flagTest : obj.getTestByteOperations()) {
-                            if(flagTest.getIndex() == 0x0fe && flagTest.getValue() == 3) {
+                            if(flagTest.getIndex() == FlagConstants.MOTHER_STATE && flagTest.getValue() == 3) {
                                 keepObject = false;
                                 break;
                             }
@@ -552,7 +553,7 @@ public final class RcdReader {
                 else if(screen.getZoneIndex() == 13 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
                     if(Settings.isRandomizeTransitionGates()) {
                         for (TestByteOperation flagTest : obj.getTestByteOperations()) {
-                            if(flagTest.getIndex() == 0x0fe && flagTest.getValue() == 3) {
+                            if(flagTest.getIndex() == FlagConstants.MOTHER_STATE && flagTest.getValue() == 3) {
                                 keepObject = false;
                                 break;
                             }
@@ -567,7 +568,7 @@ public final class RcdReader {
                     Integer testFlagIndex = null;
                     for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
                         TestByteOperation flagTest = obj.getTestByteOperations().get(i);
-                        if (flagTest.getIndex() == 748) {
+                        if (flagTest.getIndex() == FlagConstants.DIMENSIONAL_CHILDREN_DEAD) {
                             // This is the flag that prevents you from getting the original version of the Graveyard shop once you've killed all the guardians.
                             testFlagIndex = i;
                         }
@@ -630,7 +631,7 @@ public final class RcdReader {
                     Integer flagToRemove = null;
                     for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
                         TestByteOperation flagTest = obj.getTestByteOperations().get(i);
-                        if (flagTest.getIndex() == 0x710) {
+                        if (flagTest.getIndex() == FlagConstants.HT_SOLVED_ROOM35) {
                             flagToRemove = i;
                         }
                     }
@@ -640,8 +641,8 @@ public final class RcdReader {
 
                     for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
                         TestByteOperation flagTest = obj.getTestByteOperations().get(i);
-                        if (flagTest.getIndex() == 0x106) {
-                            flagTest.setIndex(0xaae);
+                        if (flagTest.getIndex() == FlagConstants.WF_PROVOCATIVE_BATHING_SUIT) {
+                            flagTest.setIndex(FlagConstants.CUSTOM_HALLOWEEN_FINAL_DRACUET);
                             flagTest.setValue((byte)0);
                         }
                     }
@@ -672,9 +673,9 @@ public final class RcdReader {
                             || screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
                         for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
                             TestByteOperation flagTest = obj.getTestByteOperations().get(i);
-                            if (flagTest.getIndex() == 0x145) {
+                            if (flagTest.getIndex() == FlagConstants.SURFACE_RUINS_OPENED) {
                                 // Swap Xelpud first-conversation flag with custom
-                                flagTest.setIndex(0xad0);
+                                flagTest.setIndex(FlagConstants.XELPUD_CONVERSATION_INTRO);
                             }
                         }
                     }
@@ -703,13 +704,13 @@ public final class RcdReader {
                         if(obj.getY() > 300) {
                             if(obj.getX() == 700) {
                                 obj.getArgs().set(4, (short)7);
-                                obj.getTestByteOperations().add(new TestByteOperation(0x008, ByteOp.FLAG_EQUALS, 0));
-                                obj.getWriteByteOperations().add(new WriteByteOperation(0x008, ByteOp.FLAG_EQUALS, 1));
+                                obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_8, ByteOp.FLAG_EQUALS, 0));
+                                obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_8, ByteOp.FLAG_EQUALS, 1));
                             }
                             else { // if(obj.getX() == 1200) {
                                 obj.getArgs().set(4, (short)7);
-                                obj.getTestByteOperations().add(new TestByteOperation(0x009, ByteOp.FLAG_EQUALS, 0));
-                                obj.getWriteByteOperations().add(new WriteByteOperation(0x009, ByteOp.FLAG_EQUALS, 1));
+                                obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_9, ByteOp.FLAG_EQUALS, 0));
+                                obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_9, ByteOp.FLAG_EQUALS, 1));
                             }
                         }
                     }
@@ -724,7 +725,7 @@ public final class RcdReader {
                 }
             }
 
-            if(obj.getTestByteOperations().isEmpty() || obj.getTestByteOperations().get(0).getIndex() != 524) {
+            if(obj.getTestByteOperations().isEmpty() || obj.getTestByteOperations().get(0).getIndex() != FlagConstants.ILLUSION_WARP_MAZE_ACTIVE) {
                 // Pots - update to 1.3 position and then return (no need to add tracking).
                 // Note that there is a pot tied to a warp in Illusion which is removed by randomizer (the warp is always active)
                 objectContainer.getObjects().add(obj);
@@ -811,11 +812,11 @@ public final class RcdReader {
                                 // Migela
                                 if("Migela".equals(Settings.getCurrentGiant())) {
                                     obj.getTestByteOperations().clear();
-                                    obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
+                                    obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 0));
 
                                     obj.getWriteByteOperations().clear();
-                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
-                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.ASSIGN_FLAG, 1));
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
                                 }
                                 else {
                                     obj.getArgs().set(1, (short)10); // Falling speed
@@ -826,22 +827,22 @@ public final class RcdReader {
                                 obj.getArgs().set(1, (short)10); // Falling speed
 
                                 obj.getTestByteOperations().clear();
-                                obj.getTestByteOperations().add(new TestByteOperation(0x008, ByteOp.FLAG_EQUALS, 0));
+                                obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_8, ByteOp.FLAG_EQUALS, 0));
 
                                 obj.getWriteByteOperations().clear();
-                                obj.getWriteByteOperations().add(new WriteByteOperation(0x008, ByteOp.ASSIGN_FLAG, 1));
+                                obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_8, ByteOp.ASSIGN_FLAG, 1));
 
-                                AddObject.addExtendingSpikes(obj, 0x008);
+                                AddObject.addExtendingSpikes(obj, FlagConstants.SCREEN_FLAG_8);
                             }
                         }
                         else if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
                             if("Bado".equals(Settings.getCurrentGiant())) {
                                 obj.getTestByteOperations().clear();
-                                obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
+                                obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 0));
 
                                 obj.getWriteByteOperations().clear();
-                                obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
-                                obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                                obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.ASSIGN_FLAG, 1));
+                                obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
                             }
                             else {
                                 obj.getArgs().set(1, (short)10); // Falling speed
@@ -852,11 +853,11 @@ public final class RcdReader {
                                 // Make sure not to get the Sakit ankh unlock dais
                                 if("Ledo".equals(Settings.getCurrentGiant())) {
                                     obj.getTestByteOperations().clear();
-                                    obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
+                                    obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 0));
 
                                     obj.getWriteByteOperations().clear();
-                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
-                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.ASSIGN_FLAG, 1));
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
                                 }
                                 else {
                                     obj.getArgs().set(1, (short)10); // Falling speed
@@ -866,11 +867,11 @@ public final class RcdReader {
                         else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
                             if("Abuto".equals(Settings.getCurrentGiant())) {
                                 obj.getTestByteOperations().clear();
-                                obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
+                                obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 0));
 
                                 obj.getWriteByteOperations().clear();
-                                obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
-                                obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                                obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.ASSIGN_FLAG, 1));
+                                obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
                             }
                             else {
                                 obj.getArgs().set(1, (short)10); // Falling speed
@@ -880,12 +881,12 @@ public final class RcdReader {
                             if(obj.getX() == 760) {
                                 if("Sakit".equals(Settings.getCurrentGiant())) {
                                     obj.getTestByteOperations().clear();
-                                    obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
-                                    obj.getTestByteOperations().add(new TestByteOperation(0x164, ByteOp.FLAG_NOT_EQUAL, 1));
+                                    obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 0));
+                                    obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.SAKIT_ANKH_PUZZLE, ByteOp.FLAG_NOT_EQUAL, 1));
 
                                     obj.getWriteByteOperations().clear();
-                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
-                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.ASSIGN_FLAG, 1));
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
                                 }
                                 else {
                                     obj.getArgs().set(1, (short)10); // Falling speed
@@ -894,12 +895,12 @@ public final class RcdReader {
                             else { //if(obj.getX() == 1140) {
                                 if("Ji".equals(Settings.getCurrentGiant())) {
                                     obj.getTestByteOperations().clear();
-                                    obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
-                                    obj.getTestByteOperations().add(new TestByteOperation(0x164, ByteOp.FLAG_NOT_EQUAL, 1));
+                                    obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 0));
+                                    obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.SAKIT_ANKH_PUZZLE, ByteOp.FLAG_NOT_EQUAL, 1));
 
                                     obj.getWriteByteOperations().clear();
-                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
-                                    obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.ASSIGN_FLAG, 1));
+                                    obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
                                 }
                                 else {
                                     obj.getArgs().set(1, (short)10); // Falling speed
@@ -909,11 +910,11 @@ public final class RcdReader {
                         else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 2) {
                             if("Ribu".equals(Settings.getCurrentGiant())) {
                                 obj.getTestByteOperations().clear();
-                                obj.getTestByteOperations().add(new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 0));
+                                obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 0));
 
                                 obj.getWriteByteOperations().clear();
-                                obj.getWriteByteOperations().add(new WriteByteOperation(0x165, ByteOp.ASSIGN_FLAG, 1));
-                                obj.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                                obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.ASSIGN_FLAG, 1));
+                                obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
                             }
                             else {
                                 obj.getArgs().set(1, (short)10); // Falling speed
@@ -924,7 +925,7 @@ public final class RcdReader {
             }
         }
         else if (obj.getId() == 0x97) {
-            if(!obj.getTestByteOperations().isEmpty() && obj.getTestByteOperations().get(0).getIndex() == 524) {
+            if(!obj.getTestByteOperations().isEmpty() && obj.getTestByteOperations().get(0).getIndex() == FlagConstants.ILLUSION_WARP_MAZE_ACTIVE) {
                 // Remove broken pot flag check so the warp is just always active.
                 obj.getTestByteOperations().remove(0);
             }
@@ -933,7 +934,7 @@ public final class RcdReader {
                 if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 21 && screen.getScreenIndex() == 0) {
                     if(Settings.isHalloweenMode()) {
                         // Disable HT exit during HT escape sequence.
-                        obj.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0));
+                        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0));
                     }
                 }
                 if(screen.getZoneIndex() == 3 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 1) {
@@ -954,7 +955,7 @@ public final class RcdReader {
                         obj.getArgs().set(2, (short)1);
                         obj.getArgs().set(3, (short)300);
                         obj.getArgs().set(4, (short)312);
-                        obj.getTestByteOperations().add(new TestByteOperation(0x3c8, ByteOp.FLAG_GT, 0));
+                        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.BIRTH_GANESHA_SCANNED, ByteOp.FLAG_GT, 0));
                     }
                 }
             }
@@ -964,7 +965,7 @@ public final class RcdReader {
                 Integer testFlagIndex = null;
                 for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
                     TestByteOperation flagTest = obj.getTestByteOperations().get(i);
-                    if (flagTest.getIndex() == 0x382) {
+                    if (flagTest.getIndex() == FlagConstants.ESCAPE) {
                         // Un-disable fairy points during the escape
                         testFlagIndex = i;
                     }
@@ -999,19 +1000,19 @@ public final class RcdReader {
                 boolean needEscapeTest = true;
                 for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
                     TestByteOperation flagTest = obj.getTestByteOperations().get(i);
-                    if (flagTest.getIndex() == 0x382) {
+                    if (flagTest.getIndex() == FlagConstants.ESCAPE) {
                         needEscapeTest = false;
                         break;
                     }
                 }
                 if(needEscapeTest) {
-                    obj.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0));
+                    obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0));
                 }
             }
         }
         else if (obj.getId() == 0xb4) {
             if(Settings.isRandomizeTrapItems()) {
-                if (!obj.getTestByteOperations().isEmpty() && obj.getTestByteOperations().get(0).getIndex() == 522) {
+                if (!obj.getTestByteOperations().isEmpty() && obj.getTestByteOperations().get(0).getIndex() == FlagConstants.ILLUSION_PUZZLE_EXPLODING_CHEST) {
                     // Exploding chest explosion object.
                     keepObject = false;
                 }
@@ -1037,7 +1038,7 @@ public final class RcdReader {
                     Screen screen = (Screen) objectContainer;
                     if (screen.getZoneIndex() == 14 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
                         for(WriteByteOperation writeByteOperation : obj.getWriteByteOperations()) {
-                            if(writeByteOperation.getIndex() == 0x278) {
+                            if(writeByteOperation.getIndex() == FlagConstants.GODDESS_STATUE_RUIN) {
                                 // Lemeza detector for ToG statue
                                 keepObject = false;
                                 break;
@@ -1063,7 +1064,7 @@ public final class RcdReader {
             if(Settings.isHalloweenMode()) {
                 boolean clearFlags = false;
                 for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                    if(testByteOperation.getIndex() == 0x164) {
+                    if(testByteOperation.getIndex() == FlagConstants.SAKIT_ANKH_PUZZLE) {
                         clearFlags = true;
                         break;
                     }
@@ -1095,7 +1096,7 @@ public final class RcdReader {
                     else {
                         // Seal to wake Mulbruk - set the awake flag so we can skip the conversation that normally sets this flag.
                         WriteByteOperation flagUpdate = new WriteByteOperation();
-                        flagUpdate.setIndex(0x391);
+                        flagUpdate.setIndex(FlagConstants.MULBRUK_CONVERSATION_AWAKE);
                         flagUpdate.setOp(ByteOp.ASSIGN_FLAG);
                         flagUpdate.setValue(1);
                         obj.getWriteByteOperations().add(flagUpdate);
@@ -1182,7 +1183,7 @@ public final class RcdReader {
                     Screen screen = ((Screen)obj.getObjectContainer());
                     if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 2) {
                         for (WriteByteOperation flagUpdate : obj.getWriteByteOperations()) {
-                            if(flagUpdate.getIndex() == 0x1f0) {
+                            if(flagUpdate.getIndex() == FlagConstants.BIG_BROTHER_UNLOCKED) {
                                 // Remove unneeded sound effect on original Little Brother screen
                                 keepObject = false;
                                 break;
@@ -1198,7 +1199,7 @@ public final class RcdReader {
                     Screen screen = (Screen)objectContainer;
                     if (screen.getZoneIndex() == 1 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                            if (testByteOperation.getIndex() == 0x152) {
+                            if (testByteOperation.getIndex() == FlagConstants.VIY_GATE_MIRROR_COVER) {
                                 keepObject = false;
                                 break;
                             }
@@ -1206,7 +1207,7 @@ public final class RcdReader {
                     }
                     if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                            if (testByteOperation.getIndex() == 0x1c9) {
+                            if (testByteOperation.getIndex() == FlagConstants.KEY_FAIRY_DOOR_UNLOCKED) {
                                 keepObject = false;
                                 break;
                             }
@@ -1214,7 +1215,7 @@ public final class RcdReader {
                     }
                 }
                 for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                    if (testByteOperation.getIndex() == 0x0ae && testByteOperation.getValue() == 0 && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())) {
+                    if (testByteOperation.getIndex() == FlagConstants.WF_BRONZE_MIRROR && testByteOperation.getValue() == 0 && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())) {
                         keepObject = false;
                         break;
                     }
@@ -1232,9 +1233,9 @@ public final class RcdReader {
                             || screen.getRoomIndex() == 10 && screen.getScreenIndex() == 3) {
                         for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
                             TestByteOperation flagTest = obj.getTestByteOperations().get(i);
-                            if (flagTest.getIndex() == 0x145) {
+                            if (flagTest.getIndex() == FlagConstants.SURFACE_RUINS_OPENED) {
                                 // Swap Xelpud first-conversation flag with custom
-                                flagTest.setIndex(0xad0);
+                                flagTest.setIndex(FlagConstants.XELPUD_CONVERSATION_INTRO);
                             }
                         }
                     }
@@ -1249,7 +1250,7 @@ public final class RcdReader {
 //                    // Bahamut wall graphic that gets removed after the fight.
 //                    if(obj.getTestByteOperations().size() == 1) {
 //                        TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
-//                        if(testByteOperation.getIndex() == 0x0f9 && ByteOp.FLAG_LTEQ.equals(testByteOperation.getOp())
+//                        if(testByteOperation.getIndex() == FlagConstants.BAHAMUT_STATE && ByteOp.FLAG_LTEQ.equals(testByteOperation.getOp())
 //                            && testByteOperation.getValue() == (byte)1) {
 //                            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
 //                            testByteOperation.setValue((byte)2);
@@ -1264,17 +1265,17 @@ public final class RcdReader {
                     if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
                         if(!Settings.isFools2020Mode()) {
                             for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                                if(testByteOperation.getIndex() == 0x1ac) {
+                                if(testByteOperation.getIndex() == FlagConstants.INFERNO_FAKE_ORB_CRUSHER) {
                                     // Graphical part of Inferno Cavern fake Sacred Orb trap
                                     obj.setId((short)0x2f);
                                     obj.getArgs().clear();
                                     obj.getArgs().add((short)0); // Interactable any time?
                                     obj.getArgs().add((short)69); // Sacred Orb item
                                     obj.getArgs().add((short)0); // Fake item
-                                    obj.getTestByteOperations().get(0).setIndex(2779);
+                                    obj.getTestByteOperations().get(0).setIndex(FlagConstants.WF_TRAP_INFERNO);
 
                                     WriteByteOperation writeByteOperation = new WriteByteOperation();
-                                    writeByteOperation.setIndex(2779);
+                                    writeByteOperation.setIndex(FlagConstants.WF_TRAP_INFERNO);
                                     writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
                                     writeByteOperation.setValue((byte)1);
                                     obj.getWriteByteOperations().add(writeByteOperation);
@@ -1284,17 +1285,17 @@ public final class RcdReader {
                         }
                     }
                     else if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 12 && screen.getScreenIndex() == 0) {
-                        if(!obj.getTestByteOperations().isEmpty() && obj.getTestByteOperations().get(0).getIndex() == 53) {
+                        if(!obj.getTestByteOperations().isEmpty() && obj.getTestByteOperations().get(0).getIndex() == FlagConstants.ROOM_FLAG_35) {
                             // Graphical part of Twin Labs fake Ankh Jewel trap
                             obj.setId((short)0x2f);
                             obj.getArgs().clear();
                             obj.getArgs().add((short)0); // Interactable any time?
                             obj.getArgs().add((short)19); // Ankh Jewel item
                             obj.getArgs().add((short)0); // Fake item
-                            obj.getTestByteOperations().get(0).setIndex(2780);
+                            obj.getTestByteOperations().get(0).setIndex(FlagConstants.WF_TRAP_TWIN);
 
                             WriteByteOperation writeByteOperation = new WriteByteOperation();
-                            writeByteOperation.setIndex(2780);
+                            writeByteOperation.setIndex(FlagConstants.WF_TRAP_TWIN);
                             writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
                             writeByteOperation.setValue((byte)1);
                             obj.getWriteByteOperations().add(writeByteOperation);
@@ -1307,7 +1308,7 @@ public final class RcdReader {
                     Screen screen = (Screen) objectContainer;
                     if (screen.getZoneIndex() == 11 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                            if(testByteOperation.getIndex() == 0x226) {
+                            if(testByteOperation.getIndex() == FlagConstants.EDEN_UNLOCKED) {
                                 // Fruit block graphic
                                 keepObject = false;
                                 break;
@@ -1316,7 +1317,7 @@ public final class RcdReader {
                     }
                     else if (screen.getZoneIndex() == 13 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                            if(testByteOperation.getIndex() == 0x226) {
+                            if(testByteOperation.getIndex() == FlagConstants.EDEN_UNLOCKED) {
                                 // Fruit block graphic
                                 keepObject = false;
                                 break;
@@ -1325,7 +1326,7 @@ public final class RcdReader {
                     }
                     else if (screen.getZoneIndex() == 14 && screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                            if(testByteOperation.getIndex() == 0x226) {
+                            if(testByteOperation.getIndex() == FlagConstants.EDEN_UNLOCKED) {
                                 // Fruit block graphic
                                 keepObject = false;
                                 break;
@@ -1334,7 +1335,7 @@ public final class RcdReader {
                     }
                     else if(screen.getZoneIndex() == 15 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
                         for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                            if(testByteOperation.getIndex() == 0x2a6) {
+                            if(testByteOperation.getIndex() == FlagConstants.SKANDA_STATE) {
                                 // Skanda block graphic
                                 keepObject = false;
                                 break;
@@ -1345,13 +1346,13 @@ public final class RcdReader {
             }
             if(Settings.isRandomizeNonBossDoors()) {
                 for (TestByteOperation flagTest : obj.getTestByteOperations()) {
-                    if(flagTest.getIndex() == 0x15c || flagTest.getIndex() == 0x15d
-                            || flagTest.getIndex() == 0x16d || flagTest.getIndex() == 0x16e
-                            || flagTest.getIndex() == 0x175 || flagTest.getIndex() == 0x176
-                            || flagTest.getIndex() == 0x1bd || flagTest.getIndex() == 0x1be
-                            || flagTest.getIndex() == 0x152 || flagTest.getIndex() == 0x153
-                            || flagTest.getIndex() == 0x2b9 || flagTest.getIndex() == 0x1d0
-                            || flagTest.getIndex() == 0x3b7 || flagTest.getIndex() == 0x1c0) {
+                    if(flagTest.getIndex() == FlagConstants.AMPHISBAENA_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.AMPHISBAENA_GATE_OPEN
+                            || flagTest.getIndex() == FlagConstants.SAKIT_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.SAKIT_GATE_OPEN
+                            || flagTest.getIndex() == FlagConstants.ELLMAC_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.ELLMAC_GATE_OPEN
+                            || flagTest.getIndex() == FlagConstants.BAHAMUT_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.BAHAMUT_GATE_OPEN
+                            || flagTest.getIndex() == FlagConstants.VIY_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.VIY_GATE_OPEN
+                            || flagTest.getIndex() == FlagConstants.PALENQUE_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.PALENQUE_GATE_OPEN
+                            || flagTest.getIndex() == FlagConstants.BAPHOMET_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.BAPHOMET_GATE_OPEN) {
                         keepObject = false;
                         break;
                     }
@@ -1359,7 +1360,7 @@ public final class RcdReader {
                 Screen screen = (Screen) objectContainer;
                 if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
                     for (TestByteOperation flagTest : obj.getTestByteOperations()) {
-                        if(flagTest.getIndex() == 0x1c9 && flagTest.getValue() == 0) {
+                        if(flagTest.getIndex() == FlagConstants.KEY_FAIRY_DOOR_UNLOCKED && flagTest.getValue() == 0) {
                             keepObject = false;
                             break;
                         }
@@ -1370,7 +1371,7 @@ public final class RcdReader {
                 Integer flagToRemove = null;
                 for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
                     TestByteOperation flagTest = obj.getTestByteOperations().get(i);
-                    if (flagTest.getIndex() == 0x710) {
+                    if (flagTest.getIndex() == FlagConstants.HT_SOLVED_ROOM35) {
                         flagToRemove = i;
                     }
                 }
@@ -1380,8 +1381,8 @@ public final class RcdReader {
 
                 for (int i = 0; i < obj.getTestByteOperations().size(); i++) {
                     TestByteOperation flagTest = obj.getTestByteOperations().get(i);
-                    if (flagTest.getIndex() == 0x106) {
-                        flagTest.setIndex(0xaae);
+                    if (flagTest.getIndex() == FlagConstants.WF_PROVOCATIVE_BATHING_SUIT) {
+                        flagTest.setIndex(FlagConstants.CUSTOM_HALLOWEEN_FINAL_DRACUET);
                         flagTest.setValue((byte)0);
                     }
                 }
@@ -1546,7 +1547,7 @@ public final class RcdReader {
                         }
                         else if(obj.getArgs().get(0) == 9) {
                             TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
-                            testByteOperation.setIndex(0x382);
+                            testByteOperation.setIndex(FlagConstants.ESCAPE);
                             testByteOperation.setOp(ByteOp.FLAG_EQUALS);
                             testByteOperation.setValue((byte)0);
                         }
@@ -1579,14 +1580,14 @@ public final class RcdReader {
                             }
                             else if(obj.getArgs().get(0) == 9) {
                                 TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
-                                testByteOperation.setIndex(0x382);
+                                testByteOperation.setIndex(FlagConstants.ESCAPE);
                                 testByteOperation.setOp(ByteOp.FLAG_EQUALS);
                                 testByteOperation.setValue((byte)0);
                             }
                         }
                         else {
                             // Don't change to true shrine until you have Feather, since the old shrine has more requirement options.
-                            if (obj.getTestByteOperations().get(0).getIndex() == 258) {
+                            if (obj.getTestByteOperations().get(0).getIndex() == FlagConstants.BOSSES_SHRINE_TRANSFORM) {
                                 if(ByteOp.FLAG_EQUALS.equals(obj.getTestByteOperations().get(0).getOp())) {
                                     keepObject = false;
                                 }
@@ -1605,7 +1606,7 @@ public final class RcdReader {
                             }
                             else if(obj.getArgs().get(0) == 9) {
                                 TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
-                                testByteOperation.setIndex(0x382);
+                                testByteOperation.setIndex(FlagConstants.ESCAPE);
                                 testByteOperation.setOp(ByteOp.FLAG_EQUALS);
                                 testByteOperation.setValue((byte)0);
                             }
@@ -1614,7 +1615,7 @@ public final class RcdReader {
                             // Don't change to true shrine until you have Feather, since the old shrine has more requirement options.
                             if (ByteOp.FLAG_EQUALS.equals(obj.getTestByteOperations().get(0).getOp())) {
                                 TestByteOperation featherCheck = new TestByteOperation();
-                                featherCheck.setIndex(182);
+                                featherCheck.setIndex(FlagConstants.WF_FEATHER);
                                 featherCheck.setOp(ByteOp.FLAG_EQUALS);
                                 featherCheck.setValue((byte) 2);
                                 obj.getTestByteOperations().add(featherCheck);
@@ -1628,7 +1629,7 @@ public final class RcdReader {
                             }
                             else if(obj.getArgs().get(0) == 9) {
                                 TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
-                                testByteOperation.setIndex(0x382);
+                                testByteOperation.setIndex(FlagConstants.ESCAPE);
                                 testByteOperation.setOp(ByteOp.FLAG_EQUALS);
                                 testByteOperation.setValue((byte)0);
                             }
@@ -1641,7 +1642,7 @@ public final class RcdReader {
                         Integer flagIndexToRemove = null;
                         for(int i = 0; i < obj.getTestByteOperations().size(); i++) {
                             TestByteOperation testByteOperation = obj.getTestByteOperations().get(i);
-                            if(testByteOperation.getIndex() == 0x226) {
+                            if(testByteOperation.getIndex() == FlagConstants.EDEN_UNLOCKED) {
                                 flagIndexToRemove = i;
                                 break;
                             }
@@ -1656,7 +1657,7 @@ public final class RcdReader {
         else if (obj.getId() == 0xa3) {
             if(Settings.isAlternateMotherAnkh()) {
                 for (TestByteOperation testByteOperation : obj.getTestByteOperations()) {
-                    if (testByteOperation.getIndex() == 0x0fe) {
+                    if (testByteOperation.getIndex() == FlagConstants.MOTHER_STATE) {
                         keepObject = false;
                         break;
                     }
@@ -2761,7 +2762,8 @@ public final class RcdReader {
         }
 
         if(Settings.isFools2021Mode()) {
-            addCustomItemGives(screen, zoneIndex, roomIndex, screenIndex);
+            AddObject.addCustomItemGives(screen, 86,
+                    FlagConstants.CUSTOM_ESCAPE_TIMER_STATE, 0, FlagConstants.CUSTOM_XMAILER_RECEIVED, 1);
         }
 
         if(zoneIndex == 0) {
@@ -2769,17 +2771,17 @@ public final class RcdReader {
                 if(Settings.isFools2021Mode()) {
                     // Treasures room
                     AddObject.addWarpDoor(screen, 320, 160, 3, 6, 0, 460, 152,
-                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_GTEQ, 1)));
-                    AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 1)));
-                    AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 2)));
-                    AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 3)));
-                    AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 4)));
+                            Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_GTEQ, 1)));
+                    AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, 1)));
+                    AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, 2)));
+                    AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, 3)));
+                    AddObject.addPushableBlock(screen, 320, 180, Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, 4)));
 
                     // After the falling block sequence, the blocks can be replaced by stationary ones.
-                    AddObject.addPushableBlock(screen, 320, 200, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 5), new TestByteOperation(0x00d, ByteOp.FLAG_EQUALS, 0)));
-                    AddObject.addPushableBlock(screen, 320, 240, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 5), new TestByteOperation(0x00d, ByteOp.FLAG_EQUALS, 0)));
-                    AddObject.addPushableBlock(screen, 320, 280, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 5), new TestByteOperation(0x00d, ByteOp.FLAG_EQUALS, 0)));
-                    AddObject.addPushableBlock(screen, 320, 320, Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 5), new TestByteOperation(0x00d, ByteOp.FLAG_EQUALS, 0)));
+                    AddObject.addPushableBlock(screen, 320, 200, Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, 5), new TestByteOperation(FlagConstants.SCREEN_FLAG_D, ByteOp.FLAG_EQUALS, 0)));
+                    AddObject.addPushableBlock(screen, 320, 240, Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, 5), new TestByteOperation(FlagConstants.SCREEN_FLAG_D, ByteOp.FLAG_EQUALS, 0)));
+                    AddObject.addPushableBlock(screen, 320, 280, Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, 5), new TestByteOperation(FlagConstants.SCREEN_FLAG_D, ByteOp.FLAG_EQUALS, 0)));
+                    AddObject.addPushableBlock(screen, 320, 320, Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, 5), new TestByteOperation(FlagConstants.SCREEN_FLAG_D, ByteOp.FLAG_EQUALS, 0)));
                 }
             }
             else if(roomIndex == 8 && screenIndex == 0) {
@@ -2795,27 +2797,27 @@ public final class RcdReader {
                     AddObject.addSpecialTransitionGate(screen, 5);
                     // todo: test boss swap + boss checkpoint
                     AddObject.addAutosave(screen, 300, 880, 41,
-                            Arrays.asList(new TestByteOperation(0x1b4, ByteOp.FLAG_EQUALS, 4),
-                                    new TestByteOperation(0x0f6, ByteOp.FLAG_LT, 2),
-                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
-                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                            Arrays.asList(new TestByteOperation(FlagConstants.VIY_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 4),
+                                    new TestByteOperation(FlagConstants.AMPHISBAENA_STATE, ByteOp.FLAG_LT, 2),
+                                    new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1));
                 }
                 if (Settings.isFools2021Mode()) {
                     AddObject.addEyeOfDivineRetribution(screen, 300, 500);
-                    AddObject.addHitbox(screen, 0, 480, 32, 24, new ArrayList<>(0), Arrays.asList(new WriteByteOperation(0x000a, ByteOp.ADD_FLAG, 1)));
+                    AddObject.addHitbox(screen, 0, 480, 32, 24, new ArrayList<>(0), Arrays.asList(new WriteByteOperation(FlagConstants.SCREEN_FLAG_A, ByteOp.ADD_FLAG, 1)));
 
                     for (int i = 1; i <= 10; i++) {
                         AddObject.addAmphisbaenaAnkh(screen, 300, 880, 32 * (i + 1),
-                                Arrays.asList(new TestByteOperation(0x133, ByteOp.FLAG_EQUALS, 5),
-                                        new TestByteOperation(0x354, ByteOp.FLAG_EQUALS, i)));
+                                Arrays.asList(new TestByteOperation(FlagConstants.AMPHISBAENA_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 5),
+                                        new TestByteOperation(FlagConstants.SACRED_ORB_COUNT, ByteOp.FLAG_EQUALS, i)));
                     }
                 }
                 if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 300, 880, 41,
-                            Arrays.asList(new TestByteOperation(0x133, ByteOp.FLAG_EQUALS, 5),
-                                    new TestByteOperation(0x0f6, ByteOp.FLAG_LT, 2),
-                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
-                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                            Arrays.asList(new TestByteOperation(FlagConstants.AMPHISBAENA_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 5),
+                                    new TestByteOperation(FlagConstants.AMPHISBAENA_STATE, ByteOp.FLAG_LT, 2),
+                                    new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
         }
@@ -2839,7 +2841,7 @@ public final class RcdReader {
                     GameObject warp = AddObject.addWarp(screen, 1220, 340, 4, 7, 0, 0, 0, 20, 312);
 
                     TestByteOperation warpTest = new TestByteOperation();
-                    warpTest.setIndex(0x414);
+                    warpTest.setIndex(FlagConstants.SURFACE_RUINS_FRONT_DOOR_OPEN);
                     warpTest.setValue((byte) 0);
                     warpTest.setOp(ByteOp.FLAG_EQUALS);
                     warp.getTestByteOperations().add(warpTest);
@@ -2856,10 +2858,10 @@ public final class RcdReader {
             if(roomIndex == 8 && screenIndex == 1) {
                 if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 900, 120, 75,
-                            Arrays.asList(new TestByteOperation(0x164, ByteOp.FLAG_EQUALS, 1),
-                                    new TestByteOperation(0x0f7, ByteOp.FLAG_LT, 2),
-                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
-                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                            Arrays.asList(new TestByteOperation(FlagConstants.SAKIT_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 1),
+                                    new TestByteOperation(FlagConstants.SAKIT_STATE, ByteOp.FLAG_LT, 2),
+                                    new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
         }
@@ -2868,28 +2870,28 @@ public final class RcdReader {
                 // Sun room with ladder for up transition
                 if(Settings.isFools2021Mode()) {
                     AddObject.addWarp(screen, 0, 80, 32, 20, 9, 9, 0, 300, 392)
-                            .getTestByteOperations().add(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, (byte)0));
+                            .getTestByteOperations().add(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, (byte)0));
                 }
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 // Sun grail screen
                 if(Settings.isFools2021Mode()) {
                     AddObject.addWarp(screen, 640, 80, 32, 20, 9, 9, 0, 300, 392)
-                            .getTestByteOperations().add(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, (byte)0));
+                            .getTestByteOperations().add(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, (byte)0));
                 }
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 // Room right of Buer
                 if(Settings.isFools2021Mode()) {
                     AddObject.addWarp(screen, 0, 0, 32, 24, 9, 9, 0, 300, 392)
-                            .getTestByteOperations().add(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, (byte)0));
+                            .getTestByteOperations().add(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, (byte)0));
                 }
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 // Room below grail / above Mulbruk
                 if(Settings.isFools2021Mode()) {
                     AddObject.addWarp(screen, 640, 0, 32, 24, 9, 9, 0, 300, 392)
-                            .getTestByteOperations().add(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, (byte)0));
+                            .getTestByteOperations().add(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, (byte)0));
                 }
             }
             else if(roomIndex == 4 && screenIndex == 3) {
@@ -2900,23 +2902,23 @@ public final class RcdReader {
                     AddObject.addPot(screen, 40, 800, PotGraphic.SUN, DropType.NOTHING, 0, new ArrayList<>(0), new ArrayList<>(0));
 
                     AddObject.addLemezaDetector(screen, 0, 600, 6, 4,
-                            Arrays.asList(new TestByteOperation(0x009, ByteOp.FLAG_EQUALS, 0)),
-                            Arrays.asList(new WriteByteOperation(0x009, ByteOp.ASSIGN_FLAG, 1)));
-                    AddObject.addPot(screen, 40, 480, PotGraphic.SUN, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0x009, ByteOp.FLAG_EQUALS, 1)), new ArrayList<>(0));
+                            Arrays.asList(new TestByteOperation(FlagConstants.SCREEN_FLAG_9, ByteOp.FLAG_EQUALS, 0)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.SCREEN_FLAG_9, ByteOp.ASSIGN_FLAG, 1)));
+                    AddObject.addPot(screen, 40, 480, PotGraphic.SUN, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.SCREEN_FLAG_9, ByteOp.FLAG_EQUALS, 1)), new ArrayList<>(0));
                 }
             }
             else if(roomIndex == 4 && screenIndex == 5) {
                 // Sun room with Bronze Mirror chest
                 if(Settings.isFools2021Mode()) {
                     AddObject.addWarp(screen, 1280, 480, 32, 24, 12, 8, 0, 20, 232)
-                            .getTestByteOperations().add(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, (byte)0));
+                            .getTestByteOperations().add(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, (byte)0));
                 }
             }
             else if(roomIndex == 5 && screenIndex == 0) {
                 // Sun room with Bronze Mirror chest
                 if(Settings.isFools2021Mode()) {
                     AddObject.addWarp(screen, 0, 0, 28, 24, 12, 8, 0, 20, 232)
-                            .getTestByteOperations().add(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, (byte)0));
+                            .getTestByteOperations().add(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, (byte)0));
                 }
             }
             else if(roomIndex == 6 && screenIndex == 0) {
@@ -2931,17 +2933,17 @@ public final class RcdReader {
                     GameObject warp = AddObject.addWarp(screen, 0, 420, 32, 4, 3, 4, 2, 100, 160);
 
                     TestByteOperation warpTest = new TestByteOperation();
-                    warpTest.setIndex(0x0f8);
+                    warpTest.setIndex(FlagConstants.ELLMAC_STATE);
                     warpTest.setValue((byte) 2);
                     warpTest.setOp(ByteOp.FLAG_NOT_EQUAL);
                     warp.getTestByteOperations().add(warpTest);
                 }
                 if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 400, 320, 104,
-                            Arrays.asList(new TestByteOperation(0x178, ByteOp.FLAG_EQUALS, 5),
-                                    new TestByteOperation(0x0f8, ByteOp.FLAG_LT, 2),
-                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
-                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                            Arrays.asList(new TestByteOperation(FlagConstants.ELLMAC_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 5),
+                                    new TestByteOperation(FlagConstants.ELLMAC_STATE, ByteOp.FLAG_LT, 2),
+                                    new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
         }
@@ -2949,18 +2951,18 @@ public final class RcdReader {
             if(roomIndex == 4 && screenIndex == 0) {
                 if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 380, 340, 136,
-                            Arrays.asList(new TestByteOperation(0x19f, ByteOp.FLAG_EQUALS, 1),
-                                    new TestByteOperation(0x199, ByteOp.FLAG_EQUALS, 1),
-                                    new TestByteOperation(0x0f9, ByteOp.FLAG_LT, 2),
-                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
-                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                            Arrays.asList(new TestByteOperation(FlagConstants.BAHAMUT_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 1),
+                                    new TestByteOperation(FlagConstants.SPRING_BAHAMUT_ROOM_FLOODED, ByteOp.FLAG_EQUALS, 1),
+                                    new TestByteOperation(FlagConstants.BAHAMUT_STATE, ByteOp.FLAG_LT, 2),
+                                    new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
             else if (roomIndex == 8 && screenIndex == 1) {
                 if (Settings.isFools2021Mode()) {
                     // Transition to Ellmac
                     AddObject.addWarp(screen, 0, 440 + 480, 32, 4, 3, 8, 0, 360, 40)
-                            .getTestByteOperations().add(new TestByteOperation(0x0f8, ByteOp.FLAG_NOT_EQUAL, (byte) 2));
+                            .getTestByteOperations().add(new TestByteOperation(FlagConstants.ELLMAC_STATE, ByteOp.FLAG_NOT_EQUAL, (byte) 2));
                 }
             }
         }
@@ -2976,28 +2978,28 @@ public final class RcdReader {
                     AddObject.addSpecialTransitionGate(screen, 0);
                     // todo: test boss swap + boss checkpoint
                     AddObject.addAutosave(screen, 460, 560, 149,
-                            Arrays.asList(new TestByteOperation(0x133, ByteOp.FLAG_EQUALS, 5),
-                                    new TestByteOperation(0x0fa, ByteOp.FLAG_LT, 2),
-                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
-                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                            Arrays.asList(new TestByteOperation(FlagConstants.AMPHISBAENA_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 5),
+                                    new TestByteOperation(FlagConstants.VIY_STATE, ByteOp.FLAG_LT, 2),
+                                    new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1));
                 }
                 if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 460, 560, 149,
-                            Arrays.asList(new TestByteOperation(0x1b4, ByteOp.FLAG_EQUALS, 4),
-                                    new TestByteOperation(0x0fa, ByteOp.FLAG_LT, 2),
-                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
-                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                            Arrays.asList(new TestByteOperation(FlagConstants.VIY_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 4),
+                                    new TestByteOperation(FlagConstants.VIY_STATE, ByteOp.FLAG_LT, 2),
+                                    new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
             else if(roomIndex == 4) {
                 if(screenIndex == 0) {
                     if(Settings.isFools2020Mode()) {
                         AddObject.addInfernoFakeWeaponCover(screen,
-                                Arrays.asList(new TestByteOperation(0x1b3, ByteOp.FLAG_LT, 2)));
+                                Arrays.asList(new TestByteOperation(FlagConstants.INFERNO_PUZZLE_FLARE_GUN, ByteOp.FLAG_LT, 2)));
                     }
                     if(Settings.isFools2021Mode()) {
                         AddObject.addInfernoFakeWeaponCover(screen,
-                                Arrays.asList(new TestByteOperation(0x1b7, ByteOp.FLAG_LT, 2)));
+                                Arrays.asList(new TestByteOperation(FlagConstants.INFERNO_PUZZLE_ICE_CAPE_CHEST, ByteOp.FLAG_LT, 2)));
                     }
                 }
             }
@@ -3021,9 +3023,9 @@ public final class RcdReader {
                                     Arrays.asList(new WriteByteOperation(spaulderCollectFlag, ByteOp.ASSIGN_FLAG, 1)));
                         }
                         AddObject.addAutosave(screen, 1080, 80, 0x06b,
-                                Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2),
-                                        new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
-                                new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                                Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2),
+                                        new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0)),
+                                new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1));
                     }
                 }
             }
@@ -3037,18 +3039,18 @@ public final class RcdReader {
             if(Settings.isBossCheckpoints()) {
                 if(roomIndex == 9 && screenIndex == 1) {
                     AddObject.addAutosave(screen, 940, 400, 170,
-                            Arrays.asList(new TestByteOperation(0x1ca, ByteOp.FLAG_EQUALS, 3),
-                                    new TestByteOperation(0x1c3, ByteOp.FLAG_EQUALS, 3),
-                                    new TestByteOperation(0x0fb, ByteOp.FLAG_LT, 2),
-                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
-                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                            Arrays.asList(new TestByteOperation(FlagConstants.EXTINCTION_PALENQUE_SCREEN_MURAL, ByteOp.FLAG_EQUALS, 3),
+                                    new TestByteOperation(FlagConstants.PALENQUE_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 3),
+                                    new TestByteOperation(FlagConstants.PALENQUE_STATE, ByteOp.FLAG_LT, 2),
+                                    new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
             if(Settings.isFeatherlessMode()) {
                 if(roomIndex == 1 && screenIndex == 1) {
                     // Land on Spriggan without feather
                     AddObject.addPot(screen, 780, 400, PotGraphic.EXTINCTION_POT,
-                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
         }
@@ -3056,17 +3058,17 @@ public final class RcdReader {
             if(roomIndex == 4 && screenIndex == 1) {
                 if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 940, 80, 188,
-                            Arrays.asList(new TestByteOperation(0x1e0, ByteOp.FLAG_EQUALS, 2),
-                                    new TestByteOperation(0x0fc, ByteOp.FLAG_LT, 2),
-                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
-                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1)); // Text block 206 is backside Twin Labs grail, but they seem to be identical.
+                            Arrays.asList(new TestByteOperation(FlagConstants.BAPHOMET_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 2),
+                                    new TestByteOperation(FlagConstants.BAPHOMET_STATE, ByteOp.FLAG_LT, 2),
+                                    new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1)); // Text block 206 is backside Twin Labs grail, but they seem to be identical.
                 }
             }
             else if(roomIndex == 10 && screenIndex == 1) {
                 if(Settings.isFeatherlessMode()) {
                     // Access to Dimensional without Feather
                     AddObject.addPot(screen, 840, 320, PotGraphic.TWIN_LABYRINTHS,
-                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
             else if(roomIndex == 3 && screenIndex == 2) {
@@ -3077,8 +3079,8 @@ public final class RcdReader {
             else if(roomIndex == 6 && screenIndex == 1) {
                 if(Settings.isFools2020Mode()) {
                     AddObject.addTwinPuzzleFeatherlessPlatform(screen);
-                    AddObject.addFloatingItem(screen, 1200, 80, 84, false, Arrays.asList(new TestByteOperation(0x1e4, ByteOp.FLAG_EQUALS, 0)), new ArrayList<>(0));
-                    AddObject.addNoItemSoundEffect(screen, 0x1e4, 0x00b);
+                    AddObject.addFloatingItem(screen, 1200, 80, 84, false, Arrays.asList(new TestByteOperation(FlagConstants.TWIN_UNSOLVABLE_PUZZLE, ByteOp.FLAG_EQUALS, 0)), new ArrayList<>(0));
+                    AddObject.addNoItemSoundEffect(screen, FlagConstants.TWIN_UNSOLVABLE_PUZZLE, FlagConstants.SCREEN_FLAG_B);
                     AddObject.addTwinPuzzleBlockFix(screen);
                 }
             }
@@ -3087,9 +3089,9 @@ public final class RcdReader {
             if(roomIndex == 5 && screenIndex == 1) {
                 if(Settings.isFools2021Mode()) {
                     AddObject.addFloatingItem(screen, 860, 400, 62, true,
-                            Arrays.asList(new TestByteOperation(0x382, ByteOp.FLAG_GT, 0),
-                                    new TestByteOperation(0xabd, ByteOp.FLAG_EQUALS, 0)),
-                            Arrays.asList(new WriteByteOperation(0xabd, ByteOp.ASSIGN_FLAG, 1)));
+                            Arrays.asList(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_GT, 0),
+                                    new TestByteOperation(FlagConstants.CUSTOM_FOOLS2021_ENDLESS_5F_SPAULDER, ByteOp.FLAG_EQUALS, 0)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.CUSTOM_FOOLS2021_ENDLESS_5F_SPAULDER, ByteOp.ASSIGN_FLAG, 1)));
                 }
             }
         }
@@ -3109,9 +3111,9 @@ public final class RcdReader {
                 GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 2));
                 if(Settings.isFools2021Mode()) {
                     AddObject.addFloatingItem(screen, 940, 240, 62, true,
-                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 0),
-                                    new TestByteOperation(0xabc, ByteOp.FLAG_EQUALS, 0)),
-                            Arrays.asList(new WriteByteOperation(0xabc, ByteOp.ASSIGN_FLAG, 1)));
+                            Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, 0),
+                                    new TestByteOperation(FlagConstants.CUSTOM_FOOLS2021_TREASURY_SPAULDER, ByteOp.FLAG_EQUALS, 0)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.CUSTOM_FOOLS2021_TREASURY_SPAULDER, ByteOp.ASSIGN_FLAG, 1)));
                 }
             }
         }
@@ -3122,7 +3124,7 @@ public final class RcdReader {
                     GameObject warp = AddObject.addWarp(screen, 80, 40, 4, 4, 10, 8, 1, 80, 352);
 
                     TestByteOperation warpTest = new TestByteOperation();
-                    warpTest.setIndex(46);
+                    warpTest.setIndex(FlagConstants.SCREEN_FLAG_2E);
                     warpTest.setValue((byte)1);
                     warpTest.setOp(ByteOp.FLAG_EQUALS);
                     warp.getTestByteOperations().add(warpTest);
@@ -3132,7 +3134,7 @@ public final class RcdReader {
                 if(roomIndex == 1 && screenIndex == 0) {
                     // For not having to damage boost up Gate of Illusion to Cog of the Soul
                     AddObject.addPot(screen, 580, 280, PotGraphic.ILLUSION,
-                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
             if(Settings.isFools2020Mode()) {
@@ -3158,10 +3160,10 @@ public final class RcdReader {
                 if(roomIndex == 8) {
                     if(screenIndex == 1) {
                         // Troll pot on the way to Nuwa
-                        AddObject.addPot(screen, 940, 280, PotGraphic.RUIN, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2),
-                                new TestByteOperation(0x369, ByteOp.FLAG_GTEQ, 1),
-                                new TestByteOperation(0x265, ByteOp.FLAG_GTEQ, 1),
-                                new TestByteOperation(0x298, ByteOp.FLAG_GTEQ, 1)), new ArrayList<>(0));
+                        AddObject.addPot(screen, 940, 280, PotGraphic.RUIN, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2),
+                                new TestByteOperation(FlagConstants.RUIN_LADDER_NUWA, ByteOp.FLAG_GTEQ, 1),
+                                new TestByteOperation(FlagConstants.RUIN_LADDER_NUWA_V2, ByteOp.FLAG_GTEQ, 1),
+                                new TestByteOperation(FlagConstants.RUIN_PUZZLE_NUWA, ByteOp.FLAG_GTEQ, 1)), new ArrayList<>(0));
                     }
                 }
             }
@@ -3170,9 +3172,9 @@ public final class RcdReader {
                     if(screenIndex == 2) {
                         // Nuwa assist
                         AddObject.addPot(screen, 1840, 180, PotGraphic.RUIN,
-                                DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                                DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                         AddObject.addPot(screen, 1840, 220, PotGraphic.RUIN,
-                                DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                                DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                     }
                 }
             }
@@ -3182,9 +3184,9 @@ public final class RcdReader {
                 if(roomIndex == 2 && screenIndex == 1) {
                     // Access to Palenque without Feather
                     AddObject.addPot(screen, 20, 760, PotGraphic.BIRTH,
-                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                     AddObject.addPot(screen, 20, 800, PotGraphic.BIRTH,
-                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
         }
@@ -3197,24 +3199,24 @@ public final class RcdReader {
             else if(roomIndex == 9 && screenIndex == 0) {
                 if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 300, 80, 358,
-                            Arrays.asList(new TestByteOperation(0x2ed, ByteOp.FLAG_EQUALS, 1),
-                                    new TestByteOperation(0x0fd, ByteOp.FLAG_LT, 2),
-                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
-                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                            Arrays.asList(new TestByteOperation(FlagConstants.TIAMAT_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 1),
+                                    new TestByteOperation(FlagConstants.TIAMAT_STATE, ByteOp.FLAG_LT, 2),
+                                    new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
             else if(roomIndex == 9 && screenIndex == 1) {
                 if(Settings.isFools2021Mode()) {
-                    AddObject.addExplosion(screen, 700, 320, 0x008, 50, true);
-                    AddObject.addExplosion(screen, 1200, 400, 0x009, 50, true);
+                    AddObject.addExplosion(screen, 700, 320, FlagConstants.SCREEN_FLAG_8, 50, true);
+                    AddObject.addExplosion(screen, 1200, 400, FlagConstants.SCREEN_FLAG_9, 50, true);
                 }
             }
             if(Settings.isFeatherlessMode()) {
                 if(roomIndex == 0 && screenIndex == 1) {
                     AddObject.addPot(screen, 500, 680, PotGraphic.DIMENSIONAL,
-                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                     AddObject.addPot(screen, 500, 720, PotGraphic.DIMENSIONAL,
-                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(0xacf, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
         }
@@ -3237,10 +3239,10 @@ public final class RcdReader {
                 // Mother ankh checkpoint
                 if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 660, 400, 231,
-                            Arrays.asList(new TestByteOperation(0x2e0, ByteOp.FLAG_GTEQ, 1),
-                                    new TestByteOperation(0x0fe, ByteOp.FLAG_LTEQ, 2),
-                                    new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
-                            new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                            Arrays.asList(new TestByteOperation(FlagConstants.MOTHER_ANKH_PUZZLE, ByteOp.FLAG_GTEQ, 1),
+                                    new TestByteOperation(FlagConstants.MOTHER_STATE, ByteOp.FLAG_LTEQ, 2),
+                                    new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
             else if (roomIndex == 8 && screenIndex == 1) {
@@ -3258,11 +3260,11 @@ public final class RcdReader {
                         AddObject.addGhostLord(screen, 300, 220, 0, 400, 5, 20);
 
                         GameObject warp = AddObject.addWarp(screen, 40, 440, 6, 2, 23, 5, 0, 40, 152);
-                        warp.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+                        warp.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1));
 
                         GameObject laserWall = AddObject.addLaserWall(screen, 120, 200, true, 1);
-                        laserWall.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
-                        laserWall.getTestByteOperations().add(new TestByteOperation(0x7f4, ByteOp.FLAG_GT, 0));
+                        laserWall.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1));
+                        laserWall.getTestByteOperations().add(new TestByteOperation(FlagConstants.HT_ROOM1_SHORTCUT_OPEN, ByteOp.FLAG_GT, 0));
 
                         AddObject.addHTExitDoor(screen);
                     }
@@ -3281,7 +3283,7 @@ public final class RcdReader {
                     else if(screenIndex == 1) {
                         // HT room 8
                         GameObject warp = AddObject.addWarp(screen, 120, 920, 26, 2, 23, 5, 0, 40, 152);
-                        warp.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+                        warp.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1));
                     }
                 }
                 else if(roomIndex == 6) {
@@ -3312,7 +3314,7 @@ public final class RcdReader {
                     if(screenIndex == 0) {
                         // HT room 20
                         GameObject warp = AddObject.addWarp(screen, 0, 0, 32, 2, 24, 1, 0, 100, 160);
-                        warp.getTestByteOperations().add(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1));
+                        warp.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1));
                     }
                 }
 //                else if(roomIndex == 14) {
@@ -3349,13 +3351,13 @@ public final class RcdReader {
                     if(screenIndex == 0) {
                         // HT room 30
                         AddObject.addLemezaDetector(screen, 0, 280, 3, 4,
-                                Arrays.asList(new TestByteOperation(0x005, ByteOp.FLAG_EQUALS, 0),
-                                        new TestByteOperation(0x7ed, ByteOp.FLAG_EQUALS, 0),
-                                        new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 1)),
-                                Arrays.asList(new WriteByteOperation(0x005, ByteOp.ASSIGN_FLAG, 1)));
+                                Arrays.asList(new TestByteOperation(FlagConstants.SCREEN_FLAG_5, ByteOp.FLAG_EQUALS, 0),
+                                        new TestByteOperation(FlagConstants.HT_SOLVED_ROOM30, ByteOp.FLAG_EQUALS, 0),
+                                        new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1)),
+                                Arrays.asList(new WriteByteOperation(FlagConstants.SCREEN_FLAG_5, ByteOp.ASSIGN_FLAG, 1)));
                         AddObject.addPunchyFist(screen, 0, 300,
-                                Arrays.asList(new WriteByteOperation(0x005, ByteOp.ASSIGN_FLAG, 1),
-                                        new WriteByteOperation(0x005, ByteOp.ASSIGN_FLAG, 0)));
+                                Arrays.asList(new WriteByteOperation(FlagConstants.SCREEN_FLAG_5, ByteOp.ASSIGN_FLAG, 1),
+                                        new WriteByteOperation(FlagConstants.SCREEN_FLAG_5, ByteOp.ASSIGN_FLAG, 0)));
                     }
                 }
                 else if(roomIndex == 22) {
@@ -3363,21 +3365,21 @@ public final class RcdReader {
                         // HT room 35
                         AddObject.addGhostLord(screen, 300, 220, 0, 400, 5, 20);
                         AddObject.addAutosave(screen, 580, 380, 918,
-                                Arrays.asList(new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0)),
-                                new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+                                Arrays.asList(new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0)),
+                                new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1));
                     }
                     else if(screenIndex == 1) {
 //                        // HT room 34 (The Boss)
-//                        AddObject.addGhostLord(screen, 300, 220, 0, 400, 20, 0).getTestByteOperations().add(new TestByteOperation(0x7f1, ByteOp.FLAG_EQUALS, 2));
-//                        AddObject.addLaserWall(screen, 680, 440, false, 30).getTestByteOperations().add(new TestByteOperation(0x7f1, ByteOp.FLAG_EQUALS, 2));
-//                        AddObject.addLaserWall(screen, 1220, 440, false, 30).getTestByteOperations().add(new TestByteOperation(0x7f1, ByteOp.FLAG_EQUALS, 2));
+//                        AddObject.addGhostLord(screen, 300, 220, 0, 400, 20, 0).getTestByteOperations().add(new TestByteOperation(FlagConstants.THE_BOSS_STATE, ByteOp.FLAG_EQUALS, 2));
+//                        AddObject.addLaserWall(screen, 680, 440, false, 30).getTestByteOperations().add(new TestByteOperation(FlagConstants.THE_BOSS_STATE, ByteOp.FLAG_EQUALS, 2));
+//                        AddObject.addLaserWall(screen, 1220, 440, false, 30).getTestByteOperations().add(new TestByteOperation(FlagConstants.THE_BOSS_STATE, ByteOp.FLAG_EQUALS, 2));
 
 //                        AddObject.addMovingPlatforms(screen);
-//                        AddObject.addStunWitch(screen,720, 400, true).getTestByteOperations().add(new TestByteOperation(0x7f1, ByteOp.FLAG_EQUALS, 2));
-//                        AddObject.addStunWitch(screen,1180, 400, false).getTestByteOperations().add(new TestByteOperation(0x7f1, ByteOp.FLAG_EQUALS, 2));
+//                        AddObject.addStunWitch(screen,720, 400, true).getTestByteOperations().add(new TestByteOperation(FlagConstants.THE_BOSS_STATE, ByteOp.FLAG_EQUALS, 2));
+//                        AddObject.addStunWitch(screen,1180, 400, false).getTestByteOperations().add(new TestByteOperation(FlagConstants.THE_BOSS_STATE, ByteOp.FLAG_EQUALS, 2));
 
-//                        AddObject.addAutosave(screen, 1220, 400, new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 0),
-//                                new WriteByteOperation(0x002, ByteOp.ASSIGN_FLAG, 1));
+//                        AddObject.addAutosave(screen, 1220, 400, new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0),
+//                                new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1));
                     }
                 }
             }
@@ -3415,2404 +3417,73 @@ public final class RcdReader {
 
                     // Top ghosts, wave 1
                     GameObject ghostLord = AddObject.addGhostLord(screen, fromLeft, fromTop, wave1Speed, wave1Health, wave1Damage, 0);
-                    ghostLord.getTestByteOperations().add(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0));
-                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x002, ByteOp.ADD_FLAG, 1));
-                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                    ghostLord.getTestByteOperations().add(new TestByteOperation(FlagConstants.HT_ROOM19_SPAWNS, ByteOp.FLAG_EQUALS, 0));
+                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ADD_FLAG, 1));
+                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
 
                     ghostLord = AddObject.addGhostLord(screen, fromRight, fromTop, wave1Speed, wave1Health, wave1Damage, 0);
-                    ghostLord.getTestByteOperations().add(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0));
-                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x002, ByteOp.ADD_FLAG, 1));
-                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                    ghostLord.getTestByteOperations().add(new TestByteOperation(FlagConstants.HT_ROOM19_SPAWNS, ByteOp.FLAG_EQUALS, 0));
+                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ADD_FLAG, 1));
+                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
 
 
                     // Mid ghosts, wave 2
                     AddObject.addSecondsTimer(screen, delayPerWave,
-                            Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0),
-                                    new TestByteOperation(0x003, ByteOp.FLAG_EQUALS, 0)),
-                            Arrays.asList(new WriteByteOperation(0x003, ByteOp.ASSIGN_FLAG, 1)));
+                            Arrays.asList(new TestByteOperation(FlagConstants.HT_ROOM19_SPAWNS, ByteOp.FLAG_EQUALS, 0),
+                                    new TestByteOperation(FlagConstants.SCREEN_FLAG_3, ByteOp.FLAG_EQUALS, 0)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.SCREEN_FLAG_3, ByteOp.ASSIGN_FLAG, 1)));
 
                     ghostLord = AddObject.addGhostLord(screen, fromLeft, midHeight, wave2Speed, wave2Health, wave2Damage, 0);
-                    ghostLord.getTestByteOperations().add(new TestByteOperation(0x003, ByteOp.FLAG_EQUALS, 1));
-                    ghostLord.getTestByteOperations().add(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0));
-                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x002, ByteOp.ADD_FLAG, 1));
-                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                    ghostLord.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_3, ByteOp.FLAG_EQUALS, 1));
+                    ghostLord.getTestByteOperations().add(new TestByteOperation(FlagConstants.HT_ROOM19_SPAWNS, ByteOp.FLAG_EQUALS, 0));
+                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ADD_FLAG, 1));
+                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
 
                     ghostLord = AddObject.addGhostLord(screen, fromRight, midHeight, wave2Speed, wave2Health, wave2Damage, 0);
-                    ghostLord.getTestByteOperations().add(new TestByteOperation(0x003, ByteOp.FLAG_EQUALS, 1));
-                    ghostLord.getTestByteOperations().add(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0));
-                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x002, ByteOp.ADD_FLAG, 1));
-                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                    ghostLord.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_3, ByteOp.FLAG_EQUALS, 1));
+                    ghostLord.getTestByteOperations().add(new TestByteOperation(FlagConstants.HT_ROOM19_SPAWNS, ByteOp.FLAG_EQUALS, 0));
+                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ADD_FLAG, 1));
+                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
 
                     // Bottom ghosts, wave 3
                     AddObject.addSecondsTimer(screen, delayPerWave,
-                            Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0),
-                                    new TestByteOperation(0x003, ByteOp.FLAG_EQUALS, 1)),
-                            Arrays.asList(new WriteByteOperation(0x003, ByteOp.ASSIGN_FLAG, 2)));
+                            Arrays.asList(new TestByteOperation(FlagConstants.HT_ROOM19_SPAWNS, ByteOp.FLAG_EQUALS, 0),
+                                    new TestByteOperation(FlagConstants.SCREEN_FLAG_3, ByteOp.FLAG_EQUALS, 1)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.SCREEN_FLAG_3, ByteOp.ASSIGN_FLAG, 2)));
                     ghostLord = AddObject.addGhostLord(screen, fromLeft, fromBottom, wave3Speed, wave3Health, wave3Damage, 0);
-                    ghostLord.getTestByteOperations().add(new TestByteOperation(0x003, ByteOp.FLAG_EQUALS, 2));
-                    ghostLord.getTestByteOperations().add(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0));
-                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x002, ByteOp.ADD_FLAG, 1));
-                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                    ghostLord.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_3, ByteOp.FLAG_EQUALS, 2));
+                    ghostLord.getTestByteOperations().add(new TestByteOperation(FlagConstants.HT_ROOM19_SPAWNS, ByteOp.FLAG_EQUALS, 0));
+                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ADD_FLAG, 1));
+                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
 
                     ghostLord = AddObject.addGhostLord(screen, fromRight, fromBottom, wave3Speed, wave3Health, wave3Damage, 0);
-                    ghostLord.getTestByteOperations().add(new TestByteOperation(0x003, ByteOp.FLAG_EQUALS, 2));
-                    ghostLord.getTestByteOperations().add(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0));
-                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x002, ByteOp.ADD_FLAG, 1));
-                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                    ghostLord.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_3, ByteOp.FLAG_EQUALS, 2));
+                    ghostLord.getTestByteOperations().add(new TestByteOperation(FlagConstants.HT_ROOM19_SPAWNS, ByteOp.FLAG_EQUALS, 0));
+                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ADD_FLAG, 1));
+                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
 
                     // Center ghost, final wave, true boss
                     AddObject.addSecondsTimer(screen, delayPerWave,
-                            Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0),
-                                    new TestByteOperation(0x003, ByteOp.FLAG_EQUALS, 2)),
-                            Arrays.asList(new WriteByteOperation(0x003, ByteOp.ASSIGN_FLAG, 3)));
+                            Arrays.asList(new TestByteOperation(FlagConstants.HT_ROOM19_SPAWNS, ByteOp.FLAG_EQUALS, 0),
+                                    new TestByteOperation(FlagConstants.SCREEN_FLAG_3, ByteOp.FLAG_EQUALS, 2)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.SCREEN_FLAG_3, ByteOp.ASSIGN_FLAG, 3)));
                     ghostLord = AddObject.addGhostLord(screen, midWidth, midHeight, wave4Speed, wave4Health, wave4Damage, 352);
-                    ghostLord.getTestByteOperations().add(new TestByteOperation(0x003, ByteOp.FLAG_EQUALS, 3));
-                    ghostLord.getTestByteOperations().add(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0));
-                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x002, ByteOp.ADD_FLAG, 1));
-                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1));
+                    ghostLord.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_3, ByteOp.FLAG_EQUALS, 3));
+                    ghostLord.getTestByteOperations().add(new TestByteOperation(FlagConstants.HT_ROOM19_SPAWNS, ByteOp.FLAG_EQUALS, 0));
+                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ADD_FLAG, 1));
+                    ghostLord.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1));
 
                     // Timer to trigger end of fight
                     AddObject.addSecondsTimer(screen,
-                            0, Arrays.asList(new TestByteOperation(0x7dd, ByteOp.FLAG_EQUALS, 0), new TestByteOperation(0x002, ByteOp.FLAG_EQUALS, 7)),
-                            Arrays.asList(new WriteByteOperation(0x7e2, ByteOp.ASSIGN_FLAG, 1)));
+                            0, Arrays.asList(new TestByteOperation(FlagConstants.HT_ROOM19_SPAWNS, ByteOp.FLAG_EQUALS, 0), new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 7)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.HT_SOLVED_ROOM19, ByteOp.ASSIGN_FLAG, 1)));
 
                     // Autosave
                     AddObject.addAutosave(screen, 580, 400, 918,
-                            Arrays.asList(new TestByteOperation(0x004, ByteOp.FLAG_EQUALS, 0)),
-                            new WriteByteOperation(0x004, ByteOp.ASSIGN_FLAG, 1));
+                            Arrays.asList(new TestByteOperation(FlagConstants.SCREEN_FLAG_4, ByteOp.FLAG_EQUALS, 0)),
+                            new WriteByteOperation(FlagConstants.SCREEN_FLAG_4, ByteOp.ASSIGN_FLAG, 1));
                 }
             }
-        }
-    }
-
-
-    private static void addCustomItemGives(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
-        // Give xmailer on every screen in the game, pretty much.
-        if(zoneIndex == 0) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 1) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 1920, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 11 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 11 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 2) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 3) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 4) {
-                AddObject.addItemGive(screen, 640, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 5) {
-                AddObject.addItemGive(screen, 1280, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 4) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 0, 1440, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 4) {
-                AddObject.addItemGive(screen, 0, 1920, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 11 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 12 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 13 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 17 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 24 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 35 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if (zoneIndex == 5) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 6) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 7) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 11 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 11 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 11 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 12 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 12 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 12 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 13 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 13 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 14 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 14 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 15 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 15 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 16 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 16 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 16 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 8) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 1920, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 1920, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 1920, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 1920, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 11 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 12 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 9) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 10) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 11 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 11) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 0, 1440, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 12) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 0, 1440, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 13) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 0, 1440, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 14 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 15 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 16 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 26 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 14) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 15) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 16) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 17) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 18) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 19) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 20) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 21) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 22) {
-            if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 0 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 5 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 10 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 640, 480, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 11 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-            else if(roomIndex == 11 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, 86,
-                        Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
-            }
-        }
-        else if(zoneIndex == 25) {
-            AddObject.addItemGive(screen, 0, 480 * screenIndex, 86,
-                    Arrays.asList(new TestByteOperation(0xaba, ByteOp.FLAG_GT, 0), new TestByteOperation(0xabb, ByteOp.FLAG_EQUALS, 0)),
-                    Arrays.asList(new WriteByteOperation(0xabb, ByteOp.ASSIGN_FLAG, 1)));
         }
     }
 
@@ -5836,17 +3507,17 @@ public final class RcdReader {
                 // Treasures room
                 if(Settings.isFools2021Mode()) {
                     AddObject.addFramesTimer(screen, 24,
-                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 1)),
-                            Arrays.asList(new WriteByteOperation(0x137, ByteOp.ASSIGN_FLAG, 2)));
+                            Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, 1)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.ASSIGN_FLAG, 2)));
                     AddObject.addFramesTimer(screen, 20,
-                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 2)),
-                            Arrays.asList(new WriteByteOperation(0x137, ByteOp.ASSIGN_FLAG, 3)));
+                            Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, 2)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.ASSIGN_FLAG, 3)));
                     AddObject.addFramesTimer(screen, 12,
-                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 3)),
-                            Arrays.asList(new WriteByteOperation(0x137, ByteOp.ASSIGN_FLAG, 4)));
+                            Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, 3)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.ASSIGN_FLAG, 4)));
                     AddObject.addFramesTimer(screen, 6,
-                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_EQUALS, 4)),
-                            Arrays.asList(new WriteByteOperation(0x137, ByteOp.ASSIGN_FLAG, 5)));
+                            Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, 4)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.ASSIGN_FLAG, 5)));
                 }
             }
             else if(roomIndex == 0 && screenIndex == 1) {
@@ -5854,9 +3525,9 @@ public final class RcdReader {
                 if(Settings.isFools2021Mode()) {
                     // Ensure the process of falling blocks triggered by Pepper is reset if unfinished.
                     AddObject.addFramesTimer(screen, 0,
-                            Arrays.asList(new TestByteOperation(0x137, ByteOp.FLAG_GT, 0),
-                                    new TestByteOperation(0x137, ByteOp.FLAG_LT, 5)),
-                            Arrays.asList(new WriteByteOperation(0x137, ByteOp.ASSIGN_FLAG, 1)));
+                            Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_GT, 0),
+                                    new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_LT, 5)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.ASSIGN_FLAG, 1)));
                 }
             }
 
@@ -5864,14 +3535,14 @@ public final class RcdReader {
                 if(Settings.isHalloweenMode()) {
                     // Priest Zarnac - 674
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xac6);
                 }
                 // Ensure you can't lose access to the Guidance elevator. // todo: maybe find a better solution that respects logic
                 AddObject.addSecondsTimer(screen, 0,
-                        Arrays.asList(new TestByteOperation(0x34c, ByteOp.FLAG_GT, 1), new TestByteOperation(0x134, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(0x134, ByteOp.ASSIGN_FLAG, 1)));
+                        Arrays.asList(new TestByteOperation(FlagConstants.HT_UNLOCK_PROGRESS_EARLY, ByteOp.FLAG_GT, 1), new TestByteOperation(FlagConstants.GUIDANCE_ELEVATOR, ByteOp.FLAG_EQUALS, 0)),
+                        Arrays.asList(new WriteByteOperation(FlagConstants.GUIDANCE_ELEVATOR, ByteOp.ASSIGN_FLAG, 1)));
             }
             if(roomIndex == 8 && screenIndex == 0) {
                 if(Settings.isFools2021Mode()) {
@@ -5885,21 +3556,21 @@ public final class RcdReader {
                 if(roomIndex == 0 && screenIndex == 2) {
                     // Hiner - 671
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xac9);
                 }
                 else if(roomIndex == 2 && screenIndex == 0) {
                     // Moger - 672
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xac8);
                 }
                 else if(roomIndex == 7 && screenIndex == 0) {
                     // Former Mekuri Master - 673
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xac7);
                 }
@@ -5938,7 +3609,7 @@ public final class RcdReader {
                 if(roomIndex == 2 && screenIndex == 0) {
                     // Priest Xanado - - 675
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xac5);
                 }
@@ -5948,41 +3619,41 @@ public final class RcdReader {
                 if(roomIndex == 7 && screenIndex == 1) {
                     if("Bado".equals(Settings.getCurrentGiant())) {
                         AddObject.addSuccessSound(screen, Arrays.asList(
-                                new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
-                                new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
-                                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
+                                new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
+                                new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
+                                new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
                     }
                 }
                 else if(roomIndex == 7 && screenIndex == 2) {
                     if("Ledo".equals(Settings.getCurrentGiant())) {
                         AddObject.addSuccessSound(screen, Arrays.asList(
-                                new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
-                                new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
-                                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
+                                new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
+                                new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
+                                new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
                     }
                 }
                 else if(roomIndex == 8 && screenIndex == 0) {
                     if("Abuto".equals(Settings.getCurrentGiant())) {
                         AddObject.addSuccessSound(screen, Arrays.asList(
-                                new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
-                                new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
-                                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
+                                new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
+                                new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
+                                new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
                     }
                 }
                 else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
                     if("Sakit".equals(Settings.getCurrentGiant()) || "Ji".equals(Settings.getCurrentGiant())) {
                         AddObject.addSuccessSound(screen, Arrays.asList(
-                                new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
-                                new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
-                                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
+                                new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
+                                new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
+                                new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
                     }
                 }
                 else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 2) {
                     if("Ribu".equals(Settings.getCurrentGiant())) {
                         AddObject.addSuccessSound(screen, Arrays.asList(
-                                new TestByteOperation(0x0a7, ByteOp.FLAG_EQUALS, 2),
-                                new TestByteOperation(0x165, ByteOp.FLAG_EQUALS, 1),
-                                new TestByteOperation(0x00b, ByteOp.FLAG_EQUALS, 1)));
+                                new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
+                                new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
+                                new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
                     }
                 }
             }
@@ -5994,15 +3665,15 @@ public final class RcdReader {
                     if(Settings.isIncludeHellTempleNPCs()) {
                         // Timer to set flag for talking about HT
                         AddObject.addSecondsTimer(screen,
-                                0, Arrays.asList(new TestByteOperation(0xaca, ByteOp.FLAG_EQUALS, 29),
-                                        new TestByteOperation(0xaac, ByteOp.FLAG_EQUALS, 1)),
-                                Arrays.asList(new WriteByteOperation(0xaac, ByteOp.ASSIGN_FLAG, 2)));
+                                0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, ByteOp.FLAG_EQUALS, 29),
+                                        new TestByteOperation(FlagConstants.CUSTOM_HALLOWEEN_MULBRUK_CONVERSATION, ByteOp.FLAG_EQUALS, 1)),
+                                Arrays.asList(new WriteByteOperation(FlagConstants.CUSTOM_HALLOWEEN_MULBRUK_CONVERSATION, ByteOp.ASSIGN_FLAG, 2)));
                     }
                 }
                 else if(roomIndex == 4 && screenIndex == 2) {
                     // Priest Madomono - 718
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xab0);
                 }
@@ -6010,7 +3681,7 @@ public final class RcdReader {
 
             if(Settings.isRandomizeBosses()) {
                 if(roomIndex == 4 && screenIndex == 2) {
-                    AddObject.addBossTimer(screen, 0x0f8, 0x2d8);
+                    AddObject.addBossTimer(screen, FlagConstants.ELLMAC_STATE, 0x2d8);
                 }
                 else if(roomIndex == 8 && screenIndex == 0) {
                     AddObject.addSphinxRemovalTimer(screen);
@@ -6027,21 +3698,21 @@ public final class RcdReader {
                 if(roomIndex == 0 && screenIndex == 1) {
                     // Philosopher Giltoriyo - 677
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xac4);
                 }
                 else if(roomIndex == 6 && screenIndex == 1) {
                     // Priest Hidlyda - 678
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xac3);
                 }
             }
 //            if(roomIndex == 4 && screenIndex == 0) {
 //                if(Settings.isFoolsMode()) {
-//                    AddObject.addBossTimer(screen, 0x0f9, 0x2d9);
+//                    AddObject.addBossTimer(screen, FlagConstants.BAHAMUT_STATE, 0x2d9);
 //                }
 //            }
         }
@@ -6050,14 +3721,14 @@ public final class RcdReader {
                 if(roomIndex == 3 && screenIndex == 2) {
                     // Priest Romancis - 679
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xac2);
                 }
                 else if(roomIndex == 2 && screenIndex == 1) {
                     // Priest Gailious - 723
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xaaf);
                 }
@@ -6065,8 +3736,8 @@ public final class RcdReader {
             if(Settings.isFools2020Mode()) {
                 if(roomIndex == 4 && screenIndex == 0) {
                     AddObject.addSecondsTimer(screen, 0,
-                            Arrays.asList(new TestByteOperation(0x13, ByteOp.FLAG_GTEQ, 1), new TestByteOperation(0x1b3, ByteOp.FLAG_EQUALS, 1)),
-                            Arrays.asList(new WriteByteOperation(0x1b3, ByteOp.ASSIGN_FLAG, 2), new WriteByteOperation(0x00b, ByteOp.ASSIGN_FLAG, 1)));
+                            Arrays.asList(new TestByteOperation(FlagConstants.SCREEN_FLAG_13, ByteOp.FLAG_GTEQ, 1), new TestByteOperation(FlagConstants.INFERNO_PUZZLE_FLARE_GUN, ByteOp.FLAG_EQUALS, 1)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.INFERNO_PUZZLE_FLARE_GUN, ByteOp.ASSIGN_FLAG, 2), new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1)));
                 }
             }
         }
@@ -6075,14 +3746,14 @@ public final class RcdReader {
                 if(roomIndex == 6 && screenIndex == 0) {
                     // Priest Aramo - 680
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xac1);
                 }
                 else if(roomIndex == 9 && screenIndex == 1) {
                     // Priest Triton - 681
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xac0);
                 }
@@ -6100,7 +3771,7 @@ public final class RcdReader {
                 if(roomIndex == 10 && screenIndex == 1) {
                     // Priest Jaguarfiv - 683
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xabf);
                 }
@@ -6108,7 +3779,7 @@ public final class RcdReader {
 
             if(Settings.isRandomizeBosses()) {
                 if(roomIndex == 0 && screenIndex == 0) {
-                    AddObject.addBossTimer(screen, 0x0fb, 0x2db);
+                    AddObject.addBossTimer(screen, FlagConstants.PALENQUE_STATE, 0x2db);
                 }
             }
         }
@@ -6116,9 +3787,9 @@ public final class RcdReader {
             if(Settings.isHalloweenMode()) {
                 if(roomIndex == 1 && screenIndex == 0) {
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
-                    AddObject.addNpcConversationTimer(screen, 0x1f5);
+                    AddObject.addNpcConversationTimer(screen, FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES);
                 }
             }
         }
@@ -6130,28 +3801,28 @@ public final class RcdReader {
                 if(roomIndex == 8 && screenIndex == 0) {
                     // Mr. Slushfund - 689
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xabe);
                 }
                 else if(roomIndex == 8 && screenIndex == 1) {
                     // Priest Alest - 693
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xabd);
                 }
                 else if(roomIndex == 0 && screenIndex == 1) {
                     // Stray fairy - 694
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xabc);
                 }
                 else if(roomIndex == 2 && screenIndex == 2) {
                     // duplex - 707
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xab4);
                 }
@@ -6168,7 +3839,7 @@ public final class RcdReader {
                 if(roomIndex == 7 && screenIndex == 0) {
                     // Giant Thexde - 696
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xabb);
                 }
@@ -6179,14 +3850,14 @@ public final class RcdReader {
                 if(roomIndex == 6 && screenIndex == 0) {
                     // Philosopher Alsedana - 698
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xaba);
                 }
                 else if(roomIndex == 3 && screenIndex == 0) {
                     // Samieru - 708
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xab3);
                 }
@@ -6206,14 +3877,14 @@ public final class RcdReader {
                 if(roomIndex == 5 && screenIndex == 1) {
                     // Philosopher Samaranta - 700
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xab9);
                 }
                 else if(roomIndex == 6 && screenIndex == 3) {
                     // Naramura - 709
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xab2);
                 }
@@ -6235,7 +3906,7 @@ public final class RcdReader {
                 if(roomIndex == 0 && screenIndex == 1) {
                     // Priest Laydoc - 701
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xab8);
                 }
@@ -6246,7 +3917,7 @@ public final class RcdReader {
                 if(roomIndex == 1 && screenIndex == 0) {
                     // Priest Ashgine - 702
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xab7);
                 }
@@ -6257,7 +3928,7 @@ public final class RcdReader {
                 if(roomIndex == 2 && screenIndex == 0) {
                     // Fobos - 704
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xab6);
                 }
@@ -6272,7 +3943,7 @@ public final class RcdReader {
                 if(roomIndex == 0 && screenIndex == 0) {
                     // 8bit Elder - 706
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xab5);
                 }
@@ -6283,7 +3954,7 @@ public final class RcdReader {
                 if(roomIndex == 0 && screenIndex == 1) {
                     // 8bit Fairy - 710
                     if(!Settings.isIncludeHellTempleNPCs()) {
-                        AddObject.addEscapeTimer(screen, 0xaca, 28);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                     }
                     AddObject.addNpcConversationTimer(screen, 0xab1);
                 }
@@ -6294,31 +3965,31 @@ public final class RcdReader {
 //                if(roomIndex == 0) {
 //                    if(screenIndex == 0) {
 //                        AddObject.addSecondsTimer(screen,
-//                                Arrays.asList(new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0)),
-//                                Arrays.asList(new WriteByteOperation(0x382, ByteOp.ASSIGN_FLAG, 1)));
+//                                Arrays.asList(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0)),
+//                                Arrays.asList(new WriteByteOperation(FlagConstants.ESCAPE, ByteOp.ASSIGN_FLAG, 1)));
 //                    }
 //                }
                 if(roomIndex == 22) {
                     if(screenIndex == 0) {
                         // Dracuet - 1011
-                        AddObject.addEscapeTimer(screen, 0xaae, 1);
-                        AddObject.addNpcConversationTimer(screen, 0xaae);
+                        AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_FINAL_DRACUET, 1);
+                        AddObject.addNpcConversationTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_FINAL_DRACUET);
                     }
                 }
                 else if(roomIndex == 12 && screenIndex == 1) {
                     AddObject.addSecondsTimer(screen,
-                            0, Arrays.asList(new TestByteOperation(0xaad, ByteOp.FLAG_GT, 0)),
-                            Arrays.asList(new WriteByteOperation(0xaad, ByteOp.ASSIGN_FLAG, 0)));
+                            0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_HALLOWEEN_H4, ByteOp.FLAG_GT, 0)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.CUSTOM_HALLOWEEN_H4, ByteOp.ASSIGN_FLAG, 0)));
                 }
                 else if(roomIndex == 14 && screenIndex == 1) {
                     AddObject.addSecondsTimer(screen,
-                            0, Arrays.asList(new TestByteOperation(0xaad, ByteOp.FLAG_GT, 0)),
-                            Arrays.asList(new WriteByteOperation(0xaad, ByteOp.ASSIGN_FLAG, 0)));
+                            0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_HALLOWEEN_H4, ByteOp.FLAG_GT, 0)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.CUSTOM_HALLOWEEN_H4, ByteOp.ASSIGN_FLAG, 0)));
                 }
                 else if(roomIndex == 15 && screenIndex == 1) {
                     AddObject.addSecondsTimer(screen,
-                            0, Arrays.asList(new TestByteOperation(0xaad, ByteOp.FLAG_GT, 0)),
-                            Arrays.asList(new WriteByteOperation(0xaad, ByteOp.ASSIGN_FLAG, 0)));
+                            0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_HALLOWEEN_H4, ByteOp.FLAG_GT, 0)),
+                            Arrays.asList(new WriteByteOperation(FlagConstants.CUSTOM_HALLOWEEN_H4, ByteOp.ASSIGN_FLAG, 0)));
                 }
             }
         }

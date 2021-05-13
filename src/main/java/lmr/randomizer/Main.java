@@ -1059,7 +1059,7 @@ public class Main {
                 saveData[4626] = (byte)2; // Held main weapon slot number
 
                 if(Settings.isAutomaticMantras()) {
-                    saveData[0x11 + 0x124] = (byte)4;
+                    saveData[0x11 + FlagConstants.MANTRA_FINAL] = (byte)4;
                 }
             }
             else if("Axe".equals(startingWeapon)) {
@@ -1137,10 +1137,10 @@ public class Main {
                 }
             }
         }
-        saveData[0x11 + 0xad1] = (byte)1;
+        saveData[0x11 + FlagConstants.RANDOMIZER_SAVE_LOADED] = (byte)1;
         if(!LocationCoordinateMapper.isSurfaceStart()) {
             short grailFlag = LocationCoordinateMapper.getGrailFlag(LocationCoordinateMapper.getStartingZone(), LocationCoordinateMapper.isFrontsideStart());
-            if(0x064 <= grailFlag && 0x075 >= grailFlag) {
+            if(FlagConstants.TABLET_GRAIL_GUIDANCE <= grailFlag && FlagConstants.TABLET_GRAIL_SHRINE_BACK >= grailFlag) {
                 saveData[0x11 + grailFlag] = (byte)1; // Set starting grail flag if this is a traditional starting location, so your grail will be empowered.
             }
             saveData[0x069 * 2 + 0x1011 + 1] = (byte)10; // Start with 10 weights
@@ -1158,7 +1158,7 @@ public class Main {
             // Unlock Mulbruk so you can get Halloween hints.
             saveData[0x11 + 0x079] = (byte)1;
             saveData[0x11 + 0x18e] = (byte)2;
-            saveData[0x11 + 0x391] = (byte)1;
+            saveData[0x11 + FlagConstants.MULBRUK_CONVERSATION_AWAKE] = (byte)1;
 
 //            saveData[0x11 + 0x70e] = (byte)1; // room 20 floor
 //            saveData[0x11 + 0x7d1] = (byte)1; // room 2
@@ -1174,7 +1174,7 @@ public class Main {
 //            saveData[0x11 + 0x7de] = (byte)1; // room 15
 //            saveData[0x11 + 0x7e0] = (byte)1; // room 17
 //            saveData[0x11 + 0x7e1] = (byte)1; // room 18
-//            saveData[0x11 + 0x7e2] = (byte)1; // room 19
+//            saveData[0x11 + FlagConstants.HT_SOLVED_ROOM19] = (byte)1; // room 19
 //            saveData[0x11 + 0x7e5] = (byte)1; // room 22
 //            saveData[0x11 + 0x7e6] = (byte)1; // room 20
 //            saveData[0x11 + 0x7e7] = (byte)2; // room 24
@@ -1193,32 +1193,32 @@ public class Main {
             // Unlock Mulbruk so you can have conversations about quitting the game
             saveData[0x11 + 0x079] = (byte)1;
             saveData[0x11 + 0x18e] = (byte)2;
-            saveData[0x11 + 0x391] = (byte)1;
+            saveData[0x11 + FlagConstants.MULBRUK_CONVERSATION_AWAKE] = (byte)1;
 
             // Default Extinction lighting
-            saveData[0x11 + 0x1cd] = (byte)1;
+            saveData[0x11 + FlagConstants.EXTINCTION_TEMP_LIGHT] = (byte)1;
         }
         if(Settings.isFools2021Mode()) {
-            saveData[0x11 + 0x178] = (byte)5; // Ellmac ankh puzzle solved
+            saveData[0x11 + FlagConstants.ELLMAC_ANKH_PUZZLE] = (byte)5; // Ellmac ankh puzzle solved
 
-            saveData[0x11 + 0x064] = (byte)1; // guidance
-            saveData[0x11 + 0x065] = (byte)1; // maus
-            saveData[0x11 + 0x066] = (byte)1; // sun
-            saveData[0x11 + 0x067] = (byte)1; // spring
-            saveData[0x11 + 0x068] = (byte)1; // inferno
-            saveData[0x11 + 0x069] = (byte)1; // extinction
-            saveData[0x11 + 0x06a] = (byte)1; // twin-f
-            saveData[0x11 + 0x06b] = (byte)1; // endless
-            saveData[0x11 + 0x06d] = (byte)1; // illusion
-            saveData[0x11 + 0x06e] = (byte)1; // graveyard
-            saveData[0x11 + 0x06f] = (byte)1; // moonlight
-            saveData[0x11 + 0x070] = (byte)1; // goddess
-            saveData[0x11 + 0x071] = (byte)1; // ruin
-            saveData[0x11 + 0x072] = (byte)1; // birth
-            saveData[0x11 + 0x073] = (byte)1; // twin-b
-            saveData[0x11 + 0x074] = (byte)1; // dimensional
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_GUIDANCE] = (byte)1; // guidance
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_MAUSOLEUM] = (byte)1; // maus
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_SUN] = (byte)1; // sun
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_SPRING] = (byte)1; // spring
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_INFERNO] = (byte)1; // inferno
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_EXTINCTION] = (byte)1; // extinction
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_TWIN_FRONT] = (byte)1; // twin-f
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_ENDLESS] = (byte)1; // endless
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_ILLUSION] = (byte)1; // illusion
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_GRAVEYARD] = (byte)1; // graveyard
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_MOONLIGHT] = (byte)1; // moonlight
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_GODDESS] = (byte)1; // goddess
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_RUIN] = (byte)1; // ruin
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_BIRTH] = (byte)1; // birth
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_TWIN_BACK] = (byte)1; // twin-b
+            saveData[0x11 + FlagConstants.TABLET_GRAIL_DIMENSIONAL] = (byte)1; // dimensional
 
-            saveData[0x11 + 0x1cd] = (byte)1; // Default Extinction lighting
+            saveData[0x11 + FlagConstants.EXTINCTION_TEMP_LIGHT] = (byte)1; // Default Extinction lighting
         }
 //        saveData[0x11 + 0x064] = 1;
 //        saveData[0x11 + 0x065] = 1;
@@ -1292,12 +1292,12 @@ public class Main {
             }
             saveData[index++] = (byte) -1;
         }
-//        try {
-//            saveData = FileUtils.getBytes(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir()));
-//        }
-//        catch (Exception ex) {
-//            return saveData;
-//        }
+        try {
+            saveData = FileUtils.getBytes(String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir()));
+        }
+        catch (Exception ex) {
+            return saveData;
+        }
         return saveData;
     }
 

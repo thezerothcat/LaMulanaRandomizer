@@ -1,5 +1,6 @@
 package lmr.randomizer.random;
 
+import lmr.randomizer.FlagConstants;
 import lmr.randomizer.Settings;
 import lmr.randomizer.rcd.object.ByteOp;
 import lmr.randomizer.rcd.object.GameObject;
@@ -1398,7 +1399,7 @@ public final class EnemyRandomizer {
         boolean isHardmode = Settings.isAutomaticHardmode();
         if(!isHardmode) {
             for(TestByteOperation testByteOperation : enemy.getTestByteOperations()) {
-                if(testByteOperation.getIndex() == 0x16a
+                if(testByteOperation.getIndex() == FlagConstants.HARDMODE
                         && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())
                         && testByteOperation.getValue() == 2) {
                     isHardmode = true;

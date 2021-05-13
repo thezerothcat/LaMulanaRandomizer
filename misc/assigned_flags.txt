@@ -76,7 +76,8 @@ retro grail flags: acd-acf 2765-2767
 xmailer conversation custom flag: ad0 (2768)
 Surface no-kill flag: ad1 (2769)
 Alternate mother ankh jewel recovery flag: ad2 (2770)
-Surface grail flag: ad3 (2771)
+---former Surface grail flag: ad3 (2771)
+---now using 54e for surface grail flag since it was formerly the tablet glow
 Wrong color medicine flag: ad4 (2772)
 Whip (removed/randomized) world flag: ad5 (2773)
 Extra ankh jewel flag: ad6 (2774)
@@ -86,7 +87,7 @@ Graveyard trap chest flag: 2777
 Exploding trap chest flag: 2778
 Sacred Orb fake item flag: 2779
 Ankh jewel fake item flag: 2780
-Removed Spaulder: 2781
+Removed Spaulder: add (2781)
 New untrue Shrine grail: ade (2782)
 Reserved perma-zero for old untrue Shrine grail: adf (2783)
 
@@ -97,7 +98,7 @@ LAMULANA recited flag: aea
 Mantras unlocked flag (Giltoriyo): aeb
 Xelpud Talisman convos: aec (2796)
 Xelpud Mulana Talisman convos: aed
-Shrine map sound effect played flag: aee
+Shrine map sound effect played flag: aee (2798)
 Cog of Soul chest: aef
 
 
