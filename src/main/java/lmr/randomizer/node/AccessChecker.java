@@ -604,6 +604,7 @@ public class AccessChecker {
     }
 
     public boolean validRequirements(String item, String location) {
+        String logicalItem = item;
         if(DataFromFile.ESCAPE_CHEST_NAME.equals(location)) {
             // Must be something not strictly required for the seed.
             // This doesn't prevent some conditionally required items from getting placed here, but it should mostly be optional stuff.
@@ -626,7 +627,7 @@ public class AccessChecker {
             }
         }
         else if(item.contains("Ankh Jewel")) {
-            item = "Ankh Jewel";
+            logicalItem = "Ankh Jewel";
             if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
                 return false;
             }
@@ -641,7 +642,7 @@ public class AccessChecker {
             }
         }
         else if(item.contains("Sacred Orb")) { // todo: should probably not do this check if it's a removed item
-            item = "Sacred Orb";
+            logicalItem = "Sacred Orb";
             if(location.contains("Shop")) {
                 if(shopRandomizer.shopHasTransformation(location)) {
                     return false;
@@ -721,7 +722,7 @@ public class AccessChecker {
             return false;
         }
 
-        return mapOfNodeNameToRequirementsObject.get(location).canContainItem(item);
+        return mapOfNodeNameToRequirementsObject.get(location).canContainItem(logicalItem);
     }
 
     public boolean isEnoughAnkhJewelsToDefeatAllAccessibleBosses() {

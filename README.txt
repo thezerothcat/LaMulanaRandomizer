@@ -1,6 +1,12 @@
 Please see the wiki page on github for information on how to use the randomizer, and other things you may need to know about it.
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
+2.26
+-----------------------------
+Included Fairy Queen, Fobos, Giant Mopiran, and Yiear Kungfu (big brother shop) when randomizing NPC/shop doors. Added support for NPC custom placement.
+
+Guaranteed weights at Nebur for Surface start in case NPC rando gets rid of all your other Surface shops. Fixed a bug where a removed Sacred Orb could be placed at an NPC and be given repeatedly.
+
 2.25
 -----------------------------
 Added random seals and partial NPC shuffle. Randomized Endless Corridor's left exit as a one-way transition. Assorted bug fixes.
