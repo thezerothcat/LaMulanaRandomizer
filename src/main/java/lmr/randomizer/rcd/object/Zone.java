@@ -72,4 +72,8 @@ public class Zone implements ObjectContainer {
         }
         return returnVal.toString();
     }
+
+    public String getContainerString() {
+        return String.format("ZONE %02d \"%s\"", zoneIndex, name);
+    }
 }

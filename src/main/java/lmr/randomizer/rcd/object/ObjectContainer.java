@@ -7,4 +7,6 @@ import java.util.List;
  */
 public interface ObjectContainer {
     List<GameObject> getObjects();
+
+    String getContainerString();
 }

@@ -119,23 +119,23 @@ public class GameObject {
 
     @Override
     public String toString() {
-        StringBuilder returnVal = new StringBuilder(String.format("OBJECT Type=0x%x", id));
+        StringBuilder returnVal = new StringBuilder(String.format("\nOBJECT Type=0x%x (%s)", id, objectContainer.getContainerString()));
         if(x >= 0) {
             returnVal.append(String.format(" @ %d, %d", x, y));
         }
         if(!testByteOperations.isEmpty()) {
             for(TestByteOperation testByteOperation : testByteOperations) {
-                returnVal.append('\n').append(String.format("TEST:\n%s", testByteOperation.toString()));
+                returnVal.append('\n').append(String.format("TEST: %s", testByteOperation.toString()));
             }
         }
         if(!writeByteOperations.isEmpty()) {
             for(WriteByteOperation writeByteOperation : writeByteOperations) {
-                returnVal.append('\n').append(String.format("UPDATE:\n%s", writeByteOperation.toString()));
+                returnVal.append('\n').append(String.format("UPDATE: %s", writeByteOperation.toString()));
             }
         }
         for(int i = 0; i < args.size(); i++) {
             returnVal.append('\n').append(String.format("ARG %d: %d", i, args.get(i)));
         }
-        return returnVal.toString();
+        return returnVal.append('\n').toString();
     }
 }

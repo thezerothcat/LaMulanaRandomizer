@@ -42,4 +42,12 @@ public class GameObjectId {
         result = 31 * result + worldFlag;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "GameObjectId{" +
+                "inventoryArg=" + inventoryArg +
+                ", worldFlag=" + worldFlag +
+                '}';
+    }
 }

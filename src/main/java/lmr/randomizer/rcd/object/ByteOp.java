@@ -111,4 +111,75 @@ public enum  ByteOp {
         }
         return null;
     }
+
+    @Override
+    public String toString() {
+        if(op == FLAG_EQUALS.getOp()) {
+            return " == ";
+        }
+        if(op == FLAG_LTEQ.getOp()) {
+            return " <= ";
+        }
+        if(op == FLAG_GTEQ.getOp()) {
+            return " >= ";
+        }
+        if(op == FLAG_AND_ISNZ.getOp()) {
+            return " FLAG_AND_ISNZ ";
+        }
+        if(op == FLAG_OR_ISNZ.getOp()) {
+            return " FLAG_OR_ISNZ ";
+        }
+        if(op == FLAG_XOR_ISNZ.getOp()) {
+            return " FLAG_XOR_ISNZ ";
+        }
+        if(op == FLAG_IS_ZERO.getOp()) {
+            return " FLAG_IS_ZERO ";
+        }
+        if(op == FLAG_NOT_EQUAL.getOp()) {
+            return " != ";
+        }
+        if(op == FLAG_GT.getOp()) {
+            return "  > ";
+        }
+        if(op == FLAG_LT.getOp()) {
+            return "  < ";
+        }
+        if(op == FLAG_AND_IS_ZERO.getOp()) {
+            return " FLAG_AND_IS_ZERO ";
+        }
+        if(op == FLAG_OR_IS_ZERO.getOp()) {
+            return " FLAG_OR_IS_ZERO ";
+        }
+        if(op == FLAG_XOR_IS_ZERO.getOp()) {
+            return " FLAG_XOR_IS_ZERO ";
+        }
+        if(op == FLAG_IS_NON_ZERO.getOp()) {
+            return " FLAG_IS_NON_ZERO ";
+        }
+        if(op == ASSIGN_FLAG.getOp()) {
+            return "  = ";
+        }
+        if(op == ADD_FLAG.getOp()) {
+            return " += ";
+        }
+        if(op == SUB_FLAG.getOp()) {
+            return " -= ";
+        }
+        if(op == MULT_FLAG.getOp()) {
+            return " *= ";
+        }
+        if(op == DIV_FLAG.getOp()) {
+            return " /= ";
+        }
+        if(op == AND_FLAG.getOp()) {
+            return " AND_FLAG ";
+        }
+        if(op == OR_FLAG.getOp()) {
+            return " OR_FLAG ";
+        }
+        if(op == XOR_FLAG.getOp()) {
+            return " XOR_FLAG ";
+        }
+        return "(unknown)";
+    }
 }

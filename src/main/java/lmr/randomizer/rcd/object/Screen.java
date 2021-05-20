@@ -102,4 +102,8 @@ public class Screen implements ObjectContainer {
 
         return returnVal.toString();
     }
+
+    public String getContainerString() {
+        return String.format("SCREEN %02d-%02d-%02d \"%s\"", zoneIndex, roomIndex, screenIndex, name);
+    }
 }

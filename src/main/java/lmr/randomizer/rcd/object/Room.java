@@ -168,4 +168,8 @@ public class Room implements ObjectContainer {
         }
         return returnVal.toString();
     }
+
+    public String getContainerString() {
+        return String.format("ROOM %02d-%02d", zoneIndex, roomIndex);
+    }
 }

@@ -40,4 +40,9 @@ public class WriteByteOperation {
     public void setOp(ByteOp op) {
         this.op = op;
     }
+
+    @Override
+    public String toString() {
+        return String.format("[%04x]%s%d", index, op.toString(), value);
+    }
 }
