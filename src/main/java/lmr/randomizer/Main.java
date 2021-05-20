@@ -6,8 +6,7 @@ import lmr.randomizer.dat.DatReader;
 import lmr.randomizer.dat.DatWriter;
 import lmr.randomizer.node.*;
 import lmr.randomizer.random.*;
-import lmr.randomizer.rcd.RcdReader;
-import lmr.randomizer.rcd.RcdWriter;
+import lmr.randomizer.rcd.*;
 import lmr.randomizer.rcd.object.Zone;
 import lmr.randomizer.ui.ButtonPanel;
 import lmr.randomizer.ui.MainPanel;
@@ -768,11 +767,14 @@ public class Main {
 
                 dialog.updateProgress(90, Translations.getText("progress.read"));
 
-                List<Zone> rcdData = RcdReader.getRcdScriptInfo();
+                List<Zone> zones = RcdReader.getRcdScriptInfo();
                 FileUtils.logFlush("rcd file successfully read");
+                RcdData rcdData = new RcdData(zones);
 
                 List<Block> datInfo = DatReader.getDatScriptInfo();
                 FileUtils.logFlush("dat file successfully read");
+
+                GameUpdater.update(rcdData);
 
                 dialog.updateProgress(95, Translations.getText("progress.write"));
                 itemRandomizer.updateFiles(random);
@@ -1385,29 +1387,21 @@ public class Main {
             return;
         }
 
-        if(Settings.isHalloweenMode()) {
-//            Settings.setCurrentStartingLocation(24);
-//            Settings.setCurrentStartingLocation(23);
-//            Settings.setCurrentStartingLocation(0);
-            Settings.setCurrentStartingLocation(22);
+        List<Integer> possibleStartingLocations = new ArrayList<>(DataFromFile.STARTING_LOCATIONS);
+        if(!Settings.getStartingItemsIncludingCustom().contains("Holy Grail")) {
+            // Tower of Ruin will be unable to get back to the grail tablet easily/will have very limited options without grail/feather/boots/ice cape, so just ban it.
+            possibleStartingLocations.remove((Integer)14);
         }
-        else {
-            List<Integer> possibleStartingLocations = new ArrayList<>(DataFromFile.STARTING_LOCATIONS);
-            if(!Settings.getStartingItemsIncludingCustom().contains("Holy Grail")) {
-                // Tower of Ruin will be unable to get back to the grail tablet easily/will have very limited options without grail/feather/boots/ice cape, so just ban it.
-                possibleStartingLocations.remove((Integer)14);
-            }
-            if(!Settings.isRandomizeTransitionGates()) {
-                // Most backside fields aren't an option unless random transitions help keep you from getting stuck on one side of the ruins.
-                possibleStartingLocations.remove((Integer)11);
-                possibleStartingLocations.remove((Integer)13);
-                possibleStartingLocations.remove((Integer)14);
-                possibleStartingLocations.remove((Integer)16);
-                possibleStartingLocations.remove((Integer)21);
-            }
-            Settings.setCurrentStartingLocation(possibleStartingLocations.get(random.nextInt(possibleStartingLocations.size())));
-            FileUtils.logFlush("Selected starting location: " + LocationCoordinateMapper.getStartingZoneName(Settings.getCurrentStartingLocation()));
+        if(!Settings.isRandomizeTransitionGates()) {
+            // Most backside fields aren't an option unless random transitions help keep you from getting stuck on one side of the ruins.
+            possibleStartingLocations.remove((Integer)11);
+            possibleStartingLocations.remove((Integer)13);
+            possibleStartingLocations.remove((Integer)14);
+            possibleStartingLocations.remove((Integer)16);
+            possibleStartingLocations.remove((Integer)21);
         }
+        Settings.setCurrentStartingLocation(possibleStartingLocations.get(random.nextInt(possibleStartingLocations.size())));
+        FileUtils.logFlush("Selected starting location: " + LocationCoordinateMapper.getStartingZoneName(Settings.getCurrentStartingLocation()));
     }
 
     private static void determineFoolsGameplay(Random random) {

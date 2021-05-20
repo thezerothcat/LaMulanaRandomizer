@@ -12,6 +12,9 @@ public class HolidayModePlacements {
         if(Settings.isHalloweenMode()) {
             addCustomPlacementsHalloween();
         }
+        else if(Settings.isFools2019Mode()) {
+            addCustomPlacementsFools2019();
+        }
         else if(Settings.isFools2020Mode()) {
             addCustomPlacementsFools2020();
         }
@@ -21,11 +24,20 @@ public class HolidayModePlacements {
     }
 
     private static void addCustomPlacementsHalloween() {
+//        DataFromFile.getCustomPlacementData().setStartingLocation(24);
+//        DataFromFile.getCustomPlacementData().setStartingLocation(23);
+//        DataFromFile.getCustomPlacementData().setStartingLocation(0);
+        DataFromFile.getCustomPlacementData().setStartingLocation(22);
+
         CustomItemPlacement customItemPlacement = new CustomItemPlacement("xmailer.exe", "Provocative Bathing Suit", null);
         DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
 
         customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 3", "Buckler", (short)5, (short)1);
         DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+    }
+
+    private static void addCustomPlacementsFools2019() {
+        DataFromFile.getCustomPlacementData().setStartingLocation(21);
     }
 
     private static void addCustomPlacementsFools2020() {

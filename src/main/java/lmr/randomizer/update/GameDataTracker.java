@@ -10,6 +10,7 @@ import lmr.randomizer.random.EnemyRandomizer;
 import lmr.randomizer.random.NpcRandomizer;
 import lmr.randomizer.random.SealRandomizer;
 import lmr.randomizer.random.ShopRandomizer;
+import lmr.randomizer.rcd.RcdData;
 import lmr.randomizer.rcd.object.*;
 
 import java.util.*;
@@ -18,7 +19,7 @@ import java.util.*;
  * Created by thezerothcat on 7/21/2017.
  */
 public final class GameDataTracker {
-    private static Map<GameObjectId, List<GameObject>> mapOfChestIdentifyingInfoToGameObject = new HashMap<>();
+    public static Map<GameObjectId, List<GameObject>> mapOfChestIdentifyingInfoToGameObject = new HashMap<>();
     private static Map<GameObjectId, List<Block>> mapOfChestIdentifyingInfoToBlock = new HashMap<>();
     private static Map<Integer, List<GameObject>> mapOfShopBlockToShopObjects = new HashMap<>();
     private static Map<String, List<GameObject>> mantraTablets = new HashMap<>();
@@ -77,7 +78,7 @@ public final class GameDataTracker {
         GameDataTracker.mapOfTransitionNameToScreen.put(transitionName, screen);
     }
 
-    public static void addObject(GameObject gameObject) {
+    public static void addObject_Old(GameObject gameObject) {
         if (gameObject.getId() == 0x23) {
             // Steam effect
             if(Settings.isFools2021Mode()) {
@@ -210,34 +211,26 @@ public final class GameDataTracker {
             Screen screen = (Screen)gameObject.getObjectContainer();
             if(Settings.isBossSpecificAnkhJewels()) {
                 int ankhJewelFlag = getAnkhJewelFlag(screen.getZoneIndex());
-
-                for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
-                    if(testByteOperation.getIndex() == FlagConstants.HARDMODE && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())) {
-                        AddObject.addBossSpecificAnkhCover(gameObject, ankhJewelFlag);
-                    }
-                }
                 gameObject.getTestByteOperations().add(new TestByteOperation(ankhJewelFlag, ByteOp.FLAG_NOT_EQUAL, (byte) 0)); // Don't spawn ankh without jewel collected.
             }
-//            if(Settings.isFoolsMode()) {
-//                Screen screen = (Screen) gameObject.getObjectContainer();
-//                if(screen.getZoneIndex() == 4) {
-//                    gameObject.getArgs().set(24, (short)4);
-//                    gameObject.getArgs().set(25, (short)400);
-//                    gameObject.getArgs().set(26, (short)2316);
-//                    gameObject.getArgs().set(27, (short)0);
-//                    gameObject.getArgs().set(28, (short)4);
-//                    gameObject.getArgs().set(29, (short)400);
-//                    gameObject.getArgs().set(30, (short)2316);
-//                }
-//            }
-//            if(Settings.isHalloweenMode()) {
-//                // Bahamut to Night Surface
-//                Screen screen = (Screen) gameObject.getObjectContainer();
-//                if(screen.getZoneIndex() == 4) {
-//                    gameObject.getArgs().set(24, (short)22);
-//                    gameObject.getArgs().set(28, (short)22);
-//                }
-//            }
+            if(Settings.isFools2019Mode()) {
+                if(screen.getZoneIndex() == 4) {
+                    gameObject.getArgs().set(24, (short)4);
+                    gameObject.getArgs().set(25, (short)400);
+                    gameObject.getArgs().set(26, (short)2316);
+                    gameObject.getArgs().set(27, (short)0);
+                    gameObject.getArgs().set(28, (short)4);
+                    gameObject.getArgs().set(29, (short)400);
+                    gameObject.getArgs().set(30, (short)2316);
+                }
+            }
+            if(Settings.isHalloweenMode()) {
+                // Bahamut to Night Surface
+                if(screen.getZoneIndex() == 4) {
+                    gameObject.getArgs().set(24, (short)22);
+                    gameObject.getArgs().set(28, (short)22);
+                }
+            }
             if(screen.getZoneIndex() == 0) {
                 // Amphisbaena ankh
                 if(Settings.isRandomizeBosses()) {
@@ -290,7 +283,7 @@ public final class GameDataTracker {
 
                     for(TestByteOperation testByteOperation : gameObject.getTestByteOperations()) {
                         if(testByteOperation.getIndex() == FlagConstants.HARDMODE && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())) {
-                            AddObject.addTwinLabsDoor(gameObject);
+                            AddObject.addTwinLabsDoor(gameObject.getObjectContainer());
                         }
                     }
                 }
@@ -320,20 +313,20 @@ public final class GameDataTracker {
         }
         else if (gameObject.getId() == 0x03) {
             if(Settings.isRandomizeEnemies()) {
-//                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-//                    // Fix flag for looping punishment room enemies
-//                    if(gameObject.getObjectContainer() instanceof Screen) {
-//                        Screen screen = (Screen) gameObject.getObjectContainer();
-//                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
-//                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-//                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-//                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
-//                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
+                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+                    // Fix flag for looping punishment room enemies
+                    if(gameObject.getObjectContainer() instanceof Screen) {
+                        Screen screen = (Screen) gameObject.getObjectContainer();
+                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
+                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
+                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
+                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
+                                }
+                            }
+                        }
+                    }
+                }
                 enemyObjects.add(gameObject);
             }
 
@@ -511,12 +504,12 @@ public final class GameDataTracker {
                 enemyObjects.add(gameObject);
             }
         }
-//        else if (gameObject.getId() == 0x44) {
-//            // Hand enemies in Extinction
-//            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
-//                enemyObjects.add(gameObject);
-//            }
-//        }
+        else if (gameObject.getId() == 0x44) {
+            // Hand enemies in Extinction
+            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
 //        else if (gameObject.getId() == 0x45) {
 //            // Centimani
 //            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
@@ -555,20 +548,20 @@ public final class GameDataTracker {
 //        }
         else if (gameObject.getId() == 0x50) {
             if(Settings.isRandomizeEnemies()) {
-//                // Fix flag for looping punishment room enemies
-//                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-//                    if(gameObject.getObjectContainer() instanceof Screen) {
-//                        Screen screen = (Screen) gameObject.getObjectContainer();
-//                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
-//                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-//                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-//                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
-//                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
+                // Fix flag for looping punishment room enemies
+                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+                    if(gameObject.getObjectContainer() instanceof Screen) {
+                        Screen screen = (Screen) gameObject.getObjectContainer();
+                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
+                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
+                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
+                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
+                                }
+                            }
+                        }
+                    }
+                }
                 enemyObjects.add(gameObject);
             }
         }
@@ -595,7 +588,9 @@ public final class GameDataTracker {
 //                // All witches except the ones connected to Baphomet
 //                enemyObjects.add(gameObject);
 //            }
-            enemyObjects.add(gameObject);
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
         }
         else if (gameObject.getId() == 0x56) {
             if(Settings.isRandomizeEnemies()) {
@@ -655,20 +650,20 @@ public final class GameDataTracker {
         }
         else if (gameObject.getId() == 0x64) {
             if(Settings.isRandomizeEnemies()) {
-//                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-//                    // Fix flag for looping punishment room enemies
-//                    if(gameObject.getObjectContainer() instanceof Screen) {
-//                        Screen screen = (Screen) gameObject.getObjectContainer();
-//                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
-//                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-//                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-//                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
-//                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
+                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+                    // Fix flag for looping punishment room enemies
+                    if(gameObject.getObjectContainer() instanceof Screen) {
+                        Screen screen = (Screen) gameObject.getObjectContainer();
+                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
+                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
+                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
+                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
+                                }
+                            }
+                        }
+                    }
+                }
                 enemyObjects.add(gameObject);
             }
         }
@@ -724,20 +719,20 @@ public final class GameDataTracker {
         }
         else if (gameObject.getId() == 0x7d) {
             if(Settings.isRandomizeEnemies()) {
-//                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-//                    // Fix flag for looping punishment room enemies
-//                    if(gameObject.getObjectContainer() instanceof Screen) {
-//                        Screen screen = (Screen) gameObject.getObjectContainer();
-//                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
-//                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-//                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-//                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
-//                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
+                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+                    // Fix flag for looping punishment room enemies
+                    if(gameObject.getObjectContainer() instanceof Screen) {
+                        Screen screen = (Screen) gameObject.getObjectContainer();
+                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
+                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
+                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
+                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
+                                }
+                            }
+                        }
+                    }
+                }
                 enemyObjects.add(gameObject);
             }
         }
@@ -758,20 +753,20 @@ public final class GameDataTracker {
         }
         else if (gameObject.getId() == 0x83) {
             if(Settings.isRandomizeEnemies()) {
-//                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-//                    // Fix flag for looping punishment room enemies
-//                    if(gameObject.getObjectContainer() instanceof Screen) {
-//                        Screen screen = (Screen) gameObject.getObjectContainer();
-//                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
-//                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-//                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-//                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
-//                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
+                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+                    // Fix flag for looping punishment room enemies
+                    if(gameObject.getObjectContainer() instanceof Screen) {
+                        Screen screen = (Screen) gameObject.getObjectContainer();
+                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
+                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
+                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
+                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
+                                }
+                            }
+                        }
+                    }
+                }
                 enemyObjects.add(gameObject);
             }
         }
@@ -787,28 +782,28 @@ public final class GameDataTracker {
                 gameObject.getArgs().set(3, (short)30); // HP
             }
         }
-//        else if (gameObject.getId() == 0x87) {
-//            // Kuusarikku
-//            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
-//                if(gameObject.getObjectContainer() instanceof Screen) {
-//                    Screen screen = (Screen) gameObject.getObjectContainer();
-//                    if(screen.getZoneIndex() == 24) {
-//                        enemyObjects.add(gameObject);
-//                    }
-//                }
-//            }
-//        }
-//        else if (gameObject.getId() == 0x88) {
-//            // Girtablilu
-//            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
-//                if(gameObject.getObjectContainer() instanceof Screen) {
-//                    Screen screen = (Screen) gameObject.getObjectContainer();
-//                    if(screen.getZoneIndex() == 24) {
-//                        enemyObjects.add(gameObject);
-//                    }
-//                }
-//            }
-//        }
+        else if (gameObject.getId() == 0x87) {
+            // Kuusarikku
+            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+                if(gameObject.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) gameObject.getObjectContainer();
+                    if(screen.getZoneIndex() == 24) {
+                        enemyObjects.add(gameObject);
+                    }
+                }
+            }
+        }
+        else if (gameObject.getId() == 0x88) {
+            // Girtablilu
+            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+                if(gameObject.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) gameObject.getObjectContainer();
+                    if(screen.getZoneIndex() == 24) {
+                        enemyObjects.add(gameObject);
+                    }
+                }
+            }
+        }
         else if (gameObject.getId() == 0x8a) {
             // Mushnahhu
             if(Settings.isFools2021Mode()) {
@@ -816,44 +811,44 @@ public final class GameDataTracker {
 //                gameObject.getArgs().set(4, (short)1); // Contact damage for worms
             }
         }
-//        else if (gameObject.getId() == 0x8d) {
-//            // Ushum
-//            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
-//                if(gameObject.getObjectContainer() instanceof Screen) {
-//                    Screen screen = (Screen) gameObject.getObjectContainer();
-//                    if(screen.getZoneIndex() == 24) {
-//                        Integer flagToRemoveIndex = null;
-//                        for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
-//                            if (gameObject.getTestByteOperations().get(i).getIndex() == FlagConstants.SCREEN_FLAG_16) {
-//                                flagToRemoveIndex = i;
-//                                break;
-//                            }
-//                        }
-//                        if(flagToRemoveIndex != null) {
-//                            gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
-//                        }
-//
-//                        enemyObjects.add(gameObject);
-//                    }
-//                }
-//            }
-//        }
+        else if (gameObject.getId() == 0x8d) {
+            // Ushum
+            if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+                if(gameObject.getObjectContainer() instanceof Screen) {
+                    Screen screen = (Screen) gameObject.getObjectContainer();
+                    if(screen.getZoneIndex() == 24) {
+                        Integer flagToRemoveIndex = null;
+                        for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                            if (gameObject.getTestByteOperations().get(i).getIndex() == FlagConstants.SCREEN_FLAG_16) {
+                                flagToRemoveIndex = i;
+                                break;
+                            }
+                        }
+                        if(flagToRemoveIndex != null) {
+                            gameObject.getTestByteOperations().remove((int)flagToRemoveIndex);
+                        }
+
+                        enemyObjects.add(gameObject);
+                    }
+                }
+            }
+        }
         else if (gameObject.getId() == 0x8f) {
             if(Settings.isRandomizeEnemies()) {
-//                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-//                    // Fix flag for looping punishment room enemies
-//                    if(gameObject.getObjectContainer() instanceof Screen) {
-//                        Screen screen = (Screen) gameObject.getObjectContainer();
-//                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
-//                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
-//                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
-//                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
-//                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
+                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+                    // Fix flag for looping punishment room enemies
+                    if(gameObject.getObjectContainer() instanceof Screen) {
+                        Screen screen = (Screen) gameObject.getObjectContainer();
+                        if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
+                            for (int i = 0; i < gameObject.getWriteByteOperations().size(); i++) {
+                                WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(i);
+                                if (flagUpdate.getIndex() == FlagConstants.SCREEN_FLAG_0) {
+                                    flagUpdate.setIndex(FlagConstants.CUSTOM_HALLOWEEN_H4);
+                                }
+                            }
+                        }
+                    }
+                }
                 enemyObjects.add(gameObject);
             }
         }
@@ -1566,13 +1561,13 @@ public final class GameDataTracker {
             }
         }
         else if (gameObject.getId() == 0x98) {
-//            if(Settings.isHalloweenMode()) {
-//                int destinationZoneIndex = gameObject.getArgs().get(1);
-//                if(destinationZoneIndex == 1) {
-//                    // Night Surface, not normal Surface.
-//                    gameObject.getArgs().set(1, (short)22);
-//                }
-//            }
+            if(Settings.isHalloweenMode()) {
+                int destinationZoneIndex = gameObject.getArgs().get(1);
+                if(destinationZoneIndex == 1) {
+                    // Night Surface, not normal Surface.
+                    gameObject.getArgs().set(1, (short)22);
+                }
+            }
 
             if(gameObject.getArgs().get(0) == 0) {
                 if(Settings.isRandomizeBacksideDoors()) {
@@ -1777,28 +1772,28 @@ public final class GameDataTracker {
                     }
                 }
 
-//                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
-//                    // Add escape door in place of normal HT to Guidance door
-//                    Screen screen = (Screen)gameObject.getObjectContainer();
-//                    if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
-//                        if(gameObject.getArgs().get(1) == 0) {
-//                            GameObject replacementDoor = new GameObject(gameObject);
-//                            replacementDoor.setId((short)0xa0);
-//                            replacementDoor.getArgs().clear();
-//                            replacementDoor.getArgs().add((short)0);
-//                            replacementDoor.getArgs().add((short)0);
-//                            replacementDoor.getArgs().add((short)0);
-//                            replacementDoor.getArgs().add((short)0);
-//                            replacementDoor.getArgs().add((short)926);
-//                            replacementDoor.getArgs().add((short)0);
-//                            replacementDoor.getArgs().add((short)1);
-//                            replacementDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1));
-//                            gameObject.getObjectContainer().getObjects().add(replacementDoor);
-//
-//                            gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0));
-//                        }
-//                    }
-//                }
+                if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+                    // Add escape door in place of normal HT to Guidance door
+                    Screen screen = (Screen)gameObject.getObjectContainer();
+                    if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        if(gameObject.getArgs().get(1) == 0) {
+                            GameObject replacementDoor = new GameObject(gameObject);
+                            replacementDoor.setId((short)0xa0);
+                            replacementDoor.getArgs().clear();
+                            replacementDoor.getArgs().add((short)0);
+                            replacementDoor.getArgs().add((short)0);
+                            replacementDoor.getArgs().add((short)0);
+                            replacementDoor.getArgs().add((short)0);
+                            replacementDoor.getArgs().add((short)926);
+                            replacementDoor.getArgs().add((short)0);
+                            replacementDoor.getArgs().add((short)1);
+                            replacementDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1));
+                            gameObject.getObjectContainer().getObjects().add(replacementDoor);
+
+                            gameObject.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0));
+                        }
+                    }
+                }
             }
         }
         else if(gameObject.getId() == 0x6b) {
@@ -2264,7 +2259,7 @@ public final class GameDataTracker {
                     // Transformed Mr. Fishman shop
                     gameObject.setX(180);
                     gameObject.setY(1520);
-                    AddObject.addTransformedMrFishmanShopDoorGraphic(gameObject);
+                    AddObject.addTransformedMrFishmanShopDoorGraphic(gameObject.getObjectContainer());
 
                     if(Settings.isRandomizeNpcs()) {
                         mapOfNpcLocationToObject.put("NPCL: Mr. Fishman (Alt)", gameObject);
@@ -3649,49 +3644,8 @@ public final class GameDataTracker {
                         }
                     }
                 }
-
-                // Add mantra count timer
-                GameObject mantraCountTimer = new GameObject(gameObject.getObjectContainer());
-                mantraCountTimer.setId((short)0x0b);
-                mantraCountTimer.getArgs().add((short) 0);
-                mantraCountTimer.getArgs().add((short) 0);
-                mantraCountTimer.setX(-1);
-                mantraCountTimer.setY(-1);
-
-                TestByteOperation testByteOperation = new TestByteOperation();
-                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                if(mantraNumber == 9) {
-                    // We've swapped out this flag, so use the replaced one.
-                    testByteOperation.setIndex(FlagConstants.MANTRA_LAMULANA);
-                    testByteOperation.setValue((byte)1);
-                }
-                else {
-                    // First index on mantra activation object is always the mantra recited flag.
-                    testByteOperation.setIndex(gameObject.getTestByteOperations().get(0).getIndex());
-                    testByteOperation.setValue((byte)4);
-                }
-                mantraCountTimer.getTestByteOperations().add(testByteOperation);
-
-                // Check to ensure that the timer hasn't already done its job (so each mantra recited can only increment the timer once)
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(2792 - (299 - gameObject.getTestByteOperations().get(0).getIndex()));
-                testByteOperation.setOp(ByteOp.FLAG_EQUALS);
-                testByteOperation.setValue((byte)0);
-                mantraCountTimer.getTestByteOperations().add(testByteOperation);
-
-                WriteByteOperation writeByteOperation = new WriteByteOperation();
-                writeByteOperation.setIndex(2793);
-                writeByteOperation.setOp(ByteOp.ADD_FLAG);
-                writeByteOperation.setValue(1);
-                mantraCountTimer.getWriteByteOperations().add(writeByteOperation);
-
-                writeByteOperation = new WriteByteOperation();
-                writeByteOperation.setIndex(2792 - (299 - gameObject.getTestByteOperations().get(0).getIndex()));
-                writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
-                writeByteOperation.setValue(1);
-                mantraCountTimer.getWriteByteOperations().add(writeByteOperation);
-
-                gameObject.getObjectContainer().getObjects().add(mantraCountTimer);
+                // Keep track of total mantras recited
+                gameObject.addUpdates(new WriteByteOperation(FlagConstants.MANTRAS_RECITED_COUNT, ByteOp.ADD_FLAG, 1));
 
                 // Add LAMULANA mantra timer
                 GameObject mantraTimer = new GameObject(gameObject.getObjectContainer());
@@ -3701,8 +3655,8 @@ public final class GameDataTracker {
                 mantraTimer.setX(-1);
                 mantraTimer.setY(-1);
 
-                testByteOperation = new TestByteOperation();
-                testByteOperation.setIndex(2793);
+                TestByteOperation testByteOperation = new TestByteOperation();
+                testByteOperation.setIndex(FlagConstants.MANTRAS_RECITED_COUNT);
                 testByteOperation.setOp(ByteOp.FLAG_GTEQ);
                 if(Settings.getEnabledGlitches().contains("Lamp Glitch")) {
                     testByteOperation.setValue((byte)5);
@@ -3718,13 +3672,13 @@ public final class GameDataTracker {
                 testByteOperation.setValue((byte)4);
                 mantraTimer.getTestByteOperations().add(testByteOperation);
 
-                writeByteOperation = new WriteByteOperation();
+                WriteByteOperation writeByteOperation = new WriteByteOperation();
                 writeByteOperation.setIndex(FlagConstants.MANTRA_FINAL);
                 writeByteOperation.setOp(ByteOp.ASSIGN_FLAG);
                 writeByteOperation.setValue(4);
                 mantraTimer.getWriteByteOperations().add(writeByteOperation);
 
-                gameObject.getObjectContainer().getObjects().add(mantraTimer);
+                gameObject.getObjectContainer().getObjects().add(0, mantraTimer);
             }
         }
     }
@@ -6633,7 +6587,8 @@ public final class GameDataTracker {
         }
     }
 
-    public static void replaceNightSurfaceWithSurface(List<Zone> rcdInfo, int danceBlockNumber, int secretShopBlockNumber) {
+    public static void replaceNightSurfaceWithSurface(RcdData rcdData, int danceBlockNumber, int secretShopBlockNumber) {
+        List<Zone> rcdInfo = rcdData.getZones();
         Zone surface = getZone(rcdInfo, 1);
         Zone nightSurface = getZone(rcdInfo, 22);
         for(GameObject gameObject : surface.getObjects()) {
@@ -6702,7 +6657,8 @@ public final class GameDataTracker {
         }
     }
 
-    public static void fixTransitionGates(List<Zone> rcdInfo) {
+    public static void fixTransitionGates(RcdData rcdData) {
+        List<Zone> rcdInfo = rcdData.getZones();
         for(Zone zone : rcdInfo) {
             for(Room room : zone.getRooms()) {
                 for(Screen screen : room.getScreens()) {
@@ -6720,7 +6676,8 @@ public final class GameDataTracker {
         }
     }
 
-    public static void addHTSkip(List<Zone> rcdInfo, List<Block> datInfo) {
+    public static void addHTSkip(RcdData rcdData, List<Block> datInfo) {
+        List<Zone> rcdInfo = rcdData.getZones();
         Zone htZone = getZone(rcdInfo, 23);
         Room htRoom = getRoom(htZone.getRooms(), 0);
         Screen htScreen = getScreen(htRoom.getScreens(), 0);
@@ -6730,7 +6687,8 @@ public final class GameDataTracker {
         }
     }
 
-    public static void updateWorldForFools2020(List<Zone> rcdInfo, List<Block> datInfo) {
+    public static void updateWorldForFools2020(RcdData rcdData, List<Block> datInfo) {
+        List<Zone> rcdInfo = rcdData.getZones();
         Zone surface = getZone(rcdInfo, 1);
         Room argusRoom = getRoom(surface.getRooms(), 0);
         Screen featherScreen = getScreen(argusRoom.getScreens(), 0);
@@ -7573,4 +7531,1924 @@ public final class GameDataTracker {
 //            }
 //        }
 //    }
-}
+
+    public static void addObject(GameObject gameObject) {
+        if (gameObject.getId() == ObjectIdConstants.Enemy_Antlion) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Bat) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Skeleton) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Snouter) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_KodamaRat) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Dais) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == FlagConstants.WF_SOFTWARE_YAGOSTR) {
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.SOFTWARE_YAGOSTR, FlagConstants.WF_SOFTWARE_YAGOSTR);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+                else if(flagTest.getIndex() == FlagConstants.WF_ANKH_JEWEL_SUN) {
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.ANKH_JEWEL, FlagConstants.WF_ANKH_JEWEL_SUN);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+                if (Settings.isFools2021Mode()) {
+                    if(flagTest.getIndex() == FlagConstants.MOONLIGHT_SCAN_DANCING_MAN) {
+                        // Eden chest 1
+                        edenDaises.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == FlagConstants.MOONLIGHT_SCAN_HANDS) {
+                        // Eden chest 2
+                        edenDaises.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == FlagConstants.MOONLIGHT_SCAN_TRAP) {
+                        // Eden chest 3
+                        edenDaises.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == FlagConstants.MOONLIGHT_SCAN_FACE) {
+                        // Eden chest 4
+                        edenDaises.add(gameObject);
+                    }
+                }
+            }
+
+            if(gameObject.getObjectContainer() instanceof Screen) {
+                Screen screen = (Screen) gameObject.getObjectContainer();
+                if(Settings.isRandomizeTrapItems()) {
+                    if (screen.getZoneIndex() == 11 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 3) {
+                        // Graveyard trap chest dais
+                        GameObjectId gameObjectId = new GameObjectId(DropType.NOTHING.getValue(), FlagConstants.WF_TRAP_GRAVEYARD);
+                        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        if (objects == null) {
+                            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        }
+                        objects.add(gameObject);
+                    }
+                }
+            }
+        }
+        else if(gameObject.getId() == ObjectIdConstants.MovingRoomSpawner) {
+            for(WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
+                if(flagUpdate.getIndex() == FlagConstants.WF_ANKH_JEWEL_MAUSOLEUM) {
+                    // Mausoleum Ankh Jewel chest trap
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.ANKH_JEWEL, FlagConstants.WF_ANKH_JEWEL_MAUSOLEUM);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    return;
+                }
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.FlagTimer) {
+            // Timer objects
+            for (WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
+                if(flagUpdate.getIndex() == FlagConstants.HT_UNLOCK_PROGRESS_EARLY) {
+                    if(flagUpdate.getValue() == 8) {
+                        // Mulbruk swimsuit conversation timer.
+                        //OBJECT Type=0xb
+                        //TEST:
+                        //[0106] == 2
+                        //[034c] <= 7
+                        //UPDATE:
+                        //[034c]  = 8
+                        //ARG 0: 0
+                        //ARG 1: 0
+                        GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.PROVOCATIVE_BATHING_SUIT, FlagConstants.WF_PROVOCATIVE_BATHING_SUIT);
+                        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        if (objects == null) {
+                            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                        }
+                        objects.add(gameObject);
+                        return;
+                    }
+                }
+                else if(!Settings.isRandomizeNonBossDoors()) {
+                    if(flagUpdate.getIndex() == FlagConstants.AMPHISBAENA_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.AMPHISBAENA_GATE_OPEN) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0
+                                ? "Door: F1" : "Door: B1";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagUpdate.getIndex() == FlagConstants.SAKIT_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.SAKIT_GATE_OPEN) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 2
+                                ? "Door: F2" : "Door: B2";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagUpdate.getIndex() == FlagConstants.ELLMAC_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.ELLMAC_GATE_OPEN) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3
+                                ? "Door: F3" : "Door: B3";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagUpdate.getIndex() == FlagConstants.BAHAMUT_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.BAHAMUT_GATE_OPEN) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
+                                ? "Door: F4" : "Door: B4";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagUpdate.getIndex() == FlagConstants.VIY_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.VIY_GATE_OPEN) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 1
+                                ? "Door: F5" : "Door: B5";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagUpdate.getIndex() == FlagConstants.PALENQUE_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.PALENQUE_GATE_OPEN) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6
+                                ? "Door: F6" : "Door: B6";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagUpdate.getIndex() == FlagConstants.BAPHOMET_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.BAPHOMET_GATE_OPEN) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
+                                ? "Door: F7" : "Door: B7";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                }
+            }
+            for(int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                TestByteOperation flagTest = gameObject.getTestByteOperations().get(i);
+                if(flagTest.getIndex() == FlagConstants.WF_DIARY) {
+                    // Timers related to Diary puzzle
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.DIARY, FlagConstants.WF_DIARY);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    return;
+                }
+                else if(flagTest.getIndex() == FlagConstants.WF_MSX2) {
+                    // Timer related to MSX2 shop
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MSX2, FlagConstants.WF_MSX2);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    return;
+                }
+//                else if(flagTest.getIndex() == FlagConstants.WF_MATERNITY_STATUE && flagTest.getValue() == 1) {
+//                    // Timer to track wait time with Woman Statue and give Maternity Statue
+//                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MATERNITY_STATUE, FlagConstants.WF_MATERNITY_STATUE);
+//                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+//                    if (objects == null) {
+//                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+//                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+//                    }
+//                    objects.add(gameObject);
+//                }
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.RoomSpawner) {
+            for(TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if(flagTest.getIndex() == FlagConstants.WF_SOFTWARE_DEATHV) {
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.SOFTWARE_DEATHV, FlagConstants.WF_SOFTWARE_DEATHV);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if(objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+                else if(flagTest.getIndex() == FlagConstants.WF_MAP_ILLUSION) {
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MAP, FlagConstants.WF_MAP_ILLUSION);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if(objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+//                else if(flagTest.getIndex() == FlagConstants.MANTRA_MARDUK && flagTest.getValue() == 2) {
+//                    if(gameObject.getObjectContainer() instanceof Screen
+//                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 8) {
+//                        // MARDUK tablet effect
+//                        List<GameObject> objects = mantraTablets.get("MARDUK");
+//                        if(objects == null) {
+//                            mantraTablets.put("MARDUK", new ArrayList<>());
+//                            objects = mantraTablets.get("MARDUK");
+//                        }
+//                        objects.add(gameObject);
+//                        break;
+//                    }
+//                }
+//                else if(flagTest.getIndex() == FlagConstants.MANTRA_SABBAT && flagTest.getValue() == 2) {
+//                    if(gameObject.getObjectContainer() instanceof Screen
+//                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 7) {
+//                        // SABBAT tablet effect
+//                        List<GameObject> objects = mantraTablets.get("SABBAT");
+//                        if(objects == null) {
+//                            mantraTablets.put("SABBAT", new ArrayList<>());
+//                            objects = mantraTablets.get("SABBAT");
+//                        }
+//                        objects.add(gameObject);
+//                        break;
+//                    }
+//                }
+//                else if(flagTest.getIndex() == FlagConstants.MANTRA_MU && flagTest.getValue() == 2) {
+//                    if(gameObject.getObjectContainer() instanceof Screen
+//                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6) {
+//                        // MU tablet effect
+//                        List<GameObject> objects = mantraTablets.get("MU");
+//                        if(objects == null) {
+//                            mantraTablets.put("MU", new ArrayList<>());
+//                            objects = mantraTablets.get("MU");
+//                        }
+//                        objects.add(gameObject);
+//                        break;
+//                    }
+//                }
+//                else if(flagTest.getIndex() == FlagConstants.MANTRA_VIY && flagTest.getValue() == 2) {
+//                    if(gameObject.getObjectContainer() instanceof Screen
+//                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5) {
+//                        // VIY tablet effect
+//                        List<GameObject> objects = mantraTablets.get("VIY");
+//                        if(objects == null) {
+//                            mantraTablets.put("VIY", new ArrayList<>());
+//                            objects = mantraTablets.get("VIY");
+//                        }
+//                        objects.add(gameObject);
+//                        break;
+//                    }
+//                }
+//                else if(flagTest.getIndex() == FlagConstants.MANTRA_BAHRUN && flagTest.getValue() == 2) {
+//                    if(gameObject.getObjectContainer() instanceof Screen
+//                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 13) {
+//                        // BAHRUN tablet effect
+//                        List<GameObject> objects = mantraTablets.get("BAHRUN");
+//                        if(objects == null) {
+//                            mantraTablets.put("BAHRUN", new ArrayList<>());
+//                            objects = mantraTablets.get("BAHRUN");
+//                        }
+//                        objects.add(gameObject);
+//                        break;
+//                    }
+//                }
+//                else if(flagTest.getIndex() == FlagConstants.MANTRA_WEDJET && flagTest.getValue() == 2) {
+//                    if(gameObject.getObjectContainer() instanceof Screen
+//                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3) {
+//                        // WEDJET tablet effect
+//                        List<GameObject> objects = mantraTablets.get("WEDJET");
+//                        if(objects == null) {
+//                            mantraTablets.put("WEDJET", new ArrayList<>());
+//                            objects = mantraTablets.get("WEDJET");
+//                        }
+//                        objects.add(gameObject);
+//                        break;
+//                    }
+//                }
+//                else if(flagTest.getIndex() == FlagConstants.MANTRA_ABUTO && flagTest.getValue() == 2) {
+//                    if(gameObject.getObjectContainer() instanceof Screen
+//                            && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 11) {
+//                        // ABUTO tablet effect
+//                        List<GameObject> objects = mantraTablets.get("ABUTO");
+//                        if(objects == null) {
+//                            mantraTablets.put("ABUTO", new ArrayList<>());
+//                            objects = mantraTablets.get("ABUTO");
+//                        }
+//                        objects.add(gameObject);
+//                        break;
+//                    }
+//                }
+//                else if(flagTest.getIndex() == FlagConstants.MANTRA_FINAL) {
+//                    if(flagTest.getValue() == 2) {
+//                        if(gameObject.getObjectContainer() instanceof Screen
+//                                && ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0) {
+//                            // LAMULANA tablet effect
+//                            List<GameObject> objects = mantraTablets.get("LAMULANA");
+//                            if(objects == null) {
+//                                mantraTablets.put("LAMULANA", new ArrayList<>());
+//                                objects = mantraTablets.get("LAMULANA");
+//                            }
+//                            objects.add(gameObject);
+//                            break;
+//                        }
+//                    }
+//                }
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Crusher) {
+            for (WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
+                if (flagUpdate.getIndex() == FlagConstants.WF_MAP_SHRINE) {
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MAP, FlagConstants.WF_MAP_SHRINE);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Hitbox) {
+            TestByteOperation flagTest;
+            for (int i = 0; i < gameObject.getTestByteOperations().size(); i++) {
+                flagTest = gameObject.getTestByteOperations().get(i);
+                if (flagTest.getIndex() == FlagConstants.WF_SOFTWARE_DEATHV) {
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.SOFTWARE_DEATHV, FlagConstants.WF_SOFTWARE_DEATHV);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+                else if (flagTest.getIndex() == FlagConstants.WF_MAP_ILLUSION) {
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MAP, FlagConstants.WF_MAP_ILLUSION);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Snake) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Cockatrice) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Condor) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_MirrorGhosts) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_MaskedMan) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Nozuchi) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Fist) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.RedSkeleton) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Sonic) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_CatBall) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Bennu) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_PharaohHead) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Chest) {
+            int worldFlag;
+            short inventoryArg;
+
+            if(gameObject.getArgs().get(0) == DropType.COINS.getValue()) {
+                // Coin chest
+                inventoryArg = gameObject.getArgs().get(1); // Use coin amount as item arg
+            }
+            else if(gameObject.getArgs().get(0) == DropType.BOMB_AMMO.getValue()) {
+                // Bomb chest, will be replaced by an 80-coin chest.
+                inventoryArg = 80;
+            }
+            else {
+                // Item chest
+                inventoryArg = (short)(gameObject.getArgs().get(0) - 11);
+            }
+
+            WriteByteOperation flagUpdate = gameObject.getWriteByteOperations().get(0);
+            if(flagUpdate.getIndex() == FlagConstants.SURFACE_PUZZLE_SEAL_COIN_CHEST) {
+                // Replace world flag for Life Seal coin chest, which is a bit special
+                worldFlag = FlagConstants.WF_COIN_SURFACE_SEAL;
+            }
+            else if(Settings.isRandomizeTrapItems() && flagUpdate.getIndex() == FlagConstants.WF_TRAP_GRAVEYARD) {
+                // Replace world flag for Graveyard trap chest, and add a full set of update flags since it only has one.
+                inventoryArg = 0;
+                worldFlag = FlagConstants.WF_TRAP_GRAVEYARD;
+            }
+            else if(Settings.isRandomizeTrapItems() && flagUpdate.getIndex() == FlagConstants.ILLUSION_PUZZLE_EXPLODING_CHEST) {
+                // Replace world flag for Illusion trap chest
+                inventoryArg = 0;
+                worldFlag = FlagConstants.WF_TRAP_ILLUSION;
+            }
+            else {
+                worldFlag = gameObject.getWriteByteOperations().get(0).getIndex();
+            }
+
+            GameObjectId gameObjectId = new GameObjectId(inventoryArg, worldFlag);
+
+            List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+            if (objects == null) {
+                mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+            }
+            objects.add(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.FloatingItem) {
+            short chestArg = gameObject.getArgs().get(1);
+            int worldFlag = gameObject.getWriteByteOperations().get(0).getIndex();
+            GameObjectId gameObjectId = new GameObjectId(chestArg, worldFlag);
+
+            List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+            if (objects == null) {
+                mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+            }
+            objects.add(gameObject);
+        }
+        else if (gameObject.getId() == ObjectIdConstants.CounterweightElevator) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == FlagConstants.WF_PLANE_MODEL) {
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.PLANE_MODEL, FlagConstants.WF_PLANE_MODEL);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Seal) {
+            if(Settings.isRandomizeSeals()) {
+                String sealNode = SealRandomizer.getSealNode(gameObject);
+                List<GameObject> seals = mapOfSealNodeToSealObjects.get(sealNode);
+                if(seals == null) {
+                    seals = new ArrayList<>();
+                    mapOfSealNodeToSealObjects.put(sealNode, seals);
+                }
+                seals.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Gyonin) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Hippocamp) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Kraken) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_ExplodeRock) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Slime) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Kakoujuu) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Mandrake) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Naga) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Garuda) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Blob) {
+            // Hand enemies in Extinction
+            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+//        else if (gameObject.getId() == ObjectIdConstants.Hekatonkheires) {
+//            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+//                enemyObjects.add(gameObject);
+//            }
+//        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Bonnacon) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_FlowerFacedSnouter) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Monocoli) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_JiangShi) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_RongXuanwangCorpse) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+//        else if (gameObject.getId() == ObjectIdConstants.Enemy_Hundun) {
+//            if(Settings.isRandomizeEnemies()) {
+//                enemyObjects.add(gameObject);
+//            }
+//        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Pan) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Hanuman) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Enkidu) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Marchosias) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Witch) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Siren) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_XingTian) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_ZaoChi) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Leucrotta) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_LizardMan) {
+            if(Settings.isRandomizeEnemies()) {
+                Screen screen = (Screen)gameObject.getObjectContainer();
+                if(screen.getZoneIndex() != 10 || screen.getRoomIndex() != 5 || screen.getScreenIndex() != 1) {
+                    // All lizards except lizard puzzle guy
+                    enemyObjects.add(gameObject);
+                }
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Asp) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Kui) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Toujin) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_DiJiang) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_IceWizard) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Keseran) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_BaiZe) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Anubis) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Yowie) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Troll) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_ABaoAQu) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Andras) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Cyclops) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Vimana) {
+            // Would normally check for Plane Model flag, but there are no Vimana objects that don't have it, except the Fools2020 ones.
+//            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+//                if (flagTest.getIndex() == FlagConstants.WF_PLANE_MODEL) {
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.PLANE_MODEL, FlagConstants.WF_PLANE_MODEL);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+//                    break;
+//                }
+//            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_BlackDog) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Salamander) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_SwordBird) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Elephant) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Amon) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Satan) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_Devil) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+//        else if (gameObject.getId() == ObjectIdConstants.Kuusarikku) {
+//            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+//                if(gameObject.getObjectContainer() instanceof Screen) {
+//                    Screen screen = (Screen) gameObject.getObjectContainer();
+//                    if(screen.getZoneIndex() == 24) {
+//                        enemyObjects.add(gameObject);
+//                    }
+//                }
+//            }
+//        }
+//        else if (gameObject.getId() == ObjectIdConstants.Girtablilu) {
+//            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+//                if(gameObject.getObjectContainer() instanceof Screen) {
+//                    Screen screen = (Screen) gameObject.getObjectContainer();
+//                    if(screen.getZoneIndex() == 24) {
+//                        enemyObjects.add(gameObject);
+//                    }
+//                }
+//            }
+//        }
+//        else if (gameObject.getId() == ObjectIdConstants.Ushum) {
+//            if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs() && Settings.isRandomizeEnemies()) {
+//                if(gameObject.getObjectContainer() instanceof Screen) {
+//                    Screen screen = (Screen) gameObject.getObjectContainer();
+//                    if(screen.getZoneIndex() == 24) {
+//                        enemyObjects.add(gameObject);
+//                    }
+//                }
+//            }
+//        }
+        else if (gameObject.getId() == ObjectIdConstants.Enemy_MiniBoss) {
+            if(Settings.isRandomizeEnemies()) {
+                enemyObjects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.GraphicsTextureDraw) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if(!Settings.isRandomizeNonBossDoors()) {
+                    if(flagTest.getIndex() == FlagConstants.AMPHISBAENA_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.AMPHISBAENA_GATE_OPEN) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0
+                                ? "Door: F1" : "Door: B1";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == FlagConstants.SAKIT_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.SAKIT_GATE_OPEN) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 2
+                                ? "Door: F2" : "Door: B2";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == FlagConstants.ELLMAC_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.ELLMAC_GATE_OPEN) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 3
+                                ? "Door: F3" : "Door: B3";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == FlagConstants.BAHAMUT_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.BAHAMUT_GATE_OPEN) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
+                                ? "Door: F4" : "Door: B4";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == FlagConstants.VIY_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.VIY_GATE_OPEN) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 1
+                                ? "Door: F5" : "Door: B5";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == FlagConstants.PALENQUE_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.PALENQUE_GATE_OPEN) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 6
+                                ? "Door: F6" : "Door: B6";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                    else if(flagTest.getIndex() == FlagConstants.BAPHOMET_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.BAPHOMET_GATE_OPEN) {
+                        String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 5
+                                ? "Door: F7" : "Door: B7";
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                }
+
+                if (flagTest.getIndex() == FlagConstants.WF_SOFTWARE_MEKURI) {
+                    // mekuri tent-closing effect
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.SOFTWARE_MEKURI, FlagConstants.WF_SOFTWARE_MEKURI);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+                else if(flagTest.getIndex() == FlagConstants.WF_CRUCIFIX) {
+                    // Crucifix puzzle lit torches
+                    GameObjectId gameObjectId = new GameObjectId((short) ItemConstants.CRUCIFIX, FlagConstants.WF_CRUCIFIX);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+                else if(flagTest.getIndex() == FlagConstants.WF_PROVOCATIVE_BATHING_SUIT) {
+                    // HT Dracuet stuff
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.PROVOCATIVE_BATHING_SUIT, FlagConstants.WF_PROVOCATIVE_BATHING_SUIT);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.WarpDoor) {
+            if(gameObject.getArgs().get(0) == 0) {
+                if(Settings.isRandomizeBacksideDoors()) {
+                    Screen screen = (Screen)gameObject.getObjectContainer();
+                    String doorName = null;
+                    int zone = screen.getZoneIndex();
+                    if(zone == ZoneConstants.GUIDANCE) {
+                        // Gate of Guidance => Gate of Illusion
+                        if(screen.getRoomIndex() != 1) {
+                            doorName = "Door: F1";
+                        }
+                    }
+                    else if(zone == ZoneConstants.SURFACE) {
+                        // Surface => Tower of the Goddess
+                        doorName = "Door: F5";
+                    }
+                    else if(zone == ZoneConstants.MAUSOLEUM) {
+                        // Mausoleum of the Giants => Graveyard of the Giants
+                        doorName = "Door: F2";
+                    }
+                    else if(zone == ZoneConstants.SUN) {
+                        // Temple of the Sun => Temple of Moonlight
+                        doorName = "Door: F3";
+                    }
+                    else if(zone == ZoneConstants.INFERNO) {
+                        if(screen.getRoomIndex() == 8) {
+                            // Inferno Cavern [Viy] => Tower of Ruin [Southwest]
+                            doorName = "Door: F4";
+                        }
+                        else {
+                            // Inferno Cavern [Spikes] => Tower of Ruin [Top]
+                            doorName = "Door: F7";
+                        }
+                    }
+                    else if(zone == ZoneConstants.EXTINCTION) {
+                        if(screen.getRoomIndex() == 7) {
+                            if(Settings.isRandomizeNonBossDoors()) {
+                                doorName = "Door: F9";
+                            }
+                        }
+                        else {
+                            // Chamber of Extinction [Magatama Left] => Chamber of Birth [Northeast]
+                            doorName = "Door: F6";
+                        }
+                    }
+                    else if(zone == ZoneConstants.ILLUSION) {
+                        // Gate of Illusion [Grail] => Gate of Guidance
+                        doorName = "Door: B1";
+                    }
+                    else if(zone == ZoneConstants.GRAVEYARD) {
+                        // Graveyard of the Giants [West] => Mausoleum of the Giants
+                        doorName = "Door: B2";
+                    }
+                    else if(zone == ZoneConstants.MOONLIGHT) {
+                        // Temple of Moonlight [Lower] => Temple of the Sun [Main]
+                        doorName = "Door: B3";
+                    }
+                    else if(zone == ZoneConstants.GODDESS) {
+                        // Tower of the Goddess [Lower] => Surface [Main]
+                        if(screen.getRoomIndex() == 0) {
+                            doorName = "Door: B5";
+                        }
+                    }
+                    else if(zone == ZoneConstants.RUIN) {
+                        if(screen.getRoomIndex() == 2) {
+                            // Tower of Ruin [Southwest] => Inferno Cavern [Viy]
+                            doorName = "Door: B4";
+                        }
+                        else {
+                            // Tower of Ruin [Top] => Inferno Cavern [Spikes]
+                            doorName = "Door: B7";
+                        }
+                    }
+                    else if(zone == ZoneConstants.BIRTH_SWORDS) {
+                        // Chamber of Birth [Northeast] => Chamber of Extinction [Magatama Left]
+                        doorName = "Door: B6";
+                    }
+                    else if(zone == 17) {
+                        if(Settings.isRandomizeNonBossDoors()) {
+                            // Dimensional Corridor [Grail] => Endless Corridor [1F]
+                            doorName = "Door: B8";
+                        }
+                    }
+                    else if(zone == 19) {
+                        if(Settings.isRandomizeNonBossDoors()) {
+                            // Gate of Time [Mausoleum] =>
+                            doorName = "Door: B9";
+                        }
+                    }
+
+                    if(doorName != null) {
+                        List<GameObject> backsideDoors = mapOfDoorNameToBacksideDoor.get(doorName);
+                        if(backsideDoors == null) {
+                            backsideDoors = new ArrayList<>();
+                            mapOfDoorNameToBacksideDoor.put(doorName, backsideDoors);
+                        }
+                        backsideDoors.add(gameObject);
+                    }
+                }
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.SoundEffect) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == FlagConstants.WF_MAP_SHRINE) {
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MAP, FlagConstants.WF_MAP_SHRINE);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+                else if(flagTest.getIndex() == FlagConstants.WF_MATERNITY_STATUE) {
+                    // Timer to play Shell Horn sound when being given Maternity Statue equivalent
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MATERNITY_STATUE, FlagConstants.WF_MATERNITY_STATUE);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                }
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.UseItemDetector) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == FlagConstants.WF_TREASURES) {
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.TREASURES, FlagConstants.WF_TREASURES);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.Scannable) {
+            for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if (flagTest.getIndex() == FlagConstants.WF_MAP_SURFACE) {
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MAP, FlagConstants.WF_MAP_SURFACE);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    break;
+                }
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.ConversationDoor) {
+            int blockNumber = gameObject.getArgs().get(4);
+            if(gameObject.getArgs().get(3) == 1) {
+                // Any shop
+                if(DataFromFile.getMapOfShopNameToShopBlock().values().contains(blockNumber)
+                        || (Settings.isFools2020Mode() && blockNumber == 273)) {
+                    List<GameObject> objects = mapOfShopBlockToShopObjects.get(blockNumber);
+                    if (objects == null) {
+                        mapOfShopBlockToShopObjects.put(blockNumber, new ArrayList<>());
+                        objects = mapOfShopBlockToShopObjects.get(blockNumber);
+                    }
+                    objects.add(gameObject);
+                }
+
+                if(blockNumber == 34) {
+                    // Shop before/after buying the MSX2
+                    for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                        if (flagTest.getIndex() == FlagConstants.WF_MSX2) {
+                            GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MSX2, FlagConstants.WF_MSX2);
+                            List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                            if (objects == null) {
+                                mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                                objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                            }
+                            objects.add(gameObject);
+                            break;
+                        }
+                    }
+                }
+                else if(blockNumber == 35) {
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Sidro", gameObject);
+                    }
+                }
+                else if(blockNumber == 36) {
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Modro", gameObject);
+                    }
+                }
+                else if(blockNumber == 39) {
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Penadvent of ghost", gameObject);
+                    }
+                }
+                else if(blockNumber == 74) {
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Greedy Charlie", gameObject);
+                    }
+                }
+                else if(blockNumber == 100) {
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Shalom III", gameObject);
+                    }
+                }
+                else if(blockNumber == 102) {
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Usas VI", gameObject);
+                    }
+                }
+                else if(blockNumber == 103) {
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Kingvalley I", gameObject);
+                    }
+                }
+                else if(blockNumber == 132){
+                    // Untransformed Mr. Fishman shop
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Mr. Fishman (Original)", gameObject);
+                    }
+                }
+                else if(blockNumber == 133){
+                    // Transformed Mr. Fishman shop
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Mr. Fishman (Alt)", gameObject);
+                    }
+                }
+                else if(blockNumber == 167){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Operator Combaker", gameObject);
+                    }
+                }
+                else if(blockNumber == 185){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Yiegah Kungfu", gameObject);
+                    }
+                }
+                else if(blockNumber == 187){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Arrogant Metagear", gameObject);
+                    }
+                }
+                else if(blockNumber == 204){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Arrogant Sturdy Snake", gameObject);
+                    }
+                }
+                else if(blockNumber == 205){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Yiear Kungfu", gameObject);
+                    }
+                }
+                else if(blockNumber == 220){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Affected Knimare", gameObject);
+                    }
+                }
+                else if(blockNumber == 244){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Mover Athleland", gameObject);
+                    }
+                }
+                else if(blockNumber == 272){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Giant Mopiran", gameObject);
+                    }
+                }
+                else if(blockNumber == 290){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Kingvalley II", gameObject);
+                    }
+                }
+                else if(blockNumber == 303){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Energetic Belmont", gameObject);
+                    }
+                }
+                else if(blockNumber == 321){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Mechanical Efspi", gameObject);
+                    }
+                }
+                else if(blockNumber == 337){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Mud Man Qubert", gameObject);
+                    }
+                }
+                else if(blockNumber == 470){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Hot-blooded Nemesistwo", gameObject);
+                    }
+                }
+                else if(blockNumber == 490) {
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MSX2, FlagConstants.WF_MSX2);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                }
+                else if(blockNumber == 1008){
+                    if(Settings.isRandomizeNpcs()) {
+                        mapOfNpcLocationToObject.put("NPCL: Tailor Dracuet", gameObject);
+                    }
+                }
+            }
+            else if(blockNumber == 671) {
+                // Hiner - Surface NPC, 01-00-02
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Hiner", gameObject);
+                }
+            }
+            else if(blockNumber == 672) {
+                // Moger - Surface NPC, 01-02-00
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Moger", gameObject);
+                }
+            }
+            else if(blockNumber == 673) {
+                // Former Mekuri Master - Surface NPC, 01-07-00
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Former Mekuri Master", gameObject);
+                }
+
+                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.SOFTWARE_MEKURI, FlagConstants.WF_SOFTWARE_MEKURI);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+            }
+            else if(blockNumber == 674) {
+                // Priest Zarnac - Guidance NPC, 00-04-01
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Zarnac", gameObject);
+                }
+            }
+            else if(blockNumber == 675) {
+                // Priest Xanado - Mausoleum NPC, 02-02-00
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Xanado", gameObject);
+                }
+            }
+            else if(blockNumber == 677) {
+                // Philosopher Giltoriyo - Spring NPC, 04-00-01
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Philosopher Giltoriyo", gameObject);
+                }
+            }
+            else if(blockNumber == 678) {
+                // Priest Hidlyda - Spring NPC, 04-06-01
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Hidlyda", gameObject);
+                }
+            }
+            else if(blockNumber == 679) {
+                // Priest Romancis - Inferno NPC, 05-03-02
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Romancis", gameObject);
+                }
+            }
+            else if(blockNumber == 680) {
+                // Priest Aramo - Extinction NPC, 06-06-00
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Aramo", gameObject);
+                }
+            }
+            else if(blockNumber == 681) {
+                // Priest Triton - Extinction NPC, 06-09-01
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Triton", gameObject);
+                }
+            }
+            else if(blockNumber == 683) {
+                // Priest Jaguarfiv - Twin Labs NPC, 07-10-01
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Jaguarfiv", gameObject);
+                }
+            }
+            else if(blockNumber == 686) {
+                // The Fairy Queen - Endless NPC, 08-01-00
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: The Fairy Queen", gameObject);
+                }
+            }
+            else if(blockNumber == 689) {
+                // Mr. Slushfund - Illusion NPC, 10-08-00
+                // Conversation to receive Pepper
+                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.PEPPER, FlagConstants.WF_PEPPER);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+
+                npcObjects.add(gameObject);
+            }
+            else if(blockNumber == 691) {
+                // Conversation to give Treasures and receive Anchor
+                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.ANCHOR, FlagConstants.WF_ANCHOR);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+            }
+            else if(blockNumber == 692) {
+                // Conversation after receiving both Pepper and Anchor
+                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.ANCHOR, FlagConstants.WF_ANCHOR);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+            }
+            if(blockNumber == 693) {
+                // Priest Alest - Illusion NPC, 10-08-01
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Alest", gameObject);
+                }
+
+                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MINI_DOLL, FlagConstants.WF_MINI_DOLL);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+            }
+            else if(blockNumber == 694) {
+                // Stray fairy - Illusion NPC, 10-00-01
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Stray fairy", gameObject);
+                }
+            }
+            else if(blockNumber == 696) {
+                // Giant Thexde - Graveyard NPC, 11-07-00
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Giant Thexde", gameObject);
+                }
+            }
+            else if(blockNumber == 698) {
+                // Philosopher Alsedana - Moonlight NPC, 12-06-00
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Philosopher Alsedana", gameObject);
+                }
+            }
+            else if(blockNumber == 700) {
+                // Philosopher Samaranta - Goddess NPC, 13-05-01
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Philosopher Samaranta", gameObject);
+                }
+            }
+            else if(blockNumber == 701) {
+                // Priest Laydoc - Ruin NPC, 14-00-01
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Laydoc", gameObject);
+                }
+            }
+            else if(blockNumber == 702) {
+                // Priest Ashgine - Birth NPC, 16-01-00
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Ashgine", gameObject);
+                }
+            }
+            else if(blockNumber == 704) {
+                // Philosopher Fobos - Dimensional NPC, 17-02-00
+                npcObjects.add(gameObject);
+            }
+            else if(blockNumber == 705) {
+                // Philosopher Fobos - Dimensional NPC, 17-02-00
+                // Post-Medicine version of Fobos
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Philosopher Fobos", gameObject);
+                }
+            }
+            else if(blockNumber == 706) {
+                // 8bit Elder - Gate of Time NPC, 21-00-00
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: 8bit Elder", gameObject);
+                }
+            }
+            else if(blockNumber == 707) {
+                // duplex - Illusion NPC, 10-02-02
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: duplex", gameObject);
+                }
+            }
+            else if(blockNumber == 708) {
+                // Samieru - Moonlight NPC, 12-03-00
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Samieru", gameObject);
+                }
+            }
+            else if(blockNumber == 709) {
+                // Naramura - Goddess NPC, 13-06-03
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Naramura", gameObject);
+                }
+            }
+            else if(blockNumber == 710) {
+                // 8bit Fairy - Gate of Time NPC, 20-00-01
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: 8bit Fairy", gameObject);
+                }
+            }
+            else if(blockNumber == 718) {
+                // Priest Madomono - Sun NPC, 03-04-02
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Madomono", gameObject);
+                }
+            }
+            else if(blockNumber == 723) {
+                // Priest Gailious - Inferno NPC, 05-02-01
+                npcObjects.add(gameObject);
+                if(Settings.isRandomizeNpcs()) {
+                    mapOfNpcLocationToObject.put("NPCL: Priest Gailious", gameObject);
+                }
+            }
+            else if(blockNumber == 726) {
+                // Tailor Dracuet - Guidance NPC, 00-06-00
+                npcObjects.add(gameObject);
+            }
+            else if(blockNumber == 915) {
+                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MINI_DOLL, FlagConstants.WF_MINI_DOLL);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+            }
+            else if(blockNumber == 991) {
+                // Tailor Dracuet - Illusion NPC, 10-07-00
+                npcObjects.add(gameObject);
+            }
+            else if(blockNumber == 993) {
+                // Tailor Dracuet - Gate of Time NPC, 20-03-01
+                npcObjects.add(gameObject);
+            }
+            else if(blockNumber == 998) {
+                if(Settings.isIncludeHellTempleNPCs()) {
+                    // Fairy - Night Surface NPC, 22-07-00
+                    npcObjects.add(gameObject);
+                }
+            }
+            else if(blockNumber == 1000) {
+                // Tailor Dracuet - Goddess NPC, 13-01-00
+                npcObjects.add(gameObject);
+            }
+            else if(blockNumber == 1011) {
+                // Dracuet Provocative Bathing Suit conversation - needs to depend on HT item instead.
+                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.PROVOCATIVE_BATHING_SUIT, FlagConstants.WF_PROVOCATIVE_BATHING_SUIT);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+            }
+            else if(blockNumber == 1013) {
+                // Mulbruk Provocative Bathing Suit conversation - needs to depend on HT item instead.
+                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.PROVOCATIVE_BATHING_SUIT, FlagConstants.WF_PROVOCATIVE_BATHING_SUIT);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.ItemGive) {
+            short itemArg = gameObject.getArgs().get(0);
+            if(itemArg == ItemConstants.MAP) {
+                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MAP, FlagConstants.WF_MAP_SURFACE);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+            }
+            else if(itemArg == ItemConstants.MATERNITY_STATUE) {
+                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MATERNITY_STATUE, FlagConstants.WF_MATERNITY_STATUE);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.XelpudPillar) {
+            for(TestByteOperation flagTest : gameObject.getTestByteOperations()) {
+                if(flagTest.getIndex() == FlagConstants.WF_DIARY) {
+                    // Diary puzzle pillar
+                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.DIARY, FlagConstants.WF_DIARY);
+                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    if (objects == null) {
+                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                    }
+                    objects.add(gameObject);
+                    return;
+                }
+            }
+        }
+        else if(gameObject.getId() == ObjectIdConstants.SnapshotsScan) {
+            short itemArg = gameObject.getArgs().get(3);
+            if(itemArg == ItemConstants.SOFTWARE_MANTRA
+                    || itemArg == ItemConstants.SOFTWARE_EMUSIC
+                    || itemArg == ItemConstants.SOFTWARE_BEOLAMU) {
+                short worldFlag;
+                if(itemArg == ItemConstants.SOFTWARE_MANTRA) {
+                    worldFlag = FlagConstants.WF_SOFTWARE_MANTRA;
+                }
+                else if(itemArg == ItemConstants.SOFTWARE_EMUSIC) {
+                    worldFlag = FlagConstants.WF_SOFTWARE_EMUSIC;
+                }
+                else {
+                    worldFlag = FlagConstants.WF_SOFTWARE_BEOLAMU;
+                }
+
+                GameObjectId gameObjectId = new GameObjectId(itemArg, worldFlag);
+                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                if (objects == null) {
+                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+                }
+                objects.add(gameObject);
+            }
+        }
+        else if (gameObject.getId() == ObjectIdConstants.TransitionGate) {
+            if(Settings.isRandomizeTransitionGates()) {
+                Screen screen = (Screen)gameObject.getObjectContainer();
+//                FileUtils.logFlush(String.format("Gate on screen [%d, %d, %d] leads to screen [%d, %d, %d] with position (%d, %d)",
+//                        screen.getZoneIndex(), screen.getRoomIndex(), screen.getScreenIndex(),
+//                        gameObject.getArgs().get(0), gameObject.getArgs().get(1), gameObject.getArgs().get(2),
+//                        gameObject.getArgs().get(3), gameObject.getArgs().get(4)));
+
+                String gateName = null;
+                if(screen.getZoneIndex() == 0) {
+                    // Gate of Guidance
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Guidance L1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Guidance U1";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Guidance D1";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Guidance D2";
+                    }
+                }
+                else if(screen.getZoneIndex() == 1) {
+                    // Surface
+                    if (screen.getRoomIndex() == 11 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Surface R1";
+                    }
+                    else if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Surface D1";
+                    }
+                    else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Surface D2";
+                    }
+                }
+                else if(screen.getZoneIndex() == 2) {
+                    // Mausoleum
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Mausoleum U1";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Mausoleum D1";
+                    }
+                    else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Mausoleum L1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 3) {
+                    // Sun
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Sun U1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Sun L1";
+                    }
+                    else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
+                        if(gameObject.getY() == 80) {
+                            gateName = "Transition: Sun R1";
+                        }
+                        else {
+                            gateName = "Transition: Sun R2";
+                        }
+                    }
+                }
+                else if(screen.getZoneIndex() == 4) {
+                    // Spring
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Spring D1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 5) {
+                    // Inferno
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Inferno R1";
+                    }
+                    else if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Inferno U1";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Inferno U2";
+                    }
+                }
+                else if(screen.getZoneIndex() == 6) {
+                    // Extinction
+                    if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Extinction U2";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Extinction U1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 0) {
+                        if(gameObject.getY() == 80) {
+                            gateName = "Transition: Extinction L1";
+                        }
+                        else {
+                            gateName = "Transition: Extinction L2";
+                        }
+                    }
+                    else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Extinction U3";
+                    }
+                }
+                else if(screen.getZoneIndex() == 7) {
+                    // Twin Labyrinths
+                    if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
+                        if(gameObject.getArgs().get(0) != 7) {
+                            gateName = "Transition: Twin U1";
+                        }
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Twin D1";
+                    }
+                    else if (screen.getRoomIndex() == 16 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Twin D2";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Twin U2";
+                    }
+                    else if (screen.getRoomIndex() == 10 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Twin U3";
+                    }
+//                    else if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
+//                        gateName = "Transition: Twin U4";
+//                    }
+                }
+                else if(screen.getZoneIndex() == 8) {
+                    // Endless
+                    if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Endless L1";
+                    }
+                    else if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Endless R1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 3) {
+                        gateName = "Transition: Endless U1";
+                    }
+                    else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 3) {
+                        gateName = "Transition: Endless D1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 9) {
+                    // Shrine
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Shrine U1";
+                    }
+                    else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                        // Escape gate gets added elsewhere.
+                        gateName = "Transition: Shrine D1";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Shrine D2";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        // Escape gate gets added elsewhere.
+                        gateName = "Transition: Shrine D3";
+                    }
+                }
+                else if(screen.getZoneIndex() == 10) {
+                    // Illusion
+                    if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Illusion D1";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Illusion D2";
+                    }
+                    else if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Illusion R1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Illusion R2";
+                    }
+                }
+                else if(screen.getZoneIndex() == 11) {
+                    // Graveyard
+                    if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Graveyard L1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Graveyard R1";
+                    }
+                    else if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Graveyard U1";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Graveyard U2";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Graveyard D1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 12) {
+                    // Moonlight
+                    if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Moonlight U1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Moonlight U2";
+                    }
+                    else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Moonlight L1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 13) {
+                    // Goddess
+                    if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Goddess L1";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Goddess D1";
+                    }
+                    else if (screen.getRoomIndex() == 2 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Goddess L2";
+                    }
+                    else if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Goddess U1";
+                    }
+                    else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                        if(gameObject.getArgs().get(0) == 11) {
+                            gateName = "Transition: Pipe L1";
+                        }
+                        else if(gameObject.getArgs().get(0) == 12) {
+                            gateName = "Transition: Pipe R1";
+                        }
+                    }
+                }
+                else if(screen.getZoneIndex() == 14) {
+                    // Ruin
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Ruin R2";
+                    }
+                    else if (screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Ruin R1";
+                    }
+                    else if (screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Ruin L1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 15) {
+                    // Birth (East)
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Birth U1";
+                    }
+                    else if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Birth L1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 16) {
+                    // Birth (West)
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Birth D1";
+                    }
+                    else if (screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Birth R1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 18) {
+                    // True Shrine
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Shrine U1";
+                    }
+                    else if (screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Shrine D1";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Shrine D2";
+                    }
+                    else if (screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Shrine D3";
+                    }
+                }
+                else if(screen.getZoneIndex() == 19) {
+                    // Gate of Time (Mausoleum of the Giants)
+                    if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Retromausoleum U1";
+                    }
+                    else if (screen.getRoomIndex() == 1 && screen.getScreenIndex() == 2) {
+                        gateName = "Transition: Retromausoleum D1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 20) {
+                    // Gate of Time (Gate of Guidance)
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Retroguidance D1";
+                    }
+                    else if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                        gateName = "Transition: Retroguidance L1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 21) {
+                    // Gate of Time (Surface)
+                    if (screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Retrosurface R1";
+                    }
+                }
+                else if(screen.getZoneIndex() == 22) {
+                    // Night Surface
+                    if (screen.getRoomIndex() == 11 && screen.getScreenIndex() == 1) {
+                        gateName = "Transition: Surface R1";
+                    }
+                }
+
+                if(gateName != null) {
+                    List<GameObject> transitionGates = mapOfGateNameToTransitionGate.get(gateName);
+                    if(transitionGates == null) {
+                        transitionGates = new ArrayList<>();
+                        mapOfGateNameToTransitionGate.put(gateName, transitionGates);
+                    }
+                    transitionGates.add(gameObject);
+                }
+            }
+        }
+    }}

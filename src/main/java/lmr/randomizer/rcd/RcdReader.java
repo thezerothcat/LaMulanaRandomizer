@@ -35,6 +35,210 @@ public final class RcdReader {
         return ByteBuffer.wrap(getByteArraySlice(mainArray, startIndex, length)).order(ByteOrder.BIG_ENDIAN);
     }
 
+    public static List<Zone> getRcdScriptInfo() throws Exception {
+        String mapPath = String.format("%s/data/mapdata", Settings.getLaMulanaBaseDir());
+
+        byte[] rcdBytes = FileUtils.getBytes("script.rcd.bak");
+        int rcdByteIndex = 2; // Seems we skip the first two bytes?
+
+        List<Zone> zones = new ArrayList<>();
+        for (int zoneIndex = 0; zoneIndex < 26; zoneIndex++) {
+            Zone zone = new Zone();
+            zone.setZoneIndex(zoneIndex);
+
+            byte nameLength = getField(rcdBytes, rcdByteIndex, 1).get();
+            rcdByteIndex += 1;
+            short zoneObjectCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
+            rcdByteIndex += 2;
+
+            zone.setName(new String(getByteArraySlice(rcdBytes, rcdByteIndex, nameLength), "UTF-16BE"));
+            rcdByteIndex += (int) nameLength;
+
+            for (int i = 0; i < zoneObjectCount; i++) {
+                rcdByteIndex = addObject(zone, rcdBytes, rcdByteIndex, false);
+            }
+
+
+            byte[] msdBytes = FileUtils.getBytes(String.format("%s/map%02d.msd", mapPath, zoneIndex));
+            int msdByteIndex = 0;
+            while (true) {
+                short frames = getField(msdBytes, msdByteIndex, 2).getShort();
+                msdByteIndex += 2;
+                if (frames == 0) {
+                    break;
+                }
+                msdByteIndex += frames * 2;
+            }
+
+            byte rooms = msdBytes[msdByteIndex + 2];
+            msdByteIndex += 3;
+
+            for (int roomIndex = 0; roomIndex < rooms; roomIndex++) {
+                Room room = new Room();
+                room.setZone(zone);
+                room.setZoneIndex(zoneIndex);
+                room.setRoomIndex(roomIndex);
+                short roomObjCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
+                rcdByteIndex += 2;
+
+                for (int roomObjectIndex = 0; roomObjectIndex < roomObjCount; roomObjectIndex++) {
+                    rcdByteIndex = addObject(room, rcdBytes, rcdByteIndex, false);
+                }
+
+                msdByteIndex += 1; // unwanted byte for use boss graphics
+
+                room.setNumberOfLayers(msdBytes[msdByteIndex]);
+                msdByteIndex += 1;
+
+                room.setPrimeLayerNumber(msdBytes[msdByteIndex]);
+                msdByteIndex += 1;
+
+                room.setHitMaskWidth(getField(msdBytes, msdByteIndex, 2).getShort());
+                msdByteIndex += 2;
+
+                room.setHitMaskHeight(getField(msdBytes, msdByteIndex, 2).getShort());
+                msdByteIndex += 2;
+
+                if(Settings.isFools2021Mode() && zoneIndex == 13) {
+                    for(int i = 0; i < room.getHitMaskWidth() * room.getHitMaskHeight(); i ++) {
+                        byte hitMask = msdBytes[msdByteIndex + i];
+                        if(hitMask == 0x05) {
+                            msdBytes[msdByteIndex + i] = 0x10;
+                        }
+                        if(hitMask == 0x06) {
+                            msdBytes[msdByteIndex + i] = 0x11;
+                        }
+                        if(hitMask == 0x07) {
+                            msdBytes[msdByteIndex + i] = 0x12;
+                        }
+                        if(hitMask == 0x08) {
+                            msdBytes[msdByteIndex + i] = 0x13;
+                        }
+                        if(hitMask == 0x09) {
+                            msdBytes[msdByteIndex + i] = 0x14;
+                        }
+                        if(hitMask == 0x0a) {
+                            msdBytes[msdByteIndex + i] = 0x15;
+                        }
+                        if(hitMask == 0x0b) {
+                            msdBytes[msdByteIndex + i] = 0x16;
+                        }
+                        if(hitMask == 0x0c) {
+                            msdBytes[msdByteIndex + i] = 0x17;
+                        }
+                        if(hitMask == 0x0d) {
+                            msdBytes[msdByteIndex + i] = 0x18;
+                        }
+                    }
+                    msdByteIndex += room.getHitMaskWidth() * room.getHitMaskHeight();
+                }
+                else {
+                    msdByteIndex += room.getHitMaskWidth() * room.getHitMaskHeight();
+                }
+
+                for (int layerIndex = 0; layerIndex < room.getNumberOfLayers(); layerIndex++) {
+                    short layerWidth = getField(msdBytes, msdByteIndex, 2).getShort();
+                    msdByteIndex += 2;
+
+                    short layerHeight = getField(msdBytes, msdByteIndex, 2).getShort();
+                    msdByteIndex += 2;
+
+                    byte sublayers = msdBytes[msdByteIndex];
+                    msdByteIndex += 1;
+
+                    if (layerIndex == (int) room.getPrimeLayerNumber()) {
+                        room.setTileWidth(layerWidth);
+                        room.setTileHeight(layerHeight);
+
+                        room.setScreenWidth((int)room.getTileWidth() / 32);
+                        room.setScreenHeight((int)room.getTileHeight() / 24);
+                        room.setNumberOfScreens(room.getScreenWidth() * room.getScreenHeight());
+                    }
+
+                    msdByteIndex += sublayers * layerWidth * layerHeight * 2;
+                }
+
+                for (int screenIndex = 0; screenIndex < room.getNumberOfScreens(); screenIndex++) {
+                    Screen screen = new Screen();
+                    screen.setZone(zone);
+                    screen.setZoneIndex(zoneIndex);
+                    screen.setRoomIndex(roomIndex);
+                    screen.setScreenIndex(screenIndex);
+                    registerScreen(screen);
+
+                    byte screenNameLength = rcdBytes[rcdByteIndex];
+                    rcdByteIndex += 1;
+
+                    short screenObjectCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
+                    rcdByteIndex += 2;
+
+                    byte noPositionScreenObjectCount = rcdBytes[rcdByteIndex];
+                    rcdByteIndex += 1;
+
+                    for (int noPositionScreenObjectIndex = 0; noPositionScreenObjectIndex < noPositionScreenObjectCount; noPositionScreenObjectIndex++) {
+                        rcdByteIndex = addObject(screen, rcdBytes, rcdByteIndex, false);
+                    }
+
+                    for (int screenObjectIndex = 0; screenObjectIndex < (screenObjectCount - noPositionScreenObjectCount); screenObjectIndex++) {
+                        rcdByteIndex = addObject(screen, rcdBytes, rcdByteIndex, true);
+                    }
+
+                    screen.setName(new String(getByteArraySlice(rcdBytes, rcdByteIndex, screenNameLength), "UTF-16BE"));
+                    rcdByteIndex += (int) screenNameLength;
+
+                    for (int exitIndex = 0; exitIndex < 4; exitIndex++) {
+                        ScreenExit screenExit = new ScreenExit();
+
+                        screenExit.setZoneIndex(rcdBytes[rcdByteIndex]);
+                        rcdByteIndex += 1;
+
+                        screenExit.setRoomIndex(rcdBytes[rcdByteIndex]);
+                        rcdByteIndex += 1;
+
+                        screenExit.setScreenIndex(rcdBytes[rcdByteIndex]);
+                        rcdByteIndex += 1;
+
+                        screen.getScreenExits().add(screenExit);
+                    }
+
+                    if(zoneIndex == 1) {
+                        if(roomIndex == 2 && screenIndex == 1) {
+                            AddObject.setXelpudScreen(screen);
+                        }
+                    }
+                    else if(zoneIndex == 3) {
+                        if(roomIndex == 3 && screenIndex == 0) {
+                            AddObject.setMulbrukScreen(screen);
+                        }
+                    }
+                    else if(zoneIndex == 7) {
+                        if(roomIndex == 3 && screenIndex == 2) {
+                            if(!Settings.isRandomizeNpcs()) {
+                                // This gets set elsewhere if NPCs are randomized.
+                                AddObject.setLittleBrotherShopScreen(screen);
+                            }
+                        }
+                    }
+                    else if(zoneIndex == 8) {
+                        if(roomIndex == 0 && screenIndex == 1) {
+                            AddObject.setDimensionalExitScreen(screen);
+                        }
+                    }
+
+                    room.getScreens().add(screen);
+                }
+
+                zone.getRooms().add(room);
+            }
+            zones.add(zone);
+            if(Settings.isFools2021Mode() && zoneIndex == 13) {
+                Settings.goddessMsdBytes = msdBytes;
+            }
+        }
+        return zones;
+    }
+
+
     /**
      * Reads in an object from the rcd file, adds it to the given ObjectContainer (unless we don't want to keep it),
      * and then notifies GameObjectManager of the object.
@@ -45,6 +249,359 @@ public final class RcdReader {
      * @return new rcdByteIndex after building this object
      */
     private static int addObject(ObjectContainer objectContainer, byte[] rcdBytes, int rcdByteIndex, boolean hasPosition) {
+        GameObject obj = new GameObject(objectContainer);
+
+        obj.setId(getField(rcdBytes, rcdByteIndex, 2).getShort());
+        rcdByteIndex += 2;
+
+        byte temp = rcdBytes[rcdByteIndex];
+        rcdByteIndex += 1;
+
+        int writeOperationCount = temp & 0xf;
+        int testOperationCount = temp >> 4;
+
+        byte argCount = rcdBytes[rcdByteIndex];
+        rcdByteIndex += 1;
+
+        if(hasPosition) {
+            obj.setX(20 * getField(rcdBytes, rcdByteIndex, 2).getShort());
+            rcdByteIndex += 2;
+            obj.setY(20 * getField(rcdBytes, rcdByteIndex, 2).getShort());
+            rcdByteIndex += 2;
+        }
+        else {
+            obj.setX((short) -1);
+            obj.setY((short) -1);
+        }
+
+        for(int i = 0; i < testOperationCount; i++) {
+            obj.getTestByteOperations().add(getTestByteOperation(rcdBytes, rcdByteIndex));
+            rcdByteIndex += 4;
+        }
+        for(int i = 0; i < writeOperationCount; i++) {
+            obj.getWriteByteOperations().add(getWriteByteOperation(rcdBytes, rcdByteIndex));
+            rcdByteIndex += 4;
+        }
+
+        for(int argIndex = 0; argIndex < argCount; argIndex++) {
+            obj.getArgs().add(getField(rcdBytes, rcdByteIndex, 2).getShort());
+            rcdByteIndex += 2;
+        }
+
+        objectContainer.getObjects().add(obj);
+        return rcdByteIndex;
+    }
+
+    private static boolean isRandomizedShopItem(int worldFlag) {
+        for(String shopItem : DataFromFile.getRandomizedShopItems()) {
+            if(DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(shopItem).getWorldFlag() == worldFlag) {
+                FileUtils.log(String.format("Removing timer object for item %s with world flag %s", shopItem, worldFlag));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static TestByteOperation getTestByteOperation(byte[] rcdBytes, int rcdByteIndex) {
+        TestByteOperation testByteOperation = new TestByteOperation();
+
+        testByteOperation.setIndex(getField(rcdBytes, rcdByteIndex, 2).getShort());
+        rcdByteIndex += 2;
+
+        testByteOperation.setValue(rcdBytes[rcdByteIndex]);
+        rcdByteIndex += 1;
+
+        testByteOperation.setOp(ByteOp.getTestOp((int)rcdBytes[rcdByteIndex]));
+//        rcdByteIndex += 1;
+
+        return testByteOperation;
+    }
+
+    private static WriteByteOperation getWriteByteOperation(byte[] rcdBytes, int rcdByteIndex) {
+        WriteByteOperation writeByteOperation = new WriteByteOperation();
+
+        writeByteOperation.setIndex(getField(rcdBytes, rcdByteIndex, 2).getShort());
+        rcdByteIndex += 2;
+
+        writeByteOperation.setValue(rcdBytes[rcdByteIndex]);
+        rcdByteIndex += 1;
+
+        writeByteOperation.setOp(ByteOp.getWriteOp((int)rcdBytes[rcdByteIndex]));
+//        rcdByteIndex += 1;
+
+        return writeByteOperation;
+    }
+
+    private static void registerScreen(Screen screen) {
+        if(screen.getZoneIndex() == 17 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+            GameDataTracker.putTransitionScreen("Transition: Dimensional D1", screen);
+        }
+    }
+
+    public static List<Zone> getRcdScriptInfo_Old() throws Exception {
+        String mapPath = String.format("%s/data/mapdata", Settings.getLaMulanaBaseDir());
+
+        byte[] rcdBytes = FileUtils.getBytes("script.rcd.bak");
+        int rcdByteIndex = 2; // Seems we skip the first two bytes?
+
+        List<Zone> zones = new ArrayList<>();
+        PotMover.init();
+        for (int zoneIndex = 0; zoneIndex < 26; zoneIndex++) {
+            Zone zone = new Zone();
+            zone.setZoneIndex(zoneIndex);
+
+            byte nameLength = getField(rcdBytes, rcdByteIndex, 1).get();
+            rcdByteIndex += 1;
+            short zoneObjectCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
+            rcdByteIndex += 2;
+
+            zone.setName(new String(getByteArraySlice(rcdBytes, rcdByteIndex, nameLength), "UTF-16BE"));
+            rcdByteIndex += (int) nameLength;
+
+            for (int i = 0; i < zoneObjectCount; i++) {
+                rcdByteIndex = addObject_Old(zone, rcdBytes, rcdByteIndex, false);
+            }
+
+
+            byte[] msdBytes = FileUtils.getBytes(String.format("%s/map%02d.msd", mapPath, zoneIndex));
+            int msdByteIndex = 0;
+            while (true) {
+                short frames = getField(msdBytes, msdByteIndex, 2).getShort();
+                msdByteIndex += 2;
+                if (frames == 0) {
+                    break;
+                }
+                msdByteIndex += frames * 2;
+            }
+
+            byte rooms = msdBytes[msdByteIndex + 2];
+            msdByteIndex += 3;
+
+            for (int roomIndex = 0; roomIndex < rooms; roomIndex++) {
+                Room room = new Room();
+                room.setZone(zone);
+                room.setZoneIndex(zoneIndex);
+                room.setRoomIndex(roomIndex);
+                short roomObjCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
+                rcdByteIndex += 2;
+
+                for (int roomObjectIndex = 0; roomObjectIndex < roomObjCount; roomObjectIndex++) {
+                    rcdByteIndex = addObject_Old(room, rcdBytes, rcdByteIndex, false);
+                }
+
+                msdByteIndex += 1; // unwanted byte for use boss graphics
+
+                room.setNumberOfLayers(msdBytes[msdByteIndex]);
+                msdByteIndex += 1;
+
+                room.setPrimeLayerNumber(msdBytes[msdByteIndex]);
+                msdByteIndex += 1;
+
+                room.setHitMaskWidth(getField(msdBytes, msdByteIndex, 2).getShort());
+                msdByteIndex += 2;
+
+                room.setHitMaskHeight(getField(msdBytes, msdByteIndex, 2).getShort());
+                msdByteIndex += 2;
+
+                if(Settings.isFools2021Mode() && zoneIndex == 13) {
+                    for(int i = 0; i < room.getHitMaskWidth() * room.getHitMaskHeight(); i ++) {
+                        byte hitMask = msdBytes[msdByteIndex + i];
+                        if(hitMask == 0x05) {
+                            msdBytes[msdByteIndex + i] = 0x10;
+                        }
+                        if(hitMask == 0x06) {
+                            msdBytes[msdByteIndex + i] = 0x11;
+                        }
+                        if(hitMask == 0x07) {
+                            msdBytes[msdByteIndex + i] = 0x12;
+                        }
+                        if(hitMask == 0x08) {
+                            msdBytes[msdByteIndex + i] = 0x13;
+                        }
+                        if(hitMask == 0x09) {
+                            msdBytes[msdByteIndex + i] = 0x14;
+                        }
+                        if(hitMask == 0x0a) {
+                            msdBytes[msdByteIndex + i] = 0x15;
+                        }
+                        if(hitMask == 0x0b) {
+                            msdBytes[msdByteIndex + i] = 0x16;
+                        }
+                        if(hitMask == 0x0c) {
+                            msdBytes[msdByteIndex + i] = 0x17;
+                        }
+                        if(hitMask == 0x0d) {
+                            msdBytes[msdByteIndex + i] = 0x18;
+                        }
+                    }
+                    msdByteIndex += room.getHitMaskWidth() * room.getHitMaskHeight();
+                }
+                else {
+                    msdByteIndex += room.getHitMaskWidth() * room.getHitMaskHeight();
+                }
+
+                for (int layerIndex = 0; layerIndex < room.getNumberOfLayers(); layerIndex++) {
+                    short layerWidth = getField(msdBytes, msdByteIndex, 2).getShort();
+                    msdByteIndex += 2;
+
+                    short layerHeight = getField(msdBytes, msdByteIndex, 2).getShort();
+                    msdByteIndex += 2;
+
+                    byte sublayers = msdBytes[msdByteIndex];
+                    msdByteIndex += 1;
+
+                    if (layerIndex == (int) room.getPrimeLayerNumber()) {
+                        room.setTileWidth(layerWidth);
+                        room.setTileHeight(layerHeight);
+
+                        room.setScreenWidth((int)room.getTileWidth() / 32);
+                        room.setScreenHeight((int)room.getTileHeight() / 24);
+                        room.setNumberOfScreens(room.getScreenWidth() * room.getScreenHeight());
+                    }
+
+                    msdByteIndex += sublayers * layerWidth * layerHeight * 2;
+                }
+
+                for (int screenIndex = 0; screenIndex < room.getNumberOfScreens(); screenIndex++) {
+                    Screen screen = new Screen();
+                    screen.setZone(zone);
+                    screen.setZoneIndex(zoneIndex);
+                    screen.setRoomIndex(roomIndex);
+                    screen.setScreenIndex(screenIndex);
+                    registerScreen(screen);
+
+                    byte screenNameLength = rcdBytes[rcdByteIndex];
+                    rcdByteIndex += 1;
+
+                    short screenObjectCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
+                    rcdByteIndex += 2;
+
+                    byte noPositionScreenObjectCount = rcdBytes[rcdByteIndex];
+                    rcdByteIndex += 1;
+
+                    addCustomNoPositionObjects(screen, zoneIndex, roomIndex, screenIndex);
+                    for (int noPositionScreenObjectIndex = 0; noPositionScreenObjectIndex < noPositionScreenObjectCount; noPositionScreenObjectIndex++) {
+                        rcdByteIndex = addObject_Old(screen, rcdBytes, rcdByteIndex, false);
+                    }
+
+                    for (int screenObjectIndex = 0; screenObjectIndex < (screenObjectCount - noPositionScreenObjectCount); screenObjectIndex++) {
+                        rcdByteIndex = addObject_Old(screen, rcdBytes, rcdByteIndex, true);
+                    }
+                    addCustomPositionObjects(screen, zoneIndex, roomIndex, screenIndex);
+                    if(zoneIndex == LocationCoordinateMapper.getStartingZone()
+                            && roomIndex == LocationCoordinateMapper.getStartingRoom()
+                            && screenIndex == LocationCoordinateMapper.getStartingScreen()) {
+                        if(zoneIndex == 0) {
+                            GameDataTracker.setCustomShop(AddObject.addGuidanceShop(screen));
+                        }
+                        else if(zoneIndex == 2) {
+                            GameDataTracker.setCustomShop(AddObject.addMausoleumShop(screen));
+                        }
+                        else if(zoneIndex == 5) {
+                            GameDataTracker.setCustomShop(AddObject.addInfernoShop(screen));
+                        }
+                        else if(zoneIndex == 7) {
+                            if(Settings.getCurrentStartingLocation() == -7) {
+                                GameDataTracker.setCustomShop(AddObject.addTwinLabsBackShop(screen));
+                            }
+                            else {
+                                GameDataTracker.setCustomShop(AddObject.addTwinLabsFrontShop(screen));
+                            }
+                        }
+                        else if(zoneIndex == 8) {
+                            GameDataTracker.setCustomShop(AddObject.addEndlessShop(screen));
+                        }
+                        else if(zoneIndex == 10) {
+                            GameDataTracker.setCustomShop(AddObject.addIllusionShop(screen));
+                        }
+                        else if(zoneIndex == 11) {
+                            GameDataTracker.setCustomShop(AddObject.addGraveyardShop(screen));
+                        }
+                        else if(zoneIndex == 13) {
+                            GameDataTracker.setCustomShop(AddObject.addGoddessShop(screen));
+                        }
+                        else if(zoneIndex == 14) {
+                            GameDataTracker.setCustomShop(AddObject.addRuinShop(screen));
+                        }
+                        else if(zoneIndex == 16) {
+                            GameDataTracker.setCustomShop(AddObject.addBirthStartStuff(screen));
+                        }
+                        else if(zoneIndex == 21) {
+                            // Retro Surface start.
+                            GameObject grailTablet = AddObject.addRetroSurfaceGrailTablet(screen);
+                            AddObject.addHotspring(grailTablet);
+                            GameDataTracker.setCustomShop(AddObject.addRetroSurfaceShop(screen));
+                        }
+                        AddObject.addStartingItems(screen);
+                    }
+
+                    screen.setName(new String(getByteArraySlice(rcdBytes, rcdByteIndex, screenNameLength), "UTF-16BE"));
+                    rcdByteIndex += (int) screenNameLength;
+
+                    for (int exitIndex = 0; exitIndex < 4; exitIndex++) {
+                        ScreenExit screenExit = new ScreenExit();
+
+                        screenExit.setZoneIndex(rcdBytes[rcdByteIndex]);
+                        rcdByteIndex += 1;
+
+                        screenExit.setRoomIndex(rcdBytes[rcdByteIndex]);
+                        rcdByteIndex += 1;
+
+                        screenExit.setScreenIndex(rcdBytes[rcdByteIndex]);
+                        rcdByteIndex += 1;
+
+                        screen.getScreenExits().add(screenExit);
+                    }
+                    updateScreenExits(screen);
+
+                    if(zoneIndex == 1) {
+                        if(roomIndex == 2 && screenIndex == 1) {
+                            AddObject.setXelpudScreen(screen);
+                        }
+                    }
+                    else if(zoneIndex == 3) {
+                        if(roomIndex == 3 && screenIndex == 0) {
+                            AddObject.setMulbrukScreen(screen);
+                        }
+                    }
+                    else if(zoneIndex == 7) {
+                        if(roomIndex == 3 && screenIndex == 2) {
+                            if(!Settings.isRandomizeNpcs()) {
+                                // This gets set elsewhere if NPCs are randomized.
+                                AddObject.setLittleBrotherShopScreen(screen);
+                            }
+                        }
+                    }
+                    else if(zoneIndex == 8) {
+                        if(roomIndex == 0 && screenIndex == 1) {
+                            AddObject.setDimensionalExitScreen(screen);
+                        }
+                    }
+
+                    room.getScreens().add(screen);
+                }
+
+                zone.getRooms().add(room);
+            }
+            zones.add(zone);
+            if(Settings.isFools2021Mode() && zoneIndex == 13) {
+                Settings.goddessMsdBytes = msdBytes;
+            }
+        }
+        PotMover.addRemovedPots();
+        return zones;
+    }
+
+    /**
+     * Reads in an object from the rcd file, adds it to the given ObjectContainer (unless we don't want to keep it),
+     * and then notifies GameObjectManager of the object.
+     * @param objectContainer the container (zone, room, or screen) we're adding this object to
+     * @param rcdBytes all the bytes from the rcd file
+     * @param rcdByteIndex byte index when starting to read this object
+     * @param hasPosition whether or not this object includes position data
+     * @return new rcdByteIndex after building this object
+     */
+    private static int addObject_Old(ObjectContainer objectContainer, byte[] rcdBytes, int rcdByteIndex, boolean hasPosition) {
         GameObject obj = new GameObject(objectContainer);
 
         obj.setId(getField(rcdBytes, rcdByteIndex, 2).getShort());
@@ -218,8 +775,8 @@ public final class RcdReader {
                 boolean addTest = false;
                 for(TestByteOperation testByteOperation : obj.getTestByteOperations()) {
                     if (testByteOperation.getIndex() == FlagConstants.BOSSES_SHRINE_TRANSFORM
-                           && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())
-                           && testByteOperation.getValue() == 8) {
+                            && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())
+                            && testByteOperation.getValue() == 8) {
                         addTest = true;
                         testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
                         testByteOperation.setValue((byte)9);
@@ -301,9 +858,9 @@ public final class RcdReader {
                     Screen screen = (Screen)objectContainer;
                     if (screen.getZoneIndex() == 12) {
                         if (screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0
-                            || screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0
-                            || screen.getRoomIndex() == 5 && screen.getScreenIndex() == 1
-                            || screen.getRoomIndex() == 6 && screen.getScreenIndex() == 0) {
+                                || screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0
+                                || screen.getRoomIndex() == 5 && screen.getScreenIndex() == 1
+                                || screen.getRoomIndex() == 6 && screen.getScreenIndex() == 0) {
                             for (WriteByteOperation writeByteOperation : obj.getWriteByteOperations()) {
                                 if (writeByteOperation.getIndex() == FlagConstants.SCREEN_FLAG_A) {
                                     // Retribution trigger wall in Moonlight pyramid
@@ -832,7 +1389,7 @@ public final class RcdReader {
                                 obj.getWriteByteOperations().clear();
                                 obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_8, ByteOp.ASSIGN_FLAG, 1));
 
-                                AddObject.addExtendingSpikes(obj, FlagConstants.SCREEN_FLAG_8);
+                                AddObject.addExtendingSpikes(obj.getObjectContainer(), obj.getX() - 20, obj.getY() + 20, FlagConstants.SCREEN_FLAG_8);
                             }
                         }
                         else if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 1) {
@@ -1246,17 +1803,17 @@ public final class RcdReader {
                         keepObject = false;
                     }
                 }
-//                else if(Settings.isFoolsMode() && screen.getZoneIndex() == 4 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
-//                    // Bahamut wall graphic that gets removed after the fight.
-//                    if(obj.getTestByteOperations().size() == 1) {
-//                        TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
-//                        if(testByteOperation.getIndex() == FlagConstants.BAHAMUT_STATE && ByteOp.FLAG_LTEQ.equals(testByteOperation.getOp())
-//                            && testByteOperation.getValue() == (byte)1) {
-//                            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-//                            testByteOperation.setValue((byte)2);
-//                        }
-//                    }
-//                }
+                else if(Settings.isFools2019Mode() && screen.getZoneIndex() == 4 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                    // Bahamut wall graphic that gets removed after the fight.
+                    if(obj.getTestByteOperations().size() == 1) {
+                        TestByteOperation testByteOperation = obj.getTestByteOperations().get(0);
+                        if(testByteOperation.getIndex() == FlagConstants.BAHAMUT_STATE && ByteOp.FLAG_LTEQ.equals(testByteOperation.getOp())
+                                && testByteOperation.getValue() == (byte)1) {
+                            testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
+                            testByteOperation.setValue((byte)2);
+                        }
+                    }
+                }
             }
 
             if(Settings.isRandomizeTrapItems()) {
@@ -1667,7 +2224,7 @@ public final class RcdReader {
         else if (obj.getId() == 0xc0) {
             // Mother ankh
             if(Settings.isHalloweenMode()) {
-               keepObject = false;
+                keepObject = false;
             }
             else {
                 if(Settings.isAlternateMotherAnkh()) {
@@ -1685,272 +2242,18 @@ public final class RcdReader {
         else if (obj.getId() == 0xc7) {
             // Escape screenshake
             if(Settings.isScreenshakeDisabled()) {
-               keepObject = false;
+                keepObject = false;
             }
         }
 
         if(keepObject) {
             objectContainer.getObjects().add(obj);
-            GameDataTracker.addObject(obj);
+            GameDataTracker.addObject_Old(obj);
         }
 //        else {
 //            FileUtils.log("Object excluded from rcd");
 //        }
         return rcdByteIndex;
-    }
-
-    private static boolean isRandomizedShopItem(int worldFlag) {
-        for(String shopItem : DataFromFile.getRandomizedShopItems()) {
-            if(DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(shopItem).getWorldFlag() == worldFlag) {
-                FileUtils.log(String.format("Removing timer object for item %s with world flag %s", shopItem, worldFlag));
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static TestByteOperation getTestByteOperation(byte[] rcdBytes, int rcdByteIndex) {
-        TestByteOperation testByteOperation = new TestByteOperation();
-
-        testByteOperation.setIndex(getField(rcdBytes, rcdByteIndex, 2).getShort());
-        rcdByteIndex += 2;
-
-        testByteOperation.setValue(rcdBytes[rcdByteIndex]);
-        rcdByteIndex += 1;
-
-        testByteOperation.setOp(ByteOp.getTestOp((int)rcdBytes[rcdByteIndex]));
-//        rcdByteIndex += 1;
-
-        return testByteOperation;
-    }
-
-    private static WriteByteOperation getWriteByteOperation(byte[] rcdBytes, int rcdByteIndex) {
-        WriteByteOperation writeByteOperation = new WriteByteOperation();
-
-        writeByteOperation.setIndex(getField(rcdBytes, rcdByteIndex, 2).getShort());
-        rcdByteIndex += 2;
-
-        writeByteOperation.setValue(rcdBytes[rcdByteIndex]);
-        rcdByteIndex += 1;
-
-        writeByteOperation.setOp(ByteOp.getWriteOp((int)rcdBytes[rcdByteIndex]));
-//        rcdByteIndex += 1;
-
-        return writeByteOperation;
-    }
-
-    public static List<Zone> getRcdScriptInfo() throws Exception {
-        String mapPath = String.format("%s/data/mapdata", Settings.getLaMulanaBaseDir());
-
-        byte[] rcdBytes = FileUtils.getBytes("script.rcd.bak");
-        int rcdByteIndex = 2; // Seems we skip the first two bytes?
-
-        List<Zone> zones = new ArrayList<>();
-        PotMover.init();
-        for (int zoneIndex = 0; zoneIndex < 26; zoneIndex++) {
-            Zone zone = new Zone();
-            zone.setZoneIndex(zoneIndex);
-
-            byte nameLength = getField(rcdBytes, rcdByteIndex, 1).get();
-            rcdByteIndex += 1;
-            short zoneObjectCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
-            rcdByteIndex += 2;
-
-            zone.setName(new String(getByteArraySlice(rcdBytes, rcdByteIndex, nameLength), "UTF-16BE"));
-            rcdByteIndex += (int) nameLength;
-
-            for (int i = 0; i < zoneObjectCount; i++) {
-                rcdByteIndex = addObject(zone, rcdBytes, rcdByteIndex, false);
-            }
-
-
-            byte[] msdBytes = FileUtils.getBytes(String.format("%s/map%02d.msd", mapPath, zoneIndex));
-            int msdByteIndex = 0;
-            while (true) {
-                short frames = getField(msdBytes, msdByteIndex, 2).getShort();
-                msdByteIndex += 2;
-                if (frames == 0) {
-                    break;
-                }
-                msdByteIndex += frames * 2;
-            }
-
-            byte rooms = msdBytes[msdByteIndex + 2];
-            msdByteIndex += 3;
-
-            for (int roomIndex = 0; roomIndex < rooms; roomIndex++) {
-                Room room = new Room();
-                room.setZone(zone);
-                room.setZoneIndex(zoneIndex);
-                room.setRoomIndex(roomIndex);
-                short roomObjCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
-                rcdByteIndex += 2;
-
-                for (int roomObjectIndex = 0; roomObjectIndex < roomObjCount; roomObjectIndex++) {
-                    rcdByteIndex = addObject(room, rcdBytes, rcdByteIndex, false);
-                }
-
-                msdByteIndex += 1; // unwanted byte for use boss graphics
-
-                room.setNumberOfLayers(msdBytes[msdByteIndex]);
-                msdByteIndex += 1;
-
-                room.setPrimeLayerNumber(msdBytes[msdByteIndex]);
-                msdByteIndex += 1;
-
-                room.setHitMaskWidth(getField(msdBytes, msdByteIndex, 2).getShort());
-                msdByteIndex += 2;
-
-                room.setHitMaskHeight(getField(msdBytes, msdByteIndex, 2).getShort());
-                msdByteIndex += 2;
-
-                if(Settings.isFools2021Mode() && zoneIndex == 13) {
-                    for(int i = 0; i < room.getHitMaskWidth() * room.getHitMaskHeight(); i ++) {
-                        byte hitMask = msdBytes[msdByteIndex + i];
-                        if(hitMask == 0x05) {
-                            msdBytes[msdByteIndex + i] = 0x10;
-                        }
-                        if(hitMask == 0x06) {
-                            msdBytes[msdByteIndex + i] = 0x11;
-                        }
-                        if(hitMask == 0x07) {
-                            msdBytes[msdByteIndex + i] = 0x12;
-                        }
-                        if(hitMask == 0x08) {
-                            msdBytes[msdByteIndex + i] = 0x13;
-                        }
-                        if(hitMask == 0x09) {
-                            msdBytes[msdByteIndex + i] = 0x14;
-                        }
-                        if(hitMask == 0x0a) {
-                            msdBytes[msdByteIndex + i] = 0x15;
-                        }
-                        if(hitMask == 0x0b) {
-                            msdBytes[msdByteIndex + i] = 0x16;
-                        }
-                        if(hitMask == 0x0c) {
-                            msdBytes[msdByteIndex + i] = 0x17;
-                        }
-                        if(hitMask == 0x0d) {
-                            msdBytes[msdByteIndex + i] = 0x18;
-                        }
-                    }
-                    msdByteIndex += room.getHitMaskWidth() * room.getHitMaskHeight();
-                }
-                else {
-                    msdByteIndex += room.getHitMaskWidth() * room.getHitMaskHeight();
-                }
-
-                for (int layerIndex = 0; layerIndex < room.getNumberOfLayers(); layerIndex++) {
-                    short layerWidth = getField(msdBytes, msdByteIndex, 2).getShort();
-                    msdByteIndex += 2;
-
-                    short layerHeight = getField(msdBytes, msdByteIndex, 2).getShort();
-                    msdByteIndex += 2;
-
-                    byte sublayers = msdBytes[msdByteIndex];
-                    msdByteIndex += 1;
-
-                    if (layerIndex == (int) room.getPrimeLayerNumber()) {
-                        room.setTileWidth(layerWidth);
-                        room.setTileHeight(layerHeight);
-
-                        room.setScreenWidth((int)room.getTileWidth() / 32);
-                        room.setScreenHeight((int)room.getTileHeight() / 24);
-                        room.setNumberOfScreens(room.getScreenWidth() * room.getScreenHeight());
-                    }
-
-                    msdByteIndex += sublayers * layerWidth * layerHeight * 2;
-                }
-
-                for (int screenIndex = 0; screenIndex < room.getNumberOfScreens(); screenIndex++) {
-                    Screen screen = new Screen();
-                    screen.setZone(zone);
-                    screen.setZoneIndex(zoneIndex);
-                    screen.setRoomIndex(roomIndex);
-                    screen.setScreenIndex(screenIndex);
-                    registerScreen(screen);
-
-                    byte screenNameLength = rcdBytes[rcdByteIndex];
-                    rcdByteIndex += 1;
-
-                    short screenObjectCount = getField(rcdBytes, rcdByteIndex, 2).getShort();
-                    rcdByteIndex += 2;
-
-                    byte noPositionScreenObjectCount = rcdBytes[rcdByteIndex];
-                    rcdByteIndex += 1;
-
-                    addCustomNoPositionObjects(screen, zoneIndex, roomIndex, screenIndex);
-                    for (int noPositionScreenObjectIndex = 0; noPositionScreenObjectIndex < noPositionScreenObjectCount; noPositionScreenObjectIndex++) {
-                        rcdByteIndex = addObject(screen, rcdBytes, rcdByteIndex, false);
-                    }
-
-                    addCustomPositionObjects(screen, zoneIndex, roomIndex, screenIndex);
-                    for (int screenObjectIndex = 0; screenObjectIndex < (screenObjectCount - noPositionScreenObjectCount); screenObjectIndex++) {
-                        rcdByteIndex = addObject(screen, rcdBytes, rcdByteIndex, true);
-                    }
-
-                    screen.setName(new String(getByteArraySlice(rcdBytes, rcdByteIndex, screenNameLength), "UTF-16BE"));
-                    rcdByteIndex += (int) screenNameLength;
-
-                    for (int exitIndex = 0; exitIndex < 4; exitIndex++) {
-                        ScreenExit screenExit = new ScreenExit();
-
-                        screenExit.setZoneIndex(rcdBytes[rcdByteIndex]);
-                        rcdByteIndex += 1;
-
-                        screenExit.setRoomIndex(rcdBytes[rcdByteIndex]);
-                        rcdByteIndex += 1;
-
-                        screenExit.setScreenIndex(rcdBytes[rcdByteIndex]);
-                        rcdByteIndex += 1;
-
-                        screen.getScreenExits().add(screenExit);
-                    }
-                    updateScreenExits(screen);
-
-                    if(zoneIndex == 1) {
-                        if(roomIndex == 2 && screenIndex == 1) {
-                            AddObject.setXelpudScreen(screen);
-                        }
-                    }
-                    else if(zoneIndex == 3) {
-                        if(roomIndex == 3 && screenIndex == 0) {
-                            AddObject.setMulbrukScreen(screen);
-                        }
-                    }
-                    else if(zoneIndex == 7) {
-                        if(roomIndex == 3 && screenIndex == 2) {
-                            if(!Settings.isRandomizeNpcs()) {
-                                // This gets set elsewhere if NPCs are randomized.
-                                AddObject.setLittleBrotherShopScreen(screen);
-                            }
-                        }
-                    }
-                    else if(zoneIndex == 8) {
-                        if(roomIndex == 0 && screenIndex == 1) {
-                            AddObject.setDimensionalExitScreen(screen);
-                        }
-                    }
-
-                    room.getScreens().add(screen);
-                }
-
-                zone.getRooms().add(room);
-            }
-            zones.add(zone);
-            if(Settings.isFools2021Mode() && zoneIndex == 13) {
-                Settings.goddessMsdBytes = msdBytes;
-            }
-        }
-        PotMover.addRemovedPots();
-        return zones;
-    }
-
-    private static void registerScreen(Screen screen) {
-        if(screen.getZoneIndex() == 17 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
-            GameDataTracker.putTransitionScreen("Transition: Dimensional D1", screen);
-        }
     }
 
     private static void updateScreenExits(Screen screen) {
@@ -1963,14 +2266,14 @@ public final class RcdReader {
             screenExit.setScreenIndex((byte)-1);
         }
 
-//        if(Settings.isFoolsMode()) {
-//            if(screen.getZoneIndex() == 4 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
-//                ScreenExit screenExit = screen.getScreenExits().get(ScreenExit.LEFT);
-//                screenExit.setZoneIndex((byte)-1);
-//                screenExit.setRoomIndex((byte)-1);
-//                screenExit.setScreenIndex((byte)-1);
-//            }
-//        }
+        if(Settings.isFools2019Mode()) {
+            if(screen.getZoneIndex() == 4 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 0) {
+                ScreenExit screenExit = screen.getScreenExits().get(ScreenExit.LEFT);
+                screenExit.setZoneIndex((byte)-1);
+                screenExit.setRoomIndex((byte)-1);
+                screenExit.setScreenIndex((byte)-1);
+            }
+        }
         if(Settings.isFools2021Mode()) {
             // Transition to Ellmac
             if(screen.getZoneIndex() == 4 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
@@ -2714,53 +3017,6 @@ public final class RcdReader {
     }
 
     private static void addCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
-        if(zoneIndex == LocationCoordinateMapper.getStartingZone()
-                && roomIndex == LocationCoordinateMapper.getStartingRoom()
-                && screenIndex == LocationCoordinateMapper.getStartingScreen()) {
-            if(zoneIndex == 0) {
-                GameDataTracker.setCustomShop(AddObject.addGuidanceShop(screen));
-            }
-            else if(zoneIndex == 2) {
-                GameDataTracker.setCustomShop(AddObject.addMausoleumShop(screen));
-            }
-            else if(zoneIndex == 5) {
-                GameDataTracker.setCustomShop(AddObject.addInfernoShop(screen));
-            }
-            else if(zoneIndex == 7) {
-                if(Settings.getCurrentStartingLocation() == -7) {
-                    GameDataTracker.setCustomShop(AddObject.addTwinLabsBackShop(screen));
-                }
-                else {
-                    GameDataTracker.setCustomShop(AddObject.addTwinLabsFrontShop(screen));
-                }
-            }
-            else if(zoneIndex == 8) {
-                GameDataTracker.setCustomShop(AddObject.addEndlessShop(screen));
-            }
-            else if(zoneIndex == 10) {
-                GameDataTracker.setCustomShop(AddObject.addIllusionShop(screen));
-            }
-            else if(zoneIndex == 11) {
-                GameDataTracker.setCustomShop(AddObject.addGraveyardShop(screen));
-            }
-            else if(zoneIndex == 13) {
-                GameDataTracker.setCustomShop(AddObject.addGoddessShop(screen));
-            }
-            else if(zoneIndex == 14) {
-                GameDataTracker.setCustomShop(AddObject.addRuinShop(screen));
-            }
-            else if(zoneIndex == 16) {
-                GameDataTracker.setCustomShop(AddObject.addBirthStartStuff(screen));
-            }
-            else if(zoneIndex == 21) {
-                // Retro Surface start.
-                GameObject grailTablet = AddObject.addRetroSurfaceGrailTablet(screen);
-                AddObject.addHotspring(grailTablet);
-                GameDataTracker.setCustomShop(AddObject.addRetroSurfaceShop(screen));
-            }
-            AddObject.addStartingItems(screen);
-        }
-
         if(Settings.isFools2021Mode()) {
             AddObject.addCustomItemGives(screen, 86,
                     FlagConstants.CUSTOM_ESCAPE_TIMER_STATE, 0, FlagConstants.CUSTOM_XMAILER_RECEIVED, 1);
@@ -2853,7 +3109,9 @@ public final class RcdReader {
                 AddObject.addHardmodeToggleWeights(screen);
             }
             if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addZebuDais(screen);
+                if(Settings.isFools2021Mode()) {
+                    AddObject.addZebuDais(screen);
+                }
             }
             if(roomIndex == 8 && screenIndex == 1) {
                 if(Settings.isBossCheckpoints()) {
@@ -2948,7 +3206,10 @@ public final class RcdReader {
             }
         }
         else if(zoneIndex == 4) {
-            if(roomIndex == 4 && screenIndex == 0) {
+            if(roomIndex == 3 && screenIndex == 3) {
+                AddObject.addTransformedMrFishmanShopDoorGraphic(screen);
+            }
+            else if(roomIndex == 4 && screenIndex == 0) {
                 if(Settings.isBossCheckpoints()) {
                     AddObject.addAutosave(screen, 380, 340, 136,
                             Arrays.asList(new TestByteOperation(FlagConstants.BAHAMUT_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 1),
@@ -3102,13 +3363,13 @@ public final class RcdReader {
                 }
             }
             else if(roomIndex == 8 && screenIndex == 1) {
-                GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 0));
+                GameDataTracker.addObject_Old(AddObject.addUntrueShrineExit(screen, 0));
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 1));
+                GameDataTracker.addObject_Old(AddObject.addUntrueShrineExit(screen, 1));
             }
             else if(roomIndex == 9 && screenIndex == 1) {
-                GameDataTracker.addObject(AddObject.addUntrueShrineExit(screen, 2));
+                GameDataTracker.addObject_Old(AddObject.addUntrueShrineExit(screen, 2));
                 if(Settings.isFools2021Mode()) {
                     AddObject.addFloatingItem(screen, 940, 240, 62, true,
                             Arrays.asList(new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TREASURES_CHEST, ByteOp.FLAG_EQUALS, 0),
@@ -3230,11 +3491,11 @@ public final class RcdReader {
                     AddObject.addTrueShrineFeatherlessPlatform(screen, 1020, 220);
                 }
             }
-//            else if (roomIndex == 3 && screenIndex == 0) {
-//                if(Settings.isFoolsMode()) {
-//                    AddObject.addWarp(screen, 600, 440, 32, 3, 18, 3, 1, 150, 72);
-//                }
-//            }
+            else if (roomIndex == 3 && screenIndex == 0) {
+                if(Settings.isFools2019Mode()) {
+                    AddObject.addWarp(screen, 600, 440, 32, 3, 18, 3, 1, 150, 72);
+                }
+            }
             else if (roomIndex == 3 && screenIndex == 1) {
                 // Mother ankh checkpoint
                 if(Settings.isBossCheckpoints()) {
@@ -3710,11 +3971,11 @@ public final class RcdReader {
                     AddObject.addNpcConversationTimer(screen, 0xac3);
                 }
             }
-//            if(roomIndex == 4 && screenIndex == 0) {
-//                if(Settings.isFoolsMode()) {
-//                    AddObject.addBossTimer(screen, FlagConstants.BAHAMUT_STATE, 0x2d9);
-//                }
-//            }
+            if(roomIndex == 4 && screenIndex == 0) {
+                if(Settings.isFools2019Mode()) {
+                    AddObject.addBossTimer(screen, FlagConstants.BAHAMUT_STATE, 0x2d9);
+                }
+            }
         }
         else if(zoneIndex == 5) {
             if(Settings.isHalloweenMode()) {
@@ -3828,10 +4089,8 @@ public final class RcdReader {
                 }
             }
 
-            if(Settings.isRandomizeTransitionGates()) {
-                if(roomIndex == 1 && screenIndex == 0) {
-                    AddObject.addWeightDoorTimer(screen, 0x037);
-                }
+            if(roomIndex == 1 && screenIndex == 0) {
+                AddObject.addWeightDoorTimer(screen, 0x037);
             }
         }
         else if(zoneIndex == 11) {

@@ -858,59 +858,6 @@ public class AddObjectTest {
     }
 
     @Test
-    public void testAddBossSpecificAnkhCover() {
-        int x = 540;
-        int y = 300;
-        int ankhFlag = 123;
-
-        Screen screen = new Screen();
-        GameObject ankh = new GameObject(screen);
-        ankh.setX(x);
-        ankh.setY(y);
-        screen.getObjects().add(ankh);
-
-        AddObject.addBossSpecificAnkhCover(ankh, ankhFlag);
-
-        // The original object
-        GameObject gameObject = screen.getObjects().get(0);
-        Assert.assertTrue(gameObject == ankh, "Positioned object should be added to end of objects list");
-
-        // The added graphics object
-        gameObject = screen.getObjects().get(1);
-        Assert.assertEquals(gameObject.getId(), 0x93);
-        Assert.assertEquals(gameObject.getX(), x - 20);
-        Assert.assertEquals(gameObject.getY(), y - 20);
-        Assert.assertEquals((int)gameObject.getArgs().get(0), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(1), -1);
-        Assert.assertEquals((int)gameObject.getArgs().get(2), 840);
-        Assert.assertEquals((int)gameObject.getArgs().get(3), 512);
-        Assert.assertEquals((int)gameObject.getArgs().get(4), 60);
-        Assert.assertEquals((int)gameObject.getArgs().get(5), 60);
-        Assert.assertEquals((int)gameObject.getArgs().get(6), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(7), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(8), 4);
-        Assert.assertEquals((int)gameObject.getArgs().get(9), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(10), 128);
-        Assert.assertEquals((int)gameObject.getArgs().get(11), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(12), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(13), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(14), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(15), 255);
-        Assert.assertEquals((int)gameObject.getArgs().get(16), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(17), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(18), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(19), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(20), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(21), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(22), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(23), 1);
-        Assert.assertEquals(gameObject.getArgs().size(), 24);
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(ankhFlag, ByteOp.FLAG_EQUALS, 0)));
-        Assert.assertEquals(gameObject.getTestByteOperations().size(), 1);
-        Assert.assertEquals(gameObject.getWriteByteOperations().size(), 0);
-    }
-
-    @Test
     public void testAddWallCopy() {
         int x = 940;
         int y = 40;
@@ -1051,7 +998,7 @@ public class AddObjectTest {
         originalFishmanShop.setY(y);
         screen.getObjects().add(originalFishmanShop);
 
-        AddObject.addTransformedMrFishmanShopDoorGraphic(originalFishmanShop);
+        AddObject.addTransformedMrFishmanShopDoorGraphic(originalFishmanShop.getObjectContainer());
 
         // The original object
         GameObject gameObject = screen.getObjects().get(0);
@@ -5927,8 +5874,8 @@ public class AddObjectTest {
 
     @Test
     public void testAddTwinLabsDoor() {
-        int x = 540;
-        int y = 300;
+        int x = 940;
+        int y = 400;
 
         Screen screen = new Screen();
         GameObject ankh = new GameObject(screen);
@@ -5936,7 +5883,7 @@ public class AddObjectTest {
         ankh.setY(y);
         screen.getObjects().add(ankh);
 
-        AddObject.addTwinLabsDoor(ankh);
+        AddObject.addTwinLabsDoor(screen);
 
         GameObject gameObject = screen.getObjects().get(0);
         Assert.assertTrue(gameObject == ankh, "Positioned object should be added to end of objects list");
@@ -6179,25 +6126,17 @@ public class AddObjectTest {
 
     @Test
     public void testAddExtendingSpikes() {
-        int x = 540;
-        int y = 300;
+        int x = 320;
+        int y = 360;
         int flagIndex = 123;
 
         Screen screen = new Screen();
-        GameObject dais = new GameObject(screen);
-        dais.setX(x);
-        dais.setY(y);
-        screen.getObjects().add(dais);
-
-        AddObject.addExtendingSpikes(dais, flagIndex);
+        AddObject.addExtendingSpikes(screen, x, y, flagIndex);
 
         GameObject gameObject = screen.getObjects().get(1);
-        Assert.assertTrue(gameObject == dais, "Positioned object should be added to end of objects list, non-positioned object to front");
-
-        gameObject = screen.getObjects().get(2);
         Assert.assertEquals(gameObject.getId(), 0x96);
-        Assert.assertEquals(gameObject.getX(), x - 20);
-        Assert.assertEquals(gameObject.getY(), y + 20);
+        Assert.assertEquals(gameObject.getX(), x);
+        Assert.assertEquals(gameObject.getY(), y);
         Assert.assertEquals((int)gameObject.getArgs().get(0), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 4);

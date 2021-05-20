@@ -65,6 +65,20 @@ public class Screen implements ObjectContainer {
         return screenExits;
     }
 
+    public ScreenExit getScreenExit(int direction) {
+        return screenExits.get(direction);
+    }
+
+    public List<GameObject> getObjectsById(int id) {
+        List<GameObject> objectsById = new ArrayList<>();
+        for(GameObject object : objects) {
+            if(object.getId() == id) {
+                objectsById.add(object);
+            }
+        }
+        return objectsById;
+    }
+
     @Override
     public String toString() {
         StringBuilder returnVal = new StringBuilder(String.format("SCREEN %02d-%02d-%02d \"%s\"", zoneIndex, roomIndex, screenIndex, name));

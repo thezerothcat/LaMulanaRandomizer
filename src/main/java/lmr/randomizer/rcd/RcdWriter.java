@@ -15,7 +15,8 @@ public final class RcdWriter {
     private RcdWriter() {
     }
 
-    public static void writeRcd(List<Zone> rcdInfo) throws IOException {
+    public static void writeRcd(RcdData rcdData) throws IOException {
+        List<Zone> rcdInfo = rcdData.getZones();
         DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(String.format("%d/script.rcd", Settings.getStartingSeed())));
         dataOutputStream.writeShort(0);
 

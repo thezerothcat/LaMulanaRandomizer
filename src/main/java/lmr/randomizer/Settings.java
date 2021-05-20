@@ -139,7 +139,7 @@ public final class Settings {
         coinChestGraphics = false;
         automaticGrailPoints = false;
         automaticTranslations = false;
-        ushumgalluAssist = false;
+        ushumgalluAssist = true;
         bossCheckpoints = false;
 
         alternateMotherAnkh = false;
@@ -877,11 +877,11 @@ public final class Settings {
         return originalContents;
     }
 
-//    public static boolean isFoolsMode() {
-//        return false;
-//    }
-
     public static boolean isHalloweenMode() {
+        return false;
+    }
+
+    public static boolean isIncludeHellTempleNPCs() {
         return false;
     }
 
@@ -898,15 +898,11 @@ public final class Settings {
     }
 
     public static boolean isFools2022Mode() {
-        return true;
+        return false;
     }
 
     public static boolean isFeatherlessMode() {
         return isFools2020Mode();
-    }
-
-    public static boolean isIncludeHellTempleNPCs() {
-        return singleton.includeHellTempleNPCs;
     }
 
     public static void setIncludeHellTempleNPCs(boolean includeHellTempleNPCs, boolean update) {
@@ -937,7 +933,7 @@ public final class Settings {
     }
 
     public static boolean isRandomizeStartingLocation() {
-        return singleton.randomizeStartingLocation;
+        return isFools2019Mode() || isHalloweenMode() || singleton.randomizeStartingLocation;
     }
 
     public static void setRandomizeStartingLocation(boolean randomizeStartingLocation, boolean update) {
@@ -948,7 +944,7 @@ public final class Settings {
     }
 
     public static boolean isRandomizeBosses() {
-        return !isFools2021Mode() && singleton.randomizeBosses;
+        return isFools2019Mode() || (!isFools2021Mode() && singleton.randomizeBosses);
     }
 
     public static void setRandomizeBosses(boolean randomizeBosses, boolean update) {
@@ -960,7 +956,7 @@ public final class Settings {
 
     public static boolean isRandomizeEnemies() {
 //        return singleton.randomizeEnemies;
-        return false;
+        return isHalloweenMode();
     }
 
     public static void setRandomizeEnemies(boolean randomizeEnemies, boolean update) {

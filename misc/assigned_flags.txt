@@ -92,7 +92,7 @@ New untrue Shrine grail: ade (2782)
 Reserved perma-zero for old untrue Shrine grail: adf (2783)
 
 Pepper conversation flag: ae0 (2784)
-Mantra count timers: ae1-ae8 (2785-2792)
+--formerly Mantra count timers: ae1-ae8 (2785-2792), now just updating mantra count on the 0xc2 instead
 Mantra tablet counter flag: ae9
 LAMULANA recited flag: aea
 Mantras unlocked flag (Giltoriyo): aeb

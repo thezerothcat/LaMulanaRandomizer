@@ -36,4 +36,10 @@ public class ScreenExit {
     public void setScreenIndex(byte screenIndex) {
         this.screenIndex = screenIndex;
     }
+
+    public void setDestination(int zoneIndex, int roomIndex, int screenIndex) {
+        this.zoneIndex = (byte)zoneIndex;
+        this.roomIndex = (byte)roomIndex;
+        this.screenIndex = (byte)screenIndex;
+    }
 }

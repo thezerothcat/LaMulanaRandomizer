@@ -16,7 +16,7 @@ package lmr.randomizer.rcd.object;
 public class Pot extends GameObject {
     public Pot(ObjectContainer objectContainer, int x, int y) {
         super(objectContainer, 9);
-        setId((short)0x00);
+        setId(ObjectIdConstants.Pot);
         setX(x);
         setY(y);
     }

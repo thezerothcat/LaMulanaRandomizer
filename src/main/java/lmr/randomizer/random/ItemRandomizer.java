@@ -388,7 +388,9 @@ public class ItemRandomizer {
             newWorldFlag = getNewWorldFlag(itemLocation, newContents, itemLocationData, itemNewContentsData);
             isLocationRelatedToBlock = DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(itemLocation);
             if(isLocationRelatedToBlock) {
-                GameDataTracker.updateBlock(itemLocationData, itemNewContentsData);
+                if(!Settings.isHalloweenMode() || !Settings.isIncludeHellTempleNPCs() || !"Provocative Bathing Suit".equals(itemLocation)) {
+                    GameDataTracker.updateBlock(itemLocationData, itemNewContentsData);
+                }
             }
             GameDataTracker.writeLocationContents(itemLocation, newContents, itemLocationData, itemNewContentsData, newWorldFlag, random, !isLocationRelatedToBlock);
         }

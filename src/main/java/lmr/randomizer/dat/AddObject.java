@@ -490,31 +490,6 @@ public final class AddObject {
     }
 
     /**
-     * Add ankh jewel cover when boss ankh jewel not yet collected
-     * @param ankh the ankh to cover with the graphic
-     */
-    public static void addBossSpecificAnkhCover(GameObject ankh, int ankhFlag) {
-        GraphicsTextureDraw ankhCover = new GraphicsTextureDraw(ankh.getObjectContainer(),
-                ankh.getX() - 20, ankh.getY() - 20);
-
-        ankhCover.getTestByteOperations().add(new TestByteOperation(ankhFlag, ByteOp.FLAG_EQUALS, 0));
-
-        ankhCover.setLayer(1);
-        ankhCover.setImageFile("01effect.png");
-        ankhCover.setImageX(840);
-        ankhCover.setImageY(512);
-        ankhCover.setImageWidth(60);
-        ankhCover.setImageHeight(60);
-        ankhCover.setAnimation(0, 1, 4, 1);
-        ankhCover.setEntryEffect(1);
-        ankhCover.setCollision(HitTile.Solid); // Hittile to fill with
-        ankhCover.setRGBAMax(0, 0, 0, 255);
-        ankhCover.setArg23(1);
-
-        ankh.getObjectContainer().getObjects().add(ankhCover);
-    }
-
-    /**
      * Add a copy of a directional wall hitbox that's hittable from a different direction.
      * @param originalWall the wall to make a copy of
      */
@@ -611,8 +586,8 @@ public final class AddObject {
 //        }
     }
 
-    public static void addTransformedMrFishmanShopDoorGraphic(GameObject mrFishmanShopDoor) {
-        GraphicsTextureDraw backupFishNewDoorGraphic = new GraphicsTextureDraw(mrFishmanShopDoor.getObjectContainer(), 180, 1520);
+    public static void addTransformedMrFishmanShopDoorGraphic(ObjectContainer objectContainer) {
+        GraphicsTextureDraw backupFishNewDoorGraphic = new GraphicsTextureDraw(objectContainer, 180, 1520);
         backupFishNewDoorGraphic.getTestByteOperations().add(new TestByteOperation(FlagConstants.FISH_SHOP_UNLOCKS, ByteOp.FLAG_EQUALS, 3));
         backupFishNewDoorGraphic.getTestByteOperations().add(new TestByteOperation(FlagConstants.MOTHER_STATE, ByteOp.FLAG_NOT_EQUAL, 3));
 
@@ -627,7 +602,7 @@ public final class AddObject {
         backupFishNewDoorGraphic.setRGBAMax(0, 0, 0, 255);
 //        backupFishNewDoorGraphic.setArg23(1); // todo: for some reason this was 0?
 
-        mrFishmanShopDoor.getObjectContainer().getObjects().add(backupFishNewDoorGraphic);
+        objectContainer.getObjects().add(backupFishNewDoorGraphic);
     }
 
     /**
@@ -1741,6 +1716,19 @@ public final class AddObject {
         screen.getObjects().add(htExitDoorGraphic);
     }
 
+    public static void addCreditsDoor(ObjectContainer screen, int x, int y) {
+        ConversationDoor escapeDoor = new ConversationDoor(screen, x, y);
+        escapeDoor.setArg0(0);
+        escapeDoor.setArg1(0);
+        escapeDoor.setArg2(0);
+        escapeDoor.setDoorType(ConversationDoor.SingleConversation);
+        escapeDoor.setBlockNumber(926);
+        escapeDoor.setArg5(0);
+        escapeDoor.setDisallowMusicChange(true);
+        escapeDoor.addTests(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1));
+        screen.getObjects().add(escapeDoor);
+    }
+
     public static GameObject addLaserWall(Screen screen, int x, int y, boolean flatDamage, int damage) {
         LaserWall laserWall = new LaserWall(screen, x, y);
 
@@ -1753,6 +1741,19 @@ public final class AddObject {
 
         screen.getObjects().add(laserWall);
         return laserWall;
+    }
+
+    public static void addAllMantrasRecitedTimer(ObjectContainer objectContainer) {
+        FlagTimer mantraTimer = new FlagTimer(objectContainer);
+        int totalMantras = 8;
+        if(Settings.getEnabledGlitches().contains("Lamp Glitch")) {
+            totalMantras = 5;
+        }
+        mantraTimer.addTests(new TestByteOperation(FlagConstants.MANTRAS_RECITED_COUNT, ByteOp.FLAG_GTEQ, totalMantras),
+                new TestByteOperation(FlagConstants.MANTRA_FINAL, ByteOp.FLAG_NOT_EQUAL, 4));
+        mantraTimer.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MANTRA_FINAL, ByteOp.ASSIGN_FLAG, 4));
+
+        objectContainer.getObjects().add(0, mantraTimer);
     }
 
     public static GameObject addStunWitch(Screen screen, int x, int y, boolean faceRight) {
@@ -3526,11 +3527,11 @@ public final class AddObject {
     }
 
     /**
-     * Add a door to twin labs (replacing Ellmac fall), using boss ankh as a reference object)
-     * @param reference boss ankh to use for determining coordinates/screen for adding the door
+     * Add a door to twin labs (replacing Ellmac fall) where the boss ankh would be
+     * @param objectContainer to add to
      */
-    public static void addTwinLabsDoor(GameObject reference) {
-        GraphicsTextureDraw doorGraphic = new GraphicsTextureDraw(reference.getObjectContainer(), reference.getX() - 20, reference.getY() - 40);
+    public static void addTwinLabsDoor(ObjectContainer objectContainer) {
+        GraphicsTextureDraw doorGraphic = new GraphicsTextureDraw(objectContainer, 920, 360);
 
         doorGraphic.setLayer(0);
         doorGraphic.setImageFile("01effect.png");
@@ -3545,13 +3546,13 @@ public final class AddObject {
 
         doorGraphic.getTestByteOperations().add(new TestByteOperation(FlagConstants.PALENQUE_STATE, ByteOp.FLAG_GTEQ, 3));
 
-        WarpDoor door = new WarpDoor(reference.getObjectContainer(), reference.getX(), reference.getY());
+        WarpDoor door = new WarpDoor(objectContainer, 940, 400);
         door.setDestination(7, 0, 0, 300, 0);
 
         door.getTestByteOperations().add(new TestByteOperation(FlagConstants.PALENQUE_STATE, ByteOp.FLAG_GTEQ, 3));
 
-        reference.getObjectContainer().getObjects().add(doorGraphic);
-        reference.getObjectContainer().getObjects().add(door);
+        objectContainer.getObjects().add(doorGraphic);
+        objectContainer.getObjects().add(door);
     }
 
     /**
@@ -3654,8 +3655,8 @@ public final class AddObject {
     /**
      * Add 0x96 object
      */
-    public static void addExtendingSpikes(GameObject referenceObj, int flagIndex) {
-        ExtendableSpikes extendingSpikes = new ExtendableSpikes(referenceObj.getObjectContainer(), referenceObj.getX() - 20, referenceObj.getY() + 20);
+    public static void addExtendingSpikes(ObjectContainer objectContainer, int x, int y, int flagIndex) {
+        ExtendableSpikes extendingSpikes = new ExtendableSpikes(objectContainer, x, y);
 
         extendingSpikes.setLayer(0);
         extendingSpikes.setDirection(ExtendableSpikes.Up);
@@ -3687,9 +3688,9 @@ public final class AddObject {
                 new WriteByteOperation(flagIndex, ByteOp.ASSIGN_FLAG, 1),
                 new WriteByteOperation(flagIndex, ByteOp.ASSIGN_FLAG, 0));
 
-        referenceObj.getObjectContainer().getObjects().add(extendingSpikes);
+        objectContainer.getObjects().add(extendingSpikes);
 
-        SoundEffect failPuzzleSound = new SoundEffect(referenceObj.getObjectContainer());
+        SoundEffect failPuzzleSound = new SoundEffect(objectContainer);
         failPuzzleSound.setSoundEffect(SoundEffect.ShellHornFailure);
         failPuzzleSound.setVolumeBalancePitch(120, 64, 0);
         failPuzzleSound.setPriority(25);
@@ -3701,7 +3702,7 @@ public final class AddObject {
         failPuzzleSound.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2));
         failPuzzleSound.getTestByteOperations().add(new TestByteOperation(flagIndex, ByteOp.FLAG_EQUALS, 1));
 
-        referenceObj.getObjectContainer().getObjects().add(0, failPuzzleSound);
+        objectContainer.getObjects().add(0, failPuzzleSound);
     }
 
     public static void addZebuDais(ObjectContainer screen) {
@@ -3734,7 +3735,7 @@ public final class AddObject {
             obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_9, ByteOp.FLAG_EQUALS, 0));
             obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_9, ByteOp.ASSIGN_FLAG, 1));
 
-            addExtendingSpikes(obj, FlagConstants.SCREEN_FLAG_9);
+            addExtendingSpikes(obj.getObjectContainer(), obj.getX() - 20, obj.getY() + 20, FlagConstants.SCREEN_FLAG_9);
         }
         screen.getObjects().add(obj);
         // todo: write tests and then switch from the above code to the commented-out code below

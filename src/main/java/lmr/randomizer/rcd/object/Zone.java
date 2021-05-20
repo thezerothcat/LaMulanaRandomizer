@@ -36,6 +36,25 @@ public class Zone implements ObjectContainer {
         return rooms;
     }
 
+    public Room getRoom(int roomIndex) {
+        for(Room room : rooms) {
+            if(room.getRoomIndex() == roomIndex) {
+                return room;
+            }
+        }
+        return null;
+    }
+
+    public List<GameObject> getObjectsById(int id) {
+        List<GameObject> objectsById = new ArrayList<>();
+        for(GameObject object : objects) {
+            if(object.getId() == id) {
+                objectsById.add(object);
+            }
+        }
+        return objectsById;
+    }
+
     public List<GameObject> getObjects() {
         return objects;
     }

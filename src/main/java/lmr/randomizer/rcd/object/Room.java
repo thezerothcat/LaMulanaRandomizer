@@ -132,6 +132,25 @@ public class Room implements ObjectContainer {
         return screens;
     }
 
+    public Screen getScreen(int screenIndex) {
+        for(Screen screen : screens) {
+            if(screen.getScreenIndex() == screenIndex) {
+                return screen;
+            }
+        }
+        return null;
+    }
+
+    public List<GameObject> getObjectsById(int id) {
+        List<GameObject> objectsById = new ArrayList<>();
+        for(GameObject object : objects) {
+            if(object.getId() == id) {
+                objectsById.add(object);
+            }
+        }
+        return objectsById;
+    }
+
     public List<GameObject> getObjects() {
         return objects;
     }

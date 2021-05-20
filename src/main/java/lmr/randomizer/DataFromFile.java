@@ -440,7 +440,7 @@ public final class DataFromFile {
             if(LocationCoordinateMapper.isSurfaceStart() || Settings.getCurrentStartingLocation() == 23 || Settings.getCurrentStartingLocation() == 24) {
                 mapOfNodeNameToRequirementsObject.remove(DataFromFile.CUSTOM_SHOP_NAME);
             }
-            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "custom-reqs.txt", false);
+//            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "custom-reqs.txt", false);
 
             for(NodeWithRequirements nodeWithRequirements : mapOfNodeNameToRequirementsObject.values()) {
                 nodeWithRequirements.expandRequirements();
