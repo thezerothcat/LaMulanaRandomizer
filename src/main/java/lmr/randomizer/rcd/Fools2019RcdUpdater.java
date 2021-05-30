@@ -3,19 +3,15 @@ package lmr.randomizer.rcd;
 import lmr.randomizer.FlagConstants;
 import lmr.randomizer.Settings;
 import lmr.randomizer.dat.AddObject;
+import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.util.Arrays;
 
 public class Fools2019RcdUpdater extends RcdUpdater {
-    public Fools2019RcdUpdater(RcdData rcdData) {
-        super(rcdData);
-    }
-
-    @Override
-    boolean updatePot(GameObject pot) {
-        return true;
+    public Fools2019RcdUpdater(RcdFileData rcdFileData, DatFileData datFileData) {
+        super(rcdFileData, datFileData);
     }
 
     @Override
@@ -55,71 +51,6 @@ public class Fools2019RcdUpdater extends RcdUpdater {
                 }
             }
         }
-        return true;
-    }
-
-    @Override
-    boolean updateLadder(GameObject ladder) {
-        return true;
-    }
-
-    @Override
-    boolean updateDais(GameObject dais) {
-        return true;
-    }
-
-    @Override
-    boolean updateFlagTimer(GameObject flagTimer) {
-        return true;
-    }
-
-    @Override
-    boolean updateRoomSpawner(GameObject roomSpawner) {
-        return true;
-    }
-
-    @Override
-    boolean updateCrusher(GameObject crusher) {
-        return true;
-    }
-
-    @Override
-    boolean updateHitbox(GameObject hitbox) {
-        return true;
-    }
-
-    @Override
-    boolean updateLemezaDetector(GameObject lemezaDetector) {
-        return true;
-    }
-
-    @Override
-    boolean updateFist(GameObject fist) {
-        return true;
-    }
-
-    @Override
-    boolean updateSteam(GameObject steam) {
-        return true;
-    }
-
-    @Override
-    boolean updateSonic(GameObject sonic) {
-        return true;
-    }
-
-    @Override
-    boolean updateGhostSpawner(GameObject ghostSpawner) {
-        return true;
-    }
-
-    @Override
-    boolean updateChest(GameObject chest) {
-        return true;
-    }
-
-    @Override
-    boolean updateWeaponCover(GameObject weaponCover) {
         return true;
     }
 
@@ -188,21 +119,6 @@ public class Fools2019RcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateFloatingItem(GameObject floatingItem) {
-        return true;
-    }
-
-    @Override
-    boolean updateTrapdoor(GameObject trapdoor) {
-        return true;
-    }
-
-    @Override
-    boolean updateSeal(GameObject seal) {
-        return true;
-    }
-
-    @Override
     boolean updateSlime(GameObject slime) {
         ObjectContainer objectContainer = slime.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
@@ -219,161 +135,6 @@ public class Fools2019RcdUpdater extends RcdUpdater {
                 }
             }
         }
-        return true;
-    }
-
-    @Override
-    boolean updateLavaRock(GameObject lavaRock) {
-        return true;
-    }
-
-    @Override
-    boolean updateSpriggan(GameObject spriggan) {
-        return true;
-    }
-
-    @Override
-    boolean updateHundun(GameObject hundun) {
-        return true;
-    }
-
-    @Override
-    boolean updatePan(GameObject pan) {
-        return true;
-    }
-
-    @Override
-    boolean updateHanuman(GameObject hanuman) {
-        return true;
-    }
-
-    @Override
-    boolean updateEnkidu(GameObject enkidu) {
-        return true;
-    }
-
-    @Override
-    boolean updateMarchosias(GameObject marchosias) {
-        return true;
-    }
-
-    @Override
-    boolean updateWitch(GameObject witch) {
-        return true;
-    }
-
-    @Override
-    boolean updateLizardMan(GameObject lizardMan) {
-        return true;
-    }
-
-    @Override
-    boolean updateChiYou(GameObject chiYou) {
-        return true;
-    }
-
-    @Override
-    boolean updateToujin(GameObject toujin) {
-        return true;
-    }
-
-    @Override
-    boolean updateIceWizard(GameObject iceWizard) {
-        return true;
-    }
-
-    @Override
-    boolean updateAnubis(GameObject anubis) {
-        return true;
-    }
-
-    @Override
-    boolean updateNinjaSpawner(GameObject ninjaSpawner) {
-        return true;
-    }
-
-    @Override
-    boolean updateAndras(GameObject andras) {
-        return true;
-    }
-
-    @Override
-    boolean updateChonchonSpawner(GameObject chonchonSpawner) {
-        return true;
-    }
-
-    @Override
-    boolean updateVimana(GameObject vimana) {
-        return true;
-    }
-
-    @Override
-    boolean updateSwordBird(GameObject swordBird) {
-        return true;
-    }
-
-    @Override
-    boolean updateElephant(GameObject elephant) {
-        return true;
-    }
-
-    @Override
-    boolean updateAmon(GameObject amon) {
-        return true;
-    }
-
-    @Override
-    boolean updateSatan(GameObject satan) {
-        return true;
-    }
-
-    @Override
-    boolean updateDevil(GameObject devil) {
-        return true;
-    }
-
-    @Override
-    boolean updateUmuDabrutu(GameObject umuDabrutu) {
-        return true;
-    }
-
-    @Override
-    boolean updateUrmahlullu(GameObject urmahlullu) {
-        return true;
-    }
-
-    @Override
-    boolean updateMushnahhu(GameObject mushnahhu) {
-        return true;
-    }
-
-    @Override
-    boolean updateUshum(GameObject ushum) {
-        return true;
-    }
-
-    @Override
-    boolean updateMushussu(GameObject mushussu) {
-        return true;
-    }
-
-    @Override
-    boolean updateMiniBoss(GameObject miniBoss) {
-        return true;
-    }
-
-    @Override
-    boolean updateTheBoss(GameObject theBoss) {
-        return true;
-    }
-
-    @Override
-    boolean updateFairyPoint(GameObject fairyPoint) {
-        return true;
-    }
-
-    @Override
-    boolean updateFog(GameObject fog) {
         return true;
     }
 
@@ -400,116 +161,6 @@ public class Fools2019RcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateEyeOfRetribution(GameObject eyeOfRetribution) {
-        return true;
-    }
-
-    @Override
-    boolean updateExtendableSpikes(GameObject extendableSpikes) {
-        return true;
-    }
-
-    @Override
-    boolean updateWarpPortal(GameObject warpPortal) {
-        return true;
-    }
-
-    @Override
-    boolean updateWarpDoor(GameObject warpDoor) {
-        return true;
-    }
-
-    @Override
-    boolean updateFallingRoom(GameObject crusher) {
-        return true;
-    }
-
-    @Override
-    boolean updateSoundEffect(GameObject soundEffect) {
-        return true;
-    }
-
-    @Override
-    boolean updateUseItemDetector(GameObject useItemDetector) {
-        return true;
-    }
-
-    @Override
-    boolean updateScannable(GameObject scannable) {
-        return true;
-    }
-
-    @Override
-    boolean updateAutosave(GameObject autosave) {
-        return true;
-    }
-
-    @Override
-    boolean updateConversationDoor(GameObject conversationDoor) {
-        return true;
-    }
-
-    @Override
-    boolean updateAnimation(GameObject animation) {
-        return true;
-    }
-
-    @Override
-    boolean updateKeyFairySpot(GameObject keyFairySpot) {
-        return true;
-    }
-
-    @Override
-    boolean updatePushableBlock(GameObject pushableBlock) {
-        return true;
-    }
-
-    @Override
-    boolean updateBlockButton(GameObject blockButton) {
-        return true;
-    }
-
-    @Override
-    boolean updateHotSpring(GameObject hotSpring) {
-        return true;
-    }
-
-    @Override
-    boolean updateExplosion(GameObject explosion) {
-        return true;
-    }
-
-    @Override
-    boolean updateItemGive(GameObject itemGive) {
-        return true;
-    }
-
-    @Override
-    boolean updateSavePoint(GameObject savePoint) {
-        return true;
-    }
-
-    @Override
-    boolean updateGrailToggle(GameObject grailToggle) {
-        return true;
-    }
-
-    @Override
-    boolean updateMotherAnkh(GameObject motherAnkh) {
-        return true;
-    }
-
-    @Override
-    boolean updateMantraDetector(GameObject mantraDetector) {
-        return true;
-    }
-
-    @Override
-    boolean updateSnapshotsScan(GameObject snapshotsScan) {
-        return true;
-    }
-
-    @Override
     boolean updateTransitionGate(GameObject transitionGate) {
         ObjectContainer objectContainer = transitionGate.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
@@ -529,16 +180,6 @@ public class Fools2019RcdUpdater extends RcdUpdater {
                 }
             }
         }
-        return true;
-    }
-
-    @Override
-    boolean updateEscapeTimer(GameObject escapeTimer) {
-        return true;
-    }
-
-    @Override
-    boolean updateEscapeScreenShake(GameObject escapeScreenShake) {
         return true;
     }
 
@@ -643,26 +284,6 @@ public class Fools2019RcdUpdater extends RcdUpdater {
                 }
             }
         }
-    }
-
-    @Override
-    void addUntrackedCustomNoPositionZoneObjects(Zone zone) {
-    }
-
-    @Override
-    void doUntrackedPostUpdates(){
-    }
-
-    @Override
-    void addTrackedCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
-    }
-
-    @Override
-    void addTrackedCustomNoPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
-    }
-
-    @Override
-    protected void doTrackedPostUpdates(){
     }
 
     @Override

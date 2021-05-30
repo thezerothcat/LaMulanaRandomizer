@@ -26,6 +26,17 @@ public final class Translations {
         return enTranslations.getProperty(key);
     }
 
+    public static String getLocationAndNpc(String npc) {
+        return getLocationAndNpc(npc, npc);
+    }
+
+    public static String getLocationAndNpc(String locationKey, String npcKey) {
+        if("jp".equals(Settings.getLanguage())) {
+            return getJapaneseTranslation(locationKey) + "" + getJapaneseTranslation(npcKey);
+        }
+        return enTranslations.getProperty("npcl." + locationKey) + "" + enTranslations.getProperty("npc." + npcKey);
+    }
+
     protected static String getJapaneseTranslation(String key) {
         if(jpTranslations == null) {
             jpTranslations = new Properties(enTranslations);

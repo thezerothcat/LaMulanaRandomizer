@@ -1,22 +1,25 @@
 package lmr.randomizer.rcd;
 
+import lmr.randomizer.BlockConstants;
 import lmr.randomizer.FlagConstants;
 import lmr.randomizer.Settings;
 import lmr.randomizer.ZoneConstants;
 import lmr.randomizer.dat.AddObject;
+import lmr.randomizer.dat.CustomBlockEnum;
+import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.LocationCoordinateMapper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class HalloweenRcdUpdater extends RcdUpdater {
-    public HalloweenRcdUpdater(RcdData rcdData) {
-        super(rcdData);
-    }
+    private List<GameObject> npcObjects;
 
-    @Override
-    boolean updatePot(GameObject pot) {
-        return true;
+    public HalloweenRcdUpdater(RcdFileData rcdFileData, DatFileData datFileData) {
+        super(rcdFileData, datFileData);
+        npcObjects = new ArrayList<>();
     }
 
     @Override
@@ -54,16 +57,6 @@ public class HalloweenRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateLadder(GameObject ladder) {
-        return true;
-    }
-
-    @Override
-    boolean updateDais(GameObject dais) {
-        return true;
-    }
-
-    @Override
     boolean updateFlagTimer(GameObject flagTimer) {
         ObjectContainer objectContainer = flagTimer.getObjectContainer();
         if(flagTimer.getObjectContainer() instanceof Screen) {
@@ -91,11 +84,6 @@ public class HalloweenRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateRoomSpawner(GameObject roomSpawner) {
-        return true;
-    }
-
-    @Override
     boolean updateCrusher(GameObject crusher) {
         ObjectContainer objectContainer = crusher.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
@@ -105,31 +93,6 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 20 && screen.getScreenIndex() == 0) {
             return false;
         }
-        return true;
-    }
-
-    @Override
-    boolean updateHitbox(GameObject hitbox) {
-        return true;
-    }
-
-    @Override
-    boolean updateLemezaDetector(GameObject lemezaDetector) {
-        return true;
-    }
-
-    @Override
-    boolean updateFist(GameObject fist) {
-        return updateHalloweenEnemy(fist);
-    }
-
-    @Override
-    boolean updateSteam(GameObject steam) {
-        return true;
-    }
-
-    @Override
-    boolean updateSonic(GameObject sonic) {
         return true;
     }
 
@@ -149,16 +112,6 @@ public class HalloweenRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateChest(GameObject chest) {
-        return true;
-    }
-
-    @Override
-    boolean updateWeaponCover(GameObject weaponCover) {
-        return true;
-    }
-
-    @Override
     boolean updateAnkh(GameObject ankh) {
         ObjectContainer objectContainer = ankh.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
@@ -170,16 +123,6 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             ankh.getArgs().set(24, (short)22);
             ankh.getArgs().set(28, (short)22);
         }
-        return true;
-    }
-
-    @Override
-    boolean updateFloatingItem(GameObject floatingItem) {
-        return true;
-    }
-
-    @Override
-    boolean updateTrapdoor(GameObject trapdoor) {
         return true;
     }
 
@@ -202,18 +145,8 @@ public class HalloweenRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateSlime(GameObject slime) {
-        return true;
-    }
-
-    @Override
     boolean updateLavaRock(GameObject lavaRock) {
         return false; // Remove lava rocks in favor of ghosts.
-    }
-
-    @Override
-    boolean updateSpriggan(GameObject spriggan) {
-        return true;
     }
 
     @Override
@@ -299,11 +232,6 @@ public class HalloweenRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateAnubis(GameObject anubis) {
-        return true;
-    }
-
-    @Override
     boolean updateNinjaSpawner(GameObject ninjaSpawner) {
         return updateHalloweenEnemy(ninjaSpawner);
     }
@@ -316,11 +244,6 @@ public class HalloweenRcdUpdater extends RcdUpdater {
     @Override
     boolean updateChonchonSpawner(GameObject chonchonSpawner) {
         return false; // Ban Medusa heads in favor of ghosts
-    }
-
-    @Override
-    boolean updateVimana(GameObject vimana) {
-        return true;
     }
 
     @Override
@@ -378,21 +301,6 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             }
         }
         return updateHalloweenEnemy(devil);
-    }
-
-    @Override
-    boolean updateUmuDabrutu(GameObject umuDabrutu) {
-        return true;
-    }
-
-    @Override
-    boolean updateUrmahlullu(GameObject urmahlullu) {
-        return true;
-    }
-
-    @Override
-    boolean updateMushnahhu(GameObject mushnahhu) {
-        return true;
     }
 
     @Override
@@ -467,16 +375,6 @@ public class HalloweenRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateFairyPoint(GameObject fairyPoint) {
-        return true;
-    }
-
-    @Override
-    boolean updateFog(GameObject fog) {
-        return true;
-    }
-
-    @Override
     boolean updateGraphicsTextureDraw(GameObject graphicsTextureDraw) {
         ObjectContainer objectContainer = graphicsTextureDraw.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
@@ -507,16 +405,6 @@ public class HalloweenRcdUpdater extends RcdUpdater {
                 }
             }
         }
-        return true;
-    }
-
-    @Override
-    boolean updateEyeOfRetribution(GameObject eyeOfRetribution) {
-        return true;
-    }
-
-    @Override
-    boolean updateExtendableSpikes(GameObject extendableSpikes) {
         return true;
     }
 
@@ -557,31 +445,6 @@ public class HalloweenRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateFallingRoom(GameObject crusher) {
-        return true;
-    }
-
-    @Override
-    boolean updateSoundEffect(GameObject soundEffect) {
-        return true;
-    }
-
-    @Override
-    boolean updateUseItemDetector(GameObject useItemDetector) {
-        return true;
-    }
-
-    @Override
-    boolean updateScannable(GameObject scannable) {
-        return true;
-    }
-
-    @Override
-    boolean updateAutosave(GameObject autosave) {
-        return true;
-    }
-
-    @Override
     boolean updateConversationDoor(GameObject conversationDoor) {
         if(conversationDoor.getArgs().get(4) == 685) {
             // Halloween doesn't need this Fairy Queen conversation.
@@ -591,7 +454,19 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             // Halloween doesn't need this Fairy Queen conversation either.
             return false;
         }
-        else if(conversationDoor.getArgs().get(4) == 1011) {
+        else if(conversationDoor.getArgs().get(4) == BlockConstants.Master_Dracuet_WaitForNightfall) {
+            conversationDoor.getArgs().set(4, getCustomBlockIndex(CustomBlockEnum.HalloweenNoCandyReferenceBlock_DracuetWaitForNightfall));
+        }
+        else if(conversationDoor.getArgs().get(4) == BlockConstants.Master_Dracuet_BackInTime) {
+            conversationDoor.getArgs().set(4, getCustomBlockIndex(CustomBlockEnum.HalloweenNoCandyReferenceBlock_DracuetBackInTime));
+        }
+        else if(conversationDoor.getArgs().get(4) == BlockConstants.Master_Dracuet_HugeCasket) {
+            conversationDoor.getArgs().set(4, getCustomBlockIndex(CustomBlockEnum.HalloweenNoCandyReferenceBlock_DracuetHugeCasket));
+        }
+        else if(conversationDoor.getArgs().get(4) == BlockConstants.Master_Dracuet_HTUnlocked) {
+            conversationDoor.getArgs().set(4, getCustomBlockIndex(CustomBlockEnum.HalloweenNoCandyReferenceBlock_DracuetHTUnlocked));
+        }
+        else if(conversationDoor.getArgs().get(4) == BlockConstants.Master_Dracuet_ProvocativeBathingSuit) {
             if(Settings.isIncludeHellTempleNPCs()) {
                 // Dracuet conversation has some unwanted flags
                 Integer flagToRemove = null;
@@ -614,13 +489,13 @@ public class HalloweenRcdUpdater extends RcdUpdater {
                 }
             }
         }
-        else if(conversationDoor.getArgs().get(4) == 924) {
+        else if(conversationDoor.getArgs().get(4) == BlockConstants.MulbrukEscapeRegular) {
             // Mulbruk escape
             if(Settings.isIncludeHellTempleNPCs()) {
                 return false;
             }
         }
-        else if(conversationDoor.getArgs().get(4) == 926) {
+        else if(conversationDoor.getArgs().get(4) == BlockConstants.MulbrukEscapeSwimsuit) {
             // Mulbruk escape
             if(Settings.isIncludeHellTempleNPCs()) {
                 return false;
@@ -628,8 +503,36 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         }
 
         int blockNumber = conversationDoor.getArgs().get(4);
-        if(blockNumber == 681) {
+        if(blockNumber == BlockConstants.Master_Hiner) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_Moger) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_FormerMekuriMaster_Mekuri) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PriestZarnac) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PriestXanado) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PhilosopherGiltoriyo) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PriestHidlyda) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PriestRomancis) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PriestAramo) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PriestTriton) {
             // Priest Triton - Extinction NPC, 06-09-01
+            npcObjects.add(conversationDoor);
             for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
                 if (flagTest.getIndex() == FlagConstants.PALENQUE_ANKH_PUZZLE) {
                     // Fix conversation to be based on whether the Palenque fight is active, rather than whether the ankh is present.
@@ -638,6 +541,62 @@ public class HalloweenRcdUpdater extends RcdUpdater {
                     flagTest.setValue((byte)2);
                     break;
                 }
+            }
+        }
+        else if(blockNumber == BlockConstants.Master_PriestJaguarfiv) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_MrSlushfund_Pepper) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PriestAlest) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_StrayFairy) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_GiantThexde) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PhilosopherAlsedana) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PhilosopherSamaranta) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PriestLaydoc) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PriestAshgine) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PhilosopherFobos_Ladder) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_8BitElder) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_duplex) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_Samieru) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_Naramura) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_8BitFairy) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PriestMadomono) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_PriestGailious) {
+            npcObjects.add(conversationDoor);
+        }
+        else if(blockNumber == BlockConstants.Master_Fairy_NightSurface) {
+            if(Settings.isIncludeHellTempleNPCs()) {
+                npcObjects.add(conversationDoor);
             }
         }
         else if(blockNumber == 684) {
@@ -685,19 +644,19 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(blockNumber == 690) {
             // Conversation after receiving Pepper if you don't have Treasures
             // Mr. Slushfund - Illusion NPC, 10-08-00
-            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag((short)689), ByteOp.FLAG_GT, 0));
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper), ByteOp.FLAG_GT, 0));
         }
-        else if(blockNumber == 691) {
+        else if(blockNumber == BlockConstants.Master_MrSlushfund_Anchor) {
             // Conversation to give Treasures and receive Anchor
             // Mr. Slushfund - Illusion NPC, 10-08-00
-            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag((short)689), ByteOp.FLAG_GT, 0));
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper), ByteOp.FLAG_GT, 0));
         }
-        else if(blockNumber == 692) {
+        else if(blockNumber == BlockConstants.Master_MrSlushfund_NeverComeBack) {
             // Conversation after receiving both Pepper and Anchor
             // Mr. Slushfund - Illusion NPC, 10-08-00
-            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag((short)689), ByteOp.FLAG_GT, 0));
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper), ByteOp.FLAG_GT, 0));
         }
-        else if(blockNumber == 705) {
+        else if(blockNumber == BlockConstants.Master_Fobos_MedicineCheck) {
             // Philosopher Fobos - Dimensional NPC, 17-02-00
             // Post-Medicine version of Fobos
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag((short)704), ByteOp.FLAG_GT, 0));
@@ -706,81 +665,6 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             // 8bit Fairy - conversation needs added test
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag((short)710), ByteOp.FLAG_GT, 0));
         }
-        return true;
-    }
-
-    @Override
-    boolean updateAnimation(GameObject animation) {
-        return true;
-    }
-
-    @Override
-    boolean updateKeyFairySpot(GameObject keyFairySpot) {
-        return true;
-    }
-
-    @Override
-    boolean updatePushableBlock(GameObject pushableBlock) {
-        return true;
-    }
-
-    @Override
-    boolean updateBlockButton(GameObject blockButton) {
-        return true;
-    }
-
-    @Override
-    boolean updateHotSpring(GameObject hotSpring) {
-        return true;
-    }
-
-    @Override
-    boolean updateExplosion(GameObject explosion) {
-        return true;
-    }
-
-    @Override
-    boolean updateItemGive(GameObject itemGive) {
-        return true;
-    }
-
-    @Override
-    boolean updateSavePoint(GameObject savePoint) {
-        return true;
-    }
-
-    @Override
-    boolean updateGrailToggle(GameObject grailToggle) {
-        return true;
-    }
-
-    @Override
-    boolean updateMotherAnkh(GameObject motherAnkh) {
-        return false;
-    }
-
-    @Override
-    boolean updateMantraDetector(GameObject mantraDetector) {
-        return true;
-    }
-
-    @Override
-    boolean updateSnapshotsScan(GameObject snapshotsScan) {
-        return true;
-    }
-
-    @Override
-    boolean updateTransitionGate(GameObject transitionGate) {
-        return true;
-    }
-
-    @Override
-    boolean updateEscapeTimer(GameObject escapeTimer) {
-        return true;
-    }
-
-    @Override
-    boolean updateEscapeScreenShake(GameObject escapeScreenShake) {
         return true;
     }
 
@@ -869,19 +753,18 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             if(roomIndex == 8 && screenIndex == 0) {
                 // Mr. Slushfund - 689
                 GameObject warp = AddObject.addWarp(screen, 80, 40, 4, 4, 10, 8, 1, 80, 352);
-
-                TestByteOperation warpTest = new TestByteOperation();
-                warpTest.setIndex(FlagConstants.SCREEN_FLAG_2E);
-                warpTest.setValue((byte)1);
-                warpTest.setOp(ByteOp.FLAG_EQUALS);
-                warp.getTestByteOperations().add(warpTest);
+                warp.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_2E, ByteOp.FLAG_EQUALS, 1));
             }
         }
         else if(zoneIndex == 23) {
             if(Settings.isIncludeHellTempleNPCs()) {
                 if(roomIndex == 0) {
-                    // Add escape door in place of normal HT to Guidance door
-                    AddObject.addCreditsDoor(screen, 300, 320);
+                    if(screenIndex == 0) {
+                        // Add escape door in place of normal HT to Guidance door
+                        AddObject.addCreditsDoor(screen, 300, 320);
+                        AddObject.addHTSkipTablet(screen, getCustomBlockIndex(CustomBlockEnum.HalloweenHTSkip));
+                        AddObject.addHTGrailWarningTablet(screen, getCustomBlockIndex(CustomBlockEnum.HalloweenHTGrailWarning));
+                    }
                 }
                 if(roomIndex == 1) {
                     if(screenIndex == 0) {
@@ -1379,23 +1262,14 @@ public class HalloweenRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    void addUntrackedCustomNoPositionZoneObjects(Zone zone) {
+    void doUntrackedPostUpdates() {
+        updateNpcObjects();
     }
 
     @Override
-    void doUntrackedPostUpdates(){
-    }
-
-    @Override
-    void addTrackedCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
-    }
-
-    @Override
-    void addTrackedCustomNoPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
-    }
-
-    @Override
-    void doTrackedPostUpdates(){
+    void doPostShuffleUpdates(){
+        replaceNightSurfaceWithSurface();
+        fixTransitionGates();
     }
 
     @Override
@@ -1721,6 +1595,196 @@ public class HalloweenRcdUpdater extends RcdUpdater {
                         screen.getScreenExit(ScreenExit.LEFT).setDestination(24, 2, 1);
                     }
                 }
+            }
+        }
+    }
+
+    private void updateNpcObjects() {
+        for(GameObject oldConversationDoor : npcObjects) {
+            short npcBlock = oldConversationDoor.getArgs().get(4);
+
+            ConversationDoor newConversationDoor = new ConversationDoor(oldConversationDoor.getObjectContainer(), oldConversationDoor.getX(), oldConversationDoor.getY());
+            newConversationDoor.setDoorType(ConversationDoor.SingleConversation);
+
+            int npcConversationFlag = FlagConstants.getNpcConversationFlag(npcBlock);
+            if(npcConversationFlag > 0) {
+                if(npcBlock == BlockConstants.Master_Hiner) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_Hiner));
+                    newConversationDoor.addTests(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_INTRO, ByteOp.FLAG_EQUALS, 1));
+                }
+                else if(npcBlock == BlockConstants.Master_Moger) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_Moger));
+                    newConversationDoor.addTests(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_INTRO, ByteOp.FLAG_EQUALS, 1));
+                }
+                else if(npcBlock == BlockConstants.Master_FormerMekuriMaster_Mekuri) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_FormerMekuriMaster));
+                }
+                else if(npcBlock == BlockConstants.Master_PriestZarnac) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestZarnac));
+                }
+                else if(npcBlock == BlockConstants.Master_PriestXanado) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestXanado));
+                }
+                else if(npcBlock == BlockConstants.Master_PhilosopherGiltoriyo) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PhilosopherGiltoriyo));
+                    newConversationDoor.addTests(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2));
+                }
+                else if(npcBlock == BlockConstants.Master_PriestHidlyda) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestHidlyda));
+                }
+                else if(npcBlock == BlockConstants.Master_PriestRomancis) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestRomancis));
+                }
+                else if(npcBlock == BlockConstants.Master_PriestAramo) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestAramo));
+                }
+                else if(npcBlock == BlockConstants.Master_PriestTriton) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestTriton));
+                    newConversationDoor.addTests(new TestByteOperation(FlagConstants.PALENQUE_STATE, ByteOp.FLAG_NOT_EQUAL, 2));
+                }
+                else if(npcBlock == BlockConstants.Master_PriestJaguarfiv) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestJaguarfiv));
+                }
+                else if(npcBlock == BlockConstants.Master_MrSlushfund_Pepper) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_MrSlushfund));
+                }
+                else if(npcBlock == BlockConstants.Master_PriestAlest) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestAlest));
+                }
+                else if(npcBlock == BlockConstants.Master_StrayFairy) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_StrayFairy));
+                    newConversationDoor.addTests(new TestByteOperation(FlagConstants.ILLUSION_PUZZLE_COG_CHEST, ByteOp.FLAG_LTEQ, 1));
+                }
+                else if(npcBlock == BlockConstants.Master_GiantThexde) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_GiantThexde));
+                }
+                else if(npcBlock == BlockConstants.Master_PhilosopherAlsedana) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PhilosopherAlsedana));
+                    newConversationDoor.addTests(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2));
+                }
+                else if(npcBlock == BlockConstants.Master_PhilosopherSamaranta) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PhilosopherSamaranta));
+                    newConversationDoor.addTests(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2));
+                }
+                else if(npcBlock == BlockConstants.Master_PriestLaydoc) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestLaydoc));
+                }
+                else if(npcBlock == BlockConstants.Master_PriestAshgine) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestAshgine));
+                }
+                else if(npcBlock == BlockConstants.Master_PhilosopherFobos_Ladder) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PhilosopherFobos));
+                    newConversationDoor.addTests(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2));
+                }
+                else if(npcBlock == BlockConstants.Master_8BitElder) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_8BitElder));
+                }
+                else if(npcBlock == BlockConstants.Master_duplex) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_duplex));
+                    newConversationDoor.addTests(new TestByteOperation(FlagConstants.DEV_ROOM_COMBO, ByteOp.FLAG_EQUALS, 1));
+                }
+                else if(npcBlock == BlockConstants.Master_Samieru) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_Samieru));
+                    newConversationDoor.addTests(new TestByteOperation(FlagConstants.DEV_ROOM_COMBO, ByteOp.FLAG_EQUALS, 1));
+                }
+                else if(npcBlock == BlockConstants.Master_Naramura) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_Naramura));
+                    newConversationDoor.addTests(new TestByteOperation(FlagConstants.DEV_ROOM_COMBO, ByteOp.FLAG_EQUALS, 1));
+                }
+                else if(npcBlock == BlockConstants.Master_8BitFairy) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_8bitFairy));
+                }
+                else if(npcBlock == BlockConstants.Master_PriestMadomono) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestMadomono));
+                }
+                else if(npcBlock == BlockConstants.Master_PriestGailious) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestGailious));
+                }
+                else if(npcBlock == BlockConstants.Master_Fairy_NightSurface) {
+                    newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_NightSurfaceFairy));
+                }
+
+                oldConversationDoor.getTestByteOperations().add(new TestByteOperation(npcConversationFlag, ByteOp.FLAG_GT, 0));
+                newConversationDoor.getTestByteOperations().add(new TestByteOperation(npcConversationFlag, ByteOp.FLAG_EQUALS, 0));
+
+                oldConversationDoor.getObjectContainer().getObjects().add(newConversationDoor);
+            }
+        }
+    }
+
+    private void replaceNightSurfaceWithSurface() {
+        Zone surface = rcdFileData.getZone(ZoneConstants.SURFACE);
+        Zone nightSurface = rcdFileData.getZone(ZoneConstants.NIGHT_SURFACE);
+        for(GameObject gameObject : surface.getObjects()) {
+            nightSurface.getObjects().add(new GameObject(gameObject));
+        }
+        for(Room surfaceRoom : surface.getRooms()) {
+            Room nightSurfaceRoom = nightSurface.getRoom(surfaceRoom.getRoomIndex());
+            nightSurfaceRoom.getObjects().clear();
+            for(GameObject gameObject : surfaceRoom.getObjects()) {
+                nightSurfaceRoom.getObjects().add(new GameObject(gameObject));
+            }
+            for(Screen surfaceScreen : surfaceRoom.getScreens()) {
+                Screen nightSurfaceScreen = nightSurfaceRoom.getScreen(surfaceScreen.getScreenIndex());
+                List<GameObject> positionalObjectsToPreserve = new ArrayList<>();
+                if(nightSurfaceScreen.getRoomIndex() == 7 && nightSurfaceScreen.getScreenIndex() == 0) {
+                    for(GameObject gameObject : nightSurfaceScreen.getObjects()) {
+                        if(gameObject.getId() == ObjectIdConstants.ConversationDoor) {
+                            positionalObjectsToPreserve.add(gameObject);
+                        }
+                    }
+                }
+                nightSurfaceScreen.getObjects().clear();
+                boolean isXelpudStatueScreen = surfaceScreen.getRoomIndex() == 4 && surfaceScreen.getScreenIndex() == 2;
+                for(GameObject gameObject : surfaceScreen.getObjects()) {
+                    if(isXelpudStatueScreen && gameObject.getId() == ObjectIdConstants.LemezaDetector && gameObject.getArgs().size() > 3) {
+                        int detectorType = gameObject.getArgs().get(3);
+                        if(detectorType < 0 || detectorType > 4) {
+                            // Sleep detector - exclude this so we don't mess with HT unlock state
+                            continue;
+                        }
+                    }
+                    nightSurfaceScreen.getObjects().add(new GameObject(gameObject));
+                }
+                nightSurfaceScreen.getObjects().addAll(positionalObjectsToPreserve);
+                if(nightSurfaceScreen.getRoomIndex() == 2 && nightSurfaceScreen.getScreenIndex() == 1) {
+                    AddObject.addStartingItems(nightSurfaceScreen);
+                    if (Settings.isAutomaticHardmode()) {
+                        AddObject.addAutomaticHardmodeTimer(nightSurfaceScreen);
+                    }
+                    if (Settings.isAutomaticTranslations()) {
+                        AddObject.addAutomaticTranslationsTimer(nightSurfaceScreen);
+                    }
+                }
+                if(Settings.isIncludeHellTempleNPCs()) {
+                    if(nightSurfaceScreen.getRoomIndex() == 7 && nightSurfaceScreen.getScreenIndex() == 0) {
+                        // Fairy - 998
+                        // No escape timer since this only happens for HT.
+                        // Not in RcdReader because we need this to happen to Night Surface specifically.
+                        AddObject.addNpcConversationTimer(nightSurfaceScreen, 0xaab);
+                    }
+                }
+                if(nightSurfaceScreen.getRoomIndex() == 9 && nightSurfaceScreen.getScreenIndex() == 0) {
+                    AddObject.addDanceDetector(nightSurfaceScreen, getCustomBlockIndex(CustomBlockEnum.HalloweenDanceBlock));
+                    AddObject.addSecretShop(nightSurfaceScreen, getCustomBlockIndex(CustomBlockEnum.HalloweenSecretShopBlock));
+                }
+
+                nightSurfaceScreen.getScreenExits().clear();
+                for(ScreenExit surfaceScreenExit : surfaceScreen.getScreenExits()) {
+                    ScreenExit nightSurfaceScreenExit = new ScreenExit();
+                    nightSurfaceScreenExit.setZoneIndex(surfaceScreenExit.getZoneIndex() == ZoneConstants.SURFACE ? ZoneConstants.NIGHT_SURFACE : surfaceScreenExit.getZoneIndex());
+                    nightSurfaceScreenExit.setRoomIndex(surfaceScreenExit.getRoomIndex());
+                    nightSurfaceScreenExit.setScreenIndex(surfaceScreenExit.getScreenIndex());
+                    nightSurfaceScreen.getScreenExits().add(nightSurfaceScreenExit);
+                }
+            }
+        }
+    }
+
+    private void fixTransitionGates() {
+        for(GameObject gameObject : rcdFileData.getObjectsById(ObjectIdConstants.TransitionGate)) {
+            if(gameObject.getArgs().get(0) == ZoneConstants.SURFACE) {
+                gameObject.getArgs().set(0, (short)ZoneConstants.NIGHT_SURFACE);
             }
         }
     }

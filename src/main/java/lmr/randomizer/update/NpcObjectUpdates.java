@@ -1,5 +1,6 @@
 package lmr.randomizer.update;
 
+import lmr.randomizer.BlockConstants;
 import lmr.randomizer.FlagConstants;
 import lmr.randomizer.dat.AddObject;
 import lmr.randomizer.rcd.object.*;
@@ -233,88 +234,88 @@ public final class NpcObjectUpdates {
             return 470;
         }
         if("NPC: Hiner".equals(npcAssigned)) {
-            return 671;
+            return BlockConstants.Master_Hiner;
         }
         if("NPC: Moger".equals(npcAssigned)) {
-            return 672;
+            return BlockConstants.Master_Moger;
         }
         if("NPC: Former Mekuri Master".equals(npcAssigned)) {
-            return 673;
+            return BlockConstants.Master_FormerMekuriMaster_Mekuri;
         }
         if("NPC: Priest Zarnac".equals(npcAssigned)) {
-            return 674;
+            return BlockConstants.Master_PriestZarnac;
         }
         if("NPC: Priest Xanado".equals(npcAssigned)) {
-            return 675;
+            return BlockConstants.Master_PriestXanado;
         }
         if("NPC: Philosopher Giltoriyo".equals(npcAssigned)) {
-            return 677;
+            return BlockConstants.Master_PhilosopherGiltoriyo;
         }
         if("NPC: Priest Hidlyda".equals(npcAssigned)) {
-            return 678;
+            return BlockConstants.Master_PriestHidlyda;
         }
         if("NPC: Priest Romancis".equals(npcAssigned)) {
-            return 679;
+            return BlockConstants.Master_PriestRomancis;
         }
         if("NPC: Priest Aramo".equals(npcAssigned)) {
-            return 680;
+            return BlockConstants.Master_PriestAramo;
         }
         if("NPC: Priest Triton".equals(npcAssigned)) {
-            return 681;
+            return BlockConstants.Master_PriestTriton;
         }
         if("NPC: Priest Jaguarfiv".equals(npcAssigned)) {
-            return 683;
+            return BlockConstants.Master_PriestJaguarfiv;
         }
         if("NPC: The Fairy Queen".equals(npcAssigned)) {
             return 686;
         }
         if("NPC: Mr. Slushfund".equals(npcAssigned)) {
-            return 689;
+            return BlockConstants.Master_MrSlushfund_Pepper;
         }
         if("NPC: Priest Alest".equals(npcAssigned)) {
-            return 693;
+            return BlockConstants.Master_PriestAlest;
         }
         if("NPC: Stray fairy".equals(npcAssigned)) {
-            return 694;
+            return BlockConstants.Master_StrayFairy;
         }
         if("NPC: Giant Thexde".equals(npcAssigned)) {
-            return 696;
+            return BlockConstants.Master_GiantThexde;
         }
         if("NPC: Philosopher Alsedana".equals(npcAssigned)) {
-            return 698;
+            return BlockConstants.Master_PhilosopherAlsedana;
         }
         if("NPC: Philosopher Samaranta".equals(npcAssigned)) {
-            return 700;
+            return BlockConstants.Master_PhilosopherSamaranta;
         }
         if("NPC: Priest Laydoc".equals(npcAssigned)) {
-            return 701;
+            return BlockConstants.Master_PriestLaydoc;
         }
         if("NPC: Priest Ashgine".equals(npcAssigned)) {
-            return 702;
+            return BlockConstants.Master_PriestAshgine;
         }
         if("NPC: Philosopher Fobos".equals(npcAssigned)) {
-            return 705;
+            return BlockConstants.Master_Fobos_MedicineCheck;
         }
         if("NPC: 8bit Elder".equals(npcAssigned)) {
-            return 706;
+            return BlockConstants.Master_8BitElder;
         }
         if("NPC: duplex".equals(npcAssigned)) {
-            return 707;
+            return BlockConstants.Master_duplex;
         }
         if("NPC: Samieru".equals(npcAssigned)) {
-            return 708;
+            return BlockConstants.Master_Samieru;
         }
         if("NPC: Naramura".equals(npcAssigned)) {
-            return 709;
+            return BlockConstants.Master_Naramura;
         }
         if("NPC: 8bit Fairy".equals(npcAssigned)) {
-            return 710;
+            return BlockConstants.Master_8BitFairy;
         }
         if("NPC: Priest Madomono".equals(npcAssigned)) {
-            return 718;
+            return BlockConstants.Master_PriestMadomono;
         }
         if("NPC: Priest Gailious".equals(npcAssigned)) {
-            return 723;
+            return BlockConstants.Master_PriestGailious;
         }
         if("NPC: Tailor Dracuet".equals(npcAssigned)) {
             return 1008;

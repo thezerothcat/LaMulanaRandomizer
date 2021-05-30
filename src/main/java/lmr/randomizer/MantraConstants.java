@@ -1,6 +1,8 @@
 package lmr.randomizer;
 
 public final class MantraConstants {
+    public static final int BIRTH = 0;
+    public static final int DEATH = 1;
     public static final int MARDUK = 2;
     public static final int SABBAT = 3;
     public static final int MU = 4;

@@ -1,6 +1,7 @@
 package lmr.randomizer.dat.conversation;
 
 import lmr.randomizer.dat.Block;
+import lmr.randomizer.dat.BlockDataConstants;
 import lmr.randomizer.dat.BlockListData;
 
 import java.io.DataOutputStream;
@@ -25,11 +26,26 @@ public class CheckBlock extends Block {
     @Override
     public int getBlockSize() {
         int size = 0;
-        for (BlockListData flagCheckReference : flagCheckReferences) {
-            size += flagCheckReference.getSize();
+        if(!flagCheckReferences.isEmpty()) {
+            for(BlockListData flagCheckReference : flagCheckReferences) {
+                size += flagCheckReference.getSize();
+            }
+            size += 2 * (flagCheckReferences.size() - 1);
         }
-        size += 2 * (flagCheckReferences.size() - 1);
         return size;
+    }
+
+    @Override
+    public List<Short> getRawData() {
+        List<Short> rawData = new ArrayList<>();
+        rawData.add((short)getBlockSize());
+        for(int i = 0; i < flagCheckReferences.size(); i++) {
+            rawData.addAll(flagCheckReferences.get(i).getRawData());
+            if(i < flagCheckReferences.size() - 1) {
+                rawData.add(BlockDataConstants.EndOfEntry);
+            }
+        }
+        return rawData;
     }
 
     @Override
@@ -41,6 +57,19 @@ public class CheckBlock extends Block {
             if(i < flagCheckReferences.size() - 1) {
                 dataOutputStream.writeShort(0x000a);
             }
+        }
+    }
+
+    public void removeCheckEntryByBlockIndex(int blockIndex) {
+        Integer cmdToRemoveIndex = null;
+        for(int i = 0; i < flagCheckReferences.size(); i++) {
+            BlockListData blockListData = flagCheckReferences.get(i);
+            if(blockListData.getData().get(2) == blockIndex) {
+                cmdToRemoveIndex = i;
+            }
+        }
+        if(cmdToRemoveIndex != null) {
+            flagCheckReferences.remove((int)cmdToRemoveIndex);
         }
     }
 }

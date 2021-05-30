@@ -1,8 +1,13 @@
 package lmr.randomizer.rcd;
 
+import lmr.randomizer.BlockConstants;
 import lmr.randomizer.FlagConstants;
 import lmr.randomizer.ItemConstants;
+import lmr.randomizer.Settings;
 import lmr.randomizer.dat.AddObject;
+import lmr.randomizer.dat.CustomBlockEnum;
+import lmr.randomizer.dat.DatFileData;
+import lmr.randomizer.random.BossDifficulty;
 import lmr.randomizer.rcd.object.*;
 
 import java.util.ArrayList;
@@ -10,33 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Fools2020RcdUpdater extends RcdUpdater {
-    public Fools2020RcdUpdater(RcdData rcdData) {
-        super(rcdData);
-    }
-
-    @Override
-    boolean updatePot(GameObject pot) {
-        return true;
-    }
-
-    @Override
-    boolean updateBat(GameObject bat) {
-        return true;
-    }
-
-    @Override
-    boolean updateSkeleton(GameObject skeleton) {
-        return true;
-    }
-
-    @Override
-    boolean updateLadder(GameObject ladder) {
-        return true;
-    }
-
-    @Override
-    boolean updateDais(GameObject dais) {
-        return true;
+    public Fools2020RcdUpdater(RcdFileData rcdFileData, DatFileData datFileData) {
+        super(rcdFileData, datFileData);
     }
 
     @Override
@@ -59,51 +39,6 @@ public class Fools2020RcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateRoomSpawner(GameObject roomSpawner) {
-        return true;
-    }
-
-    @Override
-    boolean updateCrusher(GameObject crusher) {
-        return true;
-    }
-
-    @Override
-    boolean updateHitbox(GameObject hitbox) {
-        return true;
-    }
-
-    @Override
-    boolean updateLemezaDetector(GameObject lemezaDetector) {
-        return true;
-    }
-
-    @Override
-    boolean updateFist(GameObject fist) {
-        return true;
-    }
-
-    @Override
-    boolean updateSteam(GameObject steam) {
-        return true;
-    }
-
-    @Override
-    boolean updateSonic(GameObject sonic) {
-        return true;
-    }
-
-    @Override
-    boolean updateGhostSpawner(GameObject ghostSpawner) {
-        return true;
-    }
-
-    @Override
-    boolean updateChest(GameObject chest) {
-        return true;
-    }
-
-    @Override
     boolean updateWeaponCover(GameObject weaponCover) {
         ObjectContainer objectContainer = weaponCover.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
@@ -118,16 +53,6 @@ public class Fools2020RcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateAnkh(GameObject ankh) {
-        return true;
-    }
-
-    @Override
-    boolean updateFloatingItem(GameObject floatingItem) {
-        return true;
-    }
-
-    @Override
     boolean updateTrapdoor(GameObject trapdoor) {
         ObjectContainer objectContainer = trapdoor.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
@@ -137,96 +62,6 @@ public class Fools2020RcdUpdater extends RcdUpdater {
         if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 6 && screen.getScreenIndex() == 1) {
             return false;
         }
-        return true;
-    }
-
-    @Override
-    boolean updateSeal(GameObject seal) {
-        return true;
-    }
-
-    @Override
-    boolean updateSlime(GameObject slime) {
-        return true;
-    }
-
-    @Override
-    boolean updateLavaRock(GameObject lavaRock) {
-        return true;
-    }
-
-    @Override
-    boolean updateSpriggan(GameObject spriggan) {
-        return true;
-    }
-
-    @Override
-    boolean updateHundun(GameObject hundun) {
-        return true;
-    }
-
-    @Override
-    boolean updatePan(GameObject pan) {
-        return true;
-    }
-
-    @Override
-    boolean updateHanuman(GameObject hanuman) {
-        return true;
-    }
-
-    @Override
-    boolean updateEnkidu(GameObject enkidu) {
-        return true;
-    }
-
-    @Override
-    boolean updateMarchosias(GameObject marchosias) {
-        return true;
-    }
-
-    @Override
-    boolean updateWitch(GameObject witch) {
-        return true;
-    }
-
-    @Override
-    boolean updateLizardMan(GameObject lizardMan) {
-        return true;
-    }
-
-    @Override
-    boolean updateChiYou(GameObject chiYou) {
-        return true;
-    }
-
-    @Override
-    boolean updateToujin(GameObject toujin) {
-        return true;
-    }
-
-    @Override
-    boolean updateIceWizard(GameObject iceWizard) {
-        return true;
-    }
-
-    @Override
-    boolean updateAnubis(GameObject anubis) {
-        return true;
-    }
-
-    @Override
-    boolean updateNinjaSpawner(GameObject ninjaSpawner) {
-        return true;
-    }
-
-    @Override
-    boolean updateAndras(GameObject andras) {
-        return true;
-    }
-
-    @Override
-    boolean updateChonchonSpawner(GameObject chonchonSpawner) {
         return true;
     }
 
@@ -248,71 +83,6 @@ public class Fools2020RcdUpdater extends RcdUpdater {
         vimana.getTestByteOperations().addAll(testsToUse);
         vimana.getArgs().set(3, (short)10); // Increase speed
         vimana.getArgs().set(4, (short)1); // Set HP to 1
-        return true;
-    }
-
-    @Override
-    boolean updateSwordBird(GameObject swordBird) {
-        return true;
-    }
-
-    @Override
-    boolean updateElephant(GameObject elephant) {
-        return true;
-    }
-
-    @Override
-    boolean updateAmon(GameObject amon) {
-        return true;
-    }
-
-    @Override
-    boolean updateSatan(GameObject satan) {
-        return true;
-    }
-
-    @Override
-    boolean updateDevil(GameObject devil) {
-        return true;
-    }
-
-    @Override
-    boolean updateUmuDabrutu(GameObject umuDabrutu) {
-        return true;
-    }
-
-    @Override
-    boolean updateUrmahlullu(GameObject urmahlullu) {
-        return true;
-    }
-
-    @Override
-    boolean updateMushnahhu(GameObject mushnahhu) {
-        return true;
-    }
-
-    @Override
-    boolean updateUshum(GameObject ushum) {
-        return true;
-    }
-
-    @Override
-    boolean updateMushussu(GameObject mushussu) {
-        return true;
-    }
-
-    @Override
-    boolean updateMiniBoss(GameObject miniBoss) {
-        return true;
-    }
-
-    @Override
-    boolean updateTheBoss(GameObject theBoss) {
-        return true;
-    }
-
-    @Override
-    boolean updateFairyPoint(GameObject fairyPoint) {
         return true;
     }
 
@@ -341,31 +111,6 @@ public class Fools2020RcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateEyeOfRetribution(GameObject eyeOfRetribution) {
-        return true;
-    }
-
-    @Override
-    boolean updateExtendableSpikes(GameObject extendableSpikes) {
-        return true;
-    }
-
-    @Override
-    boolean updateWarpPortal(GameObject warpPortal) {
-        return true;
-    }
-
-    @Override
-    boolean updateWarpDoor(GameObject warpDoor) {
-        return true;
-    }
-
-    @Override
-    boolean updateFallingRoom(GameObject crusher) {
-        return true;
-    }
-
-    @Override
     boolean updateSoundEffect(GameObject soundEffect) {
         ObjectContainer objectContainer = soundEffect.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
@@ -379,37 +124,12 @@ public class Fools2020RcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateUseItemDetector(GameObject useItemDetector) {
-        return true;
-    }
-
-    @Override
-    boolean updateScannable(GameObject scannable) {
-        return true;
-    }
-
-    @Override
-    boolean updateAutosave(GameObject autosave) {
-        return true;
-    }
-
-    @Override
     boolean updateConversationDoor(GameObject conversationDoor) {
         if(conversationDoor.getArgs().get(3) == 1) {
             if(conversationDoor.getArgs().get(4) == 272) {
                 conversationDoor.getArgs().set(4, (short)273);
             }
         }
-        return true;
-    }
-
-    @Override
-    boolean updateAnimation(GameObject animation) {
-        return true;
-    }
-
-    @Override
-    boolean updateKeyFairySpot(GameObject keyFairySpot) {
         return true;
     }
 
@@ -448,61 +168,6 @@ public class Fools2020RcdUpdater extends RcdUpdater {
                 blockButton.setX(blockButton.getX() - 40);
             }
         }
-        return true;
-    }
-
-    @Override
-    boolean updateHotSpring(GameObject hotSpring) {
-        return true;
-    }
-
-    @Override
-    boolean updateExplosion(GameObject explosion) {
-        return true;
-    }
-
-    @Override
-    boolean updateItemGive(GameObject itemGive) {
-        return true;
-    }
-
-    @Override
-    boolean updateSavePoint(GameObject savePoint) {
-        return true;
-    }
-
-    @Override
-    boolean updateGrailToggle(GameObject grailToggle) {
-        return true;
-    }
-
-    @Override
-    boolean updateMotherAnkh(GameObject motherAnkh) {
-        return true;
-    }
-
-    @Override
-    boolean updateMantraDetector(GameObject mantraDetector) {
-        return true;
-    }
-
-    @Override
-    boolean updateSnapshotsScan(GameObject snapshotsScan) {
-        return true;
-    }
-
-    @Override
-    boolean updateTransitionGate(GameObject transitionGate) {
-        return true;
-    }
-
-    @Override
-    boolean updateEscapeTimer(GameObject escapeTimer) {
-        return true;
-    }
-
-    @Override
-    boolean updateEscapeScreenShake(GameObject escapeScreenShake) {
         return true;
     }
 
@@ -572,6 +237,15 @@ public class Fools2020RcdUpdater extends RcdUpdater {
                 }
             }
         }
+        else if(zoneIndex == 17 && roomIndex == 9 && screenIndex == 0) {
+            // todo: this is new
+            if(BossDifficulty.EASY.equals(Settings.getBossDifficulty()) && Settings.getEnabledDamageBoosts().isEmpty()) {
+                AddObject.addPot(screen, 300, 400, PotGraphic.DIMENSIONAL,
+                        DropType.FLARE_GUN_AMMO, 80, Arrays.asList(new TestByteOperation(FlagConstants.ROOM_FLAG_40, ByteOp.FLAG_EQUALS, 1)),
+                        new ArrayList<>(0));
+
+            }
+        }
     }
 
     @Override
@@ -586,24 +260,126 @@ public class Fools2020RcdUpdater extends RcdUpdater {
     }
 
     @Override
-    void addUntrackedCustomNoPositionZoneObjects(Zone zone) {
-    }
-
-    @Override
     void doUntrackedPostUpdates(){
         convertLampDetectors();
     }
 
     @Override
-    void addTrackedCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
+    void doPostShuffleUpdates() {
+        updateFeatherChest();
+        updateFeatherChestSequence(); // todo: this is new
+        updateMulbrukConversations();
     }
 
-    @Override
-    void addTrackedCustomNoPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
+    private void updateFeatherChest() {
+        Zone surface = rcdFileData.getZone(1);
+        Room argusRoom = surface.getRoom(0);
+        Screen featherScreen = argusRoom.getScreen(0);
+
+        for(GameObject gameObject : featherScreen.getObjects()) {
+            if(gameObject.getId() == 0x2c) {
+                gameObject.getArgs().set(0, (short)(ItemConstants.SECRET_TREASURE_OF_LIFE + 11));
+
+                WriteByteOperation puzzleFlag = gameObject.getWriteByteOperations().get(1);
+                gameObject.getWriteByteOperations().clear();
+
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.ASSIGN_FLAG, 2));
+                gameObject.getWriteByteOperations().add(puzzleFlag);
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.ASSIGN_FLAG, 1));
+                gameObject.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.ASSIGN_FLAG, 2));
+            }
+        }
     }
 
-    @Override
-    void doTrackedPostUpdates(){
+    private void updateFeatherChestSequence() {
+        Zone surface = rcdFileData.getZone(1);
+        Room argusRoom = surface.getRoom(0);
+        Screen featherScreen = argusRoom.getScreen(0);
+
+        AddObject.addGrailToggle(featherScreen, false, new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2));
+        AddObject.addFramesTimer(featherScreen, 0,
+                Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_SPAULDER, ByteOp.FLAG_EQUALS, 0),
+                        new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.CUSTOM_WF_SPAULDER, ByteOp.ASSIGN_FLAG, 1),
+                        new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1)));
+        AddObject.addPot(featherScreen, 220, 20, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addSuccessSound(featherScreen,  Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2),
+                new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
+
+        Screen argusScreen = argusRoom.getScreen(1);
+
+        AddObject.addPot(argusScreen, 900, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 940, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 980, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1020, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1060, 320, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addPot(argusScreen, 920, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 960, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1000, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1040, 280, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addPot(argusScreen, 940, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 980, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1020, 240, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addPot(argusScreen, 960, 200, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+        AddObject.addPot(argusScreen, 1000, 200, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addPot(argusScreen, 980, 160, PotGraphic.SURFACE, DropType.NOTHING, 0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)), new ArrayList<>(0));
+
+        AddObject.addFloatingItem(argusScreen, 980, 0, 53, false,
+                Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(FlagConstants.CUSTOM_WF_SPAULDER, ByteOp.FLAG_EQUALS, 1)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.CUSTOM_WF_SPAULDER, ByteOp.ASSIGN_FLAG, 2),
+                        new WriteByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.ASSIGN_FLAG, 1)));
+        AddObject.addNoItemSoundEffect(argusScreen, FlagConstants.CUSTOM_WF_SPAULDER, FlagConstants.SCREEN_FLAG_B);
+
+        Screen nextToArgusScreen = argusRoom.getScreen(2);
+        AddObject.addGrailToggle(nextToArgusScreen, true);
+    }
+
+    private void updateMulbrukConversations() {
+        Zone mulbrukZone = rcdFileData.getZone(3);
+        Room mulbrukRoom = mulbrukZone.getRoom(3);
+        Screen mulbrukScreen = mulbrukRoom.getScreen(0);
+
+        // Find existing objects
+        GameObject escapeConversationNormal = null;
+        List<GameObject> keptObjects = new ArrayList<>();
+        for(GameObject gameObject : mulbrukScreen.getObjects()) {
+            if(gameObject.getId() == 0xa0) {
+                if(gameObject.getArgs().get(4) == BlockConstants.MulbrukEscapeRegular) {
+                    escapeConversationNormal = gameObject;
+                    keptObjects.add(gameObject);
+                }
+                else if(gameObject.getArgs().get(4) == BlockConstants.MulbrukEscapeSwimsuit) {
+                    keptObjects.add(gameObject);
+                }
+            }
+            else {
+                keptObjects.add(gameObject);
+            }
+        }
+
+        GameObject bookOfTheDeadConversation = new GameObject(escapeConversationNormal);
+        bookOfTheDeadConversation.getArgs().set(4, getCustomBlockIndex(CustomBlockEnum.Fools2020ReferenceBlock_MulbrukBookOfTheDead));
+        bookOfTheDeadConversation.getTestByteOperations().clear();
+        bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_NOT_EQUAL, 1));
+        bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_BOOK, ByteOp.FLAG_EQUALS, 1));
+        bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_AWAKE, ByteOp.FLAG_GTEQ, 1));
+
+        GameObject optionConversation = new GameObject(escapeConversationNormal);
+        optionConversation.getArgs().set(4, getCustomBlockIndex(CustomBlockEnum.Fools2020ReferenceBlock_MulbrukEarlyExitPrompt));
+        optionConversation.getTestByteOperations().clear();
+        optionConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_NOT_EQUAL, 1)); // Option to quit
+        optionConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_BOOK, ByteOp.FLAG_NOT_EQUAL, 1));
+        optionConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_AWAKE, ByteOp.FLAG_GTEQ, 1));
+
+        mulbrukScreen.getObjects().clear();
+        mulbrukScreen.getObjects().addAll(keptObjects);
+        mulbrukScreen.getObjects().add(bookOfTheDeadConversation);
+        mulbrukScreen.getObjects().add(optionConversation);
     }
 
     @Override
@@ -615,7 +391,7 @@ public class Fools2020RcdUpdater extends RcdUpdater {
     }
 
     private void convertLampDetectors() {
-        for(GameObject lemezaDetector : rcdData.getObjectsById(ObjectIdConstants.LemezaDetector)) {
+        for(GameObject lemezaDetector : rcdFileData.getObjectsById(ObjectIdConstants.LemezaDetector)) {
             boolean lampOfTimeDetector = false;
             for(WriteByteOperation writeByteOperation : lemezaDetector.getWriteByteOperations()) {
                 if(writeByteOperation.getIndex() == FlagConstants.LAMP_OF_TIME_STATE && ByteOp.ASSIGN_FLAG.equals(writeByteOperation.getOp()) && writeByteOperation.getValue() == 1) {

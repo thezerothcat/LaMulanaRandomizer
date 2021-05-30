@@ -2,6 +2,8 @@ package lmr.randomizer.dat;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by thezerothcat on 7/27/2017.
@@ -12,6 +14,11 @@ public class BlockItemData implements BlockContents {
 
     public BlockItemData(short data, short itemData) {
         this.data = data;
+        this.itemData = itemData;
+    }
+
+    public BlockItemData(short itemData) {
+        this.data = BlockDataConstants.Item;
         this.itemData = itemData;
     }
 
@@ -26,6 +33,14 @@ public class BlockItemData implements BlockContents {
     @Override
     public int getSize() {
         return 4;
+    }
+
+    @Override
+    public List<Short> getRawData() {
+        List<Short> rawData = new ArrayList<>();
+        rawData.add(data);
+        rawData.add(itemData);
+        return rawData;
     }
 
     @Override

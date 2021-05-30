@@ -1,19 +1,27 @@
 package lmr.randomizer.rcd;
 
+import lmr.randomizer.dat.CustomBlockEnum;
+import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.rcd.object.*;
 
 /**
  * Superclass for making updates/additions to the rcd file.
  */
 public abstract class RcdUpdater {
-    protected RcdData rcdData;
+    protected RcdFileData rcdFileData;
+    private DatFileData datFileData;
 
-    public RcdUpdater(RcdData rcdData) {
-        this.rcdData = rcdData;
+    public RcdUpdater(RcdFileData rcdFileData, DatFileData datFileData) {
+        this.rcdFileData = rcdFileData;
+        this.datFileData = datFileData;
+    }
+
+    protected Short getCustomBlockIndex(CustomBlockEnum customBlockEnum) {
+        return datFileData.getCustomBlockIndex(customBlockEnum);
     }
 
     public void updateObjects() {
-        for(Zone zone : rcdData.getZones()) {
+        for(Zone zone : rcdFileData.getZones()) {
             int zoneObjIndex = 0;
             while(zoneObjIndex < zone.getObjects().size()) {
                 if(updateObject(zone.getObjects().get(zoneObjIndex))) {
@@ -59,7 +67,7 @@ public abstract class RcdUpdater {
     }
 
     public void addUntrackedObjects() {
-        for(Zone zone : rcdData.getZones()) {
+        for(Zone zone : rcdFileData.getZones()) {
             for(Room room : zone.getRooms()) {
                 for(Screen screen : room.getScreens()) {
                     int zoneIndex = screen.getZoneIndex();
@@ -316,98 +324,256 @@ public abstract class RcdUpdater {
         return true;
     }
 
-    abstract boolean updatePot(GameObject pot);
-    abstract boolean updateBat(GameObject bat);
-    abstract boolean updateSkeleton(GameObject skeleton);
-    abstract boolean updateLadder(GameObject ladder);
-    abstract boolean updateDais(GameObject dais);
-    abstract boolean updateFlagTimer(GameObject flagTimer);
-    abstract boolean updateRoomSpawner(GameObject roomSpawner);
-    abstract boolean updateCrusher(GameObject crusher);
-    abstract boolean updateHitbox(GameObject hitbox);
-    abstract boolean updateLemezaDetector(GameObject lemezaDetector);
-    abstract boolean updateFist(GameObject fist);
-    abstract boolean updateSteam(GameObject steam);
-    abstract boolean updateSonic(GameObject sonic);
-    abstract boolean updateGhostSpawner(GameObject ghostSpawner);
-    abstract boolean updateChest(GameObject chest);
-    abstract boolean updateWeaponCover(GameObject weaponCover);
-    abstract boolean updateAnkh(GameObject ankh);
-    abstract boolean updateFloatingItem(GameObject floatingItem);
-    abstract boolean updateTrapdoor(GameObject trapdoor);
-    abstract boolean updateSeal(GameObject seal);
-    abstract boolean updateSlime(GameObject slime);
-    abstract boolean updateLavaRock(GameObject lavaRock);
-    abstract boolean updateSpriggan(GameObject spriggan);
-    abstract boolean updateHundun(GameObject hundun);
-    abstract boolean updatePan(GameObject pan);
-    abstract boolean updateHanuman(GameObject hanuman);
-    abstract boolean updateEnkidu(GameObject enkidu);
-    abstract boolean updateMarchosias(GameObject marchosias);
-    abstract boolean updateWitch(GameObject witch);
-    abstract boolean updateLizardMan(GameObject lizardMan);
-    abstract boolean updateChiYou(GameObject chiYou);
-    abstract boolean updateToujin(GameObject toujin);
-    abstract boolean updateIceWizard(GameObject iceWizard);
-    abstract boolean updateAnubis(GameObject anubis);
-    abstract boolean updateNinjaSpawner(GameObject ninjaSpawner);
-    abstract boolean updateAndras(GameObject andras);
-    abstract boolean updateChonchonSpawner(GameObject chonchonSpawner);
-    abstract boolean updateVimana(GameObject vimana);
-    abstract boolean updateSwordBird(GameObject swordBird);
-    abstract boolean updateElephant(GameObject elephant);
-    abstract boolean updateAmon(GameObject amon);
-    abstract boolean updateSatan(GameObject satan);
-    abstract boolean updateDevil(GameObject devil);
-    abstract boolean updateUmuDabrutu(GameObject umuDabrutu);
-    abstract boolean updateUrmahlullu(GameObject urmahlullu);
-    abstract boolean updateMushnahhu(GameObject mushnahhu);
-    abstract boolean updateUshum(GameObject ushum);
-    abstract boolean updateMushussu(GameObject mushussu);
-    abstract boolean updateMiniBoss(GameObject miniBoss);
-    abstract boolean updateTheBoss(GameObject theBoss);
-    abstract boolean updateFairyPoint(GameObject fairyPoint);
-    abstract boolean updateFog(GameObject fog);
-    abstract boolean updateGraphicsTextureDraw(GameObject graphicsTextureDraw);
-    abstract boolean updateEyeOfRetribution(GameObject eyeOfRetribution);
-    abstract boolean updateExtendableSpikes(GameObject extendableSpikes);
-    abstract boolean updateWarpPortal(GameObject warpPortal);
-    abstract boolean updateWarpDoor(GameObject warpDoor);
-    abstract boolean updateFallingRoom(GameObject fallingRoom);
-    abstract boolean updateSoundEffect(GameObject soundEffect);
-    abstract boolean updateUseItemDetector(GameObject useItemDetector);
-    abstract boolean updateScannable(GameObject scannable);
-    abstract boolean updateAutosave(GameObject autosave);
-    abstract boolean updateConversationDoor(GameObject conversationDoor);
-    abstract boolean updateAnimation(GameObject animation);
-    abstract boolean updateKeyFairySpot(GameObject keyFairySpot);
-    abstract boolean updatePushableBlock(GameObject pushableBlock);
-    abstract boolean updateBlockButton(GameObject blockButton);
-    abstract boolean updateHotSpring(GameObject hotSpring);
-    abstract boolean updateExplosion(GameObject explosion);
-    abstract boolean updateItemGive(GameObject itemGive);
-    abstract boolean updateSavePoint(GameObject savePoint);
-    abstract boolean updateGrailToggle(GameObject grailToggle);
-    abstract boolean updateMotherAnkh(GameObject motherAnkh);
-    abstract boolean updateMantraDetector(GameObject mantraDetector);
-    abstract boolean updateSnapshotsScan(GameObject snapshotsScan);
-    abstract boolean updateTransitionGate(GameObject transitionGate);
-    abstract boolean updateEscapeTimer(GameObject escapeTimer);
-    abstract boolean updateEscapeScreenShake(GameObject escapeScreenShake);
+    boolean updatePot(GameObject pot) {
+        return true;
+    }
+    boolean updateBat(GameObject bat) {
+        return true;
+    }
+    boolean updateSkeleton(GameObject skeleton) {
+        return true;
+    }
+    boolean updateLadder(GameObject ladder) {
+        return true;
+    }
+    boolean updateDais(GameObject dais) {
+        return true;
+    }
+    boolean updateFlagTimer(GameObject flagTimer) {
+        return true;
+    }
+    boolean updateRoomSpawner(GameObject roomSpawner) {
+        return true;
+    }
+    boolean updateCrusher(GameObject crusher) {
+        return true;
+    }
+    boolean updateHitbox(GameObject hitbox) {
+        return true;
+    }
+    boolean updateLemezaDetector(GameObject lemezaDetector) {
+        return true;
+    }
+    boolean updateFist(GameObject fist) {
+        return true;
+    }
+    boolean updateSteam(GameObject steam) {
+        return true;
+    }
+    boolean updateSonic(GameObject sonic) {
+        return true;
+    }
+    boolean updateGhostSpawner(GameObject ghostSpawner) {
+        return true;
+    }
+    boolean updateChest(GameObject chest) {
+        return true;
+    }
+    boolean updateWeaponCover(GameObject weaponCover) {
+        return true;
+    }
+    boolean updateAnkh(GameObject ankh) {
+        return true;
+    }
+    boolean updateFloatingItem(GameObject floatingItem) {
+        return true;
+    }
+    boolean updateTrapdoor(GameObject trapdoor) {
+        return true;
+    }
+    boolean updateSeal(GameObject seal) {
+        return true;
+    }
+    boolean updateSlime(GameObject slime) {
+        return true;
+    }
+    boolean updateLavaRock(GameObject lavaRock) {
+        return true;
+    }
+    boolean updateSpriggan(GameObject spriggan) {
+        return true;
+    }
+    boolean updateHundun(GameObject hundun) {
+        return true;
+    }
+    boolean updatePan(GameObject pan) {
+        return true;
+    }
+    boolean updateHanuman(GameObject hanuman) {
+        return true;
+    }
+    boolean updateEnkidu(GameObject enkidu) {
+        return true;
+    }
+    boolean updateMarchosias(GameObject marchosias) {
+        return true;
+    }
+    boolean updateWitch(GameObject witch) {
+        return true;
+    }
+    boolean updateLizardMan(GameObject lizardMan) {
+        return true;
+    }
+    boolean updateChiYou(GameObject chiYou) {
+        return true;
+    }
+    boolean updateToujin(GameObject toujin) {
+        return true;
+    }
+    boolean updateIceWizard(GameObject iceWizard) {
+        return true;
+    }
+    boolean updateAnubis(GameObject anubis) {
+        return true;
+    }
+    boolean updateNinjaSpawner(GameObject ninjaSpawner) {
+        return true;
+    }
+    boolean updateAndras(GameObject andras) {
+        return true;
+    }
+    boolean updateChonchonSpawner(GameObject chonchonSpawner) {
+        return true;
+    }
+    boolean updateVimana(GameObject vimana) {
+        return true;
+    }
+    boolean updateSwordBird(GameObject swordBird) {
+        return true;
+    }
+    boolean updateElephant(GameObject elephant) {
+        return true;
+    }
+    boolean updateAmon(GameObject amon) {
+        return true;
+    }
+    boolean updateSatan(GameObject satan) {
+        return true;
+    }
+    boolean updateDevil(GameObject devil) {
+        return true;
+    }
+    boolean updateUmuDabrutu(GameObject umuDabrutu) {
+        return true;
+    }
+    boolean updateUrmahlullu(GameObject urmahlullu) {
+        return true;
+    }
+    boolean updateMushnahhu(GameObject mushnahhu) {
+        return true;
+    }
+    boolean updateUshum(GameObject ushum) {
+        return true;
+    }
+    boolean updateMushussu(GameObject mushussu) {
+        return true;
+    }
+    boolean updateMiniBoss(GameObject miniBoss) {
+        return true;
+    }
+    boolean updateTheBoss(GameObject theBoss) {
+        return true;
+    }
+    boolean updateFairyPoint(GameObject fairyPoint) {
+        return true;
+    }
+    boolean updateFog(GameObject fog) {
+        return true;
+    }
+    boolean updateGraphicsTextureDraw(GameObject graphicsTextureDraw) {
+        return true;
+    }
+    boolean updateEyeOfRetribution(GameObject eyeOfRetribution) {
+        return true;
+    }
+    boolean updateExtendableSpikes(GameObject extendableSpikes) {
+        return true;
+    }
+    boolean updateWarpPortal(GameObject warpPortal) {
+        return true;
+    }
+    boolean updateWarpDoor(GameObject warpDoor) {
+        return true;
+    }
+    boolean updateFallingRoom(GameObject crusher) {
+        return true;
+    }
+    boolean updateSoundEffect(GameObject soundEffect) {
+        return true;
+    }
+    boolean updateUseItemDetector(GameObject useItemDetector) {
+        return true;
+    }
+    boolean updateScannable(GameObject scannable) {
+        return true;
+    }
+    boolean updateAutosave(GameObject autosave) {
+        return true;
+    }
+    boolean updateConversationDoor(GameObject conversationDoor) {
+        return true;
+    }
+    boolean updateAnimation(GameObject animation) {
+        return true;
+    }
+    boolean updateKeyFairySpot(GameObject keyFairySpot) {
+        return true;
+    }
+    boolean updatePushableBlock(GameObject pushableBlock) {
+        return true;
+    }
+    boolean updateBlockButton(GameObject blockButton) {
+        return true;
+    }
+    boolean updateHotSpring(GameObject hotSpring) {
+        return true;
+    }
+    boolean updateExplosion(GameObject explosion) {
+        return true;
+    }
+    boolean updateItemGive(GameObject itemGive) {
+        return true;
+    }
+    boolean updateSavePoint(GameObject savePoint) {
+        return true;
+    }
+    boolean updateGrailToggle(GameObject grailToggle) {
+        return true;
+    }
+    boolean updateMotherAnkh(GameObject motherAnkh) {
+        return true;
+    }
+    boolean updateMantraDetector(GameObject mantraDetector) {
+        return true;
+    }
+    boolean updateSnapshotsScan(GameObject snapshotsScan) {
+        return true;
+    }
+    boolean updateTransitionGate(GameObject transitionGate) {
+        return true;
+    }
+    boolean updateEscapeTimer(GameObject escapeTimer) {
+        return true;
+    }
+    boolean updateEscapeScreenShake(GameObject escapeScreenShake) {
+        return true;
+    }
 
-    abstract void addUntrackedCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex);
+    void addUntrackedCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) { }
 
-    abstract void addUntrackedCustomNoPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex);
+    void addUntrackedCustomNoPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) { }
 
-    abstract void addUntrackedCustomNoPositionZoneObjects(Zone zone);
+    void addUntrackedCustomNoPositionZoneObjects(Zone zone) { }
 
-    abstract void doUntrackedPostUpdates();
+    void doUntrackedPostUpdates() { }
 
-    abstract void addTrackedCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex);
+    void addTrackedCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) { }
 
-    abstract void addTrackedCustomNoPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex);
+    void addTrackedCustomNoPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) { }
 
-    abstract void doTrackedPostUpdates();
+    void doTrackedPostUpdates() { }
 
-    abstract void updateScreenExits(Screen screen);
+    void doPostShuffleUpdates() { }
+
+    void updateScreenExits(Screen screen) { }
 }

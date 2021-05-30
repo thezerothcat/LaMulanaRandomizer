@@ -51,7 +51,7 @@ public final class FlagConstants {
     public static final int SHRINE_SHAWN = 0x21b; // 1 applies to both spots you can see him
     public static final int EDEN_UNLOCKED = 0x226; // Value 0 > 1 when Eden is unlocked (placing a weight after getting Fruit of Eden)
     public static final int ILLUSION_PROGRESS_SKELETON_DAIS_TO_ELEVATOR = 0x227; // Value 0 > 1 when placing a weight on the skeleton in lower Illusion, 2 after solving "extinguish the whole", 3 via Lemeza detector in the elevator room on the way up to the grail
-    public static final int MR_SLUSHFUND_CONVERSATION = 0x228; // Value 0 > 1 when placing a weight on the skeleton in lower Illusion, 2 after solving "extinguish the whole", 3 via Lemeza detector in the elevator room on the way up to the grail
+    public static final int MR_SLUSHFUND_CONVERSATION = 0x228; // Set to 1 in the conversation for receiving Pepper, set to 2 in the conversation for receiving Anchor.
     public static final int PROVE_THOU_ART_SMALL = 0x22a; // 2=doll, 3=small, 4=read, 5=block disappears
     public static final int COG_MUDMEN_STATE = 0x23a; // Value 4 when using the Cog of the Soul at the expected tablet to spawn mudmen
     public static final int GRAVEYARD_ILLUSION_LADDER_BLOCKAGE = 0x23f; // Set to 1 after bombing the wall in Graveyard to open up emusic.exe scan
@@ -76,7 +76,7 @@ public final class FlagConstants {
     public static final int DIMENSIONAL_ANGEL_SHIELD_DAIS_RIGHT = 0x2d3; // 0 > 1 when activated by the other two daises being pressed
     public static final int SHRINE_FAIRY_BLOCK = 0x2d5; // Value 0 > 1 when spawned, 1 > 2 from talking to fairy queen, 2 > 3 for animation of removal
     public static final int SURFACE_TRANSFORM_WIND_HOWLING = 0x2e1; // Set to 1 when all 8 bosses are down, along with updates to 0x102 and others
-    public static final int CONVERSATION_CANT_LEAVE = 0x2e4; // Set to 1 when entering a conversation that can't be interrupted, set back to 0 when it's okay to leave again.
+    public static final short CONVERSATION_CANT_LEAVE = 0x2e4; // Set to 1 when entering a conversation that can't be interrupted, set back to 0 when it's okay to leave again.
     public static final int TRANSLATION_TABLETS_READ = 0x2e5; // Value += 1 for each translation tablet read.
     public static final int ANCIENT_LAMULANESE_LEARNED = 0x2ea; // Value 0 > 1 when ancient La-Mulanese has been learned.
     public static final int DIMENSIONAL_CHILDREN_DEAD = 0x2ec; // Value += 1 for each of Tiamat's children killed
@@ -353,6 +353,8 @@ public final class FlagConstants {
     public static final int ROOM_FLAG_40 = 0x040; // Set by an arg on Tiamat's ankh when the fight starts
     public static final int ROOM_FLAG_45 = 0x045; // Used for a weight door during the escape.
 
+    // Fools 2019
+
     // Halloween 2019
     public static final int CUSTOM_HALLOWEEN_MULBRUK_CONVERSATION = 0xaac; // 0 = not spoken, 1 = did intro, 2 = ready to talk about HT, 3 = HT unlocked
     public static final int CUSTOM_HALLOWEEN_H4 = 0xaad; // Used to track progress for escaping H4. Can't use a screen/room flag because of the abnormal transitions.
@@ -477,92 +479,92 @@ public final class FlagConstants {
         return 0;
     }
 
-    public static int getNpcConversationFlag(short conversationBlockNumber) {
-        if(conversationBlockNumber == 671) {
+    public static int getNpcConversationFlag(int conversationBlockNumber) {
+        if(conversationBlockNumber == BlockConstants.Master_Hiner) {
             return 0xac9;
         }
-        if(conversationBlockNumber == 672) {
+        if(conversationBlockNumber == BlockConstants.Master_Moger) {
             return 0xac8;
         }
-        if(conversationBlockNumber == 673) {
+        if(conversationBlockNumber == BlockConstants.Master_FormerMekuriMaster_Mekuri) {
             return 0xac7;
         }
-        if(conversationBlockNumber == 674) {
+        if(conversationBlockNumber == BlockConstants.Master_PriestZarnac) {
             return 0xac6;
         }
-        if(conversationBlockNumber == 675) {
+        if(conversationBlockNumber == BlockConstants.Master_PriestXanado) {
             return 0xac5;
         }
-        if(conversationBlockNumber == 677) {
+        if(conversationBlockNumber == BlockConstants.Master_PhilosopherGiltoriyo) {
             return 0xac4;
         }
-        if(conversationBlockNumber == 678) {
+        if(conversationBlockNumber == BlockConstants.Master_PriestHidlyda) {
             return 0xac3;
         }
-        if(conversationBlockNumber == 679) {
+        if(conversationBlockNumber == BlockConstants.Master_PriestRomancis) {
             return 0xac2;
         }
-        if(conversationBlockNumber == 680) {
+        if(conversationBlockNumber == BlockConstants.Master_PriestAramo) {
             return 0xac1;
         }
-        if(conversationBlockNumber == 681) {
+        if(conversationBlockNumber == BlockConstants.Master_PriestTriton) {
             return 0xac0;
         }
-        if(conversationBlockNumber == 683) {
+        if(conversationBlockNumber == BlockConstants.Master_PriestJaguarfiv) {
             return 0xabf;
         }
-        if(conversationBlockNumber == 684) {
+        if(conversationBlockNumber == BlockConstants.Master_FairyQueen_RequestPendant) {
             return FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES;
         }
-        if(conversationBlockNumber == 689) {
+        if(conversationBlockNumber == BlockConstants.Master_MrSlushfund_Pepper) {
             return 0xabe;
         }
-        if(conversationBlockNumber == 693) {
+        if(conversationBlockNumber == BlockConstants.Master_PriestAlest) {
             return 0xabd;
         }
-        if(conversationBlockNumber == 694) {
+        if(conversationBlockNumber == BlockConstants.Master_StrayFairy) {
             return 0xabc;
         }
-        if(conversationBlockNumber == 696) {
+        if(conversationBlockNumber == BlockConstants.Master_GiantThexde) {
             return 0xabb;
         }
-        if(conversationBlockNumber == 698) {
+        if(conversationBlockNumber == BlockConstants.Master_PhilosopherAlsedana) {
             return 0xaba;
         }
-        if(conversationBlockNumber == 700) {
+        if(conversationBlockNumber == BlockConstants.Master_PhilosopherSamaranta) {
             return 0xab9;
         }
-        if(conversationBlockNumber == 701) {
+        if(conversationBlockNumber == BlockConstants.Master_PriestLaydoc) {
             return 0xab8;
         }
-        if(conversationBlockNumber == 702) {
+        if(conversationBlockNumber == BlockConstants.Master_PriestAshgine) {
             return 0xab7;
         }
-        if(conversationBlockNumber == 704) {
+        if(conversationBlockNumber == BlockConstants.Master_PhilosopherFobos_Ladder) {
             return 0xab6;
         }
-        if(conversationBlockNumber == 706) {
+        if(conversationBlockNumber == BlockConstants.Master_8BitElder) {
             return 0xab5;
         }
-        if(conversationBlockNumber == 707) {
+        if(conversationBlockNumber == BlockConstants.Master_duplex) {
             return 0xab4;
         }
-        if(conversationBlockNumber == 708) {
+        if(conversationBlockNumber == BlockConstants.Master_Samieru) {
             return 0xab3;
         }
-        if(conversationBlockNumber == 709) {
+        if(conversationBlockNumber == BlockConstants.Master_Naramura) {
             return 0xab2;
         }
-        if(conversationBlockNumber == 710) {
+        if(conversationBlockNumber == BlockConstants.Master_8BitFairy) {
             return 0xab1;
         }
-        if(conversationBlockNumber == 718) {
+        if(conversationBlockNumber == BlockConstants.Master_PriestMadomono) {
             return 0xab0;
         }
-        if(conversationBlockNumber == 723) {
+        if(conversationBlockNumber == BlockConstants.Master_PriestGailious) {
             return 0xaaf;
         }
-        if(conversationBlockNumber == 998) {
+        if(conversationBlockNumber == BlockConstants.Master_Fairy_NightSurface) {
             return 0xaab;
         }
         return 0;

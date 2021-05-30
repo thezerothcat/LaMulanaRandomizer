@@ -2,6 +2,8 @@ package lmr.randomizer.rcd;
 
 import lmr.randomizer.*;
 import lmr.randomizer.dat.AddObject;
+import lmr.randomizer.dat.CustomBlockEnum;
+import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.GameDataTracker;
 import lmr.randomizer.update.LocationCoordinateMapper;
@@ -13,8 +15,8 @@ import java.util.List;
 public class BaseRcdUpdater extends RcdUpdater {
     private PotUpdater potUpdater;
 
-    public BaseRcdUpdater(RcdData rcdData) {
-        super(rcdData);
+    public BaseRcdUpdater(RcdFileData rcdFileData, DatFileData datFileData) {
+        super(rcdFileData, datFileData);
         this.potUpdater = new PotUpdater();
     }
 
@@ -655,26 +657,6 @@ public class BaseRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateFist(GameObject fist) {
-        return true;
-    }
-
-    @Override
-    boolean updateSteam(GameObject steam) {
-        return true;
-    }
-
-    @Override
-    boolean updateSonic(GameObject sonic) {
-        return true;
-    }
-
-    @Override
-    boolean updateGhostSpawner(GameObject ghostSpawner) {
-        return true;
-    }
-
-    @Override
     boolean updateChest(GameObject chest) {
         int inventoryArg = chest.getArgs().get(0) - 11;
         if(inventoryArg == ItemConstants.COG_OF_THE_SOUL) {
@@ -708,11 +690,6 @@ public class BaseRcdUpdater extends RcdUpdater {
                 chest.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.WF_TRAP_GRAVEYARD, ByteOp.ASSIGN_FLAG, 2));
             }
         }
-        return true;
-    }
-
-    @Override
-    boolean updateWeaponCover(GameObject weaponCover) {
         return true;
     }
 
@@ -797,11 +774,6 @@ public class BaseRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateTrapdoor(GameObject trapdoor) {
-        return true;
-    }
-
-    @Override
     boolean updateSeal(GameObject seal) {
         ObjectContainer objectContainer = seal.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
@@ -849,11 +821,6 @@ public class BaseRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateLavaRock(GameObject lavaRock) {
-        return true;
-    }
-
-    @Override
     boolean updateSpriggan(GameObject spriggan) {
         if(Settings.isRandomizeTransitionGates()) {
             // Spriggan statue still reachable during the escape sequence.
@@ -869,56 +836,6 @@ public class BaseRcdUpdater extends RcdUpdater {
                 spriggan.getTestByteOperations().remove((int)flagIndexToRemove);
             }
         }
-        return true;
-    }
-
-    @Override
-    boolean updateHundun(GameObject hundun) {
-        return true;
-    }
-
-    @Override
-    boolean updatePan(GameObject pan) {
-        return true;
-    }
-
-    @Override
-    boolean updateHanuman(GameObject hanuman) {
-        return true;
-    }
-
-    @Override
-    boolean updateEnkidu(GameObject enkidu) {
-        return true;
-    }
-
-    @Override
-    boolean updateMarchosias(GameObject marchosias) {
-        return true;
-    }
-
-    @Override
-    boolean updateWitch(GameObject witch) {
-        return true;
-    }
-
-    @Override
-    boolean updateLizardMan(GameObject lizardMan) {
-        return true;
-    }
-
-    @Override
-    boolean updateChiYou(GameObject chiYou) {
-        return true;
-    }
-
-    @Override
-    boolean updateToujin(GameObject toujin) {
-        return true;
-    }
-
-    @Override
-    boolean updateIceWizard(GameObject iceWizard) {
         return true;
     }
 
@@ -939,86 +856,6 @@ public class BaseRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateNinjaSpawner(GameObject ninjaSpawner) {
-        return true;
-    }
-
-    @Override
-    boolean updateAndras(GameObject andras) {
-        return true;
-    }
-
-    @Override
-    boolean updateChonchonSpawner(GameObject chonchonSpawner) {
-        return true;
-    }
-
-    @Override
-    boolean updateVimana(GameObject vimana) {
-        return true;
-    }
-
-    @Override
-    boolean updateSwordBird(GameObject swordBird) {
-        return true;
-    }
-
-    @Override
-    boolean updateElephant(GameObject elephant) {
-        return true;
-    }
-
-    @Override
-    boolean updateAmon(GameObject amon) {
-        return true;
-    }
-
-    @Override
-    boolean updateSatan(GameObject satan) {
-        return true;
-    }
-
-    @Override
-    boolean updateDevil(GameObject devil) {
-        return true;
-    }
-
-    @Override
-    boolean updateUmuDabrutu(GameObject umuDabrutu) {
-        return true;
-    }
-
-    @Override
-    boolean updateUrmahlullu(GameObject urmahlullu) {
-        return true;
-    }
-
-    @Override
-    boolean updateMushnahhu(GameObject mushnahhu) {
-        return true;
-    }
-
-    @Override
-    boolean updateUshum(GameObject ushum) {
-        return true;
-    }
-
-    @Override
-    boolean updateMushussu(GameObject mushussu) {
-        return true;
-    }
-
-    @Override
-    boolean updateMiniBoss(GameObject miniBoss) {
-        return true;
-    }
-
-    @Override
-    boolean updateTheBoss(GameObject theBoss) {
-        return true;
-    }
-
-    @Override
     boolean updateFairyPoint(GameObject fairyPoint) {
         if(Settings.isRandomizeNonBossDoors()) {
             Integer testFlagIndex = null;
@@ -1033,11 +870,6 @@ public class BaseRcdUpdater extends RcdUpdater {
                 fairyPoint.getTestByteOperations().remove((int)testFlagIndex);
             }
         }
-        return true;
-    }
-
-    @Override
-    boolean updateFog(GameObject fog) {
         return true;
     }
 
@@ -1185,16 +1017,6 @@ public class BaseRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateEyeOfRetribution(GameObject eyeOfRetribution) {
-        return true;
-    }
-
-    @Override
-    boolean updateExtendableSpikes(GameObject extendableSpikes) {
-        return true;
-    }
-
-    @Override
     boolean updateWarpPortal(GameObject warpPortal) {
         if(!warpPortal.getTestByteOperations().isEmpty() && warpPortal.getTestByteOperations().get(0).getIndex() == FlagConstants.ILLUSION_WARP_MAZE_ACTIVE) {
             // Remove broken pot flag check so the warp is just always active.
@@ -1258,11 +1080,6 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
             }
         }
-        return true;
-    }
-
-    @Override
-    boolean updateFallingRoom(GameObject crusher) {
         return true;
     }
 
@@ -1462,7 +1279,7 @@ public class BaseRcdUpdater extends RcdUpdater {
             // Conversation to inform of unlocking Big Brother's shop, to be removed and re-added if shuffling NPCs for simplicity.
             return false;
         }
-        else if(conversationDoor.getArgs().get(4) == 684 && !Settings.isHalloweenMode()) {
+        else if(conversationDoor.getArgs().get(4) == BlockConstants.Master_FairyQueen_RequestPendant && !Settings.isHalloweenMode()) {
             // First Fairy Queen conversation, completely unneeded for randomizer outside of Halloween.
             return false;
         }
@@ -1478,7 +1295,7 @@ public class BaseRcdUpdater extends RcdUpdater {
             // Fairy Queen conversation, to be removed and re-added if shuffling NPCs for simplicity.
             return false;
         }
-        else if(conversationDoor.getArgs().get(4) == 704 && Settings.isRandomizeNpcs()) {
+        else if(conversationDoor.getArgs().get(4) == BlockConstants.Master_PhilosopherFobos_Ladder && Settings.isRandomizeNpcs()) {
             // Giltoriyo, Alsedana, Samaranta, Fobos conversations without Philosopher's Ocarina
             return false;
         }
@@ -1541,7 +1358,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
             }
         }
-        else if(blockNumber == 677) {
+        else if(blockNumber == BlockConstants.Master_PhilosopherGiltoriyo) {
             // Giltoriyo mantra conversation
             for (WriteByteOperation flagUpdate : conversationDoor.getWriteByteOperations()) {
                 if(flagUpdate.getIndex() == FlagConstants.MANTRA_MARDUK) {
@@ -1549,7 +1366,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
             }
         }
-        else if(blockNumber == 681) {
+        else if(blockNumber == BlockConstants.Master_PriestTriton) {
             // Priest Triton - Extinction NPC, 06-09-01
 //            if(Settings.isRandomizeNpcs()) {
 //                for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
@@ -1590,7 +1407,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
             }
         }
-        else if(blockNumber == 689) {
+        else if(blockNumber == BlockConstants.Master_MrSlushfund_Pepper) {
             // Mr. Slushfund - Illusion NPC, 10-08-00
             // Conversation to receive Pepper
             for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
@@ -1614,7 +1431,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
             }
         }
-        else if(blockNumber == 691) {
+        else if(blockNumber == BlockConstants.Master_MrSlushfund_Anchor) {
             // Conversation to give Treasures and receive Anchor
             for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
                 if (flagTest.getIndex() == FlagConstants.MR_SLUSHFUND_CONVERSATION) {
@@ -1626,7 +1443,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
             }
         }
-        else if(blockNumber == 692) {
+        else if(blockNumber == BlockConstants.Master_MrSlushfund_NeverComeBack) {
             // Conversation after receiving both Pepper and Anchor
             for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
                 if (flagTest.getIndex() == FlagConstants.MR_SLUSHFUND_CONVERSATION) {
@@ -1640,7 +1457,7 @@ public class BaseRcdUpdater extends RcdUpdater {
             // Add a check for Pepper conversation (otherwise we could get this conversation before being given Pepper).
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER, ByteOp.FLAG_GT, 0));
         }
-        if(blockNumber == 693) {
+        if(blockNumber == BlockConstants.Master_PriestAlest) {
             // Priest Alest - Illusion NPC, 10-08-01
             // Mini Doll conversation
             for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
@@ -1650,7 +1467,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
             }
         }
-        else if(blockNumber == 694) {
+        else if(blockNumber == BlockConstants.Master_StrayFairy) {
             // Stray fairy - Illusion NPC, 10-00-01
             for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
                 if (flagTest.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
@@ -1714,7 +1531,7 @@ public class BaseRcdUpdater extends RcdUpdater {
             // Mulbruk misc conversation priority below Book of the Dead
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_BOOK, ByteOp.FLAG_NOT_EQUAL, 1));
         }
-        else if(blockNumber == 1082 || blockNumber == 1083 || blockNumber == 924) {
+        else if(blockNumber == 1082 || blockNumber == 1083 || blockNumber == BlockConstants.MulbrukEscapeRegular) {
             // Remove the flags that prevent normal Mulbruk convos if you have Forbidden Treasure/Provocative Bathing Suit
             Integer flagToRemoveIndex = null;
             for (int i = 0; i < conversationDoor.getTestByteOperations().size(); i++) {
@@ -1763,21 +1580,6 @@ public class BaseRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updatePushableBlock(GameObject pushableBlock) {
-        return true;
-    }
-
-    @Override
-    boolean updateBlockButton(GameObject blockButton) {
-        return true;
-    }
-
-    @Override
-    boolean updateHotSpring(GameObject hotSpring) {
-        return true;
-    }
-
-    @Override
     boolean updateExplosion(GameObject explosion) {
         if(Settings.isRandomizeTrapItems()) {
             if(!explosion.getTestByteOperations().isEmpty() && explosion.getTestByteOperations().get(0).getIndex() == FlagConstants.ILLUSION_PUZZLE_EXPLODING_CHEST) {
@@ -1785,11 +1587,6 @@ public class BaseRcdUpdater extends RcdUpdater {
                 return false;
             }
         }
-        return true;
-    }
-
-    @Override
-    boolean updateItemGive(GameObject itemGive) {
         return true;
     }
 
@@ -1967,11 +1764,6 @@ public class BaseRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateSnapshotsScan(GameObject snapshotsScan) {
-        return true;
-    }
-
-    @Override
     boolean updateTransitionGate(GameObject transitionGate) {
         ObjectContainer objectContainer = transitionGate.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
@@ -2114,7 +1906,7 @@ public class BaseRcdUpdater extends RcdUpdater {
 
     private void addEscapeGates() {
         if(Settings.isRandomizeTransitionGates()) {
-            for(GameObject transitionGate : rcdData.getObjectsById(ObjectIdConstants.TransitionGate)) {
+            for(GameObject transitionGate : rcdFileData.getObjectsById(ObjectIdConstants.TransitionGate)) {
                 Screen screen = (Screen)transitionGate.getObjectContainer();
 //                FileUtils.logFlush(String.format("Gate on screen [%d, %d, %d] leads to screen [%d, %d, %d] with position (%d, %d)",
 //                        screen.getZoneIndex(), screen.getRoomIndex(), screen.getScreenIndex(),
@@ -2207,7 +1999,7 @@ public class BaseRcdUpdater extends RcdUpdater {
 
     private void addGrailTabletLemezaDetectors() {
         if(Settings.isAutomaticGrailPoints()) {
-            for(GameObject scannable : rcdData.getObjectsById(ObjectIdConstants.Scannable)) {
+            for(GameObject scannable : rcdFileData.getObjectsById(ObjectIdConstants.Scannable)) {
                 ObjectContainer objectContainer = scannable.getObjectContainer();
                 if(!(objectContainer instanceof Screen)) {
                     continue;
@@ -2232,7 +2024,7 @@ public class BaseRcdUpdater extends RcdUpdater {
 
     private void addMissingBacksideDoorObjects() {
         if(Settings.isRandomizeBacksideDoors() && !Settings.isRandomizeNonBossDoors()) {
-            for(GameObject warpDoor : rcdData.getObjectsById(ObjectIdConstants.WarpDoor)) {
+            for(GameObject warpDoor : rcdFileData.getObjectsById(ObjectIdConstants.WarpDoor)) {
                 if(warpDoor.getArgs().get(0) == 0) {
                     Screen screen = (Screen)warpDoor.getObjectContainer();
                     int zone = screen.getZoneIndex();
@@ -2264,7 +2056,7 @@ public class BaseRcdUpdater extends RcdUpdater {
     }
 
     private void updateStartingScreen() {
-        Screen screen = rcdData.getScreen(LocationCoordinateMapper.getStartingZone(),
+        Screen screen = rcdFileData.getScreen(LocationCoordinateMapper.getStartingZone(),
                 LocationCoordinateMapper.getStartingRoom(),
                 LocationCoordinateMapper.getStartingScreen());
         int zoneIndex = screen.getZoneIndex();
@@ -2288,42 +2080,42 @@ public class BaseRcdUpdater extends RcdUpdater {
 
     private void addStartingShop(Screen screen, int zoneIndex) {
         if(zoneIndex == 0) {
-            GameDataTracker.setCustomShop(AddObject.addGuidanceShop(screen));
+            GameDataTracker.trackDefaultShop(AddObject.addGuidanceShop(screen, getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock)));
         }
         else if(zoneIndex == 2) {
-            GameDataTracker.setCustomShop(AddObject.addMausoleumShop(screen));
+            GameDataTracker.trackDefaultShop(AddObject.addMausoleumShop(screen, getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock)));
         }
         else if(zoneIndex == 5) {
-            GameDataTracker.setCustomShop(AddObject.addInfernoShop(screen));
+            GameDataTracker.trackDefaultShop(AddObject.addInfernoShop(screen, getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock)));
         }
         else if(zoneIndex == 7) {
             if(Settings.getCurrentStartingLocation() == -7) {
-                GameDataTracker.setCustomShop(AddObject.addTwinLabsBackShop(screen));
+                GameDataTracker.trackDefaultShop(AddObject.addTwinLabsBackShop(screen, getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock)));
             }
             else {
-                GameDataTracker.setCustomShop(AddObject.addTwinLabsFrontShop(screen));
+                GameDataTracker.trackDefaultShop(AddObject.addTwinLabsFrontShop(screen, getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock)));
             }
         }
         else if(zoneIndex == 8) {
-            GameDataTracker.setCustomShop(AddObject.addEndlessShop(screen));
+            GameDataTracker.trackDefaultShop(AddObject.addEndlessShop(screen, getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock)));
         }
         else if(zoneIndex == 10) {
-            GameDataTracker.setCustomShop(AddObject.addIllusionShop(screen));
+            GameDataTracker.trackDefaultShop(AddObject.addIllusionShop(screen, getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock)));
         }
         else if(zoneIndex == 11) {
-            GameDataTracker.setCustomShop(AddObject.addGraveyardShop(screen));
+            GameDataTracker.trackDefaultShop(AddObject.addGraveyardShop(screen, getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock)));
         }
         else if(zoneIndex == 13) {
-            GameDataTracker.setCustomShop(AddObject.addGoddessShop(screen));
+            GameDataTracker.trackDefaultShop(AddObject.addGoddessShop(screen, getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock)));
         }
         else if(zoneIndex == 14) {
-            GameDataTracker.setCustomShop(AddObject.addRuinShop(screen));
+            GameDataTracker.trackDefaultShop(AddObject.addRuinShop(screen, getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock)));
         }
         else if(zoneIndex == 16) {
-            GameDataTracker.setCustomShop(AddObject.addBirthStartStuff(screen));
+            GameDataTracker.trackDefaultShop(AddObject.addBirthStartStuff(screen, getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock)));
         }
         else if(zoneIndex == 21) {
-            GameDataTracker.setCustomShop(AddObject.addRetroSurfaceShop(screen));
+            GameDataTracker.trackDefaultShop(AddObject.addRetroSurfaceShop(screen, getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock)));
         }
     }
 
@@ -2757,10 +2549,6 @@ public class BaseRcdUpdater extends RcdUpdater {
                 AddObject.addAngelShieldPuzzleTimers(screen);
             }
         }
-    }
-
-    @Override
-    void addUntrackedCustomNoPositionZoneObjects(Zone zone) {
     }
 
     @Override

@@ -126,7 +126,7 @@ public abstract class ShopRandomizer {
                     String npcLocationKey = npcRandomizer.getShopNpcLocation(shop);
                     if(npcLocationKey != null) {
                         npcLocationKey = npcLocationKey.replaceAll("NPCL: ", "").replaceAll("[ )('-.]", "");
-                        writer.write(Translations.getText("npc." + npcLocationKey).replaceAll("：", ":")
+                        writer.write(Translations.getText("npc." + npcLocationKey) + ":"
                                 + Translations.getText("npcl." + npcLocationKey).replaceAll("：", ":"));
                         writer.newLine();
                     }

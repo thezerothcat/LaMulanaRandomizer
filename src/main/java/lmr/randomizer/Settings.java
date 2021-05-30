@@ -624,7 +624,7 @@ public final class Settings {
     }
 
     public static boolean isRandomizeNpcs() {
-        return isFools2021Mode() || singleton.randomizeNpcs;
+        return isFools2021Mode() || (!isHalloweenMode() && singleton.randomizeNpcs);
     }
 
     public static void setRandomizeNpcs(boolean randomizeNpcs, boolean update) {

@@ -3954,8 +3954,9 @@ public class AddObjectTest {
     @Test
     public void testAddGuidanceShop() {
         Screen screen = new Screen();
+        short blockNumber = 1234;
 
-        AddObject.addGuidanceShop(screen);
+        AddObject.addGuidanceShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -3999,7 +4000,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(3), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(4), 36);
+        Assert.assertEquals((int)gameObject.getArgs().get(4), blockNumber);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(6), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 7);
@@ -4010,8 +4011,9 @@ public class AddObjectTest {
     @Test
     public void testAddMausoleumShop() {
         Screen screen = new Screen();
+        short blockNumber = 1234;
 
-        AddObject.addMausoleumShop(screen);
+        AddObject.addMausoleumShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4055,7 +4057,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(3), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(4), 36);
+        Assert.assertEquals((int)gameObject.getArgs().get(4), blockNumber);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(6), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 7);
@@ -4066,8 +4068,9 @@ public class AddObjectTest {
     @Test
     public void testAddInfernoShop() {
         Screen screen = new Screen();
+        short blockNumber = 1234;
 
-        AddObject.addInfernoShop(screen);
+        AddObject.addInfernoShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4111,7 +4114,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(3), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(4), 36);
+        Assert.assertEquals((int)gameObject.getArgs().get(4), blockNumber);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(6), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 7);
@@ -4122,8 +4125,9 @@ public class AddObjectTest {
     @Test
     public void testAddIllusionShop() {
         Screen screen = new Screen();
+        short blockNumber = 1234;
 
-        AddObject.addIllusionShop(screen);
+        AddObject.addIllusionShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4167,7 +4171,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(3), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(4), 36);
+        Assert.assertEquals((int)gameObject.getArgs().get(4), blockNumber);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(6), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 7);
@@ -4178,8 +4182,9 @@ public class AddObjectTest {
     @Test
     public void testAddTwinLabsFrontShop() {
         Screen screen = new Screen();
+        short blockNumber = 1234;
 
-        AddObject.addTwinLabsFrontShop(screen);
+        AddObject.addTwinLabsFrontShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4223,7 +4228,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(3), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(4), 36);
+        Assert.assertEquals((int)gameObject.getArgs().get(4), blockNumber);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(6), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 7);
@@ -4234,8 +4239,9 @@ public class AddObjectTest {
     @Test
     public void testAddTwinLabsBackShop() {
         Screen screen = new Screen();
+        short blockNumber = 1234;
 
-        AddObject.addTwinLabsBackShop(screen);
+        AddObject.addTwinLabsBackShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4279,7 +4285,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(3), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(4), 36);
+        Assert.assertEquals((int)gameObject.getArgs().get(4), blockNumber);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(6), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 7);
@@ -4290,8 +4296,9 @@ public class AddObjectTest {
     @Test
     public void testAddEndlessShop() {
         Screen screen = new Screen();
+        short blockNumber = 1332;
 
-        AddObject.addEndlessShop(screen);
+        AddObject.addEndlessShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4335,7 +4342,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(3), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(4), 36);
+        Assert.assertEquals((int)gameObject.getArgs().get(4), blockNumber);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(6), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 7);
@@ -4346,8 +4353,9 @@ public class AddObjectTest {
     @Test
     public void testAddGraveyardShop() {
         Screen screen = new Screen();
+        short blockNumber = 1332;
 
-        AddObject.addGraveyardShop(screen);
+        AddObject.addGraveyardShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4391,7 +4399,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(3), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(4), 36);
+        Assert.assertEquals((int)gameObject.getArgs().get(4), blockNumber);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(6), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 7);
@@ -4402,8 +4410,9 @@ public class AddObjectTest {
     @Test
     public void testAddGoddessShop() {
         Screen screen = new Screen();
+        short blockNumber = 1234;
 
-        AddObject.addGoddessShop(screen);
+        AddObject.addGoddessShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4447,7 +4456,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(3), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(4), 36);
+        Assert.assertEquals((int)gameObject.getArgs().get(4), blockNumber);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(6), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 7);
@@ -4458,8 +4467,9 @@ public class AddObjectTest {
     @Test
     public void testAddRuinShop() {
         Screen screen = new Screen();
+        short blockNumber = 1332;
 
-        AddObject.addRuinShop(screen);
+        AddObject.addRuinShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4503,7 +4513,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(3), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(4), 36);
+        Assert.assertEquals((int)gameObject.getArgs().get(4), blockNumber);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(6), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 7);
@@ -4514,8 +4524,9 @@ public class AddObjectTest {
     @Test
     public void testAddBirthStartStuff() {
         Screen screen = new Screen();
+        short blockNumber = 1234;
 
-        AddObject.addBirthStartStuff(screen);
+        AddObject.addBirthStartStuff(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4559,7 +4570,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(3), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(4), 36);
+        Assert.assertEquals((int)gameObject.getArgs().get(4), blockNumber);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(6), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 7);
@@ -4669,8 +4680,9 @@ public class AddObjectTest {
     @Test
     public void testAddRetroSurfaceShop() {
         Screen screen = new Screen();
+        short blockNumber = 273;
 
-        AddObject.addRetroSurfaceShop(screen);
+        AddObject.addRetroSurfaceShop(screen, blockNumber);
 
         // Door graphics, part 1
         GameObject gameObject = screen.getObjects().get(0);
@@ -4747,7 +4759,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(3), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(4), 36);
+        Assert.assertEquals((int)gameObject.getArgs().get(4), blockNumber);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(6), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 7);
@@ -5698,13 +5710,14 @@ public class AddObjectTest {
     }
 
     @Test
-    public void testAddHTSkip() {
+    public void testAddHTSkipTablet() {
         Screen screen = new Screen();
         List<Block> blocks = new ArrayList<>();
         blocks.add(new Block(0));
         blocks.add(new Block(1));
         blocks.add(new Block(2));
         blocks.add(new Block(3));
+        short tabletBlock = 3;
 
         try {
             Translations.initTranslations();
@@ -5712,10 +5725,10 @@ public class AddObjectTest {
         catch(Exception ex) {
             Assert.fail("Unable to initialize translations");
         }
-        AddObject.addHTSkip(screen, blocks);
+        AddObject.addHTSkipTablet(screen, tabletBlock);
 
-        Assert.assertEquals(blocks.size(), 5);
-        Assert.assertEquals(blocks.get(blocks.size() - 1).getBlockNumber(), 4);
+        Assert.assertEquals(blocks.size(), 4);
+        Assert.assertEquals(blocks.get(blocks.size() - 1).getBlockNumber(), 3);
 
         Assert.assertEquals(screen.getObjects().size(), 3);
 
@@ -5723,7 +5736,7 @@ public class AddObjectTest {
         Assert.assertEquals(gameObject.getId(), 0x9e);
         Assert.assertEquals(gameObject.getX(), 60);
         Assert.assertEquals(gameObject.getY(), 400);
-        Assert.assertEquals((int)gameObject.getArgs().get(0), 4);
+        Assert.assertEquals((int)gameObject.getArgs().get(0), tabletBlock);
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(3), 1);
@@ -5793,12 +5806,13 @@ public class AddObjectTest {
     }
 
     @Test
-    public void testAddHTWarning() {
+    public void testAddHTGrailWarningTablet() {
         Screen screen = new Screen();
         List<Block> blocks = new ArrayList<>();
         blocks.add(new Block(0));
         blocks.add(new Block(1));
         blocks.add(new Block(2));
+        short blockNumber = 1;
 
         try {
             Translations.initTranslations();
@@ -5806,16 +5820,7 @@ public class AddObjectTest {
         catch(Exception ex) {
             Assert.fail("Unable to initialize translations");
         }
-        AddObject.addHTWarning(screen, blocks);
-
-        Assert.assertEquals(blocks.size(), 4);
-        Assert.assertEquals(blocks.get(blocks.size() - 1).getBlockNumber(), 3);
-        Block tabletBlock = blocks.get(blocks.size() - 1);
-        BlockContents tabletData = tabletBlock.getBlockContents().get(tabletBlock.getBlockContents().size() - 1);
-        Assert.assertTrue(tabletData instanceof BlockListData, "Expected tablet data list at end of block contents");
-        List<Short> tabletDataList = ((BlockListData)tabletData).getData();
-        Assert.assertEquals((int)tabletDataList.get(0), 0, "Expected tablet language of English");
-        Assert.assertEquals((int)tabletDataList.get(1), 0, "Expected tablet image of none");
+        AddObject.addHTGrailWarningTablet(screen, blockNumber);
 
         Assert.assertEquals(screen.getObjects().size(), 2);
 
@@ -5823,7 +5828,7 @@ public class AddObjectTest {
         Assert.assertEquals(gameObject.getId(), 0x9e);
         Assert.assertEquals(gameObject.getX(), 120);
         Assert.assertEquals(gameObject.getY(), 400);
-        Assert.assertEquals((int)gameObject.getArgs().get(0), 3);
+        Assert.assertEquals((int)gameObject.getArgs().get(0), blockNumber);
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(3), 1);

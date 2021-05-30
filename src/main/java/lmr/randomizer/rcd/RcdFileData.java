@@ -8,10 +8,10 @@ import lmr.randomizer.rcd.object.Zone;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RcdData {
+public class RcdFileData {
     private List<Zone> zones;
 
-    public RcdData(List<Zone> zones) {
+    public RcdFileData(List<Zone> zones) {
         this.zones = zones;
     }
 

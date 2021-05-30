@@ -1,10 +1,13 @@
 package lmr.randomizer.dat.shop;
 
 import lmr.randomizer.dat.Block;
+import lmr.randomizer.dat.BlockDataConstants;
 import lmr.randomizer.dat.BlockListData;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by thezerothcat on 7/26/2017.
@@ -48,6 +51,10 @@ public class ShopBlock extends Block {
 
     private BlockStringData bunemonLocation;
     private BlockStringData bunemonText;
+
+    public ShopBlock() {
+        super();
+    }
 
     public ShopBlock(int blockNumber) {
         super(blockNumber);
@@ -293,6 +300,43 @@ public class ShopBlock extends Block {
         size += bunemonLocation.getSize() + 2;
         size += bunemonText.getSize(); // No 0x000a after this one
         return size;
+    }
+
+    @Override
+    public List<Short> getRawData() {
+        List<Short> rawData = new ArrayList<>();
+        rawData.add((short)getBlockSize());
+
+        rawData.addAll(inventoryItemArgsList.getRawData());
+        rawData.add(BlockDataConstants.EndOfEntry);
+
+        rawData.addAll(inventoryPriceList.getRawData());
+        rawData.add(BlockDataConstants.EndOfEntry);
+
+        rawData.addAll(inventoryCountList.getRawData());
+        rawData.add(BlockDataConstants.EndOfEntry);
+
+        rawData.addAll(flagList.getRawData());
+        rawData.add(BlockDataConstants.EndOfEntry);
+
+        for(int i = 0; i < 18; i++) {
+            rawData.addAll(getString(i).getRawData());
+            rawData.add(BlockDataConstants.EndOfEntry);
+        }
+
+        rawData.addAll(background.getRawData());
+        rawData.addAll(sprite.getRawData());
+
+        rawData.addAll(exitFlagList.getRawData());
+        rawData.add(BlockDataConstants.EndOfEntry);
+
+        rawData.addAll(music.getRawData());
+
+        rawData.addAll(bunemonLocation.getRawData());
+        rawData.add(BlockDataConstants.EndOfEntry);
+
+        rawData.addAll(bunemonText.getRawData());
+        return rawData;
     }
 
     @Override

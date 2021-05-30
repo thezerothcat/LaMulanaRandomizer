@@ -1895,7 +1895,7 @@ public final class AddObject {
         screen.getObjects().add(enemy);
     }
 
-    public static GameObject addGuidanceShop(Screen screen) {
+    public static GameObject addGuidanceShop(Screen screen, short shopBlockIndex) {
         GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 240, 380);
 
         graphic.setLayer(0);
@@ -1913,12 +1913,13 @@ public final class AddObject {
 
         ConversationDoor shop = new ConversationDoor(screen, 240, 400);
         shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
 
         screen.getObjects().add(shop);
         return shop;
     }
 
-    public static GameObject addMausoleumShop(Screen screen) {
+    public static GameObject addMausoleumShop(Screen screen, short shopBlockIndex) {
         GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 300, 240);
 
         graphic.setLayer(0);
@@ -1936,12 +1937,13 @@ public final class AddObject {
 
         ConversationDoor shop = new ConversationDoor(screen, 300, 240);
         shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
 
         screen.getObjects().add(shop);
         return shop;
     }
 
-    public static GameObject addInfernoShop(Screen screen) {
+    public static GameObject addInfernoShop(Screen screen, short shopBlockIndex) {
         GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 220, 60);
 
         graphic.setLayer(0);
@@ -1959,12 +1961,13 @@ public final class AddObject {
 
         ConversationDoor shop = new ConversationDoor(screen, 240, 80);
         shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
 
         screen.getObjects().add(shop);
         return shop;
     }
 
-    public static GameObject addIllusionShop(Screen screen) {
+    public static GameObject addIllusionShop(Screen screen, short shopBlockIndex) {
         GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 220, 80);
 
         graphic.setLayer(0);
@@ -1982,12 +1985,13 @@ public final class AddObject {
 
         ConversationDoor shop = new ConversationDoor(screen, 220, 80);
         shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
 
         screen.getObjects().add(shop);
         return shop;
     }
 
-    public static GameObject addTwinLabsFrontShop(Screen screen) {
+    public static GameObject addTwinLabsFrontShop(Screen screen, short shopBlockIndex) {
         GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 880, 380);
 
         graphic.setLayer(0);
@@ -2005,12 +2009,13 @@ public final class AddObject {
 
         ConversationDoor shop = new ConversationDoor(screen, 900, 400);
         shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
 
         screen.getObjects().add(shop);
         return shop;
     }
 
-    public static GameObject addTwinLabsBackShop(Screen screen) {
+    public static GameObject addTwinLabsBackShop(Screen screen, short shopBlockIndex) {
         GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 920, 220);
 
         graphic.setLayer(0);
@@ -2028,12 +2033,13 @@ public final class AddObject {
 
         ConversationDoor shop = new ConversationDoor(screen, 940, 240);
         shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
 
         screen.getObjects().add(shop);
         return shop;
     }
 
-    public static GameObject addEndlessShop(Screen screen) {
+    public static GameObject addEndlessShop(Screen screen, short shopBlockIndex) {
         GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 500, 40);
 
         graphic.setLayer(0);
@@ -2051,12 +2057,13 @@ public final class AddObject {
 
         ConversationDoor shop = new ConversationDoor(screen, 520, 80);
         shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
 
         screen.getObjects().add(shop);
         return shop;
     }
 
-    public static GameObject addGraveyardShop(Screen screen) {
+    public static GameObject addGraveyardShop(Screen screen, short shopBlockIndex) {
         GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 880, 140);
 
         graphic.setLayer(0);
@@ -2074,12 +2081,13 @@ public final class AddObject {
 
         ConversationDoor shop = new ConversationDoor(screen, 880, 160);
         shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
 
         screen.getObjects().add(shop);
         return shop;
     }
 
-    public static GameObject addGoddessShop(Screen screen) {
+    public static GameObject addGoddessShop(Screen screen, short shopBlockIndex) {
         GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 940, 300);
 
         graphic.setLayer(0);
@@ -2097,12 +2105,13 @@ public final class AddObject {
 
         ConversationDoor shop = new ConversationDoor(screen, 940, 320);
         shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
 
         screen.getObjects().add(shop);
         return shop;
     }
 
-    public static GameObject addRuinShop(Screen screen) {
+    public static GameObject addRuinShop(Screen screen, short shopBlockIndex) {
         GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 200, 380);
 
         graphic.setLayer(0);
@@ -2120,12 +2129,13 @@ public final class AddObject {
 
         ConversationDoor shop = new ConversationDoor(screen, 200, 400);
         shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
 
         screen.getObjects().add(shop);
         return shop;
     }
 
-    public static GameObject addBirthStartStuff(Screen screen) {
+    public static GameObject addBirthStartStuff(Screen screen, short shopBlockIndex) {
         GraphicsTextureDraw shopGraphic = new GraphicsTextureDraw(screen, 140, 300);
 
         shopGraphic.setLayer(0);
@@ -2143,6 +2153,7 @@ public final class AddObject {
 
         ConversationDoor shop = new ConversationDoor(screen, 140, 320);
         shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
 
         screen.getObjects().add(shop);
 
@@ -2194,7 +2205,7 @@ public final class AddObject {
         return shop;
     }
 
-    public static GameObject addRetroSurfaceShop(Screen screen) {
+    public static GameObject addRetroSurfaceShop(Screen screen, short shopBlockIndex) {
         GraphicsTextureDraw tent = new GraphicsTextureDraw(screen, 480,200);
 
         tent.setLayer(0);
@@ -2227,6 +2238,7 @@ public final class AddObject {
 
         ConversationDoor shop = new ConversationDoor(screen, 500, 240);
         shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
 
         screen.getObjects().add(shop);
         return shop;
@@ -2610,42 +2622,42 @@ public final class AddObject {
         screen.getObjects().add(obj);
     }
 
-    public static ShopBlock addShopBlock(List<Block> blocks) {
-        ShopBlock shopBlock = new ShopBlock(blocks.size());
+    public static ShopBlock buildShopBlock() {
+        ShopBlock shopBlock = new ShopBlock();
 
-        BlockListData shopBlockData = new BlockListData((short)0x004e, (short)3);
+        BlockListData shopBlockData = new BlockListData((short)3);
         shopBlockData.getData().add((short)105);
         shopBlockData.getData().add((short)105);
         shopBlockData.getData().add((short)105);
-        shopBlockData.getData().add((short)0x000a);
+        shopBlockData.getData().add(BlockDataConstants.EndOfEntry);
         shopBlock.setInventoryItemArgsList(shopBlockData);
 
-        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData = new BlockListData((short)3);
         shopBlockData.getData().add((short)10);
         shopBlockData.getData().add((short)10);
         shopBlockData.getData().add((short)10);
-        shopBlockData.getData().add((short)0x000a);
+        shopBlockData.getData().add(BlockDataConstants.EndOfEntry);
         shopBlock.setInventoryPriceList(shopBlockData);
 
-        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData = new BlockListData((short)3);
         shopBlockData.getData().add((short)5);
         shopBlockData.getData().add((short)5);
         shopBlockData.getData().add((short)5);
-        shopBlockData.getData().add((short)0x000a);
+        shopBlockData.getData().add(BlockDataConstants.EndOfEntry);
         shopBlock.setInventoryCountList(shopBlockData);
 
-        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData = new BlockListData((short)3);
         shopBlockData.getData().add((short)0);
         shopBlockData.getData().add((short)0);
         shopBlockData.getData().add((short)0);
-        shopBlockData.getData().add((short)0x000a);
+        shopBlockData.getData().add(BlockDataConstants.EndOfEntry);
         shopBlock.setFlagList(shopBlockData);
 
-        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData = new BlockListData((short)3);
         shopBlockData.getData().add((short)0);
         shopBlockData.getData().add((short)0);
         shopBlockData.getData().add((short)0);
-        shopBlockData.getData().add((short)0x000a);
+        shopBlockData.getData().add(BlockDataConstants.EndOfEntry);
         shopBlock.setExitFlagList(shopBlockData);
 
         shopBlock.setBackground(new BlockCmdSingle((short)4));
@@ -2658,7 +2670,8 @@ public final class AddObject {
 
         blockStringData = new BlockStringData();
         blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText(
-                "shop0.screenName.zone" + LocationCoordinateMapper.getStartingZone() + (LocationCoordinateMapper.isFrontsideStart() ? ".front" : ".back"))));
+                "shop0.screenName.zone" + LocationCoordinateMapper.getStartingZone()
+                        + (LocationCoordinateMapper.isFrontsideStart() ? ".front" : ".back"))));
         shopBlock.setBunemonLocation(blockStringData);
 
         blockStringData = new BlockStringData();
@@ -2675,7 +2688,7 @@ public final class AddObject {
 
         blockStringData = new BlockStringData();
         List<Short> data = FileUtils.stringToData(Translations.getText("shop0.askItem1String.1"));
-        data.add((short)0x004a);
+        data.add(BlockDataConstants.ColorChange);
         data.add((short)0x96);
         data.add((short)0);
         data.add((short)0x64);
@@ -2683,7 +2696,7 @@ public final class AddObject {
         blockStringData.setItemNameEndIndex(blockStringData.getItemNameStartIndex() + 2);
         data.add((short)77);
         data.add((short)105);
-        data.add((short)0x004a);
+        data.add(BlockDataConstants.ColorChange);
         data.add((short)0);
         data.add((short)0);
         data.add((short)0);
@@ -2693,7 +2706,7 @@ public final class AddObject {
 
         blockStringData = new BlockStringData();
         data = FileUtils.stringToData(Translations.getText("shop0.askItem2String.1"));
-        data.add((short)0x004a);
+        data.add(BlockDataConstants.ColorChange);
         data.add((short)0x96);
         data.add((short)0);
         data.add((short)0x64);
@@ -2701,7 +2714,7 @@ public final class AddObject {
         blockStringData.setItemNameEndIndex(blockStringData.getItemNameStartIndex() + 2);
         data.add((short)77);
         data.add((short)105);
-        data.add((short)0x004a);
+        data.add(BlockDataConstants.ColorChange);
         data.add((short)0);
         data.add((short)0);
         data.add((short)0);
@@ -2711,7 +2724,7 @@ public final class AddObject {
 
         blockStringData = new BlockStringData();
         data = FileUtils.stringToData(Translations.getText("shop0.askItem3String.1"));
-        data.add((short)0x004a);
+        data.add(BlockDataConstants.ColorChange);
         data.add((short)0x96);
         data.add((short)0);
         data.add((short)0x64);
@@ -2719,7 +2732,7 @@ public final class AddObject {
         blockStringData.setItemNameEndIndex(blockStringData.getItemNameStartIndex() + 2);
         data.add((short)77);
         data.add((short)105);
-        data.add((short)0x004a);
+        data.add(BlockDataConstants.ColorChange);
         data.add((short)0);
         data.add((short)0);
         data.add((short)0);
@@ -2774,38 +2787,50 @@ public final class AddObject {
         blockStringData = new BlockStringData();
         blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.noMoneyItem3String")));
         shopBlock.setString(blockStringData, 17);
-        blocks.add(shopBlock);
         return shopBlock;
     }
 
-    public static ShopBlock addSecretShopBlock(List<Block> blocks) {
-        ShopBlock shopBlock = new ShopBlock(blocks.size());
+    public static Block buildXelpudIntroBlock() {
+        Block introBlock = new Block();
+        introBlock.getBlockContents().add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
+        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText(Settings.isFools2019Mode() ? "fools.xelpudText" : "text.xelpudWarn"));
+        for(Short shortCharacter : stringCharacters) {
+            introBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        introBlock.getBlockContents().add(new BlockFlagData((short)FlagConstants.RANDOMIZER_SAVE_LOADED, (short)2));
+        introBlock.getBlockContents().add(new BlockFlagData((short)FlagConstants.XELPUD_CONVERSATION_INTRO, (short)1));
+        introBlock.getBlockContents().add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)0));
+        return introBlock;
+    }
 
-        BlockListData shopBlockData = new BlockListData((short)0x004e, (short)3);
+    public static ShopBlock buildSecretShopBlock() {
+        ShopBlock shopBlock = new ShopBlock();
+
+        BlockListData shopBlockData = new BlockListData((short)3);
         shopBlockData.getData().add(DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Scriptures").getInventoryArg());
         shopBlockData.getData().add(DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Perfume").getInventoryArg());
         shopBlockData.getData().add((short)0x06a);
         shopBlock.setInventoryItemArgsList(shopBlockData);
 
-        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData = new BlockListData((short)3);
         shopBlockData.getData().add((short)1);
         shopBlockData.getData().add((short)1);
         shopBlockData.getData().add((short)0);
         shopBlock.setInventoryPriceList(shopBlockData);
 
-        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData = new BlockListData((short)3);
         shopBlockData.getData().add((short)1);
         shopBlockData.getData().add((short)1);
         shopBlockData.getData().add((short)100);
         shopBlock.setInventoryCountList(shopBlockData);
 
-        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData = new BlockListData((short)3);
         shopBlockData.getData().add((short)0);
         shopBlockData.getData().add((short)0);
         shopBlockData.getData().add((short)0);
         shopBlock.setFlagList(shopBlockData);
 
-        shopBlockData = new BlockListData((short)0x004e, (short)3);
+        shopBlockData = new BlockListData((short)3);
         shopBlockData.getData().add((short)0);
         shopBlockData.getData().add((short)0);
         shopBlockData.getData().add((short)0);
@@ -2839,7 +2864,7 @@ public final class AddObject {
 
         blockStringData = new BlockStringData();
         List<Short> data = FileUtils.stringToData(Translations.getText("shop0.askItem1String.1"));
-        data.add((short)0x004a);
+        data.add(BlockDataConstants.ColorChange);
         data.add((short)0x96);
         data.add((short)0);
         data.add((short)0x64);
@@ -2847,7 +2872,7 @@ public final class AddObject {
         blockStringData.setItemNameEndIndex(blockStringData.getItemNameStartIndex() + 2);
         data.add((short)77);
         data.add((short)105);
-        data.add((short)0x004a);
+        data.add(BlockDataConstants.ColorChange);
         data.add((short)0);
         data.add((short)0);
         data.add((short)0);
@@ -2857,7 +2882,7 @@ public final class AddObject {
 
         blockStringData = new BlockStringData();
         data = FileUtils.stringToData(Translations.getText("shop0.askItem2String.1"));
-        data.add((short)0x004a);
+        data.add(BlockDataConstants.ColorChange);
         data.add((short)0x96);
         data.add((short)0);
         data.add((short)0x64);
@@ -2865,7 +2890,7 @@ public final class AddObject {
         blockStringData.setItemNameEndIndex(blockStringData.getItemNameStartIndex() + 2);
         data.add((short)77);
         data.add((short)105);
-        data.add((short)0x004a);
+        data.add(BlockDataConstants.ColorChange);
         data.add((short)0);
         data.add((short)0);
         data.add((short)0);
@@ -2875,7 +2900,7 @@ public final class AddObject {
 
         blockStringData = new BlockStringData();
         data = FileUtils.stringToData(Translations.getText("shop0.askItem3String.1"));
-        data.add((short)0x004a);
+        data.add(BlockDataConstants.ColorChange);
         data.add((short)0x96);
         data.add((short)0);
         data.add((short)0x64);
@@ -2883,7 +2908,7 @@ public final class AddObject {
         blockStringData.setItemNameEndIndex(blockStringData.getItemNameStartIndex() + 2);
         data.add((short)77);
         data.add((short)105);
-        data.add((short)0x004a);
+        data.add(BlockDataConstants.ColorChange);
         data.add((short)0);
         data.add((short)0);
         data.add((short)0);
@@ -2938,91 +2963,334 @@ public final class AddObject {
         blockStringData = new BlockStringData();
         blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.noMoneyItem3String")));
         shopBlock.setString(blockStringData, 17);
-        blocks.add(shopBlock);
         return shopBlock;
     }
 
-    public static Block addDanceBlock(List<Block> blocks) {
-        Block danceBlock = new Block(blocks.size());
-        BlockListData danceMove = new BlockListData((short)0x004e, (short)1);
+    public static Block buildDanceBlock() {
+        Block danceBlock = new Block();
+        BlockListData danceMove = new BlockListData((short)1);
         danceMove.getData().add((short)1); // Jump
         danceBlock.getBlockContents().add(danceMove);
         danceBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
 
-        danceMove = new BlockListData((short)0x004e, (short)1);
+        danceMove = new BlockListData((short)1);
         danceMove.getData().add((short)3); // Swing right
         danceBlock.getBlockContents().add(danceMove);
         danceBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
 
-        danceMove = new BlockListData((short)0x004e, (short)1);
+        danceMove = new BlockListData((short)1);
         danceMove.getData().add((short)1); // Jump
         danceBlock.getBlockContents().add(danceMove);
         danceBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
 
-        danceMove = new BlockListData((short)0x004e, (short)1);
+        danceMove = new BlockListData((short)1);
         danceMove.getData().add((short)2); // Swing left
         danceBlock.getBlockContents().add(danceMove);
 
-        blocks.add(danceBlock);
         return danceBlock;
     }
 
-    public static int addNpcBlock(List<Block> blocks, int templateBlockIndex, int conversationFlagIndex) {
-        Block templateBlock = blocks.get(templateBlockIndex);
-        if(templateBlock instanceof MasterNpcBlock) {
-            Block halloweenBlock = new Block(blocks.size());
-            halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
+    public static Block buildHalloweenCandyBlock(CustomBlockEnum customBlockEnum) {
+        int npcConversationFlag = 0;
+        String textPart2Key = "event.halloween.text2";
+        if(CustomBlockEnum.HalloweenCandyConversationBlock_Hiner.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_Hiner);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_Moger.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_Moger);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_FormerMekuriMaster.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_FormerMekuriMaster_Mekuri);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestZarnac.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestZarnac);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestXanado.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestXanado);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PhilosopherGiltoriyo.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PhilosopherGiltoriyo);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestHidlyda.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestHidlyda);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestRomancis.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestRomancis);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestAramo.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestAramo);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestTriton.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestTriton);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestJaguarfiv.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestJaguarfiv);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_MrSlushfund.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper);
+            textPart2Key = "event.halloween.fraud";
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestAlest.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestAlest);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_StrayFairy.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_StrayFairy);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_GiantThexde.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_GiantThexde);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PhilosopherAlsedana.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PhilosopherAlsedana);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PhilosopherSamaranta.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PhilosopherSamaranta);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestLaydoc.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestLaydoc);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestAshgine.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestAshgine);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PhilosopherFobos.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PhilosopherFobos_Ladder);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_8BitElder.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_8BitElder);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_duplex.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_duplex);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_Samieru.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_Samieru);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_Naramura.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_Naramura);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_8bitFairy.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_8BitFairy);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestMadomono.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestMadomono);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestGailious.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestGailious);
+        }
+        else if(CustomBlockEnum.HalloweenCandyConversationBlock_NightSurfaceFairy.equals(customBlockEnum)) {
+            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_Fairy_NightSurface);
+        }
+
+        if(npcConversationFlag > 0) {
+            Block candyBlock = new Block();
+            List<BlockContents> candyBlockContents = candyBlock.getBlockContents();
+            candyBlockContents.add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, 1));
             List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.text1"));
             for (Short shortCharacter : stringCharacters) {
-                halloweenBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+                candyBlockContents.add(new BlockSingleData(shortCharacter));
             }
-            halloweenBlock.getBlockContents().add(new BlockItemData((short)0x0042, (short)84)); // Secret Treasure of Life
-            halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)conversationFlagIndex, (short)1));
-            halloweenBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+            candyBlockContents.add(new BlockItemData(ItemConstants.SECRET_TREASURE_OF_LIFE));
+            candyBlockContents.add(new BlockFlagData(npcConversationFlag, 1));
+            candyBlockContents.add(new BlockSingleData(BlockDataConstants.Cls));
 
-            stringCharacters = FileUtils.stringToData(Translations.getText(templateBlockIndex == 689 ? "event.halloween.fraud" : "event.halloween.text2"));
+            stringCharacters = FileUtils.stringToData(Translations.getText(textPart2Key));
             for (Short shortCharacter : stringCharacters) {
-                halloweenBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+                candyBlockContents.add(new BlockSingleData(shortCharacter));
             }
 
-            halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)0)); // Can-exit flag
-
-            blocks.add(halloweenBlock);
-
-            // Build master block referencing this
-            MasterNpcBlock masterNpcBlock = new MasterNpcBlock((MasterNpcBlock)templateBlock, blocks.size());
-            masterNpcBlock.setTextCard(new BlockCmdSingle((short)halloweenBlock.getBlockNumber()));
-            blocks.add(masterNpcBlock);
-            return masterNpcBlock.getBlockNumber();
+            candyBlockContents.add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, 0));
+            return candyBlock;
         }
-        return 0;
+        return null;
     }
 
-    public static int addNoCandyMasterBlock(List<Block> blocks, int templateBlockIndex, int noCandyTextBlockIndex) {
-        Block templateBlock = blocks.get(templateBlockIndex);
-        if(templateBlock instanceof MasterNpcBlock) {
-            MasterNpcBlock masterNpcBlock = new MasterNpcBlock((MasterNpcBlock)templateBlock, blocks.size());
-            masterNpcBlock.setTextCard(new BlockCmdSingle((short)noCandyTextBlockIndex));
-            blocks.add(masterNpcBlock);
-            return masterNpcBlock.getBlockNumber();
+    public static Block buildMasterBlock(CustomBlockEnum customBlockEnum, int textBlockIndex) { // List<Block> blocks, int templateBlockIndex
+        if (CustomBlockEnum.HalloweenNoCandyReferenceBlock_DracuetWaitForNightfall.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("TailorDracuetFaces", "TailorDracuet")));
+            return new MasterNpcBlock(textBlockIndex, 0x021, 0x2f0, 0x00e, blockStringData);
         }
-        return 0;
+        else if (CustomBlockEnum.HalloweenNoCandyReferenceBlock_DracuetBackInTime.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("TailorDracuetConfusion", "TailorDracuet")));
+            return new MasterNpcBlock(textBlockIndex, 0x023, 0x2f0, 0x00e, blockStringData);
+        }
+        else if (CustomBlockEnum.HalloweenNoCandyReferenceBlock_DracuetHugeCasket.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("TailorDracuetGuidance", "TailorDracuet")));
+            return new MasterNpcBlock(textBlockIndex, 0x021, 0x2f0, 0x00e, blockStringData);
+        }
+        else if (CustomBlockEnum.HalloweenNoCandyReferenceBlock_DracuetHTUnlocked.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("TailorDracuetAnterior", "TailorDracuet")));
+            return new MasterNpcBlock(textBlockIndex, 0x021, 0x2f0, 0x00e, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_Hiner.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("Hiner")));
+            return new MasterNpcBlock(textBlockIndex, 0x000, 0x2d9, 0x004, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_Moger.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("Moger")));
+            return new MasterNpcBlock(textBlockIndex, 0x000, 0x2da, 0x004, blockStringData);
+        }
+        else if (CustomBlockEnum.HalloweenCandyReferenceBlock_FormerMekuriMaster.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("FormerMekuriMaster")));
+            return new MasterNpcBlock(textBlockIndex, 0x000, 0x2dd, 0x004, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestZarnac.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PriestZarnac")));
+            return new MasterNpcBlock(textBlockIndex, 0x003, 0x2dd, 0x00e, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestXanado.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PriestXanado")));
+            return new MasterNpcBlock(textBlockIndex, 0x003, 0x2dd, 0x00e, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_PhilosopherGiltoriyo.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PhilosopherGiltoriyo")));
+            return new MasterNpcBlock(textBlockIndex, 0x020, 0x2e6, 0x023, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestHidlyda.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PriestHidlyda")));
+            return new MasterNpcBlock(textBlockIndex, 0x007, 0x2dd, 0x00e, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestRomancis.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PriestRomancis")));
+            return new MasterNpcBlock(textBlockIndex, 0x009, 0x2dd, 0x00e, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestAramo.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PriestAramo")));
+            return new MasterNpcBlock(textBlockIndex, 0x00b, 0x2dd, 0x00e, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestTriton.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PriestTriton")));
+            return new MasterNpcBlock(textBlockIndex, 0x00b, 0x2dd, 0x00e, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestJaguarfiv.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PriestJaguarfiv")));
+            return new MasterNpcBlock(textBlockIndex, 0x00d, 0x2dd, 0x00e, blockStringData);
+        }
+        else if (CustomBlockEnum.HalloweenCandyReferenceBlock_MrSlushfund.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("MrSlushfund")));
+            return new MasterNpcBlock(textBlockIndex, 0x00f, 0x2dd, 0x00e, blockStringData);
+        }
+        else if (CustomBlockEnum.HalloweenCandyReferenceBlock_PriestAlest.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PriestAlest")));
+            return new MasterNpcBlock(textBlockIndex, 0x00f, 0x2dd, 0x00e, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_StrayFairy.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("Strayfairy")));
+            return new MasterNpcBlock(textBlockIndex, 0x00f, 0x2e3, 0x00e, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_GiantThexde.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("GiantThexde")));
+            return new MasterNpcBlock(textBlockIndex, 0x011, 0x2f0, 0x00e, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_PhilosopherAlsedana.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PhilosopherAlsedana")));
+            return new MasterNpcBlock(textBlockIndex, 0x01c, 0x2e7, 0x023, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_PhilosopherSamaranta.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PhilosopherSamaranta")));
+            return new MasterNpcBlock(textBlockIndex, 0x01d, 0x2e8, 0x023, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestLaydoc.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PriestLaydoc")));
+            return new MasterNpcBlock(textBlockIndex, 0x015, 0x2dd, 0x00e, blockStringData);
+        }
+        else if(CustomBlockEnum.HalloweenCandyReferenceBlock_PriestAshgine.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PriestAshgine")));
+            return new MasterNpcBlock(textBlockIndex, 0x017, 0x2e5, 0x00e, blockStringData);
+        }
+        else if (CustomBlockEnum.HalloweenCandyReferenceBlock_PhilosopherFobos.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PhilosopherFobos")));
+            return new MasterNpcBlock(textBlockIndex, 0x01e, 0x2e9, 0x023, blockStringData);
+        }
+        else if (CustomBlockEnum.HalloweenCandyReferenceBlock_8BitElder.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("8bitElder")));
+            return new MasterNpcBlock(textBlockIndex, 0x01b, 0x2ed, 0x003, blockStringData);
+        }
+        else if (CustomBlockEnum.HalloweenCandyReferenceBlock_duplex.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("duplex")));
+            return new MasterNpcBlock(textBlockIndex, 0x00f, 0x2eb, 0x01c, blockStringData);
+        }
+        else if (CustomBlockEnum.HalloweenCandyReferenceBlock_Samieru.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("Samieru")));
+            return new MasterNpcBlock(textBlockIndex, 0x013, 0x2ec, 0x021, blockStringData);
+        }
+        else if (CustomBlockEnum.HalloweenCandyReferenceBlock_Naramura.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("Naramura")));
+            return new MasterNpcBlock(textBlockIndex, 0x007, 0x2ea, 0x017, blockStringData);
+        }
+        else if (CustomBlockEnum.HalloweenCandyReferenceBlock_8bitFairy.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("8bitFairy")));
+            return new MasterNpcBlock(textBlockIndex, 0x01b, 0x2ee, 0x00e, blockStringData);
+        }
+        else if (CustomBlockEnum.HalloweenCandyReferenceBlock_PriestMadomono.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PriestMadomono")));
+            return new MasterNpcBlock(textBlockIndex, 0x005, 0x2dd, 0x00e, blockStringData);
+        }
+        else if (CustomBlockEnum.HalloweenCandyReferenceBlock_PriestGailious.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("PriestGailious")));
+            return new MasterNpcBlock(textBlockIndex, 0x009, 0x2dd, 0x00e, blockStringData);
+        }
+        else if (CustomBlockEnum.HalloweenCandyReferenceBlock_NightSurfaceFairy.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("Fairy")));
+            return new MasterNpcBlock(textBlockIndex, 0x022, 0x2f0, 0x003, blockStringData);
+        }
+        else if (CustomBlockEnum.Fools2020ReferenceBlock_MulbrukEarlyExitPrompt.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("Mulbruk")));
+            return new MasterNpcBlock(textBlockIndex, 0x019, 0x2f1, 0x2710, blockStringData);
+        }
+        else if (CustomBlockEnum.Fools2020ReferenceBlock_MulbrukBookOfTheDead.equals(customBlockEnum)) {
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getLocationAndNpc("Mulbruk")));
+            return new MasterNpcBlock(textBlockIndex, 0x019, 0x2e0, 0x00f, blockStringData);
+        }
+
+        return null;
     }
 
-    public static int addNpcCountBlock(List<Block> blocks, int currentNpcs, int maxNpcs) {
-        Block npcCountBlock = new Block(blocks.size());
+    public static Block buildNpcCountBlock(int currentNpcs, int maxNpcs) {
+        Block npcCountBlock = new Block();
         List<Short> stringCharacters = FileUtils.stringToData(String.format(Translations.getText("event.halloween.npcCount"), currentNpcs, maxNpcs));
         for (Short shortCharacter : stringCharacters) {
             npcCountBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        blocks.add(npcCountBlock);
-        return npcCountBlock.getBlockNumber();
+        return npcCountBlock;
     }
 
-    public static int addNpcHintBlock(List<Block> blocks, int hintNumber, boolean updateConversationFlag) {
-        Block npcCountBlock = new Block(blocks.size());
+    public static Block buildNpcHintBlock(int hintNumber, boolean updateConversationFlag) {
+        Block npcCountBlock = new Block();
+        List<BlockContents> npcCountBlockContents = npcCountBlock.getBlockContents();
         if(updateConversationFlag) {
-            npcCountBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CUSTOM_HALLOWEEN_MULBRUK_HINT, (short)hintNumber));
+            npcCountBlockContents.add(new BlockFlagData((short)FlagConstants.CUSTOM_HALLOWEEN_MULBRUK_HINT, (short)hintNumber));
         }
 
         String hintText = getHintText(hintNumber);
@@ -3031,246 +3299,196 @@ public final class AddObject {
         if(hintTexts.length > 0) {
             stringCharacters = FileUtils.stringToData(hintTexts[0]);
             for (Short shortCharacter : stringCharacters) {
-                npcCountBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+                npcCountBlockContents.add(new BlockSingleData(shortCharacter));
             }
         }
-        npcCountBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0x32, (short)0));
+        npcCountBlockContents.add(new BlockColorsData((short)0x96, (short)0x32, (short)0));
         stringCharacters = FileUtils.stringToData(getLocationText(hintNumber));
         for (Short shortCharacter : stringCharacters) {
-            npcCountBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            npcCountBlockContents.add(new BlockSingleData(shortCharacter));
         }
-        npcCountBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+        npcCountBlockContents.add(new BlockColorsData((short)0, (short)0, (short)0));
 
         stringCharacters = FileUtils.stringToData(hintTexts[hintTexts.length > 0 ? 1 : 0]);
         for (Short shortCharacter : stringCharacters) {
-            npcCountBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            npcCountBlockContents.add(new BlockSingleData(shortCharacter));
         }
 
-        blocks.add(npcCountBlock);
-        return npcCountBlock.getBlockNumber();
+        return npcCountBlock;
     }
 
-    public static void addFoolsMulbrukBlocks(Screen mulbrukScreen, List<Block> datInfo) {
+    public static Block buildFoolsEarlyExitBlock() {
         // Conversation to go to credits early.
-        Block foolsEarlyExitBlock = new Block(datInfo.size());
+        Block foolsEarlyExitBlock = new Block();
         List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit1"));
-        for (Short shortCharacter : stringCharacters) {
+        for(Short shortCharacter : stringCharacters) {
             foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        foolsEarlyExitBlock.getBlockContents().add(new BlockItemData((short)0x0042, (short)62)); // Spaulder
-        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+        foolsEarlyExitBlock.getBlockContents().add(new BlockItemData((short)ItemConstants.SPAULDER));
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.Cls));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit2"));
-        for (Short shortCharacter : stringCharacters) {
+        for(Short shortCharacter : stringCharacters) {
             foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.Cls));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit3"));
-        for (Short shortCharacter : stringCharacters) {
+        for(Short shortCharacter : stringCharacters) {
             foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.Cls));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit4"));
-        for (Short shortCharacter : stringCharacters) {
+        for(Short shortCharacter : stringCharacters) {
             foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.Cls));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit5"));
-        for (Short shortCharacter : stringCharacters) {
+        for(Short shortCharacter : stringCharacters) {
             foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.Cls));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit6"));
-        for (Short shortCharacter : stringCharacters) {
+        for(Short shortCharacter : stringCharacters) {
             foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.Cls));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit7"));
-        for (Short shortCharacter : stringCharacters) {
+        for(Short shortCharacter : stringCharacters) {
             foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.Cls));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exit8"));
-        for (Short shortCharacter : stringCharacters) {
+        for(Short shortCharacter : stringCharacters) {
             foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
 
-        foolsEarlyExitBlock.getBlockContents().add(new BlockPoseData((short)0x0046, (short)8)); // Pose 8
-        foolsEarlyExitBlock.getBlockContents().add(new BlockPoseData((short)0x0046, (short)9)); // Pose 9
-        foolsEarlyExitBlock.getBlockContents().add(new BlockSceneData((short)0x004f, (short)0)); // Scene 0 (credits)
-        datInfo.add(foolsEarlyExitBlock);
+        foolsEarlyExitBlock.getBlockContents().add(new BlockPoseData(BlockDataConstants.Pose, (short)8));
+        foolsEarlyExitBlock.getBlockContents().add(new BlockPoseData(BlockDataConstants.Pose, (short)9));
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSceneData(BlockDataConstants.Anime, (short)0)); // Scene 0 (credits)
+        return foolsEarlyExitBlock;
+    }
 
+    public static Block buildFoolsExitPromptBlock(short foolsEarlyExitBlockNumber) {
         // Conversation offering to quit
-        Block foolsOptionBlock = new Block(datInfo.size());
-        foolsOptionBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)1)); // Can-exit flag
-        stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exitPrompt"));
+        Block foolsOptionBlock = new Block();
+        foolsOptionBlock.getBlockContents().add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)1)); // Can-exit flag
+        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.exitPrompt"));
         for (Short shortCharacter : stringCharacters) {
             foolsOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.EndOfEntry));
 
-        BlockListData repeatCmd = new BlockListData((short)0x004e, (short)1);
-        repeatCmd.getData().add((short)foolsEarlyExitBlock.getBlockNumber());
+        BlockListData repeatCmd = new BlockListData((short)1);
+        repeatCmd.getData().add(foolsEarlyExitBlockNumber);
         foolsOptionBlock.getBlockContents().add(repeatCmd);
-        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.EndOfEntry));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("prompt.yes"));
         for (Short shortCharacter : stringCharacters) {
             foolsOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.EndOfEntry));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("prompt.no"));
         for (Short shortCharacter : stringCharacters) {
             foolsOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.EndOfEntry));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("event.fools2020.noQuit"));
         for (Short shortCharacter : stringCharacters) {
             foolsOptionBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        foolsOptionBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)0)); // Can-exit flag
-        foolsOptionBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
-        datInfo.add(foolsOptionBlock);
-
-        // Master block - Some eggs
-        MasterNpcBlock optionMasterNpcBlock = new MasterNpcBlock((MasterNpcBlock)datInfo.get(0x39c), datInfo.size());
-        optionMasterNpcBlock.setTextCard(new BlockCmdSingle((short)foolsOptionBlock.getBlockNumber()));
-        datInfo.add(optionMasterNpcBlock);
-
-        // Master block - Book of the Dead
-        MasterNpcBlock bookMasterNpcBlock = new MasterNpcBlock(datInfo.size());
-        bookMasterNpcBlock.setTextCard(new BlockCmdSingle((short)397));
-        bookMasterNpcBlock.setBackground(new BlockCmdSingle((short)0x019));
-        bookMasterNpcBlock.setNpcCard(new BlockCmdSingle((short)0x2e0)); // 2f0?
-        bookMasterNpcBlock.setMusic(new BlockCmdSingle((short)0x00f));
-        bookMasterNpcBlock.setNpcName(((MasterNpcBlock)datInfo.get(0x39c)).getNpcName());
-        datInfo.add(bookMasterNpcBlock);
-
-        // Find existing objects
-        GameObject escapeConversationNormal = null;
-        List<GameObject> keptObjects = new ArrayList<>();
-        for(GameObject gameObject : mulbrukScreen.getObjects()) {
-            if(gameObject.getId() == 0xa0) {
-                if(gameObject.getArgs().get(4) == 924) {
-                    escapeConversationNormal = gameObject;
-                    keptObjects.add(gameObject);
-                }
-                else if(gameObject.getArgs().get(4) == 926) {
-                    keptObjects.add(gameObject);
-                }
-            }
-            else {
-                keptObjects.add(gameObject);
-            }
-        }
-
-        GameObject bookOfTheDeadConversation = new GameObject(escapeConversationNormal);
-        bookOfTheDeadConversation.getArgs().set(4, (short)bookMasterNpcBlock.getBlockNumber());
-        bookOfTheDeadConversation.getTestByteOperations().clear();
-        bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_NOT_EQUAL, 1));
-        bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_BOOK, ByteOp.FLAG_EQUALS, 1));
-        bookOfTheDeadConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_AWAKE, ByteOp.FLAG_GTEQ, 1));
-
-        GameObject optionConversation = new GameObject(escapeConversationNormal);
-        optionConversation.getArgs().set(4, (short)optionMasterNpcBlock.getBlockNumber());
-        optionConversation.getTestByteOperations().clear();
-        optionConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_NOT_EQUAL, 1)); // Option to quit
-        optionConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_BOOK, ByteOp.FLAG_NOT_EQUAL, 1));
-        optionConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_AWAKE, ByteOp.FLAG_GTEQ, 1));
-
-        mulbrukScreen.getObjects().clear();
-        mulbrukScreen.getObjects().addAll(keptObjects);
-        mulbrukScreen.getObjects().add(bookOfTheDeadConversation);
-        mulbrukScreen.getObjects().add(optionConversation);
+        foolsOptionBlock.getBlockContents().add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)0));
+        foolsOptionBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.EndOfEntry));
+        return foolsOptionBlock;
     }
 
-    public static int addDevRoomHintBlock(List<Block> blocks, boolean updateConversationFlag) {
-        Block devHintBlock = new Block(blocks.size());
+    public static Block buildDevRoomHintBlock(boolean updateConversationFlag) {
+        Block devHintBlock = new Block();
+        List<BlockContents> devHintBlockContents = devHintBlock.getBlockContents();
         if(updateConversationFlag) {
-            devHintBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CUSTOM_HALLOWEEN_MULBRUK_HINT, (short)0));
+            devHintBlockContents.add(new BlockFlagData((short)FlagConstants.CUSTOM_HALLOWEEN_MULBRUK_HINT, (short)0));
         }
 
         String hintText = Translations.getText("event.halloween.hintDevs");
         List<Short> stringCharacters = FileUtils.stringToData(hintText);
         for (Short shortCharacter : stringCharacters) {
-            devHintBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            devHintBlockContents.add(new BlockSingleData(shortCharacter));
         }
-        blocks.add(devHintBlock);
-        return devHintBlock.getBlockNumber();
+        return devHintBlock;
     }
 
-    public static int addMulbrukHTBlock(List<Block> blocks, int totalHints) {
-        Block mulbrukHTBlock = new Block(blocks.size());
-        mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
+    public static Block buildMulbrukHTBlock(int totalHints) {
+        Block mulbrukHTBlock = new Block();
+        List<BlockContents> mulbrukHTBlockContents = mulbrukHTBlock.getBlockContents();
+        mulbrukHTBlockContents.add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
 
         List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.htMulbruk1"));
         for (Short shortCharacter : stringCharacters) {
-            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            mulbrukHTBlockContents.add(new BlockSingleData(shortCharacter));
         }
-        mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.HT_UNLOCKED, (short)1)); // Unlock HT
-        mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CUSTOM_HALLOWEEN_MULBRUK_HINT, (short)totalHints)); // Set 0xace (Mulbruk hints cycle flag) to +1
-        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short)0x0044)); // {CLS}
+        mulbrukHTBlockContents.add(new BlockFlagData((short)FlagConstants.HT_UNLOCKED, (short)1)); // Unlock HT
+        mulbrukHTBlockContents.add(new BlockFlagData((short)FlagConstants.CUSTOM_HALLOWEEN_MULBRUK_HINT, (short)totalHints)); // Set 0xace (Mulbruk hints cycle flag) to +1
+        mulbrukHTBlockContents.add(new BlockSingleData(BlockDataConstants.Cls));
 
         String textLine = Translations.getText("event.halloween.htMulbruk2");
         String[] textParts = textLine.split("%s");
         if(textParts.length > 0) {
             stringCharacters = FileUtils.stringToData(textParts[0]);
             for (Short shortCharacter : stringCharacters) {
-                mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+                mulbrukHTBlockContents.add(new BlockSingleData(shortCharacter));
             }
         }
-        mulbrukHTBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0, (short)0x64));
+        mulbrukHTBlockContents.add(new BlockColorsData((short)0x96, (short)0, (short)0x64));
         stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.halloweenCostume"));
         for (Short shortCharacter : stringCharacters) {
-            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            mulbrukHTBlockContents.add(new BlockSingleData(shortCharacter));
         }
-        mulbrukHTBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+        mulbrukHTBlockContents.add(new BlockColorsData((short)0, (short)0, (short)0));
         stringCharacters = FileUtils.stringToData(textParts[textParts.length > 0 ? 1 : 0]);
         for (Short shortCharacter : stringCharacters) {
-            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            mulbrukHTBlockContents.add(new BlockSingleData(shortCharacter));
         }
-        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+        mulbrukHTBlockContents.add(new BlockSingleData(BlockDataConstants.Cls));
 
         textLine = Translations.getText("event.halloween.htMulbruk3");
         textParts = textLine.split("%s");
         if(textParts.length > 0) {
             stringCharacters = FileUtils.stringToData(textParts[0]);
             for (Short shortCharacter : stringCharacters) {
-                mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+                mulbrukHTBlockContents.add(new BlockSingleData(shortCharacter));
             }
         }
-        mulbrukHTBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0x32, (short)0));
+        mulbrukHTBlockContents.add(new BlockColorsData((short)0x96, (short)0x32, (short)0));
         stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.helloweenTemple"));
         for (Short shortCharacter : stringCharacters) {
-            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            mulbrukHTBlockContents.add(new BlockSingleData(shortCharacter));
         }
-        mulbrukHTBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+        mulbrukHTBlockContents.add(new BlockColorsData((short)0, (short)0, (short)0));
         stringCharacters = FileUtils.stringToData(textParts[textParts.length > 0 ? 1 : 0]);
         for (Short shortCharacter : stringCharacters) {
-            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            mulbrukHTBlockContents.add(new BlockSingleData(shortCharacter));
         }
-        mulbrukHTBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
+        mulbrukHTBlockContents.add(new BlockSingleData(BlockDataConstants.Cls));
 
         stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.htMulbruk4"));
         for (Short shortCharacter : stringCharacters) {
-            mulbrukHTBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+            mulbrukHTBlockContents.add(new BlockSingleData(shortCharacter));
         }
-        mulbrukHTBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)0));
+        mulbrukHTBlockContents.add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)0));
 
-        blocks.add(mulbrukHTBlock);
-        return mulbrukHTBlock.getBlockNumber();
+        return mulbrukHTBlock;
     }
 
-    public static int addAllNpcsBlock(List<Block> blocks) {
-        Block allNpcsBlock = new Block(blocks.size());
+    public static Block buildAllNpcsBlock() {
+        Block allNpcsBlock = new Block();
         List<Short> stringCharacters;
         String textLine = String.format(Translations.getText("event.halloween.xelpudAll"), 29, 29, "%s");
         String[] textParts = textLine.split("%s");
@@ -3280,22 +3498,21 @@ public final class AddObject {
                 allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
             }
         }
-        allNpcsBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0x32, (short)0));
+        allNpcsBlock.getBlockContents().add(new BlockColorsData(BlockDataConstants.ColorChange, (short)0x96, (short)0x32, (short)0));
         stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.mulbruk"));
         for (Short shortCharacter : stringCharacters) {
             allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        allNpcsBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+        allNpcsBlock.getBlockContents().add(new BlockColorsData(BlockDataConstants.ColorChange, (short)0, (short)0, (short)0));
         stringCharacters = FileUtils.stringToData(textParts[textParts.length > 0 ? 1 : 0]);
         for (Short shortCharacter : stringCharacters) {
             allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        blocks.add(allNpcsBlock);
-        return allNpcsBlock.getBlockNumber();
+        return allNpcsBlock;
     }
 
-    public static int addNoCandyBlock(List<Block> blocks) {
-        Block allNpcsBlock = new Block(blocks.size());
+    public static Block buildNoCandyConversationBlock() {
+        Block allNpcsBlock = new Block();
         List<Short> stringCharacters;
         String textLine = Translations.getText("event.halloween.noDracuet");
         String[] textParts = textLine.split("%s");
@@ -3305,18 +3522,17 @@ public final class AddObject {
                 allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
             }
         }
-        allNpcsBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0, (short)0x64));
+        allNpcsBlock.getBlockContents().add(new BlockColorsData(0x96, 0, 0x64));
         stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.halloweenCandy"));
         for (Short shortCharacter : stringCharacters) {
             allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        allNpcsBlock.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
+        allNpcsBlock.getBlockContents().add(new BlockColorsData(0, 0, 0));
         stringCharacters = FileUtils.stringToData(textParts[textParts.length > 0 ? 1 : 0]);
         for (Short shortCharacter : stringCharacters) {
             allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        blocks.add(allNpcsBlock);
-        return allNpcsBlock.getBlockNumber();
+        return allNpcsBlock;
     }
 
     private static String getHintText(int hintNumber) {
@@ -3395,23 +3611,25 @@ public final class AddObject {
         return "";
     }
 
-    public static void addHTSkip(Screen screen, List<Block> blocks) {
-        Block htExplanation = new Block(blocks.size());
+    public static Block buildHTSkipBlock() {
+        Block htExplanation = new Block();
         List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.htSkip"));
         for (Short shortCharacter : stringCharacters) {
             htExplanation.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
         htExplanation.getBlockContents().add(new BlockSingleData((short)0x000a)); // End record
-        BlockListData tabletData = new BlockListData((short)0x004e, (short)2);
+        BlockListData tabletData = new BlockListData((short)2);
         tabletData.getData().add((short)0); // Language: 0 = English; 1 = La-Mulanese; 2 = Ancient La-Mulanese; 3 = Rosetta Stone
         tabletData.getData().add((short)0); // Slate: 0 = No image; 1 = use slate00.png; 1 = use slate01.png
         htExplanation.getBlockContents().add(tabletData);
 
-        blocks.add(htExplanation);
+        return htExplanation;
+    }
 
+    public static void addHTSkipTablet(Screen screen, short tabletBlock) {
         Scannable tabletReadable = new Scannable(screen, 60, 400);
 
-        tabletReadable.setTextBlock((short)htExplanation.getBlockNumber());
+        tabletReadable.setTextBlock(tabletBlock);
         tabletReadable.setArg1(0);
         tabletReadable.setArg2(0);
         tabletReadable.setArg3(1);
@@ -3461,40 +3679,10 @@ public final class AddObject {
         screen.getObjects().add(htSkipDais);
     }
 
-    public static void addHTWarning(Screen screen, List<Block> blocks) {
-        Block htExplanation = new Block(blocks.size());
-
-        List<Short> stringCharacters;
-        String textLine = Translations.getText("event.halloween.htLogic");
-        String[] textParts = textLine.split("%s");
-        if(textParts.length > 0) {
-            stringCharacters = FileUtils.stringToData(textParts[0]);
-            for (Short shortCharacter : stringCharacters) {
-                htExplanation.getBlockContents().add(new BlockSingleData(shortCharacter));
-            }
-        }
-        htExplanation.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0x96, (short)0, (short)0x64));
-        stringCharacters = FileUtils.stringToData(Translations.getText("items.HolyGrail"));
-        for (Short shortCharacter : stringCharacters) {
-            htExplanation.getBlockContents().add(new BlockSingleData(shortCharacter));
-        }
-        htExplanation.getBlockContents().add(new BlockColorsData((short)0x004a, (short)0, (short)0, (short)0));
-        stringCharacters = FileUtils.stringToData(textParts[textParts.length > 0 ? 1 : 0]);
-        for (Short shortCharacter : stringCharacters) {
-            htExplanation.getBlockContents().add(new BlockSingleData(shortCharacter));
-        }
-
-        htExplanation.getBlockContents().add(new BlockSingleData((short)0x000a)); // End record
-        BlockListData tabletData = new BlockListData((short)0x004e, (short)2);
-        tabletData.getData().add((short)0); // Language: 0 = English; 1 = La-Mulanese; 2 = Ancient La-Mulanese; 3 = Rosetta Stone
-        tabletData.getData().add((short)0); // Slate: 0 = No image; 1 = use slate00.png; 1 = use slate01.png
-        htExplanation.getBlockContents().add(tabletData);
-
-        blocks.add(htExplanation);
-
+    public static void addHTGrailWarningTablet(Screen screen, short tabletBlock) {
         Scannable tabletReadable = new Scannable(screen, 120, 400);
 
-        tabletReadable.setTextBlock((short)htExplanation.getBlockNumber());
+        tabletReadable.setTextBlock(tabletBlock);
         tabletReadable.setArg1(0);
         tabletReadable.setArg2(0);
         tabletReadable.setArg3(1);
@@ -3524,6 +3712,37 @@ public final class AddObject {
         tabletGraphic.setArg23(1);
 
         screen.getObjects().add(tabletGraphic);
+    }
+
+    public static Block buildHTGrailWarningBlock() {
+        Block htExplanation = new Block();
+
+        List<Short> stringCharacters;
+        String textLine = Translations.getText("event.halloween.htLogic");
+        String[] textParts = textLine.split("%s");
+        if(textParts.length > 0) {
+            stringCharacters = FileUtils.stringToData(textParts[0]);
+            for (Short shortCharacter : stringCharacters) {
+                htExplanation.getBlockContents().add(new BlockSingleData(shortCharacter));
+            }
+        }
+        htExplanation.getBlockContents().add(new BlockColorsData((short)0x96, (short)0, (short)0x64));
+        stringCharacters = FileUtils.stringToData(Translations.getText("items.HolyGrail"));
+        for (Short shortCharacter : stringCharacters) {
+            htExplanation.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        htExplanation.getBlockContents().add(new BlockColorsData((short)0, (short)0, (short)0));
+        stringCharacters = FileUtils.stringToData(textParts[textParts.length > 0 ? 1 : 0]);
+        for (Short shortCharacter : stringCharacters) {
+            htExplanation.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+
+        htExplanation.getBlockContents().add(new BlockSingleData(BlockDataConstants.EndOfEntry));
+        BlockListData tabletData = new BlockListData((short)2);
+        tabletData.getData().add((short)0); // Language: 0 = English; 1 = La-Mulanese; 2 = Ancient La-Mulanese; 3 = Rosetta Stone
+        tabletData.getData().add((short)0); // Slate: 0 = No image; 1 = use slate00.png; 1 = use slate01.png
+        htExplanation.getBlockContents().add(tabletData);
+        return htExplanation;
     }
 
     /**

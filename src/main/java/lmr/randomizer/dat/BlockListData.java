@@ -24,17 +24,29 @@ public class BlockListData implements BlockContents {
         data = new ArrayList<>(objectToCopy.data);
     }
 
-    public List<Short> getData() {
-        return data;
+    public BlockListData(short listSize) {
+        this.idData = BlockDataConstants.DataList;
+        this.listSize = listSize;
     }
 
-    public void addListSize(int amount) {
-        this.listSize += amount;
+    public List<Short> getData() {
+        return data;
     }
 
     @Override
     public int getSize() {
         return data.size() * 2 + 4; // CMD, list length, then the list itself
+    }
+
+    @Override
+    public List<Short> getRawData() {
+        List<Short> rawData = new ArrayList<>();
+        rawData.add(idData);
+        rawData.add(listSize);
+        for(int i = 0; i < data.size(); i++) {
+            rawData.add(data.get(i));
+        }
+        return rawData;
     }
 
     @Override

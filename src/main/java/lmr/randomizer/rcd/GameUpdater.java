@@ -1,6 +1,7 @@
 package lmr.randomizer.rcd;
 
 import lmr.randomizer.Settings;
+import lmr.randomizer.dat.*;
 import lmr.randomizer.rcd.object.GameObject;
 import lmr.randomizer.rcd.object.Room;
 import lmr.randomizer.rcd.object.Screen;
@@ -10,37 +11,67 @@ import lmr.randomizer.update.GameDataTracker;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Currently just rcd updates, may eventually include other files
- */
-public final class GameUpdater {
-    public static void update(RcdData rcdData) {
-        List<RcdUpdater> updaters = new ArrayList<>();
-        updaters.add(new BaseRcdUpdater(rcdData));
+public class GameUpdater {
+    private RcdFileData rcdFileData;
+    private DatFileData datFileData;
+
+    private List<RcdUpdater> rcdUpdaters = new ArrayList<>();
+    private List<DatUpdater> datUpdaters = new ArrayList<>();
+
+    public GameUpdater(RcdFileData rcdFileData, DatFileData datFileData) {
+        this.rcdFileData = rcdFileData;
+        this.datFileData = datFileData;
+    }
+
+    public void updateRcd() {
+        rcdUpdaters.add(new BaseRcdUpdater(rcdFileData, datFileData));
         if(Settings.isFools2019Mode()) {
-            updaters.add(new Fools2019RcdUpdater(rcdData));
+            rcdUpdaters.add(new Fools2019RcdUpdater(rcdFileData, datFileData));
         }
         if(Settings.isFools2020Mode()) {
-            updaters.add(new Fools2020RcdUpdater(rcdData));
+            rcdUpdaters.add(new Fools2020RcdUpdater(rcdFileData, datFileData));
         }
         if(Settings.isFools2021Mode()) {
-            updaters.add(new Fools2021RcdUpdater(rcdData));
+            rcdUpdaters.add(new Fools2021RcdUpdater(rcdFileData, datFileData));
         }
         if(Settings.isHalloweenMode()) {
-            updaters.add(new HalloweenRcdUpdater(rcdData));
+            rcdUpdaters.add(new HalloweenRcdUpdater(rcdFileData, datFileData));
         }
 
-        for(RcdUpdater rcdUpdater : updaters) {
+        for(RcdUpdater rcdUpdater : rcdUpdaters) {
             rcdUpdater.updateObjects();
         }
-        trackObjects(rcdData);
-        for(RcdUpdater rcdUpdater : updaters) {
+        trackObjects();
+        for(RcdUpdater rcdUpdater : rcdUpdaters) {
             rcdUpdater.addUntrackedObjects();
         }
     }
 
-    public static void trackObjects(RcdData rcdData) {
-        for(Zone zone : rcdData.getZones()) {
+    public void updateDat() {
+        datUpdaters.add(new BaseDatUpdater(datFileData));
+//        if(Settings.isFools2019Mode()) {
+//            updaters.add(new Fools2019DatUpdater(datFileData));
+//        }
+        if(Settings.isFools2020Mode()) {
+            datUpdaters.add(new Fools2020DatUpdater(datFileData));
+        }
+        if(Settings.isFools2021Mode()) {
+            datUpdaters.add(new Fools2021DatUpdater(datFileData));
+        }
+        if(Settings.isHalloweenMode()) {
+            datUpdaters.add(new HalloweenDatUpdater(datFileData));
+        }
+
+        for(DatUpdater datUpdater : datUpdaters) {
+            datUpdater.addCustomBlocks(datFileData);
+        }
+        for(DatUpdater datUpdater : datUpdaters) {
+            datUpdater.updateBlocks();
+        }
+    }
+
+    public void trackObjects() {
+        for(Zone zone : rcdFileData.getZones()) {
             for(GameObject gameObject : zone.getObjects()) {
                 GameDataTracker.addObject(gameObject);
             }
@@ -57,5 +88,9 @@ public final class GameUpdater {
         }
     }
 
-    private GameUpdater() { }
+    public void doPostShuffleUpdates() {
+        for(RcdUpdater rcdUpdater : rcdUpdaters) {
+            rcdUpdater.doPostShuffleUpdates();
+        }
+    }
 }

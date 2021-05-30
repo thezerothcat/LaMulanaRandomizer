@@ -12,6 +12,9 @@ public class Block {
     private int blockNumber;
     private List<BlockContents> blockContents = new ArrayList<>();
 
+    public Block() {
+    }
+
     public Block(int blockNumber) {
         this.blockNumber = blockNumber;
     }
@@ -28,8 +31,25 @@ public class Block {
         return blockNumber;
     }
 
+    public void setBlockNumber(int blockNumber) {
+        this.blockNumber = blockNumber;
+    }
+
     public List<BlockContents> getBlockContents() {
         return blockContents;
+    }
+
+    /**
+     * Mostly for testing use, should probably use this when writing the dat file
+     * @return list of shorts representing the data of this block
+     */
+    public List<Short> getRawData() {
+        List<Short> rawData = new ArrayList<>();
+        rawData.add((short)getBlockSize());
+        for (BlockContents blockData : getBlockContents()) {
+            rawData.addAll(blockData.getRawData());
+        }
+        return rawData;
     }
 
     public void write(DataOutputStream dataOutputStream) throws IOException {

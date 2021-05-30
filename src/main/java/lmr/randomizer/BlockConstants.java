@@ -1,0 +1,125 @@
+package lmr.randomizer;
+
+public final class BlockConstants {
+    public static final int ItemNameBlock = 1;
+    public static final int ItemDescriptionBlock = 2;
+    public static final int MenuBlock = 4;
+    public static final int SoftwareBlock = 5;
+    public static final int GrailPointBlock = 7;
+    public static final int HTMapNamesLimitedBlock = 28;
+    public static final int FootOfFuto = 88;
+    public static final int FairyQueenFirstConversation = 215;
+    public static final int FairyQueenWhenTheTimeComesConversation = 218;
+    public static final int XelpudTalismanConversation = 369;
+    public static final int XelpudPillarConversation = 370;
+    public static final int MulbrukIntroBlock = 393; // Replaced for Helloween
+    public static final int MulbrukEscapeRegular = 924; // 0x39c
+    public static final int MulbrukEscapeSwimsuit = 926; // 0x39e
+
+    public static final int ItemConversationMekuri = 37;
+    public static final int ItemConversationPepper = 245;
+    public static final int ItemConversationAnchor = 247;
+    public static final int ItemConversationMiniDoll = 249;
+    public static final int ItemConversationXmailer = 364;
+    public static final int ItemConversationMulanaTalisman = 371;
+    public static final int ItemConversationBookOfTheDead = 397;
+    public static final int ItemConversationMapSurface = 716;
+    public static final int ItemConversationProvocativeBathingSuit = 1012;
+
+    public static final int Master_Hiner = 671;
+    public static final int Master_Moger = 672;
+    public static final int Master_FormerMekuriMaster_Mekuri = 673;
+    public static final int Master_PriestZarnac = 674;
+    public static final int Master_PriestXanado = 675;
+    public static final int Master_PhilosopherGiltoriyo = 677;
+    public static final int Master_PriestHidlyda = 678;
+    public static final int Master_PriestRomancis = 679;
+    public static final int Master_PriestAramo = 680;
+    public static final int Master_PriestTriton = 681;
+    public static final int Master_PriestJaguarfiv = 683;
+    public static final int Master_FairyQueen_RequestPendant = 684;
+    public static final int Master_MrSlushfund_Pepper = 689; // References ItemConversationPepper
+    public static final int Master_MrSlushfund_Anchor = 691; // References ItemConversationAnchor
+    public static final int Master_PriestAlest = 693;
+    public static final int Master_MrSlushfund_NeverComeBack = 692;
+    public static final int Master_StrayFairy = 694;
+    public static final int Master_GiantThexde = 696;
+    public static final int Master_PhilosopherAlsedana = 698;
+    public static final int Master_PhilosopherSamaranta = 700;
+    public static final int Master_PriestLaydoc = 701;
+    public static final int Master_PriestAshgine = 702;
+    public static final int Master_PhilosopherFobos_Ladder = 704;
+    public static final int Master_8BitElder = 706;
+    public static final int Master_duplex = 707;
+    public static final int Master_Samieru = 708;
+    public static final int Master_Naramura = 709;
+    public static final int Master_8BitFairy = 710;
+    public static final int Master_PriestMadomono = 718;
+    public static final int Master_PriestGailious = 723;
+    public static final int Master_Dracuet_WaitForNightfall = 726; // Tailor Dracuet - Guidance NPC, 00-06-00
+    public static final int Master_Fobos_MedicineCheck = 705;
+    public static final int Master_Dracuet_BackInTime = 991; // Tailor Dracuet - Illusion NPC, 10-07-00
+    public static final int Master_Dracuet_HugeCasket = 993; // Tailor Dracuet - Gate of Time NPC, 20-03-01
+    public static final int Master_Fairy_NightSurface = 998; // Fairy - Night Surface NPC, 22-07-00
+    public static final int Master_Dracuet_HTUnlocked = 1000; // Tailor Dracuet - Goddess NPC, 13-01-00
+    public static final int Master_Dracuet_ProvocativeBathingSuit = 1011; // References ItemConversationProvocativeBathingSuit
+
+    public static final int XelpudFlagCheckBlock = 480;
+    public static final int XelpudScoreCheckBlock = 482;
+    public static final int MulbrukFlagCheckBlock = 486;
+    public static final int MulbrukScoreCheckBlock = 488;
+    public static final int MulbrukRandomBlock1 = 489;
+    public static final int MulbrukRandomBlock2 = 1078;
+    public static final int MulbrukRandomBlock3 = 1079;
+
+    public static final int Removed_XelpudScoreWindHowling = 373;
+    public static final int Removed_WindHowlingSwimsuit = 1049;
+
+    public static final int Email00 = 0x1ac;
+    public static final int Email01 = 0x1ad;
+    public static final int Email02 = 715;
+    public static final int Email03 = 963;
+    public static final int Email04 = 365;
+    public static final int Email05 = 0x1ae;
+    public static final int Email06 = 0x1af;
+    public static final int Email07 = 0x1b0;
+    public static final int Email08 = 0x1b1;
+    public static final int Email09 = 0x1b2;
+    public static final int Email10 = 0x1b3;
+    public static final int Email11 = 0x1b4;
+    public static final int Email12 = 0x1b5;
+    public static final int Email13 = 0x1b6;
+    public static final int Email14 = 0x1b7;
+    public static final int Email15 = 0x1b8;
+    public static final int Email16 = 0x1b9;
+    public static final int Email17 = 0x1ba;
+    public static final int Email18 = 0x1bb;
+    public static final int Email19 = 0x1bc;
+    public static final int Email20 = 0x1bd;
+    public static final int Email21 = 0x1be;
+    public static final int Email22 = 0x1bf;
+    public static final int Email23 = 0x1c0;
+    public static final int Email24 = 0x1c1;
+    public static final int Email25 = 0x1c2;
+    public static final int Email26 = 0x1c3;
+    public static final int Email27 = 0x1c4;
+    public static final int Email28 = 0x1c5;
+    public static final int Email29 = 0x1c6;
+    public static final int Email30 = 0x1c7;
+    public static final int Email31 = 0x1c8;
+    public static final int Email32 = 0x1c9;
+    public static final int Email33 = 0x1ca;
+    public static final int Email34 = 0x1cb;
+    public static final int Email35 = 0x1cc;
+    public static final int Email36 = 0x1cd;
+    public static final int Email37 = 0x1ce;
+    public static final int Email38 = 0x1cf;
+    public static final int Email39 = 0x1d0;
+    public static final int Email40 = 0x1d1;
+    public static final int Email41 = 0x1d2;
+    public static final int Email42 = 0x1d3;
+    public static final int Email43 = 0x1d4;
+    public static final int Email44 = 0x1d5;
+
+    private BlockConstants() { }
+}

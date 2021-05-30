@@ -4,6 +4,8 @@ import lmr.randomizer.dat.Block;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by thezerothcat on 9/8/2019.
@@ -20,13 +22,13 @@ public class MasterNpcBlock extends Block {
         super(blockNumber);
     }
 
-    public MasterNpcBlock(MasterNpcBlock blockToCopy, int blockNumber) {
-        super(blockNumber);
-        this.textCard = new BlockCmdSingle(blockToCopy.getTextCard());
-        this.background = new BlockCmdSingle(blockToCopy.getBackground());
-        this.npcCard = new BlockCmdSingle(blockToCopy.getNpcCard());
-        this.music = new BlockCmdSingle(blockToCopy.getMusic());
-        this.npcName = new BlockStringData(blockToCopy.getNpcName());
+    public MasterNpcBlock(int textCard, int background, int npcCard, int music, BlockStringData npcName) {
+        super();
+        this.textCard = new BlockCmdSingle((short)textCard);
+        this.background = new BlockCmdSingle((short)background);
+        this.npcCard = new BlockCmdSingle((short)npcCard);
+        this.music = new BlockCmdSingle((short)music);
+        this.npcName = npcName;
     }
 
     public BlockCmdSingle getTextCard() {
@@ -77,6 +79,20 @@ public class MasterNpcBlock extends Block {
         size += music.getSize();
         size += npcName.getSize();
         return size;
+    }
+
+    @Override
+    public List<Short> getRawData() {
+        List<Short> rawData = new ArrayList<>();
+        rawData.add((short)getBlockSize());
+
+        rawData.addAll(textCard.getRawData());
+        rawData.addAll(background.getRawData());
+        rawData.addAll(npcCard.getRawData());
+        rawData.addAll(music.getRawData());
+
+        rawData.addAll(npcName.getRawData());
+        return rawData;
     }
 
     @Override

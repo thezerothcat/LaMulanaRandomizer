@@ -1,13 +1,16 @@
 package lmr.randomizer.dat;
 
-import lmr.randomizer.*;
+import lmr.randomizer.BlockConstants;
+import lmr.randomizer.DataFromFile;
+import lmr.randomizer.Settings;
+import lmr.randomizer.dat.blocks.*;
+import lmr.randomizer.dat.blocks.entries.*;
 import lmr.randomizer.dat.conversation.CheckBlock;
 import lmr.randomizer.dat.shop.BlockCmdSingle;
 import lmr.randomizer.dat.shop.BlockStringData;
 import lmr.randomizer.dat.shop.MasterNpcBlock;
 import lmr.randomizer.dat.shop.ShopBlock;
 import lmr.randomizer.update.GameDataTracker;
-import lmr.randomizer.update.LocationCoordinateMapper;
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -22,12 +25,177 @@ public final class DatReader {
     private DatReader() {
     }
 
+    private static ItemNameBlock buildItemNameBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        int dataIndex = 0;
+        ItemNameBlock itemNameBlock = new ItemNameBlock(blockIndex);
+        TextEntry textEntry;
+
+        for(int i = 0; i < ItemNameBlock.SoulStone; i++) {
+            textEntry = new TextEntry();
+            dataIndex += populateTextEntry(textEntry, dataInputStream);
+            itemNameBlock.getBlockContents().add(textEntry);
+        }
+
+        // Last entry
+        textEntry = new TextEntry();
+        populateTextEntry(textEntry, dataInputStream, numberOfShortsInThisBlock - dataIndex);
+        textEntry.setIncludeEndRecordIndicator(false);
+        itemNameBlock.getBlockContents().add(textEntry);
+
+        return itemNameBlock;
+    }
+
+    private static Block buildItemDescriptionBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        int dataIndex = 0;
+        ItemDescriptionBlock itemDescriptionBlock = new ItemDescriptionBlock(blockIndex);
+        TextEntry textEntry;
+
+        for(int i = 0; i < ItemDescriptionBlock.SoftwareLamulana; i++) {
+            textEntry = new TextEntry();
+            dataIndex += populateTextEntry(textEntry, dataInputStream);
+            itemDescriptionBlock.getBlockContents().add(textEntry);
+        }
+
+        // Last entry
+        textEntry = new TextEntry();
+        populateTextEntry(textEntry, dataInputStream, numberOfShortsInThisBlock - dataIndex);
+        textEntry.setIncludeEndRecordIndicator(false);
+        itemDescriptionBlock.getBlockContents().add(textEntry);
+
+        return itemDescriptionBlock;
+    }
+
+    private static Block buildMenuBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        int dataIndex = 0;
+        MenuBlock menuBlock = new MenuBlock(blockIndex);
+
+        TextEntry textEntry;
+        ListEntry listEntry;
+        for(int i = 0; i < MenuBlock.LastEntry; i++) {
+            if(i == MenuBlock.ListData_Unknown39 || i == MenuBlock.ListData_Unknown40 || i == MenuBlock.ListData_LaMulaneseBackgroundColor || i == MenuBlock.ListData_XelpudMailerTextColor
+                    || i == MenuBlock.ListData_PopInMenuColor || i == MenuBlock.ListData_SelectedTextColor || i == MenuBlock.ListData_RosettaCount || i == MenuBlock.ListData_MantraMenu_TitleTextColor
+                    || i == MenuBlock.ListData_SnapshotsMenu_TextColor || i == MenuBlock.ListData_TextTrax_MenuTextColor1 || i == MenuBlock.ListData_TextTrax_MenuTextColor2
+                    || i == MenuBlock.ListData_EmusicTitleColor || i == MenuBlock.ListData_UnknownSelectedTextColor || i == MenuBlock.ListData_EmusicHighlightedLineColor
+                    || i == MenuBlock.ListData_ShieldHp) {
+                listEntry = buildListEntry(dataInputStream, true);
+                dataIndex += listEntry.getSize() / 2;
+                menuBlock.getBlockContents().add(listEntry);
+            } else {
+                // Note there are a few odd entries here that don't really fit the pattern
+                textEntry = new TextEntry();
+                dataIndex += populateTextEntry(textEntry, dataInputStream);
+                menuBlock.getBlockContents().add(textEntry);
+            }
+        }
+
+        // Last entry
+        textEntry = new TextEntry();
+        populateTextEntry(textEntry, dataInputStream, numberOfShortsInThisBlock - dataIndex);
+        textEntry.setIncludeEndRecordIndicator(false);
+        menuBlock.getBlockContents().add(textEntry);
+
+        return menuBlock;
+    }
+
+    private static Block buildSoftwareBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        int dataIndex = 0;
+        SoftwareBlock softwareBlock = new SoftwareBlock(blockIndex);
+
+        for(int softwareIndex = 0; softwareIndex < SoftwareBlock.SoftwareLamulana; softwareIndex++) {
+            SoftwareListEntry softwareListEntry = buildSoftwareListEntry(dataInputStream);
+            dataIndex += softwareListEntry.getSize() / 2;
+            softwareBlock.getBlockContents().add(softwareListEntry);
+
+            TextEntry softwareNameEntry = new TextEntry();
+            dataIndex += populateTextEntry(softwareNameEntry, dataInputStream);
+            softwareBlock.getBlockContents().add(softwareNameEntry);
+
+            TextEntry softwareCostTextEntry = new TextEntry();
+            dataIndex += populateTextEntry(softwareCostTextEntry, dataInputStream);
+            softwareBlock.getBlockContents().add(softwareCostTextEntry);
+        }
+
+        // Last entry
+        SoftwareListEntry softwareListEntry = buildSoftwareListEntry(dataInputStream);
+        dataIndex += softwareListEntry.getSize() / 2;
+        softwareBlock.getBlockContents().add(softwareListEntry);
+
+        TextEntry softwareNameEntry = new TextEntry();
+        dataIndex += populateTextEntry(softwareNameEntry, dataInputStream);
+        softwareBlock.getBlockContents().add(softwareNameEntry);
+
+        TextEntry softwareCostTextEntry = new TextEntry();
+        populateTextEntry(softwareCostTextEntry, dataInputStream, numberOfShortsInThisBlock - dataIndex);
+        softwareBlock.getBlockContents().add(softwareCostTextEntry);
+
+        return softwareBlock;
+    }
+
+    private static Block buildGrailPointBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        int dataIndex = 0;
+        GrailPointBlock grailPointsBlock = new GrailPointBlock(blockIndex);
+
+        DefaultGrailPointEntry defaultGrailPointEntry = buildDefaultGrailPointEntry(dataInputStream);
+        dataIndex += defaultGrailPointEntry.getSize() / 2;
+        grailPointsBlock.getBlockContents().add(defaultGrailPointEntry);
+
+        while(dataIndex < numberOfShortsInThisBlock) {
+            GrailPointEntry grailPointEntry = buildGrailPointEntry(dataInputStream);
+            dataIndex += grailPointEntry.getSize() / 2;
+            grailPointsBlock.getBlockContents().add(grailPointEntry);
+        }
+        return grailPointsBlock;
+    }
+
+    private static Block buildMapNamesLimitedBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        int dataIndex = 0;
+        MapNamesLimitedBlock mapNamesBlock = new MapNamesLimitedBlock(blockIndex);
+
+        // Music entry
+        MapMusicLimitedEntry mapMusicLimitedEntry = buildMapMusicLimitedEntry(dataInputStream);
+        dataIndex += mapMusicLimitedEntry.getSize() / 2;
+        mapNamesBlock.getBlockContents().add(mapMusicLimitedEntry);
+
+        // Japanese field name
+        TextEntry textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        mapNamesBlock.getBlockContents().add(textEntry);
+
+        // Field name
+        textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        mapNamesBlock.getBlockContents().add(textEntry);
+
+        // Screen names
+        while(dataIndex < numberOfShortsInThisBlock) {
+            textEntry = new TextEntry();
+            dataIndex += populateTextEntry(textEntry, dataInputStream, numberOfShortsInThisBlock - dataIndex);
+            mapNamesBlock.getBlockContents().add(textEntry);
+        }
+        return mapNamesBlock;
+    }
+
+    private static ScannableBlock buildScannableBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        int dataIndex = 0;
+        ScannableBlock scannableBlock = new ScannableBlock(blockIndex);
+
+        // Scannable text
+        TextEntry textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        scannableBlock.getBlockContents().add(textEntry);
+
+        ListEntry listEntry = buildListEntry(dataInputStream, false);
+        dataIndex += listEntry.getSize() / 2;
+        scannableBlock.getBlockContents().add(listEntry);
+        return scannableBlock;
+    }
+
     private static ShopBlock buildShopBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         int dataIndex = 0;
         ShopBlock shopBlock = new ShopBlock(blockIndex);
 
         List<BlockListData> shopBlockData = new ArrayList<>();
-        for(int i = 0; i < 4; i ++) {
+        for(int i = 0; i < 4; i++) {
             short cmdShort = dataInputStream.readShort();
             ++dataIndex;
 
@@ -49,7 +217,7 @@ public final class DatReader {
         shopBlock.setInventoryCountList(shopBlockData.get(2));
         shopBlock.setFlagList(shopBlockData.get(3));
 
-        for(int i = 0; i < 18; i ++) {
+        for(int i = 0; i < 18; i++) {
             BlockStringData blockStringData = new BlockStringData();
             dataIndex += populateBlockStringData(blockStringData, dataInputStream);
             shopBlock.setString(blockStringData, i);
@@ -107,69 +275,6 @@ public final class DatReader {
         }
         shopBlock.setBunemonText(blockStringData);
         return shopBlock;
-    }
-
-    private static Block buildSoftwareMenuBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
-        Block block = new Block(blockIndex);
-
-        for(int softwareIndex = 0; softwareIndex < 20; softwareIndex++) {
-            BlockListData softwareCostBehavior = new BlockListData(dataInputStream.readShort(), dataInputStream.readShort());
-            if(softwareIndex == 18) {
-                softwareCostBehavior.getData().add((short)0x0c8);
-                dataInputStream.readShort(); // Waste the original value
-            }
-            else {
-                softwareCostBehavior.getData().add(dataInputStream.readShort());
-            }
-            softwareCostBehavior.getData().add(dataInputStream.readShort());
-            dataInputStream.readShort(); // 0x000a
-
-            block.getBlockContents().add(softwareCostBehavior);
-            block.getBlockContents().add(new BlockSingleData((short)0x000a));
-
-            BlockStringData softwareName = new BlockStringData();
-            populateBlockStringData(softwareName, dataInputStream);
-            if(Settings.isFools2020Mode()) {
-                if(softwareIndex == 2) {
-                    softwareName.getData().clear();
-                    softwareName.getData().addAll(FileUtils.stringToData(Translations.getText("items.yagostr.exe")));
-                }
-                else if(softwareIndex == 3) {
-                    softwareName.getData().clear();
-                    softwareName.getData().addAll(FileUtils.stringToData(Translations.getText("items.yagomap.exe")));
-                }
-                else if(softwareIndex == 6) {
-                    softwareName.getData().clear();
-                    softwareName.getData().addAll(FileUtils.stringToData(Translations.getText("items.miracle.exe")));
-                }
-                else if(softwareIndex == 7) {
-                    softwareName.getData().clear();
-                    softwareName.getData().addAll(FileUtils.stringToData(Translations.getText("items.lamulana.exe")));
-                }
-                else if(softwareIndex == 17) {
-                    softwareName.getData().clear();
-                    softwareName.getData().addAll(FileUtils.stringToData(Translations.getText("items.torude.exe")));
-                }
-                else if(softwareIndex == 19) {
-                    softwareName.getData().clear();
-                    softwareName.getData().addAll(FileUtils.stringToData(Translations.getText("items.guild.exe")));
-                }
-            }
-
-            block.getBlockContents().add(softwareName);
-            block.getBlockContents().add(new BlockSingleData((short)0x000a));
-
-            BlockStringData softwareCostDisplay = new BlockStringData();
-            populateBlockStringData(softwareCostDisplay, dataInputStream);
-            if(softwareIndex == 18) {
-                softwareCostDisplay.getData().clear();
-                softwareCostDisplay.getData().addAll(FileUtils.stringToData(Translations.getText("software.cost.mirai")));
-            }
-
-            block.getBlockContents().add(softwareCostDisplay);
-            block.getBlockContents().add(new BlockSingleData((short)0x000a));
-        }
-        return block;
     }
 
     private static MasterNpcBlock buildMasterNpcBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
@@ -249,730 +354,6 @@ public final class DatReader {
             }
         }
         return checkBlock;
-    }
-
-    private static Block buildItemNameBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
-        int dataIndex = 0;
-        Block itemNameBlock = new Block(blockIndex);
-        BlockStringData blockStringData;
-
-        // Add everything before Lamp of Time
-        for(int i = 0; i < 25; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("items.LampofTime")));
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item name
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        for(int i = 0; i < 11; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("items.Scriptures")));
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item name
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Add everything before Scriptures
-        for(int i = 0; i < 18; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("items.HeatproofCase")));
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item name
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Add everything before Map
-        for(int i = 0; i < 13; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("items.Nothing")));
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item name
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Add everything before Lamp of Time
-        for(int i = 0; i < 9; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("items.LampofTime")));
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item name
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Add everything before Secret Treasure of Life
-        for(int i = 0; i < 3; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isHalloweenMode()) {
-            // Get the data for Secret Treasure of Life, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.halloween.candy.name")));
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-        else if(Settings.isFools2020Mode()) {
-            // Get the data for Secret Treasure of Life, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("items.Feather")));
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get Secret Treasure of Life item name
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Add everything before yagomap/yagostr
-        for(int i = 0; i < 2; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("items.YagooStr")));
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("items.YagooMap")));
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item name
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-
-            // Get normal item name
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Add everything before Snapshots / torude.exe
-        for(int i = 0; i < 2; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("items.MiracleWitch")));
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item name
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Guild
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("items.LaMulana")));
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item name
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Add everything before Miracle Witch / miracle.exe
-        for(int i = 0; i < 9; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("items.Snapshots")));
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item name
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Mirai
-        blockStringData = new BlockStringData();
-        dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-        blockStringData.getData().add((short)0x000a);
-        itemNameBlock.getBlockContents().add(blockStringData);
-
-        // La-Mulana software
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("items.Guild")));
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item name
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemNameBlock.getBlockContents().add(blockStringData);
-        }
-
-        while(dataIndex < numberOfShortsInThisBlock) {
-            short blockData = dataInputStream.readShort();
-            ++dataIndex;
-            itemNameBlock.getBlockContents().add(new BlockSingleData(blockData));
-        }
-        return itemNameBlock;
-    }
-
-    private static Block buildItemDescriptionBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
-        int dataIndex = 0;
-        Block itemDescriptionBlock = new Block(blockIndex);
-        String versionString = " Randomizer version " + FileUtils.VERSION;
-        String settingsString = "Settings " + Settings.generateShortString();
-
-        BlockStringData blockStringData;
-
-        // Add everything before Mobile Super X
-        for(int i = 0; i < 35; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Get the data for Mobile Super X, but throw it away in favor of custom replacement
-        dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-        blockStringData = new BlockStringData();
-        blockStringData.getData().addAll(FileUtils.stringToData("Mobile　Super　X：" + versionString));
-        blockStringData.getData().add((short)0x0045);
-        blockStringData.getData().addAll(FileUtils.stringToData(settingsString));
-        blockStringData.getData().add((short)0x000a);
-        itemDescriptionBlock.getBlockContents().add(blockStringData);
-
-        // Add Waterproof Case
-        blockStringData = new BlockStringData();
-        dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-        blockStringData.getData().add((short)0x000a);
-        itemDescriptionBlock.getBlockContents().add(blockStringData);
-
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.fools2020.heatproof.description")));
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item description
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Add everything before Scriptures
-        for(int i = 0; i < 18; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.fools2020.scriptures.description")));
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item description
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        for(int i = 0; i < 19; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Get the data for Mobile Super X2, but throw it away in favor of custom replacement
-        dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-        blockStringData = new BlockStringData();
-        blockStringData.getData().addAll(FileUtils.stringToData("Mobile　Super　X2：" + versionString));
-        blockStringData.getData().add((short)0x0045);
-        blockStringData.getData().addAll(FileUtils.stringToData(settingsString));
-        blockStringData.getData().add((short)0x000a);
-        itemDescriptionBlock.getBlockContents().add(blockStringData);
-
-        // Add everything before Lamp of Time
-        for(int i = 0; i < 3; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.fools2020.lamp.description")));
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item description
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Add everything before Secret Treasure of Life
-        for(int i = 0; i < 3; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isHalloweenMode()) {
-            // Get the data for Secret Treasure of Life, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.halloween.candy.description")));
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-        else if(Settings.isFools2020Mode()) {
-            // Get the data for Secret Treasure of Life, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.fools2020.stol.description")));
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get Secret Treasure of Life item description
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Add everything before yagomap / yagostr
-        for(int i = 0; i < 2; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.fools2020.yagomap.description")));
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.fools2020.yagostr.description")));
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item description
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-
-            // Get normal item description
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Add everything before Snapshots / torude.exe
-        for(int i = 0; i < 2; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.fools2020.torude.description")));
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item description
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Guild
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.fools2020.guild.description")));
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item description
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Add everything before Miracle Witch / miracle.exe
-        for(int i = 0; i < 9; i ++) {
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            dataIndex += populateBlockStringData(new BlockStringData(), dataInputStream);
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.fools2020.miracle.description")));
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            // Get normal item description
-            blockStringData = new BlockStringData();
-            dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-
-        // Mirai
-        blockStringData = new BlockStringData();
-        dataIndex += populateBlockStringData(blockStringData, dataInputStream);
-        blockStringData.getData().add((short)0x000a);
-        itemDescriptionBlock.getBlockContents().add(blockStringData);
-
-        // La-Mulana software
-        if(Settings.isFools2020Mode()) {
-            // Get the data for the item, but throw it away in favor of custom replacement
-            while(dataIndex < numberOfShortsInThisBlock) {
-                dataInputStream.readShort();
-                ++dataIndex;
-            }
-
-            blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("event.fools2020.lamulana.description")));
-            blockStringData.getData().add((short)0x000a);
-            itemDescriptionBlock.getBlockContents().add(blockStringData);
-        }
-        else {
-            while(dataIndex < numberOfShortsInThisBlock) {
-                short blockData = dataInputStream.readShort();
-                ++dataIndex;
-                itemDescriptionBlock.getBlockContents().add(new BlockSingleData(blockData));
-            }
-        }
-
-        return itemDescriptionBlock;
-    }
-
-    private static Block buildGrailPointBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
-        Block grailPointsBlock = new Block(blockIndex);
-        addBlockContentsToBlock(grailPointsBlock, dataInputStream, numberOfShortsInThisBlock);
-        if(!LocationCoordinateMapper.isSurfaceStart() || Settings.isFools2021Mode() || Settings.getCurrentStartingLocation() == 22) {
-            grailPointsBlock.getBlockContents().clear();
-
-            boolean front = LocationCoordinateMapper.isFrontsideStart();
-
-            // Build a new warp for actual starting area
-            BlockListData blockListData = new BlockListData((short)0x004e, (short)6);
-            blockListData.getData().add(LocationCoordinateMapper.getImageIndex(LocationCoordinateMapper.getStartingZone(), front));
-            blockListData.getData().add((short)LocationCoordinateMapper.getStartingZone());
-            blockListData.getData().add((short)LocationCoordinateMapper.getStartingRoom());
-            blockListData.getData().add((short)LocationCoordinateMapper.getStartingScreen());
-            blockListData.getData().add((short)(LocationCoordinateMapper.getStartingX() % 640));
-            blockListData.getData().add((short)(LocationCoordinateMapper.getStartingY() % 480));
-            grailPointsBlock.getBlockContents().add(blockListData);
-            grailPointsBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
-
-            List<Short> warpsAdded = new ArrayList<>();
-            warpsAdded.add((short)LocationCoordinateMapper.getStartingZone());
-            short nextWarp = LocationCoordinateMapper.getNextWarpZone(LocationCoordinateMapper.getStartingZone(), front);
-            while(!warpsAdded.contains(nextWarp)) {
-                blockListData = new BlockListData((short)0x004e, (short)8);
-                blockListData.getData().add((short)0); // No mirai needed
-                blockListData.getData().add(LocationCoordinateMapper.getGrailFlag(nextWarp, front));
-                blockListData.getData().add(LocationCoordinateMapper.getImageIndex(nextWarp, front));
-                blockListData.getData().add(nextWarp);
-                blockListData.getData().add((short)LocationCoordinateMapper.getStartingRoom(nextWarp, front));
-                blockListData.getData().add((short)LocationCoordinateMapper.getStartingScreen(nextWarp));
-                blockListData.getData().add((short)(LocationCoordinateMapper.getStartingX(nextWarp, front) % 640));
-                blockListData.getData().add((short)(LocationCoordinateMapper.getStartingY(nextWarp, front) % 480));
-                grailPointsBlock.getBlockContents().add(blockListData);
-                grailPointsBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
-
-                warpsAdded.add(nextWarp);
-                nextWarp = LocationCoordinateMapper.getNextWarpZone(nextWarp, front);
-            }
-            front = !front;
-            nextWarp = LocationCoordinateMapper.getNextWarpZone(-1, front);
-            warpsAdded.clear(); // Necessary since Twin Labyrinths is on both sides.
-            while(!warpsAdded.contains(nextWarp)) {
-                blockListData = new BlockListData((short)0x004e, (short)8);
-                blockListData.getData().add((short)1); // Require mirai
-                blockListData.getData().add(LocationCoordinateMapper.getGrailFlag(nextWarp, front));
-                blockListData.getData().add(LocationCoordinateMapper.getImageIndex(nextWarp, front));
-                blockListData.getData().add(nextWarp);
-                blockListData.getData().add((short)LocationCoordinateMapper.getStartingRoom(nextWarp, front));
-                blockListData.getData().add((short)LocationCoordinateMapper.getStartingScreen(nextWarp));
-                blockListData.getData().add((short)(LocationCoordinateMapper.getStartingX(nextWarp, front) % 640));
-                blockListData.getData().add((short)(LocationCoordinateMapper.getStartingY(nextWarp, front) % 480));
-                grailPointsBlock.getBlockContents().add(blockListData);
-                grailPointsBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
-
-                warpsAdded.add(nextWarp);
-                nextWarp = LocationCoordinateMapper.getNextWarpZone(nextWarp, front);
-            }
-        }
-        return grailPointsBlock;
-    }
-
-    private static Block buildHTMapBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
-        Block htMapBlock = new Block(blockIndex);
-        addBlockContentsToBlock(htMapBlock, dataInputStream, numberOfShortsInThisBlock);
-        if(Settings.isHalloweenMode()) {
-            List<Short> textToAdd = FileUtils.stringToData(Translations.getText("event.halloween.HTsuffix"));
-            for(int i = textToAdd.size() - 1; i >= 0; i--) {
-                Short character = textToAdd.get(i);
-                htMapBlock.getBlockContents().add(11, new BlockSingleData(character));
-            }
-        }
-        return htMapBlock;
-    }
-
-    private static Block buildGiantSacredOrbSkeletonScanBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
-        Block block = new Block(blockIndex);
-        addBlockContentsToBlock(block, dataInputStream, numberOfShortsInThisBlock);
-        if(Settings.isFools2021Mode()) {
-            BlockContents lastEntry = block.getBlockContents().get(block.getBlockContents().size() - 1);
-            block.getBlockContents().clear();
-            for (Short singleCharacter : FileUtils.stringToData(String.format(Translations.getText("event.fools2021.giants"), Settings.getCurrentGiant(), Settings.getCurrentGiant()))) {
-                block.getBlockContents().add(new BlockSingleData(singleCharacter));
-            }
-            block.getBlockContents().add(new BlockSingleData((short)0x00a));
-            block.getBlockContents().add(lastEntry);
-        }
-        return block;
-    }
-
-    private static Block buildEmailBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
-        Block block = new Block(blockIndex);
-        addBlockContentsToBlock(block, dataInputStream, numberOfShortsInThisBlock);
-        if(Settings.isFools2021Mode()) {
-            block.getBlockContents().clear();
-            for (Short singleCharacter : FileUtils.stringToData(Translations.getText("event.fools2021.mailTitle"))) {
-                block.getBlockContents().add(new BlockSingleData(singleCharacter));
-            }
-            block.getBlockContents().add(new BlockSingleData((short)0x00a));
-            for (Short singleCharacter : FileUtils.stringToData(Translations.getText("event.fools2021.mailText"))) {
-                block.getBlockContents().add(new BlockSingleData(singleCharacter));
-            }
-        }
-        return block;
-    }
-
-    private static Block buildFairyQueenFirstConversationBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
-        // Throw away entire existing block contents in favor of custom
-        int dataIndex = 0;
-        while(dataIndex < numberOfShortsInThisBlock) {
-            short blockData = dataInputStream.readShort();
-            ++dataIndex;
-        }
-
-        Block halloweenBlock = new Block(blockIndex);
-        halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
-        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.text1"));
-        for (Short shortCharacter : stringCharacters) {
-            halloweenBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
-        }
-        halloweenBlock.getBlockContents().add(new BlockItemData((short)0x0042, (short)84)); // Secret Treasure of Life
-        halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, (short)1));
-        halloweenBlock.getBlockContents().add(new BlockSingleData((short) 0x0044)); // {CLS}
-
-        stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.text2"));
-        for (Short shortCharacter : stringCharacters) {
-            halloweenBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
-        }
-
-        halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)0)); // Can-exit flag
-
-        return halloweenBlock;
-    }
-
-    private static Block buildFairyQueenLastConversationBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
-        // Throw away entire existing block contents in favor of custom
-        int dataIndex = 0;
-        while(dataIndex < numberOfShortsInThisBlock) {
-            short blockData = dataInputStream.readShort();
-            ++dataIndex;
-        }
-
-        Block halloweenBlock = new Block(blockIndex);
-        halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
-        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.fairyqueen"));
-        for (Short shortCharacter : stringCharacters) {
-            halloweenBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
-        }
-
-        halloweenBlock.getBlockContents().add(new BlockFlagData((short)0x0040, (short)FlagConstants.CONVERSATION_CANT_LEAVE, (short)0)); // Can-exit flag
-
-        return halloweenBlock;
-    }
-
-    private static short getNextZone(int startingZone) {
-        if(startingZone == 21) {
-            return 19;
-        }
-        return 1;
     }
 
     private static int populateBlockStringData(BlockStringData blockStringData, DataInputStream dataInputStream) throws IOException{
@@ -1094,6 +475,230 @@ public final class DatReader {
         }
     }
 
+    private static int populateTextEntry(TextEntry textEntry, DataInputStream dataInputStream) throws IOException{
+        int dataIndex = 0;
+
+        while (true) {
+            short data = dataInputStream.readShort();
+            ++dataIndex;
+
+            if (data == 0x000a) {
+//                s = unichr(o)
+                return dataIndex;
+            }
+            else if(data == 0x000c || data == 0x0020) {
+                textEntry.getData().add(data);
+            }
+            else if (data >= 0x0040 && data <= 0x0050) {
+                if (data == 0x0040) {
+//                    cmd = "{FLAG %d:=%d}" % (ord(b[0]), ord(b[1]))
+//                    b = b[2:]
+
+                    textEntry.getData().add(data);
+                    textEntry.getData().add(dataInputStream.readShort());
+                    textEntry.getData().add(dataInputStream.readShort());
+                    ++dataIndex;
+                    ++dataIndex;
+                } else if (data == 0x0042) {
+//                    cmd = "{ITEM %d}" % ord(b[0])
+//                    b = b[1:]
+
+                    textEntry.getData().add(data);
+                    textEntry.getData().add(dataInputStream.readShort());
+                    ++dataIndex;
+                } else if (data == 0x0044) {
+//                    cmd = "{CLS}"
+//                    s = "<p>"
+                    textEntry.getData().add(data);
+                } else if (data == 0x0045) {
+//                    cmd = "{BR}"
+//                    s = "<br>"
+                    textEntry.getData().add(data);
+                } else if (data == 0x0046) {
+//                    cmd = "{POSE %d}" % ord(b[0])
+//                    b = b[1:]
+
+                    textEntry.getData().add(data);
+                    textEntry.getData().add(dataInputStream.readShort());
+                    ++dataIndex;
+                } else if (data == 0x0047) {
+//                    cmd = "{MANTRA %d}" % ord(b[0])
+//                    b = b[1:]
+
+                    textEntry.getData().add(data);
+                    textEntry.getData().add(dataInputStream.readShort());
+                    ++dataIndex;
+                } else if (data == 0x004a) {
+//                    colors = [ord(x) for x in b[:3]]
+//                    cmd = "{COL %03d-%03d-%03d}" % tuple(colors)
+//                    if sum(colors) > 0:
+//                        s = "<span style='color:#%02x%02x%02x'>" % tuple(200-x for x in colors)
+//                    else:
+//                        s = "</span>"
+//                        b = b[3:] #TODO: colors not verified
+
+                    textEntry.getData().add(data);
+                    textEntry.getData().add(dataInputStream.readShort());
+                    textEntry.getData().add(dataInputStream.readShort());
+                    textEntry.getData().add(dataInputStream.readShort());
+                    ++dataIndex;
+                    ++dataIndex;
+                    ++dataIndex;
+                } else if (data == 0x004e) {
+//                    lenopts = ord(b[0])
+//                    opts = ["%d" % ord(x) for x in b[1:lenopts+1]]
+//                    cmd = "{CMD %s}" % "-".join(opts)
+//                    b = b[lenopts+1:]
+                    textEntry.getData().add(data);
+                    short numberOfOpts = dataInputStream.readShort();
+                    textEntry.getData().add(numberOfOpts);
+                    ++dataIndex;
+                    for (int i = 0; i < numberOfOpts; i++) {
+                        textEntry.getData().add(dataInputStream.readShort());
+                        ++dataIndex;
+                    }
+                } else if (data == 0x004f) {
+//                    cmd = "{SCENE %d}" % ord(b[0])
+//                    b = b[1:]
+                    textEntry.getData().add(data);
+                    textEntry.getData().add(dataInputStream.readShort());
+                    ++dataIndex;
+                } else {
+//                    cmd = "{%02x}" % o
+                    textEntry.getData().add(data);
+                }
+            } else if (data >= 0x0100 && data <= 0x05c0) {
+//                s = font00[o-0x0100]
+                textEntry.getData().add(data);
+            } else if (data == 0x05c1) {
+//                s = "Un"
+                textEntry.getData().add(data);
+            } else if (data == 0x05c2) {
+//                s = "defi"
+                textEntry.getData().add(data);
+            } else if (data == 0x05c3) {
+//                s = "ned"
+                textEntry.getData().add(data);
+            } else {
+//                s = "{%04x}" % o
+                textEntry.getData().add(data);
+            }
+        }
+    }
+
+    private static int populateTextEntry(TextEntry textEntry, DataInputStream dataInputStream, int shortsRemainingInThisBlock) throws IOException{
+        // todo: integrate this with the other populateTextEntry - only difference is this one has a check for length, to be used if the block will end before an end-of-entry indicator is found
+        int dataIndex = 0;
+
+        while (dataIndex < shortsRemainingInThisBlock) {
+            short data = dataInputStream.readShort();
+            ++dataIndex;
+
+            if (data == 0x000a) {
+//                s = unichr(o)
+                return dataIndex;
+            }
+            else if(data == 0x000c || data == 0x0020) {
+                textEntry.getData().add(data);
+            }
+            else if (data >= 0x0040 && data <= 0x0050) {
+                if (data == 0x0040) {
+//                    cmd = "{FLAG %d:=%d}" % (ord(b[0]), ord(b[1]))
+//                    b = b[2:]
+
+                    textEntry.getData().add(data);
+                    textEntry.getData().add(dataInputStream.readShort());
+                    textEntry.getData().add(dataInputStream.readShort());
+                    ++dataIndex;
+                    ++dataIndex;
+                } else if (data == 0x0042) {
+//                    cmd = "{ITEM %d}" % ord(b[0])
+//                    b = b[1:]
+
+                    textEntry.getData().add(data);
+                    textEntry.getData().add(dataInputStream.readShort());
+                    ++dataIndex;
+                } else if (data == 0x0044) {
+//                    cmd = "{CLS}"
+//                    s = "<p>"
+                    textEntry.getData().add(data);
+                } else if (data == 0x0045) {
+//                    cmd = "{BR}"
+//                    s = "<br>"
+                    textEntry.getData().add(data);
+                } else if (data == 0x0046) {
+//                    cmd = "{POSE %d}" % ord(b[0])
+//                    b = b[1:]
+
+                    textEntry.getData().add(data);
+                    textEntry.getData().add(dataInputStream.readShort());
+                    ++dataIndex;
+                } else if (data == 0x0047) {
+//                    cmd = "{MANTRA %d}" % ord(b[0])
+//                    b = b[1:]
+
+                    textEntry.getData().add(data);
+                    textEntry.getData().add(dataInputStream.readShort());
+                    ++dataIndex;
+                } else if (data == 0x004a) {
+//                    colors = [ord(x) for x in b[:3]]
+//                    cmd = "{COL %03d-%03d-%03d}" % tuple(colors)
+//                    if sum(colors) > 0:
+//                        s = "<span style='color:#%02x%02x%02x'>" % tuple(200-x for x in colors)
+//                    else:
+//                        s = "</span>"
+//                        b = b[3:] #TODO: colors not verified
+
+                    textEntry.getData().add(data);
+                    textEntry.getData().add(dataInputStream.readShort());
+                    textEntry.getData().add(dataInputStream.readShort());
+                    textEntry.getData().add(dataInputStream.readShort());
+                    ++dataIndex;
+                    ++dataIndex;
+                    ++dataIndex;
+                } else if (data == 0x004e) {
+//                    lenopts = ord(b[0])
+//                    opts = ["%d" % ord(x) for x in b[1:lenopts+1]]
+//                    cmd = "{CMD %s}" % "-".join(opts)
+//                    b = b[lenopts+1:]
+                    textEntry.getData().add(data);
+                    short numberOfOpts = dataInputStream.readShort();
+                    textEntry.getData().add(numberOfOpts);
+                    ++dataIndex;
+                    for (int i = 0; i < numberOfOpts; i++) {
+                        textEntry.getData().add(dataInputStream.readShort());
+                        ++dataIndex;
+                    }
+                } else if (data == 0x004f) {
+//                    cmd = "{SCENE %d}" % ord(b[0])
+//                    b = b[1:]
+                    textEntry.getData().add(data);
+                    textEntry.getData().add(dataInputStream.readShort());
+                    ++dataIndex;
+                } else {
+//                    cmd = "{%02x}" % o
+                    textEntry.getData().add(data);
+                }
+            } else if (data >= 0x0100 && data <= 0x05c0) {
+//                s = font00[o-0x0100]
+                textEntry.getData().add(data);
+            } else if (data == 0x05c1) {
+//                s = "Un"
+                textEntry.getData().add(data);
+            } else if (data == 0x05c2) {
+//                s = "defi"
+                textEntry.getData().add(data);
+            } else if (data == 0x05c3) {
+//                s = "ned"
+                textEntry.getData().add(data);
+            } else {
+//                s = "{%04x}" % o
+                textEntry.getData().add(data);
+            }
+        }
+        return dataIndex;
+    }
+
     private static void addBlockContentsToBlock(Block block, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         int dataIndex = 0;
         while (dataIndex < numberOfShortsInThisBlock) {
@@ -1106,47 +711,46 @@ public final class DatReader {
                 block.getBlockContents().add(new BlockSingleData(data));
             }
             else if(data >= 0x0040 && data <= 0x0050) {
-                if (data == 0x0040) {
+                if (data == BlockDataConstants.Flag) {
 //                    cmd = "{FLAG %d:=%d}" % (ord(b[0]), ord(b[1]))
 //                    b = b[2:]
 
-                    block.getBlockContents().add(new BlockFlagData(data,
-                            dataInputStream.readShort(), dataInputStream.readShort()));
+                    block.getBlockContents().add(new BlockFlagData(dataInputStream.readShort(), dataInputStream.readShort()));
                     ++dataIndex;
                     ++dataIndex;
                 }
-                else if (data == 0x0042) {
+                else if (data == BlockDataConstants.Item) {
 //                    cmd = "{ITEM %d}" % ord(b[0])
 //                    b = b[1:]
 
-                    block.getBlockContents().add(new BlockItemData(data, dataInputStream.readShort()));
+                    block.getBlockContents().add(new BlockItemData(dataInputStream.readShort()));
                     ++dataIndex;
                 }
-                else if (data == 0x0044) {
+                else if (data == BlockDataConstants.Cls) {
 //                    cmd = "{CLS}"
 //                    s = "<p>"
                     block.getBlockContents().add(new BlockSingleData(data));
                 }
-                else if (data == 0x0045) {
+                else if (data == BlockDataConstants.Newline) {
 //                    cmd = "{BR}"
 //                    s = "<br>"
                     block.getBlockContents().add(new BlockSingleData(data));
                 }
-                else if (data == 0x0046) {
+                else if (data == BlockDataConstants.Pose) {
 //                    cmd = "{POSE %d}" % ord(b[0])
 //                    b = b[1:]
 
                     block.getBlockContents().add(new BlockPoseData(data, dataInputStream.readShort()));
                     ++dataIndex;
-               }
-                else if (data == 0x0047) {
+                }
+                else if (data == BlockDataConstants.Mantra) {
 //                    cmd = "{MANTRA %d}" % ord(b[0])
 //                    b = b[1:]
 
                     block.getBlockContents().add(new BlockMantraData(data, dataInputStream.readShort()));
                     ++dataIndex;
                 }
-                else if (data == 0x004a) {
+                else if (data == BlockDataConstants.ColorChange) {
 //                    colors = [ord(x) for x in b[:3]]
 //                    cmd = "{COL %03d-%03d-%03d}" % tuple(colors)
 //                    if sum(colors) > 0:
@@ -1155,13 +759,13 @@ public final class DatReader {
 //                        s = "</span>"
 //                        b = b[3:] #TODO: colors not verified
 
-                    block.getBlockContents().add(new BlockColorsData(data, dataInputStream.readShort(),
+                    block.getBlockContents().add(new BlockColorsData(dataInputStream.readShort(),
                             dataInputStream.readShort(), dataInputStream.readShort()));
                     ++dataIndex;
                     ++dataIndex;
                     ++dataIndex;
                 }
-                else if (data == 0x004e) {
+                else if (data == BlockDataConstants.DataList) {
 //                    lenopts = ord(b[0])
 //                    opts = ["%d" % ord(x) for x in b[1:lenopts+1]]
 //                    cmd = "{CMD %s}" % "-".join(opts)
@@ -1175,7 +779,7 @@ public final class DatReader {
                     }
                     block.getBlockContents().add(blockListData);
                 }
-                else if (data == 0x004f) {
+                else if (data == BlockDataConstants.Anime) {
 //                    cmd = "{SCENE %d}" % ord(b[0])
 //                    b = b[1:]
                     block.getBlockContents().add(new BlockSceneData(data, dataInputStream.readShort()));
@@ -1209,6 +813,104 @@ public final class DatReader {
         }
     }
 
+    private static ListEntry buildListEntry(DataInputStream dataInputStream, boolean includeEndOfListEntry) throws IOException {
+        dataInputStream.readShort(); // 0x004e
+        short listSize = dataInputStream.readShort();
+        ListEntry listEntry = new ListEntry(listSize);
+        for(int i = 0; i < listSize; i++) {
+            listEntry.getData().set(i, dataInputStream.readShort());
+        }
+        if(includeEndOfListEntry) {
+            dataInputStream.readShort(); // 0x000a
+        }
+        else {
+            listEntry.setIncludeEndRecordIndicator(false);
+        }
+        return listEntry;
+    }
+
+    private static MapMusicLimitedEntry buildMapMusicLimitedEntry(DataInputStream dataInputStream) throws IOException {
+        dataInputStream.readShort(); // 0x004e
+        short listSize = dataInputStream.readShort();
+        MapMusicLimitedEntry listEntry = new MapMusicLimitedEntry();
+        for(int i = 0; i < listSize; i++) {
+            listEntry.getData().set(i, dataInputStream.readShort());
+        }
+        dataInputStream.readShort(); // 0x000a
+        return listEntry;
+    }
+
+    private static SoftwareListEntry buildSoftwareListEntry(DataInputStream dataInputStream) throws IOException {
+        dataInputStream.readShort(); // 0x004e
+        short listSize = dataInputStream.readShort(); // list length, should be 2
+        SoftwareListEntry softwareListEntry = new SoftwareListEntry();
+        for(int i = 0; i < listSize; i++) {
+            softwareListEntry.getData().set(i, dataInputStream.readShort());
+        }
+        dataInputStream.readShort(); // 0x000a
+        return softwareListEntry;
+    }
+
+    private static DefaultGrailPointEntry buildDefaultGrailPointEntry(DataInputStream dataInputStream) throws IOException {
+        dataInputStream.readShort(); // 0x004e
+        short listSize = dataInputStream.readShort(); // list length, should be 6
+        DefaultGrailPointEntry defaultGrailPointEntry = new DefaultGrailPointEntry();
+        for(int i = 0; i < listSize; i++) {
+            defaultGrailPointEntry.getData().set(i, dataInputStream.readShort());
+        }
+        dataInputStream.readShort(); // 0x000a
+        return defaultGrailPointEntry;
+    }
+
+    private static GrailPointEntry buildGrailPointEntry(DataInputStream dataInputStream) throws IOException {
+        dataInputStream.readShort(); // 0x004e
+        short listSize = dataInputStream.readShort(); // list length, should be 8
+        GrailPointEntry grailPointEntry = new GrailPointEntry();
+        for(int i = 0; i < listSize; i++) {
+            grailPointEntry.getData().set(i, dataInputStream.readShort());
+        }
+        dataInputStream.readShort(); // 0x000a
+        return grailPointEntry;
+    }
+
+    private static boolean isMasterNpcBlock(int blockIndex) {
+        // Others exist, but these are the ones we care about for rando right now
+        return blockIndex == BlockConstants.Master_Hiner
+                || blockIndex == BlockConstants.Master_Moger
+                || blockIndex == BlockConstants.Master_FormerMekuriMaster_Mekuri
+                || blockIndex == BlockConstants.Master_PriestZarnac
+                || blockIndex == BlockConstants.Master_PriestXanado
+                || blockIndex == BlockConstants.Master_PhilosopherGiltoriyo
+                || blockIndex == BlockConstants.Master_PriestHidlyda
+                || blockIndex == BlockConstants.Master_PriestRomancis
+                || blockIndex == BlockConstants.Master_PriestAramo
+                || blockIndex == BlockConstants.Master_PriestTriton
+                || blockIndex == BlockConstants.Master_PriestJaguarfiv
+                || blockIndex == BlockConstants.Master_MrSlushfund_Pepper
+                || blockIndex == BlockConstants.Master_PriestAlest
+                || blockIndex == BlockConstants.Master_StrayFairy
+                || blockIndex == BlockConstants.Master_GiantThexde
+                || blockIndex == BlockConstants.Master_PhilosopherAlsedana
+                || blockIndex == BlockConstants.Master_PhilosopherSamaranta
+                || blockIndex == BlockConstants.Master_PriestLaydoc
+                || blockIndex == BlockConstants.Master_PriestAshgine
+                || blockIndex == BlockConstants.Master_PhilosopherFobos_Ladder
+                || blockIndex == BlockConstants.Master_8BitElder
+                || blockIndex == BlockConstants.Master_duplex
+                || blockIndex == BlockConstants.Master_Samieru
+                || blockIndex == BlockConstants.Master_Naramura
+                || blockIndex == BlockConstants.Master_8BitFairy
+                || blockIndex == BlockConstants.Master_PriestMadomono
+                || blockIndex == BlockConstants.Master_PriestGailious
+                || blockIndex == BlockConstants.Master_Dracuet_WaitForNightfall
+                || blockIndex == BlockConstants.MulbrukEscapeRegular
+                || blockIndex == BlockConstants.MulbrukEscapeSwimsuit
+                || blockIndex == BlockConstants.Master_Dracuet_BackInTime
+                || blockIndex == BlockConstants.Master_Dracuet_HugeCasket
+                || blockIndex == BlockConstants.Master_Fairy_NightSurface
+                || blockIndex == BlockConstants.Master_Dracuet_HTUnlocked;
+    }
+
     public static List<Block> getDatScriptInfo() throws Exception {
         DataInputStream dataInputStream = new DataInputStream(new FileInputStream(Settings.getBackupDatFile()));
 
@@ -1219,106 +921,47 @@ public final class DatReader {
         for(int blockIndex = 0; blockIndex < numberOfBlocks; blockIndex++) {
             int numberOfBytesInThisBlock = dataInputStream.readShort();
 
-            if(DataFromFile.getMapOfShopNameToShopBlock().values().contains((Integer)blockIndex)) {
-                block = buildShopBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
-            }
-            else if(blockIndex == 273 && Settings.isFools2020Mode()) {
-                block = buildShopBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
-            }
-            else if(blockIndex == 480 || blockIndex == 482 || blockIndex == 486) {
-                block = buildCheckBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
-            }
-            else if(blockIndex == 1) {
+            if(blockIndex == BlockConstants.ItemNameBlock) {
                 block = buildItemNameBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
-            else if(blockIndex == 2) {
+            else if(blockIndex == BlockConstants.ItemDescriptionBlock) {
                 block = buildItemDescriptionBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
-            else if(blockIndex == 4) {
-                block = new Block(blockIndex);
-                addBlockContentsToBlock(block, dataInputStream, numberOfBytesInThisBlock / 2);
-                if(Settings.isFools2020Mode()) {
-                    for(BlockContents blockContents : block.getBlockContents()) {
-                        if(blockContents instanceof BlockListData) {
-                            BlockListData blockListData = (BlockListData)blockContents;
-                            if(blockListData.getData().size() == 8
-                                    && blockListData.getData().get(0) == 0x14
-                                    && blockListData.getData().get(1) == 0x5a
-                                    && blockListData.getData().get(2) == 0x46
-                                    && blockListData.getData().get(3) == 0x5a
-                                    && blockListData.getData().get(4) == 0x2710
-                                    && blockListData.getData().get(5) == 0x1e
-                                    && blockListData.getData().get(6) == 0x1
-                                    && blockListData.getData().get(7) == 0x5a) {
-                                blockListData.getData().set(4, (short)(352 * 10 + 1)); // Nerf Angel Shield hp
-                                blockListData.getData().set(6, (short)0x2710); // Buff Fake Silver Shield hp
-                            }
-                        }
-                    }
-                }
+            else if(blockIndex == BlockConstants.MenuBlock) {
+                block = buildMenuBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
-            else if(blockIndex == 5) {
-                block = buildSoftwareMenuBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            else if(blockIndex == BlockConstants.SoftwareBlock) {
+                block = buildSoftwareBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
-            else if(blockIndex == 7) {
+            else if(blockIndex == BlockConstants.GrailPointBlock) {
                 block = buildGrailPointBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
-            else if(blockIndex == 0x1c) {
-                block = buildHTMapBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            else if(blockIndex == BlockConstants.HTMapNamesLimitedBlock) {
+                block = buildMapNamesLimitedBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
-            else if(blockIndex == 88 && Settings.isFools2021Mode()) {
-                // Strength lies at the foot of Futo
-                block = buildGiantSacredOrbSkeletonScanBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            else if(blockIndex == BlockConstants.FootOfFuto) {
+                block = buildScannableBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
-            else if(blockIndex == 0xd7 && Settings.isHalloweenMode()) {
-                block = buildFairyQueenFirstConversationBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            else if(blockIndex == 273) {
+                block = buildShopBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
-            else if(blockIndex == 0xda && Settings.isHalloweenMode()) {
-                block = buildFairyQueenLastConversationBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            else if(blockIndex == BlockConstants.XelpudFlagCheckBlock || blockIndex == BlockConstants.XelpudScoreCheckBlock
+                    || blockIndex == BlockConstants.MulbrukFlagCheckBlock || blockIndex == BlockConstants.MulbrukScoreCheckBlock) {
+                block = buildCheckBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
-            else if((blockIndex >= 0x1ac && blockIndex <= 0x1d5) || (blockIndex == 0x16d || blockIndex == 0x2cb || blockIndex == 0x3c3)) {
-                block = buildEmailBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
-            }
-            else if(blockIndex == 671 || blockIndex == 672 || blockIndex == 673 || blockIndex == 674 || blockIndex == 675 || blockIndex == 677 || blockIndex == 678 || blockIndex == 679
-                    || blockIndex == 680 || blockIndex == 681 || blockIndex == 683 || blockIndex == 689
-                    || blockIndex == 693 || blockIndex == 694 || blockIndex == 696 || blockIndex == 698
-                    || blockIndex == 700 || blockIndex == 701 || blockIndex == 702 || blockIndex == 704 || blockIndex == 706 || blockIndex == 707 || blockIndex == 708 || blockIndex == 709
-                    || blockIndex == 710 || blockIndex == 718 || blockIndex == 723
-                    || blockIndex == 726 || blockIndex == 0x39c || blockIndex == 0x39e || blockIndex == 991 || blockIndex == 993 || blockIndex == 1000) {
+            else if(isMasterNpcBlock(blockIndex)) {
                 block = buildMasterNpcBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
-            else if(blockIndex == 998 && Settings.isIncludeHellTempleNPCs()) {
-                block = buildMasterNpcBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            else if(DataFromFile.getMapOfShopNameToShopBlock().values().contains((Integer)blockIndex)) {
+                block = buildShopBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             else {
                 block = new Block(blockIndex);
                 addBlockContentsToBlock(block, dataInputStream, numberOfBytesInThisBlock / 2);
-                if(blockIndex == 249) {
-                    // Remove Mini Doll's becoming small flag from conversation.
-                    Integer becomingSmallFlagIndex = null;
-                    BlockContents blockContents;
-                    for(int i = 0; i < block.getBlockContents().size(); i++) {
-                        blockContents = block.getBlockContents().get(i);
-                        if(blockContents instanceof BlockFlagData && ((BlockFlagData) blockContents).getWorldFlag() == FlagConstants.PROVE_THOU_ART_SMALL) {
-                            becomingSmallFlagIndex = i;
-                        }
-                    }
-                    if(becomingSmallFlagIndex != null) {
-                        block.getBlockContents().remove((int)becomingSmallFlagIndex);
-                    }
-                }
             }
             datBlocks.add(block);
-            GameDataTracker.addBlock(block);
+            GameDataTracker.trackBlock(block);
         }
-        if(!LocationCoordinateMapper.isSurfaceStart() && Settings.getCurrentStartingLocation() != 23 && Settings.getCurrentStartingLocation() != 24) {
-            block = AddObject.addShopBlock(datBlocks);
-            if(!DataFromFile.getMapOfShopNameToShopBlock().containsKey(DataFromFile.CUSTOM_SHOP_NAME)) {
-                DataFromFile.getMapOfShopNameToShopBlock().put(DataFromFile.CUSTOM_SHOP_NAME, block.getBlockNumber());
-            }
-            GameDataTracker.setCustomShopBlock(block.getBlockNumber());
-        }
-        GameDataTracker.addCustomBlocks(datBlocks);
         return datBlocks;
     }
 }

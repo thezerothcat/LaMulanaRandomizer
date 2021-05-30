@@ -17,7 +17,7 @@ public class ConversationDoor extends GameObject {
 
     public ConversationDoor(ObjectContainer objectContainer, int x, int y) {
         super(objectContainer, 7);
-        setId((short)0xa0);
+        setId(ObjectIdConstants.ConversationDoor);
         setX(x);
         setY(y);
     }

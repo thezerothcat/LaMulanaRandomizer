@@ -50,6 +50,15 @@ public class BlockStringData implements BlockContents {
     }
 
     @Override
+    public List<Short> getRawData() {
+        List<Short> rawData = new ArrayList<>();
+        for(int i = 0; i < data.size(); i++) {
+            rawData.add(data.get(i));
+        }
+        return rawData;
+    }
+
+    @Override
     public void writeBytes(DataOutputStream dataOutputStream) throws IOException {
         for(Short dataShort : data) {
             dataOutputStream.writeShort(dataShort);

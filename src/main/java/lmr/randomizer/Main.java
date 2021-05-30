@@ -1,9 +1,6 @@
 package lmr.randomizer;
 
-import lmr.randomizer.dat.AddObject;
-import lmr.randomizer.dat.Block;
-import lmr.randomizer.dat.DatReader;
-import lmr.randomizer.dat.DatWriter;
+import lmr.randomizer.dat.*;
 import lmr.randomizer.node.*;
 import lmr.randomizer.random.*;
 import lmr.randomizer.rcd.*;
@@ -769,12 +766,15 @@ public class Main {
 
                 List<Zone> zones = RcdReader.getRcdScriptInfo();
                 FileUtils.logFlush("rcd file successfully read");
-                RcdData rcdData = new RcdData(zones);
+                RcdFileData rcdFileData = new RcdFileData(zones);
 
                 List<Block> datInfo = DatReader.getDatScriptInfo();
+                DatFileData datFileData = new DatFileData(datInfo);
                 FileUtils.logFlush("dat file successfully read");
 
-                GameUpdater.update(rcdData);
+                GameUpdater gameUpdater = new GameUpdater(rcdFileData, datFileData);
+                gameUpdater.updateDat();
+                gameUpdater.updateRcd();
 
                 dialog.updateProgress(95, Translations.getText("progress.write"));
                 itemRandomizer.updateFiles(random);
@@ -819,27 +819,14 @@ public class Main {
                     transitionGateRandomizer.updateTransitions();
                     FileUtils.logFlush("Updated transition gate data");
                 }
-                if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || Settings.isFools2020Mode()) {
-                    GameDataTracker.updateXelpudIntro(datInfo);
-                }
+                gameUpdater.doPostShuffleUpdates();
+
 //                if(Settings.isRandomizeMantras()) {
 //                    GameDataTracker.randomizeMantras(random);
 //                }
-                if(Settings.isHalloweenMode()) {
-                    int shopBlockNumber = AddObject.addSecretShopBlock(datInfo).getBlockNumber();
-                    int danceBlockNumber = AddObject.addDanceBlock(datInfo).getBlockNumber();
-                    GameDataTracker.replaceNightSurfaceWithSurface(rcdData, danceBlockNumber, shopBlockNumber);
-                    if(Settings.isIncludeHellTempleNPCs()) {
-                        GameDataTracker.addHTSkip(rcdData, datInfo);
-                    }
-                    GameDataTracker.fixTransitionGates(rcdData);
-                }
-                else if(Settings.isFools2020Mode()) {
-                    GameDataTracker.updateWorldForFools2020(rcdData, datInfo);
-                }
 
                 FileUtils.logFlush("Writing rcd file");
-                RcdWriter.writeRcd(rcdData);
+                RcdWriter.writeRcd(rcdFileData);
 
                 FileUtils.log("rcd file successfully written");
                 FileUtils.logFlush("Writing dat file");

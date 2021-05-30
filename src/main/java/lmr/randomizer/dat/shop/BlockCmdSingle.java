@@ -1,9 +1,12 @@
 package lmr.randomizer.dat.shop;
 
 import lmr.randomizer.dat.BlockContents;
+import lmr.randomizer.dat.BlockDataConstants;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by thezerothcat on 8/1/2017.
@@ -25,10 +28,20 @@ public class BlockCmdSingle implements BlockContents {
     }
 
     @Override
+    public List<Short> getRawData() {
+        List<Short> rawData = new ArrayList<>();
+        rawData.add(BlockDataConstants.DataList);
+        rawData.add((short)1);
+        rawData.add(data);
+        rawData.add(BlockDataConstants.EndOfEntry);
+        return rawData;
+    }
+
+    @Override
     public void writeBytes(DataOutputStream dataOutputStream) throws IOException {
-        dataOutputStream.writeShort(0x004e);
+        dataOutputStream.writeShort(BlockDataConstants.DataList);
         dataOutputStream.writeShort(1);
         dataOutputStream.writeShort(data);
-        dataOutputStream.writeShort(0x000a);
+        dataOutputStream.writeShort(BlockDataConstants.EndOfEntry);
     }
 }
