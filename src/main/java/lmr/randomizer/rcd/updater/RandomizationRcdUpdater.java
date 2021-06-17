@@ -1989,7 +1989,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
 //                mapOfNpcLocationToObject.put("NPCL: Stray fairy", (ConversationDoor)gameObject);
 //            }
             else if(blockNumber == BlockConstants.Master_GiantThexde) {
-//                mapOfNpcLocationToObject.put("NPCL: Giant Thexde", (ConversationDoor)gameObject);
+                mapOfNpcLocationToObject.put("NPCL: Giant Thexde", (ConversationDoor)gameObject);
             }
             else if(blockNumber == BlockConstants.Master_PhilosopherAlsedana) {
                 mapOfNpcLocationToObject.put("NPCL: Philosopher Alsedana", (ConversationDoor)gameObject);
