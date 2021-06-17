@@ -1,8 +1,11 @@
 package lmr.randomizer.dat;
 
-import lmr.randomizer.BlockConstants;
+import lmr.randomizer.randomization.data.CustomBlockEnum;
+import lmr.randomizer.util.BlockConstants;
+import lmr.randomizer.Settings;
 import lmr.randomizer.dat.blocks.*;
-import lmr.randomizer.dat.conversation.CheckBlock;
+import lmr.randomizer.dat.blocks.CheckBlock;
+import lmr.randomizer.dat.blocks.ShopBlock;
 
 import java.util.*;
 
@@ -41,11 +44,17 @@ public class DatFileData {
     public Block getFairyQueenWhenTheTimeComesConversationBlock() {
         return datFileEntries.get(BlockConstants.FairyQueenWhenTheTimeComesConversation);
     }
+    public Block getMekuriConversationBlock() {
+        return datFileEntries.get(BlockConstants.ItemConversationMekuri);
+    }
     public Block getMiniDollConversationBlock() {
         return datFileEntries.get(BlockConstants.ItemConversationMiniDoll);
     }
     public Block getPepperConversationBlock() {
         return datFileEntries.get(BlockConstants.ItemConversationPepper);
+    }
+    public Block getAnchorConversationBlock() {
+        return datFileEntries.get(BlockConstants.ItemConversationAnchor);
     }
     public Block getXmailerConversationBlock() {
         return datFileEntries.get(BlockConstants.ItemConversationXmailer);
@@ -65,8 +74,93 @@ public class DatFileData {
     public Block getBookOfTheDeadConversationBlock() {
         return datFileEntries.get(BlockConstants.ItemConversationBookOfTheDead);
     }
+    public Block getSurfaceMapScannableBlock() {
+        return datFileEntries.get(BlockConstants.ItemConversationMapSurface);
+    }
     public Block getProvocativeBathingSuitConversationBlock() {
         return datFileEntries.get(BlockConstants.ItemConversationProvocativeBathingSuit);
+    }
+    public ShopBlock getNeburShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockNebur);
+    }
+    public ShopBlock getNeburAltShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockNeburAlt);
+    }
+    public ShopBlock getSidroShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockSidro);
+    }
+    public ShopBlock getModroShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockModro);
+    }
+    public ShopBlock getPenadventOfGhostShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockPenadventOfGhost);
+    }
+    public ShopBlock getGreedyCharlieShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockGreedyCharlie);
+    }
+    public ShopBlock getShalomIIIShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockShalomIII);
+    }
+    public ShopBlock getUsasVIShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockUsasVI);
+    }
+    public ShopBlock getKingvalleyIShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockKingvalleyI);
+    }
+    public ShopBlock getMrFishmanShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockMrFishman);
+    }
+    public ShopBlock getMrFishmanAltShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockMrFishmanAlt);
+    }
+    public ShopBlock getOperatorCombakerShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockOperatorCombaker);
+    }
+    public ShopBlock getYiegahKungfuShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockYiegahKungfu);
+    }
+    public ShopBlock getArrogantMetagearShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockArrogantMetagear);
+    }
+    public ShopBlock getArrogantSturdySnakeShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockArrogantSturdySnake);
+    }
+    public ShopBlock getYiearKungfuShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockYiearKungfu);
+    }
+    public ShopBlock getAffectedKnimareShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockAffectedKnimare);
+    }
+    public ShopBlock getMoverAthlelandShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockMoverAthleland);
+    }
+    public ShopBlock getGiantMopiranShopBlock() {
+        if(Settings.isFools2020Mode()) {
+            return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockGiantMopiranAngelShield);
+        }
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockGiantMopiran);
+    }
+    public ShopBlock getKingvalleyIIShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockKingvalleyII);
+    }
+    public ShopBlock getEnergeticBelmontShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockEnergeticBelmont);
+    }
+    public ShopBlock getMechanicalEfspiShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockMechanicalEfspi);
+    }
+    public ShopBlock getMudManQubertShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockMudManQubert);
+    }
+    public ShopBlock getHotbloodedNemesistwoShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockHotbloodedNemesistwo);
+    }
+    public ShopBlock getTailorDracuetShopBlock() {
+        return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockTailorDracuet);
+    }
+    public ShopBlock getCustomShopBlock() {
+        Short customBlockIndex = getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock);
+        return customBlockIndex == null ? null : (ShopBlock)datFileEntries.get(customBlockIndex);
     }
     public CheckBlock getXelpudFlagCheckBlock() {
         return (CheckBlock)datFileEntries.get(BlockConstants.XelpudFlagCheckBlock);

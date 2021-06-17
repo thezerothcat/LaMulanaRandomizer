@@ -107,7 +107,27 @@ public class GameObject {
         }
     }
 
+    public void addTests(List<TestByteOperation> tests) {
+        for(TestByteOperation test : tests) {
+            testByteOperations.add(test);
+        }
+        if(testByteOperations.size() > 4) {
+            FileUtils.logFlush("Attempted to add more than 4 tests to object:\n" + toString());
+            throw new RuntimeException("Too many tests on rcd object");
+        }
+    }
+
     public void addUpdates(WriteByteOperation... updates) {
+        for(WriteByteOperation update : updates) {
+            writeByteOperations.add(update);
+        }
+        if(writeByteOperations.size() > 4) {
+            FileUtils.logFlush("Attempted to add more than 4 tests to object:\n" + toString());
+            throw new RuntimeException("Too many tests on rcd object");
+        }
+    }
+
+    public void addUpdates(List<WriteByteOperation> updates) {
         for(WriteByteOperation update : updates) {
             writeByteOperations.add(update);
         }

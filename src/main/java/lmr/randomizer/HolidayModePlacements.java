@@ -3,7 +3,7 @@ package lmr.randomizer;
 import lmr.randomizer.node.CustomDoorPlacement;
 import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.node.CustomTransitionPlacement;
-import lmr.randomizer.random.ShopRandomizationEnum;
+import lmr.randomizer.randomization.ShopRandomizationEnum;
 
 import java.util.List;
 

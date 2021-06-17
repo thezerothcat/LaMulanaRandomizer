@@ -2,9 +2,8 @@ package lmr.randomizer.rcd;
 
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
-import lmr.randomizer.dat.AddObject;
+import lmr.randomizer.update.AddObject;
 import lmr.randomizer.rcd.object.*;
-import lmr.randomizer.update.GameDataTracker;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -159,7 +158,6 @@ public final class RcdReader {
                     screen.setZoneIndex(zoneIndex);
                     screen.setRoomIndex(roomIndex);
                     screen.setScreenIndex(screenIndex);
-                    registerScreen(screen);
 
                     byte screenNameLength = rcdBytes[rcdByteIndex];
                     rcdByteIndex += 1;
@@ -204,19 +202,6 @@ public final class RcdReader {
                     else if(zoneIndex == 3) {
                         if(roomIndex == 3 && screenIndex == 0) {
                             AddObject.setMulbrukScreen(screen);
-                        }
-                    }
-                    else if(zoneIndex == 7) {
-                        if(roomIndex == 3 && screenIndex == 2) {
-                            if(!Settings.isRandomizeNpcs()) {
-                                // This gets set elsewhere if NPCs are randomized.
-                                AddObject.setLittleBrotherShopScreen(screen);
-                            }
-                        }
-                    }
-                    else if(zoneIndex == 8) {
-                        if(roomIndex == 0 && screenIndex == 1) {
-                            AddObject.setDimensionalExitScreen(screen);
                         }
                     }
 
@@ -282,8 +267,27 @@ public final class RcdReader {
             rcdByteIndex += 2;
         }
 
-        objectContainer.getObjects().add(obj);
+        objectContainer.getObjects().add(convertObject(obj));
         return rcdByteIndex;
+    }
+
+    private static GameObject convertObject(GameObject object) { // todo: eventually just parse this properly in the first place
+        if(object.getId() == ObjectIdConstants.Chest) {
+            return new Chest(object);
+        }
+        if(object.getId() == ObjectIdConstants.FloatingItem) {
+            return new FloatingItem(object);
+        }
+        if(object.getId() == ObjectIdConstants.ConversationDoor) {
+            return new ConversationDoor(object);
+        }
+        if(object.getId() == ObjectIdConstants.ItemGive) {
+            return new ItemGive(object);
+        }
+        if(object.getId() == ObjectIdConstants.SnapshotsScan) {
+            return new SnapshotsScan(object);
+        }
+        return object;
     }
 
     private static TestByteOperation getTestByteOperation(byte[] rcdBytes, int rcdByteIndex) {
@@ -314,11 +318,5 @@ public final class RcdReader {
 //        rcdByteIndex += 1;
 
         return writeByteOperation;
-    }
-
-    private static void registerScreen(Screen screen) {
-        if(screen.getZoneIndex() == 17 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
-            GameDataTracker.putTransitionScreen("Transition: Dimensional D1", screen);
-        }
     }
 }

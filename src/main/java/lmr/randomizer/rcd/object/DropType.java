@@ -1,6 +1,6 @@
 package lmr.randomizer.rcd.object;
 
-public enum  DropType {
+public enum DropType {
     NOTHING(0),
     COINS(1),
     WEIGHTS(2),

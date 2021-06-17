@@ -1,6 +1,6 @@
 package lmr.randomizer.rcd.object;
 
-import lmr.randomizer.FlagConstants;
+import lmr.randomizer.util.FlagConstants;
 
 /**
  * 0x95 Eye of Divine Retribution args Not Reversed, Tested

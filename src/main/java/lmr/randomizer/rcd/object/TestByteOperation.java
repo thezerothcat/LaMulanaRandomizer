@@ -35,6 +35,9 @@ public class TestByteOperation {
         return value;
     }
 
+    public void setValue(int value) {
+        this.value = (byte)value;
+    }
     public void setValue(byte value) {
         this.value = value;
     }

@@ -1,16 +1,12 @@
 package lmr.randomizer.dat;
 
-import lmr.randomizer.BlockConstants;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.Settings;
 import lmr.randomizer.dat.blocks.*;
-import lmr.randomizer.dat.blocks.entries.*;
-import lmr.randomizer.dat.conversation.CheckBlock;
-import lmr.randomizer.dat.shop.BlockCmdSingle;
-import lmr.randomizer.dat.shop.BlockStringData;
-import lmr.randomizer.dat.shop.MasterNpcBlock;
-import lmr.randomizer.dat.shop.ShopBlock;
-import lmr.randomizer.update.GameDataTracker;
+import lmr.randomizer.dat.blocks.contents.*;
+import lmr.randomizer.dat.blocks.contents.entries.*;
+import lmr.randomizer.util.BlockConstants;
+import lmr.randomizer.util.BlockDataConstants;
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -911,8 +907,16 @@ public final class DatReader {
                 || blockIndex == BlockConstants.Master_Dracuet_HTUnlocked;
     }
 
-    public static List<Block> getDatScriptInfo() throws Exception {
-        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(Settings.getBackupDatFile()));
+    private static DataInputStream getDatFile(boolean loadFromBackup) throws Exception {
+        if(loadFromBackup) {
+            return new DataInputStream(new FileInputStream(Settings.getBackupDatFile()));
+        }
+        return new DataInputStream(new FileInputStream(String.format("%s/data/language/%s/script_code.dat",
+                Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
+
+    }
+    public static List<Block> getDatScriptInfo(boolean loadFromBackup) throws Exception {
+        DataInputStream dataInputStream = getDatFile(loadFromBackup);
 
         List<Block> datBlocks = new ArrayList<>();
         int numberOfBlocks = (int)dataInputStream.readShort();
@@ -942,6 +946,9 @@ public final class DatReader {
             else if(blockIndex == BlockConstants.FootOfFuto) {
                 block = buildScannableBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
+            else if(blockIndex == BlockConstants.ItemConversationMapSurface) {
+                block = buildScannableBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
             else if(blockIndex == 273) {
                 block = buildShopBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
@@ -960,7 +967,6 @@ public final class DatReader {
                 addBlockContentsToBlock(block, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             datBlocks.add(block);
-            GameDataTracker.trackBlock(block);
         }
         return datBlocks;
     }

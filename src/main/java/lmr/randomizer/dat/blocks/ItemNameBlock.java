@@ -1,7 +1,6 @@
 package lmr.randomizer.dat.blocks;
 
-import lmr.randomizer.dat.Block;
-import lmr.randomizer.dat.blocks.entries.TextEntry;
+import lmr.randomizer.dat.blocks.contents.entries.TextEntry;
 
 public class ItemNameBlock extends Block {
     public static final int Whip = 0;

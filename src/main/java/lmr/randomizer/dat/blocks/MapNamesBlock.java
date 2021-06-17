@@ -1,8 +1,7 @@
 package lmr.randomizer.dat.blocks;
 
-import lmr.randomizer.dat.Block;
-import lmr.randomizer.dat.blocks.entries.MapMusicEntry;
-import lmr.randomizer.dat.blocks.entries.TextEntry;
+import lmr.randomizer.dat.blocks.contents.entries.MapMusicEntry;
+import lmr.randomizer.dat.blocks.contents.entries.TextEntry;
 
 public class MapNamesBlock extends Block {
     public MapNamesBlock(int blockNumber) {

@@ -1,8 +1,7 @@
 package lmr.randomizer.dat.blocks;
 
-import lmr.randomizer.dat.Block;
-import lmr.randomizer.dat.blocks.entries.DefaultGrailPointEntry;
-import lmr.randomizer.dat.blocks.entries.GrailPointEntry;
+import lmr.randomizer.dat.blocks.contents.entries.DefaultGrailPointEntry;
+import lmr.randomizer.dat.blocks.contents.entries.GrailPointEntry;
 
 public class GrailPointBlock extends Block {
     public GrailPointBlock(int blockNumber) {

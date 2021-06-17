@@ -2,9 +2,9 @@ package lmr.randomizer;
 
 import lmr.randomizer.node.CustomPlacementData;
 import lmr.randomizer.node.NodeWithRequirements;
-import lmr.randomizer.random.ShopRandomizationEnum;
-import lmr.randomizer.update.GameObjectId;
-import lmr.randomizer.update.LocationCoordinateMapper;
+import lmr.randomizer.randomization.ShopRandomizationEnum;
+import lmr.randomizer.randomization.data.GameObjectId;
+import lmr.randomizer.util.LocationCoordinateMapper;
 
 import java.util.*;
 
@@ -20,6 +20,7 @@ public final class DataFromFile {
             "Flail Whip", "Earth Spear", "Angel Shield", "Trap: Inferno Orb", "Trap: Twin Ankh");
     public static List<String> LOCATIONS_RELATED_TO_BLOCKS = Arrays.asList("Map (Surface)", "mekuri.exe",
             "Mini Doll", "Pepper", "Anchor", "Mulana Talisman", "xmailer.exe", "Book of the Dead", "Provocative Bathing Suit");
+    public static List<String> SNAPSHOTS_SCAN_LOCATIONS = Arrays.asList("emusic.exe", "beolamu.exe", "mantra.exe");
     public static List<String> TRAP_ITEMS = Arrays.asList("Trap: Graveyard", "Trap: Exploding",
             "Trap: Inferno Orb", "Trap: Twin Ankh");
     public static List<String> USELESS_ITEMS = Arrays.asList("Map (Surface)", "Map (Gate of Guidance)", "Map (Mausoleum of the Giants)", "Map (Temple of the Sun)",
@@ -33,13 +34,6 @@ public final class DataFromFile {
             "capstar.exe", "Dragon Bone", "Fake Silver Shield", "guild.exe", "Hand Scanner", "Heatproof Case", "Helmet",
             "Hermes' Boots", "Lamp of Time", "miracle.exe", "Mobile Super X2", "move.exe", "Pistol", "randc.exe", "reader.exe",
             "Scriptures", "torude.exe", "Waterproof Case", "yagomap.exe");
-    public static List<String> CATEGORIZED_SHOP_ITEM_LOCATIONS = Arrays.asList("Shop 1 (Surface) Item 1",
-            "Shop 2 (Surface) Item 2", "Shop 2 (Surface) Item 3", "Shop 2 Alt (Surface) Item 1",
-            "Shop 3 (Surface) Item 1", "Shop 3 (Surface) Item 2", "Shop 3 (Surface) Item 3", "Shop 4 (Guidance) Item 2",
-            "Shop 5 (Illusion) Item 1", "Shop 6 (Mausoleum) Item 1", "Shop 7 (Graveyard) Item 2", "Shop 8 (Sun) Item 3",
-            "Shop 9 (Sun) Item 1", "Shop 11 (Moonlight) Item 1", "Shop 12 Alt (Spring) Item 3", "Shop 13 (Goddess) Item 1",
-            "Shop 14 (Inferno) Item 1", "Shop 15 (Ruin) Item 1", "Shop 17 (Birth) Item 2", "Shop 18 (Lil Bro) Item 1",
-            "Shop 19 (Big Bro) Item 1", "Shop 20 (Twin Labs) Item 1", "Shop 21 (Unsolvable) Item 1");
     public static final List<String> GUARDIAN_DEFEATED_EVENTS = Arrays.asList("Event: Amphisbaena Defeated",
             "Event: Sakit Defeated", "Event: Ellmac Defeated", "Event: Bahamut Defeated", "Event: Viy Defeated",
             "Event: Palenque Defeated", "Event: Baphomet Defeated", "Event: Tiamat Defeated");
@@ -62,13 +56,9 @@ public final class DataFromFile {
     public static List<String> POSSIBLE_DBOOSTS = Arrays.asList("Item", "Environment", "Enemy");
 
     public static String EXPLODING_CHEST_NAME = "Trap: Exploding";
-    public static String GRAVEYARD_TRAP_CHEST_NAME = "Trap: Graveyard";
     public static String ESCAPE_CHEST_NAME = "Coin: Twin (Escape)";
 
     public static String CUSTOM_SHOP_NAME = "Shop 0 (Default)";
-
-    public static int FIRST_AVAILABLE_RANDOM_GRAPHICS_FLAG = (Settings.isFools2020Mode() || Settings.isFools2021Mode()) ? 2762 : 2730;
-    public static int LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG = (Settings.isFools2020Mode() || Settings.isFools2021Mode()) ? 2765 : 2760;
 
     private static List<String> allShops;
     private static List<String> allItems;
@@ -367,6 +357,9 @@ public final class DataFromFile {
                 }
                 if(!Settings.isRandomizeXmailer() && "xmailer.exe".equals(itemName)) {
                     continue; // NPCs can't have removed items yet.
+                }
+                if("Maternity Statue".equals(itemName)) {
+                    continue; // Not possible in game.
                 }
                 if("Provocative Bathing Suit".equals(itemName)) {
                     continue; // No value in removing this, and if someone wanted it randomized they probably want to actually see it.

@@ -1,8 +1,7 @@
 package lmr.randomizer.dat.blocks;
 
-import lmr.randomizer.dat.Block;
-import lmr.randomizer.dat.blocks.entries.SoftwareListEntry;
-import lmr.randomizer.dat.blocks.entries.TextEntry;
+import lmr.randomizer.dat.blocks.contents.entries.SoftwareListEntry;
+import lmr.randomizer.dat.blocks.contents.entries.TextEntry;
 
 public class SoftwareBlock extends Block {
     public static final int SoftwareReader = 0;

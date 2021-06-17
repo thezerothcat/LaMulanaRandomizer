@@ -2,7 +2,7 @@ package lmr.randomizer.ui;
 
 import lmr.randomizer.Settings;
 import lmr.randomizer.Translations;
-import lmr.randomizer.random.BossDifficulty;
+import lmr.randomizer.BossDifficulty;
 
 import javax.swing.*;
 import java.awt.*;

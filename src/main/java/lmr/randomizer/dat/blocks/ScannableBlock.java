@@ -1,8 +1,7 @@
 package lmr.randomizer.dat.blocks;
 
-import lmr.randomizer.dat.Block;
-import lmr.randomizer.dat.blocks.entries.ListEntry;
-import lmr.randomizer.dat.blocks.entries.TextEntry;
+import lmr.randomizer.dat.blocks.contents.entries.ListEntry;
+import lmr.randomizer.dat.blocks.contents.entries.TextEntry;
 
 public class ScannableBlock extends Block {
     public static final int Language_Native = 0;

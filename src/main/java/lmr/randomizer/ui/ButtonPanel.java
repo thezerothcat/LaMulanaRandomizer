@@ -1,6 +1,5 @@
 package lmr.randomizer.ui;
 
-import lmr.randomizer.FileUtils;
 import lmr.randomizer.Main;
 import lmr.randomizer.Translations;
 
@@ -11,6 +10,7 @@ public class ButtonPanel extends JPanel {
     JButton applyButton;
     JButton restoreButton;
     JButton restoreSavesButton;
+    JButton createZipButton;
     JButton seedImportButton;
 
     public ButtonPanel(Main.RandomizerUI randomizerUI) {
@@ -31,6 +31,11 @@ public class ButtonPanel extends JPanel {
         restoreSavesButton.setActionCommand("restoreSaves");
         add(restoreSavesButton);
 
+        createZipButton = new JButton(Translations.getText("button.createZip"));
+        createZipButton.addActionListener(randomizerUI);
+        createZipButton.setActionCommand("createZip");
+        add(createZipButton);
+
         seedImportButton = new JButton(Translations.getText("button.importSeed"));
         seedImportButton.addActionListener(randomizerUI);
         seedImportButton.setActionCommand("importSeed");
@@ -41,6 +46,7 @@ public class ButtonPanel extends JPanel {
         applyButton.setText(Translations.getText("button.apply"));
         restoreButton.setText(Translations.getText("button.restore"));
         restoreSavesButton.setText(Translations.getText("button.restoreSaves"));
+        createZipButton.setText(Translations.getText("button.createZip"));
         seedImportButton.setText(Translations.getText("button.importSeed"));
     }
 }

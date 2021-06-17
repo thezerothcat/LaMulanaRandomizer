@@ -3,11 +3,11 @@ package lmr.randomizer.node;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
-import lmr.randomizer.random.BacksideDoorRandomizer;
-import lmr.randomizer.random.ItemRandomizer;
-import lmr.randomizer.random.ShopRandomizer;
-import lmr.randomizer.random.TransitionGateRandomizer;
-import lmr.randomizer.update.LocationCoordinateMapper;
+import lmr.randomizer.randomization.BacksideDoorRandomizer;
+import lmr.randomizer.randomization.ItemRandomizer;
+import lmr.randomizer.randomization.ShopRandomizer;
+import lmr.randomizer.randomization.TransitionGateRandomizer;
+import lmr.randomizer.util.LocationCoordinateMapper;
 
 import java.util.*;
 

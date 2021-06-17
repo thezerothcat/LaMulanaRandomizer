@@ -1,6 +1,7 @@
 package lmr.randomizer.dat;
 
 import lmr.randomizer.Settings;
+import lmr.randomizer.dat.blocks.Block;
 
 import java.io.*;
 import java.util.List;

@@ -1,10 +1,10 @@
 package lmr.randomizer.node;
 
 import lmr.randomizer.DataFromFile;
+import lmr.randomizer.randomization.*;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
-import lmr.randomizer.random.*;
-import lmr.randomizer.update.LocationCoordinateMapper;
+import lmr.randomizer.util.LocationCoordinateMapper;
 
 import java.util.*;
 
@@ -614,38 +614,27 @@ public class AccessChecker {
             location = location.substring(0, location.indexOf(")") + 1);
         }
 
-        NodeWithRequirements node = mapOfNodeNameToRequirementsObject.get(location);
-        if(node == null) {
-            FileUtils.log("No requirements for item " + item);
-        }
-
         if(item.equals("Dimensional Key")) {
-            if("Angel Shield".equals(location) || "beolamu.exe".equals(location) || "Sacred Orb (Dimensional Corridor)".equals(location)
-                    || "Ankh Jewel (Dimensional Corridor)".equals(location) || "Magatama Jewel".equals(location)
-                    || "Map (Dimensional Corridor)".equals(location) || "Coin: Dimensional".equals(location)) {
+            if(isDimensionalCorridorLocation(location)) {
                 return false;
             }
         }
         else if(item.contains("Ankh Jewel")) {
             logicalItem = "Ankh Jewel";
-            if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
-                return false;
-            }
-        }
-        else if(item.contains("Key Sword")) {
-            if(Settings.isFools2021Mode()
-                    && ("Shop 12 (Spring)".equals(location) || "Shop 12 Alt (Spring)".equals(location)
-                    || "Shop 18 (Lil Bro)".equals(location) || "Shop 20 (Twin Labs)".equals(location)
-                    || "Shop 21 (Unsolvable)".equals(location))) {
-                // Avoid dealing with Key Sword mantra timer.
+            if(isSnapshotsScanLocation(location)) {
                 return false;
             }
         }
         else if(item.contains("Sacred Orb")) { // todo: should probably not do this check if it's a removed item
             logicalItem = "Sacred Orb";
+            if(isSnapshotsScanLocation(location)) {
+                return false;
+            }
             if(location.contains("Shop")) {
                 if(shopRandomizer.shopHasTransformation(location)) {
-                    return false;
+                    if(!itemRandomizer.isRemovedItem(item)) {
+                        return false;
+                    }
                 }
                 if(Settings.isFools2021Mode()
                         && ("Shop 12 (Spring)".equals(location) || "Shop 12 Alt (Spring)".equals(location)
@@ -655,22 +644,17 @@ public class AccessChecker {
                     return false;
                 }
             }
-            if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
-                return false;
-            }
         }
         else if(item.startsWith("Map")) {
             // Don't put maps in conversations or torude scans, because the item-give dialog won't behave normally.
+            if(isSnapshotsScanLocation(location)) {
+                return false;
+            }
             if(DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(location) && !"Map (Surface)".equals(location)) {
-                return false;
-            }
-            if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
-                return false;
-            }
-            if(Settings.isReplaceMapsWithWeights()
-                    && !"Map (Shrine of the Mother)".equals(item) && "Shop 2 Alt (Surface)".equals(location)) {
-                // Don't put removed map in transforming Surface shop.
-                return false;
+                if(!itemRandomizer.isRemovedItem(item)) {
+                    // Conversations can have removed items, but not maps.
+                    return false;
+                }
             }
         }
         else if(item.startsWith("Trap:")) {
@@ -681,7 +665,7 @@ public class AccessChecker {
             if(DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(location)) {
                 return false;
             }
-            if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
+            if(isSnapshotsScanLocation(location)) {
                 return false;
             }
             if(DataFromFile.getBannedTrapLocations().contains(location)) {
@@ -689,29 +673,42 @@ public class AccessChecker {
                 // look bad if opening one chest procs both traps.
                 return false;
             }
+            if(DataFromFile.EXPLODING_CHEST_NAME.equals(item)) {
+                if(isFloatingItemLocation(location)) {
+                    return false;
+                }
+            }
+        }
+        else if(item.startsWith("Coin:")) {
+            // Shop, floating item, torude scan can't give coins.
+            if(location.contains("Shop")) {
+                return false;
+            }
+            if(isFloatingItemLocation(location)) {
+                return false;
+            }
+            if(isSnapshotsScanLocation(location)) {
+                return false;
+            }
         }
         else if(item.equals("Whip") || item.equals("Chain Whip") || item.equals("Buckler") || item.contains("Silver Shield")) {
-            if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
+            if(isSnapshotsScanLocation(location)) {
                 return false;
             }
             if("Shop 2 Alt (Surface)".equals(location)) {
                 // Don't put low/mid tier shield/whip in the shop; you can't buy it to transform the shop if you have the higher tier version.
-                return false;
+                if(!itemRandomizer.isRemovedItem(item)) {
+                    return false;
+                }
             }
         }
 
-        if(Settings.getCurrentRemovedItems().contains(item)
-                || Settings.getRemovedItems().contains(item)
-                || Settings.getStartingItemsIncludingCustom().contains(item)) {
+        if(itemRandomizer.isRemovedItem(item)) {
             if("Shop 2 Alt (Surface)".equals(location)) {
                 // Don't put removed item in transforming Surface shop.
                 return false;
             }
-            else if(DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(location) ) {
-                // Don't put removed item in conversations or instant-item locations, for now.
-                return false;
-            }
-            else if("emusic.exe".equals(location) || "beolamu.exe".equals(location) || "mantra.exe".equals(location)) {
+            if(isSnapshotsScanLocation(location)) {
                 // Don't put removed item in torude scan spots, for now.
                 return false;
             }
@@ -723,6 +720,21 @@ public class AccessChecker {
         }
 
         return mapOfNodeNameToRequirementsObject.get(location).canContainItem(logicalItem);
+    }
+
+    private boolean isDimensionalCorridorLocation(String location) {
+        return "Angel Shield".equals(location) || "beolamu.exe".equals(location) || "Sacred Orb (Dimensional Corridor)".equals(location)
+                || "Ankh Jewel (Dimensional Corridor)".equals(location) || "Magatama Jewel".equals(location)
+                || "Map (Dimensional Corridor)".equals(location) || "Coin: Dimensional".equals(location)
+                || npcRandomizer.isDimensionalCorridor(location);
+    }
+
+    private boolean isSnapshotsScanLocation(String location) {
+        return DataFromFile.SNAPSHOTS_SCAN_LOCATIONS.contains(location);
+    }
+
+    private boolean isFloatingItemLocation(String location) {
+        return DataFromFile.FLOATING_ITEM_LOCATIONS.contains(location);
     }
 
     public boolean isEnoughAnkhJewelsToDefeatAllAccessibleBosses() {

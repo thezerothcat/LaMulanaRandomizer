@@ -1,7 +1,6 @@
 package lmr.randomizer.dat.blocks;
 
-import lmr.randomizer.dat.Block;
-import lmr.randomizer.dat.blocks.entries.TextEntry;
+import lmr.randomizer.dat.blocks.contents.entries.TextEntry;
 
 public class ItemDescriptionBlock extends Block {
     public static final int Whip = 0;
@@ -114,6 +113,9 @@ public class ItemDescriptionBlock extends Block {
         super(blockNumber);
     }
 
+    public TextEntry getDescription(int index) {
+        return (TextEntry)getBlockContents().get(index);
+    }
     public void setDescription(int index, TextEntry newItemDescriptionData) {
         getBlockContents().set(index, newItemDescriptionData);
     }

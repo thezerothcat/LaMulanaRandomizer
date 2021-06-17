@@ -1,8 +1,11 @@
 package lmr.randomizer;
 
-import lmr.randomizer.dat.*;
+import lmr.randomizer.dat.blocks.Block;
 import lmr.randomizer.rcd.object.*;
-import lmr.randomizer.update.LocationCoordinateMapper;
+import lmr.randomizer.update.AddObject;
+import lmr.randomizer.update.AddStartingShop;
+import lmr.randomizer.util.LocationCoordinateMapper;
+import lmr.randomizer.util.FlagConstants;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -2367,15 +2370,12 @@ public class AddObjectTest {
     @Test
     public void testAddGrailToggle() {
         Screen screen = new Screen();
-        Screen dimensionalExitScreen = new Screen();
 
         TestByteOperation testFlag1 = new TestByteOperation(123, ByteOp.FLAG_NOT_EQUAL, 1);
         TestByteOperation testFlag2 = new TestByteOperation(321, ByteOp.FLAG_GT, 4);
 
-        AddObject.setDimensionalExitScreen(dimensionalExitScreen);
         AddObject.addGrailToggle(screen, true, testFlag1, testFlag2);
         AddObject.addGrailToggle(screen, false, testFlag1);
-        AddObject.addGrailToggle(null, false, testFlag1);
 
         GameObject gameObject = screen.getObjects().get(0);
         Assert.assertEquals(gameObject.getId(), 0xb7);
@@ -2402,20 +2402,7 @@ public class AddObjectTest {
         Assert.assertEquals(gameObject.getWriteByteOperations().size(), 0);
         Assert.assertTrue(gameObject.getObjectContainer() == screen);
 
-        gameObject = dimensionalExitScreen.getObjects().get(0);
-        Assert.assertEquals(gameObject.getId(), 0xb7);
-        Assert.assertEquals(gameObject.getX(), -1);
-        Assert.assertEquals(gameObject.getY(), -1);
-        Assert.assertEquals((int)gameObject.getArgs().get(0), 0);
-        Assert.assertEquals(gameObject.getArgs().size(), 1);
-        Assert.assertTrue(containsTest(gameObject, testFlag1));
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(0x382, ByteOp.FLAG_EQUALS, 0)));
-        Assert.assertEquals(gameObject.getTestByteOperations().size(), 2);
-        Assert.assertEquals(gameObject.getWriteByteOperations().size(), 0);
-        Assert.assertTrue(gameObject.getObjectContainer() == dimensionalExitScreen);
-
         Assert.assertEquals(screen.getObjects().size(), 2);
-        Assert.assertEquals(dimensionalExitScreen.getObjects().size(), 1);
     }
 
     @Test
@@ -2443,8 +2430,7 @@ public class AddObjectTest {
 
         Screen screen = new Screen();
 
-        AddObject.setLittleBrotherShopScreen(screen);
-        AddObject.addLittleBrotherShopTimer((short)shopItemFlag);
+        AddObject.addLittleBrotherShopTimer(screen, (short)shopItemFlag);
 
         GameObject gameObject = screen.getObjects().get(0);
         Assert.assertEquals(gameObject.getId(), 0x0b);
@@ -2537,7 +2523,7 @@ public class AddObjectTest {
 
     @Test
     public void testAddNoItemSoundEffect() {
-        int newWorldFlag = 123;
+        short newWorldFlag = 123;
         int screenFlag = 9;
 
         Screen screen = new Screen();
@@ -3956,7 +3942,7 @@ public class AddObjectTest {
         Screen screen = new Screen();
         short blockNumber = 1234;
 
-        AddObject.addGuidanceShop(screen, blockNumber);
+        AddStartingShop.addGuidanceShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4013,7 +3999,7 @@ public class AddObjectTest {
         Screen screen = new Screen();
         short blockNumber = 1234;
 
-        AddObject.addMausoleumShop(screen, blockNumber);
+        AddStartingShop.addMausoleumShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4070,7 +4056,7 @@ public class AddObjectTest {
         Screen screen = new Screen();
         short blockNumber = 1234;
 
-        AddObject.addInfernoShop(screen, blockNumber);
+        AddStartingShop.addInfernoShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4127,7 +4113,7 @@ public class AddObjectTest {
         Screen screen = new Screen();
         short blockNumber = 1234;
 
-        AddObject.addIllusionShop(screen, blockNumber);
+        AddStartingShop.addIllusionShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4184,7 +4170,7 @@ public class AddObjectTest {
         Screen screen = new Screen();
         short blockNumber = 1234;
 
-        AddObject.addTwinLabsFrontShop(screen, blockNumber);
+        AddStartingShop.addTwinLabsFrontShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4241,7 +4227,7 @@ public class AddObjectTest {
         Screen screen = new Screen();
         short blockNumber = 1234;
 
-        AddObject.addTwinLabsBackShop(screen, blockNumber);
+        AddStartingShop.addTwinLabsBackShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4298,7 +4284,7 @@ public class AddObjectTest {
         Screen screen = new Screen();
         short blockNumber = 1332;
 
-        AddObject.addEndlessShop(screen, blockNumber);
+        AddStartingShop.addEndlessShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4355,7 +4341,7 @@ public class AddObjectTest {
         Screen screen = new Screen();
         short blockNumber = 1332;
 
-        AddObject.addGraveyardShop(screen, blockNumber);
+        AddStartingShop.addGraveyardShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4412,7 +4398,7 @@ public class AddObjectTest {
         Screen screen = new Screen();
         short blockNumber = 1234;
 
-        AddObject.addGoddessShop(screen, blockNumber);
+        AddStartingShop.addGoddessShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4469,7 +4455,7 @@ public class AddObjectTest {
         Screen screen = new Screen();
         short blockNumber = 1332;
 
-        AddObject.addRuinShop(screen, blockNumber);
+        AddStartingShop.addRuinShop(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4526,7 +4512,7 @@ public class AddObjectTest {
         Screen screen = new Screen();
         short blockNumber = 1234;
 
-        AddObject.addBirthStartStuff(screen, blockNumber);
+        AddStartingShop.addBirthStartStuff(screen, blockNumber);
 
         // Door graphics
         GameObject gameObject = screen.getObjects().get(0);
@@ -4682,7 +4668,7 @@ public class AddObjectTest {
         Screen screen = new Screen();
         short blockNumber = 273;
 
-        AddObject.addRetroSurfaceShop(screen, blockNumber);
+        AddStartingShop.addRetroSurfaceShop(screen, blockNumber);
 
         // Door graphics, part 1
         GameObject gameObject = screen.getObjects().get(0);

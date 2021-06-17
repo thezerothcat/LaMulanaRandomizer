@@ -33,6 +33,7 @@ NPCL: Priest Romancis => Location: Inferno Cavern [Main], Seal: B2, State: Lamp,
 NPCL: Hot-blooded Nemesistwo => Location: Inferno Cavern [Main], Attack: Chest-Any
 # Chamber of Extinction
 NPCL: Priest Aramo => Location: Chamber of Extinction [Main], Attack: Chest-Any
+NPCL: Priest Triton => Location: Chamber of Extinction [Ankh Lower], Feather
 NPCL: Operator Combaker => Location: Chamber of Extinction [Ankh Lower], Attack: Chest-Any
 # Twin Labyrinths
 NPCL: Yiegah Kungfu => Location: Twin Labyrinths [Loop]

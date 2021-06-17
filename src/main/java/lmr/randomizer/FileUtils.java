@@ -1,14 +1,16 @@
 package lmr.randomizer;
 
 import lmr.randomizer.node.*;
-import lmr.randomizer.update.GameObjectId;
-import lmr.randomizer.update.LocationCoordinateMapper;
+import lmr.randomizer.randomization.data.GameObjectId;
+import lmr.randomizer.util.LocationCoordinateMapper;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.Files;
+import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.*;
 import java.security.MessageDigest;
 import java.util.List;
 import java.util.*;
@@ -19,7 +21,7 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.26.0";
+    public static final String VERSION = "2.27.0";
     public static final int EXISTING_FILE_WIDTH = 1024;
     public static final int EXISTING_FILE_HEIGHT = 512;
     public static final int GRAPHICS_VERSION = 4;
@@ -270,6 +272,26 @@ public class FileUtils {
             }
         }
         return dataString;
+    }
+
+    public static String dataToString(List<Short> dataToConvert) {
+        StringBuilder stringBuilder = new StringBuilder();
+        short data;
+        char charAtIndex;
+        for (int i = 0; i < dataToConvert.size(); i++) {
+            data = dataToConvert.get(i);
+            if (data == 32) {
+                stringBuilder.append(' ');
+            }
+            else if (data == 0x0045) {
+                stringBuilder.append('\n');
+            }
+            else {
+                charAtIndex = CHAR_TO_SHORT_CONVERSION.charAt(data - 0x0100);
+                stringBuilder.append(charAtIndex);
+            }
+        }
+        return stringBuilder.toString();
     }
 
     public static CustomPlacementData getCustomPlacementData() {
@@ -834,7 +856,7 @@ public class FileUtils {
             if(fileToCopy.exists()) {
                 FileUtils.logFlush("Copying msd file from seed folder to La-Mulana install directory");
                 FileOutputStream fileOutputStream = new FileOutputStream(new File(String.format("%s/data/mapdata/map13.msd",
-                        Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
+                        Settings.getLaMulanaBaseDir())));
                 Files.copy(fileToCopy.toPath(), fileOutputStream);
                 fileOutputStream.flush();
                 fileOutputStream.close();
@@ -1262,6 +1284,33 @@ public class FileUtils {
             dataOutputStream.close();
         } catch (Exception ex) {
 
+        }
+    }
+
+    public static void zipCurrentSeed(String zipFileName) {
+        logFlush("Zipping seed");
+        Map<String, String> zipEnv = new HashMap<>();
+        zipEnv.put("create", "true");
+        URI zipURI = URI.create(String.format("jar:%s", Paths.get(zipFileName).toUri().toString()));
+        try (FileSystem zip = FileSystems.newFileSystem(zipURI, zipEnv)){
+            String[] seedfiles = {
+                    String.format("%s/data/mapdata/script.rcd", Settings.getLaMulanaBaseDir()),
+                    String.format("%s/data/language/%s/script_code.dat", Settings.getLaMulanaBaseDir(), Settings.getLanguage()),
+                    String.format("%s/lm_00.sav", Settings.getLaMulanaSaveDir())
+            };
+            for (String filename : seedfiles) {
+                Path source = Paths.get(filename);
+                Path dest = zip.getPath("/" + filename.substring(filename.lastIndexOf('/') + 1));
+                try {
+                    Files.copy(source, dest);
+                }
+                catch (IOException e) {
+                    logException(e);
+                }
+            }
+        }
+        catch(IOException e) {
+            logException(e);
         }
     }
 

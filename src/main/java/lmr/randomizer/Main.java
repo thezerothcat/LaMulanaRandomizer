@@ -1,16 +1,27 @@
 package lmr.randomizer;
 
 import lmr.randomizer.dat.*;
-import lmr.randomizer.node.*;
-import lmr.randomizer.random.*;
-import lmr.randomizer.rcd.*;
+import lmr.randomizer.dat.blocks.Block;
+import lmr.randomizer.dat.blocks.ItemDescriptionBlock;
+import lmr.randomizer.dat.blocks.contents.entries.TextEntry;
+import lmr.randomizer.node.AccessChecker;
+import lmr.randomizer.node.CustomItemPlacement;
+import lmr.randomizer.node.CustomPlacementData;
+import lmr.randomizer.node.MoneyChecker;
+import lmr.randomizer.randomization.*;
+import lmr.randomizer.update.GameUpdater;
+import lmr.randomizer.rcd.RcdFileData;
+import lmr.randomizer.rcd.RcdReader;
+import lmr.randomizer.rcd.RcdWriter;
 import lmr.randomizer.rcd.object.Zone;
 import lmr.randomizer.ui.ButtonPanel;
 import lmr.randomizer.ui.MainPanel;
 import lmr.randomizer.ui.ProgressDialog;
 import lmr.randomizer.ui.TabbedPanel;
-import lmr.randomizer.update.GameDataTracker;
-import lmr.randomizer.update.LocationCoordinateMapper;
+import lmr.randomizer.update.AddObject;
+import lmr.randomizer.util.LocationCoordinateMapper;
+import lmr.randomizer.util.FlagConstants;
+import lmr.randomizer.util.FlagManager;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -180,6 +191,40 @@ public class Main {
                             progressDialog.setLocationRelativeTo(f);
                             try {
                                 restore();
+                            }
+                            catch (Exception ex) {
+                                JOptionPane.showMessageDialog(f,
+                                        ex.getMessage(),
+                                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                            }
+
+                            return null;
+                        }
+                    };
+                    swingWorker.execute();
+                    progressDialog.setVisible(true);
+                } catch (Exception ex) {
+                    FileUtils.log("Error: " + ex.getMessage());
+                    FileUtils.logException(ex);
+                }
+            }
+            else if("createZip".equals(e.getActionCommand())) {
+                if(!Validation.validateInstallDir(this)) {
+                    return;
+                }
+                if(!Validation.validateSaveDir(this)) {
+                    return;
+                }
+
+                try {
+                    String zipFileName = getZipFileName();
+                    Frame f = this;
+                    SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
+                        @Override
+                        protected Void doInBackground() throws Exception {
+                            progressDialog.setLocationRelativeTo(f);
+                            try {
+                                zipCurrentSeed(zipFileName);
                             }
                             catch (Exception ex) {
                                 JOptionPane.showMessageDialog(f,
@@ -523,6 +568,40 @@ public class Main {
             }
         }
 
+        private void zipCurrentSeed(String zipFileName) {
+            try {
+                progressDialog.updateProgress(0, String.format(Translations.getText("export.start"), zipFileName));
+                FileUtils.zipCurrentSeed(zipFileName);
+                progressDialog.updateProgress(100, String.format(Translations.getText("export.done"), zipFileName));
+
+                SwingUtilities.invokeLater(() -> {
+                    try {
+                        Thread.sleep(2000);
+                        progressDialog.setVisible(false);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+            catch (Exception ex) {
+                FileUtils.log("Unable to export seed: " + ex.getMessage());
+                FileUtils.logException(ex);
+                throw new RuntimeException("Unable to export seed. Please see logs for more information.");
+            }
+        }
+
+        private String getZipFileName() throws Exception {
+            DatFileData datFileData = new DatFileData(DatReader.getDatScriptInfo(false));
+            TextEntry textEntry = datFileData.getItemDescriptionBlock().getDescription(ItemDescriptionBlock.MSX1);
+            String msxDescription = FileUtils.dataToString(textEntry.getData());
+            if(msxDescription.contains("Randomizer version")) {
+                return msxDescription.substring(msxDescription.lastIndexOf("Settings ")).replaceAll("Settings ", "") + ".zip";
+            }
+            else {
+                return "randomizer-seed-export-unknown-version.zip";
+            }
+        }
+
         private boolean validateSettings() {
             if(!Validation.validateInstallDir(this)) {
                 return false;
@@ -668,11 +747,6 @@ public class Main {
             }
             shopRandomizer.determineItemTypes(random);
             accessChecker.determineCursedChests(random);
-            if(Settings.isRandomizeCoinChests() || Settings.isRandomizeTrapItems()) {
-                if(!itemRandomizer.placeChestOnlyItems(random)) {
-                    continue;
-                }
-            }
 
             if(!itemRandomizer.placeNoRequirementItems(new ArrayList<>(initiallyAccessibleItems), random)) {
                 continue;
@@ -681,6 +755,7 @@ public class Main {
             if(!itemRandomizer.placeAllItems(random)) {
                 continue;
             }
+            itemRandomizer.placeSubweaponPotContents(random);
 
             if(!Settings.isSkipValidation(attempt)) {
                 accessChecker.computeStartingLocationAccess(true, attempt);
@@ -759,6 +834,10 @@ public class Main {
                     moneyChecker = null;
                 }
 
+                FlagManager flagManager = new FlagManager();
+                FileUtils.logFlush("assigning random graphics");
+                itemRandomizer.assignRandomGraphics(flagManager.getTotalUnallocatedFlags(), random);
+
                 dialog.updateProgress(85, Translations.getText("progress.spoiler"));
                 outputLocations(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer, attempt);
 
@@ -768,58 +847,16 @@ public class Main {
                 FileUtils.logFlush("rcd file successfully read");
                 RcdFileData rcdFileData = new RcdFileData(zones);
 
-                List<Block> datInfo = DatReader.getDatScriptInfo();
+                List<Block> datInfo = DatReader.getDatScriptInfo(true);
                 DatFileData datFileData = new DatFileData(datInfo);
                 FileUtils.logFlush("dat file successfully read");
 
-                GameUpdater gameUpdater = new GameUpdater(rcdFileData, datFileData);
-                gameUpdater.updateDat();
-                gameUpdater.updateRcd();
-
                 dialog.updateProgress(95, Translations.getText("progress.write"));
-                itemRandomizer.updateFiles(random);
-                FileUtils.logFlush("Updated item location data");
-
-                if(Settings.isRandomizeNpcs()) {
-                    // This must happen before shop data randomized in order to get the correct shop screen for little brother
-                    npcRandomizer.updateNpcs();
-                    FileUtils.logFlush("Updated NPCs");
-                }
-
-                boolean subweaponOnly = isSubweaponOnly();
-                shopRandomizer.updateFiles(datInfo, subweaponOnly, moneyChecker, random);
-                FileUtils.logFlush("Updated shop data");
-
-                List<String> availableSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
-                availableSubweapons.removeAll(Settings.getRemovedItems());
-                availableSubweapons.removeAll(Settings.getCurrentRemovedItems());
-                if(!availableSubweapons.isEmpty()) {
-                    GameDataTracker.updateSubweaponPot(availableSubweapons.get(random.nextInt(availableSubweapons.size())));
-                }
-                FileUtils.logFlush("Updated subweapon pot data");
-                if(Settings.isRandomizeEnemies()) {
-                    GameDataTracker.randomizeEnemies(random);
-                    FileUtils.logFlush("Updated enemy data");
-                }
-                if(Settings.isFools2021Mode()) {
-                    GameDataTracker.updateEdenDaises(random);
-                    FileUtils.logFlush("Updated puzzle flags");
-                }
-
-                if(Settings.isRandomizeSeals()) {
-                    sealRandomizer.updateSeals();
-                    FileUtils.logFlush("Updated seal data");
-                }
-
-                if(Settings.isRandomizeBacksideDoors()) {
-                    backsideDoorRandomizer.updateBacksideDoors();
-                    FileUtils.logFlush("Updated backside door data");
-                }
-                if(Settings.isRandomizeTransitionGates()) {
-                    transitionGateRandomizer.updateTransitions();
-                    FileUtils.logFlush("Updated transition gate data");
-                }
-                gameUpdater.doPostShuffleUpdates();
+                shopRandomizer.initShopItemPriceCountRandomizer(isSubweaponOnly(), moneyChecker, random);
+                GameUpdater gameUpdater = new GameUpdater(rcdFileData, datFileData, flagManager);
+                gameUpdater.updateDat(itemRandomizer, shopRandomizer);
+                gameUpdater.updateRcd(itemRandomizer, shopRandomizer, npcRandomizer, sealRandomizer,
+                        transitionGateRandomizer, backsideDoorRandomizer, random);
 
 //                if(Settings.isRandomizeMantras()) {
 //                    GameDataTracker.randomizeMantras(random);
@@ -871,7 +908,6 @@ public class Main {
                 }
 
                 dialog.updateProgress(100, Translations.getText("progress.done"));
-                GameDataTracker.clearAll();
                 AddObject.clearObjects();
                 DataFromFile.clearCustomPlacementData();
 
@@ -1386,6 +1422,12 @@ public class Main {
             possibleStartingLocations.remove((Integer)14);
             possibleStartingLocations.remove((Integer)16);
             possibleStartingLocations.remove((Integer)21);
+        }
+        for(CustomItemPlacement customItemPlacement : customPlacementData.getCustomItemPlacements()) {
+            if(customItemPlacement.getLocation().startsWith(DataFromFile.CUSTOM_SHOP_NAME)) {
+                possibleStartingLocations.remove(1);
+                break;
+            }
         }
         Settings.setCurrentStartingLocation(possibleStartingLocations.get(random.nextInt(possibleStartingLocations.size())));
         FileUtils.logFlush("Selected starting location: " + LocationCoordinateMapper.getStartingZoneName(Settings.getCurrentStartingLocation()));

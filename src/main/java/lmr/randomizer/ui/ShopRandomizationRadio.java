@@ -2,7 +2,7 @@ package lmr.randomizer.ui;
 
 import lmr.randomizer.Settings;
 import lmr.randomizer.Translations;
-import lmr.randomizer.random.ShopRandomizationEnum;
+import lmr.randomizer.randomization.ShopRandomizationEnum;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;

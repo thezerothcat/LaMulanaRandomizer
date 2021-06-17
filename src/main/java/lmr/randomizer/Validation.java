@@ -1,16 +1,24 @@
 package lmr.randomizer;
 
 import lmr.randomizer.node.*;
-import lmr.randomizer.random.ItemRandomizer;
-import lmr.randomizer.random.ShopRandomizationEnum;
-import lmr.randomizer.random.TransitionGateRandomizer;
-import lmr.randomizer.update.LocationCoordinateMapper;
+import lmr.randomizer.randomization.ItemRandomizer;
+import lmr.randomizer.randomization.ShopRandomizationEnum;
+import lmr.randomizer.randomization.TransitionGateRandomizer;
+import lmr.randomizer.util.LocationCoordinateMapper;
 
 import javax.swing.*;
 import java.io.File;
 import java.util.*;
 
 public class Validation {
+    private static List<String> CATEGORIZED_SHOP_ITEM_LOCATIONS = Arrays.asList("Shop 1 (Surface) Item 1",
+            "Shop 2 (Surface) Item 2", "Shop 2 (Surface) Item 3", "Shop 2 Alt (Surface) Item 1",
+            "Shop 3 (Surface) Item 1", "Shop 3 (Surface) Item 2", "Shop 3 (Surface) Item 3", "Shop 4 (Guidance) Item 2",
+            "Shop 5 (Illusion) Item 1", "Shop 6 (Mausoleum) Item 1", "Shop 7 (Graveyard) Item 2", "Shop 8 (Sun) Item 3",
+            "Shop 9 (Sun) Item 1", "Shop 11 (Moonlight) Item 1", "Shop 12 Alt (Spring) Item 3", "Shop 13 (Goddess) Item 1",
+            "Shop 14 (Inferno) Item 1", "Shop 15 (Ruin) Item 1", "Shop 17 (Birth) Item 2", "Shop 18 (Lil Bro) Item 1",
+            "Shop 19 (Big Bro) Item 1", "Shop 20 (Twin Labs) Item 1", "Shop 21 (Unsolvable) Item 1");
+
     public static boolean validateCustomPlacements(Main.RandomizerUI randomizerUI) {
         CustomPlacementData customPlacementData = DataFromFile.getCustomPlacementData();
 
@@ -395,9 +403,7 @@ public class Validation {
             }
             if(DataFromFile.FLOATING_ITEM_LOCATIONS.contains(cursedChestLocation)
                     || DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(cursedChestLocation)
-                    || "mantra.exe".equals(cursedChestLocation)
-                    || "emusic.exe".equals(cursedChestLocation)
-                    || "beolamu.exe".equals(cursedChestLocation)) {
+                    || DataFromFile.SNAPSHOTS_SCAN_LOCATIONS.contains(cursedChestLocation)) {
                 JOptionPane.showMessageDialog(randomizerUI,
                         "Non-chest location " + cursedChestLocation + " cannot be cursed",
                         "Custom placement error", JOptionPane.ERROR_MESSAGE);
@@ -405,13 +411,6 @@ public class Validation {
             }
         }
         for(CustomItemPlacement customItemPlacement : customPlacementData.getCustomItemPlacements()) {
-            if(Settings.getStartingItems().contains(customItemPlacement.getContents())) {
-                JOptionPane.showMessageDialog(randomizerUI,
-                        "Custom placement of " + customItemPlacement.getContents() + " not valid with current settings for starting item",
-                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-
             if(locations.contains(customItemPlacement.getLocation())) {
                 JOptionPane.showMessageDialog(randomizerUI,
                         "Location used for multiple items: " + customItemPlacement.getLocation(),
@@ -505,14 +504,22 @@ public class Validation {
                     return false;
                 }
             }
-            if(customItemPlacement.getContents().startsWith("Coin:") || DataFromFile.EXPLODING_CHEST_NAME.equals(customItemPlacement.getContents())) {
+            if(DataFromFile.EXPLODING_CHEST_NAME.equals(customItemPlacement.getContents())) {
                 if(DataFromFile.FLOATING_ITEM_LOCATIONS.contains(customItemPlacement.getLocation())
                         || DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(customItemPlacement.getLocation())
-                        || "mantra.exe".equals(customItemPlacement.getLocation())
-                        || "emusic.exe".equals(customItemPlacement.getLocation())
-                        || "beolamu.exe".equals(customItemPlacement.getLocation())) {
+                        || DataFromFile.SNAPSHOTS_SCAN_LOCATIONS.contains(customItemPlacement.getLocation())) {
                     JOptionPane.showMessageDialog(randomizerUI,
-                            "Item " + customItemPlacement.getContents() + " cannot be placed at non-chest location " + customItemPlacement.getLocation(),
+                            "Item " + customItemPlacement.getContents() + " cannot be placed at location " + customItemPlacement.getLocation(),
+                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }
+            if(customItemPlacement.getContents().startsWith("Coin:")) {
+                if(DataFromFile.FLOATING_ITEM_LOCATIONS.contains(customItemPlacement.getLocation())
+                        || "Map (Surface)".equals(customItemPlacement.getLocation())
+                        || DataFromFile.SNAPSHOTS_SCAN_LOCATIONS.contains(customItemPlacement.getLocation())) {
+                    JOptionPane.showMessageDialog(randomizerUI,
+                            "Item " + customItemPlacement.getContents() + " cannot be placed at location " + customItemPlacement.getLocation(),
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
@@ -527,7 +534,7 @@ public class Validation {
 
             if(ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())
                     && customItemPlacement.getLocation().startsWith("Shop ")) {
-                if(!DataFromFile.CATEGORIZED_SHOP_ITEM_LOCATIONS.contains(customItemPlacement.getLocation())) {
+                if(!CATEGORIZED_SHOP_ITEM_LOCATIONS.contains(customItemPlacement.getLocation())) {
                     JOptionPane.showMessageDialog(randomizerUI,
                             "Custom placement of item at " + customItemPlacement.getLocation() + " not valid with current settings for shop randomization",
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
@@ -882,7 +889,7 @@ public class Validation {
                 || "Priest Hidlyda".equals(npcName)
                 || "Priest Romancis".equals(npcName)
                 || "Priest Aramo".equals(npcName)
-//                || "Priest Triton".equals(npcName)
+                || "Priest Triton".equals(npcName)
                 || "Priest Jaguarfiv".equals(npcName)
                 || "The Fairy Queen".equals(npcName)
 //                || "Mr. Slushfund".equals(npcName)

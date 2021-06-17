@@ -1,8 +1,7 @@
 package lmr.randomizer;
 
-import lmr.randomizer.random.BossDifficulty;
-import lmr.randomizer.random.ShopRandomizationEnum;
-import lmr.randomizer.update.LocationCoordinateMapper;
+import lmr.randomizer.randomization.ShopRandomizationEnum;
+import lmr.randomizer.util.LocationCoordinateMapper;
 
 import javax.swing.*;
 import java.io.File;

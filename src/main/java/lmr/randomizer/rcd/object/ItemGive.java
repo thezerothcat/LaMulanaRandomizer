@@ -11,9 +11,22 @@ package lmr.randomizer.rcd.object;
 public class ItemGive extends GameObject {
     public ItemGive(ObjectContainer objectContainer, int x, int y) {
         super(objectContainer, 4);
-        setId((short)0xb5);
+        setId(ObjectIdConstants.ItemGive);
         setX(x);
         setY(y);
+    }
+
+    public ItemGive(GameObject gameObject) {
+        super(gameObject.getObjectContainer(), 4);
+        setId(ObjectIdConstants.ItemGive);
+        setX(gameObject.getX());
+        setY(gameObject.getY());
+        addTests(gameObject.getTestByteOperations());
+        addUpdates(gameObject.getWriteByteOperations());
+        setInventoryWord(gameObject.getArgs().get(0));
+        setWidth(gameObject.getArgs().get(1));
+        setHeight(gameObject.getArgs().get(2));
+        setSoundEffect(gameObject.getArgs().get(3));
     }
 
     public void setInventoryWord(int inventoryWord) {

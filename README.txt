@@ -1,6 +1,16 @@
 Please see the wiki page on github for information on how to use the randomizer, and other things you may need to know about it.
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
+2.27
+-----------------------------
+Included Priest Triton when randomizing NPC/shop doors. NPC checks can now have coin chests and removed items. Removed non-chest items now give you a weight.
+
+A new "Export Current Seed" button has been added, which will zip the necessary files to export your current seed for someone else to import. Currently this also includes your first save file.
+
+Fixed a bug where warp wall graphics did not appear when using random starting location. Updated the starting screen to re-enable your grail without having to save and reload.
+
+Updated logic to prevent Dimensional Key from appearing in a shop located in Fobos's room.
+
 2.26
 -----------------------------
 Included Fairy Queen, Fobos, Giant Mopiran, and Yiear Kungfu (big brother shop) when randomizing NPC/shop doors. Added support for NPC custom placement.
