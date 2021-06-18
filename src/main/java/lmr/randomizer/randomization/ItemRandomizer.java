@@ -366,8 +366,8 @@ public class ItemRandomizer {
             if(isTrapItem(newContents) && !isExplodingChest(newContents)) {
                 if(DataFromFile.FLOATING_ITEM_LOCATIONS.contains(itemLocation)) {
                     mapOfItemLocationToItemGraphicInventoryArg.put(itemLocation, getRandomItemGraphic(random));
-                    continue;
                 }
+                continue;
             }
             if(Settings.isRandomizeGraphics() && random.nextBoolean()) {
                 mapOfItemLocationToItemGraphicInventoryArg.put(itemLocation, getRandomItemGraphic(random));

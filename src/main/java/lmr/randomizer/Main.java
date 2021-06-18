@@ -1245,24 +1245,6 @@ public class Main {
 
             saveData[0x11 + FlagConstants.EXTINCTION_TEMP_LIGHT] = (byte)1; // Default Extinction lighting
         }
-//        saveData[0x11 + 0x064] = 1;
-//        saveData[0x11 + 0x065] = 1;
-//        saveData[0x11 + 0x066] = 1;
-//        saveData[0x11 + 0x067] = 1;
-//        saveData[0x11 + 0x068] = 1;
-//        saveData[0x11 + 0x069] = 1;
-//        saveData[0x11 + 0x06a] = 1;
-//        saveData[0x11 + 0x06b] = 1;
-//        saveData[0x11 + 0x06c] = 1;
-//        saveData[0x11 + 0x06d] = 1;
-//        saveData[0x11 + 0x06e] = 1;
-//        saveData[0x11 + 0x06f] = 1;
-//        saveData[0x11 + 0x070] = 1;
-//        saveData[0x11 + 0x071] = 1;
-//        saveData[0x11 + 0x072] = 1;
-//        saveData[0x11 + 0x073] = 1;
-//        saveData[0x11 + 0x074] = 1;
-//        saveData[0x11 + 0x075] = 1;
 
         FileUtils.logFlush("Writing save file");
         try {
