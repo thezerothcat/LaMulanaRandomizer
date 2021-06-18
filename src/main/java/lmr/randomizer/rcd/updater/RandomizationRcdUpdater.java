@@ -1793,8 +1793,9 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             int blockNumber = gameObject.getArgs().get(4);
             if(gameObject.getArgs().get(3) == 1) {
                 // Any shop
+                Short defaultShopBlock = getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock);
                 if(DataFromFile.getMapOfShopNameToShopBlock().values().contains(blockNumber)
-                        || (blockNumber == getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock))
+                        || (defaultShopBlock != null && blockNumber == defaultShopBlock)
                         || (Settings.isFools2020Mode() && blockNumber == BlockConstants.ShopBlockGiantMopiranAngelShield)) {
                     List<GameObject> objects = mapOfShopBlockToShopObjects.get(blockNumber);
                     if (objects == null) {

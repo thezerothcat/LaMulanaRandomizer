@@ -279,6 +279,7 @@ State: Can Open Moonlight Path => Attack: Below, State: Moonlight Face Weapon
 State: Dev Rooms => miracle.exe, mirai.exe
 State: Extinction Light => Attack: Flare Gun
 State: Extinction Light => Setting: Flareless Extinction
+State: Extinction Light => Setting: Fools2020
 State: Extinction Light => Setting: Fools2021
 State: Extinction Full Light => Location: Chamber of Birth [Southeast], Location: Chamber of Extinction [Main], Seal: L7, Seal: L3, Attack: Flare Gun
 State: Fairy Access => Location: Spring in the Sky [Upper], Event: Fairies Unlocked

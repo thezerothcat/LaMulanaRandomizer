@@ -41,7 +41,7 @@ NPCL: Yiear Kungfu => Location: Twin Labyrinths [Loop], NPC: Yiegah Kungfu
 NPCL: Arrogant Sturdy Snake => Location: Twin Labyrinths [Lower], Feather
 NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], State: Block Pushing, Feather, Attack: Bomb
 NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], Glitch: Raindrop
-#NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], Setting: Featherless, Attack: Bomb
+NPCL: Arrogant Metagear => Location: Twin Labyrinths [Lower], Setting: Featherless, Attack: Bomb
 NPCL: Priest Jaguarfiv => Location: Twin Labyrinths [Poseidon]
 # Endless Corridor
 NPCL: The Fairy Queen => Location: Endless Corridor [1F]

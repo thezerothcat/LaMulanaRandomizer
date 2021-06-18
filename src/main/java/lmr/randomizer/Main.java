@@ -993,13 +993,18 @@ public class Main {
             startingNodes.add("Setting: Featherless");
         }
 
+        if(Settings.isFools2020Mode()) {
+            startingNodes.add("Setting: Fools2020");
+        }
         if(Settings.isFools2021Mode()) {
             startingNodes.add("Setting: Fools2021");
-        } else {
+        }
+        else {
             startingNodes.add("Setting: Not Fools2021");
         }
 
         startingNodes.add("Setting: " + Settings.getCurrentBossCount() + " Bosses");
+        startingNodes.add("Setting: Normal Pushing");
 
         if(!Settings.getEnabledGlitches().contains("Raindrop")) {
             startingNodes.add("Setting: No Raindrop");

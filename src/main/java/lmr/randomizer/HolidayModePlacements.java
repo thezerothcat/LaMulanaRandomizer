@@ -69,6 +69,8 @@ public class HolidayModePlacements {
         Settings.setReplaceMapsWithWeights(false, false);
         Settings.setRemoveSpaulder(false, false);
         Settings.setRemoveMainWeapons(false, false);
+        Settings.setRandomizeNpcs(false, false);
+        Settings.setRandomizeSeals(false, false);
         Settings.getStartingItems().clear();
         Settings.getInitiallyAccessibleItems().clear();
         Settings.getRemovedItems().clear();
