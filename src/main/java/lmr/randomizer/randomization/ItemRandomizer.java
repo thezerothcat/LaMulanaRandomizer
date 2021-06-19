@@ -356,6 +356,9 @@ public class ItemRandomizer {
             if(isItemGraphicCustom(itemLocation)) {
                 continue;
             }
+            if("Maternity Statue".equals(itemLocation)) {
+                continue;
+            }
             newContents = Settings.getUpdatedContents(mapOfItemLocationToItem.get(itemLocation));
             if(isRemovedItem(newContents)) {
                 continue;

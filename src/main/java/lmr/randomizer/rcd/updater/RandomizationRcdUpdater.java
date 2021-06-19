@@ -1749,16 +1749,16 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                     objects.add(gameObject);
                     break;
                 }
-                else if(flagTest.getIndex() == FlagConstants.WF_MATERNITY_STATUE) {
-                    // Timer to play Shell Horn sound when being given Maternity Statue equivalent
-                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MATERNITY_STATUE, FlagConstants.WF_MATERNITY_STATUE);
-                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                    if (objects == null) {
-                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                    }
-                    objects.add(gameObject);
-                }
+//                else if(flagTest.getIndex() == FlagConstants.WF_MATERNITY_STATUE) {
+//                    // Timer to play Shell Horn sound when being given Maternity Statue equivalent
+//                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MATERNITY_STATUE, FlagConstants.WF_MATERNITY_STATUE);
+//                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+//                    if (objects == null) {
+//                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+//                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+//                    }
+//                    objects.add(gameObject);
+//                }
             }
         }
         else if (gameObject.getId() == ObjectIdConstants.UseItemDetector) {
@@ -2070,15 +2070,15 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                 }
                 objects.add(gameObject);
             }
-            else if(itemArg == ItemConstants.MATERNITY_STATUE) {
-                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MATERNITY_STATUE, FlagConstants.WF_MATERNITY_STATUE);
-                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                if (objects == null) {
-                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                }
-                objects.add(gameObject);
-            }
+//            else if(itemArg == ItemConstants.MATERNITY_STATUE) {
+//                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MATERNITY_STATUE, FlagConstants.WF_MATERNITY_STATUE);
+//                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+//                if (objects == null) {
+//                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
+//                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
+//                }
+//                objects.add(gameObject);
+//            }
         }
         else if (gameObject.getId() == ObjectIdConstants.XelpudPillar) {
             for(TestByteOperation flagTest : gameObject.getTestByteOperations()) {
