@@ -11,7 +11,7 @@ import java.io.File;
 
 public class EventPanel extends JPanel {
     private JCheckBox holidayMode;
-    private JCheckBox includeHT;
+    private JCheckBox holidayOption1;
     private JCheckBox fools2021Pt1;
     private JCheckBox fools2021Pt2;
     private JCheckBox fools2021Pt3;
@@ -29,8 +29,12 @@ public class EventPanel extends JPanel {
         }
 
         if(Settings.isHalloweenMode()) {
-            includeHT = new JCheckBox();
-            includeHT.setSelected(Settings.isIncludeHellTempleNPCs());
+            holidayOption1 = new JCheckBox();
+            holidayOption1.setSelected(Settings.isIncludeHellTempleNPCs());
+        }
+        if(Settings.isFools2020Mode()) {
+            holidayOption1 = new JCheckBox();
+            holidayOption1.setSelected(Settings.isUpdatedVersion());
         }
         if(Settings.isFools2021Mode()) {
             fools2021Pt1 = new JCheckBox();
@@ -51,7 +55,10 @@ public class EventPanel extends JPanel {
             checkboxContainer.add(holidayMode);
         }
         if(Settings.isHalloweenMode()) {
-            checkboxContainer.add(includeHT);
+            checkboxContainer.add(holidayOption1);
+        }
+        if(Settings.isFools2020Mode()) {
+            checkboxContainer.add(holidayOption1);
         }
         if(Settings.isFools2021Mode()) {
             checkboxContainer.add(fools2021Pt1);
@@ -89,10 +96,11 @@ public class EventPanel extends JPanel {
     public void updateTranslations() {
         if(Settings.isHalloweenMode()) {
             holidayMode.setText(Translations.getText("event.halloween"));
-            includeHT.setText(Translations.getText("event.includeHTNPCs"));
+            holidayOption1.setText(Translations.getText("event.includeHTNPCs"));
         }
         else if(Settings.isFools2020Mode()) {
             holidayMode.setText(Translations.getText("event.fools2020"));
+            holidayOption1.setText(Translations.getText("event.useUpdatedVersion"));
         }
         else if(Settings.isFools2021Mode()) {
             fools2021Pt1.setText(Translations.getText("randomization.fools2021"));
@@ -107,7 +115,10 @@ public class EventPanel extends JPanel {
 
     public void updateSettings() {
         if(Settings.isHalloweenMode()) {
-            Settings.setIncludeHellTempleNPCs(includeHT.isSelected(), true);
+            Settings.setIncludeHellTempleNPCs(holidayOption1.isSelected(), true);
+        }
+        if(Settings.isFools2020Mode()) {
+            Settings.setUpdatedVersion(holidayOption1.isSelected(), true);
         }
         if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
             Settings.setGraphicsPack(graphicsPack.getText(), true);
@@ -116,7 +127,10 @@ public class EventPanel extends JPanel {
 
     public void reloadSettings() {
         if(Settings.isHalloweenMode()) {
-            includeHT.setSelected(Settings.isIncludeHellTempleNPCs());
+            holidayOption1.setSelected(Settings.isIncludeHellTempleNPCs());
+        }
+        if(Settings.isFools2020Mode()) {
+            holidayOption1.setSelected(Settings.isUpdatedVersion());
         }
         if(Settings.isHalloweenMode() || Settings.isFools2020Mode()) {
             graphicsPack.setText(Settings.getGraphicsPack());

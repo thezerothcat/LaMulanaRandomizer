@@ -1,12 +1,12 @@
 package lmr.randomizer.rcd.updater;
 
-import lmr.randomizer.*;
-import lmr.randomizer.update.AddObject;
-import lmr.randomizer.randomization.data.CustomBlockEnum;
-import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.BossDifficulty;
+import lmr.randomizer.Settings;
+import lmr.randomizer.dat.DatFileData;
+import lmr.randomizer.randomization.data.CustomBlockEnum;
 import lmr.randomizer.rcd.RcdFileData;
 import lmr.randomizer.rcd.object.*;
+import lmr.randomizer.update.AddObject;
 import lmr.randomizer.util.BlockConstants;
 import lmr.randomizer.util.FlagConstants;
 import lmr.randomizer.util.ItemConstants;
@@ -240,10 +240,9 @@ public class Fools2020RcdUpdater extends RcdUpdater {
             }
         }
         else if(zoneIndex == 17 && roomIndex == 9 && screenIndex == 0) {
-            // todo: this is new
-            if(BossDifficulty.EASY.equals(Settings.getBossDifficulty()) && Settings.getEnabledDamageBoosts().isEmpty()) {
+            if(Settings.isUpdatedVersion()) {
                 AddObject.addPot(screen, 300, 400, PotGraphic.DIMENSIONAL,
-                        DropType.FLARE_GUN_AMMO, 80, Arrays.asList(new TestByteOperation(FlagConstants.ROOM_FLAG_40, ByteOp.FLAG_EQUALS, 1)),
+                        BossDifficulty.EASY.equals(Settings.getBossDifficulty()) ? DropType.FLARE_GUN_AMMO : DropType.NOTHING, 80, Arrays.asList(new TestByteOperation(FlagConstants.ROOM_FLAG_40, ByteOp.FLAG_EQUALS, 1)),
                         new ArrayList<>(0));
 
             }
@@ -270,7 +269,9 @@ public class Fools2020RcdUpdater extends RcdUpdater {
     public void doPostShuffleUpdates() {
         updateFlareGunItem();
         updateFeatherChest();
-        updateFeatherChestSequence(); // todo: this is new
+        if(Settings.isUpdatedVersion()) {
+            updateFeatherChestSequence();
+        }
         updateMulbrukConversations();
     }
 
@@ -400,6 +401,10 @@ public class Fools2020RcdUpdater extends RcdUpdater {
         if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 1) {
             // Prevent raindropping to the Lamp of Time shop
             screen.getScreenExit(ScreenExit.DOWN).setDestination(7, 4, 1);
+        }
+        if(screen.getZoneIndex() == 1 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
+            // In case the falling pot does weird stuff
+            screen.getScreenExit(ScreenExit.DOWN).setDestination(1, 0, 0);
         }
     }
 
