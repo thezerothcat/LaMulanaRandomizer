@@ -624,6 +624,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             int itemFlag = getNpcItemFlag("Mini Doll");
             ConversationDoorUpdates.addPriestAlestDoor(conversationDoor, itemFlag); // Do this before adding tests, so we can carry over any tests based on the location.
             conversationDoor.getTestByteOperations().add(new TestByteOperation(itemFlag, ByteOp.FLAG_LTEQ, 1));
+            AddObject.addSpecialItemObjects(conversationDoor.getObjectContainer(), itemRandomizer.getNewContents("Mini Doll"));
         }
         if("NPC: Naramura".equals(npcAssigned)) {
             conversationDoor.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.NARAMURA_SPOKEN, ByteOp.ASSIGN_FLAG, 1)); // Flag indicating Naramura has been spoken to

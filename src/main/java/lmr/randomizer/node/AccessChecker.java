@@ -681,7 +681,7 @@ public class AccessChecker {
             }
         }
         else if(item.startsWith("Coin:")) {
-            // Shop, floating item, torude scan can't give coins.
+            // Shop, floating item, torude scan, item give can't give coins.
             if(location.contains("Shop")) {
                 return false;
             }
@@ -689,6 +689,9 @@ public class AccessChecker {
                 return false;
             }
             if(isSnapshotsScanLocation(location)) {
+                return false;
+            }
+            if("Map (Surface)".equals(location)) {
                 return false;
             }
         }
