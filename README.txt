@@ -7,6 +7,8 @@ Included Mr. Slushfund and Priest Alest when randomizing NPC/shop doors.
 
 Added Temple of the Sun, Spring in the Sky, Chamber of Extinction, and Temple of Moonlight to possible random starting locations.
 
+Fixed a bug allowing coin chests to be placed at Surface Map.
+
 2.27
 -----------------------------
 Included Priest Triton when randomizing NPC/shop doors. NPC checks can now have coin chests and removed items. Removed non-chest items now give you a weight.
