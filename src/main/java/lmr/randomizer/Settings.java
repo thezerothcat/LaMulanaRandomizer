@@ -2,6 +2,7 @@ package lmr.randomizer;
 
 import lmr.randomizer.randomization.ShopRandomizationEnum;
 import lmr.randomizer.util.LocationCoordinateMapper;
+import lmr.randomizer.util.ZoneConstants;
 
 import javax.swing.*;
 import java.io.File;
@@ -679,6 +680,10 @@ public final class Settings {
     public static Set<String> getStartingItemsIncludingCustom() {
         Set<String> startingItems = new HashSet<>(singleton.startingItems);
         startingItems.addAll(DataFromFile.getCustomPlacementData().getStartingItems());
+        if(isRequireFlaresForExtinction()
+                && LocationCoordinateMapper.getStartingZone() == ZoneConstants.EXTINCTION) {
+            startingItems.add("Flare Gun");
+        }
         if(Settings.getCurrentStartingLocation() == 7) {
             startingItems.add("Twin Statue");
         }

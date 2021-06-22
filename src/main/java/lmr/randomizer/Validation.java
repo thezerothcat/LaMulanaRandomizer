@@ -85,7 +85,8 @@ public class Validation {
                 return false;
             }
             if(!Settings.isRandomizeTransitionGates()) {
-                if(customPlacementData.getStartingLocation() == 11
+                if(customPlacementData.getStartingLocation() == 6
+                        || customPlacementData.getStartingLocation() == 11
                         || customPlacementData.getStartingLocation() == 14
                         || customPlacementData.getStartingLocation() == 16
                         || customPlacementData.getStartingLocation() == 21) {

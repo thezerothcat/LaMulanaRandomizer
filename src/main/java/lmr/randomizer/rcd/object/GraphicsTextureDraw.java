@@ -107,12 +107,22 @@ public class GraphicsTextureDraw extends GameObject {
         getArgs().set(3, (short)imageY);
     }
 
+    public void setImagePosition(int x, int y) {
+        setImageX(x);
+        setImageY(y);
+    }
+
     public void setImageWidth(int imageWidthPixels) {
         getArgs().set(4, (short)imageWidthPixels);
     }
 
     public void setImageHeight(int imageHeightPixels) {
         getArgs().set(5, (short)imageHeightPixels);
+    }
+
+    public void setImageSize(int imageWidthPixels, int imageHeightPixels) {
+        setImageWidth(imageWidthPixels);
+        setImageHeight(imageHeightPixels);
     }
 
     public void setAnimationMode(int animationMode) {

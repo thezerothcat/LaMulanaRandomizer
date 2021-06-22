@@ -20,8 +20,17 @@ public final class AddStartingShop {
         else if(zoneIndex == 2) {
             conversationDoor = addMausoleumShop(startingScreen, startingShopBlockIndex);
         }
+        else if(zoneIndex == 3) {
+            conversationDoor = addSunShop(startingScreen, startingShopBlockIndex);
+        }
+        else if(zoneIndex == 4) {
+            conversationDoor = addSpringShop(startingScreen, startingShopBlockIndex);
+        }
         else if(zoneIndex == 5) {
             conversationDoor = addInfernoShop(startingScreen, startingShopBlockIndex);
+        }
+        else if(zoneIndex == 6) {
+            conversationDoor = addExtinctionShop(startingScreen, startingShopBlockIndex);
         }
         else if(zoneIndex == 7) {
             if(Settings.getCurrentStartingLocation() == -7) {
@@ -39,6 +48,9 @@ public final class AddStartingShop {
         }
         else if(zoneIndex == 11) {
             conversationDoor = addGraveyardShop(startingScreen, startingShopBlockIndex);
+        }
+        else if(zoneIndex == 12) {
+            conversationDoor = addMoonlightShop(startingScreen, startingShopBlockIndex);
         }
         else if(zoneIndex == 13) {
             conversationDoor = addGoddessShop(startingScreen, startingShopBlockIndex);
@@ -109,6 +121,50 @@ public final class AddStartingShop {
         return shop;
     }
 
+    public static ConversationDoor addSunShop(Screen screen, short shopBlockIndex) {
+        GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 1020, 200);
+
+        graphic.setLayer(0);
+        graphic.setImageFile("01effect.png");
+        graphic.setImagePosition(0, 628);
+        graphic.setImageSize(80, 80);
+        graphic.setAnimation(0, 0, 1, 0);
+        graphic.setCollision(HitTile.Air);
+        graphic.setRGBAMax(0, 0, 0, 255);
+        graphic.setArg23(1);
+
+        screen.getObjects().add(graphic);
+
+        ConversationDoor shop = new ConversationDoor(screen, 1040, 240);
+        shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
+
+        screen.getObjects().add(shop);
+        return shop;
+    }
+
+    public static ConversationDoor addSpringShop(Screen screen, short shopBlockIndex) {
+        GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 60, 140);
+
+        graphic.setLayer(0);
+        graphic.setImageFile("01effect.png");
+        graphic.setImagePosition(280, 628);
+        graphic.setImageSize(40, 60);
+        graphic.setAnimation(0, 0, 1, 0);
+        graphic.setCollision(HitTile.Air);
+        graphic.setRGBAMax(0, 0, 0, 255);
+        graphic.setArg23(1);
+
+        screen.getObjects().add(graphic);
+
+        ConversationDoor shop = new ConversationDoor(screen, 60, 160);
+        shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
+
+        screen.getObjects().add(shop);
+        return shop;
+    }
+
     public static ConversationDoor addInfernoShop(Screen screen, short shopBlockIndex) {
         GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 220, 60);
 
@@ -126,6 +182,28 @@ public final class AddStartingShop {
         screen.getObjects().add(graphic);
 
         ConversationDoor shop = new ConversationDoor(screen, 240, 80);
+        shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
+
+        screen.getObjects().add(shop);
+        return shop;
+    }
+
+    public static ConversationDoor addExtinctionShop(Screen screen, short shopBlockIndex) {
+        GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 40, 700);
+
+        graphic.setLayer(0);
+        graphic.setImageFile("01effect.png");
+        graphic.setImagePosition(320, 628);
+        graphic.setImageSize(40, 60);
+        graphic.setAnimation(0, 0, 1, 0);
+        graphic.setCollision(HitTile.Air);
+        graphic.setRGBAMax(0, 0, 0, 255);
+        graphic.setArg23(1);
+
+        screen.getObjects().add(graphic);
+
+        ConversationDoor shop = new ConversationDoor(screen, 40, 720);
         shop.setShopDefaults();
         shop.setBlockNumber(shopBlockIndex);
 
@@ -246,6 +324,28 @@ public final class AddStartingShop {
         screen.getObjects().add(graphic);
 
         ConversationDoor shop = new ConversationDoor(screen, 880, 160);
+        shop.setShopDefaults();
+        shop.setBlockNumber(shopBlockIndex);
+
+        screen.getObjects().add(shop);
+        return shop;
+    }
+
+    public static ConversationDoor addMoonlightShop(Screen screen, short shopBlockIndex) {
+        GraphicsTextureDraw graphic = new GraphicsTextureDraw(screen, 280, 520);
+
+        graphic.setLayer(0);
+        graphic.setImageFile("01effect.png");
+        graphic.setImagePosition(80, 628);
+        graphic.setImageSize(80, 80);
+        graphic.setAnimation(0, 0, 1, 0);
+        graphic.setCollision(HitTile.Air);
+        graphic.setRGBAMax(0, 0, 0, 255);
+        graphic.setArg23(1);
+
+        screen.getObjects().add(graphic);
+
+        ConversationDoor shop = new ConversationDoor(screen, 300, 560);
         shop.setShopDefaults();
         shop.setBlockNumber(shopBlockIndex);
 

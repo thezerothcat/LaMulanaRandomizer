@@ -1,6 +1,12 @@
 Please see the wiki page on github for information on how to use the randomizer, and other things you may need to know about it.
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
+2.28
+-----------------------------
+Included Mr. Slushfund and Priest Alest when randomizing NPC/shop doors.
+
+Added Temple of the Sun, Spring in the Sky, Chamber of Extinction, and Temple of Moonlight to possible random starting locations.
+
 2.27
 -----------------------------
 Included Priest Triton when randomizing NPC/shop doors. NPC checks can now have coin chests and removed items. Removed non-chest items now give you a weight.

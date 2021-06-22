@@ -632,8 +632,17 @@ public final class LocationCoordinateMapper {
         if("Mausoleum of the Giants".equals(name) || "Mausoleum".equals(name)) {
             return 2;
         }
+        if("Temple of the Sun".equals(name) || "Sun".equals(name)) {
+            return 3;
+        }
+        if("Spring in the Sky".equals(name) || "Spring".equals(name)) {
+            return 4;
+        }
         if("Inferno Cavern".equals(name) || "Inferno".equals(name)) {
             return 5;
+        }
+        if("Chamber of Extinction".equals(name) || "Extinction".equals(name)) {
+            return 6;
         }
         if(name.contains("Twin ")) {
             if(name.toLowerCase().contains("back")) {
@@ -647,11 +656,17 @@ public final class LocationCoordinateMapper {
         if("Endless Corridor".equals(name) || "Endless".equals(name)) {
             return 8;
         }
+//        if("Shrine of the Mother".equals(name) || "Shrine".equals(name)) {
+//            return 8;
+//        }
         if("Gate of Illusion".equals(name) || "Illusion".equals(name)) {
             return 10;
         }
         if("Graveyard of the Giants".equals(name) || "Graveyard".equals(name)) {
             return 11;
+        }
+        if("Temple of Moonlight".equals(name) || "Moonlight".equals(name)) {
+            return 12;
         }
         if("Tower of the Goddess".equals(name) || "Goddess".equals(name)) {
             return 13;
@@ -661,6 +676,9 @@ public final class LocationCoordinateMapper {
         }
         if("Chamber of Birth".equals(name) || "Birth".equals(name)) {
             return 16;
+        }
+        if("Dimensional Corridor".equals(name) || "Dimensional".equals(name)) {
+            return 17;
         }
         if("Gate of Time (Surface)".equals(name) || "Gate of Time Surface".equals(name) || "Surface of Time".equals(name) || "Retro Surface".equals(name) || "Retrosurface".equals(name)) {
             return 21;
@@ -749,11 +767,17 @@ public final class LocationCoordinateMapper {
         if(zone == 2) {
             return "Location: Mausoleum of the Giants";
         }
+        if(zone == 3) {
+            return "Location: Temple of the Sun [Main]";
+        }
         if(zone == 4) {
             return "Location: Spring in the Sky [Main]";
         }
         if(zone == 5) {
             return "Location: Inferno Cavern [Main]";
+        }
+        if(zone == 6) {
+            return "Location: Chamber of Extinction [Main]";
         }
         if(zone == 7) {
             return "Location: Twin Labyrinths [Poison 1]";
@@ -769,6 +793,9 @@ public final class LocationCoordinateMapper {
         }
         if(zone == 11) {
             return "Location: Graveyard of the Giants [Grail]";
+        }
+        if(zone == 12) {
+            return "Location: Temple of Moonlight [Grail]";
         }
         if(zone == 13) {
             return "Location: Tower of the Goddess [Grail]";

@@ -37,7 +37,8 @@ public final class FlagConstants {
     public static final int EXTINCTION_PALENQUE_SCREEN_MURAL = 0x1ca; // Value 0 > 1 after placing the weight in the Extinction <> Birth teleport area, 2 and 3 for animation of mural falling
     public static final int EXTINCTION_TEMP_LIGHT = 0x1cd; // Value 0 > 1 when lighting Extinction via Flare Gun
     public static final int EXTINCTION_TRAP_FAKE_ANKH = 0x1cf; // Triggers crushers via Lemeza detector on approaching the fake ankh
-    public static final int TWINS_POISON = 0x1d7; // Value 0 > 1 when entering the poison room (counting down), 1 > 2 activates the poison after time runs out
+    public static final int TWINS_POISON = 0x1d7; // 2 = elevator moving
+    public static final int TWINS_FRONT_GRAIL_ELEVATOR = 0x1db; // Value 0 > 1 when pressing first dais to release the twins, 1 > 2 when pressing second dais
     public static final int TWINS_RELEASED = 0x1dc; // Value 0 > 1 when pressing first dais to release the twins, 1 > 2 when pressing second dais
     public static final short TWIN_UNSOLVABLE_PUZZLE = 0x1e4; // Value 0 > 1 when solving the block pushing puzzle in Twin Labyrinths on the screen with the lamp recharge station/Lamp of Time Shop
     public static final int LITTLE_BROTHER_PURCHASES = 0x1ea; // Value += 1 for each purchase made from little brother
@@ -61,6 +62,7 @@ public final class FlagConstants {
     public static final int MOONLIGHT_3_WOMEN_FACES = 0x262; // Set to 1 after hitting the face in Moon-gazing pit with a subweapon.
     public static final int RUIN_LADDER_NUWA_V2 = 0x265; // Don't remember how/why this is different from 0x369
     public static final int MOONLIGHT_SCAN_DANCING_MAN = 0x270; // Set to 1 after scanning the Dancing Man
+    public static final int GODDESS_LIGHTS_ON = 0x271; // 3 = lights on
     public static final int GODDESS_STATUE_RUIN = 0x278; // Value 0 > 1 to remove the Goddess statue blocking entry to Tower of Ruin
     public static final int GODDESS_PUZZLE_FLAIL_WHIP = 0x27b; // Value 0 > 1 when reading the tablet, 1 > 2 when solved, 2 > 3 when weapon cover is gone
     public static final int GODDESS_STATUE_SHIELD_ANIMATION = 0x284; // Goes to 2 when activated; 2 > 3 when gone

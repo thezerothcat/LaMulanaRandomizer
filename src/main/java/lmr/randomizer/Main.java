@@ -22,6 +22,7 @@ import lmr.randomizer.update.AddObject;
 import lmr.randomizer.util.LocationCoordinateMapper;
 import lmr.randomizer.util.FlagConstants;
 import lmr.randomizer.util.FlagManager;
+import lmr.randomizer.util.ZoneConstants;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -1178,13 +1179,14 @@ public class Main {
             }
             saveData[0x069 * 2 + 0x1011 + 1] = (byte)10; // Start with 10 weights
 
-            if(Settings.getCurrentStartingLocation() == 7) {
-                // Twin labs front, auto-solve the elevator puzzle
-                saveData[0x11 + 0x1db] = (byte)2;
+            if(Settings.getCurrentStartingLocation() == ZoneConstants.EXTINCTION) {
+                saveData[0x11 + FlagConstants.EXTINCTION_TEMP_LIGHT] = (byte)1; // A bit of light to start things off
             }
-//            if(Settings.getCurrentStartingLocation() == 13) {
-//                // Tower of the Goddess, turn on the lights.
-//                saveData[0x11 + 0x271] = 3;
+            if(Settings.getCurrentStartingLocation() == ZoneConstants.TWIN_FRONT) {
+                saveData[0x11 + FlagConstants.TWINS_FRONT_GRAIL_ELEVATOR] = (byte)2; // Auto-solve elevator puzzle
+            }
+//            if(Settings.getCurrentStartingLocation() == ZoneConstants.GODDESS) {
+//                saveData[0x11 + FlagConstants.GODDESS_LIGHTS_ON] = 3;
 //            }
         }
         if(HolidaySettings.isHalloweenMode()) {
@@ -1377,6 +1379,12 @@ public class Main {
         if(Settings.isAllowSubweaponStart()) {
             startingWeapons.addAll(ItemRandomizer.ALL_SUBWEAPONS);
         }
+        if(Settings.getCurrentStartingLocation() == ZoneConstants.SUN) {
+            startingWeapons.remove("Earth Spear");
+        }
+        if(Settings.getCurrentStartingLocation() == ZoneConstants.MOONLIGHT) {
+            startingWeapons.remove("Flare Gun");
+        }
 
         startingWeapons.removeAll(customPlacementData.getRemovedItems());
         startingWeapons.removeAll(customPlacementData.getStartingItems());
@@ -1407,6 +1415,7 @@ public class Main {
         }
         if(!Settings.isRandomizeTransitionGates()) {
             // Most backside fields aren't an option unless random transitions help keep you from getting stuck on one side of the ruins.
+            possibleStartingLocations.remove((Integer)6); // All the vanilla transitions in Extinction are blocked off from the Extinction side.
             possibleStartingLocations.remove((Integer)11);
             possibleStartingLocations.remove((Integer)13);
             possibleStartingLocations.remove((Integer)14);
