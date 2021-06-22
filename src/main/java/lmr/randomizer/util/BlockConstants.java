@@ -38,10 +38,11 @@ public final class BlockConstants {
     public static final int Master_PriestTriton = 681; // Priest Triton - Extinction NPC, 06-09-01
     public static final int Master_PriestJaguarfiv = 683; // Priest Jaguarfiv - Twin Labs NPC, 07-10-01
     public static final int Master_FairyQueen_RequestPendant = 684;
-    public static final int Master_MrSlushfund_Pepper = 689; // References ItemConversationPepper
+    public static final int Master_MrSlushfund_Pepper = 689; // Mr. Slushfund - Illusion NPC, 10-08-00 - References ItemConversationPepper
+    public static final short Master_MrSlushfund_WaitingForTreasures = 690;
     public static final int Master_MrSlushfund_Anchor = 691; // References ItemConversationAnchor
-    public static final int Master_PriestAlest = 693; // Priest Alest - Illusion NPC, 10-08-01
     public static final int Master_MrSlushfund_NeverComeBack = 692;
+    public static final int Master_PriestAlest = 693; // Priest Alest - Illusion NPC, 10-08-01
     public static final int Master_StrayFairy = 694; // Stray fairy - Illusion NPC, 10-00-01
     public static final int Master_GiantThexde = 696; // Giant Thexde - Graveyard NPC, 11-07-00
     public static final int Master_PhilosopherAlsedana = 698; // Philosopher Alsedana - Moonlight NPC, 12-06-00
@@ -58,6 +59,7 @@ public final class BlockConstants {
     public static final int Master_PriestMadomono = 718; // Priest Madomono - Sun NPC, 03-04-02
     public static final int Master_PriestGailious = 723; // Priest Gailious - Inferno NPC, 05-02-01
     public static final int Master_Dracuet_WaitForNightfall = 726; // Tailor Dracuet - Guidance NPC, 00-06-00
+    public static final short Master_PriestAlest_NoItem = 915;
     public static final int Master_Dracuet_BackInTime = 991; // Tailor Dracuet - Illusion NPC, 10-07-00
     public static final int Master_Dracuet_HugeCasket = 993; // Tailor Dracuet - Gate of Time NPC, 20-03-01
     public static final int Master_Fairy_NightSurface = 998; // Fairy - Night Surface NPC, 22-07-00

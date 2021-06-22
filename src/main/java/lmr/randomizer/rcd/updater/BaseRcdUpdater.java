@@ -1400,8 +1400,6 @@ public class BaseRcdUpdater extends RcdUpdater {
             }
         }
         else if(blockNumber == BlockConstants.Master_MrSlushfund_Pepper) {
-            // Mr. Slushfund - Illusion NPC, 10-08-00
-            // Conversation to receive Pepper
             for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
                 if (flagTest.getIndex() == FlagConstants.MR_SLUSHFUND_CONVERSATION) {
                     flagTest.setIndex(FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER);
@@ -1411,46 +1409,19 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
             }
         }
-        else if(blockNumber == 690) {
-            // Conversation after receiving Pepper if you don't have Treasures
-            for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
-                if (flagTest.getIndex() == FlagConstants.MR_SLUSHFUND_CONVERSATION) {
-                    // Swap out the Pepper/Treasures/Anchor combo flag with Pepper received flag
-                    flagTest.setIndex(FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER);
-                    flagTest.setOp(ByteOp.FLAG_GT);
-                    flagTest.setValue((byte)0);
-                    break;
-                }
-            }
+        else if(blockNumber == BlockConstants.Master_MrSlushfund_WaitingForTreasures) {
+            // To be removed and re-added for NPC shuffling simplicity.
+            return false;
         }
         else if(blockNumber == BlockConstants.Master_MrSlushfund_Anchor) {
-            // Conversation to give Treasures and receive Anchor
-            for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
-                if (flagTest.getIndex() == FlagConstants.MR_SLUSHFUND_CONVERSATION) {
-                    // Swap out the Pepper/Treasures/Anchor combo flag with Anchor custom world flag
-                    flagTest.setIndex(FlagConstants.WF_ANCHOR);
-                    flagTest.setOp(ByteOp.FLAG_LT);
-                    flagTest.setValue((byte)2);
-                    break;
-                }
-            }
+            // To be removed and re-added for NPC shuffling simplicity.
+            return false;
         }
         else if(blockNumber == BlockConstants.Master_MrSlushfund_NeverComeBack) {
-            // Conversation after receiving both Pepper and Anchor
-            for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
-                if (flagTest.getIndex() == FlagConstants.MR_SLUSHFUND_CONVERSATION) {
-                    // Swap out the Pepper/Treasures/Anchor combo flag with Anchor custom world flag
-                    flagTest.setIndex(FlagConstants.WF_ANCHOR);
-                    flagTest.setOp(ByteOp.FLAG_GTEQ);
-                    flagTest.setValue((byte)2);
-                    break;
-                }
-            }
-            // Add a check for Pepper conversation (otherwise we could get this conversation before being given Pepper).
-            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER, ByteOp.FLAG_GT, 0));
+            // To be removed and re-added for NPC shuffling simplicity.
+            return false;
         }
         if(blockNumber == BlockConstants.Master_PriestAlest) {
-            // Priest Alest - Illusion NPC, 10-08-01
             // Mini Doll conversation
             for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
                 if (flagTest.getIndex() == FlagConstants.PROVE_THOU_ART_SMALL) {
@@ -1458,6 +1429,10 @@ public class BaseRcdUpdater extends RcdUpdater {
                     break;
                 }
             }
+        }
+        if(blockNumber == BlockConstants.Master_PriestAlest_NoItem) {
+            // To be removed and re-added for NPC shuffling simplicity.
+            return false;
         }
         else if(blockNumber == BlockConstants.Master_StrayFairy) {
             // Stray fairy - Illusion NPC, 10-00-01

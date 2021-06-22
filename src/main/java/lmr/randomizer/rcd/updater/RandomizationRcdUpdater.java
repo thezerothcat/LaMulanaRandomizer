@@ -161,10 +161,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                 updateRelatedObject(objectToModify, locationContentsData);
                 if(objectToModify.getId() == ObjectIdConstants.ConversationDoor) {
                     short blockRef = objectToModify.getArgs().get(4);
-                    if(blockRef == BlockConstants.Master_FormerMekuriMaster_Mekuri
-                            || blockRef == BlockConstants.Master_MrSlushfund_Pepper
-                            || blockRef == BlockConstants.Master_MrSlushfund_Anchor
-                            || blockRef == BlockConstants.Master_PriestAlest) {
+                    if(blockRef == BlockConstants.Master_FormerMekuriMaster_Mekuri) {
                         AddObject.addSpecialItemObjects(objectToModify.getObjectContainer(), locationContentsData.getItemName());
                     }
                 }
@@ -617,6 +614,17 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             conversationDoor.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.ASSIGN_FLAG, 2)); // Fairy Queen conversation progress
             conversationDoor.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.FAIRY_POINTS_ACTIVE, ByteOp.ASSIGN_FLAG, 1)); // Fairy points active
         }
+        if("NPC: Mr. Slushfund".equals(npcAssigned)) {
+            ConversationDoorUpdates.addMrSlushfundDoors(conversationDoor, getNpcItemFlag("Anchor")); // Do this before adding tests, so we can carry over any tests based on the location.
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER, ByteOp.FLAG_EQUALS, 0));
+            AddObject.addSpecialItemObjects(conversationDoor.getObjectContainer(), itemRandomizer.getNewContents("Pepper"));
+            AddObject.addSpecialItemObjects(conversationDoor.getObjectContainer(), itemRandomizer.getNewContents("Anchor"));
+        }
+        if("NPC: Priest Alest".equals(npcAssigned)) {
+            int itemFlag = getNpcItemFlag("Mini Doll");
+            ConversationDoorUpdates.addPriestAlestDoor(conversationDoor, itemFlag); // Do this before adding tests, so we can carry over any tests based on the location.
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(itemFlag, ByteOp.FLAG_LTEQ, 1));
+        }
         if("NPC: Naramura".equals(npcAssigned)) {
             conversationDoor.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.NARAMURA_SPOKEN, ByteOp.ASSIGN_FLAG, 1)); // Flag indicating Naramura has been spoken to
         }
@@ -626,6 +634,14 @@ public class RandomizationRcdUpdater extends RcdUpdater {
         if("NPC: Samieru".equals(npcAssigned)) {
             conversationDoor.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SAMIERU_SPOKEN, ByteOp.ASSIGN_FLAG, 1)); // Flag indicating Samieru has been spoken to
         }
+    }
+
+    private int getNpcItemFlag(String itemLocation) {
+        String newContents = itemRandomizer.getNewContents(itemLocation);
+        if(itemRandomizer.isRemovedItem(newContents)) {
+            return flagManager.getNewWorldFlag(DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(itemLocation).getWorldFlag());
+        }
+        return DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(newContents).getWorldFlag();
     }
 
     private void updateSeals() {
@@ -1945,46 +1961,10 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                 mapOfNpcLocationToObject.put("NPCL: The Fairy Queen", (ConversationDoor)gameObject);
             }
             else if(blockNumber == BlockConstants.Master_MrSlushfund_Pepper) {
-                // Mr. Slushfund - Illusion NPC, 10-08-00
-                // Conversation to receive Pepper
-                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.PEPPER, FlagConstants.WF_PEPPER);
-                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                if (objects == null) {
-                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                }
-                objects.add(gameObject);
-            }
-            else if(blockNumber == BlockConstants.Master_MrSlushfund_Anchor) {
-                // Conversation to give Treasures and receive Anchor
-                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.ANCHOR, FlagConstants.WF_ANCHOR);
-                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                if (objects == null) {
-                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                }
-                objects.add(gameObject);
-            }
-            else if(blockNumber == BlockConstants.Master_MrSlushfund_NeverComeBack) {
-                // Conversation after receiving both Pepper and Anchor
-                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.ANCHOR, FlagConstants.WF_ANCHOR);
-                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                if (objects == null) {
-                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                }
-                objects.add(gameObject);
+                mapOfNpcLocationToObject.put("NPCL: Mr. Slushfund", (ConversationDoor)gameObject);
             }
             else if(blockNumber == BlockConstants.Master_PriestAlest) {
-//                mapOfNpcLocationToObject.put("NPCL: Priest Alest", (ConversationDoor)gameObject);
-
-                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MINI_DOLL, FlagConstants.WF_MINI_DOLL);
-                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                if (objects == null) {
-                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                }
-                objects.add(gameObject);
+                mapOfNpcLocationToObject.put("NPCL: Priest Alest", (ConversationDoor)gameObject);
             }
 //            else if(blockNumber == BlockConstants.Master_StrayFairy) {
 //                mapOfNpcLocationToObject.put("NPCL: Stray fairy", (ConversationDoor)gameObject);
@@ -2020,9 +2000,9 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             else if(blockNumber == BlockConstants.Master_Naramura) {
                 mapOfNpcLocationToObject.put("NPCL: Naramura", (ConversationDoor)gameObject);
             }
-            else if(blockNumber == BlockConstants.Master_8BitFairy) {
-                mapOfNpcLocationToObject.put("NPCL: 8bit Fairy", (ConversationDoor)gameObject);
-            }
+//            else if(blockNumber == BlockConstants.Master_8BitFairy) {
+//                mapOfNpcLocationToObject.put("NPCL: 8bit Fairy", (ConversationDoor)gameObject);
+//            }
             else if(blockNumber == BlockConstants.Master_PriestMadomono) {
                 mapOfNpcLocationToObject.put("NPCL: Priest Madomono", (ConversationDoor)gameObject);
             }

@@ -545,24 +545,16 @@ public class HalloweenRcdUpdater extends RcdUpdater {
 
             conversationDoor.getWriteByteOperations().clear();
         }
-        else if(blockNumber == 690) {
-            // Conversation after receiving Pepper if you don't have Treasures
-            // Mr. Slushfund - Illusion NPC, 10-08-00
+        else if(blockNumber == BlockConstants.Master_MrSlushfund_WaitingForTreasures) {
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper), ByteOp.FLAG_GT, 0));
         }
         else if(blockNumber == BlockConstants.Master_MrSlushfund_Anchor) {
-            // Conversation to give Treasures and receive Anchor
-            // Mr. Slushfund - Illusion NPC, 10-08-00
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper), ByteOp.FLAG_GT, 0));
         }
         else if(blockNumber == BlockConstants.Master_MrSlushfund_NeverComeBack) {
-            // Conversation after receiving both Pepper and Anchor
-            // Mr. Slushfund - Illusion NPC, 10-08-00
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper), ByteOp.FLAG_GT, 0));
         }
         else if(blockNumber == BlockConstants.Master_Fobos_MedicineCheck) {
-            // Philosopher Fobos - Dimensional NPC, 17-02-00
-            // Post-Medicine version of Fobos
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag((short)704), ByteOp.FLAG_GT, 0));
         }
         else if(blockNumber == 714) {

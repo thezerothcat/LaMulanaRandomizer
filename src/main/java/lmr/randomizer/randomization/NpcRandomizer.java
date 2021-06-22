@@ -61,6 +61,8 @@ public class NpcRandomizer {
             mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Samaranta", "NPC: Philosopher Samaranta");
             mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Fobos", "NPC: Philosopher Fobos");
             mapOfNpcDoorLocationToContents.put("NPCL: The Fairy Queen", "NPC: The Fairy Queen");
+            mapOfNpcDoorLocationToContents.put("NPCL: Priest Alest", "NPC: Priest Alest");
+            mapOfNpcDoorLocationToContents.put("NPCL: Mr. Slushfund", "NPC: Mr. Slushfund");
             mapOfNpcDoorLocationToContents.put("NPCL: Hiner", "NPC: Hiner");
             mapOfNpcDoorLocationToContents.put("NPCL: Moger", "NPC: Moger");
             mapOfNpcDoorLocationToContents.put("NPCL: Sidro", "NPC: Sidro");
@@ -116,6 +118,8 @@ public class NpcRandomizer {
             npcDoors.add("Philosopher Samaranta");
             npcDoors.add("Philosopher Fobos");
             npcDoors.add("The Fairy Queen");
+            npcDoors.add("Priest Alest");
+            npcDoors.add("Mr. Slushfund");
             npcDoors.add("Hiner");
             npcDoors.add("Moger");
             npcDoors.add("Sidro");
@@ -163,6 +167,8 @@ public class NpcRandomizer {
             npcs.add("Philosopher Samaranta");
             npcs.add("Philosopher Fobos");
             npcs.add("The Fairy Queen");
+            npcs.add("Priest Alest");
+            npcs.add("Mr. Slushfund");
             npcs.add("Hiner");
             npcs.add("Moger");
             npcs.add("Sidro");
@@ -236,6 +242,8 @@ public class NpcRandomizer {
             mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Samaranta", "NPC: Philosopher Samaranta");
             mapOfNpcDoorLocationToContents.put("NPCL: Philosopher Fobos", "NPC: Philosopher Fobos");
             mapOfNpcDoorLocationToContents.put("NPCL: The Fairy Queen", "NPC: The Fairy Queen");
+            mapOfNpcDoorLocationToContents.put("NPCL: Priest Alest", "NPC: Priest Alest");
+            mapOfNpcDoorLocationToContents.put("NPCL: Mr. Slushfund", "NPC: Mr. Slushfund");
             mapOfNpcDoorLocationToContents.put("NPCL: Hiner", "NPC: Hiner");
             mapOfNpcDoorLocationToContents.put("NPCL: Moger", "NPC: Moger");
             mapOfNpcDoorLocationToContents.put("NPCL: Sidro", "NPC: Sidro");
@@ -251,8 +259,6 @@ public class NpcRandomizer {
 //        mapOfNpcDoorLocationToContents.put("NPCL: 8bit Fairy", "NPC: 8bit Fairy");
 //
 //        mapOfNpcDoorLocationToContents.put("NPCL: Former Mekuri Master", "NPC: Former Mekuri Master");
-//        mapOfNpcDoorLocationToContents.put("NPCL: Priest Alest", "NPC: Priest Alest");
-//        mapOfNpcDoorLocationToContents.put("NPCL: Mr. Slushfund", "NPC: Mr. Slushfund");
 //
 //        mapOfNpcDoorLocationToContents.put("NPCL: Nebur", "NPC: Nebur");
 //

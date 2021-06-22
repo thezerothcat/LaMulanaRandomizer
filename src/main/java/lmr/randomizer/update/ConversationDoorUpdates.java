@@ -149,76 +149,125 @@ public final class ConversationDoorUpdates {
      * @param doorObject the base npc door object, to use as a positional reference
      */
     public static void addFairyQueenDoors(GameObject doorObject) {
-        GameObject fairyQueenConveration = new GameObject(doorObject.getObjectContainer());
-        fairyQueenConveration.setId(ObjectIdConstants.ConversationDoor);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)685);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.setX(doorObject.getX());
-        fairyQueenConveration.setY(doorObject.getY());
+        GameObject fairyQueenConversation = new GameObject(doorObject.getObjectContainer());
+        fairyQueenConversation.setId(ObjectIdConstants.ConversationDoor);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)685);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.setX(doorObject.getX());
+        fairyQueenConversation.setY(doorObject.getY());
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
-            fairyQueenConveration.getTestByteOperations().add(testByteOperation);
+            fairyQueenConversation.getTestByteOperations().add(testByteOperation);
         }
-        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.FLAG_LTEQ, 1)); // Fairy Queen conversation progress
-        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_ISIS_PENDANT, ByteOp.FLAG_LTEQ, 1)); // Isis' Pendant not found
-        doorObject.getObjectContainer().getObjects().add(fairyQueenConveration);
+        fairyQueenConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.FLAG_LTEQ, 1)); // Fairy Queen conversation progress
+        fairyQueenConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_ISIS_PENDANT, ByteOp.FLAG_LTEQ, 1)); // Isis' Pendant not found
+        doorObject.getObjectContainer().getObjects().add(fairyQueenConversation);
 
-        fairyQueenConveration = new GameObject(doorObject.getObjectContainer());
-        fairyQueenConveration.setId(ObjectIdConstants.ConversationDoor);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)687);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.setX(doorObject.getX());
-        fairyQueenConveration.setY(doorObject.getY());
+        fairyQueenConversation = new GameObject(doorObject.getObjectContainer());
+        fairyQueenConversation.setId(ObjectIdConstants.ConversationDoor);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)687);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.setX(doorObject.getX());
+        fairyQueenConversation.setY(doorObject.getY());
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
-            fairyQueenConveration.getTestByteOperations().add(testByteOperation);
+            fairyQueenConversation.getTestByteOperations().add(testByteOperation);
         }
-        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.FLAG_EQUALS, 2)); // Fairy Queen conversation progress; fairy points unlocked
-        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(FlagConstants.SHRINE_FAIRY_BLOCK, ByteOp.FLAG_EQUALS, 0)); // Fairy block in True Shrine hasn't spawned yet
-        doorObject.getObjectContainer().getObjects().add(fairyQueenConveration);
+        fairyQueenConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.FLAG_EQUALS, 2)); // Fairy Queen conversation progress; fairy points unlocked
+        fairyQueenConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.SHRINE_FAIRY_BLOCK, ByteOp.FLAG_EQUALS, 0)); // Fairy block in True Shrine hasn't spawned yet
+        doorObject.getObjectContainer().getObjects().add(fairyQueenConversation);
 
-        fairyQueenConveration = new GameObject(doorObject.getObjectContainer());
-        fairyQueenConveration.setId(ObjectIdConstants.ConversationDoor);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)688);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.setX(doorObject.getX());
-        fairyQueenConveration.setY(doorObject.getY());
+        fairyQueenConversation = new GameObject(doorObject.getObjectContainer());
+        fairyQueenConversation.setId(ObjectIdConstants.ConversationDoor);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)688);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.setX(doorObject.getX());
+        fairyQueenConversation.setY(doorObject.getY());
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
-            fairyQueenConveration.getTestByteOperations().add(testByteOperation);
+            fairyQueenConversation.getTestByteOperations().add(testByteOperation);
         }
-        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.FLAG_EQUALS, 2)); // Fairy Queen conversation progress; fairy points unlocked
-        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(FlagConstants.SHRINE_FAIRY_BLOCK, ByteOp.FLAG_EQUALS, 1)); // Fairy block in True Shrine has spawned
-        fairyQueenConveration.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SHRINE_FAIRY_BLOCK, ByteOp.ASSIGN_FLAG, 2)); // Fairy block in True Shrine will be removed when you go there
-        doorObject.getObjectContainer().getObjects().add(fairyQueenConveration);
+        fairyQueenConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.FLAG_EQUALS, 2)); // Fairy Queen conversation progress; fairy points unlocked
+        fairyQueenConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.SHRINE_FAIRY_BLOCK, ByteOp.FLAG_EQUALS, 1)); // Fairy block in True Shrine has spawned
+        fairyQueenConversation.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SHRINE_FAIRY_BLOCK, ByteOp.ASSIGN_FLAG, 2)); // Fairy block in True Shrine will be removed when you go there
+        doorObject.getObjectContainer().getObjects().add(fairyQueenConversation);
 
-        fairyQueenConveration = new GameObject(doorObject.getObjectContainer());
-        fairyQueenConveration.setId(ObjectIdConstants.ConversationDoor);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)985);
-        fairyQueenConveration.getArgs().add((short)0);
-        fairyQueenConveration.getArgs().add((short)1);
-        fairyQueenConveration.setX(doorObject.getX());
-        fairyQueenConveration.setY(doorObject.getY());
+        fairyQueenConversation = new GameObject(doorObject.getObjectContainer());
+        fairyQueenConversation.setId(ObjectIdConstants.ConversationDoor);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)985);
+        fairyQueenConversation.getArgs().add((short)0);
+        fairyQueenConversation.getArgs().add((short)1);
+        fairyQueenConversation.setX(doorObject.getX());
+        fairyQueenConversation.setY(doorObject.getY());
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
-            fairyQueenConveration.getTestByteOperations().add(testByteOperation);
+            fairyQueenConversation.getTestByteOperations().add(testByteOperation);
         }
-        fairyQueenConveration.getTestByteOperations().add(new TestByteOperation(FlagConstants.SHRINE_FAIRY_BLOCK, ByteOp.FLAG_EQUALS, 2)); // Fairy block in True Shrine will be removed when you go there (have had the previous conversation)
-        doorObject.getObjectContainer().getObjects().add(fairyQueenConveration);
+        fairyQueenConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.SHRINE_FAIRY_BLOCK, ByteOp.FLAG_EQUALS, 2)); // Fairy block in True Shrine will be removed when you go there (have had the previous conversation)
+        doorObject.getObjectContainer().getObjects().add(fairyQueenConversation);
+    }
+
+    /**
+     * @param doorObject the base npc door object, to use as a positional reference
+     */
+    public static void addPriestAlestDoor(ConversationDoor doorObject, int itemFlag) {
+        ConversationDoor priestAlestConversation = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+        priestAlestConversation.setDoorType(ConversationDoor.SingleConversation);
+        priestAlestConversation.setBlockNumber(BlockConstants.Master_PriestAlest_NoItem);
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            priestAlestConversation.getTestByteOperations().add(testByteOperation);
+        }
+        priestAlestConversation.getTestByteOperations().add(new TestByteOperation(itemFlag, ByteOp.FLAG_GTEQ, 2)); // Mini Doll conversation has already happened
+        doorObject.getObjectContainer().getObjects().add(priestAlestConversation);
+    }
+
+    /**
+     * @param doorObject the base npc door object, to use as a positional reference
+     */
+    public static void addMrSlushfundDoors(ConversationDoor doorObject, int itemFlagAnchor) {
+        ConversationDoor mrSlushfundConversation = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+        mrSlushfundConversation.setDoorType(ConversationDoor.SingleConversation);
+        mrSlushfundConversation.setBlockNumber(BlockConstants.Master_MrSlushfund_WaitingForTreasures);
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            mrSlushfundConversation.getTestByteOperations().add(testByteOperation);
+        }
+        mrSlushfundConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER, ByteOp.FLAG_GT, 0)); // Pepper conversation has already happened
+        mrSlushfundConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_TREASURES, ByteOp.FLAG_LTEQ, 1)); // Treasures not collected
+        doorObject.getObjectContainer().getObjects().add(mrSlushfundConversation);
+
+        mrSlushfundConversation = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+        mrSlushfundConversation.setDoorType(ConversationDoor.SingleConversation);
+        mrSlushfundConversation.setBlockNumber(BlockConstants.Master_MrSlushfund_Anchor);
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            mrSlushfundConversation.getTestByteOperations().add(testByteOperation);
+        }
+        mrSlushfundConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_TREASURES, ByteOp.FLAG_EQUALS, 2)); // Treasures collected
+        mrSlushfundConversation.getTestByteOperations().add(new TestByteOperation(itemFlagAnchor, ByteOp.FLAG_LT, 2)); // Treasures item not collected
+        doorObject.getObjectContainer().getObjects().add(mrSlushfundConversation);
+
+        mrSlushfundConversation = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+        mrSlushfundConversation.setDoorType(ConversationDoor.SingleConversation);
+        mrSlushfundConversation.setBlockNumber(BlockConstants.Master_MrSlushfund_NeverComeBack);
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            mrSlushfundConversation.getTestByteOperations().add(testByteOperation);
+        }
+        mrSlushfundConversation.getTestByteOperations().add(new TestByteOperation(itemFlagAnchor, ByteOp.FLAG_GTEQ, 2)); // Treasures item collected
+        mrSlushfundConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER, ByteOp.FLAG_GT, 0)); // Pepper conversation has already happened
+        doorObject.getObjectContainer().getObjects().add(mrSlushfundConversation);
     }
 }

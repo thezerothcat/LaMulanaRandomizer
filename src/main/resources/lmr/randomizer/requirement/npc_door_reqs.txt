@@ -30,7 +30,7 @@ NPCL: Mr. Fishman (Alt) => Location: Spring in the Sky [Main], Location: Spring 
 NPCL: Priest Gailious => Location: Inferno Cavern [Main]
 NPCL: Priest Romancis => Location: Inferno Cavern [Main], State: Can Reach Pazuzu, State: Block Pushing
 NPCL: Priest Romancis => Location: Inferno Cavern [Main], Seal: B2, State: Lamp, State: Block Pushing
-NPCL: Hot-blooded Nemesistwo => Location: Inferno Cavern [Main], Attack: Chest-Any
+NPCL: Hot-blooded Nemesistwo => Location: Inferno Cavern [Main], Attack: Chest-Any # There's a pot in the way, but it doesn't respawn once broken, so you can break it with Flare Gun and then go around
 # Chamber of Extinction
 NPCL: Priest Aramo => Location: Chamber of Extinction [Main], Attack: Chest-Any
 NPCL: Priest Triton => Location: Chamber of Extinction [Ankh Lower], Feather
@@ -48,6 +48,8 @@ NPCL: The Fairy Queen => Location: Endless Corridor [1F]
 NPCL: Affected Knimare => Location: Endless Corridor [1F], Seal: O6
 # Gate of Illusion
 NPCL: duplex => State: Dev Rooms, Location: Gate of Illusion [Grail], State: Can Reach Chi You, State: Can Stop Chi You Sacrifices, Event: Chi You Defeated, Attack: Forward
+NPCL: Mr. Slushfund => Location: Gate of Illusion [Lower], State: Can Reach Illusion Fraud
+NPCL: Priest Alest => Location: Gate of Illusion [Lower], State: Can Reach Illusion Fraud, State: Can Reach Mini Doll
 NPCL: Mover Athleland => Location: Gate of Illusion [Middle]
 # Graveyard of the Giants
 NPCL: Giant Mopiran => Location: Graveyard of the Giants [West]
