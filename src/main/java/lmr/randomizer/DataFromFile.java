@@ -268,7 +268,7 @@ public final class DataFromFile {
                 if(!Settings.isFoolsGameplay() && itemName.startsWith("Ankh Jewel")) {
                     continue; // Don't remove ankh jewels unless it's allowed.
                 }
-                if(Settings.isFools2021Mode()) {
+                if(HolidaySettings.isFools2021Mode()) {
                     if(itemName.equals("Pepper")) {
                         continue;
                     }
@@ -412,7 +412,7 @@ public final class DataFromFile {
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/attack_reqs.txt", true);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dead_ends.txt", true);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/transition_reqs.txt", true);
-            if(Settings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloweenMode()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/npc_reqs.txt", true);
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/npc_door_reqs.txt", true);
@@ -469,7 +469,7 @@ public final class DataFromFile {
 
     public static List<String> getWinRequirements() {
         if(winRequirements == null) {
-            if(Settings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloweenMode()) {
                 winRequirements = FileUtils.getList("requirement/win/npc_win_reqs.txt");
             }
             else {

@@ -1,5 +1,6 @@
 package lmr.randomizer.randomization;
 
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.randomization.data.ItemPriceCount;
 import lmr.randomizer.Settings;
 import lmr.randomizer.node.MoneyChecker;
@@ -79,7 +80,7 @@ public class CategorizedShopItemPriceCountRandomizer implements ShopItemPriceCou
         }
 
         if ("Weights".equals(shopItem)) {
-            if(Settings.isFools2019Mode()) {
+            if(HolidaySettings.isFools2019Mode()) {
                 return new ItemPriceCount(1, random.nextInt(10) + 1);
             }
             else {

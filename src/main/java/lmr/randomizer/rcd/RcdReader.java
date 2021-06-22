@@ -1,6 +1,7 @@
 package lmr.randomizer.rcd;
 
 import lmr.randomizer.FileUtils;
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
 import lmr.randomizer.update.AddObject;
 import lmr.randomizer.rcd.object.*;
@@ -93,7 +94,7 @@ public final class RcdReader {
                 room.setHitMaskHeight(getField(msdBytes, msdByteIndex, 2).getShort());
                 msdByteIndex += 2;
 
-                if(Settings.isFools2021Mode() && zoneIndex == 13) {
+                if(HolidaySettings.isFools2021Mode() && zoneIndex == 13) {
                     for(int i = 0; i < room.getHitMaskWidth() * room.getHitMaskHeight(); i ++) {
                         byte hitMask = msdBytes[msdByteIndex + i];
                         if(hitMask == 0x05) {
@@ -211,7 +212,7 @@ public final class RcdReader {
                 zone.getRooms().add(room);
             }
             zones.add(zone);
-            if(Settings.isFools2021Mode() && zoneIndex == 13) {
+            if(HolidaySettings.isFools2021Mode() && zoneIndex == 13) {
                 Settings.goddessMsdBytes = msdBytes;
             }
         }

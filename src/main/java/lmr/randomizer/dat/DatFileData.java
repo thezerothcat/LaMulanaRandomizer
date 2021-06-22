@@ -1,11 +1,9 @@
 package lmr.randomizer.dat;
 
+import lmr.randomizer.HolidaySettings;
+import lmr.randomizer.dat.blocks.*;
 import lmr.randomizer.randomization.data.CustomBlockEnum;
 import lmr.randomizer.util.BlockConstants;
-import lmr.randomizer.Settings;
-import lmr.randomizer.dat.blocks.*;
-import lmr.randomizer.dat.blocks.CheckBlock;
-import lmr.randomizer.dat.blocks.ShopBlock;
 
 import java.util.*;
 
@@ -135,7 +133,7 @@ public class DatFileData {
         return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockMoverAthleland);
     }
     public ShopBlock getGiantMopiranShopBlock() {
-        if(Settings.isFools2020Mode()) {
+        if(HolidaySettings.isFools2020Mode()) {
             return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockGiantMopiranAngelShield);
         }
         return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockGiantMopiran);

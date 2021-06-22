@@ -1142,7 +1142,7 @@ public final class AddObject {
         platform.setRGBAMax(0, 0, 0, 255);
         platform.setArg23(1);
 
-        if (Settings.isFools2020Mode()) {
+        if (HolidaySettings.isFools2020Mode()) {
             platform.addTests(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2));
         }
 
@@ -1469,7 +1469,7 @@ public final class AddObject {
         escapeTimer.setXPosition(264);
         escapeTimer.setYPosition(20);
 
-        if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isHalloweenMode() && HolidaySettings.isIncludeHellTempleNPCs()) {
             escapeTimer.setMinutes(10);
             escapeTimer.setSeconds(31);
         }
@@ -1519,7 +1519,7 @@ public final class AddObject {
         escapeTimer.setXPosition(264);
         escapeTimer.setYPosition(20);
 
-        if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isHalloweenMode() && HolidaySettings.isIncludeHellTempleNPCs()) {
             escapeTimer.setMinutes(10);
             escapeTimer.setSeconds(31);
         }
@@ -2439,7 +2439,7 @@ public final class AddObject {
     public static Block buildXelpudIntroBlock() {
         Block introBlock = new Block();
         introBlock.getBlockContents().add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
-        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText(Settings.isFools2019Mode() ? "fools.xelpudText" : "text.xelpudWarn"));
+        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText(HolidaySettings.isFools2019Mode() ? "fools.xelpudText" : "text.xelpudWarn"));
         for(Short shortCharacter : stringCharacters) {
             introBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
@@ -3184,7 +3184,7 @@ public final class AddObject {
     private static String getHintText(int hintNumber) {
         String peopleText = "";
         if(hintNumber == 1) {
-            peopleText = String.format(Translations.getText("event.halloween.hintPlural"), Settings.isIncludeHellTempleNPCs() ? 4 : 3);
+            peopleText = String.format(Translations.getText("event.halloween.hintPlural"), HolidaySettings.isIncludeHellTempleNPCs() ? 4 : 3);
         }
         else if(hintNumber == 2 || hintNumber == 3 || hintNumber == 4
                 || hintNumber == 8 || hintNumber == 9 || hintNumber == 11

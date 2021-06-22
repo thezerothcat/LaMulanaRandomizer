@@ -1,9 +1,6 @@
 package lmr.randomizer.randomization;
 
-import lmr.randomizer.DataFromFile;
-import lmr.randomizer.FileUtils;
-import lmr.randomizer.Settings;
-import lmr.randomizer.Translations;
+import lmr.randomizer.*;
 import lmr.randomizer.node.CustomTransitionPlacement;
 import lmr.randomizer.randomization.data.TransitionGateData;
 
@@ -378,7 +375,7 @@ public class TransitionGateRandomizer {
         rightTransitions.add("Transition: Ruin R1");
         rightTransitions.add("Transition: Ruin R2");
 
-        if(!Settings.isFools2021Mode()) {
+        if(!HolidaySettings.isFools2021Mode()) {
             rightTransitions.add("Transition: Sun R1");
             rightTransitions.add("Transition: Sun R2");
             rightTransitions.add("Transition: Endless R1");

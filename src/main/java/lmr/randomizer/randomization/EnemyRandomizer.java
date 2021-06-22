@@ -1,5 +1,6 @@
 package lmr.randomizer.randomization;
 
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.util.FlagConstants;
 import lmr.randomizer.Settings;
 import lmr.randomizer.rcd.object.ByteOp;
@@ -51,7 +52,7 @@ public final class EnemyRandomizer {
     private int getEnemyId(GameObject enemyObject, int zoneIndex) {
         int enemyId = (int)enemyObject.getId();
         if(enemyId == 0x87 || enemyId == 0x88 || enemyId == 0x8d || enemyId == 0x8e || enemyId == 0x45 || enemyId == 0x2a) {
-            return Settings.isHalloweenMode() ? 0x20 : enemyId; // Miniboss swaps
+            return HolidaySettings.isHalloweenMode() ? 0x20 : enemyId; // Miniboss swaps
         }
 
         if(enemyId == 0x69) {
@@ -64,7 +65,7 @@ public final class EnemyRandomizer {
         if(WATER_ENEMIES.contains(enemyId)) {
             // Hippocampus / Sea Horse
             // Jelly
-            if(Settings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloweenMode()) {
                 return 0x02;
             }
             return getSpringWaterEnemyId(!enemyObject.getWriteByteOperations().isEmpty());
@@ -420,7 +421,7 @@ public final class EnemyRandomizer {
     private List<Integer> getSharedGroundEnemyIds(boolean hasUpdateFlags) {
         List<Integer> enemyIds = new ArrayList<>();
         enemyIds.add(0x03); // Skeleton
-        if(!Settings.isHalloweenMode()) {
+        if(!HolidaySettings.isHalloweenMode()) {
             enemyIds.add(0x05); // Snouter
             if(!hasUpdateFlags) {
                 enemyIds.add(0x06); // Kodama Rat / Pink exploding rat pig
@@ -438,7 +439,7 @@ public final class EnemyRandomizer {
 
     private List<Integer> getSharedAirEnemyIds() {
         List<Integer> enemyIds = new ArrayList<>();
-        if(!Settings.isHalloweenMode()) {
+        if(!HolidaySettings.isHalloweenMode()) {
             enemyIds.add(0x68); // Anubis
         }
         return enemyIds;
@@ -447,7 +448,7 @@ public final class EnemyRandomizer {
     private List<Integer> getSharedNoCollisionEnemyIds(boolean hasUpdateFlags) {
         List<Integer> enemyIds = new ArrayList<>();
         enemyIds.add(0x02); // Bat
-        if(!Settings.isHalloweenMode()) {
+        if(!HolidaySettings.isHalloweenMode()) {
             enemyIds.add(0x1b); // Mirror Ghost
             if(!hasUpdateFlags) {
                 enemyIds.add(0x3b); // Explode Rock / Mine
@@ -470,7 +471,7 @@ public final class EnemyRandomizer {
 
     private List<Integer> getSurfaceEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        if(!Settings.isHalloweenMode()) {
+        if(!HolidaySettings.isHalloweenMode()) {
             enemyIds.add(0x18); // Surface - Vulture
             if(!isNoCollisionEnemy && includeGround) {
                 enemyIds.add(0x16); // Surface - Snake
@@ -483,7 +484,7 @@ public final class EnemyRandomizer {
     private List<Integer> getGuidanceEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy && includeGround) {
-            if(!Settings.isHalloweenMode()) {
+            if(!HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x01); // Guidance - Myrmecoleon
             }
             enemyIds.add(0x21); // Guidance - Red Skeleton
@@ -496,7 +497,7 @@ public final class EnemyRandomizer {
 //        enemyIds.add(0x1f); // Mausoleum Ghosts
 //        enemyIds.add(0x20); // Mausoleum - Ghost Lord
         if(!isNoCollisionEnemy) {
-            if(!Settings.isHalloweenMode()) {
+            if(!HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x1e); // Mausoleum - Fist
                 if(includeGround) {
                     enemyIds.add(0x1d); // Mausoleum - Nozuchi
@@ -508,11 +509,11 @@ public final class EnemyRandomizer {
 
     private List<Integer> getSunEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        if(!Settings.isHalloweenMode()) {
+        if(!HolidaySettings.isHalloweenMode()) {
             enemyIds.add(0x29); // Sun - Mask
         }
         if(!isNoCollisionEnemy) {
-            if(!Settings.isHalloweenMode()) {
+            if(!HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x28); // Sun - Bird
             }
             if(includeGround) {
@@ -525,7 +526,7 @@ public final class EnemyRandomizer {
     private List<Integer> getSpringEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy && includeGround) {
-            if(!Settings.isHalloweenMode()) {
+            if(!HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x35); // Spring - Gyonin
             }
         }
@@ -535,7 +536,7 @@ public final class EnemyRandomizer {
     private List<Integer> getInfernoEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy && includeGround) {
-            if(!Settings.isHalloweenMode()) {
+            if(!HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x3e); // Inferno - Kakaojuu / Fire Lizard
             }
         }
@@ -544,11 +545,11 @@ public final class EnemyRandomizer {
 
     private List<Integer> getExtinctionEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        if(!Settings.isHalloweenMode()) {
+        if(!HolidaySettings.isHalloweenMode()) {
             enemyIds.add(0x43); // Extinction - Garuda
         }
         if(!isNoCollisionEnemy && includeGround) {
-            if(Settings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x55); // Twin Labs - Witch
             }
             else {
@@ -564,7 +565,7 @@ public final class EnemyRandomizer {
         if(!isNoCollisionEnemy) {
             if(includeGround) {
                 enemyIds.add(0x55); // Twin Labs - Witch
-                if(!Settings.isHalloweenMode()) {
+                if(!HolidaySettings.isHalloweenMode()) {
                     enemyIds.add(0x56); // Twin Labs - Siren // todo: might not be ground only
                     enemyIds.add(0x57); // Twin Labs - Xingtian
                     enemyIds.add(0x58); // Twin Labs - Zaochi
@@ -578,7 +579,7 @@ public final class EnemyRandomizer {
     private List<Integer> getEndlessEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy && includeGround) {
-            if(Settings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x55); // Twin Labs - Witch
             }
             else {
@@ -595,7 +596,7 @@ public final class EnemyRandomizer {
     private List<Integer> getShrineEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy && includeGround) {
-            if(Settings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x55); // Twin Labs - Witch
             }
             else {
@@ -611,7 +612,7 @@ public final class EnemyRandomizer {
     private List<Integer> getIllusionEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy && includeGround) {
-            if(!Settings.isHalloweenMode()) {
+            if(!HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x5c); // Illusion - Lizard
                 enemyIds.add(0x5d); // Illusion - Asp
                 enemyIds.add(0x5e); // Illusion - Kui / Hopper
@@ -622,11 +623,11 @@ public final class EnemyRandomizer {
 
     private List<Integer> getGraveyardEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        if(!Settings.isHalloweenMode()) {
+        if(!HolidaySettings.isHalloweenMode()) {
             enemyIds.add(0x65); // Graveyard - Cloud / Puffball
         }
         if(!isNoCollisionEnemy && includeGround) {
-            if(Settings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x27); // Sun - Cait Sith / CatBall
                 enemyIds.add(0x55); // Twin Labs - Witch // todo: consider removal
             }
@@ -641,7 +642,7 @@ public final class EnemyRandomizer {
 
     private List<Integer> getMoonlightEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        if(!Settings.isHalloweenMode()) {
+        if(!HolidaySettings.isHalloweenMode()) {
             if(!isNoCollisionEnemy) {
 //                enemyIds.add(0x69); // Moonlight - Bug
                 if(includeGround) {
@@ -654,11 +655,11 @@ public final class EnemyRandomizer {
 
     private List<Integer> getGoddessEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        if(!Settings.isHalloweenMode()) {
+        if(!HolidaySettings.isHalloweenMode()) {
             enemyIds.add(0x6d); // Goddess - A Bao A Qu
         }
         if(!isNoCollisionEnemy && includeGround) {
-            if(Settings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x27); // Sun - Cait Sith / CatBall
                 enemyIds.add(0x55); // Twin Labs - Witch // todo: consider removal
             }
@@ -672,7 +673,7 @@ public final class EnemyRandomizer {
 
     private List<Integer> getRuinEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        if(!Settings.isHalloweenMode()) {
+        if(!HolidaySettings.isHalloweenMode()) {
             if(!isNoCollisionEnemy && includeGround) {
                 enemyIds.add(0x73); // Ruin - Dog
                 enemyIds.add(0x74); // Ruin - Salamander
@@ -683,7 +684,7 @@ public final class EnemyRandomizer {
 
     private List<Integer> getBirthEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        if(!Settings.isHalloweenMode()) {
+        if(!HolidaySettings.isHalloweenMode()) {
             enemyIds.add(0x7d); // Birth - Sword Bird
             if(!isNoCollisionEnemy && includeGround) {
                 enemyIds.add(0x7e); // Birth - Elephant
@@ -695,7 +696,7 @@ public final class EnemyRandomizer {
     private List<Integer> getDimensionalEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy) {
-            if(Settings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloweenMode()) {
                 if(includeGround) {
                     enemyIds.add(0x55); // Twin Labs - Witch // todo: consider removal
                 }
@@ -714,7 +715,7 @@ public final class EnemyRandomizer {
     private List<Integer> getRetroEnemyIds(boolean includeGround, boolean isNoCollisionEnemy, boolean hasUpdateFlags) {
         List<Integer> enemyIds = new ArrayList<>();
         enemyIds.add(0x02); // Bat
-        if(!Settings.isHalloweenMode()) {
+        if(!HolidaySettings.isHalloweenMode()) {
             enemyIds.add(0x1b); // Mirror Ghost
             if(!hasUpdateFlags) {
                 enemyIds.add(0x3b); // Explode Rock / Mine
@@ -722,16 +723,16 @@ public final class EnemyRandomizer {
 //            enemyIds.add(0x1f); // Mausoleum Ghosts
         }
         if(!isNoCollisionEnemy) {
-            if(!Settings.isHalloweenMode()) {
+            if(!HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x1e); // Mausoleum - Fist
                 enemyIds.add(0x68); // Anubis
             }
             if(includeGround) {
-                if(!Settings.isHalloweenMode()) {
+                if(!HolidaySettings.isHalloweenMode()) {
                     enemyIds.add(0x01); // Guidance - Myrmecoleon
                 }
                 enemyIds.add(0x03); // Skeleton
-                if(!Settings.isHalloweenMode()) {
+                if(!HolidaySettings.isHalloweenMode()) {
                     enemyIds.add(0x05); // Snouter
                     if(!hasUpdateFlags) {
                         enemyIds.add(0x06); // Kodama Rat / Pink exploding rat pig
@@ -750,23 +751,23 @@ public final class EnemyRandomizer {
 
     private List<Integer> getHellTempleEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
-        if(!Settings.isHalloweenMode()) {
+        if(!HolidaySettings.isHalloweenMode()) {
             enemyIds.add(0x7d); // Birth - Sword Bird
         }
         if(!isNoCollisionEnemy) {
-            if(!Settings.isHalloweenMode()) {
+            if(!HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x1e); // Mausoleum - Fist
                 enemyIds.add(0x83); // Dimensional - Gargoyle / Satan / Telephone Demon
             }
             if(includeGround) {
-                if(!Settings.isHalloweenMode()) {
+                if(!HolidaySettings.isHalloweenMode()) {
                     enemyIds.add(0x50); // Shrine - Pan
                     enemyIds.add(0x51); // Shrine - Hanuman
                     enemyIds.add(0x52); // Shrine - Enkidu
                     enemyIds.add(0x53); // Shrine - Marchosias
                 }
                 enemyIds.add(0x55); // Twin Labs - Witch
-                if(!Settings.isHalloweenMode()) {
+                if(!HolidaySettings.isHalloweenMode()) {
                     enemyIds.add(0x5c); // Illusion - Lizard
                     enemyIds.add(0x64); // Graveyard - Ice Wizard
                     enemyIds.add(0x6e); // Goddess - Andras
@@ -971,7 +972,7 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)120); // Spawning period
         enemy.getArgs().add((short)(random.nextInt(2) + 2)); // Maximum Ghosts
         enemy.getArgs().add((short)0); // UNKNOWN - bugged?
-        enemy.getArgs().add((short)(Settings.isHalloweenMode() ? 1 : 0)); // Speed AND Drop-type
+        enemy.getArgs().add((short)(HolidaySettings.isHalloweenMode() ? 1 : 0)); // Speed AND Drop-type
         enemy.getArgs().add((short)1); // Health
         enemy.getArgs().add((short)2); // Damage AND Soul
         enemy.getArgs().add((short)3); // UNKNOWN - bugged?
@@ -1026,7 +1027,7 @@ public final class EnemyRandomizer {
         enemy.getArgs().clear();
         enemy.getArgs().add((short)facing);
         enemy.getArgs().add((short)1); // Speed
-        if(Settings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloweenMode()) {
             enemy.getArgs().add((short)(random.nextBoolean() ? 1 : 11)); // Droptype - 1 is coins, 11 for skeleton is either coins or weights
             enemy.getArgs().add((short)1); // Amount
             enemy.getArgs().add((short)(health == null
@@ -1434,7 +1435,7 @@ public final class EnemyRandomizer {
 
     private int getWitchType(int zoneIndex) {
         // Type - 0 = pink = lightning, 1 = green = fire, 2 = blue = paralyze, 3 = brown = splitting orb, 4 = white mage, 5+ = black mage
-        if(Settings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloweenMode()) {
             if(zoneIndex == 23) {
                 return random.nextInt(2) + 2; // Only allowing 2 or 3 due to ghost graphics collision
             }
@@ -1649,7 +1650,7 @@ public final class EnemyRandomizer {
             enemy.getArgs().add((short)12); // Health
         }
         else {
-            enemy.getArgs().add((short)(Settings.isHalloweenMode() ? 4 : 8)); // Health
+            enemy.getArgs().add((short)(HolidaySettings.isHalloweenMode() ? 4 : 8)); // Health
         }
         enemy.getArgs().add((short)6); // Contact damage
         enemy.getArgs().add((short)8); // Soul
@@ -1659,7 +1660,7 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)2); // Projectile speed
         enemy.getArgs().add((short)2); // Secondary projectile speed (first split for witches)
         enemy.getArgs().add((short)2); // Tertiary projectile speed (first split for witches)
-        if(Settings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloweenMode()) {
             enemy.getArgs().add((short)8); // Initial projectile damage
             enemy.getArgs().add((short)8); // Secondary projectile damage (lingering flame, first split)
             enemy.getArgs().add((short)8); // Tertiary projectile damage (second split)
@@ -1682,7 +1683,7 @@ public final class EnemyRandomizer {
             enemy.getArgs().add((short)(random.nextBoolean() ? 12 : 8)); // Health
         }
         else {
-            enemy.getArgs().add((short)(Settings.isHalloweenMode() ? 4 : 8)); // Health
+            enemy.getArgs().add((short)(HolidaySettings.isHalloweenMode() ? 4 : 8)); // Health
         }
         enemy.getArgs().add((short)6); // Contact damage
         enemy.getArgs().add((short)8); // Soul
@@ -1692,7 +1693,7 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)2); // Projectile speed
         enemy.getArgs().add((short)2); // Secondary projectile speed (first split for witches)
         enemy.getArgs().add((short)2); // Tertiary projectile speed (first split for witches)
-        if(Settings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloweenMode()) {
             enemy.getArgs().add((short)8); // Initial projectile damage
             enemy.getArgs().add((short)8); // Secondary projectile damage (lingering flame, first split)
             enemy.getArgs().add((short)8); // Tertiary projectile damage (second split)

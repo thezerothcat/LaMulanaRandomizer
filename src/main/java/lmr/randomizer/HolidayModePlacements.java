@@ -9,16 +9,16 @@ import java.util.List;
 
 public class HolidayModePlacements {
     public static void applyCustomPlacements() {
-        if(Settings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloweenMode()) {
             addCustomPlacementsHalloween();
         }
-        else if(Settings.isFools2019Mode()) {
+        else if(HolidaySettings.isFools2019Mode()) {
             addCustomPlacementsFools2019();
         }
-        else if(Settings.isFools2020Mode()) {
+        else if(HolidaySettings.isFools2020Mode()) {
             addCustomPlacementsFools2020();
         }
-        else if(Settings.isFools2021Mode()) {
+        else if(HolidaySettings.isFools2021Mode()) {
             addCustomPlacementsFools2021();
         }
     }

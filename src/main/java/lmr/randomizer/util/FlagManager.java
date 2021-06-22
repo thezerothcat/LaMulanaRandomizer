@@ -1,14 +1,15 @@
 package lmr.randomizer.util;
 
 import lmr.randomizer.DataFromFile;
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
 import lmr.randomizer.randomization.data.GameObjectId;
 
 import java.util.*;
 
 public class FlagManager {
-    private static final int FIRST_AVAILABLE_RANDOM_GRAPHICS_FLAG = (Settings.isFools2020Mode() || Settings.isFools2021Mode()) ? 2762 : 2730;
-    private static final int LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG = (Settings.isFools2020Mode() || Settings.isFools2021Mode()) ? 2765 : 2760;
+    private static final int FIRST_AVAILABLE_RANDOM_GRAPHICS_FLAG = (HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2021Mode()) ? 2762 : 2730;
+    private static final int LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG = (HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2021Mode()) ? 2765 : 2760;
 
     private Map<Integer, Integer> mapOfItemLocationWorldFlagToAssignedReplacementFlag;
     private List<Integer> availableFlags;

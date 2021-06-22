@@ -46,7 +46,7 @@ public class BaseDatUpdater extends DatUpdater {
 
     @Override
     public void updateGrailPoints(GrailPointBlock grailPointBlock) {
-        if(!LocationCoordinateMapper.isSurfaceStart() || Settings.isFools2021Mode() || Settings.getCurrentStartingLocation() == 22) {
+        if(!LocationCoordinateMapper.isSurfaceStart() || HolidaySettings.isFools2021Mode() || Settings.getCurrentStartingLocation() == 22) {
             boolean front = LocationCoordinateMapper.isFrontsideStart();
 
             DefaultGrailPointEntry defaultGrailPointEntry = grailPointBlock.getDefaultGrailPointEntry();
@@ -299,7 +299,7 @@ public class BaseDatUpdater extends DatUpdater {
         blockListData.getData().add((short)0);
         flagCheckBlock.getFlagCheckReferences().add(0, blockListData);
 
-        if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || Settings.isFools2019Mode() || Settings.isFools2020Mode()) {
+        if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || HolidaySettings.isFools2019Mode() || HolidaySettings.isFools2020Mode()) {
             // Changing xmailer conversation to use a custom flag instead of a held item check
             blockListData = new BlockListData((short)4);
             blockListData.getData().add((short)FlagConstants.RANDOMIZER_SAVE_LOADED);
@@ -350,7 +350,7 @@ public class BaseDatUpdater extends DatUpdater {
             }
         }
 
-        if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || Settings.isFools2019Mode() || Settings.isFools2020Mode()) {
+        if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || HolidaySettings.isFools2019Mode() || HolidaySettings.isFools2020Mode()) {
             datFileData.addCustomBlock(CustomBlockEnum.CustomXelpudIntro, AddObject.buildXelpudIntroBlock());
         }
     }

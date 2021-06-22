@@ -54,7 +54,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
         updateSubweaponPot();
 //        FileUtils.logFlush("Updated subweapon pot data");
 
-        if(Settings.isFools2021Mode()){
+        if(HolidaySettings.isFools2021Mode()){
             updateEdenDaises(random);
 //            FileUtils.logFlush("Updated puzzle flags");
         }
@@ -192,7 +192,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             chest.setUpdateWhenOpened(new WriteByteOperation(locationContentsData.getItemWorldFlag(), ByteOp.ASSIGN_FLAG, 1));
             chest.setUpdateWhenCollected(new WriteByteOperation(locationContentsData.getItemWorldFlag(), ByteOp.ASSIGN_FLAG, 1));
 
-            if(Settings.isFools2020Mode()) {
+            if(HolidaySettings.isFools2020Mode()) {
                 AddObject.addFoolsExplosion(chest.getObjectContainer(), chest.getX(), chest.getY(), locationContentsData.getItemWorldFlag());
             }
             else {
@@ -258,7 +258,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
 
             floatingItem.addUpdates(new WriteByteOperation(FlagConstants.SCREEN_FLAG_2B, ByteOp.ASSIGN_FLAG, 1));
 
-            if(Settings.isFools2020Mode()) {
+            if(HolidaySettings.isFools2020Mode()) {
                 AddObject.addTrapItemBats(floatingItem, FlagConstants.SCREEN_FLAG_2B);
                 AddObject.addNoItemSoundEffect(floatingItem.getObjectContainer(), locationContentsData.getNewWorldFlag(), (int)FlagConstants.SCREEN_FLAG_2B);
             }
@@ -435,7 +435,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                         AddObject.addIllusionFruitBlockVertical(gameObject);
                         updateFirstObject = true;
                     }
-                    if(firstObject && Settings.isFools2021Mode() && "Transition: Guidance L1".equals(transitionGateData.getGateDestination())) {
+                    if(firstObject && HolidaySettings.isFools2021Mode() && "Transition: Guidance L1".equals(transitionGateData.getGateDestination())) {
                         // Add timer for fools' rando 2021 to ensure a flag sequence behaves as intended.
                         // Ensure the process of falling blocks triggered by Pepper is reset if unfinished.
                         AddObject.addFramesTimer(gameObject.getObjectContainer(), 0,
@@ -740,7 +740,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                     objects.add(gameObject);
                     break;
                 }
-                if (Settings.isFools2021Mode()) {
+                if (HolidaySettings.isFools2021Mode()) {
                     if(flagTest.getIndex() == FlagConstants.MOONLIGHT_SCAN_DANCING_MAN) {
                         // Eden chest 1
                         edenDaises.add(gameObject);
@@ -1283,12 +1283,12 @@ public class RandomizationRcdUpdater extends RcdUpdater {
         }
         else if (gameObject.getId() == ObjectIdConstants.Enemy_Blob) {
             // Hand enemies in Extinction
-            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+            if(HolidaySettings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
                 enemyObjects.add(gameObject);
             }
         }
 //        else if (gameObject.getId() == ObjectIdConstants.Hekatonkheires) {
-//            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+//            if(HolidaySettings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
 //                enemyObjects.add(gameObject);
 //            }
 //        }
@@ -1492,7 +1492,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             }
         }
 //        else if (gameObject.getId() == ObjectIdConstants.Kuusarikku) {
-//            if(Settings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
+//            if(HolidaySettings.isHalloweenMode() && Settings.isRandomizeEnemies()) {
 //                if(gameObject.getObjectContainer() instanceof Screen) {
 //                    Screen screen = (Screen) gameObject.getObjectContainer();
 //                    if(screen.getZoneIndex() == 24) {
@@ -1502,7 +1502,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
 //            }
 //        }
         else if (gameObject.getId() == ObjectIdConstants.Girtablilu) {
-            if(Settings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloweenMode()) {
                 if(gameObject.getObjectContainer() instanceof Screen) {
                     Screen screen = (Screen) gameObject.getObjectContainer();
                     if(screen.getZoneIndex() == 24) {
@@ -1512,7 +1512,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             }
         }
 //        else if (gameObject.getId() == ObjectIdConstants.Ushum) {
-//            if(Settings.isHalloweenMode() && Settings.isIncludeHellTempleNPCs() && Settings.isRandomizeEnemies()) {
+//            if(HolidaySettings.isHalloweenMode() && HolidaySettings.isIncludeHellTempleNPCs() && Settings.isRandomizeEnemies()) {
 //                if(gameObject.getObjectContainer() instanceof Screen) {
 //                    Screen screen = (Screen) gameObject.getObjectContainer();
 //                    if(screen.getZoneIndex() == 24) {
@@ -1796,7 +1796,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                 Short defaultShopBlock = getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock);
                 if(DataFromFile.getMapOfShopNameToShopBlock().values().contains(blockNumber)
                         || (defaultShopBlock != null && blockNumber == defaultShopBlock)
-                        || (Settings.isFools2020Mode() && blockNumber == BlockConstants.ShopBlockGiantMopiranAngelShield)) {
+                        || (HolidaySettings.isFools2020Mode() && blockNumber == BlockConstants.ShopBlockGiantMopiranAngelShield)) {
                     List<GameObject> objects = mapOfShopBlockToShopObjects.get(blockNumber);
                     if (objects == null) {
                         mapOfShopBlockToShopObjects.put(blockNumber, new ArrayList<>());

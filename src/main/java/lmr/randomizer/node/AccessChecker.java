@@ -1,6 +1,7 @@
 package lmr.randomizer.node;
 
 import lmr.randomizer.DataFromFile;
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.randomization.*;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
@@ -148,7 +149,7 @@ public class AccessChecker {
                         || NodeType.EXIT.equals(nodeType)|| NodeType.SETTING.equals(nodeType) || NodeType.TRANSITION.equals(nodeType) ) {
                     continue;
                 }
-                else if(!Settings.isHalloweenMode() && NodeType.NPC.equals(nodeType)) {
+                else if(!HolidaySettings.isHalloweenMode() && NodeType.NPC.equals(nodeType)) {
                     continue;
                 }
                 else if(NodeType.ITEM_LOCATION.equals(nodeType)) {
@@ -205,8 +206,8 @@ public class AccessChecker {
     }
 
     private boolean isEscapeSuccess() {
-        if(Settings.isHalloweenMode()) {
-            if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isHalloweenMode()) {
+            if(HolidaySettings.isIncludeHellTempleNPCs()) {
                 return true; // Don't have to have a path to Temple of the Sun since the escape ends when you get out.
             }
             else {
@@ -504,7 +505,7 @@ public class AccessChecker {
                     }
                     if (!Settings.getCurrentRemovedItems().contains(item) && !Settings.getRemovedItems().contains(item)) {
                         FileUtils.logDetail("Found item " + item, attemptNumber);
-                        if(Settings.isFools2020Mode()) {
+                        if(HolidaySettings.isFools2020Mode()) {
                             if("Fake Silver Shield".equals(item)) {
                                 queuedUpdates.add("Angel Shield");
                             }
@@ -569,7 +570,7 @@ public class AccessChecker {
                                 && !Settings.getRemovedItems().contains(shopItem)
                                 && !Settings.getCurrentRemovedItems().contains(shopItem)) {
                             FileUtils.logDetail("Found item " + shopItem, attemptNumber);
-                            if(Settings.isFools2020Mode()) {
+                            if(HolidaySettings.isFools2020Mode()) {
                                 if("Fake Silver Shield".equals(shopItem)) {
                                     queuedUpdates.add("Angel Shield");
                                 }
@@ -636,7 +637,7 @@ public class AccessChecker {
                         return false;
                     }
                 }
-                if(Settings.isFools2021Mode()
+                if(HolidaySettings.isFools2021Mode()
                         && ("Shop 12 (Spring)".equals(location) || "Shop 12 Alt (Spring)".equals(location)
                         || "Shop 18 (Lil Bro)".equals(location) || "Shop 20 (Twin Labs)".equals(location)
                         || "Shop 21 (Unsolvable)".equals(location))) {

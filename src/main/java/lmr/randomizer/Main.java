@@ -42,6 +42,9 @@ public class Main {
     public static void main(String[] args) {
         try {
             FileUtils.readSettings();
+            if(HolidaySettings.isHolidayMode()) {
+                FileUtils.readHolidaySettings();
+            }
             if(args.length > 0) {
                 Settings.setSkipValidation(Integer.parseInt(args[0]));
             }
@@ -455,7 +458,7 @@ public class Main {
                 fileOutputStream.close();
                 FileUtils.logFlush("dat copy complete");
 
-                if(Settings.isFools2021Mode()) {
+                if(HolidaySettings.isFools2021Mode()) {
                     FileUtils.logFlush("Copying msd file from seed folder to La-Mulana install directory");
                     fileOutputStream = new FileOutputStream(new File(String.format("%s/data/mapdata/map13.msd",
                             Settings.getLaMulanaBaseDir(), Settings.getLanguage())));
@@ -650,7 +653,7 @@ public class Main {
             // the trap item.
             DataFromFile.setBannedTrapLocations(random);
         }
-        if(Settings.isFools2019Mode() && DataFromFile.getCustomPlacementData().getMedicineColor() == null) {
+        if(HolidaySettings.isFools2019Mode() && DataFromFile.getCustomPlacementData().getMedicineColor() == null) {
             List<String> medicineColors = Arrays.asList("Red", "Green", "Yellow", null);
             Settings.setMedicineColor(medicineColors.get(random.nextInt(medicineColors.size())));
         }
@@ -682,7 +685,7 @@ public class Main {
                 this.attempt = attempt;
             }
         }
-        int totalFakeAttempts = Settings.isFools2020Mode() ? random.nextInt(4120) : 0; // Use random not from seed, to avoid messing things up.
+        int totalFakeAttempts = HolidaySettings.isFools2020Mode() ? random.nextInt(4120) : 0; // Use random not from seed, to avoid messing things up.
         var updateHistory = new LinkedList<ProgressUpdate>();
         updateHistory.add(new ProgressUpdate(startTime, 0));
         while(true) {
@@ -804,7 +807,7 @@ public class Main {
                     }
                 }
             }
-            if(Settings.isFools2020Mode() && attempt < totalFakeAttempts) {
+            if(HolidaySettings.isFools2020Mode() && attempt < totalFakeAttempts) {
                 continue;
             }
             if(Settings.isGenerationComplete(attempt) || accessChecker.isSuccess(attempt)) {
@@ -872,7 +875,7 @@ public class Main {
                 FileUtils.logFlush("dat file successfully written");
                 FileUtils.logFlush("Writing msd file");
 
-                if(Settings.isFools2021Mode()) {
+                if(HolidaySettings.isFools2021Mode()) {
                     FileUtils.writeMsd();
                 }
                 FileUtils.logFlush("msd file successfully written");
@@ -881,14 +884,14 @@ public class Main {
                     writeSaveFile();
                 }
 
-                if(Settings.isHalloweenMode()) {
+                if(HolidaySettings.isHalloweenMode()) {
                     if(!FileUtils.updateGraphicsFilesForHalloween(Settings.getGraphicsPack())) {
                         JOptionPane.showMessageDialog(f,
                                 Translations.getText("Unable to create Halloween graphics"),
                                 "Randomizer error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
-                if(Settings.isFools2020Mode()) {
+                if(HolidaySettings.isFools2020Mode()) {
                     if(!FileUtils.updateGraphicsFilesForFools2020(Settings.getGraphicsPack())) {
                         JOptionPane.showMessageDialog(f,
                                 Translations.getText("Unable to create Fools 2020 graphics"),
@@ -993,10 +996,10 @@ public class Main {
             startingNodes.add("Setting: Featherless");
         }
 
-        if(Settings.isFools2020Mode()) {
+        if(HolidaySettings.isFools2020Mode()) {
             startingNodes.add("Setting: Fools2020");
         }
-        if(Settings.isFools2021Mode()) {
+        if(HolidaySettings.isFools2021Mode()) {
             startingNodes.add("Setting: Fools2021");
         }
         else {
@@ -1184,7 +1187,7 @@ public class Main {
 //                saveData[0x11 + 0x271] = 3;
 //            }
         }
-        if(Settings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloweenMode()) {
             // Unlock Mulbruk so you can get Halloween hints.
             saveData[0x11 + 0x079] = (byte)1;
             saveData[0x11 + 0x18e] = (byte)2;
@@ -1219,7 +1222,7 @@ public class Main {
             saveData[0x11 + 0x243] = 3;
             saveData[0x11 + 0x244] = 3;
         }
-        if(Settings.isFools2020Mode()) {
+        if(HolidaySettings.isFools2020Mode()) {
             // Unlock Mulbruk so you can have conversations about quitting the game
             saveData[0x11 + 0x079] = (byte)1;
             saveData[0x11 + 0x18e] = (byte)2;
@@ -1228,7 +1231,7 @@ public class Main {
             // Default Extinction lighting
             saveData[0x11 + FlagConstants.EXTINCTION_TEMP_LIGHT] = (byte)1;
         }
-        if(Settings.isFools2021Mode()) {
+        if(HolidaySettings.isFools2021Mode()) {
             saveData[0x11 + FlagConstants.ELLMAC_ANKH_PUZZLE] = (byte)5; // Ellmac ankh puzzle solved
 
             saveData[0x11 + FlagConstants.TABLET_GRAIL_GUIDANCE] = (byte)1; // guidance
@@ -1365,7 +1368,7 @@ public class Main {
         }
         if(Settings.isAllowMainWeaponStart()) {
             startingWeapons.add("Knife");
-            if(!Settings.isFools2021Mode()) {
+            if(!HolidaySettings.isFools2021Mode()) {
                 startingWeapons.add("Key Sword");
             }
             startingWeapons.add("Axe");
@@ -1441,7 +1444,7 @@ public class Main {
     }
 
     private static void determineGiant(Random random) {
-        if(Settings.isFools2021Mode()) {
+        if(HolidaySettings.isFools2021Mode()) {
             List<String> giants = Arrays.asList("Zebu", "Bado", "Migela", "Ledo", "Abuto", "Ji", "Ribu", "Sakit"); // not Futo
             Settings.setCurrentGiant(giants.get(random.nextInt(giants.size())));
         }

@@ -1,16 +1,16 @@
 package lmr.randomizer.update;
 
+import lmr.randomizer.HolidaySettings;
+import lmr.randomizer.dat.DatFileData;
+import lmr.randomizer.dat.update.*;
 import lmr.randomizer.randomization.*;
 import lmr.randomizer.rcd.RcdFileData;
-import lmr.randomizer.util.FlagManager;
-import lmr.randomizer.Settings;
-import lmr.randomizer.dat.*;
-import lmr.randomizer.dat.update.*;
 import lmr.randomizer.rcd.object.GameObject;
 import lmr.randomizer.rcd.object.Room;
 import lmr.randomizer.rcd.object.Screen;
 import lmr.randomizer.rcd.object.Zone;
 import lmr.randomizer.rcd.updater.*;
+import lmr.randomizer.util.FlagManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,19 +32,19 @@ public class GameUpdater {
 
     public void updateDat(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer) {
         datUpdaters.add(new BaseDatUpdater(datFileData));
-//        if(Settings.isFools2019Mode()) {
+//        if(HolidaySettings.isFools2019Mode()) {
 //            updaters.add(new Fools2019DatUpdater(datFileData));
 //        }
-        if(Settings.isFools2020Mode()) {
+        if(HolidaySettings.isFools2020Mode()) {
             datUpdaters.add(new Fools2020DatUpdater(datFileData));
         }
-        if(Settings.isFools2021Mode()) {
+        if(HolidaySettings.isFools2021Mode()) {
             datUpdaters.add(new Fools2021DatUpdater(datFileData));
         }
-        if(Settings.isFools2022Mode()) {
+        if(HolidaySettings.isFools2022Mode()) {
             datUpdaters.add(new Fools2022DatUpdater(datFileData));
         }
-        if(Settings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloweenMode()) {
             datUpdaters.add(new HalloweenDatUpdater(datFileData));
         }
         datUpdaters.add(new RandomizationDatUpdater(datFileData, itemRandomizer, shopRandomizer, flagManager));
@@ -61,19 +61,19 @@ public class GameUpdater {
                           SealRandomizer sealRandomizer, TransitionGateRandomizer transitionGateRandomizer,
                           BacksideDoorRandomizer backsideDoorRandomizer, Random random) {
         rcdUpdaters.add(new BaseRcdUpdater(rcdFileData, datFileData));
-        if(Settings.isFools2019Mode()) {
+        if(HolidaySettings.isFools2019Mode()) {
             rcdUpdaters.add(new Fools2019RcdUpdater(rcdFileData, datFileData));
         }
-        if(Settings.isFools2020Mode()) {
+        if(HolidaySettings.isFools2020Mode()) {
             rcdUpdaters.add(new Fools2020RcdUpdater(rcdFileData, datFileData));
         }
-        if(Settings.isFools2021Mode()) {
+        if(HolidaySettings.isFools2021Mode()) {
             rcdUpdaters.add(new Fools2021RcdUpdater(rcdFileData, datFileData));
         }
-        if(Settings.isFools2022Mode()) {
+        if(HolidaySettings.isFools2022Mode()) {
             rcdUpdaters.add(new Fools2022RcdUpdater(rcdFileData, datFileData));
         }
-        if(Settings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloweenMode()) {
             rcdUpdaters.add(new HalloweenRcdUpdater(rcdFileData, datFileData));
         }
         rcdUpdaters.add(new RandomizationRcdUpdater(rcdFileData, datFileData, flagManager,

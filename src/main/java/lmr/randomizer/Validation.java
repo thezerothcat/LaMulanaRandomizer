@@ -363,7 +363,7 @@ public class Validation {
                 return false;
             }
 
-            if(Settings.isHalloweenMode() && customRemovedItem.equals("Provocative Bathing Suit")) {
+            if(HolidaySettings.isHalloweenMode() && customRemovedItem.equals("Provocative Bathing Suit")) {
                 JOptionPane.showMessageDialog(randomizerUI,
                         String.format("Custom placement of \"%s\" cannot be used with this mode",
                                 Translations.getText("items.ProvocativeBathingSuit")),
@@ -386,7 +386,7 @@ public class Validation {
                 return false;
             }
 
-            if(Settings.isHalloweenMode() && customStartingItem.equals("Provocative Bathing Suit")) {
+            if(HolidaySettings.isHalloweenMode() && customStartingItem.equals("Provocative Bathing Suit")) {
                 JOptionPane.showMessageDialog(randomizerUI,
                         String.format("Custom placement of \"%s\" cannot be used with this mode",
                                 Translations.getText("items.ProvocativeBathingSuit")),
@@ -425,7 +425,7 @@ public class Validation {
                         "Custom placement error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            if(Settings.isHalloweenMode() && customItemPlacement.getContents().equals("Provocative Bathing Suit")) {
+            if(HolidaySettings.isHalloweenMode() && customItemPlacement.getContents().equals("Provocative Bathing Suit")) {
                 JOptionPane.showMessageDialog(randomizerUI,
                         String.format("Custom placement of \"%s\" cannot be used with this mode",
                                 Translations.getText("items.ProvocativeBathingSuit")),
@@ -686,7 +686,7 @@ public class Validation {
     }
 
     public static boolean validateHalloween(Main.RandomizerUI randomizerUI) {
-        if(Settings.isHalloweenMode()){
+        if(HolidaySettings.isHalloweenMode()){
             if(Settings.isRequireFullAccess()) {
                 JOptionPane.showMessageDialog(randomizerUI,
                         String.format("The setting \"%s\" cannot be used with this mode",
@@ -720,7 +720,7 @@ public class Validation {
     }
 
     public static boolean validateFools2020(Main.RandomizerUI randomizerUI) {
-        if(Settings.isFools2020Mode()) {
+        if(HolidaySettings.isFools2020Mode()) {
             if(Settings.isRequireFullAccess()) {
                 JOptionPane.showMessageDialog(randomizerUI,
                         String.format("The setting \"%s\" cannot be used with this mode",
@@ -747,7 +747,7 @@ public class Validation {
     }
 
     public static boolean validateFools2021(Main.RandomizerUI randomizerUI) {
-        if(Settings.isFools2021Mode()) {
+        if(HolidaySettings.isFools2021Mode()) {
             if(Settings.isRequireFullAccess()) {
                 JOptionPane.showMessageDialog(randomizerUI,
                         String.format("The setting \"%s\" cannot be used with this mode",

@@ -313,7 +313,7 @@ public class RcdUpdaterTest {
         }
         if(Settings.isAllowMainWeaponStart()) {
             startingWeapons.add("Knife");
-            if(!Settings.isFools2021Mode()) {
+            if(!HolidaySettings.isFools2021Mode()) {
                 startingWeapons.add("Key Sword");
             }
             startingWeapons.add("Axe");
@@ -350,7 +350,7 @@ public class RcdUpdaterTest {
     }
 
     private static void determineGiant(Random random) {
-        if(Settings.isFools2021Mode()) {
+        if(HolidaySettings.isFools2021Mode()) {
             List<String> giants = Arrays.asList("Zebu", "Bado", "Migela", "Ledo", "Abuto", "Ji", "Ribu", "Sakit"); // not Futo
             Settings.setCurrentGiant(giants.get(random.nextInt(giants.size())));
         }
@@ -434,7 +434,7 @@ public class RcdUpdaterTest {
             startingNodes.add("Setting: Featherless");
         }
 
-        if(Settings.isFools2021Mode()) {
+        if(HolidaySettings.isFools2021Mode()) {
             startingNodes.add("Setting: Fools2021");
         } else {
             startingNodes.add("Setting: Not Fools2021");

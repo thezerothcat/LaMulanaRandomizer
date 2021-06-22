@@ -1,5 +1,6 @@
 package lmr.randomizer.rcd.updater;
 
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.util.BlockConstants;
 import lmr.randomizer.util.FlagConstants;
 import lmr.randomizer.Settings;
@@ -38,7 +39,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
 
     @Override
     boolean updateSkeleton(GameObject skeleton) {
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             ObjectContainer objectContainer = skeleton.getObjectContainer();
             if(!(objectContainer instanceof Screen)) {
                 return true;
@@ -62,7 +63,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         ObjectContainer objectContainer = flagTimer.getObjectContainer();
         if(flagTimer.getObjectContainer() instanceof Screen) {
             Screen screen = (Screen)objectContainer;
-            if(Settings.isIncludeHellTempleNPCs()) {
+            if(HolidaySettings.isIncludeHellTempleNPCs()) {
                 if(screen.getZoneIndex() == 23 && screen.getRoomIndex() == 16 && screen.getScreenIndex() == 0) {
                     for (int i = 0; i < flagTimer.getTestByteOperations().size(); i++) {
                         TestByteOperation flagTest = flagTimer.getTestByteOperations().get(i);
@@ -157,7 +158,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
 
     @Override
     boolean updatePan(GameObject pan) {
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             ObjectContainer objectContainer = pan.getObjectContainer();
             if(!(objectContainer instanceof Screen)) {
                 return true;
@@ -213,7 +214,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
 
     @Override
     boolean updateIceWizard(GameObject iceWizard) {
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             ObjectContainer objectContainer = iceWizard.getObjectContainer();
             if(!(objectContainer instanceof Screen)) {
                 return true;
@@ -249,7 +250,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
 
     @Override
     boolean updateSwordBird(GameObject swordBird) {
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             ObjectContainer objectContainer = swordBird.getObjectContainer();
             if(!(objectContainer instanceof Screen)) {
                 return true;
@@ -285,7 +286,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
 
     @Override
     boolean updateDevil(GameObject devil) {
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             ObjectContainer objectContainer = devil.getObjectContainer();
             if(!(objectContainer instanceof Screen)) {
                 return true;
@@ -311,7 +312,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             return true;
         }
         Screen screen = (Screen)objectContainer;
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             if(screen.getZoneIndex() == 24) {
                 Integer flagToRemoveIndex = null;
                 for (int i = 0; i < ushum.getTestByteOperations().size(); i++) {
@@ -335,7 +336,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             return true;
         }
         Screen screen = (Screen)objectContainer;
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             if(screen.getZoneIndex() == 24) {
                 return false;
             }
@@ -345,7 +346,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
 
     @Override
     boolean updateMiniBoss(GameObject miniBoss) {
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             ObjectContainer objectContainer = miniBoss.getObjectContainer();
             if(!(objectContainer instanceof Screen)) {
                 return true;
@@ -367,7 +368,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
     @Override
     boolean updateTheBoss(GameObject theBoss) {
         // The Boss ankh
-//        if(Settings.isIncludeHellTempleNPCs()) {
+//        if(HolidaySettings.isIncludeHellTempleNPCs()) {
 //            theBoss.getArgs().set(3, (short)160); // HP
 //            theBoss.getArgs().set(7, (short)1); // Max number of slimes
 //            theBoss.getArgs().set(12, (short)240); // Delay between bombs
@@ -386,7 +387,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             // Graphic for closed Mulbruk door should be removed since the door won't be closed.
             return false;
         }
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             Integer flagToRemove = null;
             for(int i = 0; i < graphicsTextureDraw.getTestByteOperations().size(); i++) {
                 TestByteOperation flagTest = graphicsTextureDraw.getTestByteOperations().get(i);
@@ -431,7 +432,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             warpDoor.getArgs().set(1, (short)ZoneConstants.NIGHT_SURFACE);
         }
 
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             // Add escape door in place of normal HT to Guidance door
             if(warpDoor.getArgs().get(0) == 0) {
                 Screen screen = (Screen)warpDoor.getObjectContainer();
@@ -468,7 +469,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             conversationDoor.getArgs().set(4, getCustomBlockIndex(CustomBlockEnum.HalloweenNoCandyReferenceBlock_DracuetHTUnlocked));
         }
         else if(conversationDoor.getArgs().get(4) == BlockConstants.Master_Dracuet_ProvocativeBathingSuit) {
-            if(Settings.isIncludeHellTempleNPCs()) {
+            if(HolidaySettings.isIncludeHellTempleNPCs()) {
                 // Dracuet conversation has some unwanted flags
                 Integer flagToRemove = null;
                 for (int i = 0; i < conversationDoor.getTestByteOperations().size(); i++) {
@@ -491,106 +492,18 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             }
         }
         else if(conversationDoor.getArgs().get(4) == BlockConstants.MulbrukEscapeRegular) {
-            // Mulbruk escape
-            if(Settings.isIncludeHellTempleNPCs()) {
+            if(HolidaySettings.isIncludeHellTempleNPCs()) {
                 return false;
             }
         }
         else if(conversationDoor.getArgs().get(4) == BlockConstants.MulbrukEscapeSwimsuit) {
-            // Mulbruk escape
-            if(Settings.isIncludeHellTempleNPCs()) {
+            if(HolidaySettings.isIncludeHellTempleNPCs()) {
                 return false;
             }
         }
 
         int blockNumber = conversationDoor.getArgs().get(4);
-        if(blockNumber == BlockConstants.Master_Hiner) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_Moger) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_FormerMekuriMaster_Mekuri) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PriestZarnac) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PriestXanado) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PhilosopherGiltoriyo) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PriestHidlyda) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PriestRomancis) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PriestAramo) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PriestTriton) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PriestJaguarfiv) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_MrSlushfund_Pepper) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PriestAlest) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_StrayFairy) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_GiantThexde) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PhilosopherAlsedana) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PhilosopherSamaranta) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PriestLaydoc) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PriestAshgine) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PhilosopherFobos_Ladder) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_8BitElder) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_duplex) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_Samieru) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_Naramura) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_8BitFairy) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PriestMadomono) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_PriestGailious) {
-            npcObjects.add(conversationDoor);
-        }
-        else if(blockNumber == BlockConstants.Master_Fairy_NightSurface) {
-            if(Settings.isIncludeHellTempleNPCs()) {
-                npcObjects.add(conversationDoor);
-            }
-        }
-        else if(blockNumber == 684) {
+        if(blockNumber == 684) {
             // Fairy Queen - Endless NPC, 08-01-00
             Integer flagToRemoveIndex = null;
             for (int i = 0; i < conversationDoor.getWriteByteOperations().size(); i++) {
@@ -665,7 +578,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             return true;
         }
         Screen screen = (Screen)objectContainer;
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             if(screen.getZoneIndex() == 23) {
                 if(screen.getRoomIndex() == 1) {
                     if(screen.getScreenIndex() == 0) {
@@ -739,6 +652,99 @@ public class HalloweenRcdUpdater extends RcdUpdater {
     }
 
     @Override
+    public void trackObject(GameObject conversationDoor) {
+        if(conversationDoor.getId() == ObjectIdConstants.ConversationDoor) {
+            int blockNumber = conversationDoor.getArgs().get(4);
+            if(blockNumber == BlockConstants.Master_Hiner) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_Moger) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_FormerMekuriMaster_Mekuri) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PriestZarnac) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PriestXanado) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PhilosopherGiltoriyo) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PriestHidlyda) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PriestRomancis) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PriestAramo) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PriestTriton) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PriestJaguarfiv) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_MrSlushfund_Pepper) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PriestAlest) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_StrayFairy) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_GiantThexde) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PhilosopherAlsedana) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PhilosopherSamaranta) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PriestLaydoc) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PriestAshgine) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PhilosopherFobos_Ladder) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_8BitElder) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_duplex) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_Samieru) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_Naramura) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_8BitFairy) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PriestMadomono) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_PriestGailious) {
+                npcObjects.add(conversationDoor);
+            }
+            else if(blockNumber == BlockConstants.Master_Fairy_NightSurface) {
+                if(HolidaySettings.isIncludeHellTempleNPCs()) {
+                    npcObjects.add(conversationDoor);
+                }
+            }
+       }
+    }
+
+    @Override
     void addUntrackedCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
         if(zoneIndex == 10) {
             if(roomIndex == 8 && screenIndex == 0) {
@@ -748,7 +754,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             }
         }
         else if(zoneIndex == 23) {
-            if(Settings.isIncludeHellTempleNPCs()) {
+            if(HolidaySettings.isIncludeHellTempleNPCs()) {
                 if(roomIndex == 0) {
                     if(screenIndex == 0) {
                         // Add escape door in place of normal HT to Guidance door
@@ -879,7 +885,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             }
         }
         else if(zoneIndex == 24) {
-            if(Settings.isIncludeHellTempleNPCs()) {
+            if(HolidaySettings.isIncludeHellTempleNPCs()) {
                 if(roomIndex == 1 && screenIndex == 0) {
 //                    int wave1Health = 20;
 //                    int wave2Health = 40;
@@ -986,7 +992,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         if(zoneIndex == 0) {
             if(roomIndex == 4 && screenIndex == 1) {
                 // Priest Zarnac - 674
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xac6);
@@ -995,21 +1001,21 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 1) {
             if(roomIndex == 0 && screenIndex == 2) {
                 // Hiner - 671
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xac9);
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 // Moger - 672
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xac8);
             }
             else if(roomIndex == 7 && screenIndex == 0) {
                 // Former Mekuri Master - 673
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xac7);
@@ -1018,7 +1024,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 2) {
             if(roomIndex == 2 && screenIndex == 0) {
                 // Priest Xanado - - 675
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xac5);
@@ -1027,7 +1033,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 3) {
             if(roomIndex == 3 && screenIndex == 0) {
                 // Mulbruk
-                if(Settings.isIncludeHellTempleNPCs()) {
+                if(HolidaySettings.isIncludeHellTempleNPCs()) {
                     // Timer to set flag for talking about HT
                     AddObject.addSecondsTimer(screen,
                             0, Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, ByteOp.FLAG_EQUALS, 29),
@@ -1037,7 +1043,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             }
             else if(roomIndex == 4 && screenIndex == 2) {
                 // Priest Madomono - 718
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xab0);
@@ -1046,14 +1052,14 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 4) {
             if(roomIndex == 0 && screenIndex == 1) {
                 // Philosopher Giltoriyo - 677
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xac4);
             }
             else if(roomIndex == 6 && screenIndex == 1) {
                 // Priest Hidlyda - 678
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xac3);
@@ -1062,14 +1068,14 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 5) {
             if(roomIndex == 3 && screenIndex == 2) {
                 // Priest Romancis - 679
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xac2);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 // Priest Gailious - 723
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xaaf);
@@ -1078,14 +1084,14 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 6) {
             if(roomIndex == 6 && screenIndex == 0) {
                 // Priest Aramo - 680
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xac1);
             }
             else if(roomIndex == 9 && screenIndex == 1) {
                 // Priest Triton - 681
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xac0);
@@ -1094,7 +1100,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 7) {
             if(roomIndex == 10 && screenIndex == 1) {
                 // Priest Jaguarfiv - 683
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xabf);
@@ -1102,7 +1108,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         }
         else if(zoneIndex == 8) {
             if(roomIndex == 1 && screenIndex == 0) {
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES);
@@ -1111,28 +1117,28 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 10) {
             if(roomIndex == 8 && screenIndex == 0) {
                 // Mr. Slushfund - 689
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xabe);
             }
             else if(roomIndex == 8 && screenIndex == 1) {
                 // Priest Alest - 693
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xabd);
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 // Stray fairy - 694
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xabc);
             }
             else if(roomIndex == 2 && screenIndex == 2) {
                 // duplex - 707
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xab4);
@@ -1141,7 +1147,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 11) {
             if(roomIndex == 7 && screenIndex == 0) {
                 // Giant Thexde - 696
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xabb);
@@ -1150,14 +1156,14 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 12) {
             if(roomIndex == 6 && screenIndex == 0) {
                 // Philosopher Alsedana - 698
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xaba);
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 // Samieru - 708
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xab3);
@@ -1166,14 +1172,14 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 13) {
             if(roomIndex == 5 && screenIndex == 1) {
                 // Philosopher Samaranta - 700
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xab9);
             }
             else if(roomIndex == 6 && screenIndex == 3) {
                 // Naramura - 709
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xab2);
@@ -1182,7 +1188,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 14) {
             if(roomIndex == 0 && screenIndex == 1) {
                 // Priest Laydoc - 701
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xab8);
@@ -1191,7 +1197,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 16) {
             if(roomIndex == 1 && screenIndex == 0) {
                 // Priest Ashgine - 702
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xab7);
@@ -1200,7 +1206,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 17) {
             if(roomIndex == 2 && screenIndex == 0) {
                 // Fobos - 704
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xab6);
@@ -1209,7 +1215,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 21) {
             if(roomIndex == 0 && screenIndex == 0) {
                 // 8bit Elder - 706
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xab5);
@@ -1218,14 +1224,14 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 20) {
             if(roomIndex == 0 && screenIndex == 1) {
                 // 8bit Fairy - 710
-                if(!Settings.isIncludeHellTempleNPCs()) {
+                if(!HolidaySettings.isIncludeHellTempleNPCs()) {
                     AddObject.addEscapeTimer(screen, FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT, 28);
                 }
                 AddObject.addNpcConversationTimer(screen, 0xab1);
             }
         }
         else if(zoneIndex == 23) {
-            if(Settings.isIncludeHellTempleNPCs()) {
+            if(HolidaySettings.isIncludeHellTempleNPCs()) {
                 if(roomIndex == 22) {
                     if(screenIndex == 0) {
                         // Dracuet - 1011
@@ -1282,7 +1288,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
             }
         }
 
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             if(screen.getZoneIndex() == 23) {
                 if(screen.getRoomIndex() == 0) {
                     if(screen.getScreenIndex() == 0) {
@@ -1747,7 +1753,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
                         AddObject.addAutomaticTranslationsTimer(nightSurfaceScreen);
                     }
                 }
-                if(Settings.isIncludeHellTempleNPCs()) {
+                if(HolidaySettings.isIncludeHellTempleNPCs()) {
                     if(nightSurfaceScreen.getRoomIndex() == 7 && nightSurfaceScreen.getScreenIndex() == 0) {
                         // Fairy - 998
                         // No escape timer since this only happens for HT.

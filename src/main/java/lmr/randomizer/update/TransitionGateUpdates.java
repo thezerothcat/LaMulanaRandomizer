@@ -1,29 +1,29 @@
 package lmr.randomizer.update;
 
-import lmr.randomizer.util.FlagConstants;
-import lmr.randomizer.Settings;
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.rcd.object.*;
+import lmr.randomizer.util.FlagConstants;
 
 public final class TransitionGateUpdates {
     private TransitionGateUpdates() { }
 
     public static void replaceTransitionGateArgs(GameObject gameObject, String gateDestination) {
         if("Transition: Surface R1".equals(gateDestination)) {
-            gameObject.getArgs().set(0, (short)(Settings.isHalloweenMode() ? 22 : 1));
+            gameObject.getArgs().set(0, (short)(HolidaySettings.isHalloweenMode() ? 22 : 1));
             gameObject.getArgs().set(1, (short)11);
             gameObject.getArgs().set(2, (short)1);
             gameObject.getArgs().set(3, (short)580);
             gameObject.getArgs().set(4, (short)312);
         }
         else if("Transition: Surface D1".equals(gateDestination)) {
-            gameObject.getArgs().set(0, (short)(Settings.isHalloweenMode() ? 22 : 1));
+            gameObject.getArgs().set(0, (short)(HolidaySettings.isHalloweenMode() ? 22 : 1));
             gameObject.getArgs().set(1, (short)4);
             gameObject.getArgs().set(2, (short)2);
             gameObject.getArgs().set(3, (short)440);
             gameObject.getArgs().set(4, (short)392);
         }
         else if("Transition: Surface D2".equals(gateDestination)) {
-            gameObject.getArgs().set(0, (short)(Settings.isHalloweenMode() ? 22 : 1));
+            gameObject.getArgs().set(0, (short)(HolidaySettings.isHalloweenMode() ? 22 : 1));
             gameObject.getArgs().set(1, (short)5);
             gameObject.getArgs().set(2, (short)2);
             gameObject.getArgs().set(3, (short)440);
@@ -536,7 +536,7 @@ public final class TransitionGateUpdates {
         if(zoneIndex == 18) {
             screenExit.setZoneIndex((byte)9);
         }
-        else if(Settings.isHalloweenMode() && zoneIndex == 1) {
+        else if(HolidaySettings.isHalloweenMode() && zoneIndex == 1) {
             // Night Surface, not normal Surface. Not necessary if the gate is already up to date, but checking for safety anyway.
             screenExit.setZoneIndex((byte)22);
         }
@@ -600,17 +600,17 @@ public final class TransitionGateUpdates {
     private static ScreenExit getScreenExit(String gateDestination) {
         ScreenExit screenExit = new ScreenExit();
         if("Transition: Surface R1".equals(gateDestination)) {
-            screenExit.setZoneIndex((byte)(Settings.isHalloweenMode() ? 22 : 1));
+            screenExit.setZoneIndex((byte)(HolidaySettings.isHalloweenMode() ? 22 : 1));
             screenExit.setRoomIndex((byte)11);
             screenExit.setScreenIndex((byte)1);
         }
         else if("Transition: Surface D1".equals(gateDestination)) {
-            screenExit.setZoneIndex((byte)(Settings.isHalloweenMode() ? 22 : 1));
+            screenExit.setZoneIndex((byte)(HolidaySettings.isHalloweenMode() ? 22 : 1));
             screenExit.setRoomIndex((byte)4);
             screenExit.setScreenIndex((byte)2);
         }
         else if("Transition: Surface D2".equals(gateDestination)) {
-            screenExit.setZoneIndex((byte)(Settings.isHalloweenMode() ? 22 : 1));
+            screenExit.setZoneIndex((byte)(HolidaySettings.isHalloweenMode() ? 22 : 1));
             screenExit.setRoomIndex((byte)5);
             screenExit.setScreenIndex((byte)2);
         }

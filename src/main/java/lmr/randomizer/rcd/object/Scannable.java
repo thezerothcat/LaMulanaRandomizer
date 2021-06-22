@@ -39,7 +39,7 @@ package lmr.randomizer.rcd.object;
 public class Scannable extends GameObject {
     public Scannable(ObjectContainer objectContainer, int x, int y) {
         super(objectContainer, 12);
-        setId((short)0x9e);
+        setId(ObjectIdConstants.Scannable);
         setX(x);
         setY(y);
     }

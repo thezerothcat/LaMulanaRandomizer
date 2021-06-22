@@ -1,6 +1,6 @@
 package lmr.randomizer.ui;
 
-import lmr.randomizer.Settings;
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Translations;
 
 import javax.swing.*;
@@ -20,15 +20,15 @@ public class TabbedPanel extends JTabbedPane {
     public TabbedPanel(MainPanel _mainPanel) {
         mainPanel = _mainPanel;
 
-        if(Settings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloweenMode()) {
             eventPanel = new EventPanel(this);
             addTab(Translations.getText("settings.event.halloween"), eventPanel);
         }
-        else if(Settings.isFools2020Mode()) {
+        else if(HolidaySettings.isFools2020Mode()) {
             eventPanel = new EventPanel(this);
             addTab(Translations.getText("settings.event.fools2020"), eventPanel);
         }
-        else if(Settings.isFools2021Mode()) {
+        else if(HolidaySettings.isFools2021Mode()) {
             eventPanel = new EventPanel(this);
             addTab(Translations.getText("settings.event.fools2021"), eventPanel);
         }
@@ -99,13 +99,13 @@ public class TabbedPanel extends JTabbedPane {
         removedItemsPanel.updateTranslations();
 
         int i = 0;
-        if(Settings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloweenMode()) {
             setTitleAt(i++, Translations.getText("settings.event.halloween"));
         }
-        else if(Settings.isFools2020Mode()) {
+        else if(HolidaySettings.isFools2020Mode()) {
             setTitleAt(i++, Translations.getText("settings.event.fools2020"));
         }
-        else if(Settings.isFools2021Mode()) {
+        else if(HolidaySettings.isFools2021Mode()) {
             setTitleAt(i++, Translations.getText("settings.event.fools2021"));
         }
         setTitleAt(i++, Translations.getText("settings.items"));

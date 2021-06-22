@@ -220,7 +220,7 @@ public class HalloweenDatUpdater extends DatUpdater {
 
     @Override
     void updateProvocativeBathingSuitConversationBlock(Block conversationBlock) {
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             List<BlockContents> swimsuitBlockContents = conversationBlock.getBlockContents();
             swimsuitBlockContents.clear();
             swimsuitBlockContents.add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
@@ -256,7 +256,7 @@ public class HalloweenDatUpdater extends DatUpdater {
             blockListData.getData().add((short)0);
             flagCheckBlock.getFlagCheckReferences().add(4, blockListData);
         }
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             BlockListData blockListData = new BlockListData((short)4);
             blockListData.getData().add((short)FlagConstants.CUSTOM_HALLOWEEN_NPC_COUNT);
             blockListData.getData().add((short)29);
@@ -297,7 +297,7 @@ public class HalloweenDatUpdater extends DatUpdater {
         flagCheckBlock.getFlagCheckReferences().clear();
         flagCheckBlock.getFlagCheckReferences().addAll(halloweenFlagCheckReferences);
 
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             BlockListData blockListData = new BlockListData((short)4);
             blockListData.getData().add((short)FlagConstants.CUSTOM_HALLOWEEN_MULBRUK_CONVERSATION);
             blockListData.getData().add((short)2);
@@ -506,20 +506,20 @@ public class HalloweenDatUpdater extends DatUpdater {
         masterBlock = AddObject.buildMasterBlock(CustomBlockEnum.HalloweenCandyReferenceBlock_8BitElder, candyConversationBlock.getBlockNumber());
         datFileData.addCustomBlock(CustomBlockEnum.HalloweenCandyReferenceBlock_8BitElder, masterBlock);
 
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             candyConversationBlock = AddObject.buildHalloweenCandyBlock(CustomBlockEnum.HalloweenCandyConversationBlock_NightSurfaceFairy);
             datFileData.addCustomBlock(CustomBlockEnum.HalloweenCandyConversationBlock_NightSurfaceFairy, candyConversationBlock);
             masterBlock = AddObject.buildMasterBlock(CustomBlockEnum.HalloweenCandyReferenceBlock_NightSurfaceFairy, candyConversationBlock.getBlockNumber());
             datFileData.addCustomBlock(CustomBlockEnum.HalloweenCandyReferenceBlock_NightSurfaceFairy, masterBlock);
         }
 
-        final int totalNpcCount = Settings.isIncludeHellTempleNPCs() ? 29 : 28;
+        final int totalNpcCount = HolidaySettings.isIncludeHellTempleNPCs() ? 29 : 28;
         final int npcHintCount = 17;
         for(int i = 28; i >= 0; i--) {
             datFileData.addCustomBlock(CustomBlockEnum.valueOf("HalloweenConversationBlock_NpcCount" + i),
                     AddObject.buildNpcCountBlock(i, totalNpcCount));
         }
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             datFileData.addCustomBlock(CustomBlockEnum.HalloweenConversationBlock_AllNpcs,
                     AddObject.buildAllNpcsBlock());
             Block conversationBlock = AddObject.buildMulbrukHTBlock(npcHintCount + 1);
@@ -539,7 +539,7 @@ public class HalloweenDatUpdater extends DatUpdater {
 
         datFileData.addCustomBlock(CustomBlockEnum.HalloweenSecretShopBlock, AddObject.buildSecretShopBlock());
         datFileData.addCustomBlock(CustomBlockEnum.HalloweenDanceBlock, AddObject.buildDanceBlock());
-        if(Settings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isIncludeHellTempleNPCs()) {
             datFileData.addCustomBlock(CustomBlockEnum.HalloweenHTSkip, AddObject.buildHTSkipBlock());
             if(!Settings.getStartingItemsIncludingCustom().contains("Holy Grail")) {
                 datFileData.addCustomBlock(CustomBlockEnum.HalloweenHTGrailWarning, AddObject.buildHTGrailWarningBlock());

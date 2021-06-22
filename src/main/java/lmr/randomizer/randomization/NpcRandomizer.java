@@ -1,6 +1,7 @@
 package lmr.randomizer.randomization;
 
 import lmr.randomizer.DataFromFile;
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
 import lmr.randomizer.node.CustomNPCPlacement;
 
@@ -14,7 +15,7 @@ public class NpcRandomizer {
     }
 
     public void determineNpcLocations(Random random) {
-        if (Settings.isFools2021Mode()) {
+        if (HolidaySettings.isFools2021Mode()) {
             List<String> npcDoors = new ArrayList<>();
             npcDoors.add("Arrogant Sturdy Snake");
             npcDoors.add("Arrogant Metagear");
@@ -258,6 +259,7 @@ public class NpcRandomizer {
 //        mapOfNpcDoorLocationToContents.put("NPCL: Xelpud", "NPC: Xelpud");
 //        mapOfNpcDoorLocationToContents.put("NPCL: Mulbruk", "NPC: Mulbruk");
 //        mapOfNpcDoorLocationToContents.put("NPCL: Stray fairy", "NPC: Stray fairy");
+//        mapOfNpcDoorLocationToContents.put("NPCL: Fairy", "NPC: Fairy");
     }
 
     public String getNpc(String npcLocation) {

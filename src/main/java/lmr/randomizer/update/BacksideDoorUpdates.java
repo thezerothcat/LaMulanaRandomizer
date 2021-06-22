@@ -1,5 +1,6 @@
 package lmr.randomizer.update;
 
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.randomization.data.BacksideDoorData;
 import lmr.randomizer.util.FlagConstants;
 import lmr.randomizer.Settings;
@@ -180,7 +181,7 @@ public final class BacksideDoorUpdates {
             gameObject.getArgs().add((short)160);
         }
         else if("Door: B5".equals(doorWithCoordinatesData)) {
-            gameObject.getArgs().add((short)(Settings.isHalloweenMode() ? 22 : 1));
+            gameObject.getArgs().add((short)(HolidaySettings.isHalloweenMode() ? 22 : 1));
             gameObject.getArgs().add((short)8);
             gameObject.getArgs().add((short)0);
             gameObject.getArgs().add((short)200);
@@ -201,7 +202,7 @@ public final class BacksideDoorUpdates {
             gameObject.getArgs().add((short)80);
         }
         else if("Door: B8".equals(doorWithCoordinatesData)) {
-            if(Settings.isFools2021Mode()) {
+            if(HolidaySettings.isFools2021Mode()) {
                 gameObject.getArgs().add((short)0);
                 gameObject.getArgs().add((short)0);
                 gameObject.getArgs().add((short)0);

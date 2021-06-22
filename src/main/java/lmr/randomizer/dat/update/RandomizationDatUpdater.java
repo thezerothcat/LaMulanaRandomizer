@@ -509,7 +509,7 @@ public class RandomizationDatUpdater extends DatUpdater {
         }
 
         List<Short> newBlockData = new ArrayList<>(blockStringData.getData().subList(0, blockStringData.getItemNameStartIndex()));
-        if(Settings.isFools2020Mode()) {
+        if(HolidaySettings.isFools2020Mode()) {
             if(shopInventoryData.getInventoryArg() == ItemConstants.SCRIPTURES) {
                 newBlockData.addAll(FileUtils.stringToData(Translations.getText("items.HeatproofCase")));
             }
@@ -533,7 +533,7 @@ public class RandomizationDatUpdater extends DatUpdater {
     }
 
     private void updateBunemonText(List<Short> bunemonData, ShopInventoryData shopInventoryData, Short itemPrice) {
-        if(Settings.isFools2020Mode()) {
+        if(HolidaySettings.isFools2020Mode()) {
             if(shopInventoryData.getInventoryArg() == ItemConstants.SCRIPTURES) {
                 bunemonData.addAll(FileUtils.stringToData(Translations.getText("items.HeatproofCase")));
             }

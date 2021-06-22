@@ -440,6 +440,30 @@ public class FileUtils {
         return customPlacementData;
     }
 
+    public static void readHolidaySettings() throws IOException {
+        if(!(new File("holiday-config.txt").exists())) {
+            return;
+        }
+
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader("randomizer-config.txt"));
+        } catch(Exception ex) {
+            FileUtils.log("Unable to read settings file" + ", " + ex.getMessage());
+            return;
+        }
+
+        String line;
+        while((line = reader.readLine()) != null) {
+            if(line.startsWith("includeHellTempleNPCs")) {
+                HolidaySettings.setIncludeHellTempleNPCs(Boolean.valueOf(line.split("=")[1]), false);
+            }
+            else if(line.startsWith("updatedVersion")) {
+                HolidaySettings.setUpdatedVersion(Boolean.valueOf(line.split("=")[1]), false);
+            }
+        }
+    }
+
     public static void readSettings() throws IOException {
         if(!(new File("randomizer-config.txt").exists())) {
             return;
@@ -635,6 +659,16 @@ public class FileUtils {
         Settings.setStartingItems(startingItems, false);
     }
 
+    public static void saveHolidaySettings() throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("holiday-config.txt"));
+
+        writer.write(String.format("includeHellTempleNPCs=%s", HolidaySettings.isIncludeHellTempleNPCs()));
+        writer.newLine();
+
+        writer.write(String.format("updatedVersion=%s", HolidaySettings.isUpdatedVersion()));
+        writer.newLine();
+    }
+
     public static void saveSettings() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("randomizer-config.txt"));
         writer.write(String.format("version=%s", VERSION));
@@ -749,9 +783,6 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("randomizeNpcs=%s", Settings.isRandomizeNpcs()));
-        writer.newLine();
-
-        writer.write(String.format("includeHellTempleNPCs=%s", Settings.isIncludeHellTempleNPCs()));
         writer.newLine();
 
         writer.write(String.format("screenshakeDisabled=%s", Settings.isScreenshakeDisabled()));
@@ -873,10 +904,10 @@ public class FileUtils {
                 fileOutputStream.close();
             }
 
-            if(Settings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloweenMode()) {
                 FileUtils.updateGraphicsFilesForHalloween(Settings.getGraphicsPack());
             }
-            if(Settings.isFools2020Mode()) {
+            if(HolidaySettings.isFools2020Mode()) {
                 FileUtils.updateGraphicsFilesForFools2020(Settings.getGraphicsPack());
             }
             FileUtils.updateGraphicsFiles();
@@ -1136,7 +1167,7 @@ public class FileUtils {
             BufferedImage newImage = new BufferedImage(existingImage.getWidth(), existingImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics2D = newImage.createGraphics();
 
-            if(Settings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloweenMode()) {
                 BufferedImage modified;
                 try {
                     modified = ImageIO.read(FileUtils.class.getResource(filepath));
@@ -1156,7 +1187,7 @@ public class FileUtils {
                 graphics2D.drawImage(rightPart, null, 820, 320);
                 graphics2D.drawImage(bottomPart, null, 780, 360);
             }
-            else if(Settings.isFools2020Mode()) {
+            else if(HolidaySettings.isFools2020Mode()) {
                 final int itemsBeginX = 620;
                 final int itemsBeginY = 0;
                 final int itemsEndY = 440;
@@ -1208,10 +1239,10 @@ public class FileUtils {
     }
 
     private static String getPathFromSettings(String file) {
-        if(Settings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloweenMode()) {
             return "graphics/halloween/" + file;
         }
-        if(Settings.isFools2020Mode()) {
+        if(HolidaySettings.isFools2020Mode()) {
             return "graphics/fools2020/" + file;
         }
         return  "";

@@ -1,8 +1,8 @@
 package lmr.randomizer.rcd.updater;
 
-import lmr.randomizer.util.FlagConstants;
-import lmr.randomizer.Settings;
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.rcd.object.*;
+import lmr.randomizer.util.FlagConstants;
 
 public class PotUpdater {
     private boolean templeOfMoonlightRemovedPotPresent;
@@ -51,13 +51,13 @@ public class PotUpdater {
         int zoneIndex = screen.getZoneIndex();
         int roomIndex = screen.getRoomIndex();
         int screenIndex = screen.getScreenIndex();
-        if(Settings.isFools2021Mode() && zoneIndex == 3) {
+        if(HolidaySettings.isFools2021Mode() && zoneIndex == 3) {
             // Flares in all Sun pots
             pot.getArgs().set(0, DropType.FLARE_GUN_AMMO.getValue());
             pot.getArgs().set(1, (short)80);
         }
 
-        if (Settings.isFools2021Mode()) {
+        if (HolidaySettings.isFools2021Mode()) {
             if(zoneIndex == 17 && roomIndex == 9 && screenIndex == 1) {
                 // Dimensional - Umu Dabrutu's room
                 if(pot.getY() > 300) {

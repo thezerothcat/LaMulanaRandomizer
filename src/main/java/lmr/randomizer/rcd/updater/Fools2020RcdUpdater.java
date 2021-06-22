@@ -1,6 +1,7 @@
 package lmr.randomizer.rcd.updater;
 
 import lmr.randomizer.BossDifficulty;
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
 import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.randomization.data.CustomBlockEnum;
@@ -240,7 +241,7 @@ public class Fools2020RcdUpdater extends RcdUpdater {
             }
         }
         else if(zoneIndex == 17 && roomIndex == 9 && screenIndex == 0) {
-            if(Settings.isUpdatedVersion()) {
+            if(HolidaySettings.isUpdatedVersion()) {
                 AddObject.addPot(screen, 300, 400, PotGraphic.DIMENSIONAL,
                         BossDifficulty.EASY.equals(Settings.getBossDifficulty()) ? DropType.FLARE_GUN_AMMO : DropType.NOTHING, 80, Arrays.asList(new TestByteOperation(FlagConstants.ROOM_FLAG_40, ByteOp.FLAG_EQUALS, 1)),
                         new ArrayList<>(0));
@@ -269,7 +270,7 @@ public class Fools2020RcdUpdater extends RcdUpdater {
     public void doPostShuffleUpdates() {
         updateFlareGunItem();
         updateFeatherChest();
-        if(Settings.isUpdatedVersion()) {
+        if(HolidaySettings.isUpdatedVersion()) {
             updateFeatherChestSequence();
         }
         updateMulbrukConversations();

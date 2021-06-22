@@ -405,7 +405,7 @@ public final class Settings {
     }
 
     public static boolean isRandomizeEscapeChest() {
-        return Settings.isFools2021Mode() || singleton.randomizeEscapeChest;
+        return HolidaySettings.isFools2021Mode() || singleton.randomizeEscapeChest;
     }
 
     public static void setRandomizeEscapeChest(boolean randomizeEscapeChest, boolean update) {
@@ -601,7 +601,7 @@ public final class Settings {
     }
 
     public static boolean isFoolsGameplay() {
-        return isFools2021Mode();
+        return HolidaySettings.isFools2021Mode();
     }
 
     public static void setFoolsGameplay(boolean foolsGameplay, boolean update) {
@@ -612,7 +612,7 @@ public final class Settings {
     }
 
     public static boolean isRandomizeSeals() {
-        return isFools2021Mode() || singleton.randomizeSeals;
+        return HolidaySettings.isFools2021Mode() || singleton.randomizeSeals;
     }
 
     public static void setRandomizeSeals(boolean randomizeSeals, boolean update) {
@@ -623,7 +623,7 @@ public final class Settings {
     }
 
     public static boolean isRandomizeNpcs() {
-        return isFools2021Mode() || (!isHalloweenMode() && singleton.randomizeNpcs);
+        return HolidaySettings.isFools2021Mode() || (!HolidaySettings.isHalloweenMode() && singleton.randomizeNpcs);
     }
 
     public static void setRandomizeNpcs(boolean randomizeNpcs, boolean update) {
@@ -776,7 +776,7 @@ public final class Settings {
 
     public static Set<String> getRemovedItems() {
         Set<String> removedItems = new HashSet<>();
-        if(!Settings.isFools2021Mode() && singleton.removeSpaulder) {
+        if(!HolidaySettings.isFools2021Mode() && singleton.removeSpaulder) {
             removedItems.add("Spaulder");
         }
         if(singleton.removeMainWeapons) {
@@ -865,7 +865,7 @@ public final class Settings {
                 return String.format("Medicine of the Mind (%s)", Settings.getMedicineColor());
             }
         }
-        if(Settings.isFools2021Mode()) {
+        if(HolidaySettings.isFools2021Mode()) {
             if("Woman Statue".equals(originalContents)) {
                 return "Maternity Statue";
             }
@@ -876,36 +876,8 @@ public final class Settings {
         return originalContents;
     }
 
-    public static boolean isHalloweenMode() {
-        return false;
-    }
-
-    public static boolean isIncludeHellTempleNPCs() {
-        return singleton.holidayOption1;
-    }
-
-    public static boolean isFools2019Mode() {
-        return false;
-    }
-
-    public static boolean isFools2020Mode() {
-        return false;
-    }
-
-    public static boolean isUpdatedVersion() {
-        return singleton.holidayOption1;
-    }
-
-    public static boolean isFools2021Mode() {
-        return false;
-    }
-
-    public static boolean isFools2022Mode() {
-        return false;
-    }
-
     public static boolean isFeatherlessMode() {
-        return isFools2020Mode();
+        return HolidaySettings.isFools2020Mode();
     }
 
     public static void setIncludeHellTempleNPCs(boolean includeHellTempleNPCs, boolean update) {
@@ -940,7 +912,7 @@ public final class Settings {
     }
 
     public static boolean isRandomizeStartingLocation() {
-        return isFools2019Mode() || isHalloweenMode() || singleton.randomizeStartingLocation;
+        return HolidaySettings.isFools2019Mode() || HolidaySettings.isHalloweenMode() || singleton.randomizeStartingLocation;
     }
 
     public static void setRandomizeStartingLocation(boolean randomizeStartingLocation, boolean update) {
@@ -951,7 +923,7 @@ public final class Settings {
     }
 
     public static boolean isRandomizeBosses() {
-        return isFools2019Mode() || (!isFools2021Mode() && singleton.randomizeBosses);
+        return HolidaySettings.isFools2019Mode() || (!HolidaySettings.isFools2021Mode() && singleton.randomizeBosses);
     }
 
     public static void setRandomizeBosses(boolean randomizeBosses, boolean update) {
@@ -963,7 +935,7 @@ public final class Settings {
 
     public static boolean isRandomizeEnemies() {
 //        return singleton.randomizeEnemies;
-        return isHalloweenMode();
+        return HolidaySettings.isHalloweenMode();
     }
 
     public static void setRandomizeEnemies(boolean randomizeEnemies, boolean update) {
@@ -1008,11 +980,11 @@ public final class Settings {
 
     public static boolean isSaveFileNeeded() {
         return isAllowMainWeaponStart() || isAllowSubweaponStart() || isRandomizeStartingLocation()
-                || Settings.isHalloweenMode() || isFools2020Mode() || isFools2021Mode();
+                || HolidaySettings.isHalloweenMode() || HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2021Mode();
     }
 
     public static boolean isCheapConsumables() {
-        return isFools2020Mode() || isFools2021Mode();
+        return HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2021Mode();
     }
 
     public static void saveSettings() {

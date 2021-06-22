@@ -2,6 +2,7 @@ package lmr.randomizer.rcd.updater;
 
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
 import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.rcd.RcdFileData;
@@ -624,7 +625,7 @@ public class BaseRcdUpdater extends RcdUpdater {
         if(Settings.isRandomizeTrapItems()) {
             if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
                 // Lemeza Detector part of Inferno Cavern fake Sacred Orb trap
-                if(!Settings.isFools2020Mode()) {
+                if(!HolidaySettings.isFools2020Mode()) {
                     return false;
                 }
             }
@@ -897,7 +898,7 @@ public class BaseRcdUpdater extends RcdUpdater {
 
         if(Settings.isRandomizeTrapItems()) {
             if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
-                if(!Settings.isFools2020Mode()) {
+                if(!HolidaySettings.isFools2020Mode()) {
                     for(TestByteOperation testByteOperation : graphicsTextureDraw.getTestByteOperations()) {
                         if(testByteOperation.getIndex() == FlagConstants.INFERNO_FAKE_ORB_CRUSHER) {
                             // Graphical part of Inferno Cavern fake Sacred Orb trap
@@ -1273,7 +1274,7 @@ public class BaseRcdUpdater extends RcdUpdater {
             // Conversation to inform of unlocking Big Brother's shop, to be removed and re-added for NPC shuffling simplicity.
             return false;
         }
-        else if(conversationDoor.getArgs().get(4) == BlockConstants.Master_FairyQueen_RequestPendant && !Settings.isHalloweenMode()) {
+        else if(conversationDoor.getArgs().get(4) == BlockConstants.Master_FairyQueen_RequestPendant && !HolidaySettings.isHalloweenMode()) {
             // First Fairy Queen conversation, completely unneeded for randomizer outside of Halloween.
             return false;
         }
@@ -1372,7 +1373,7 @@ public class BaseRcdUpdater extends RcdUpdater {
             }
         }
         else if(blockNumber == 685) {
-            if(!Settings.isHalloweenMode()) {
+            if(!HolidaySettings.isHalloweenMode()) {
                 for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
                     if (flagTest.getIndex() == FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES) {
                         // The first conversation with the Fairy Queen is removed. Subsequent conversations must
@@ -1386,7 +1387,7 @@ public class BaseRcdUpdater extends RcdUpdater {
         }
         else if(blockNumber == 686) {
             // The Fairy Queen - Endless NPC, 08-01-00
-            if(!Settings.isHalloweenMode()) {
+            if(!HolidaySettings.isHalloweenMode()) {
                 for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
                     if (flagTest.getIndex() == FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES) {
                         // The first conversation with the Fairy Queen is removed. Subsequent conversations must
@@ -2226,7 +2227,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                 if(roomIndex == 1 && screenIndex == 1) {
                     // Land on Spriggan without feather
                     AddObject.addPot(screen, 780, 400, PotGraphic.EXTINCTION_POT,
-                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                            DropType.NOTHING, 0, HolidaySettings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
         }
@@ -2244,7 +2245,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                 if(Settings.isFeatherlessMode()) {
                     // Access to Dimensional without Feather
                     AddObject.addPot(screen, 840, 320, PotGraphic.TWIN_LABYRINTHS,
-                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                            DropType.NOTHING, 0, HolidaySettings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
         }
@@ -2260,7 +2261,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                 if(roomIndex == 1 && screenIndex == 0) {
                     // For not having to damage boost up Gate of Illusion to Cog of the Soul
                     AddObject.addPot(screen, 580, 280, PotGraphic.ILLUSION,
-                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                            DropType.NOTHING, 0, HolidaySettings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
         }
@@ -2277,9 +2278,9 @@ public class BaseRcdUpdater extends RcdUpdater {
                     if(screenIndex == 2) {
                         // Nuwa assist
                         AddObject.addPot(screen, 1840, 180, PotGraphic.RUIN,
-                                DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                                DropType.NOTHING, 0, HolidaySettings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                         AddObject.addPot(screen, 1840, 220, PotGraphic.RUIN,
-                                DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                                DropType.NOTHING, 0, HolidaySettings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                     }
                 }
             }
@@ -2289,9 +2290,9 @@ public class BaseRcdUpdater extends RcdUpdater {
                 if(roomIndex == 2 && screenIndex == 1) {
                     // Access to Palenque without Feather
                     AddObject.addPot(screen, 20, 760, PotGraphic.BIRTH,
-                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                            DropType.NOTHING, 0, HolidaySettings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                     AddObject.addPot(screen, 20, 800, PotGraphic.BIRTH,
-                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                            DropType.NOTHING, 0, HolidaySettings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
         }
@@ -2313,9 +2314,9 @@ public class BaseRcdUpdater extends RcdUpdater {
             if(Settings.isFeatherlessMode()) {
                 if(roomIndex == 0 && screenIndex == 1) {
                     AddObject.addPot(screen, 500, 680, PotGraphic.DIMENSIONAL,
-                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                            DropType.NOTHING, 0, HolidaySettings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                     AddObject.addPot(screen, 500, 720, PotGraphic.DIMENSIONAL,
-                            DropType.NOTHING, 0, Settings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
+                            DropType.NOTHING, 0, HolidaySettings.isFools2020Mode() ? Arrays.asList(new TestByteOperation(FlagConstants.CUSTOM_WF_FAKE_FEATHER, ByteOp.FLAG_EQUALS, 2)) : new ArrayList<>(0), new ArrayList<>(0));
                 }
             }
         }
@@ -2377,20 +2378,20 @@ public class BaseRcdUpdater extends RcdUpdater {
             }
             else if(roomIndex == 2) {
                 if(screenIndex == 0) {
-                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation() || Settings.isFools2020Mode()) {
+                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation() || HolidaySettings.isFools2020Mode()) {
                         AddObject.addSurfaceKillTimer(screen, false);
                     }
                 }
                 if(screenIndex == 1) {
                     AddObject.addXelpudIntroTimer(screen);
                     AddObject.addDiaryTalismanConversationTimers(screen);
-                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation() || Settings.isFools2020Mode()) {
+                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation() || HolidaySettings.isFools2020Mode()) {
                         AddObject.addSurfaceKillTimer(screen, true);
                     }
                 }
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation() || Settings.isFools2020Mode()) {
+                if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation() || HolidaySettings.isFools2020Mode()) {
                     AddObject.addSurfaceKillTimer(screen, false);
                 }
             }
@@ -2513,7 +2514,7 @@ public class BaseRcdUpdater extends RcdUpdater {
     void addTrackedCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
         if(zoneIndex == 5) {
             if(roomIndex == 1 && screenIndex == 1) {
-                if(Settings.isRandomizeTrapItems() && !Settings.isFools2020Mode()) {
+                if(Settings.isRandomizeTrapItems() && !HolidaySettings.isFools2020Mode()) {
                     AddObject.addFloatingItem(screen, 180, 640, ItemConstants.SACRED_ORB, false,
                             Arrays.asList(new TestByteOperation(FlagConstants.WF_TRAP_INFERNO, ByteOp.FLAG_EQUALS, 0)),
                             Arrays.asList(new WriteByteOperation(FlagConstants.WF_TRAP_INFERNO, ByteOp.ASSIGN_FLAG, 1)));

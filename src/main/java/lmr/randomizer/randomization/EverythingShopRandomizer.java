@@ -1,6 +1,7 @@
 package lmr.randomizer.randomization;
 
 import lmr.randomizer.DataFromFile;
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
 import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.node.MoneyChecker;
@@ -21,7 +22,7 @@ public class EverythingShopRandomizer extends ShopRandomizer {
             if(MSX_SHOP_NAME.equals(shop)) {
                 unassignedShopItemLocations.add(String.format("%s Item 1", shop));
             }
-            else if(Settings.isFools2021Mode() && FISH_FAIRY_SHOP_NAME.equals(shop)) {
+            else if(HolidaySettings.isFools2021Mode() && FISH_FAIRY_SHOP_NAME.equals(shop)) {
                 unassignedShopItemLocations.add(String.format("%s Item 3", shop));
             }
             else {
@@ -89,7 +90,7 @@ public class EverythingShopRandomizer extends ShopRandomizer {
                 unassignedShopItemLocations.remove(shopItemLocation);
             }
         }
-        if(Settings.isFools2021Mode()) {
+        if(HolidaySettings.isFools2021Mode()) {
             mapOfShopInventoryItemToContents.put(FISH_FAIRY_SHOP_NAME + " Item 1", "Shell Horn");
             mapOfShopInventoryItemToContents.put(FISH_FAIRY_SHOP_NAME + " Item 2", "guild.exe");
             unassignedShopItemLocations.remove(FISH_FAIRY_SHOP_NAME + " Item 1");
@@ -102,7 +103,7 @@ public class EverythingShopRandomizer extends ShopRandomizer {
                 if(!customLocation.startsWith(DataFromFile.CUSTOM_SHOP_NAME) || !LocationCoordinateMapper.isSurfaceStart()) {
                     mapOfShopInventoryItemToContents.put(customLocation, customItemPlacement.getContents());
                     unassignedShopItemLocations.remove(customLocation);
-                    if(!Settings.isFools2021Mode() || !"Spaulder".equals(customItemPlacement.getContents())) {
+                    if(!HolidaySettings.isFools2021Mode() || !"Spaulder".equals(customItemPlacement.getContents())) {
                         itemRandomizer.removeItemFromUnplacedItems(customItemPlacement.getContents());
                     }
                     if(customItemPlacement.getContents().contains("Sacred Orb")) {
@@ -304,7 +305,7 @@ public class EverythingShopRandomizer extends ShopRandomizer {
             }
         }
 
-        if(!Settings.isFools2021Mode()) {
+        if(!HolidaySettings.isFools2021Mode()) {
             // Guarantee weights at Little Brother's shop so there's a guaranteed way to unlock Big Brother's shop.
             guaranteedWeightShopLocations.clear();
             for(String location : unassignedShopItemLocations) {

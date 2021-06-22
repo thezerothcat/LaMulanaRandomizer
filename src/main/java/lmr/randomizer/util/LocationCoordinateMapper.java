@@ -1,5 +1,6 @@
 package lmr.randomizer.util;
 
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
 
 public final class LocationCoordinateMapper {
@@ -345,7 +346,7 @@ public final class LocationCoordinateMapper {
     }
 
     public static short getGrailFlag(int zone, boolean front) {
-        if(Settings.isFools2021Mode()) {
+        if(HolidaySettings.isFools2021Mode()) {
             if(zone == 0) {
                 return FlagConstants.CUSTOM_FOOLS2021_GRAIL_GUIDANCE;
             }
