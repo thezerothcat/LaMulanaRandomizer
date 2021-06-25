@@ -222,7 +222,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             else {
                 chest.setDrops(DropType.WEIGHTS.getValue(), 1); // The game won't allow multiple weights, so just give 1
             }
-            updateChestGraphic(chest, true, random);
+            updateChestGraphic(chest, false, random);
             updateChestFlags(chest, locationContentsData.getLocationWorldFlag(), locationContentsData.getNewWorldFlag(), 2);
         }
         else if(locationContentsData.getCustomItemGraphic() != null) {
@@ -552,12 +552,16 @@ public class RandomizationRcdUpdater extends RcdUpdater {
         if(npcName == null) {
             return CustomBlockEnum.TransformedShopBlock_Default;
         }
+        if("Nebur".equals(npcName)) {
+            return null;
+        }
         return CustomBlockEnum.valueOf("TransformedShopBlock_" + npcName.replaceAll("[ )(-.]", ""));
     }
 
     private void updateConversationDoorByLocation(ConversationDoor conversationDoor, String npcDoorLocation) {
         // Handle special cases for location of door
-        if("NPCL: Sidro".equals(npcDoorLocation) || "NPCL: Modro".equals(npcDoorLocation) || "NPCL: Hiner".equals(npcDoorLocation) || "NPCL: Moger".equals(npcDoorLocation)) {
+        if("NPCL: Nebur".equals(npcDoorLocation) || "NPCL: Sidro".equals(npcDoorLocation) || "NPCL: Modro".equals(npcDoorLocation)
+                || "NPCL: Hiner".equals(npcDoorLocation) || "NPCL: Moger".equals(npcDoorLocation)) {
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_INTRO, ByteOp.FLAG_EQUALS, 1)); // Flag for having talked to Xelpud to open Surface tents
         }
         if("NPCL: Mr. Fishman (Original)".equals(npcDoorLocation)) {
@@ -582,8 +586,20 @@ public class RandomizationRcdUpdater extends RcdUpdater {
 
     private void updateConversationDoorByNpcAssigned(ConversationDoor conversationDoor, String npcAssigned) {
         // Handle special cases for door contents
+        if("NPC: Nebur".equals(npcAssigned)) {
+            ConversationDoorUpdates.addNeburObjects(conversationDoor, getNpcItemFlag("Mobile Super X2")); // Do this before adding tests, so we can carry over any tests based on the location.
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_MSX2, ByteOp.FLAG_EQUALS, 0));
+            AddObject.addSpecialItemObjects(conversationDoor.getObjectContainer(), itemRandomizer.getNewContents("Mobile Super X2"));
+        }
         if("NPC: Yiegah Kungfu".equals(npcAssigned)) {
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.BIG_BROTHER_UNLOCKED, ByteOp.FLAG_NOT_EQUAL, 1));
+        }
+        if("NPC: Elder Xelpud".equals(npcAssigned)) {
+            ConversationDoorUpdates.addXelpudObjects(conversationDoor); // Do this before adding tests, so we can carry over any tests based on the location.
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCORE, ByteOp.FLAG_LTEQ, 70));
+            conversationDoor.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_INTRO, ByteOp.ASSIGN_FLAG, 1));
+            AddObject.addSpecialItemObjects(conversationDoor.getObjectContainer(), itemRandomizer.getNewContents("xmailer.exe"));
+            AddObject.addSpecialItemObjects(conversationDoor.getObjectContainer(), itemRandomizer.getNewContents("Mulana Talisman"));
         }
         if("NPC: Philosopher Giltoriyo".equals(npcAssigned)) {
             ConversationDoorUpdates.addPhilosopherStoneDoor(conversationDoor); // Do this before adding tests, so we can carry over any tests based on the location.
@@ -1812,8 +1828,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                 // Any shop
                 Short defaultShopBlock = getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock);
                 if(DataFromFile.getMapOfShopNameToShopBlock().values().contains(blockNumber)
-                        || (defaultShopBlock != null && blockNumber == defaultShopBlock)
-                        || (HolidaySettings.isFools2020Mode() && blockNumber == BlockConstants.ShopBlockGiantMopiranAngelShield)) {
+                        || (defaultShopBlock != null && blockNumber == defaultShopBlock)) {
                     List<GameObject> objects = mapOfShopBlockToShopObjects.get(blockNumber);
                     if (objects == null) {
                         mapOfShopBlockToShopObjects.put(blockNumber, new ArrayList<>());
@@ -1822,20 +1837,8 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                     objects.add(gameObject);
                 }
 
-                if(blockNumber == BlockConstants.ShopBlockNebur) {
-                    // Shop before/after buying the MSX2
-                    for (TestByteOperation flagTest : gameObject.getTestByteOperations()) {
-                        if (flagTest.getIndex() == FlagConstants.WF_MSX2) {
-                            GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MSX2, FlagConstants.WF_MSX2);
-                            List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                            if (objects == null) {
-                                mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                                objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                            }
-                            objects.add(gameObject);
-                            break;
-                        }
-                    }
+                if(blockNumber == BlockConstants.ShopBlockNeburAlt) {
+                    mapOfNpcLocationToObject.put("NPCL: Nebur", (ConversationDoor)gameObject);
                 }
                 else if(blockNumber == BlockConstants.ShopBlockSidro) {
                     mapOfNpcLocationToObject.put("NPCL: Sidro", (ConversationDoor)gameObject);
@@ -1858,63 +1861,57 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                 else if(blockNumber == BlockConstants.ShopBlockKingvalleyI) {
                     mapOfNpcLocationToObject.put("NPCL: Kingvalley I", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockMrFishman){
+                else if(blockNumber == BlockConstants.ShopBlockMrFishman) {
                     mapOfNpcLocationToObject.put("NPCL: Mr. Fishman (Original)", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockMrFishmanAlt){
+                else if(blockNumber == BlockConstants.ShopBlockMrFishmanAlt) {
                     mapOfNpcLocationToObject.put("NPCL: Mr. Fishman (Alt)", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockOperatorCombaker){
+                else if(blockNumber == BlockConstants.ShopBlockOperatorCombaker) {
                     mapOfNpcLocationToObject.put("NPCL: Operator Combaker", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockYiegahKungfu){
+                else if(blockNumber == BlockConstants.ShopBlockYiegahKungfu) {
                     mapOfNpcLocationToObject.put("NPCL: Yiegah Kungfu", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockArrogantMetagear){
+                else if(blockNumber == BlockConstants.ShopBlockArrogantMetagear) {
                     mapOfNpcLocationToObject.put("NPCL: Arrogant Metagear", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockArrogantSturdySnake){
+                else if(blockNumber == BlockConstants.ShopBlockArrogantSturdySnake) {
                     mapOfNpcLocationToObject.put("NPCL: Arrogant Sturdy Snake", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockYiearKungfu){
+                else if(blockNumber == BlockConstants.ShopBlockYiearKungfu) {
                     mapOfNpcLocationToObject.put("NPCL: Yiear Kungfu", (ConversationDoor)gameObject);
                 }
                 else if(blockNumber == BlockConstants.ShopBlockAffectedKnimare){
                     mapOfNpcLocationToObject.put("NPCL: Affected Knimare", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockMoverAthleland){
+                else if(blockNumber == BlockConstants.ShopBlockMoverAthleland) {
                     mapOfNpcLocationToObject.put("NPCL: Mover Athleland", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockGiantMopiran){
+                else if(blockNumber == BlockConstants.ShopBlockGiantMopiran) {
                     mapOfNpcLocationToObject.put("NPCL: Giant Mopiran", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockKingvalleyII){
+                else if(blockNumber == BlockConstants.ShopBlockKingvalleyII) {
                     mapOfNpcLocationToObject.put("NPCL: Kingvalley II", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockEnergeticBelmont){
+                else if(blockNumber == BlockConstants.ShopBlockEnergeticBelmont) {
                     mapOfNpcLocationToObject.put("NPCL: Energetic Belmont", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockMechanicalEfspi){
+                else if(blockNumber == BlockConstants.ShopBlockMechanicalEfspi) {
                     mapOfNpcLocationToObject.put("NPCL: Mechanical Efspi", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockMudManQubert){
+                else if(blockNumber == BlockConstants.ShopBlockMudManQubert) {
                     mapOfNpcLocationToObject.put("NPCL: Mud Man Qubert", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockHotbloodedNemesistwo){
+                else if(blockNumber == BlockConstants.ShopBlockHotbloodedNemesistwo) {
                     mapOfNpcLocationToObject.put("NPCL: Hot-blooded Nemesistwo", (ConversationDoor)gameObject);
                 }
-                else if(blockNumber == BlockConstants.ShopBlockNeburAlt) {
-                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MSX2, FlagConstants.WF_MSX2);
-                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                    if (objects == null) {
-                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                    }
-                    objects.add(gameObject);
-                }
-                else if(blockNumber == BlockConstants.ShopBlockTailorDracuet){
+                else if(blockNumber == BlockConstants.ShopBlockTailorDracuet) {
                     mapOfNpcLocationToObject.put("NPCL: Tailor Dracuet", (ConversationDoor)gameObject);
                 }
+            }
+            else if(blockNumber == BlockConstants.Master_ElderXelpudRandomSetA) {
+                mapOfNpcLocationToObject.put("NPCL: Elder Xelpud", (ConversationDoor)gameObject);
             }
             else if(blockNumber == BlockConstants.Master_Hiner) {
                 mapOfNpcLocationToObject.put("NPCL: Hiner", (ConversationDoor)gameObject);
@@ -2009,15 +2006,6 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             }
             else if(blockNumber == BlockConstants.Master_PriestGailious) {
                 mapOfNpcLocationToObject.put("NPCL: Priest Gailious", (ConversationDoor)gameObject);
-            }
-            else if(blockNumber == 915) {
-                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.MINI_DOLL, FlagConstants.WF_MINI_DOLL);
-                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                if (objects == null) {
-                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                }
-                objects.add(gameObject);
             }
             else if(blockNumber == BlockConstants.Master_Dracuet_ProvocativeBathingSuit) {
                 // Dracuet Provocative Bathing Suit conversation - needs to depend on HT item instead.

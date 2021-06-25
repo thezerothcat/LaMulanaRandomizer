@@ -656,9 +656,9 @@ public final class LocationCoordinateMapper {
         if("Endless Corridor".equals(name) || "Endless".equals(name)) {
             return 8;
         }
-//        if("Shrine of the Mother".equals(name) || "Shrine".equals(name)) {
-//            return 8;
-//        }
+        if("Shrine of the Mother".equals(name) || "Shrine".equals(name)) {
+            return 9;
+        }
         if("Gate of Illusion".equals(name) || "Illusion".equals(name)) {
             return 10;
         }

@@ -26,6 +26,10 @@ public final class BlockConstants {
     public static final int ItemConversationMapSurface = 716;
     public static final int ItemConversationProvocativeBathingSuit = 1012;
 
+    public static final int Master_ElderXelpudRandomSetA = 484; // Elder Xelpud - Surface NPC, 01-02-01
+    public static final int Master_ElderXelpudRandomSetC_Rug = 1019;
+    public static final int Master_ElderXelpudRandomSetB = 1080;
+    public static final int Master_ElderXelpudRandomSetC_NoRug = 1081;
     public static final int Master_Hiner = 671; // Hiner - Surface NPC, 01-00-02
     public static final int Master_Moger = 672; // Moger - Surface NPC, 01-02-00
     public static final int Master_FormerMekuriMaster_Mekuri = 673; // Former Mekuri Master - Surface NPC, 01-07-00

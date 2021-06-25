@@ -128,7 +128,9 @@ public final class FlagConstants {
     public static final int XELPUD_CONVERSATION_DIARY_FOUND = 0xaed; // Value 0 > 1 via rando-added timer on Xelpud's screen when Diary conversation is enabled
     public static final int XELPUD_CONVERSATION_INTRO = 0xad0; // Randomizer sets this flag after first conversation with Xelpud (where he normally gives xmailer and opens the other tents.
 
+    public static final int MULBRUK_DOOR_UNSEALED = 0x18e; // 1=talked to 2=touched seal 3=talked to mulbruk again
     public static final int MULBRUK_CONVERSATION_AWAKE = 0x391;
+    public static final int MULBRUK_CONVERSATIONS_EARLY = 0x079; // 1=unsealed 2=wedjet 3=left after wedjet 4 blah blah doesn't really matter
     public static final int MULBRUK_CONVERSATION_BOOK = 0x32a; // Value 0 > 1 via rando-added timer on Xelpud's screen when Diary conversation is enabled
 
     public static final int FAIRY_QUEEN_CONVERSATION_FAIRIES = 0x1f5; // Unlocking the ceiling in Buer's room (vanilla only; rando makes it breakable by default) with value 0 > 1; value goes to 2 after the conversation that unlocks fairies/fairy points
@@ -305,6 +307,9 @@ public final class FlagConstants {
     // Mail flags
     public static final int MAIL_COUNT = 0x328;
     public static final int MAIL_07 = 0x2f3;
+    public static final int MAIL_18 = 0x2fe;
+    public static final int MAIL_25 = 0x305;
+    public static final int MAIL_41 = 0x315;
     public static final int MAIL_43 = 0x317;
 
     // Screen flags
@@ -364,6 +369,10 @@ public final class FlagConstants {
     public static final int ROOM_FLAG_3C = 0x03c; // Used by Graveyard trap chest for non-random traps.
     public static final int ROOM_FLAG_40 = 0x040; // Set by an arg on Tiamat's ankh when the fight starts
     public static final int ROOM_FLAG_45 = 0x045; // Used for a weight door during the escape.
+
+    // Flags used in vanilla reclaimed for randomizer
+    public static final int XELPUD_TENT_OPEN = 0x21c; // For the two-second delay between game start and Xelpud's tent being open
+    public static final int XELPUD_READY_TO_TALK = 0x3b6; // Making sure you can't actually talk to Xelpud in his basic conversation if the tent is closed.
 
     // Fools 2019
 

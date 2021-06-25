@@ -195,12 +195,7 @@ public final class RcdReader {
                         screen.getScreenExits().add(screenExit);
                     }
 
-                    if(zoneIndex == 1) {
-                        if(roomIndex == 2 && screenIndex == 1) {
-                            AddObject.setXelpudScreen(screen);
-                        }
-                    }
-                    else if(zoneIndex == 3) {
+                    if(zoneIndex == 3) {
                         if(roomIndex == 3 && screenIndex == 0) {
                             AddObject.setMulbrukScreen(screen);
                         }

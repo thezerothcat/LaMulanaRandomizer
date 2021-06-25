@@ -1,7 +1,5 @@
 package lmr.randomizer;
 
-import java.io.IOException;
-
 public final class HolidaySettings {
     private static HolidaySettings singleton = new HolidaySettings();
 
@@ -13,6 +11,10 @@ public final class HolidaySettings {
     private HolidaySettings() {
         updatedVersion = true;
         includeHellTempleNPCs = true;
+    }
+
+    public static boolean isChanged() {
+        return singleton.changed;
     }
 
     public static boolean isHalloweenMode() {
@@ -60,15 +62,5 @@ public final class HolidaySettings {
             singleton.changed = true;
         }
         singleton.includeHellTempleNPCs = includeHellTempleNPCs;
-    }
-
-    public static void saveSettings() {
-        if(singleton.changed) {
-            try {
-                FileUtils.saveHolidaySettings();
-            } catch (IOException ex) {
-                FileUtils.log("Unable to save settings: " + ex.getMessage());
-            }
-        }
     }
 }

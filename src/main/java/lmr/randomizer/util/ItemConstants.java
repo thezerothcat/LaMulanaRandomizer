@@ -21,6 +21,9 @@ public final class ItemConstants {
     public static final int MULANA_TALISMAN = 73;
     public static final short PROVOCATIVE_BATHING_SUIT = 74;
     public static final int MSX2 = 76;
+    public static final int MEDICINE_OF_THE_MIND_YELLOW = 77;
+    public static final int MEDICINE_OF_THE_MIND_GREEN = 78;
+    public static final int MEDICINE_OF_THE_MIND_RED = 79;
     public static final int MATERNITY_STATUE = 81;
     public static final short SECRET_TREASURE_OF_LIFE = 84;
     public static final short SOFTWARE_XMAILER = 86;

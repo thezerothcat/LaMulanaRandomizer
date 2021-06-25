@@ -43,9 +43,6 @@ public class Main {
     public static void main(String[] args) {
         try {
             FileUtils.readSettings();
-            if(HolidaySettings.isHolidayMode()) {
-                FileUtils.readHolidaySettings();
-            }
             if(args.length > 0) {
                 Settings.setSkipValidation(Integer.parseInt(args[0]));
             }
@@ -151,12 +148,12 @@ public class Main {
                 }
             }
             else if("importSeed".equals(e.getActionCommand())) {
-                Settings.saveSettings();
+                FileUtils.saveSettings();
 //                if(validateInstallDir()) {
 //                    if(validateSaveDir()) {
                         JFileChooser zipFileChooser = new JFileChooser();
                         if(zipFileChooser.showOpenDialog(this.getParent()) == JFileChooser.APPROVE_OPTION) {
-                            Settings.saveSettings();
+                            FileUtils.saveSettings();
                             if(FileUtils.importExistingSeed(zipFileChooser.getSelectedFile())) {
                                 JOptionPane.showMessageDialog(this,
                                         "La-Mulana has been updated.",
@@ -289,7 +286,7 @@ public class Main {
 
             progressDialog.updateProgress(0, Translations.getText("progress.generating"));
 
-            Settings.saveSettings();
+            FileUtils.saveSettings();
 
             HolidayModePlacements.applyCustomPlacements();
 
@@ -1191,8 +1188,8 @@ public class Main {
         }
         if(HolidaySettings.isHalloweenMode()) {
             // Unlock Mulbruk so you can get Halloween hints.
-            saveData[0x11 + 0x079] = (byte)1;
-            saveData[0x11 + 0x18e] = (byte)2;
+            saveData[0x11 + FlagConstants.MULBRUK_CONVERSATIONS_EARLY] = (byte)1;
+            saveData[0x11 + FlagConstants.MULBRUK_DOOR_UNSEALED] = (byte)2;
             saveData[0x11 + FlagConstants.MULBRUK_CONVERSATION_AWAKE] = (byte)1;
 
 //            saveData[0x11 + 0x70e] = (byte)1; // room 20 floor
@@ -1226,8 +1223,8 @@ public class Main {
         }
         if(HolidaySettings.isFools2020Mode()) {
             // Unlock Mulbruk so you can have conversations about quitting the game
-            saveData[0x11 + 0x079] = (byte)1;
-            saveData[0x11 + 0x18e] = (byte)2;
+            saveData[0x11 + FlagConstants.MULBRUK_CONVERSATIONS_EARLY] = (byte)1;
+            saveData[0x11 + FlagConstants.MULBRUK_DOOR_UNSEALED] = (byte)2;
             saveData[0x11 + FlagConstants.MULBRUK_CONVERSATION_AWAKE] = (byte)1;
 
             // Default Extinction lighting
@@ -1412,6 +1409,9 @@ public class Main {
         if(!Settings.getStartingItemsIncludingCustom().contains("Holy Grail")) {
             // Tower of Ruin will be unable to get back to the grail tablet easily/will have very limited options without grail/feather/boots/ice cape, so just ban it.
             possibleStartingLocations.remove((Integer)14);
+        }
+        if(Settings.isRandomizeNpcs() && ShopRandomizationEnum.CATEGORIZED.equals(Settings.getShopRandomization())) {
+            possibleStartingLocations.remove(1);
         }
         if(!Settings.isRandomizeTransitionGates()) {
             // Most backside fields aren't an option unless random transitions help keep you from getting stuck on one side of the ruins.

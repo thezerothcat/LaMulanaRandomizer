@@ -1,6 +1,8 @@
 Exit: Surface [Main] => Holy Grail
 Exit: Surface [Main] => State: Pre-Escape, Glitch: Raindrop
-Exit: Surface [Main] => Exit: Surface R1
+Exit: Surface [Main] => NPC: Elder Xelpud, Exit: Surface R1
+Exit: Surface [Main] => Glitch: Raindrop, Exit: Surface R1
+Exit: Surface [Main] => Glitch: Natural Align Raindrop, Exit: Surface R1
 Exit: Surface [Main] => Exit: Door B5
 Exit: Surface [Ruin Path Lower] => Holy Grail
 Exit: Surface [Ruin Path Lower] => State: Pre-Escape, Glitch: Raindrop

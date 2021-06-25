@@ -119,12 +119,7 @@ public class EverythingShopRandomizer extends ShopRandomizer {
         if(LocationCoordinateMapper.isSurfaceStart()) {
             List<String> guaranteedAmmoShopLocations = new ArrayList<>();
             if(Settings.isRandomizeNpcs()) {
-                if(unassignedShopItemLocations.contains(NON_MSX_SHOP_NAME + " Item 2")) {
-                    guaranteedAmmoShopLocations.add(NON_MSX_SHOP_NAME + " Item 2");
-                }
-                if(unassignedShopItemLocations.contains(NON_MSX_SHOP_NAME + " Item 3")) {
-                    guaranteedAmmoShopLocations.add(NON_MSX_SHOP_NAME + " Item 3");
-                }
+                guaranteedAmmoShopLocations.addAll(getAvailableSurfaceShopLocations());
             }
             else {
                 for(String location : unassignedShopItemLocations) {
@@ -260,12 +255,7 @@ public class EverythingShopRandomizer extends ShopRandomizer {
         List<String> guaranteedWeightShopLocations = new ArrayList<>();
         if(LocationCoordinateMapper.isSurfaceStart()) {
             if(Settings.isRandomizeNpcs()) {
-                if(unassignedShopItemLocations.contains(NON_MSX_SHOP_NAME + " Item 2")) {
-                    guaranteedWeightShopLocations.add(NON_MSX_SHOP_NAME + " Item 2");
-                }
-                if(unassignedShopItemLocations.contains(NON_MSX_SHOP_NAME + " Item 3")) {
-                    guaranteedWeightShopLocations.add(NON_MSX_SHOP_NAME + " Item 3");
-                }
+                guaranteedWeightShopLocations.addAll(getAvailableSurfaceShopLocations());
             }
             else {
                 for(String location : unassignedShopItemLocations) {
@@ -334,6 +324,24 @@ public class EverythingShopRandomizer extends ShopRandomizer {
                 unassignedShopItemLocations.remove(graveyardShopWeightsLocation);
             }
         }
+    }
+
+    private List<String> getAvailableSurfaceShopLocations() {
+        List<String> availableLocations = new ArrayList<>();
+        String shopItemLocation;
+        for(String shopName : npcRandomizer.getSurfaceShops()) {
+            for(int i = 1; i <= 3; i++) {
+                if(NON_MSX_SHOP_NAME.equals(shopName) && i == 1) {
+                    continue;
+                }
+
+                shopItemLocation = shopName + " Item " + i;
+                if(unassignedShopItemLocations.contains(shopItemLocation)) {
+                    availableLocations.add(shopItemLocation);
+                }
+            }
+        }
+        return availableLocations;
     }
 
     private int getWeightCount(Random random, int usableShops) {

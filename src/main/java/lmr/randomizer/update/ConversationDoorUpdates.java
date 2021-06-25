@@ -5,6 +5,8 @@ import lmr.randomizer.util.BlockConstants;
 import lmr.randomizer.util.FlagConstants;
 import lmr.randomizer.rcd.object.*;
 
+import java.util.Arrays;
+
 public final class ConversationDoorUpdates {
     private ConversationDoorUpdates() { }
 
@@ -269,5 +271,111 @@ public final class ConversationDoorUpdates {
         mrSlushfundConversation.getTestByteOperations().add(new TestByteOperation(itemFlagAnchor, ByteOp.FLAG_GTEQ, 2)); // Treasures item collected
         mrSlushfundConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER, ByteOp.FLAG_GT, 0)); // Pepper conversation has already happened
         doorObject.getObjectContainer().getObjects().add(mrSlushfundConversation);
+    }
+
+    /**
+     * @param doorObject the base npc door object, to use as a positional reference
+     */
+    public static void addXelpudObjects(ConversationDoor doorObject) {
+        AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
+                Arrays.asList(
+                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.FLAG_LTEQ, 2),
+                        new TestByteOperation(FlagConstants.MAIL_18, ByteOp.FLAG_NOT_EQUAL, 0)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.ASSIGN_FLAG, 3)));
+        AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
+                Arrays.asList(
+                        new TestByteOperation(FlagConstants.MAIL_25, ByteOp.FLAG_GTEQ, 1),
+                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.FLAG_LTEQ, 5)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.ASSIGN_FLAG, 6)));
+        AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
+                Arrays.asList(
+                        new TestByteOperation(FlagConstants.MAIL_43, ByteOp.FLAG_EQUALS, 1),
+                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.FLAG_LTEQ, 9)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.ASSIGN_FLAG, 10)));
+        AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
+                Arrays.asList(
+                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.FLAG_EQUALS, 7),
+                        new TestByteOperation(FlagConstants.MULBRUK_CONVERSATIONS_EARLY, ByteOp.FLAG_GTEQ, 2),
+                        new TestByteOperation(FlagConstants.MULBRUK_DOOR_UNSEALED, ByteOp.FLAG_GTEQ, 1)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.ASSIGN_FLAG, 8)));
+        AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
+                Arrays.asList(
+                        new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9),
+                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.FLAG_LTEQ, 12)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.ASSIGN_FLAG, 13)));
+        AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
+                Arrays.asList(
+                        new TestByteOperation(FlagConstants.WF_DIARY, ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_DIARY_FOUND, ByteOp.FLAG_EQUALS, 0)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_DIARY_FOUND, ByteOp.ASSIGN_FLAG, 1)));
+        AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
+                Arrays.asList(
+                        new TestByteOperation(FlagConstants.WF_TALISMAN, ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_TALISMAN_FOUND, ByteOp.FLAG_EQUALS, 0),
+                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.FLAG_GTEQ, 1)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_TALISMAN_FOUND, ByteOp.ASSIGN_FLAG, 1)));
+
+        ConversationDoor xelpudConversation = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+        xelpudConversation.setDoorType(ConversationDoor.ConversationTree);
+        xelpudConversation.setBlockNumber(BlockConstants.Master_ElderXelpudRandomSetB);
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            xelpudConversation.getTestByteOperations().add(testByteOperation);
+        }
+        xelpudConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCORE, ByteOp.FLAG_GTEQ, 71));
+        xelpudConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCORE, ByteOp.FLAG_LTEQ, 140));
+        doorObject.getObjectContainer().getObjects().add(xelpudConversation);
+
+        xelpudConversation = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+        xelpudConversation.setDoorType(ConversationDoor.ConversationTree);
+        xelpudConversation.setBlockNumber(BlockConstants.Master_ElderXelpudRandomSetC_NoRug);
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            xelpudConversation.getTestByteOperations().add(testByteOperation);
+        }
+        xelpudConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCORE, ByteOp.FLAG_GTEQ, 141));
+        xelpudConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MAIL_41, ByteOp.FLAG_EQUALS, 0));
+        doorObject.getObjectContainer().getObjects().add(xelpudConversation);
+
+        xelpudConversation = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+        xelpudConversation.setArg2(2);
+        xelpudConversation.setDoorType(ConversationDoor.ConversationTree);
+        xelpudConversation.setBlockNumber(BlockConstants.Master_ElderXelpudRandomSetC_Rug);
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            xelpudConversation.getTestByteOperations().add(testByteOperation);
+        }
+        xelpudConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCORE, ByteOp.FLAG_GTEQ, 141));
+        xelpudConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.MAIL_41, ByteOp.FLAG_NOT_EQUAL, 0));
+        doorObject.getObjectContainer().getObjects().add(xelpudConversation);
+    }
+
+    /**
+     * @param doorObject the base npc door object, to use as a positional reference
+     */
+    public static void addNeburObjects(ConversationDoor doorObject, int itemFlagMSX2) {
+        AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
+                Arrays.asList(
+                        new TestByteOperation(itemFlagMSX2, ByteOp.FLAG_NOT_EQUAL, 0),
+                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_MSX2, ByteOp.FLAG_NOT_EQUAL, 2)),
+                Arrays.asList(
+                        new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_MSX2, ByteOp.ASSIGN_FLAG, 2),
+                        new WriteByteOperation(FlagConstants.SCORE, ByteOp.ADD_FLAG, 2)));
+
+        ConversationDoor neburShop = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+        neburShop.setDoorType(ConversationDoor.Shop);
+        neburShop.setBlockNumber(BlockConstants.ShopBlockNeburAlt);
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            neburShop.getTestByteOperations().add(testByteOperation);
+        }
+        neburShop.getTestByteOperations().add(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_MSX2, ByteOp.FLAG_GTEQ, 1));
+        neburShop.getTestByteOperations().add(new TestByteOperation(itemFlagMSX2, ByteOp.FLAG_EQUALS, 0));
+        doorObject.getObjectContainer().getObjects().add(neburShop);
+
+        neburShop = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+        neburShop.setDoorType(ConversationDoor.Shop);
+        neburShop.setBlockNumber(BlockConstants.ShopBlockNebur);
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            neburShop.getTestByteOperations().add(testByteOperation);
+        }
+        neburShop.getTestByteOperations().add(new TestByteOperation(itemFlagMSX2, ByteOp.FLAG_NOT_EQUAL, 0));
+        doorObject.getObjectContainer().getObjects().add(neburShop);
     }
 }

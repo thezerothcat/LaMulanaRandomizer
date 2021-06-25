@@ -1,8 +1,10 @@
 # Surface
-NPCL: Sidro => Location: Surface [Main]
-NPCL: Modro => Location: Surface [Main]
-NPCL: Hiner => Location: Surface [Main]
-NPCL: Moger => Location: Surface [Main]
+NPCL: Elder Xelpud => Location: Surface [Main]
+NPCL: Nebur => Location: Surface [Main], NPC: Elder Xelpud
+NPCL: Sidro => Location: Surface [Main], NPC: Elder Xelpud
+NPCL: Modro => Location: Surface [Main], NPC: Elder Xelpud
+NPCL: Hiner => Location: Surface [Main], NPC: Elder Xelpud
+NPCL: Moger => Location: Surface [Main], NPC: Elder Xelpud
 # Gate of Guidance
 NPCL: Priest Zarnac => Location: Gate of Guidance [Main]
 NPCL: Penadvent of ghost => Location: Gate of Guidance [Main] # Shop 4 (Guidance)

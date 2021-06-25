@@ -3,7 +3,7 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 2.28
 -----------------------------
-Included Mr. Slushfund and Priest Alest when randomizing NPC/shop doors.
+Included Elder Xelpud, Nebur, Mr. Slushfund, and Priest Alest when randomizing NPC/shop doors.
 
 Added Temple of the Sun, Spring in the Sky, Chamber of Extinction, and Temple of Moonlight to possible random starting locations.
 

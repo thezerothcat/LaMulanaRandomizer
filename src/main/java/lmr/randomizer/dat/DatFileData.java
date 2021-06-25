@@ -234,7 +234,7 @@ public class DatFileData {
     }
 
     public Short getCustomBlockIndex(CustomBlockEnum customBlockEnum) {
-        return mapOfCustomIdToBlockIndex.get(customBlockEnum);
+        return customBlockEnum == null ? null : mapOfCustomIdToBlockIndex.get(customBlockEnum);
     }
 
     public Map<CustomBlockEnum, Short> getMapOfCustomIdToBlockIndex() {

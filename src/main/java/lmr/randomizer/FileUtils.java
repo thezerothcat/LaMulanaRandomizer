@@ -440,42 +440,28 @@ public class FileUtils {
         return customPlacementData;
     }
 
-    public static void readHolidaySettings() throws IOException {
-        if(!(new File("holiday-config.txt").exists())) {
-            return;
+    public static void readSettings() throws IOException {
+        boolean loadedSettings = false;
+        if(HolidaySettings.isHolidayMode()) {
+            loadedSettings = readSettings("holiday-config.txt");
         }
-
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader("randomizer-config.txt"));
-        } catch(Exception ex) {
-            FileUtils.log("Unable to read settings file" + ", " + ex.getMessage());
-            return;
-        }
-
-        String line;
-        while((line = reader.readLine()) != null) {
-            if(line.startsWith("includeHellTempleNPCs")) {
-                HolidaySettings.setIncludeHellTempleNPCs(Boolean.valueOf(line.split("=")[1]), false);
-            }
-            else if(line.startsWith("updatedVersion")) {
-                HolidaySettings.setUpdatedVersion(Boolean.valueOf(line.split("=")[1]), false);
-            }
+        if(!loadedSettings) {
+            readSettings("randomizer-config.txt");
         }
     }
 
-    public static void readSettings() throws IOException {
-        if(!(new File("randomizer-config.txt").exists())) {
-            return;
+    private static boolean readSettings(String filename) throws IOException {
+        if(!(new File(filename).exists())) {
+            return false;
         }
 
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new FileReader("randomizer-config.txt"));
+            reader = new BufferedReader(new FileReader(filename));
         }
         catch (Exception ex) {
             FileUtils.log("Unable to read settings file" + ", " + ex.getMessage());
-            return;
+            return false;
         }
 
         String line;
@@ -621,7 +607,7 @@ public class FileUtils {
                 Settings.setScreenshakeDisabled(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("includeHellTempleNPCs")) {
-                Settings.setIncludeHellTempleNPCs(Boolean.valueOf(line.split("=")[1]), false);
+                HolidaySettings.setIncludeHellTempleNPCs(Boolean.valueOf(line.split("=")[1]), false);
             }
             else if(line.startsWith("quickStartItemsEnabled")) {
                 // Upgrade legacy settings
@@ -652,25 +638,43 @@ public class FileUtils {
             else if(line.startsWith("maxRandomRemovedItems")) {
                 Settings.setMaxRandomRemovedItems(Integer.parseInt(line.split("=")[1]), false);
             }
+            else {
+                readHolidayLine(line);
+            }
         }
         Settings.setEnabledGlitches(enabledGlitches, false);
         Settings.setEnabledDamageBoosts(enabledDamageBoosts, false);
         Settings.setInitiallyAccessibleItems(initiallyAvailableItems, false);
         Settings.setStartingItems(startingItems, false);
+        return true;
     }
 
-    public static void saveHolidaySettings() throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("holiday-config.txt"));
-
-        writer.write(String.format("includeHellTempleNPCs=%s", HolidaySettings.isIncludeHellTempleNPCs()));
-        writer.newLine();
-
-        writer.write(String.format("updatedVersion=%s", HolidaySettings.isUpdatedVersion()));
-        writer.newLine();
+    private static void readHolidayLine(String line) {
+        if(line.startsWith("includeHellTempleNPCs")) {
+            HolidaySettings.setIncludeHellTempleNPCs(Boolean.valueOf(line.split("=")[1]), false);
+        }
+        else if(line.startsWith("updatedVersion")) {
+            HolidaySettings.setUpdatedVersion(Boolean.valueOf(line.split("=")[1]), false);
+        }
     }
 
-    public static void saveSettings() throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("randomizer-config.txt"));
+    public static void saveSettings() {
+        try {
+            if(HolidaySettings.isHolidayMode()) {
+                if(Settings.isChanged() || HolidaySettings.isChanged()) {
+                    saveSettings("holiday-config.txt");
+                }
+            }
+            else if(Settings.isChanged()) {
+                saveSettings("randomizer-config.txt");
+            }
+        } catch (IOException ex) {
+            FileUtils.log("Unable to save settings: " + ex.getMessage());
+        }
+    }
+
+    private static void saveSettings(String filename) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
         writer.write(String.format("version=%s", VERSION));
         writer.newLine();
 
@@ -838,8 +842,18 @@ public class FileUtils {
             writer.newLine();
         }
 
+        writeHolidaySettings(writer);
+
         writer.flush();
         writer.close();
+    }
+
+    public static void writeHolidaySettings(BufferedWriter writer) throws IOException {
+        writer.write(String.format("includeHellTempleNPCs=%s", HolidaySettings.isIncludeHellTempleNPCs()));
+        writer.newLine();
+
+        writer.write(String.format("updatedVersion=%s", HolidaySettings.isUpdatedVersion()));
+        writer.newLine();
     }
 
     public static boolean importExistingSeed(File zipFile) {

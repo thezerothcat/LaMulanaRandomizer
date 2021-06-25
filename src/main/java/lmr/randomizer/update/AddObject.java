@@ -19,19 +19,13 @@ import java.util.List;
 public final class AddObject {
     private AddObject() { }
 
-    private static ObjectContainer xelpudScreen;
     private static ObjectContainer mulbrukScreen;
-
-    public static void setXelpudScreen(ObjectContainer xelpudScreen) {
-        AddObject.xelpudScreen = xelpudScreen;
-    }
 
     public static void setMulbrukScreen(ObjectContainer mulbrukScreen) {
         AddObject.mulbrukScreen = mulbrukScreen;
     }
 
     public static void clearObjects() {
-        xelpudScreen = null;
         mulbrukScreen = null;
     }
 
@@ -1007,27 +1001,6 @@ public final class AddObject {
     }
 
     /**
-     * Add Diary updated timer to Xelpud's screen.
-     * @param objectContainer the screen to add the objects to
-     */
-    public static void addDiaryTalismanConversationTimers(ObjectContainer objectContainer) {
-        // Timer to trigger Xelpud Diary conversation (gives Mulana Talisman) if you enter his screen with the Diary.
-        addFramesTimer(objectContainer, 0,
-                Arrays.asList(
-                        new TestByteOperation(FlagConstants.WF_DIARY, ByteOp.FLAG_EQUALS, 2),
-                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_DIARY_FOUND, ByteOp.FLAG_EQUALS, 0)),
-                Arrays.asList(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_DIARY_FOUND, ByteOp.ASSIGN_FLAG, 1)));
-
-        // Timer to trigger Xelpud Talisman conversation (allows Diary chest appearance) if you enter his screen with the Talisman.
-        addFramesTimer(objectContainer, 0,
-                Arrays.asList(
-                        new TestByteOperation(FlagConstants.WF_TALISMAN, ByteOp.FLAG_EQUALS, 2),
-                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_TALISMAN_FOUND, ByteOp.FLAG_EQUALS, 0),
-                        new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.FLAG_GTEQ, 1)),
-                Arrays.asList(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_TALISMAN_FOUND, ByteOp.ASSIGN_FLAG, 1)));
-    }
-
-    /**
      * Cheats for easy testing. Gives Shrine of the Mother frontside grail via a timer on the starting screen.
      * Other warps could be added for convenience as needed (0x064 = guidance, through 0x075 = backside shrine)
      * @param objectContainer screen to add the timers to
@@ -1310,12 +1283,7 @@ public final class AddObject {
     }
 
     public static boolean addSpecialItemObjects(String chestLocation, String chestContents) {
-        if("xmailer.exe".equals(chestLocation) || "Mulana Talisman".equals(chestLocation)) {
-            // Xelpud location, but no object with flags to update.
-            addSpecialItemObjects(xelpudScreen, chestContents);
-            return true;
-        }
-        else if("Book of the Dead".equals(chestLocation)) {
+        if("Book of the Dead".equals(chestLocation)) {
             // Mulbruk location, but no object with flags to update.
             addSpecialItemObjects(mulbrukScreen, chestContents);
             return true;
@@ -3780,6 +3748,14 @@ public final class AddObject {
         }
         if(shopInventoryData.getInventoryArg() == ItemConstants.KEY_SWORD) {
             AddObject.addAutomaticMantrasTimer(conversationDoor.getObjectContainer());
+        }
+        if(shopInventoryData.getInventoryArg() == ItemConstants.MEDICINE_OF_THE_MIND_YELLOW
+                || shopInventoryData.getInventoryArg() == ItemConstants.MEDICINE_OF_THE_MIND_GREEN
+                || shopInventoryData.getInventoryArg() == ItemConstants.MEDICINE_OF_THE_MIND_RED) {
+            AddObject.addMedicineStatueTimer(conversationDoor.getObjectContainer());
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_SHRINE) {
+            AddObject.addShrineMapSoundEffect(conversationDoor.getObjectContainer());
         }
     }
 

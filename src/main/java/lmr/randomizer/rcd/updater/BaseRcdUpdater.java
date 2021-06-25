@@ -1,13 +1,12 @@
 package lmr.randomizer.rcd.updater;
 
-import lmr.randomizer.DataFromFile;
-import lmr.randomizer.FileUtils;
 import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
 import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.rcd.RcdFileData;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.AddObject;
+import lmr.randomizer.update.FlagTimerUpdates;
 import lmr.randomizer.util.*;
 
 import java.util.ArrayList;
@@ -136,262 +135,7 @@ public class BaseRcdUpdater extends RcdUpdater {
 
     @Override
     boolean updateFlagTimer(GameObject flagTimer) {
-        // Get rid of timer objects related to purchasing the pre-randomized item
-        for (WriteByteOperation flagUpdate : flagTimer.getWriteByteOperations()) {
-            if (isRandomizedShopItem(flagUpdate.getIndex())) {
-                for (TestByteOperation flagTest : flagTimer.getTestByteOperations()) {
-                    if (flagTest.getIndex() == flagUpdate.getIndex() && flagTest.getValue() == 1) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        if(Settings.isRandomizeNonBossDoors()) {
-            // Remove timers for backside doors
-            for (WriteByteOperation flagUpdate : flagTimer.getWriteByteOperations()) {
-                if(flagUpdate.getIndex() == FlagConstants.AMPHISBAENA_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.AMPHISBAENA_GATE_OPEN
-                        || flagUpdate.getIndex() == FlagConstants.SAKIT_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.SAKIT_GATE_OPEN
-                        || flagUpdate.getIndex() == FlagConstants.ELLMAC_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.ELLMAC_GATE_OPEN
-                        || flagUpdate.getIndex() == FlagConstants.BAHAMUT_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.BAHAMUT_GATE_OPEN
-                        || flagUpdate.getIndex() == FlagConstants.VIY_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.VIY_GATE_OPEN
-                        || flagUpdate.getIndex() == FlagConstants.PALENQUE_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.PALENQUE_GATE_OPEN
-                        || flagUpdate.getIndex() == FlagConstants.BAPHOMET_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.BAPHOMET_GATE_OPEN
-                        || flagUpdate.getIndex() == FlagConstants.KEY_FAIRY_DOOR_UNLOCKED_V2) {
-                    return false;
-                }
-            }
-        }
-
-        ObjectContainer objectContainer = flagTimer.getObjectContainer();
-        if(flagTimer.getObjectContainer() instanceof Screen) {
-            if(Settings.isRandomizeTransitionGates()) {
-                int zoneIndex = ((Screen)flagTimer.getObjectContainer()).getZoneIndex();
-                if(zoneIndex != 3 && zoneIndex != 7) {
-                    for(TestByteOperation testByteOperation : flagTimer.getTestByteOperations()) {
-                        if(testByteOperation.getIndex() == FlagConstants.TWINS_POISON) {
-                            return false;
-                        }
-                    }
-                }
-
-                if(zoneIndex == 1) {
-                    // Surface timer for resetting HT unlock
-                    for(TestByteOperation testByteOperation : flagTimer.getTestByteOperations()) {
-                        if (testByteOperation.getIndex() == FlagConstants.HT_UNLOCK_CHAIN_PRIMARY
-                                && ByteOp.FLAG_GTEQ.equals(testByteOperation.getOp())
-                                && testByteOperation.getValue() == 3) {
-                            return false;
-                        }
-                    }
-                }
-                else if(zoneIndex == 5) {
-                    for(TestByteOperation testByteOperation : flagTimer.getTestByteOperations()) {
-                        if (testByteOperation.getIndex() == FlagConstants.BUER_STATE && testByteOperation.getValue() == 1) {
-                            return false;
-                        }
-                    }
-                }
-                else if(zoneIndex == 11) {
-                    for(TestByteOperation testByteOperation : flagTimer.getTestByteOperations()) {
-                        if (testByteOperation.getIndex() == FlagConstants.GODDESS_STATUE_SHIELD_ANIMATION && testByteOperation.getValue() == 2) {
-                            return false;
-                        }
-                    }
-                }
-            }
-
-            Screen screen = (Screen)objectContainer;
-            if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 2) {
-                for(WriteByteOperation flagUpdate : flagTimer.getWriteByteOperations()) {
-                    if(flagUpdate.getIndex() == FlagConstants.BIG_BROTHER_UNLOCKED) {
-                        // Remove unneeded timer on original Little Brother screen
-                        return false;
-                    }
-                }
-            }
-        }
-
-        if(Settings.isFoolsGameplay() && Settings.getCurrentBossCount() != 8) {
-            // Timers for unlocking true shrine, normally set value from 8 to 9
-            boolean addTest = false;
-            for(TestByteOperation testByteOperation : flagTimer.getTestByteOperations()) {
-                if (testByteOperation.getIndex() == FlagConstants.BOSSES_SHRINE_TRANSFORM
-                        && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())
-                        && testByteOperation.getValue() == 8) {
-                    addTest = true;
-                    testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
-                    testByteOperation.setValue((byte)9);
-                    break;
-                }
-            }
-            if(addTest) {
-                flagTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_GTEQ, Settings.getCurrentBossCount()));
-            }
-        }
-
-        if(!(objectContainer instanceof Zone)) {
-            for (int i = 0; i < flagTimer.getWriteByteOperations().size(); i++) {
-                WriteByteOperation updateFlag = flagTimer.getWriteByteOperations().get(i);
-                if (updateFlag.getIndex() == FlagConstants.SACRED_ORB_COUNT) {
-                    // Sacred orb flag for heal rate
-                    return false;
-                }
-                else if(updateFlag.getIndex() == FlagConstants.MANTRA_MARDUK) {
-                    // Timer for MARDUK mantra update
-                    if(objectContainer instanceof Screen) {
-                        int zoneIndex = ((Screen) objectContainer).getZoneIndex();
-                        if(zoneIndex == 4 || zoneIndex == 18) {
-                            return false;
-                        }
-                    }
-                }
-                else if(updateFlag.getIndex() == FlagConstants.WF_ANGEL_SHIELD) {
-                    // Get rid of Angel Shield shop timer on Graveyard alt shop screen (alt shop has been removed).
-                    return false;
-                }
-                else if(updateFlag.getIndex() == FlagConstants.WF_VANILLA_DRAGON_BONE) {
-                    // Get rid of Dragon Bone shop timer. We're using a different flag for Dragon Bone
-                    // since the base game's flag was bugged and fixing it could have unexpected effects,
-                    // but it still doesn't hurt to get rid of this thing.
-                    return false;
-                }
-                else if(updateFlag.getIndex() == FlagConstants.WF_MULANA_TALISMAN) {
-                    // Get rid of Mulana Talisman timer related to Xelpud conversation. We're using different flags for that.
-                    return false;
-                }
-                else if(updateFlag.getIndex() == FlagConstants.SHRINE_DIARY_CHEST && updateFlag.getValue() == 1) {
-                    // With changed event flow for Xelpud pillar/Diary chest, this timer isn't needed
-                    return false;
-                }
-            }
-        }
-
-        for (WriteByteOperation flagUpdate : flagTimer.getWriteByteOperations()) {
-            if (flagUpdate.getIndex() == FlagConstants.PROVE_THOU_ART_SMALL && flagUpdate.getValue() == 3) {
-                // Becoming small
-                for(TestByteOperation flagTest : flagTimer.getTestByteOperations()) {
-                    if (flagTest.getIndex() == FlagConstants.PROVE_THOU_ART_SMALL && ByteOp.FLAG_EQUALS.equals(flagTest.getOp()) && flagTest.getValue() == 2) {
-                        flagTest.setOp(ByteOp.FLAG_LTEQ);
-                        break;
-                    }
-                }
-            }
-            else if(flagUpdate.getIndex() == FlagConstants.HT_UNLOCK_PROGRESS_EARLY) {
-                if(flagUpdate.getValue() == 1) {
-                    if((Settings.isRandomizeForbiddenTreasure() && Settings.isHTFullRandom())
-                            || Settings.isRandomizeDracuetShop()) {
-                        // Get rid of 8-boss requirement on HT.
-                        Integer flagToRemoveIndex = null;
-                        for (int i = 0; i < flagTimer.getTestByteOperations().size(); i++) {
-                            if (flagTimer.getTestByteOperations().get(i).getIndex() == FlagConstants.BOSSES_SHRINE_TRANSFORM) {
-                                flagToRemoveIndex = i;
-                                break;
-                            }
-                        }
-                        if (flagToRemoveIndex != null) {
-                            flagTimer.getTestByteOperations().remove((int) flagToRemoveIndex);
-                        }
-                    }
-                }
-            }
-        }
-        for(int i = 0; i < flagTimer.getTestByteOperations().size(); i++) {
-            TestByteOperation flagTest = flagTimer.getTestByteOperations().get(i);
-            if(flagTest.getIndex() == FlagConstants.SCORE && flagTest.getValue() == 56) {
-                // Mulbruk score check timer - if you don't have the right score, the timer won't set the flag to
-                // spawn the Mulbruk conversation object that would let you get Book of the Dead.
-                flagTest.setValue((byte)0);
-            }
-            else if (flagTest.getIndex() == FlagConstants.MANTRA_MARDUK) {
-                // Timers related to MARDUK mantra. Some other timers have been removed in RcdReader.
-                if(flagTimer.getObjectContainer() instanceof Screen && ((Screen)flagTimer.getObjectContainer()).getZoneIndex() == ZoneConstants.ENDLESS) {
-                    flagTest.setOp(ByteOp.FLAG_LTEQ);
-
-                    // Add test for Giltoriyo conversation
-                    flagTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
-                    break;
-                }
-            }
-            else if (flagTest.getIndex() == FlagConstants.MANTRA_SABBAT) {
-                // Timers related to SABBAT mantra. Some other timers have been removed in RcdReader.
-                if(flagTimer.getObjectContainer() instanceof Screen && ((Screen)flagTimer.getObjectContainer()).getZoneIndex() == 7) {
-                    flagTest.setOp(ByteOp.FLAG_LTEQ);
-
-                    // Add test for Giltoriyo conversation
-                    flagTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
-                    break;
-                }
-            }
-            else if (flagTest.getIndex() == FlagConstants.MANTRA_MU) {
-                // Timers related to MU mantra.
-                if(flagTimer.getObjectContainer() instanceof Screen && ((Screen)flagTimer.getObjectContainer()).getZoneIndex() == 6) {
-                    flagTest.setOp(ByteOp.FLAG_LTEQ);
-
-                    // Add test for Giltoriyo conversation
-                    flagTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
-                    break;
-                }
-            }
-            else if (flagTest.getIndex() == FlagConstants.MANTRA_BAHRUN) {
-                // Timers related to BAHRUN mantra.
-                if(flagTimer.getObjectContainer() instanceof Screen && ((Screen)flagTimer.getObjectContainer()).getZoneIndex() == 13) {
-                    flagTest.setOp(ByteOp.FLAG_LTEQ);
-
-                    // Add test for Giltoriyo conversation
-                    flagTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
-                    break;
-                }
-            }
-            else if (flagTest.getIndex() == FlagConstants.MANTRA_WEDJET) {
-                // Timers related to WEDJET mantra.
-                if(flagTimer.getObjectContainer() instanceof Screen && ((Screen)flagTimer.getObjectContainer()).getZoneIndex() == 3) {
-                    flagTest.setOp(ByteOp.FLAG_LTEQ);
-
-                    // Add test for Giltoriyo conversation
-                    flagTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
-                    break;
-                }
-            }
-            else if (flagTest.getIndex() == FlagConstants.MANTRA_ABUTO) {
-                // Timers related to ABUTO mantra.
-                if(flagTimer.getObjectContainer() instanceof Screen && ((Screen)flagTimer.getObjectContainer()).getZoneIndex() == 11) {
-                    flagTest.setOp(ByteOp.FLAG_LTEQ);
-
-                    // Add test for Giltoriyo conversation
-                    flagTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
-                    break;
-                }
-            }
-            else if (flagTest.getIndex() == FlagConstants.MANTRA_FINAL) {
-                // Timers related to LAMULANA mantra.
-                if(flagTest.getValue() == 1) {
-                    if(flagTimer.getObjectContainer() instanceof Screen && ((Screen)flagTimer.getObjectContainer()).getZoneIndex() == 0) {
-                        flagTest.setOp(ByteOp.FLAG_LTEQ);
-
-                        // Add test for Giltoriyo conversation
-                        flagTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.FLAG_EQUALS, 1));
-                        break;
-                    }
-                }
-                else if(flagTest.getValue() == 4) {
-                    flagTest.setIndex(FlagConstants.MANTRA_LAMULANA);
-                    flagTest.setValue((byte)1);
-                }
-            }
-            else if(flagTest.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
-                // Timer to update Cog of the Soul puzzle.
-                flagTest.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
-                for(WriteByteOperation writeByteOperation : flagTimer.getWriteByteOperations()) {
-                    if(writeByteOperation.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
-                        writeByteOperation.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-        return true;
+        return FlagTimerUpdates.updateFlagTimer(flagTimer);
     }
 
     @Override
@@ -881,6 +625,13 @@ public class BaseRcdUpdater extends RcdUpdater {
         }
         Screen screen = (Screen)objectContainer;
         if(screen.getZoneIndex() == 1) {
+            // Remove graphic for closed Xelpud tent; rando will have it start open instead.
+            for(TestByteOperation testByteOperation : graphicsTextureDraw.getTestByteOperations()) {
+                if(testByteOperation.getIndex() == FlagConstants.XELPUD_TENT_OPEN) {
+                    return false;
+                }
+            }
+
             // Graphics for closed surface tents before talking to Xelpud
             if(screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2
                     || screen.getRoomIndex() == 2 && screen.getScreenIndex() == 0
@@ -1096,7 +847,15 @@ public class BaseRcdUpdater extends RcdUpdater {
             return true;
         }
         Screen screen = (Screen)objectContainer;
-        if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 2) {
+        if (screen.getZoneIndex() == 1 && screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
+            for (TestByteOperation flagTest : soundEffect.getTestByteOperations()) {
+                if(flagTest.getIndex() == FlagConstants.SCREEN_FLAG_16) {
+                    // Remove Xelpud tent opening sound effect
+                    return false;
+                }
+            }
+        }
+        else if (screen.getZoneIndex() == 7 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 2) {
             for (WriteByteOperation flagUpdate : soundEffect.getWriteByteOperations()) {
                 if(flagUpdate.getIndex() == FlagConstants.BIG_BROTHER_UNLOCKED) {
                     // Remove unneeded sound effect on original Little Brother screen
@@ -1243,171 +1002,62 @@ public class BaseRcdUpdater extends RcdUpdater {
 
     @Override
     boolean updateConversationDoor(GameObject conversationDoor) {
-        if(conversationDoor.getArgs().get(3) == 1) {
-            if(conversationDoor.getArgs().get(4) == 272) {
-                Integer testFlagIndex = null;
-                for (int i = 0; i < conversationDoor.getTestByteOperations().size(); i++) {
-                    TestByteOperation flagTest = conversationDoor.getTestByteOperations().get(i);
-                    if (flagTest.getIndex() == FlagConstants.DIMENSIONAL_CHILDREN_DEAD) {
-                        // This is the flag that prevents you from getting the original version of the Graveyard shop once you've killed all the guardians.
-                        testFlagIndex = i;
-                    }
-                }
-                if(testFlagIndex != null) {
-                    conversationDoor.getTestByteOperations().remove((int)testFlagIndex);
-                }
-            }
-            else if(conversationDoor.getArgs().get(4) == 273) {
-                // Get rid of alternate Graveyard shop (with the Angel Shield)
-                return false;
-            }
-        }
-        else if(conversationDoor.getArgs().get(4) == 719) {
-            // Low-score version of Mulbruk which could interfere with getting Book of the Dead.
-            return false;
-        }
-        else if(conversationDoor.getArgs().get(4) == 676) {
-            // Giltoriyo, Alsedana, Samaranta, Fobos conversations without Philosopher's Ocarina
-            return false;
-        }
-        else if(conversationDoor.getArgs().get(4) == 682) {
-            // Conversation to inform of unlocking Big Brother's shop, to be removed and re-added for NPC shuffling simplicity.
-            return false;
-        }
-        else if(conversationDoor.getArgs().get(4) == BlockConstants.Master_FairyQueen_RequestPendant && !HolidaySettings.isHalloweenMode()) {
-            // First Fairy Queen conversation, completely unneeded for randomizer outside of Halloween.
-            return false;
-        }
-        else if(conversationDoor.getArgs().get(4) == 685) {
-            // To be removed and re-added for NPC shuffling simplicity.
-            return false;
-        }
-        else if(conversationDoor.getArgs().get(4) == 687) {
-            // Fairy Queen conversation, to be removed and re-added for NPC shuffling simplicity.
-            return false;
-        }
-        else if(conversationDoor.getArgs().get(4) == 688) {
-            // Fairy Queen conversation, to be removed and re-added for NPC shuffling simplicity.
-            return false;
-        }
-        else if(conversationDoor.getArgs().get(4) == BlockConstants.Master_PhilosopherFobos_Ladder) {
-            // Fobos main conversation, to be removed and re-added for NPC shuffling simplicity.
-            return false;
-        }
-        else if(conversationDoor.getArgs().get(4) == 985) {
-            // To be removed and re-added for NPC shuffling simplicity.
-            return false;
-        }
-        else if(conversationDoor.getArgs().get(4) == 913) {
-            // Xelpud conversation after he goes to do the Diary thing.
-            return false;
-        }
-        else if(conversationDoor.getArgs().get(4) == 1014) {
-            // Mulbruk conversation after she runs away from the Provocative Bathing Suit.
-            return false;
-        }
-
-        ObjectContainer objectContainer = conversationDoor.getObjectContainer();
-        if(!(objectContainer instanceof Screen)) {
-            return true;
-        }
-        Screen screen = (Screen)objectContainer;
-        if(screen.getZoneIndex() == 1) {
-            if(screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2
-                    || screen.getRoomIndex() == 2 && screen.getScreenIndex() == 0
-                    || screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1) {
-                for (int i = 0; i < conversationDoor.getTestByteOperations().size(); i++) {
-                    TestByteOperation flagTest = conversationDoor.getTestByteOperations().get(i);
-                    if (flagTest.getIndex() == FlagConstants.SURFACE_RUINS_OPENED) {
-                        // Swap Xelpud first-conversation flag with custom
-                        flagTest.setIndex(FlagConstants.XELPUD_CONVERSATION_INTRO);
-                    }
-                }
-            }
-        }
-
         int blockNumber = conversationDoor.getArgs().get(4);
-        if(conversationDoor.getArgs().get(3) == 1) {
-            // Any shop
-            if(blockNumber == 132){
-                // Untransformed Mr. Fishman shop
-                for(TestByteOperation testByteOperation : conversationDoor.getTestByteOperations()) {
-                    if (testByteOperation.getIndex() == FlagConstants.FISH_SHOP_UNLOCKS) {
-                        // Keep existing even after the transformed shop appears.
-                        testByteOperation.setOp(ByteOp.FLAG_GTEQ);
-                        break;
-                    }
-                }
-            }
-            else if(blockNumber == 133){
+        if(conversationDoor.getArgs().get(3) == ConversationDoor.Shop) {
+            if(blockNumber == BlockConstants.ShopBlockMrFishmanAlt){
                 // Transformed Mr. Fishman shop
                 conversationDoor.setX(180);
                 conversationDoor.setY(1520);
             }
-        }
-        else if(blockNumber == 915) {
-            // Mini Doll conversation
-            for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
-                if (flagTest.getIndex() == FlagConstants.PROVE_THOU_ART_SMALL) {
-                    flagTest.setIndex(FlagConstants.WF_MINI_DOLL); // Normally this goes off a flag related to proving yourself small, but we'd rather check if we have the Mini Doll for safer shuffling.
-                }
+            else if(blockNumber == BlockConstants.ShopBlockNebur) {
+                // To be removed and re-added for NPC shuffling simplicity.
+                return false;
+            }
+            else if(blockNumber == BlockConstants.ShopBlockGiantMopiranAngelShield) {
+                // Get rid of alternate Graveyard shop (with the Angel Shield)
+                return false;
             }
         }
-        else if(blockNumber == BlockConstants.Master_PhilosopherGiltoriyo) {
-            // Giltoriyo mantra conversation
-            for (WriteByteOperation flagUpdate : conversationDoor.getWriteByteOperations()) {
-                if(flagUpdate.getIndex() == FlagConstants.MANTRA_MARDUK) {
-                    flagUpdate.setIndex(FlagConstants.MANTRAS_UNLOCKED);
+        else if(blockNumber == 485) {
+            // Remove the flags that prevent normal Mulbruk convos if you have Forbidden Treasure/Provocative Bathing Suit.
+            // Also remove score requirement on Mulbruk conversation.
+            Integer flagToRemoveIndex = null;
+            for (int i = 0; i < conversationDoor.getTestByteOperations().size(); i++) {
+                TestByteOperation flagTest = conversationDoor.getTestByteOperations().get(i);
+                if (flagTest.getIndex() == FlagConstants.MULBRUK_BIKINI_ENDING) {
+                    flagToRemoveIndex = i;
                 }
+                else if(flagTest.getIndex() == FlagConstants.SCORE && flagTest.getValue() == 56) {
+                    flagTest.setValue((byte)0);
+                }
+            }
+            if(flagToRemoveIndex != null) {
+                conversationDoor.getTestByteOperations().remove((int)flagToRemoveIndex);
             }
         }
-        else if(blockNumber == BlockConstants.Master_PriestTriton) {
-            for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
-                if (flagTest.getIndex() == FlagConstants.PALENQUE_ANKH_PUZZLE) {
-                    // Fix conversation to be based on whether the Palenque fight is active, rather than whether the ankh is present.
-                    flagTest.setIndex(FlagConstants.PALENQUE_STATE);
-                    flagTest.setOp(ByteOp.FLAG_NOT_EQUAL);
-                    flagTest.setValue((byte)2);
-                    break;
-                }
-            }
+        else if(blockNumber == 676) {
+            // Giltoriyo, Alsedana, Samaranta, Fobos conversations without Philosopher's Ocarina
+            return false;
+        }
+        else if(blockNumber == 682) {
+            // Conversation to inform of unlocking Big Brother's shop, to be removed and re-added for NPC shuffling simplicity.
+            return false;
+        }
+        else if(blockNumber == BlockConstants.Master_FairyQueen_RequestPendant && !HolidaySettings.isHalloweenMode()) {
+            // First Fairy Queen conversation, completely unneeded for randomizer outside of Halloween.
+            return false;
         }
         else if(blockNumber == 685) {
-            if(!HolidaySettings.isHalloweenMode()) {
-                for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
-                    if (flagTest.getIndex() == FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES) {
-                        // The first conversation with the Fairy Queen is removed. Subsequent conversations must
-                        // therefore not require the first one to have happened, so we'll make the conversation
-                        // check for flag value <= 1 instead of == 1
-                        flagTest.setOp(ByteOp.FLAG_LTEQ);
-                        break;
-                    }
-                }
-            }
+            // To be removed and re-added for NPC shuffling simplicity.
+            return false;
         }
-        else if(blockNumber == 686) {
-            // The Fairy Queen - Endless NPC, 08-01-00
-            if(!HolidaySettings.isHalloweenMode()) {
-                for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
-                    if (flagTest.getIndex() == FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES) {
-                        // The first conversation with the Fairy Queen is removed. Subsequent conversations must
-                        // therefore not require the first one to have happened, so we'll make the conversation
-                        // check for flag value <= 1 instead of == 1
-                        flagTest.setOp(ByteOp.FLAG_LTEQ);
-                        break;
-                    }
-                }
-            }
+        else if(blockNumber == 687) {
+            // Fairy Queen conversation, to be removed and re-added for NPC shuffling simplicity.
+            return false;
         }
-        else if(blockNumber == BlockConstants.Master_MrSlushfund_Pepper) {
-            for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
-                if (flagTest.getIndex() == FlagConstants.MR_SLUSHFUND_CONVERSATION) {
-                    flagTest.setIndex(FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER);
-                    flagTest.setOp(ByteOp.FLAG_EQUALS);
-                    flagTest.setValue((byte)0);
-                    break;
-                }
-            }
+        else if(blockNumber == 688) {
+            // Fairy Queen conversation, to be removed and re-added for NPC shuffling simplicity.
+            return false;
         }
         else if(blockNumber == BlockConstants.Master_MrSlushfund_WaitingForTreasures) {
             // To be removed and re-added for NPC shuffling simplicity.
@@ -1418,19 +1068,6 @@ public class BaseRcdUpdater extends RcdUpdater {
             return false;
         }
         else if(blockNumber == BlockConstants.Master_MrSlushfund_NeverComeBack) {
-            // To be removed and re-added for NPC shuffling simplicity.
-            return false;
-        }
-        if(blockNumber == BlockConstants.Master_PriestAlest) {
-            // Mini Doll conversation
-            for (TestByteOperation flagTest : conversationDoor.getTestByteOperations()) {
-                if (flagTest.getIndex() == FlagConstants.PROVE_THOU_ART_SMALL) {
-                    flagTest.setIndex(FlagConstants.WF_MINI_DOLL); // Normally this goes off a flag related to proving yourself small, but we'd rather check if we have the Mini Doll for safer shuffling.
-                    break;
-                }
-            }
-        }
-        if(blockNumber == BlockConstants.Master_PriestAlest_NoItem) {
             // To be removed and re-added for NPC shuffling simplicity.
             return false;
         }
@@ -1463,40 +1100,39 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
             }
         }
-        else if(blockNumber == 484 || blockNumber == 1019
-                || blockNumber == 1080 || blockNumber == 1081) {
-            // Remove the flags that prevent normal Xelpud convos if he leaves for the Diary puzzle
-            Integer flagToRemoveIndex = null;
-            for (int i = 0; i < conversationDoor.getTestByteOperations().size(); i++) {
-                if (conversationDoor.getTestByteOperations().get(i).getIndex() == FlagConstants.SHRINE_DIARY_CHEST) {
-                    flagToRemoveIndex = i;
-                    break;
-                }
-            }
-            if(flagToRemoveIndex != null) {
-                conversationDoor.getTestByteOperations().remove((int)flagToRemoveIndex);
-            }
+        else if(blockNumber == BlockConstants.Master_PhilosopherFobos_Ladder) {
+            // Fobos main conversation, to be removed and re-added for NPC shuffling simplicity.
+            return false;
         }
-        else if(blockNumber == 485) {
-            // Remove the flags that prevent normal Mulbruk convos if you have Forbidden Treasure/Provocative Bathing Suit.
-            // Also remove score requirement on Mulbruk conversation.
-            Integer flagToRemoveIndex = null;
-            for (int i = 0; i < conversationDoor.getTestByteOperations().size(); i++) {
-                TestByteOperation flagTest = conversationDoor.getTestByteOperations().get(i);
-                if (flagTest.getIndex() == FlagConstants.MULBRUK_BIKINI_ENDING) {
-                    flagToRemoveIndex = i;
-                }
-                else if(flagTest.getIndex() == FlagConstants.SCORE && flagTest.getValue() == 56) {
-                    flagTest.setValue((byte)0);
-                }
-            }
-            if(flagToRemoveIndex != null) {
-                conversationDoor.getTestByteOperations().remove((int)flagToRemoveIndex);
-            }
+        else if(blockNumber == 719) {
+            // Low-score version of Mulbruk which could interfere with getting Book of the Dead.
+            return false;
+        }
+        else if(blockNumber == 985) {
+            // To be removed and re-added for NPC shuffling simplicity.
+            return false;
+        }
+        else if(blockNumber == 913) {
+            // Xelpud conversation after he goes to do the Diary thing.
+            return false;
+        }
+        else if(blockNumber == BlockConstants.Master_PriestAlest_NoItem) {
+            // To be removed and re-added for NPC shuffling simplicity.
+            return false;
         }
         else if(blockNumber == 990) {
             // Mulbruk misc conversation priority below Book of the Dead
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_BOOK, ByteOp.FLAG_NOT_EQUAL, 1));
+        }
+        else if(blockNumber == 1014) {
+            // Mulbruk conversation after she runs away from the Provocative Bathing Suit.
+            return false;
+        }
+        else if(blockNumber == BlockConstants.Master_ElderXelpudRandomSetC_Rug
+                || blockNumber == BlockConstants.Master_ElderXelpudRandomSetB
+                || blockNumber == BlockConstants.Master_ElderXelpudRandomSetC_NoRug) {
+            // To be removed and re-added for NPC shuffling simplicity.
+            return false;
         }
         else if(blockNumber == 1082 || blockNumber == 1083 || blockNumber == BlockConstants.MulbrukEscapeRegular) {
             // Remove the flags that prevent normal Mulbruk convos if you have Forbidden Treasure/Provocative Bathing Suit
@@ -1859,16 +1495,6 @@ public class BaseRcdUpdater extends RcdUpdater {
             return false;
         }
         return true;
-    }
-
-    private static boolean isRandomizedShopItem(int worldFlag) {
-        for(String shopItem : DataFromFile.getRandomizedShopItems()) {
-            if(DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(shopItem).getWorldFlag() == worldFlag) {
-                FileUtils.log(String.format("Removing timer object for item %s with world flag %s", shopItem, worldFlag));
-                return true;
-            }
-        }
-        return false;
     }
 
     private void addEscapeGates() {
@@ -2359,7 +1985,6 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
                 if(screenIndex == 1) {
                     AddObject.addXelpudIntroTimer(screen);
-                    AddObject.addDiaryTalismanConversationTimers(screen);
                     if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation() || HolidaySettings.isFools2020Mode()) {
                         AddObject.addSurfaceKillTimer(screen, true);
                     }

@@ -6,7 +6,6 @@ import lmr.randomizer.util.ZoneConstants;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.function.BiFunction;
@@ -40,7 +39,6 @@ public final class Settings {
     private boolean randomizeForbiddenTreasure;
     private boolean htFullRandom;
     private boolean randomizeDracuetShop;
-    private boolean holidayOption1;
     private boolean randomizeCoinChests;
     private boolean randomizeTrapItems;
     private boolean randomizeEscapeChest;
@@ -115,7 +113,6 @@ public final class Settings {
         randomizeForbiddenTreasure = false;
         htFullRandom = false;
         randomizeDracuetShop = false;
-        holidayOption1 = false;
         randomizeCoinChests = true;
         randomizeTrapItems = true;
         randomizeEscapeChest = false;
@@ -885,17 +882,6 @@ public final class Settings {
         return HolidaySettings.isFools2020Mode();
     }
 
-    public static void setIncludeHellTempleNPCs(boolean includeHellTempleNPCs, boolean update) {
-        singleton.holidayOption1 = includeHellTempleNPCs;
-    }
-
-    public static void setUpdatedVersion(boolean updatedVersion, boolean update) {
-        if(update && updatedVersion != singleton.holidayOption1) {
-            singleton.changed = true;
-        }
-        singleton.holidayOption1 = updatedVersion;
-    }
-
     public static boolean isAlternateMotherAnkh() {
         return singleton.alternateMotherAnkh || DataFromFile.getCustomPlacementData().isAlternateMotherAnkh();
     }
@@ -990,16 +976,6 @@ public final class Settings {
 
     public static boolean isCheapConsumables() {
         return HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2021Mode();
-    }
-
-    public static void saveSettings() {
-        if(singleton.changed) {
-            try {
-                FileUtils.saveSettings();
-            } catch (IOException ex) {
-                FileUtils.log("Unable to save settings: " + ex.getMessage());
-            }
-        }
     }
 
     public static int itemSetToInt(Collection<String> selectedItems, List<String> possibleItems) {
@@ -1101,7 +1077,7 @@ public final class Settings {
         booleanSettings2 |= processBooleanFlag.apply(singleton.foolsGameplay, 8);
         booleanSettings2 |= processBooleanFlag.apply(singleton.bossCheckpoints, 7);
         booleanSettings2 |= processBooleanFlag.apply(singleton.screenshakeDisabled, 6);
-        booleanSettings2 |= processBooleanFlag.apply(singleton.holidayOption1, 5);
+        booleanSettings2 |= processBooleanFlag.apply(false, 5); // todo: put something else here
         booleanSettings2 |= processBooleanFlag.apply(false, 4); // todo: put something else here
         booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeGraphics, 3);
         booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeEnemies, 2);
@@ -1192,7 +1168,7 @@ public final class Settings {
         singleton.foolsGameplay = getBoolFlagFromInt.apply(booleanSettingsFlag2, 8);
         singleton.bossCheckpoints = getBoolFlagFromInt.apply(booleanSettingsFlag2, 7);
         singleton.screenshakeDisabled = getBoolFlagFromInt.apply(booleanSettingsFlag2, 6);
-        singleton.holidayOption1 = getBoolFlagFromInt.apply(booleanSettingsFlag2, 5);
+        // todo: put something else here - getBoolFlagFromInt.apply(booleanSettingsFlag2, 5);
         // todo: put something else here - getBoolFlagFromInt.apply(booleanSettingsFlag2, 4);
         singleton.randomizeGraphics = getBoolFlagFromInt.apply(booleanSettingsFlag2, 3);
         singleton.randomizeEnemies = getBoolFlagFromInt.apply(booleanSettingsFlag2, 2);

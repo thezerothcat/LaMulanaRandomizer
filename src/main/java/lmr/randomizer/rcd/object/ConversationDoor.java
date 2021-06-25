@@ -1,5 +1,6 @@
 package lmr.randomizer.rcd.object;
 
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.util.BlockConstants;
 
 /**
@@ -82,10 +83,20 @@ public class ConversationDoor extends GameObject {
     }
 
     public static int getDoorType(String npcAssigned) {
-        return isShop(npcAssigned) ? Shop : SingleConversation; // Currently no ConversationTree NPCs are shuffled.
+        if(isConversationTree(npcAssigned)) {
+            return ConversationTree;
+        }
+        return isShop(npcAssigned) ? Shop : SingleConversation;
     }
 
-    private static boolean isShop(String npcAssigned) {
+    public static boolean isConversationTree(String npcAssigned) {
+        if("NPC: Elder Xelpud".equals(npcAssigned)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isShop(String npcAssigned) {
         if("NPC: Nebur".equals(npcAssigned)) {
             return true;
         }
@@ -214,7 +225,7 @@ public class ConversationDoor extends GameObject {
             return BlockConstants.ShopBlockMoverAthleland;
         }
         if("NPC: Giant Mopiran".equals(npcAssigned)) {
-            return BlockConstants.ShopBlockGiantMopiran;
+            return (short)(HolidaySettings.isFools2020Mode() ? BlockConstants.ShopBlockGiantMopiranAngelShield : BlockConstants.ShopBlockGiantMopiran);
         }
         if("NPC: Kingvalley II".equals(npcAssigned)) {
             return BlockConstants.ShopBlockKingvalleyII;
@@ -230,6 +241,9 @@ public class ConversationDoor extends GameObject {
         }
         if("NPC: Hot-blooded Nemesistwo".equals(npcAssigned)) {
             return BlockConstants.ShopBlockHotbloodedNemesistwo;
+        }
+        if("NPC: Elder Xelpud".equals(npcAssigned)) {
+            return BlockConstants.Master_ElderXelpudRandomSetA;
         }
         if("NPC: Hiner".equals(npcAssigned)) {
             return BlockConstants.Master_Hiner;

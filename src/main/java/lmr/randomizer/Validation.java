@@ -858,7 +858,8 @@ public class Validation {
     }
 
     private static boolean isValidNpc(String npcName) {
-        return "Nebur".equals(npcName)
+        return "Elder Xelpud".equals(npcName)
+                || "Nebur".equals(npcName)
                 || "Sidro".equals(npcName)
                 || "Modro".equals(npcName)
                 || "Penadvent of ghost".equals(npcName)

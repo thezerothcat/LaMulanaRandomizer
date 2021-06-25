@@ -2469,40 +2469,6 @@ public class AddObjectTest {
     }
 
     @Test
-    public void testAddDiaryTalismanConversationTimers() {
-        Screen screen = new Screen();
-
-        AddObject.addDiaryTalismanConversationTimers(screen);
-
-        GameObject gameObject = screen.getObjects().get(0);
-        Assert.assertEquals(gameObject.getId(), 0x0b);
-        Assert.assertEquals(gameObject.getX(), -1);
-        Assert.assertEquals(gameObject.getY(), -1);
-        Assert.assertEquals((int)gameObject.getArgs().get(0), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
-        Assert.assertEquals(gameObject.getArgs().size(), 2);
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(164, ByteOp.FLAG_EQUALS, 2)));
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(2796, ByteOp.FLAG_EQUALS, 0)));
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(0x07c, ByteOp.FLAG_GTEQ, 1)));
-        Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(2796, ByteOp.ASSIGN_FLAG, 1)));
-        Assert.assertEquals(gameObject.getTestByteOperations().size(), 3);
-        Assert.assertEquals(gameObject.getWriteByteOperations().size(), 1);
-
-        gameObject = screen.getObjects().get(1);
-        Assert.assertEquals(gameObject.getId(), 0x0b);
-        Assert.assertEquals(gameObject.getX(), -1);
-        Assert.assertEquals(gameObject.getY(), -1);
-        Assert.assertEquals((int)gameObject.getArgs().get(0), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
-        Assert.assertEquals(gameObject.getArgs().size(), 2);
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(260, ByteOp.FLAG_EQUALS, 2)));
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(2797, ByteOp.FLAG_EQUALS, 0)));
-        Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(2797, ByteOp.ASSIGN_FLAG, 1)));
-        Assert.assertEquals(gameObject.getTestByteOperations().size(), 2);
-        Assert.assertEquals(gameObject.getWriteByteOperations().size(), 1);
-    }
-
-    @Test
     public void testAddGrailWarpTimers() {
         Screen screen = new Screen();
 

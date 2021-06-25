@@ -127,16 +127,6 @@ public class Fools2020RcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateConversationDoor(GameObject conversationDoor) {
-        if(conversationDoor.getArgs().get(3) == 1) {
-            if(conversationDoor.getArgs().get(4) == 272) {
-                conversationDoor.getArgs().set(4, (short)273);
-            }
-        }
-        return true;
-    }
-
-    @Override
     boolean updatePushableBlock(GameObject pushableBlock) {
         ObjectContainer objectContainer = pushableBlock.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {

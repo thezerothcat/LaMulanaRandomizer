@@ -1,4 +1,6 @@
-Transition: Surface R1 => Location: Surface [Main]
+Transition: Surface R1 => Location: Surface [Main], NPC: Elder Xelpud
+Transition: Surface R1 => Location: Surface [Main], Glitch: Raindrop
+Transition: Surface R1 => Location: Surface [Main], Glitch: Natural Align Raindrop
 Transition: Surface D1 => Location: Surface [Ruin Path Lower]
 Transition: Surface D2 => Location: Surface [Ruin Path Upper]
 Transition: Surface D2 => Location: Surface [Ruin Path Lower], Glitch: Raindrop

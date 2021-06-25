@@ -4,10 +4,15 @@ import lmr.randomizer.DataFromFile;
 import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
 import lmr.randomizer.node.CustomNPCPlacement;
+import lmr.randomizer.rcd.object.ConversationDoor;
+import lmr.randomizer.util.LocationCoordinateMapper;
 
 import java.util.*;
 
 public class NpcRandomizer {
+    private static final List<String> SURFACE_DOOR_LOCATIONS =
+            Arrays.asList("NPCL: Elder Xelpud", "NPCL: Nebur", "NPCL: Sidro", "NPCL: Modro", "NPCL: Hiner", "NPCL: Moger");
+
     private Map<String, String> mapOfNpcDoorLocationToContents;
 
     public NpcRandomizer() {
@@ -63,8 +68,10 @@ public class NpcRandomizer {
             mapOfNpcDoorLocationToContents.put("NPCL: The Fairy Queen", "NPC: The Fairy Queen");
             mapOfNpcDoorLocationToContents.put("NPCL: Priest Alest", "NPC: Priest Alest");
             mapOfNpcDoorLocationToContents.put("NPCL: Mr. Slushfund", "NPC: Mr. Slushfund");
+            mapOfNpcDoorLocationToContents.put("NPCL: Elder Xelpud", "NPC: Elder Xelpud");
             mapOfNpcDoorLocationToContents.put("NPCL: Hiner", "NPC: Hiner");
             mapOfNpcDoorLocationToContents.put("NPCL: Moger", "NPC: Moger");
+            mapOfNpcDoorLocationToContents.put("NPCL: Nebur", "NPC: Nebur");
             mapOfNpcDoorLocationToContents.put("NPCL: Sidro", "NPC: Sidro");
             mapOfNpcDoorLocationToContents.put("NPCL: Modro", "NPC: Modro");
             mapOfNpcDoorLocationToContents.put("NPCL: Mud Man Qubert", "NPC: Mud Man Qubert");
@@ -120,8 +127,10 @@ public class NpcRandomizer {
             npcDoors.add("The Fairy Queen");
             npcDoors.add("Priest Alest");
             npcDoors.add("Mr. Slushfund");
+            npcDoors.add("Elder Xelpud");
             npcDoors.add("Hiner");
             npcDoors.add("Moger");
+            npcDoors.add("Nebur");
             npcDoors.add("Sidro");
             npcDoors.add("Modro");
             npcDoors.add("Mud Man Qubert");
@@ -169,8 +178,10 @@ public class NpcRandomizer {
             npcs.add("The Fairy Queen");
             npcs.add("Priest Alest");
             npcs.add("Mr. Slushfund");
+            npcs.add("Elder Xelpud");
             npcs.add("Hiner");
             npcs.add("Moger");
+            npcs.add("Nebur");
             npcs.add("Sidro");
             npcs.add("Modro");
             npcs.add("Mud Man Qubert");
@@ -200,6 +211,21 @@ public class NpcRandomizer {
                 npc = npcs.remove(random.nextInt(npcs.size()));
                 doorLocation = npcDoors.remove(random.nextInt(npcDoors.size()));
                 mapOfNpcDoorLocationToContents.put("NPCL: " + doorLocation, "NPC: " + npc);
+            }
+
+            if(LocationCoordinateMapper.isSurfaceStart()) {
+                String npcPreviouslyInXelpudTent = mapOfNpcDoorLocationToContents.get("NPCL: Elder Xelpud");
+                if(npcPreviouslyInXelpudTent.equals("NPC: Elder Xelpud")) {
+                    List<String> surfaceShops = getSurfaceShops();
+                    if(surfaceShops.isEmpty()) {
+                        List<String> possibleDoors = new ArrayList<>(SURFACE_DOOR_LOCATIONS);
+                        possibleDoors.remove("NPCL: Elder Xelpud");
+                        replaceDoorContentsWithShop(possibleDoors.get(random.nextInt(possibleDoors.size())), random);
+                    }
+                }
+                if(!npcPreviouslyInXelpudTent.equals("NPC: Elder Xelpud") && !ConversationDoor.isShop(npcPreviouslyInXelpudTent)) {
+                    replaceDoorContentsWithShop("NPCL: Elder Xelpud", random);
+                }
             }
         }
         else {
@@ -244,8 +270,10 @@ public class NpcRandomizer {
             mapOfNpcDoorLocationToContents.put("NPCL: The Fairy Queen", "NPC: The Fairy Queen");
             mapOfNpcDoorLocationToContents.put("NPCL: Priest Alest", "NPC: Priest Alest");
             mapOfNpcDoorLocationToContents.put("NPCL: Mr. Slushfund", "NPC: Mr. Slushfund");
+            mapOfNpcDoorLocationToContents.put("NPCL: Elder Xelpud", "NPC: Elder Xelpud");
             mapOfNpcDoorLocationToContents.put("NPCL: Hiner", "NPC: Hiner");
             mapOfNpcDoorLocationToContents.put("NPCL: Moger", "NPC: Moger");
+            mapOfNpcDoorLocationToContents.put("NPCL: Nebur", "NPC: Nebur");
             mapOfNpcDoorLocationToContents.put("NPCL: Sidro", "NPC: Sidro");
             mapOfNpcDoorLocationToContents.put("NPCL: Modro", "NPC: Modro");
             mapOfNpcDoorLocationToContents.put("NPCL: Mud Man Qubert", "NPC: Mud Man Qubert");
@@ -260,12 +288,42 @@ public class NpcRandomizer {
 //
 //        mapOfNpcDoorLocationToContents.put("NPCL: Former Mekuri Master", "NPC: Former Mekuri Master");
 //
-//        mapOfNpcDoorLocationToContents.put("NPCL: Nebur", "NPC: Nebur");
-//
-//        mapOfNpcDoorLocationToContents.put("NPCL: Xelpud", "NPC: Xelpud");
 //        mapOfNpcDoorLocationToContents.put("NPCL: Mulbruk", "NPC: Mulbruk");
 //        mapOfNpcDoorLocationToContents.put("NPCL: Stray fairy", "NPC: Stray fairy");
 //        mapOfNpcDoorLocationToContents.put("NPCL: Fairy", "NPC: Fairy");
+    }
+
+    public List<String> getSurfaceShops() {
+        List<String> surfaceShops = new ArrayList<>();
+        String xelpudDoorNpc = mapOfNpcDoorLocationToContents.get("NPCL: Elder Xelpud");
+        if(xelpudDoorNpc.equals("NPC: Elder Xelpud")) {
+            for(String surfaceDoor : SURFACE_DOOR_LOCATIONS) {
+                String surfaceNpc = mapOfNpcDoorLocationToContents.get(surfaceDoor);
+                if(ConversationDoor.isShop(surfaceNpc)) {
+                    surfaceShops.add(getShopName(surfaceNpc.replaceAll("NPC: ", "")));
+                }
+            }
+        }
+        else if(ConversationDoor.isShop(xelpudDoorNpc)) {
+            surfaceShops.add(getShopName(xelpudDoorNpc.replaceAll("NPC: ", "")));
+        }
+        return surfaceShops;
+    }
+
+    private void replaceDoorContentsWithShop(String npcLocation, Random random) {
+        String doorPreviousNpc = mapOfNpcDoorLocationToContents.get(npcLocation);
+        List<String> shopNpcs = new ArrayList<>();
+
+        for(String placedNpc : mapOfNpcDoorLocationToContents.values()) {
+            if(ConversationDoor.isShop(placedNpc)) {
+                shopNpcs.add(placedNpc);
+            }
+        }
+        String moveToDoorNpc = shopNpcs.get(random.nextInt(shopNpcs.size()));
+        String moveToDoorNpcOldLocation = getNpcLocation(moveToDoorNpc.replaceAll("NPC: ", ""));
+
+        mapOfNpcDoorLocationToContents.put(npcLocation, moveToDoorNpc);
+        mapOfNpcDoorLocationToContents.put(moveToDoorNpcOldLocation, doorPreviousNpc);
     }
 
     public String getNpc(String npcLocation) {
