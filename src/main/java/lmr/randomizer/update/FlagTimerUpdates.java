@@ -38,7 +38,6 @@ public class FlagTimerUpdates {
             }
         }
 
-
         updateTimerUpdates(flagTimer);
         updateTimerTests(flagTimer);
         updateTrueShrineTransformationTimer(flagTimer);

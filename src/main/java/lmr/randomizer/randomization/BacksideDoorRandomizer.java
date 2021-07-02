@@ -612,11 +612,10 @@ public class BacksideDoorRandomizer {
         return nodeWithRequirements.getAllRequirements().get(0);
     }
 
-    public void outputLocations(int attemptNumber) throws IOException {
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/doors.txt", Settings.getStartingSeed()));
-        if (writer == null) {
-            return;
-        }
+    public void outputLocations(BufferedWriter writer, int attemptNumber) throws IOException {
+        writer.newLine();
+        writer.write(Translations.getText("section.doors"));
+        writer.newLine();
 
         String doorLocation;
         for(String door : backsideDoorLocationMap.keySet()) {
@@ -628,8 +627,5 @@ public class BacksideDoorRandomizer {
                 writer.newLine();
             }
         }
-
-        writer.flush();
-        writer.close();
     }
 }

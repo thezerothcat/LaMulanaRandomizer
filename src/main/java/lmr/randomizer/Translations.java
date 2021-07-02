@@ -66,10 +66,16 @@ public final class Translations {
         return getText("glitches." + glitchName.replaceAll("[ ']", ""));
     }
 
-    public static String getShopItemText(String shopName, int itemNumber) {
-        return String.format(getText("shops.ItemFormat"),
-                getText("shops." + shopName.replaceAll("[ )(]", "")),
-                itemNumber);
+    public static String getShopLabel(String npcName, String npcLocation, String npcZone) {
+        if(Settings.isRandomizeNpcs()) {
+            return String.format(getText("shops.randomNpcLocationFormat"),
+                    getText("npc." + npcName.replaceAll("[ )('-.]", "")),
+                    getText("npc." + npcLocation.replaceAll("[ )('-.]", "")),
+                    getMapLocationText(npcZone));
+        }
+        return String.format(getText("shops.npcLocationFormat"),
+                getText("npc." + npcName.replaceAll("[ )('-.]", "")),
+                getMapLocationText(npcZone));
     }
 
     public static String getItemText(String itemName, boolean removedItem) {

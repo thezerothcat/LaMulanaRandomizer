@@ -203,7 +203,7 @@ public final class LocationCoordinateMapper {
             return 160;
         }
         if(zone == 3) {
-            return 560;
+            return 1200;
         }
         if(zone == 4) {
             return 120;
@@ -292,7 +292,7 @@ public final class LocationCoordinateMapper {
             return 72;
         }
         if(zone == 6) {
-            return 152;
+            return 632;
         }
         if(zone == 7) {
             return front ? (short)392 : 312;
@@ -310,7 +310,7 @@ public final class LocationCoordinateMapper {
             return 152;
         }
         if(zone == 12) {
-            return 72;
+            return 552;
         }
         if(zone == 13) {
             return 232;

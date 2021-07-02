@@ -5,6 +5,7 @@ NPCL: Sidro => Location: Surface [Main], NPC: Elder Xelpud
 NPCL: Modro => Location: Surface [Main], NPC: Elder Xelpud
 NPCL: Hiner => Location: Surface [Main], NPC: Elder Xelpud
 NPCL: Moger => Location: Surface [Main], NPC: Elder Xelpud
+NPCL: Former Mekuri Master => Location: Surface [Main], State: Can Break Mekuri Wall
 # Gate of Guidance
 NPCL: Priest Zarnac => Location: Gate of Guidance [Main]
 NPCL: Penadvent of ghost => Location: Gate of Guidance [Main] # Shop 4 (Guidance)

@@ -1,9 +1,9 @@
 package lmr.randomizer.update;
 
 import lmr.randomizer.randomization.data.ShopInventory;
+import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.util.BlockConstants;
 import lmr.randomizer.util.FlagConstants;
-import lmr.randomizer.rcd.object.*;
 
 import java.util.Arrays;
 

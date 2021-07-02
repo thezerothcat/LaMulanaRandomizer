@@ -601,6 +601,12 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             AddObject.addSpecialItemObjects(conversationDoor.getObjectContainer(), itemRandomizer.getNewContents("xmailer.exe"));
             AddObject.addSpecialItemObjects(conversationDoor.getObjectContainer(), itemRandomizer.getNewContents("Mulana Talisman"));
         }
+        if("NPC: Former Mekuri Master".equals(npcAssigned)) {
+            int itemFlag = getNpcItemFlag("mekuri.exe");
+            GraphicsTextureDrawUpdates.addNpcDoorCover(conversationDoor, itemFlag);
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(itemFlag, ByteOp.FLAG_EQUALS, 0));
+            AddObject.addSpecialItemObjects(conversationDoor.getObjectContainer(), itemRandomizer.getNewContents("mekuri.exe"));
+        }
         if("NPC: Philosopher Giltoriyo".equals(npcAssigned)) {
             ConversationDoorUpdates.addPhilosopherStoneDoor(conversationDoor); // Do this before adding tests, so we can carry over any tests based on the location.
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2));
@@ -1634,18 +1640,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                     }
                 }
 
-                if (flagTest.getIndex() == FlagConstants.WF_SOFTWARE_MEKURI) {
-                    // mekuri tent-closing effect
-                    GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.SOFTWARE_MEKURI, FlagConstants.WF_SOFTWARE_MEKURI);
-                    List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                    if (objects == null) {
-                        mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                        objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                    }
-                    objects.add(gameObject);
-                    break;
-                }
-                else if(flagTest.getIndex() == FlagConstants.WF_CRUCIFIX) {
+                if(flagTest.getIndex() == FlagConstants.WF_CRUCIFIX) {
                     // Crucifix puzzle lit torches
                     GameObjectId gameObjectId = new GameObjectId((short) ItemConstants.CRUCIFIX, FlagConstants.WF_CRUCIFIX);
                     List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
@@ -1921,14 +1916,6 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             }
             else if(blockNumber == BlockConstants.Master_FormerMekuriMaster_Mekuri) {
                 mapOfNpcLocationToObject.put("NPCL: Former Mekuri Master", (ConversationDoor)gameObject);
-
-                GameObjectId gameObjectId = new GameObjectId((short)ItemConstants.SOFTWARE_MEKURI, FlagConstants.WF_SOFTWARE_MEKURI);
-                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                if (objects == null) {
-                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                }
-                objects.add(gameObject);
             }
             else if(blockNumber == BlockConstants.Master_PriestZarnac) {
                 mapOfNpcLocationToObject.put("NPCL: Priest Zarnac", (ConversationDoor)gameObject);

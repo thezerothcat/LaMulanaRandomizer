@@ -1,10 +1,11 @@
 package lmr.randomizer.randomization;
 
-import lmr.randomizer.*;
+import lmr.randomizer.DataFromFile;
+import lmr.randomizer.Settings;
+import lmr.randomizer.Translations;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.rcd.object.DropType;
-import lmr.randomizer.FileUtils;
 import lmr.randomizer.util.ItemConstants;
 
 import java.io.BufferedWriter;
@@ -242,12 +243,9 @@ public class ItemRandomizer {
         return indices;
     }
 
-    public void outputLocations(int attemptNumber) throws IOException {
-//        BufferedWriter writer = FileUtils.getFileWriter(String.format("target/items%d_%d.txt", startingSeed, attemptNumber));
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/items.txt", Settings.getStartingSeed()));
-        if (writer == null) {
-            return;
-        }
+    public void outputLocations(BufferedWriter writer, int attemptNumber) throws IOException {
+        writer.write(Translations.getText("section.items"));
+        writer.newLine();
 
         Comparator<String> itemNameComparator = new Comparator<String>() {
             @Override
@@ -289,9 +287,6 @@ public class ItemRandomizer {
             writer.write(itemName + ": " + location);
             writer.newLine();
         }
-
-        writer.flush();
-        writer.close();
     }
 
     private Map<String, String> buildReverseMap(Map<String, String> originalMap) {

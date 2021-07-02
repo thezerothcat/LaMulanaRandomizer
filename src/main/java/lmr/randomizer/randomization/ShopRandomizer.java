@@ -1,12 +1,13 @@
 package lmr.randomizer.randomization;
 
-import lmr.randomizer.*;
+import lmr.randomizer.DataFromFile;
+import lmr.randomizer.Settings;
+import lmr.randomizer.Translations;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.node.MoneyChecker;
 import lmr.randomizer.randomization.data.ItemPriceCount;
 import lmr.randomizer.randomization.data.ShopInventory;
 import lmr.randomizer.randomization.data.ShopInventoryData;
-import lmr.randomizer.FileUtils;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -185,11 +186,10 @@ public abstract class ShopRandomizer {
 
     public abstract void determineItemTypes(Random random);
 
-    public void outputLocations(int attemptNumber) throws IOException {
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/shops.txt", Settings.getStartingSeed()));
-        if (writer == null) {
-            return;
-        }
+    public void outputLocations(BufferedWriter writer, int attemptNumber) throws IOException {
+        writer.newLine();
+        writer.write(Translations.getText("section.shops"));
+        writer.newLine();
 
         String location;
         boolean addNewline = false;
@@ -201,42 +201,36 @@ public abstract class ShopRandomizer {
                 addNewline = true;
             }
 
-            if(Settings.isRandomizeNpcs()) {
-                if(DataFromFile.CUSTOM_SHOP_NAME.equals(shop)) {
-                    writer.write(Translations.getText("shops.Shop0Default") + ":");
-                    writer.newLine();
-                }
-                else {
-                    String npcLocationKey = npcRandomizer.getNpcLocation(npcRandomizer.getNpcName(shop));
-                    if(npcLocationKey != null) {
-                        npcLocationKey = npcLocationKey.replaceAll("NPCL: ", "").replaceAll("[ )('-.]", "");
-                        writer.write(Translations.getText("npc." + npcLocationKey) + ":"
-                                + Translations.getText("npcl." + npcLocationKey).replaceAll("：", ":"));
-                        writer.newLine();
+            if(DataFromFile.CUSTOM_SHOP_NAME.equals(shop)) {
+                writer.write(Translations.getText("shops.Shop0Default") + ":");
+                writer.newLine();
+            }
+            else {
+                String shopNpcName = npcRandomizer.getNpcName(shop);
+                String npcLocationKey = npcRandomizer.getNpcLocation(shopNpcName);
+                if(npcLocationKey != null) {
+                    npcLocationKey = npcLocationKey.replaceAll("NPCL: ", "");
+                    String npcZone = npcRandomizer.getNpcZone(npcLocationKey);
+                    if(MSX_SHOP_NAME.equals(shop)) {
+                        shopNpcName = "NeburAlt";
                     }
+                    writer.write(Translations.getShopLabel(shopNpcName, npcLocationKey, npcZone));
+                    writer.newLine();
                 }
             }
             for (int i = 1; i <= 3; i++) {
                 location = String.format("%s Item %d", shop, i);
+                writer.write("\t" + String.format(Translations.getText("shops.ItemFormat"), i) + ": ");
                 if(mapOfShopInventoryItemToContents.containsKey(location)) {
                     String itemName = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(location));
-                    boolean removedItem = Settings.getCurrentRemovedItems().contains(itemName)
-                            || Settings.getRemovedItems().contains(itemName)
-                            || Settings.getStartingItemsIncludingCustom().contains(itemName)
-                            || (Settings.isReplaceMapsWithWeights() && itemName.startsWith("Map (") && !"Map (Shrine of the Mother)".equals(itemName));
-                    writer.write(Translations.getShopItemText(shop, i) + ": " + Translations.getItemText(itemName, removedItem));
-                    writer.newLine();
+                    writer.write(Translations.getItemText(itemName, itemRandomizer.isRemovedItem(itemName)));
                 }
                 else {
-                    writer.write(Translations.getShopItemText(shop, i) + ": (unchanged)");
-                    writer.newLine();
+                    writer.write(Translations.getText("shops.unchanged"));
                 }
+                writer.newLine();
             }
-
         }
-
-        writer.flush();
-        writer.close();
     }
 
     public void setAccessChecker(AccessChecker accessChecker) {

@@ -813,11 +813,10 @@ public class TransitionGateRandomizer {
         return null;
     }
 
-    public void outputLocations(int attemptNumber) throws IOException {
-        BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/gates.txt", Settings.getStartingSeed()));
-        if (writer == null) {
-            return;
-        }
+    public void outputLocations(BufferedWriter writer, int attemptNumber) throws IOException {
+        writer.newLine();
+        writer.write(Translations.getText("section.transitions"));
+        writer.newLine();
 
         for(String transition : getTransitionList()) {
             String transitionFormat;
@@ -842,9 +841,6 @@ public class TransitionGateRandomizer {
                     Translations.getTransitionText(transitionOut)));
             writer.newLine();
         }
-
-        writer.flush();
-        writer.close();
     }
 
     public static List<String> getTransitionList() {

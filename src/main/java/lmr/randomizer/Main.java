@@ -840,7 +840,7 @@ public class Main {
                 itemRandomizer.assignRandomGraphics(flagManager.getTotalUnallocatedFlags(), random);
 
                 dialog.updateProgress(85, Translations.getText("progress.spoiler"));
-                outputLocations(itemRandomizer, shopRandomizer, backsideDoorRandomizer, transitionGateRandomizer, attempt);
+                outputLocations(itemRandomizer, shopRandomizer, npcRandomizer, transitionGateRandomizer, backsideDoorRandomizer, attempt);
 
                 dialog.updateProgress(90, Translations.getText("progress.read"));
 
@@ -1773,14 +1773,27 @@ public class Main {
     }
 
     private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer,
-                                        BacksideDoorRandomizer backsideDoorRandomizer,
-                                        TransitionGateRandomizer transitionGateRandomizer, int attempt) throws IOException {
-        itemRandomizer.outputLocations(attempt);
-        shopRandomizer.outputLocations(attempt);
-        backsideDoorRandomizer.outputLocations(attempt);
-        transitionGateRandomizer.outputLocations(attempt);
+                                        NpcRandomizer npcRandomizer, TransitionGateRandomizer transitionGateRandomizer,
+                                        BacksideDoorRandomizer backsideDoorRandomizer, int attempt) throws IOException {
+        BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/spoiler.txt", Settings.getStartingSeed()));
+        if (writer == null) {
+            return;
+        }
+        itemRandomizer.outputLocations(writer, attempt);
+        shopRandomizer.outputLocations(writer, attempt);
+        if(Settings.isRandomizeNpcs()) {
+            npcRandomizer.outputLocations(writer);
+        }
+        if(Settings.isRandomizeTransitionGates()) {
+            transitionGateRandomizer.outputLocations(writer, attempt);
+        }
+        if(Settings.isRandomizeBacksideDoors()) {
+            backsideDoorRandomizer.outputLocations(writer, attempt);
+        }
+        writer.flush();
+        writer.close();
         if (!Settings.getCurrentRemovedItems().isEmpty() || !Settings.getRemovedItems().isEmpty()) {
-            BufferedWriter writer = FileUtils.getFileWriter(String.format("%s/removed_items.txt", Settings.getStartingSeed()));
+            writer = FileUtils.getFileWriter(String.format("%s/removed_items.txt", Settings.getStartingSeed()));
             if (writer == null) {
                 return;
             }

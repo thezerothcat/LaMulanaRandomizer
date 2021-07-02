@@ -90,12 +90,12 @@ public final class BlockConstants {
     public static final int ShopBlockMoverAthleland = 244;
     public static final int ShopBlockGiantMopiran = 272;
     public static final int ShopBlockGiantMopiranAngelShield = 273;
-    public static final int ShopBlockKingvalleyII = 290;
+    public static final int ShopBlockKingvalleyII = 290; // Kingvalley II - Moonlight NPC, 12-07-00
     public static final int ShopBlockEnergeticBelmont = 303;
     public static final int ShopBlockMechanicalEfspi = 321;
-    public static final int ShopBlockMudManQubert = 337;
+    public static final int ShopBlockMudManQubert = 337; // Priest Ashgine - Birth NPC, 16-01-01
     public static final int ShopBlockHotbloodedNemesistwo = 470;
-    public static final int ShopBlockTailorDracuet = 1008;
+    public static final int ShopBlockTailorDracuet = 1008; // Tailor Dracuet - HT NPC, 23-08-01
 
     public static final int XelpudFlagCheckBlock = 480;
     public static final int XelpudScoreCheckBlock = 482;

@@ -3,14 +3,18 @@ package lmr.randomizer.randomization;
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
+import lmr.randomizer.Translations;
 import lmr.randomizer.node.CustomNPCPlacement;
 import lmr.randomizer.rcd.object.ConversationDoor;
 import lmr.randomizer.util.LocationCoordinateMapper;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class NpcRandomizer {
-    private static final List<String> SURFACE_DOOR_LOCATIONS =
+    // Ignores Former Mekuri Master which isn't always accessible.
+    private static final List<String> SURFACE_INITIAL_DOOR_LOCATIONS =
             Arrays.asList("NPCL: Elder Xelpud", "NPCL: Nebur", "NPCL: Sidro", "NPCL: Modro", "NPCL: Hiner", "NPCL: Moger");
 
     private Map<String, String> mapOfNpcDoorLocationToContents;
@@ -71,6 +75,7 @@ public class NpcRandomizer {
             mapOfNpcDoorLocationToContents.put("NPCL: Elder Xelpud", "NPC: Elder Xelpud");
             mapOfNpcDoorLocationToContents.put("NPCL: Hiner", "NPC: Hiner");
             mapOfNpcDoorLocationToContents.put("NPCL: Moger", "NPC: Moger");
+            mapOfNpcDoorLocationToContents.put("NPCL: Former Mekuri Master", "NPC: Former Mekuri Master");
             mapOfNpcDoorLocationToContents.put("NPCL: Nebur", "NPC: Nebur");
             mapOfNpcDoorLocationToContents.put("NPCL: Sidro", "NPC: Sidro");
             mapOfNpcDoorLocationToContents.put("NPCL: Modro", "NPC: Modro");
@@ -130,6 +135,7 @@ public class NpcRandomizer {
             npcDoors.add("Elder Xelpud");
             npcDoors.add("Hiner");
             npcDoors.add("Moger");
+            npcDoors.add("Former Mekuri Master");
             npcDoors.add("Nebur");
             npcDoors.add("Sidro");
             npcDoors.add("Modro");
@@ -181,6 +187,7 @@ public class NpcRandomizer {
             npcs.add("Elder Xelpud");
             npcs.add("Hiner");
             npcs.add("Moger");
+            npcs.add("Former Mekuri Master");
             npcs.add("Nebur");
             npcs.add("Sidro");
             npcs.add("Modro");
@@ -218,7 +225,7 @@ public class NpcRandomizer {
                 if(npcPreviouslyInXelpudTent.equals("NPC: Elder Xelpud")) {
                     List<String> surfaceShops = getSurfaceShops();
                     if(surfaceShops.isEmpty()) {
-                        List<String> possibleDoors = new ArrayList<>(SURFACE_DOOR_LOCATIONS);
+                        List<String> possibleDoors = new ArrayList<>(SURFACE_INITIAL_DOOR_LOCATIONS);
                         possibleDoors.remove("NPCL: Elder Xelpud");
                         replaceDoorContentsWithShop(possibleDoors.get(random.nextInt(possibleDoors.size())), random);
                     }
@@ -273,6 +280,7 @@ public class NpcRandomizer {
             mapOfNpcDoorLocationToContents.put("NPCL: Elder Xelpud", "NPC: Elder Xelpud");
             mapOfNpcDoorLocationToContents.put("NPCL: Hiner", "NPC: Hiner");
             mapOfNpcDoorLocationToContents.put("NPCL: Moger", "NPC: Moger");
+            mapOfNpcDoorLocationToContents.put("NPCL: Former Mekuri Master", "NPC: Former Mekuri Master");
             mapOfNpcDoorLocationToContents.put("NPCL: Nebur", "NPC: Nebur");
             mapOfNpcDoorLocationToContents.put("NPCL: Sidro", "NPC: Sidro");
             mapOfNpcDoorLocationToContents.put("NPCL: Modro", "NPC: Modro");
@@ -286,8 +294,6 @@ public class NpcRandomizer {
 
 //        mapOfNpcDoorLocationToContents.put("NPCL: 8bit Fairy", "NPC: 8bit Fairy");
 //
-//        mapOfNpcDoorLocationToContents.put("NPCL: Former Mekuri Master", "NPC: Former Mekuri Master");
-//
 //        mapOfNpcDoorLocationToContents.put("NPCL: Mulbruk", "NPC: Mulbruk");
 //        mapOfNpcDoorLocationToContents.put("NPCL: Stray fairy", "NPC: Stray fairy");
 //        mapOfNpcDoorLocationToContents.put("NPCL: Fairy", "NPC: Fairy");
@@ -297,7 +303,7 @@ public class NpcRandomizer {
         List<String> surfaceShops = new ArrayList<>();
         String xelpudDoorNpc = mapOfNpcDoorLocationToContents.get("NPCL: Elder Xelpud");
         if(xelpudDoorNpc.equals("NPC: Elder Xelpud")) {
-            for(String surfaceDoor : SURFACE_DOOR_LOCATIONS) {
+            for(String surfaceDoor : SURFACE_INITIAL_DOOR_LOCATIONS) {
                 String surfaceNpc = mapOfNpcDoorLocationToContents.get(surfaceDoor);
                 if(ConversationDoor.isShop(surfaceNpc)) {
                     surfaceShops.add(getShopName(surfaceNpc.replaceAll("NPC: ", "")));
@@ -508,11 +514,104 @@ public class NpcRandomizer {
         return npc.replace("NPC:", "NPCL:");
     }
 
+    public String getNpcZone(String npcName) {
+        if("Elder Xelpud".equals(npcName) || "Former Mekuri Master".equals(npcName)
+                ||  "Hiner".equals(npcName) || "Moger".equals(npcName)
+                || "Nebur".equals(npcName) || "Sidro".equals(npcName) || "Modro".equals(npcName)) {
+            return "Surface";
+        }
+        if("Penadvent of ghost".equals(npcName) || "Priest Zarnac".equals(npcName)) {
+            return "Gate of Guidance";
+        }
+        if("Priest Xanado".equals(npcName) || "Greedy Charlie".equals(npcName)) {
+            return "Mausoleum of the Giants";
+        }
+        if("Priest Madomono".equals(npcName)
+                || "Shalom III".equals(npcName) || "Usas VI".equals(npcName) || "Kingvalley I".equals(npcName)) {
+            return "Temple of the Sun";
+        }
+        if("Philosopher Giltoriyo".equals(npcName) || "Priest Hidlyda".equals(npcName)
+                || "Mr. Fishman (Original)".equals(npcName) || "Mr. Fishman (Alt)".equals(npcName)) {
+            return "Spring in the Sky";
+        }
+        if("Priest Romancis".equals(npcName) || "Priest Gailious".equals(npcName)
+                || "Hot-blooded Nemesistwo".equals(npcName)) {
+            return "Inferno Cavern";
+        }
+        if("Priest Aramo".equals(npcName) || "Priest Triton".equals(npcName)
+                || "Operator Combaker".equals(npcName)) {
+            return "Chamber of Extinction";
+        }
+        if("Priest Jaguarfiv".equals(npcName)
+                || "Yiegah Kungfu".equals(npcName) || "Yiear Kungfu".equals(npcName)
+                || "Arrogant Sturdy Snake".equals(npcName) || "Arrogant Metagear".equals(npcName)) {
+            return "Twin Labyrinths";
+        }
+        if("The Fairy Queen".equals(npcName) || "Affected Knimare".equals(npcName)) {
+            return "Endless Corridor";
+        }
+        if("Mr. Slushfund".equals(npcName) || "Priest Alest".equals(npcName)
+                || "duplex".equals(npcName) || "Stray fairy".equals(npcName)
+                || "Mover Athleland".equals(npcName)) {
+            return "Gate of Illusion";
+        }
+        if("Giant Thexde".equals(npcName) || "Giant Mopiran".equals(npcName)) {
+            return "Graveyard of the Giants";
+        }
+        if("Philosopher Alsedana".equals(npcName) || "Samieru".equals(npcName)
+                || "Kingvalley II".equals(npcName)) {
+            return "Temple of Moonlight";
+        }
+        if("Philosopher Samaranta".equals(npcName) || "Naramura".equals(npcName)
+                || "Energetic Belmont".equals(npcName)) {
+            return "Tower of the Goddess";
+        }
+        if("Priest Laydoc".equals(npcName) || "Mechanical Efspi".equals(npcName)) {
+            return "Tower of Ruin";
+        }
+        if("Priest Ashgine".equals(npcName) || "Mud Man Qubert".equals(npcName)) {
+            return "Chamber of Birth";
+        }
+        if("Philosopher Fobos".equals(npcName)) {
+            return "Dimensional Corridor";
+        }
+        if("8bit Elder".equals(npcName) || "8bit Fairy".equals(npcName)) {
+            return "Gate of Time";
+        }
+        if("Tailor Dracuet".equals(npcName)) {
+            return "Hell Temple";
+        }
+        return null;
+    }
+
     public Set<String> getNpcDoors() {
         Set<String> npcDoors = new HashSet<>(mapOfNpcDoorLocationToContents.keySet());
         if(!Settings.isRandomizeDracuetShop()) {
             npcDoors.remove("NPCL: Tailor Dracuet");
         }
         return npcDoors;
+    }
+
+    public void outputLocations(BufferedWriter writer) throws IOException {
+        writer.newLine();
+        writer.write(Translations.getText("section.npcs"));
+        writer.newLine();
+
+        Map<String, String> translatedNpcNameToTranslatedNpcLocation = new HashMap<>();
+        for(Map.Entry<String, String> npcDoorToNpc : mapOfNpcDoorLocationToContents.entrySet()) {
+            String npcLocationKey = npcDoorToNpc.getKey().replaceAll("NPCL: ", "").replaceAll("[ )('-.]", "");
+            String npcKey = npcDoorToNpc.getValue().replaceAll("NPC: ", "").replaceAll("[ )('-.]", "");
+            String translatedNpcName = Translations.getText("npc." + npcKey);
+            String translatedNpcLocation =  Translations.getText("npc." + npcLocationKey).replaceAll("：", "");
+            translatedNpcNameToTranslatedNpcLocation.put(translatedNpcName, translatedNpcLocation);
+        }
+        List<String> translatedNpcNames = new ArrayList<>(translatedNpcNameToTranslatedNpcLocation.keySet());
+        Collections.sort(translatedNpcNames, String.CASE_INSENSITIVE_ORDER);
+        for(String translatedNpcName : translatedNpcNames) {
+            String translatedNpcLocation = translatedNpcNameToTranslatedNpcLocation.get(translatedNpcName);
+                writer.write(translatedNpcName + ": "
+                        + String.format(Translations.getText("locations.LocationFormat"), translatedNpcLocation));
+            writer.newLine();
+        }
     }
 }

@@ -372,6 +372,7 @@ public final class FlagConstants {
 
     // Flags used in vanilla reclaimed for randomizer
     public static final int XELPUD_TENT_OPEN = 0x21c; // For the two-second delay between game start and Xelpud's tent being open
+    public static final int RETRO_XELPUD_DOOR_COVER = 0x2e3; // Set to 1 after talking to 8bit Elder on Gate of Time Surface in vanilla.
     public static final int XELPUD_READY_TO_TALK = 0x3b6; // Making sure you can't actually talk to Xelpud in his basic conversation if the tent is closed.
 
     // Fools 2019

@@ -7,6 +7,7 @@ import lmr.randomizer.rcd.RcdFileData;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.AddObject;
 import lmr.randomizer.update.FlagTimerUpdates;
+import lmr.randomizer.update.GraphicsTextureDrawUpdates;
 import lmr.randomizer.util.*;
 
 import java.util.ArrayList;
@@ -619,149 +620,7 @@ public class BaseRcdUpdater extends RcdUpdater {
 
     @Override
     boolean updateGraphicsTextureDraw(GameObject graphicsTextureDraw) {
-        ObjectContainer objectContainer = graphicsTextureDraw.getObjectContainer();
-        if(!(objectContainer instanceof Screen)) {
-            return true;
-        }
-        Screen screen = (Screen)objectContainer;
-        if(screen.getZoneIndex() == 1) {
-            // Remove graphic for closed Xelpud tent; rando will have it start open instead.
-            for(TestByteOperation testByteOperation : graphicsTextureDraw.getTestByteOperations()) {
-                if(testByteOperation.getIndex() == FlagConstants.XELPUD_TENT_OPEN) {
-                    return false;
-                }
-            }
-
-            // Graphics for closed surface tents before talking to Xelpud
-            if(screen.getRoomIndex() == 0 && screen.getScreenIndex() == 2
-                    || screen.getRoomIndex() == 2 && screen.getScreenIndex() == 0
-                    || screen.getRoomIndex() == 2 && screen.getScreenIndex() == 1
-                    || screen.getRoomIndex() == 10 && screen.getScreenIndex() == 3) {
-                for (int i = 0; i < graphicsTextureDraw.getTestByteOperations().size(); i++) {
-                    TestByteOperation flagTest = graphicsTextureDraw.getTestByteOperations().get(i);
-                    if (flagTest.getIndex() == FlagConstants.SURFACE_RUINS_OPENED) {
-                        // Swap Xelpud first-conversation flag with custom
-                        flagTest.setIndex(FlagConstants.XELPUD_CONVERSATION_INTRO);
-                    }
-                }
-            }
-        }
-
-        if(Settings.isRandomizeTrapItems()) {
-            if (screen.getZoneIndex() == 5 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
-                if(!HolidaySettings.isFools2020Mode()) {
-                    for(TestByteOperation testByteOperation : graphicsTextureDraw.getTestByteOperations()) {
-                        if(testByteOperation.getIndex() == FlagConstants.INFERNO_FAKE_ORB_CRUSHER) {
-                            // Graphical part of Inferno Cavern fake Sacred Orb trap
-                            return false;
-                        }
-                    }
-                }
-            }
-            else if(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 12 && screen.getScreenIndex() == 0) {
-                if(!graphicsTextureDraw.getTestByteOperations().isEmpty() && graphicsTextureDraw.getTestByteOperations().get(0).getIndex() == FlagConstants.ROOM_FLAG_35) {
-                    // Graphical part of Twin Labs fake Ankh Jewel trap
-                    return false;
-                }
-            }
-        }
-
-        if(Settings.isRandomizeTransitionGates()) {
-            if (screen.getZoneIndex() == 11 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
-                for(TestByteOperation testByteOperation : graphicsTextureDraw.getTestByteOperations()) {
-                    if(testByteOperation.getIndex() == FlagConstants.EDEN_UNLOCKED) {
-                        // Fruit block graphic
-                        return false;
-                    }
-                }
-            }
-            else if (screen.getZoneIndex() == 13 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
-                for(TestByteOperation testByteOperation : graphicsTextureDraw.getTestByteOperations()) {
-                    if(testByteOperation.getIndex() == FlagConstants.EDEN_UNLOCKED) {
-                        // Fruit block graphic
-                        return false;
-                    }
-                }
-            }
-            else if (screen.getZoneIndex() == 14 && screen.getRoomIndex() == 5 && screen.getScreenIndex() == 0) {
-                for(TestByteOperation testByteOperation : graphicsTextureDraw.getTestByteOperations()) {
-                    if(testByteOperation.getIndex() == FlagConstants.EDEN_UNLOCKED) {
-                        // Fruit block graphic
-                        return false;
-                    }
-                }
-            }
-            else if(screen.getZoneIndex() == 15 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
-                for(TestByteOperation testByteOperation : graphicsTextureDraw.getTestByteOperations()) {
-                    if(testByteOperation.getIndex() == FlagConstants.SKANDA_STATE) {
-                        // Skanda block graphic
-                        return false;
-                    }
-                }
-            }
-        }
-
-        if(Settings.isRandomizeNonBossDoors()) {
-            for (TestByteOperation flagTest : graphicsTextureDraw.getTestByteOperations()) {
-                if(flagTest.getIndex() == FlagConstants.AMPHISBAENA_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.AMPHISBAENA_GATE_OPEN
-                        || flagTest.getIndex() == FlagConstants.SAKIT_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.SAKIT_GATE_OPEN
-                        || flagTest.getIndex() == FlagConstants.ELLMAC_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.ELLMAC_GATE_OPEN
-                        || flagTest.getIndex() == FlagConstants.BAHAMUT_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.BAHAMUT_GATE_OPEN
-                        || flagTest.getIndex() == FlagConstants.VIY_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.VIY_GATE_OPEN
-                        || flagTest.getIndex() == FlagConstants.PALENQUE_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.PALENQUE_GATE_OPEN
-                        || flagTest.getIndex() == FlagConstants.BAPHOMET_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.BAPHOMET_GATE_OPEN) {
-                    return false;
-                }
-            }
-            if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
-                for (TestByteOperation flagTest : graphicsTextureDraw.getTestByteOperations()) {
-                    if(flagTest.getIndex() == FlagConstants.KEY_FAIRY_DOOR_UNLOCKED && flagTest.getValue() == 0) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        Integer removeFlagIndex = null;
-        for (int flagIndex = 0; flagIndex < graphicsTextureDraw.getTestByteOperations().size(); flagIndex++) {
-            TestByteOperation flagTest = graphicsTextureDraw.getTestByteOperations().get(flagIndex);
-            if(flagTest.getIndex() == FlagConstants.MANTRA_FINAL) {
-                if(flagTest.getValue() == 4) {
-                    flagTest.setIndex(FlagConstants.MANTRA_LAMULANA);
-                    flagTest.setValue((byte)1);
-                }
-            }
-            else if(flagTest.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
-                if(flagTest.getValue() == 3) {
-                    if(ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
-                        flagTest.setOp(ByteOp.FLAG_LTEQ);
-                        graphicsTextureDraw.setX(graphicsTextureDraw.getX() - 60);
-                        break;
-                    }
-                    if(ByteOp.FLAG_LTEQ.equals(flagTest.getOp())) {
-                        flagTest.setValue((byte)4);
-                        flagTest.setOp(ByteOp.FLAG_LT);
-                        break;
-                    }
-                }
-                else if(flagTest.getValue() != 4) {
-                    flagTest.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
-                    break;
-                }
-            }
-            else if(flagTest.getIndex() == FlagConstants.SURFACE_RUINS_OPENED) {
-                if(screen.getZoneIndex() != ZoneConstants.SURFACE && screen.getZoneIndex() != ZoneConstants.NIGHT_SURFACE) {
-                    // Some graphics objects wrongly test for having talked to Xelpud on the Surface, notably warp portal graphics.
-                    if(ByteOp.FLAG_NOT_EQUAL.equals(flagTest.getOp()) && flagTest.getValue() == 0) {
-                        removeFlagIndex = flagIndex;
-                    }
-                }
-            }
-        }
-        if(removeFlagIndex != null) {
-            graphicsTextureDraw.getTestByteOperations().remove((int)removeFlagIndex);
-        }
-        return true;
+        return GraphicsTextureDrawUpdates.updateGraphicsTextureDraw(graphicsTextureDraw);
     }
 
     @Override

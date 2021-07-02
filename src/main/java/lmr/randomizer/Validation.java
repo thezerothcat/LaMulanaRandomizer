@@ -884,7 +884,7 @@ public class Validation {
                 || "Hot-blooded Nemesistwo".equals(npcName)
                 || "Hiner".equals(npcName)
                 || "Moger".equals(npcName)
-//                || "Former Mekuri Master".equals(npcName)
+                || "Former Mekuri Master".equals(npcName)
                 || "Priest Zarnac".equals(npcName)
                 || "Priest Xanado".equals(npcName)
                 || "Philosopher Giltoriyo".equals(npcName)

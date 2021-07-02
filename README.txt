@@ -3,11 +3,13 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
 2.28
 -----------------------------
-Included Elder Xelpud, Nebur, Mr. Slushfund, and Priest Alest when randomizing NPC/shop doors.
+Included Elder Xelpud, Nebur, Mr. Slushfund, Priest Alest, and Former Mekuri Master when randomizing NPC/shop doors.
 
 Added Temple of the Sun, Spring in the Sky, Chamber of Extinction, and Temple of Moonlight to possible random starting locations.
 
 Fixed a bug allowing coin chests to be placed at Surface Map.
+
+Merged spoiler logs for items, shops, transitions, and backside doors into a single file (spoiler.txt), and added spoiler logging for randomized NPCs.
 
 2.27
 -----------------------------
