@@ -21,7 +21,7 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.28.0";
+    public static final String VERSION = "2.28.1";
     public static final int EXISTING_FILE_WIDTH = 1024;
     public static final int EXISTING_FILE_HEIGHT = 512;
     public static final int GRAPHICS_VERSION = 5;
