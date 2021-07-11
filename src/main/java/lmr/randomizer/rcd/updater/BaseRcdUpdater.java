@@ -1843,7 +1843,6 @@ public class BaseRcdUpdater extends RcdUpdater {
                     }
                 }
                 if(screenIndex == 1) {
-                    AddObject.addXelpudIntroTimer(screen);
                     if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation() || HolidaySettings.isFools2020Mode()) {
                         AddObject.addSurfaceKillTimer(screen, true);
                     }

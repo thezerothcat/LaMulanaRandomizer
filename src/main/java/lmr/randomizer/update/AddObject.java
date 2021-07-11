@@ -310,21 +310,6 @@ public final class AddObject {
     }
 
     /**
-     * Add replacement timer for Xelpud dialogue state to compensate for removed 0x07c flag in intro conversation
-     * @param screen the screen to add the objects to
-     */
-    public static void addXelpudIntroTimer(Screen screen) {
-        FlagTimer timer = new FlagTimer(screen);
-
-        timer.getTestByteOperations().add(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_INTRO, ByteOp.FLAG_EQUALS, 1));
-        timer.getTestByteOperations().add(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.FLAG_EQUALS, 0));
-
-        timer.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_GENERAL, ByteOp.ASSIGN_FLAG, 1));
-
-        screen.getObjects().add(0, timer);
-    }
-
-    /**
      * Add a backup door from Chamber of Extinction to untransformed Shrine of the Mother.
      * @param screen the screen to add the objects to
      */

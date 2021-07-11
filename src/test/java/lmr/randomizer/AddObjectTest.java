@@ -480,26 +480,6 @@ public class AddObjectTest {
     }
 
     @Test
-    public void testAddXelpudIntroTimer() {
-        Screen screen = new Screen();
-
-        AddObject.addXelpudIntroTimer(screen);
-
-        GameObject gameObject = screen.getObjects().get(0);
-        Assert.assertEquals(gameObject.getId(), 0x0b);
-        Assert.assertEquals(gameObject.getX(), -1);
-        Assert.assertEquals(gameObject.getY(), -1);
-        Assert.assertEquals((int)gameObject.getArgs().get(0), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
-        Assert.assertEquals(gameObject.getArgs().size(), 2);
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(0xad0, ByteOp.FLAG_EQUALS, 1)));
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(0x07c, ByteOp.FLAG_EQUALS, 0)));
-        Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x07c, ByteOp.ASSIGN_FLAG, 1)));
-        Assert.assertEquals(gameObject.getTestByteOperations().size(), 2);
-        Assert.assertEquals(gameObject.getWriteByteOperations().size(), 1);
-    }
-
-    @Test
     public void testAddLowerUntrueShrineBackupDoor() {
         Screen screen = new Screen();
 
