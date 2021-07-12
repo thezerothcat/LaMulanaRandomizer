@@ -946,9 +946,6 @@ public final class DatReader {
             else if(blockIndex == BlockConstants.FootOfFuto) {
                 block = buildScannableBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
-            else if(blockIndex == BlockConstants.ItemConversationMapSurface) {
-                block = buildScannableBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
-            }
             else if(blockIndex == 273) {
                 block = buildShopBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
