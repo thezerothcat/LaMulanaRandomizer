@@ -9,7 +9,7 @@ package lmr.randomizer.rcd.object;
 public class LaserWall extends GameObject {
     public LaserWall(ObjectContainer objectContainer, int x, int y) {
         super(objectContainer, 2);
-        setId((short)0xab);
+        setId(ObjectIdConstants.LaserWall);
         setX(x);
         setY(y);
     }

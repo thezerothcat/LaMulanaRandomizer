@@ -30,17 +30,7 @@ public class Chest extends GameObject {
     }
 
     public Chest(GameObject gameObject) {
-        super(gameObject.getObjectContainer(), 6);
-        setId(ObjectIdConstants.Chest);
-        setX(gameObject.getX());
-        setY(gameObject.getY());
-        addTests(gameObject.getTestByteOperations());
-        addUpdates(gameObject.getWriteByteOperations());
-        setDrops(gameObject.getArgs().get(0), gameObject.getArgs().get(1));
-        setChestGraphic(gameObject.getArgs().get(2));
-        setCursed(gameObject.getArgs().get(3) > 0);
-        setPercentDamage(gameObject.getArgs().get(4) > 0);
-        setCurseDamage(gameObject.getArgs().get(5));
+        super(gameObject);
     }
 
     public void setDrops(int dropType, int quantity) {
@@ -52,12 +42,20 @@ public class Chest extends GameObject {
         getArgs().set(0, (short)dropType);
     }
 
+    public int getDropQuantity() {
+        return getArgs().get(1);
+    }
+
     public void setDropQuantity(int quantity) {
         getArgs().set(1, (short)quantity);
     }
 
     public void setChestGraphic(int chestGraphic) {
         getArgs().set(2, (short)chestGraphic);
+    }
+
+    public boolean isCursed() {
+        return getArgs().get(3) > 0;
     }
 
     public void setCursed(boolean cursed) {

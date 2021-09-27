@@ -10,20 +10,27 @@ package lmr.randomizer.rcd.object;
  * 4 - (2-3) Damage
  */
 public class Bat extends GameObject {
-    public Bat(ObjectContainer objectContainer) {
-        super(objectContainer, 5);
-    }
-
     public Bat(ObjectContainer objectContainer, int x, int y) {
         super(objectContainer, 5);
-        setId((short)0x02);
+        setId(ObjectIdConstants.Enemy_Bat);
         setX(x);
         setY(y);
     }
 
+    public Bat(GameObject gameObject) {
+        super(gameObject);
+    }
 
     public void setInitiallyFlying(boolean initiallyFlying) {
         getArgs().set(0, (short)(initiallyFlying ? 1 : 0));
+    }
+
+    public int getDropType() {
+        return getArgs().get(1);
+    }
+
+    public void setDropType(DropType dropType) {
+        getArgs().set(1, dropType.getValue());
     }
 
     public void setDropType(int dropType) {

@@ -37,9 +37,13 @@ public class ExtendableSpikes extends GameObject {
 
     public ExtendableSpikes(ObjectContainer objectContainer, int x, int y) {
         super(objectContainer, 26);
-        setId((short)0x96);
+        setId(ObjectIdConstants.ExtendableSpikes);
         setX(x);
         setY(y);
+    }
+
+    public ExtendableSpikes(GameObject gameObject) {
+        super(gameObject);
     }
 
     public void setLayer(int layer) {

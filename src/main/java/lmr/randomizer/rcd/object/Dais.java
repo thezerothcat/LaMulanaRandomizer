@@ -25,6 +25,10 @@ public class Dais extends GameObject {
         setY(y);
     }
 
+    public Dais(GameObject gameObject) {
+        super(gameObject);
+    }
+
     public void setDustAppearance(int dustAppearance) {
         // Light red dust or pink dust
         getArgs().set(0, (short)dustAppearance);

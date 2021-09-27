@@ -10,9 +10,13 @@ package lmr.randomizer.rcd.object;
 public class HotSpring extends GameObject {
     public HotSpring(ObjectContainer objectContainer, int x, int y) {
         super(objectContainer, 4);
-        setId((short)0xad);
+        setId(ObjectIdConstants.HotSpring);
         setX(x);
         setY(y);
+    }
+
+    public HotSpring(GameObject gameObject) {
+        super(gameObject);
     }
 
     public void setWidth(int gTileWidth) {
@@ -25,6 +29,10 @@ public class HotSpring extends GameObject {
 
     public void setFramesOfNoHeal(int framesOfNoHeal) {
         getArgs().set(2, (short)framesOfNoHeal);
+    }
+
+    public int getHealAmount() {
+        return getArgs().get(3);
     }
 
     public void setHealAmount(int healAmount) {

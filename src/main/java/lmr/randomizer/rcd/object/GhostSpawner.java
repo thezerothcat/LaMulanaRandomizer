@@ -13,7 +13,7 @@ package lmr.randomizer.rcd.object;
 public class GhostSpawner extends GameObject {
     public GhostSpawner(ObjectContainer objectContainer) {
         super(objectContainer, 7);
-        setId((short)0x1f);
+        setId(ObjectIdConstants.GhostSpawner);
         setX(-1);
         setY(-1);
     }

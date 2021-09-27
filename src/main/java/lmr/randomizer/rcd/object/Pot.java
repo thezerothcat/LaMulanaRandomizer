@@ -21,8 +21,24 @@ public class Pot extends GameObject {
         setY(y);
     }
 
+    public Pot(GameObject gameObject) {
+        super(gameObject);
+    }
+
+    public int getDropType() {
+        return getArgs().get(0);
+    }
+
     public void setDropType(DropType dropType) {
         getArgs().set(0, dropType.getValue());
+    }
+
+    public void setDropType(int dropType) {
+        getArgs().set(0, (short)dropType);
+    }
+
+    public int getDropQuantity() {
+        return getArgs().get(1);
     }
 
     public void setDropQuantity(int quantity) {
@@ -30,6 +46,11 @@ public class Pot extends GameObject {
     }
 
     public void setDrops(DropType dropType, int quantity) {
+        setDropType(dropType);
+        setDropQuantity(quantity);
+    }
+
+    public void setDrops(int dropType, int quantity) {
         setDropType(dropType);
         setDropQuantity(quantity);
     }
@@ -43,12 +64,16 @@ public class Pot extends GameObject {
     }
 
     public void setFlag(int flagByte, int flagBit) {
-        getArgs().set(2, (short)flagByte);
-        getArgs().set(3, (short)flagBit);
+        setFlagByte(flagByte);
+        setFlagBit(flagBit);
     }
 
     public void setPotGraphic(PotGraphic potGraphic) {
         getArgs().set(4, potGraphic.getGraphic());
+    }
+
+    public void setPotGraphic(int potGraphic) {
+        getArgs().set(4, (short)potGraphic);
     }
 
     public void setHitSoundEffect(int soundEffect) {

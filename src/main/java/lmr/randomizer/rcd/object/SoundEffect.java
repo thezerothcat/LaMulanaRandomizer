@@ -43,13 +43,14 @@ package lmr.randomizer.rcd.object;
  *     Pitch is the sample rate of the sound effect. That is, the higher the pitch, the faster and higher the sound plays. The lower it is, the slower and lower the sound plays. The sample rate is 48 000Hz + pitch * 10Hz. More practically speaking, compare the sound produced by breaking pots in Tower of Ruin to breaking pots in other locations. The pot sound effects in Ruin have a pitch of (approximately) -500.
  */
 public class SoundEffect extends GameObject {
+    public static final int HardmodeActivated = 0;
     public static final int ItemCollected = 39;
     public static final int ShellHornSuccess = 30;
     public static final int ShellHornFailure = 80;
 
     public SoundEffect(ObjectContainer objectContainer) {
         super(objectContainer, 15);
-        setId((short)0x9b);
+        setId(ObjectIdConstants.SoundEffect);
         setX(-1);
         setY(-1);
     }

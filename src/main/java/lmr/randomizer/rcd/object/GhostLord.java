@@ -12,7 +12,7 @@ package lmr.randomizer.rcd.object;
 public class GhostLord extends GameObject {
     public GhostLord(ObjectContainer objectContainer, int x, int y) {
         super(objectContainer, 6);
-        setId((short)0x20);
+        setId(ObjectIdConstants.GhostLord);
         setX(x);
         setY(y);
         setDefaults();
