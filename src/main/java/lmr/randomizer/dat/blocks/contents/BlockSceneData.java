@@ -1,5 +1,7 @@
 package lmr.randomizer.dat.blocks.contents;
 
+import lmr.randomizer.util.BlockDataConstants;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +17,14 @@ public class BlockSceneData implements BlockContents {
     public BlockSceneData(short data, short sceneData) {
         this.data = data;
         this.sceneData = sceneData;
+    }
+
+    /**
+     * The only scene in the game (escape/credits)
+     */
+    public BlockSceneData() {
+        this.data = BlockDataConstants.Anime;
+        this.sceneData = (short)0;
     }
 
     @Override

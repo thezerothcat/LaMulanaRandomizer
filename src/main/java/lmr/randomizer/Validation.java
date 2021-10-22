@@ -108,13 +108,13 @@ public class Validation {
             Map<String, String> placedDoorsAndDestinations = new HashMap<>();
             Map<String, Integer> placedDoorsAndBosses = new HashMap<>();
             for(CustomDoorPlacement customDoorPlacement : customPlacementData.getCustomDoorPlacements()) {
-                if(!customDoorPlacement.getTargetDoor().startsWith("Door F") && !customDoorPlacement.getTargetDoor().startsWith("Door B")) {
+                if(!isValidDoor(customDoorPlacement.getTargetDoor())) {
                     JOptionPane.showMessageDialog(randomizerUI,
                             "Backside door " + customDoorPlacement.getTargetDoor() + " is invalid",
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
-                if(!customDoorPlacement.getDestinationDoor().startsWith("Door F") && !customDoorPlacement.getDestinationDoor().startsWith("Door B")) {
+                if(!isValidDoor(customDoorPlacement.getDestinationDoor())) {
                     JOptionPane.showMessageDialog(randomizerUI,
                             "Backside door " + customDoorPlacement.getDestinationDoor() + " is invalid",
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
@@ -210,6 +210,7 @@ public class Validation {
             }
 
             Map<String, String> placedTargetAndDestination = new HashMap<>();
+            Set<String> pipeTransitions = new HashSet<>();
             for(CustomTransitionPlacement customTransitionPlacement : customPlacementData.getCustomTransitionPlacements()) {
                 if(!isValidTransition(customTransitionPlacement.getTargetTransition())) {
                     JOptionPane.showMessageDialog(randomizerUI,
@@ -271,9 +272,26 @@ public class Validation {
                     }
                 }
                 if(placedTargetAndDestination.keySet().contains(customTransitionPlacement.getDestinationTransition())) {
-                    if(!customTransitionPlacement.getTargetTransition().equals(placedTargetAndDestination.get(customTransitionPlacement.getDestinationTransition()))) {
+                    if(!customTransitionPlacement.getDestinationTransition().equals(placedTargetAndDestination.get(customTransitionPlacement.getTargetTransition()))) {
                         JOptionPane.showMessageDialog(randomizerUI,
-                                "Support for non-reversible backside door placement does not exist at this time; please update assignment for " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", "") + " or " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", ""),
+                                "Support for non-reversible transition placement does not exist at this time; please update assignment for " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", "") + " or " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", ""),
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                }
+                if(customTransitionPlacement.isPipeTransition()) {
+                    pipeTransitions.add(customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", ""));
+                    pipeTransitions.add(customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", ""));
+                    if(pipeTransitions.size() != 2) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Pipe transition is only supported for one transition pair; please update assignment for one of the following: " + pipeTransitions.toString(),
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if(!isPipeSupportedLeftTransition(customTransitionPlacement.getTargetTransition().replace("Transition ", "Transition: "))
+                            && !isPipeSupportedLeftTransition(customTransitionPlacement.getDestinationTransition().replace("Transition ", "Transition: "))) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Pipe transition is not supported for this transition pair; please update assignment for one of the following: " + pipeTransitions.toString(),
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
                         return false;
                     }
@@ -645,6 +663,12 @@ public class Validation {
                     "Randomizer error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        if("HALLOWEEN21".equals(Settings.getGraphicsPack())) {
+            JOptionPane.showMessageDialog(randomizerUI,
+                    String.format("HALLOWEEN cannot be used as %s. Please select a folder from which the HALLOWEEN graphics should be created.", Translations.getText("settings.graphicsPack")),
+                    "Randomizer error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         if("FOOLS2020".equals(Settings.getGraphicsPack())) {
             JOptionPane.showMessageDialog(randomizerUI,
                     String.format("FOOLS2020 cannot be used as %s. Please select a folder from which the FOOLS2020 graphics should be created.", Translations.getText("settings.graphicsPack")),
@@ -661,14 +685,14 @@ public class Validation {
                     "Randomizer error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if(Settings.isRandomizeEnemies() && Settings.getEnabledDamageBoosts().contains("Enemy")) {
-            JOptionPane.showMessageDialog(randomizerUI,
-                    String.format("The setting \"%s\" cannot be used with the setting \"%s\"",
-                            Translations.getText("enemies.randomizeEnemies"),
-                            Translations.getText("dboost.Enemy")),
-                    "Randomizer error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
+//        if(Settings.isRandomizeEnemies() && Settings.getEnabledDamageBoosts().contains("Enemy")) {
+//            JOptionPane.showMessageDialog(randomizerUI,
+//                    String.format("The setting \"%s\" cannot be used with the setting \"%s\"",
+//                            Translations.getText("enemies.randomizeEnemies"),
+//                            Translations.getText("dboost.Enemy")),
+//                    "Randomizer error", JOptionPane.ERROR_MESSAGE);
+//            return false;
+//        }
         if(Settings.isRequireFullAccess() && Settings.isRemoveMainWeapons()) {
             JOptionPane.showMessageDialog(randomizerUI,
                     "The setting \"Require all items to be accessible\" cannot be used when removing Main Weapons",
@@ -686,8 +710,8 @@ public class Validation {
         return true;
     }
 
-    public static boolean validateHalloween(Main.RandomizerUI randomizerUI) {
-        if(HolidaySettings.isHalloweenMode()){
+    public static boolean validateHalloween2019(Main.RandomizerUI randomizerUI) {
+        if(HolidaySettings.isHalloween2019Mode()){
             if(Settings.isRequireFullAccess()) {
                 JOptionPane.showMessageDialog(randomizerUI,
                         String.format("The setting \"%s\" cannot be used with this mode",
@@ -715,6 +739,45 @@ public class Validation {
                                 Translations.getText("dboost.Enemy")),
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean validateHalloween2021(Main.RandomizerUI randomizerUI) {
+        if(HolidaySettings.isHalloween2021Mode()){
+            StringBuilder warnings = new StringBuilder();
+            if(!Settings.isAlternateMotherAnkh()) {
+                warnings.append('\n')
+                        .append(String.format("The setting \"%s\" will be enabled", Translations.getText("gameplay.alternateMotherAnkh")));
+            }
+            if(Settings.getMinRandomRemovedItems() > 0 || Settings.getMaxRandomRemovedItems() > 0) {
+                warnings.append('\n')
+                        .append("Items cannot be randomly removed");
+            }
+            if(Settings.isReplaceMapsWithWeights()) {
+                warnings.append('\n')
+                        .append("Maps cannot be removed");
+            }
+            if(Settings.isRandomizeGraphics()) {
+                warnings.append('\n')
+                        .append("Random graphics cannot be used");
+            }
+            if(!Settings.isHTFullRandom()) {
+                warnings.append('\n')
+                        .append("Provocative Bathing Suit will be set to fully random");
+            }
+            if(Settings.getEnabledDamageBoosts().contains("Enemy")) {
+                warnings.append('\n')
+                        .append(String.format("The setting \"%s\" cannot be used", Translations.getText("dboost.Enemy")));
+            }
+            if(Settings.isRequireFullAccess()) {
+                warnings.append('\n')
+                        .append(String.format("The setting \"%s\" cannot be used", Translations.getText("logic.requireFullAccess.short")));
+            }
+            if(warnings.length() > 0) {
+                warnings.deleteCharAt(0);
+                JOptionPane.showMessageDialog(randomizerUI, warnings.toString(), "Halloween Settings", JOptionPane.WARNING_MESSAGE);
             }
         }
         return true;
@@ -857,6 +920,25 @@ public class Validation {
                 && !formattedTransition.startsWith("Transition: Extinction L"));
     }
 
+    public static boolean isPipeSupportedLeftTransition(String transition) {
+        return "Transition: Guidance L1".equals(transition)
+                || "Transition: Mausoleum L1".equals(transition)
+                || "Transition: Sun L1".equals(transition)
+//                || "Transition: Extinction L1".equals(transition)
+//                || "Transition: Extinction L2".equals(transition)
+                || "Transition: Graveyard L1".equals(transition)
+                || "Transition: Moonlight L1".equals(transition)
+//                || "Transition: Goddess L1".equals(transition)
+                || "Transition: Goddess L2".equals(transition)
+                || "Transition: Ruin L1".equals(transition)
+                || "Transition: Birth L1".equals(transition)
+                || "Transition: Retroguidance L1".equals(transition);
+    }
+
+    private static boolean isValidDoor(String door) {
+        return door.startsWith("Door F")|| door.startsWith("Door B") || door.startsWith("Door: F")|| door.startsWith("Door: B");
+    }
+
     private static boolean isValidNpc(String npcName) {
         return "Elder Xelpud".equals(npcName)
                 || "Nebur".equals(npcName)
@@ -864,6 +946,7 @@ public class Validation {
                 || "Modro".equals(npcName)
                 || "Penadvent of ghost".equals(npcName)
                 || "Greedy Charlie".equals(npcName)
+                || "Mulbruk".equals(npcName)
                 || "Shalom III".equals(npcName)
                 || "Usas VI".equals(npcName)
                 || "Kingvalley I".equals(npcName)

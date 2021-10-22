@@ -12,9 +12,10 @@ public final class BlockConstants {
     public static final int FairyQueenWhenTheTimeComesConversation = 218;
     public static final int XelpudTalismanConversation = 369;
     public static final int XelpudPillarConversation = 370;
-    public static final int MulbrukIntroBlock = 393; // Replaced for Helloween
-    public static final int MulbrukEscapeRegular = 924; // 0x39c
-    public static final int MulbrukEscapeSwimsuit = 926; // 0x39e
+    public static final int MulbrukStoneConversationBlock = 392; // 0x188; stays with Mulbruk seal door
+    public static final int MulbrukWakingUpConversationBlock = 393; // 0x189; moved to flag check conversations in randomizer
+    public static final int MulbrukIntroBlock = 393; // Replaced for Helloween 2019
+    public static final int MulbrukHTConversationBlock = 414; // 0x19e; Replaced for Halloween 2021
 
     public static final int ItemConversationMekuri = 37;
     public static final int ItemConversationPepper = 245;
@@ -27,9 +28,12 @@ public final class BlockConstants {
     public static final int ItemConversationProvocativeBathingSuit = 1012;
 
     public static final int Master_ElderXelpudRandomSetA = 484; // Elder Xelpud - Surface NPC, 01-02-01
+    public static final int Master_MulbrukRandomSetA = 485; // Mulbruk, Sun NPC, 03-03-00
     public static final int Master_ElderXelpudRandomSetC_Rug = 1019;
     public static final int Master_ElderXelpudRandomSetB = 1080;
     public static final int Master_ElderXelpudRandomSetC_NoRug = 1081;
+    public static final int Master_MulbrukRandomSetB = 1082;
+    public static final int Master_MulbrukRandomSetC = 1083;
     public static final int Master_Hiner = 671; // Hiner - Surface NPC, 01-00-02
     public static final int Master_Moger = 672; // Moger - Surface NPC, 01-02-00
     public static final int Master_FormerMekuriMaster_Mekuri = 673; // Former Mekuri Master - Surface NPC, 01-07-00
@@ -63,12 +67,17 @@ public final class BlockConstants {
     public static final int Master_PriestMadomono = 718; // Priest Madomono - Sun NPC, 03-04-02
     public static final int Master_PriestGailious = 723; // Priest Gailious - Inferno NPC, 05-02-01
     public static final int Master_Dracuet_WaitForNightfall = 726; // Tailor Dracuet - Guidance NPC, 00-06-00
+    public static final short Master_Mulbruk_StoneConversation = 912; // 0x390; Mulbruk, Sun NPC, 03-03-00
     public static final short Master_PriestAlest_NoItem = 915;
+    public static final int Master_MulbrukEscapeRegular = 924; // 0x39c
+    public static final int Master_MulbrukEscapeSwimsuit = 926; // 0x39e
+    public static final int Master_Mulbruk_Awake = 990; // Mulbruk, Sun NPC, 03-03-00
     public static final int Master_Dracuet_BackInTime = 991; // Tailor Dracuet - Illusion NPC, 10-07-00
     public static final int Master_Dracuet_HugeCasket = 993; // Tailor Dracuet - Gate of Time NPC, 20-03-01
     public static final int Master_Fairy_NightSurface = 998; // Fairy - Night Surface NPC, 22-07-00
     public static final int Master_Dracuet_HTUnlocked = 1000; // Tailor Dracuet - Goddess NPC, 13-01-00
     public static final int Master_Dracuet_ProvocativeBathingSuit = 1011; // References ItemConversationProvocativeBathingSuit
+    public static final int Master_Mulbruk_ProvocativeBathingSuitReaction = 1013;
 
     public static final int ShopBlockNebur = 34;
     public static final int ShopBlockNeburAlt = 490;
@@ -105,7 +114,12 @@ public final class BlockConstants {
     public static final int MulbrukRandomBlock2 = 1078;
     public static final int MulbrukRandomBlock3 = 1079;
 
+    public static final int Conversation_MulbrukEscapeRegular = 925;
+    public static final int Conversation_MulbrukEscapeSwimsuit = 927;
+
     public static final int Removed_XelpudScoreWindHowling = 373;
+    public static final int Removed_MulbrukLowScore = 719;
+    public static final int Removed_MulbrukEmptyAfterProvocativeBathingSuit = 1014;
     public static final int Removed_WindHowlingSwimsuit = 1049;
 
     public static final int Email00 = 0x1ac;

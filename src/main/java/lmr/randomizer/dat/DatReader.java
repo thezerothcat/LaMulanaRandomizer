@@ -899,8 +899,9 @@ public final class DatReader {
                 || blockIndex == BlockConstants.Master_PriestMadomono
                 || blockIndex == BlockConstants.Master_PriestGailious
                 || blockIndex == BlockConstants.Master_Dracuet_WaitForNightfall
-                || blockIndex == BlockConstants.MulbrukEscapeRegular
-                || blockIndex == BlockConstants.MulbrukEscapeSwimsuit
+                || blockIndex == BlockConstants.Master_Mulbruk_StoneConversation
+                || blockIndex == BlockConstants.Master_MulbrukEscapeRegular
+                || blockIndex == BlockConstants.Master_MulbrukEscapeSwimsuit
                 || blockIndex == BlockConstants.Master_Dracuet_BackInTime
                 || blockIndex == BlockConstants.Master_Dracuet_HugeCasket
                 || blockIndex == BlockConstants.Master_Fairy_NightSurface

@@ -137,6 +137,45 @@ public class GameObject {
         }
     }
 
+    public boolean hasUpdate(WriteByteOperation updateToLookFor) {
+        WriteByteOperation writeByteOperation;
+        for(int i = 0; i < writeByteOperations.size(); i++) {
+            writeByteOperation = writeByteOperations.get(i);
+            if(writeByteOperation.getIndex() != updateToLookFor.getIndex()) {
+                continue;
+            }
+            if(updateToLookFor.getOp() != null && !writeByteOperation.getOp().equals(updateToLookFor.getOp())) {
+                continue;
+            }
+            if(writeByteOperation.getValue() != updateToLookFor.getValue()) {
+                continue;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public void removeUpdate(WriteByteOperation updateToRemove) {
+        Integer indexToRemove = null;
+        WriteByteOperation writeByteOperation;
+        for(int i = 0; i < writeByteOperations.size(); i++) {
+            writeByteOperation = writeByteOperations.get(i);
+            if(writeByteOperation.getIndex() != updateToRemove.getIndex()) {
+                continue;
+            }
+            if(updateToRemove.getOp() != null && !writeByteOperation.getOp().equals(updateToRemove.getOp())) {
+                continue;
+            }
+            if(writeByteOperation.getValue() != updateToRemove.getValue()) {
+                continue;
+            }
+            indexToRemove = i;
+        }
+        if(indexToRemove != null) {
+            writeByteOperations.remove((int)indexToRemove);
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder returnVal = new StringBuilder(String.format("\nOBJECT Type=0x%x (%s)", id, objectContainer.getContainerString()));

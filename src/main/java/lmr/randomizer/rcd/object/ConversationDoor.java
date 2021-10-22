@@ -93,6 +93,9 @@ public class ConversationDoor extends GameObject {
         if("NPC: Elder Xelpud".equals(npcAssigned)) {
             return true;
         }
+        if("NPC: Mulbruk".equals(npcAssigned)) {
+            return true;
+        }
         return false;
     }
 
@@ -328,6 +331,9 @@ public class ConversationDoor extends GameObject {
         }
         if("NPC: Priest Gailious".equals(npcAssigned)) {
             return BlockConstants.Master_PriestGailious;
+        }
+        if("NPC: Mulbruk".equals(npcAssigned)) {
+            return BlockConstants.Master_MulbrukRandomSetA;
         }
         if("NPC: Tailor Dracuet".equals(npcAssigned)) {
             return BlockConstants.ShopBlockTailorDracuet;

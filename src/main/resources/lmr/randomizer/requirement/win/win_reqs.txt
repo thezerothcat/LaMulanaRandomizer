@@ -1,1 +1,2 @@
-Event: Mother Defeated
+Win: Normal => Event: Mother Defeated
+Win: Halloween2021 => Map (Surface), Map (Gate of Guidance), Map (Mausoleum of the Giants), Map (Temple of the Sun), Map (Spring in the Sky), Map (Inferno Cavern), Map (Chamber of Extinction), Map (Twin Labyrinths), Map (Endless Corridor), Map (Shrine of the Mother), Map (Gate of Illusion), Map (Graveyard of the Giants), Map (Temple of Moonlight), Map (Tower of the Goddess), Map (Tower of Ruin), Map (Chamber of Birth), Map (Dimensional Corridor)

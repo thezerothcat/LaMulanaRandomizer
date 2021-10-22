@@ -176,6 +176,10 @@ public class GraphicsTextureDrawUpdates {
                 }
             }
         }
+        if(roomIndex == 0 && screenIndex == 2) {
+            // Hiner door has wrong layer
+            graphicsTextureDraw.getArgs().set(0, (short)0);
+        }
     }
 
     private static void updateTests(GameObject graphicsTextureDraw, int zoneIndex) {

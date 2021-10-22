@@ -161,6 +161,7 @@ public class AddObjectTest {
     public void testAddPalenqueMSX2Timer() {
         Screen screen = new Screen();
 
+
         AddObject.addPalenqueMSX2Timer(screen);
 
         GameObject gameObject = screen.getObjects().get(0);
@@ -174,10 +175,12 @@ public class AddObjectTest {
         Assert.assertTrue(containsTest(gameObject, new TestByteOperation(0x21d, ByteOp.FLAG_EQUALS, 0)));
         Assert.assertTrue(containsTest(gameObject, new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0)));
         Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x21d, ByteOp.ASSIGN_FLAG, 1)));
-        Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x317, ByteOp.ASSIGN_FLAG, 1)));
-        Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x328, ByteOp.ADD_FLAG, 1)));
+        if(!HolidaySettings.isHalloween2021Mode()) {
+            Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x317, ByteOp.ASSIGN_FLAG, 1)));
+            Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x328, ByteOp.ADD_FLAG, 1)));
+        }
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 3);
-        Assert.assertEquals(gameObject.getWriteByteOperations().size(), 3);
+        Assert.assertEquals(gameObject.getWriteByteOperations().size(), HolidaySettings.isHalloween2021Mode() ? 1 : 3);
     }
 
     @Test
@@ -959,8 +962,9 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 2);
         Assert.assertTrue(containsTest(gameObject, new TestByteOperation(292, ByteOp.FLAG_NOT_EQUAL, 4)));
+        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(FlagConstants.WF_KEY_SWORD, ByteOp.FLAG_GTEQ, 2)));
         Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(292, ByteOp.ASSIGN_FLAG, 4)));
-        Assert.assertEquals(gameObject.getTestByteOperations().size(), 1);
+        Assert.assertEquals(gameObject.getTestByteOperations().size(), 2);
         Assert.assertEquals(gameObject.getWriteByteOperations().size(), 1);
     }
 
@@ -2513,7 +2517,7 @@ public class AddObjectTest {
         AddObject.addBat(screen, x, y, screenFlag);
 
         GameObject gameObject = screen.getObjects().get(0);
-        Assert.assertEquals(gameObject.getId(), 0x02);
+        Assert.assertEquals(gameObject.getId(), ObjectIdConstants.Enemy_Bat);
         Assert.assertEquals(gameObject.getX(), x);
         Assert.assertEquals(gameObject.getY(), y);
         Assert.assertEquals((int)gameObject.getArgs().get(0), 1);
@@ -2522,7 +2526,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(3), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(4), 3);
         Assert.assertEquals(gameObject.getArgs().size(), 5);
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(screenFlag, ByteOp.FLAG_EQUALS, 1)));
+        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(screenFlag, ByteOp.FLAG_GTEQ, 1)));
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 1);
         Assert.assertEquals(gameObject.getWriteByteOperations().size(), 0);
     }
@@ -3419,8 +3423,8 @@ public class AddObjectTest {
         Assert.assertEquals(gameObject.getY(), -1);
         Assert.assertEquals((int)gameObject.getArgs().get(0), 264);
         Assert.assertEquals((int)gameObject.getArgs().get(1), 20);
-        Assert.assertEquals((int)gameObject.getArgs().get(2), 5);
-        Assert.assertEquals((int)gameObject.getArgs().get(3), 0);
+        Assert.assertEquals((int)gameObject.getArgs().get(2), HolidaySettings.isHalloween2021Mode() ? 10 : 5);
+        Assert.assertEquals((int)gameObject.getArgs().get(3), HolidaySettings.isHalloween2021Mode() ? 31 : 0);
         Assert.assertEquals((int)gameObject.getArgs().get(4), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 10);
         Assert.assertEquals((int)gameObject.getArgs().get(6), -1);
@@ -3484,7 +3488,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(0), 264);
         Assert.assertEquals((int)gameObject.getArgs().get(1), 20);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 10);
-        Assert.assertEquals((int)gameObject.getArgs().get(3), 0);
+        Assert.assertEquals((int)gameObject.getArgs().get(3), HolidaySettings.isHalloween2021Mode() ? 31 : 0);
         Assert.assertEquals((int)gameObject.getArgs().get(4), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 10);
         Assert.assertEquals((int)gameObject.getArgs().get(6), -1);
@@ -3547,40 +3551,25 @@ public class AddObjectTest {
     @Test
     public void testAddGhostSpawner() {
         int spawnRate = 360;
+        int damageAndSoul = 2;
+        int maxGhosts = 3;
+        int speedAndDropType = 4;
 
         Screen screen = new Screen();
         screen.setZoneIndex(1);
 
-        AddObject.addGhostSpawner(screen, spawnRate);
+        AddObject.addGhostSpawner(screen, maxGhosts, damageAndSoul, spawnRate, speedAndDropType);
 
         GameObject gameObject = screen.getObjects().get(0);
         Assert.assertEquals(gameObject.getId(), 0x1f);
         Assert.assertEquals(gameObject.getX(), -1);
         Assert.assertEquals(gameObject.getY(), -1);
         Assert.assertEquals((int)gameObject.getArgs().get(0), spawnRate);
-        Assert.assertEquals((int)gameObject.getArgs().get(1), 3);
+        Assert.assertEquals((int)gameObject.getArgs().get(1), maxGhosts);
         Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(3), 1);
+        Assert.assertEquals((int)gameObject.getArgs().get(3), speedAndDropType);
         Assert.assertEquals((int)gameObject.getArgs().get(4), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(5), 2);
-        Assert.assertEquals((int)gameObject.getArgs().get(6), 3);
-        Assert.assertEquals(gameObject.getArgs().size(), 7);
-        Assert.assertEquals(gameObject.getTestByteOperations().size(), 0);
-        Assert.assertEquals(gameObject.getWriteByteOperations().size(), 0);
-
-        screen.setZoneIndex(23);
-        AddObject.addGhostSpawner(screen, spawnRate);
-
-        gameObject = screen.getObjects().get(0);
-        Assert.assertEquals(gameObject.getId(), 0x1f);
-        Assert.assertEquals(gameObject.getX(), -1);
-        Assert.assertEquals(gameObject.getY(), -1);
-        Assert.assertEquals((int)gameObject.getArgs().get(0), spawnRate);
-        Assert.assertEquals((int)gameObject.getArgs().get(1), 3);
-        Assert.assertEquals((int)gameObject.getArgs().get(2), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(3), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(4), 1);
-        Assert.assertEquals((int)gameObject.getArgs().get(5), 2);
+        Assert.assertEquals((int)gameObject.getArgs().get(5), damageAndSoul);
         Assert.assertEquals((int)gameObject.getArgs().get(6), 3);
         Assert.assertEquals(gameObject.getArgs().size(), 7);
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 0);
@@ -5467,7 +5456,7 @@ public class AddObjectTest {
     public void testAddExtinctionTorch() {
         Screen screen = new Screen();
 
-        AddObject.addExtinctionTorch(screen);
+        AddObject.addExtinctionTorch(screen, 60, 80);
 
         GameObject gameObject = screen.getObjects().get(0);
         Assert.assertEquals(gameObject.getId(), 0x12);

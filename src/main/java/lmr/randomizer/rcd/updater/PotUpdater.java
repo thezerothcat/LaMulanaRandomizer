@@ -41,7 +41,7 @@ public class PotUpdater {
         }
     }
 
-    public boolean updatePot(GameObject pot) {
+    public boolean updatePot(Pot pot) {
         ObjectContainer objectContainer = pot.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
             return true;
@@ -53,8 +53,7 @@ public class PotUpdater {
         int screenIndex = screen.getScreenIndex();
         if(HolidaySettings.isFools2021Mode() && zoneIndex == 3) {
             // Flares in all Sun pots
-            pot.getArgs().set(0, DropType.FLARE_GUN_AMMO.getValue());
-            pot.getArgs().set(1, (short)80);
+            pot.setDrops(DropType.FLARE_GUN_AMMO, 80);
         }
 
         if (HolidaySettings.isFools2021Mode()) {
@@ -62,12 +61,12 @@ public class PotUpdater {
                 // Dimensional - Umu Dabrutu's room
                 if(pot.getY() > 300) {
                     if(pot.getX() == 700) {
-                        pot.getArgs().set(4, (short)7);
+                        pot.setPotGraphic(PotGraphic.ENDLESS);
                         pot.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_8, ByteOp.FLAG_EQUALS, 0));
                         pot.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_8, ByteOp.FLAG_EQUALS, 1));
                     }
                     else { // if(obj.getX() == 1200) {
-                        pot.getArgs().set(4, (short)7);
+                        pot.setPotGraphic(PotGraphic.ENDLESS);
                         pot.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_9, ByteOp.FLAG_EQUALS, 0));
                         pot.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_9, ByteOp.FLAG_EQUALS, 1));
                     }
@@ -77,10 +76,8 @@ public class PotUpdater {
 
         if(screen.getZoneIndex() == 21 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
             // Pot in retro surface now has coins
-            pot.getArgs().set(0, DropType.COINS.getValue());
-            pot.getArgs().set(1, (short)10);
-            pot.getArgs().set(2, (short)277);
-            pot.getArgs().set(3, (short)16);
+            pot.setDrops(DropType.COINS, 10);
+            pot.setFlag(277, 16);
         }
 
         if(pot.getTestByteOperations().isEmpty() || pot.getTestByteOperations().get(0).getIndex() != FlagConstants.ILLUSION_WARP_MAZE_ACTIVE) {
@@ -331,6 +328,31 @@ public class PotUpdater {
                     obj.setX(760);
                 }
             }
+        }
+    }
+
+    public void trackPots() {
+        if(!towerOfTheGoddessRemovedPotPresent) {
+            Pot towerOfTheGoddessRemovedPot = new Pot(towerOfTheGoddessRemovedPotScreen, 1500, 400);
+
+            towerOfTheGoddessRemovedPot.setDrops(DropType.NOTHING, 0);
+            towerOfTheGoddessRemovedPot.setFlag(-1, 1);
+            towerOfTheGoddessRemovedPot.setPotGraphic(PotGraphic.GODDESS);
+            towerOfTheGoddessRemovedPot.setSoundEffects(105, 35, 17);
+            towerOfTheGoddessRemovedPot.setPitchShift(0);
+
+            towerOfTheGoddessRemovedPotScreen.getObjects().add(towerOfTheGoddessRemovedPot);
+        }
+        if(!templeOfMoonlightRemovedPotPresent) {
+            Pot templeOfMoonlightRemovedPot = new Pot(templeOfMoonlightRemovedPotScreen, 540, 240);
+
+            templeOfMoonlightRemovedPot.setDrops(DropType.NOTHING, 0);
+            templeOfMoonlightRemovedPot.setFlag(-1, 1);
+            templeOfMoonlightRemovedPot.setPotGraphic(PotGraphic.MOONLIGHT);
+            templeOfMoonlightRemovedPot.setSoundEffects(105, 35, 17);
+            templeOfMoonlightRemovedPot.setPitchShift(0);
+
+            templeOfMoonlightRemovedPotScreen.getObjects().add(templeOfMoonlightRemovedPot);
         }
     }
 }

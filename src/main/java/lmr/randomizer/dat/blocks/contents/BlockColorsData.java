@@ -11,17 +11,16 @@ import java.util.List;
  * Created by thezerothcat on 7/27/2017.
  */
 public class BlockColorsData implements BlockContents {
+    public static final BlockColorsData COLOR_DEFAULT = new BlockColorsData(0, 0, 0);
+    public static final BlockColorsData COLOR_SOFTWARE_YELLOW = new BlockColorsData((short)0, (short)0x32, (short)0x96);
+    public static final BlockColorsData COLOR_ITEMS_GREEN = new BlockColorsData((short)0x96, (short)0, (short)0x64);
+    public static final BlockColorsData COLOR_PEOPLE_PLACES_BLUE = new BlockColorsData((short)0x96, (short)0x32, (short)0);
+    public static final BlockColorsData COLOR_THREATS_RED = new BlockColorsData((short)0, (short)0x78, (short)0x78);
+
     private short data;
     private short color1;
     private short color2;
     private short color3;
-
-    public BlockColorsData(short data, short color1, short color2, short color3) {
-        this.data = data;
-        this.color1 = color1;
-        this.color2 = color2;
-        this.color3 = color3;
-    }
 
     public BlockColorsData(int color1, int color2, int color3) {
         this.data = BlockDataConstants.ColorChange;

@@ -15,8 +15,8 @@ import lmr.randomizer.util.ItemConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HalloweenDatUpdater extends DatUpdater {
-    public HalloweenDatUpdater(DatFileData datFileData) {
+public class Halloween2019DatUpdater extends DatUpdater {
+    public Halloween2019DatUpdater(DatFileData datFileData) {
         super(datFileData);
     }
 
@@ -150,7 +150,6 @@ public class HalloweenDatUpdater extends DatUpdater {
         List<BlockContents> xelpudBlockContents = conversationBlock.getBlockContents();
         xelpudBlockContents.clear();
         xelpudBlockContents.add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
-        xelpudBlockContents.add(new BlockFlagData((short)0xaa7, (short)1));
         List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.intro1"));
         for (Short shortCharacter : stringCharacters) {
             xelpudBlockContents.add(new BlockSingleData(shortCharacter));

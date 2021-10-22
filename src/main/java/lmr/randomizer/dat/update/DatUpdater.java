@@ -2,13 +2,16 @@ package lmr.randomizer.dat.update;
 
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.dat.blocks.Block;
+import lmr.randomizer.dat.blocks.contents.*;
 import lmr.randomizer.randomization.data.CustomBlockEnum;
 import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.dat.blocks.*;
 import lmr.randomizer.dat.blocks.contents.entries.TextEntry;
 import lmr.randomizer.dat.blocks.CheckBlock;
 import lmr.randomizer.dat.blocks.ShopBlock;
+import lmr.randomizer.util.BlockDataConstants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DatUpdater {
@@ -29,7 +32,12 @@ public abstract class DatUpdater {
 
         updateFairyQueenFirstConversationBlock(datFileData.getFairyQueenFirstConversationBlock());
         updateFairyQueenWhenTheTimeComesConversationBlock(datFileData.getFairyQueenWhenTheTimeComesConversationBlock());
+        updateMulbrukStoneConversationBlock(datFileData.getMulbrukStoneConversationBlock());
+        updateMulbrukWakingUpConversationBlock(datFileData.getMulbrukWakingUpConversationBlock());
         updateMulbrukIntroConversationBlock(datFileData.getMulbrukIntroConversationBlock());
+        updateMulbrukHTConversationBlock(datFileData.getMulbrukHTConversationBlock());
+        updateRegularEscapeConversationBlock(datFileData.getRegularEscapeConversationBlock());
+        updateSwimsuitEscapeConversationBlock(datFileData.getSwimsuitEscapeConversationBlock());
 
         updateMekuriConversationBlock(datFileData.getMekuriConversationBlock());
         updateMiniDollConversationBlock(datFileData.getMiniDollConversationBlock());
@@ -78,6 +86,7 @@ public abstract class DatUpdater {
         updateMulbrukFlagCheckBlock(datFileData.getMulbrukFlagCheckBlock());
         updateMulbrukScoreCheckBlock(datFileData.getMulbrukScoreCheckBlock());
         updateMulbrukRandomBlocks(datFileData.getMulbrukRandomBlocks());
+        updateMulbrukStoneConversationReferenceBlock(datFileData.getMulbrukStoneConversationReferenceBlock());
         for(Block emailBlock : datFileData.getEmailBlocks()) {
             updateEmailBlock(emailBlock);
         }
@@ -93,6 +102,70 @@ public abstract class DatUpdater {
         TextEntry textEntry = new TextEntry();
         textEntry.getData().addAll(FileUtils.stringToData(textToUse));
         return textEntry;
+    }
+
+    protected void replaceText(List<BlockContents> blockContentsList, String textToReplace, String replacement) {
+        List<BlockContents> keptBlockContents = new ArrayList<>();
+        String temp = "";
+        for(BlockContents blockContents : blockContentsList) {
+            if(blockContents instanceof BlockColorsData
+                    || blockContents instanceof BlockCmdSingle
+                    || blockContents instanceof BlockFlagData
+                    || blockContents instanceof BlockItemData
+                    || blockContents instanceof BlockListData
+                    || blockContents instanceof BlockMantraData
+                    || blockContents instanceof BlockPoseData
+                    || blockContents instanceof BlockSceneData
+                    || blockContents instanceof BlockStringData) {
+                keptBlockContents.addAll(buildBlockContents(temp));
+                keptBlockContents.add(blockContents);
+                temp = "";
+            }
+            else if(blockContents instanceof BlockSingleData) {
+                if(BlockDataConstants.Cls == blockContents.getRawData().get(0)) {
+                    keptBlockContents.addAll(buildBlockContents(temp));
+                    keptBlockContents.add(blockContents);
+                }
+                else {
+                    String text = FileUtils.dataToString(blockContents.getRawData());
+                    if(textToReplace.startsWith(temp + text)) {
+                        temp = temp + text;
+                        if(textToReplace.equals(temp)) {
+                            keptBlockContents.addAll(buildBlockContents(replacement));
+                            temp = "";
+                        }
+                    }
+                    else {
+                        keptBlockContents.addAll(buildBlockContents(temp));
+                        keptBlockContents.add(blockContents);
+                        temp = "";
+                    }
+                }
+            }
+        }
+        blockContentsList.clear();
+        blockContentsList.addAll(keptBlockContents);
+    }
+
+    protected static List<BlockContents> buildBlockContents(String text) {
+        List<BlockContents> blockContents = new ArrayList<>();
+        for (Short shortCharacter : FileUtils.stringToData(text)) {
+            blockContents.add(new BlockSingleData(shortCharacter));
+        }
+        return blockContents;
+    }
+
+    protected static List<BlockContents> buildBlockContentsWithColor(String text, String subsection, BlockColorsData color) {
+        List<BlockContents> blockContents = new ArrayList<>();
+        String[] texts = text.split("%s");
+        if(texts.length > 0) {
+            blockContents.addAll(buildBlockContents(texts[0]));
+        }
+        blockContents.add(color);
+        blockContents.addAll(buildBlockContents(subsection));
+        blockContents.add(BlockColorsData.COLOR_DEFAULT);
+        blockContents.addAll(buildBlockContents(texts[texts.length > 0 ? 1 : 0]));
+        return blockContents;
     }
 
     void updateItemNames(ItemNameBlock itemNameBlock) { }
@@ -146,13 +219,19 @@ public abstract class DatUpdater {
 
     void updateFairyQueenFirstConversationBlock(Block conversationBlock) { }
     void updateFairyQueenWhenTheTimeComesConversationBlock(Block conversationBlock) { }
+    void updateMulbrukStoneConversationBlock(Block conversationBlock) { }
+    void updateMulbrukWakingUpConversationBlock(Block conversationBlock) { }
     void updateMulbrukIntroConversationBlock(Block conversationBlock) { }
+    void updateMulbrukHTConversationBlock(Block conversationBlock) { }
+    void updateRegularEscapeConversationBlock(Block conversationBlock) { }
+    void updateSwimsuitEscapeConversationBlock(Block conversationBlock) { }
 
     void updateXelpudFlagCheckBlock(CheckBlock flagCheckBlock) { }
     void updateXelpudScoreCheckBlock(CheckBlock scoreCheckBlock) { }
     void updateMulbrukFlagCheckBlock(CheckBlock flagCheckBlock) { }
     void updateMulbrukScoreCheckBlock(CheckBlock scoreCheckBlock) { }
     void updateMulbrukRandomBlocks(List<Block> randomBlocks) { }
+    void updateMulbrukStoneConversationReferenceBlock(MasterNpcBlock referenceBlock) { }
 
     void updateEmailBlock(Block emailBlock) { }
 }

@@ -19,7 +19,7 @@ public class Fools2021RcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateBat(GameObject bat) {
+    boolean updateBat(Bat bat) {
         ObjectContainer objectContainer = bat.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
             return true;

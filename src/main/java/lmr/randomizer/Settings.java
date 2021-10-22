@@ -621,7 +621,7 @@ public final class Settings {
     }
 
     public static boolean isRandomizeNpcs() {
-        return HolidaySettings.isFools2021Mode() || (!HolidaySettings.isHalloweenMode() && singleton.randomizeNpcs);
+        return HolidaySettings.isFools2021Mode() || (!HolidaySettings.isHalloween2019Mode() && singleton.randomizeNpcs);
     }
 
     public static void setRandomizeNpcs(boolean randomizeNpcs, boolean update) {
@@ -903,7 +903,7 @@ public final class Settings {
     }
 
     public static boolean isRandomizeStartingLocation() {
-        return HolidaySettings.isFools2019Mode() || HolidaySettings.isHalloweenMode() || singleton.randomizeStartingLocation;
+        return HolidaySettings.isFools2019Mode() || HolidaySettings.isHalloween2019Mode() || HolidaySettings.isHalloween2021Mode() || singleton.randomizeStartingLocation;
     }
 
     public static void setRandomizeStartingLocation(boolean randomizeStartingLocation, boolean update) {
@@ -974,7 +974,15 @@ public final class Settings {
                 || HolidaySettings.isHalloweenMode() || HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2021Mode();
     }
 
-    public static boolean isCheapConsumables() {
+    public static boolean isCheapAmmo() {
+        return HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2021Mode();
+    }
+
+    public static boolean isCheapWeights() {
+        return HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2021Mode();
+    }
+
+    public static boolean isRandomWeightCount() {
         return HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2021Mode();
     }
 
@@ -1057,7 +1065,7 @@ public final class Settings {
         booleanSettings = booleanSettings << 2 | singleton.shopRandomization.ordinal();
 
         //glitches
-        int glitches = itemSetToInt(getEnabledGlitches(), DataFromFile.POSSIBLE_GLITCHES);
+        int glitches = itemSetToInt(getEnabledGlitches(), DataFromFile.SUPPORTED_GLITCHES);
 
         //dboosts
         int dboosts = itemSetToInt(getEnabledDamageBoosts(), DataFromFile.POSSIBLE_DBOOSTS);
@@ -1154,7 +1162,7 @@ public final class Settings {
         singleton.replaceMapsWithWeights = getBoolFlagFromInt.apply(booleanSettingsFlag, 1);
         singleton.automaticGrailPoints = getBoolFlagFromInt.apply(booleanSettingsFlag, 0);
 
-        Collection<String> glitches = intToItemSet(Integer.parseInt(parts[3],16), DataFromFile.POSSIBLE_GLITCHES);
+        Collection<String> glitches = intToItemSet(Integer.parseInt(parts[3],16), DataFromFile.SUPPORTED_GLITCHES);
         Collection<String> dboosts = intToItemSet(Integer.parseInt(parts[4],16), DataFromFile.POSSIBLE_DBOOSTS);
         Set<String> initItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[5],16), singleton.possibleRandomizedItems));
         Set<String> startingItems = new HashSet<>(intToItemSet(Integer.parseInt(parts[6],16), singleton.possibleRandomizedItems));

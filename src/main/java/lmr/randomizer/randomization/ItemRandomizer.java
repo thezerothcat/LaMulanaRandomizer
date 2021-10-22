@@ -1,6 +1,7 @@
 package lmr.randomizer.randomization;
 
 import lmr.randomizer.DataFromFile;
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
 import lmr.randomizer.Translations;
 import lmr.randomizer.node.AccessChecker;
@@ -148,6 +149,88 @@ public class ItemRandomizer {
         return true;
     }
 
+    public boolean placeChestOnlyItems(Random random) {
+        List<String> chestOnlyItems = getUnplacedChestOnlyItems();
+        if(chestOnlyItems.isEmpty()) {
+            return true;
+        }
+
+        int locationIndexIndex;
+
+        List<String> possibleLocations = getPossibleChestOnlyItemLocations();
+        int size = chestOnlyItems.size();
+        for(int i = 0; i < size; i++) {
+            String item = getRandomItem(chestOnlyItems, random);
+            int availableLocations = possibleLocations.size();
+            List<Integer> availableLocationIndices = buildIndices(availableLocations);
+
+            while(true) {
+                if(availableLocationIndices.isEmpty()) {
+                    return false;
+                }
+                locationIndexIndex = random.nextInt(availableLocationIndices.size());
+                int locationIndex = availableLocationIndices.get(locationIndexIndex);
+                String location = possibleLocations.get(locationIndex);
+                if(accessChecker.validRequirements(item, location)) {
+                    mapOfItemLocationToItem.put(location, item);
+                    chestOnlyItems.remove(item);
+                    possibleLocations.remove(location);
+                    unassignedNonShopItemLocations.remove(location);
+                    unplacedItems.remove(item);
+                    break;
+                }
+                else {
+                    availableLocationIndices.remove(locationIndexIndex);
+                }
+            }
+        }
+        return true;
+    }
+
+    private List<String> getUnplacedChestOnlyItems() {
+        List<String> items = new ArrayList<>();
+        if(Settings.isRandomizeTrapItems()) {
+            items.add(DataFromFile.GRAVEYARD_TRAP_CHEST_NAME);
+        }
+        if(HolidaySettings.isHalloween2021Mode()) {
+            items.add("Map (Surface)");
+            items.add("Map (Gate of Guidance)");
+            items.add("Map (Mausoleum of the Giants)");
+            items.add("Map (Temple of the Sun)");
+            items.add("Map (Spring in the Sky)");
+            items.add("Map (Inferno Cavern)");
+            items.add("Map (Chamber of Extinction)");
+            items.add("Map (Twin Labyrinths)");
+            items.add("Map (Endless Corridor)");
+            items.add("Map (Shrine of the Mother)");
+            items.add("Map (Gate of Illusion)");
+            items.add("Map (Graveyard of the Giants)");
+            items.add("Map (Temple of Moonlight)");
+            items.add("Map (Tower of the Goddess)");
+            items.add("Map (Tower of Ruin)");
+            items.add("Map (Chamber of Birth)");
+            items.add("Map (Dimensional Corridor)");
+        }
+        items.removeAll(mapOfItemLocationToItem.values());
+        return items;
+    }
+
+    private List<String> getPossibleChestOnlyItemLocations() {
+        List<String> chests = new ArrayList<>(DataFromFile.ITEM_CHEST_LOCATIONS);
+        if(Settings.isRandomizeCoinChests()) {
+            chests.addAll(DataFromFile.getAllCoinChests());
+        }
+        if(Settings.isRandomizeTrapItems()) {
+            chests.add(DataFromFile.GRAVEYARD_TRAP_CHEST_NAME);
+            chests.add(DataFromFile.EXPLODING_CHEST_NAME);
+        }
+        if(Settings.isRandomizeEscapeChest()) {
+            chests.add(DataFromFile.ESCAPE_CHEST_NAME);
+        }
+        chests.removeAll(mapOfItemLocationToItem.keySet());
+        return chests;
+    }
+
     private String getRandomItem(List<String> items, Random random) {
         return items.get(random.nextInt(items.size()));
     }
@@ -277,13 +360,15 @@ public class ItemRandomizer {
         List<String> itemNames = new ArrayList<>(mapOfItemToLocation.keySet());
         Collections.sort(itemNames, itemNameComparator);
 
+        String newContents;
         for (String itemName : itemNames) {
             boolean isRemoved = Settings.getCurrentRemovedItems().contains(itemName)
                     || Settings.getRemovedItems().contains(itemName)
                     || Settings.getStartingItemsIncludingCustom().contains(itemName);
             String location = mapOfItemToLocation.get(itemName);
+            newContents = Settings.getUpdatedContents(itemName);
             itemName = Translations.getItemText(Settings.getUpdatedContents(itemName), isRemoved);
-            location = Translations.getLocationText(location, Settings.getCurrentCursedChests().contains(location));
+            location = Translations.getLocationText(location, isCursedChestLocation(location, newContents));
             writer.write(itemName + ": " + location);
             writer.newLine();
         }
@@ -438,6 +523,29 @@ public class ItemRandomizer {
 
     public boolean isExplodingChest(String newContents) {
         return  newContents.equals(DataFromFile.EXPLODING_CHEST_NAME);
+    }
+
+    public boolean isChestLocation(String itemLocation) {
+        return DataFromFile.ITEM_CHEST_LOCATIONS.contains(itemLocation) || itemLocation.startsWith("Coin:")
+                || DataFromFile.GRAVEYARD_TRAP_CHEST_NAME.equals(itemLocation) || DataFromFile.EXPLODING_CHEST_NAME.equals(itemLocation);
+    }
+
+    public boolean isCursedChestLocation(String itemLocation, String itemContents) {
+        if(HolidaySettings.isHalloween2021Mode()) {
+            return isChestLocation(itemLocation)
+                    && !"Shell Horn".equals(itemLocation)
+                    && !"Birth Seal".equals(itemLocation)
+                    && !"Feather".equals(itemLocation)
+                    && !"Sacred Orb (Surface)".equals(itemLocation)
+                    && !"Coin: Surface (Waterfall)".equals(itemLocation)
+                    && !"Coin: Surface (Seal)".equals(itemLocation)
+                    && !"Coin: Surface (Ruin Path)".equals(itemLocation)
+                    && !itemContents.startsWith("Coin:")
+                    && !itemContents.startsWith("Trap:")
+                    && !itemContents.startsWith("Map (")
+                    && !"Mulana Talisman".equals(itemContents);
+        }
+        return Settings.getCurrentCursedChests().contains(itemLocation);
     }
 
     private void assignCustomGraphics() {

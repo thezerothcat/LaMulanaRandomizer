@@ -8,6 +8,7 @@ public final class ItemConstants {
     public static final int COG_OF_THE_SOUL = 24;
     public static final int PEPPER = 30;
     public static final int HEATPROOF_CASE = 37;
+    public static final int HOLY_GRAIL = 40;
     public static final int CRUCIFIX = 42;
     public static final int ANCHOR = 50;
     public static final int PLANE_MODEL = 51;

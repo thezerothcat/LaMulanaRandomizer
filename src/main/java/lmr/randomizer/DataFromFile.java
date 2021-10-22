@@ -21,6 +21,25 @@ public final class DataFromFile {
     public static List<String> LOCATIONS_RELATED_TO_BLOCKS = Arrays.asList("Map (Surface)", "mekuri.exe",
             "Mini Doll", "Pepper", "Anchor", "Mulana Talisman", "xmailer.exe", "Book of the Dead", "Provocative Bathing Suit");
     public static List<String> SNAPSHOTS_SCAN_LOCATIONS = Arrays.asList("emusic.exe", "beolamu.exe", "mantra.exe");
+    public static List<String> ITEM_CHEST_LOCATIONS = Arrays.asList(
+            "Ankh Jewel (Dimensional Corridor)", "Ankh Jewel (Gate of Guidance)", "Ankh Jewel (Mausoleum of the Giants)",
+            "Ankh Jewel (Spring in the Sky)", "Ankh Jewel (Temple of the Sun)", "Ankh Jewel (Tower of Ruin)",
+            "Ankh Jewel (Twin Labyrinths)", "Birth Seal", "bounce.exe", "Bronze Mirror", "Cog of the Soul",
+            "Crucifix", "Crystal Skull", "Death Seal", "Diary", "Dimensional Key", "Djed Pillar", "Eye of Truth",
+            "Fairy Clothes", "Feather", "Fruit of Eden", "Gauntlet", "Glove", "Grapple Claw", "Holy Grail", "Ice Cape",
+            "Isis' Pendant", "Key of Eternity", "lamulana.exe", "Life Seal", "Magatama Jewel",
+            "Map (Chamber of Birth)", "Map (Chamber of Extinction)", "Map (Dimensional Corridor)",
+            "Map (Endless Corridor)", "Map (Gate of Guidance)", "Map (Gate of Illusion)",
+            "Map (Graveyard of the Giants)", "Map (Inferno Cavern)", "Map (Mausoleum of the Giants)",
+            "Map (Shrine of the Mother)", "Map (Spring in the Sky)", "Map (Temple of Moonlight)",
+            "Map (Temple of the Sun)", "Map (Tower of Ruin)", "Map (Tower of the Goddess)", "Map (Twin Labyrinths)",
+            "mirai.exe", "Origin Seal", "Perfume", "Plane Model", "Pochette Key",
+            "Sacred Orb (Gate of Guidance)", "Sacred Orb (Chamber of Extinction)", "Sacred Orb (Dimensional Corridor)",
+            "Sacred Orb (Mausoleum of the Giants)", "Sacred Orb (Shrine of the Mother)",
+            "Sacred Orb (Spring in the Sky)", "Sacred Orb (Surface)", "Sacred Orb (Temple of the Sun)",
+            "Sacred Orb (Tower of Ruin)", "Sacred Orb (Twin Labyrinths)",
+            "Scalesphere", "Serpent Staff", "Shell Horn", "Spaulder", "Treasures", "Twin Statue", "Vessel",
+            "Woman Statue", "yagostr.exe");
     public static List<String> TRAP_ITEMS = Arrays.asList("Trap: Graveyard", "Trap: Exploding",
             "Trap: Inferno Orb", "Trap: Twin Ankh");
     public static List<String> USELESS_ITEMS = Arrays.asList("Map (Surface)", "Map (Gate of Guidance)", "Map (Mausoleum of the Giants)", "Map (Temple of the Sun)",
@@ -51,11 +70,17 @@ public final class DataFromFile {
             "Location: Tower of the Goddess [Lower]", "Location: Tower of Ruin [Southwest]", "Location: Chamber of Birth [West]",
             "Location: Dimensional Corridor [Grail]", "Location: Gate of Time [Guidance]", "Location: Gate of Time [Surface]");
 
-    public static List<String> POSSIBLE_GLITCHES = Arrays.asList("Lamp Glitch", "Cat Pause",
+    public static List<String> SUPPORTED_GLITCHES = Arrays.asList("Lamp Glitch", "Cat Pause",
             "Raindrop", "Ice Raindrop", "Pot Clip", "Object Zip", "Screen Mash");
+    public static List<String> POSSIBLE_GLITCHES = Arrays.asList("Lamp Glitch", "Cat Pause", "Warp Climb", "Screen Mash",
+            "Raindrop", "Water Raindrop", "Deep Dive", "Ice Raindrop",
+            "Object Zip", "Platform Zip", "Blind Clip", "Pot Clip");
     public static List<String> POSSIBLE_DBOOSTS = Arrays.asList("Item", "Environment", "Enemy");
 
     public static String EXPLODING_CHEST_NAME = "Trap: Exploding";
+    public static String GRAVEYARD_TRAP_CHEST_NAME = "Trap: Graveyard";
+    public static String FAKE_ANKH_TRAP_NAME = "Trap: Twin Ankh";
+    public static String FAKE_ORB_TRAP_NAME = "Trap: Inferno Orb";
     public static String ESCAPE_CHEST_NAME = "Coin: Twin (Escape)";
 
     public static String CUSTOM_SHOP_NAME = "Shop 0 (Default)";
@@ -412,7 +437,7 @@ public final class DataFromFile {
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/attack_reqs.txt", true);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/dead_ends.txt", true);
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/transition_reqs.txt", true);
-            if(HolidaySettings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloween2019Mode()) {
                 FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/npc_reqs.txt", true);
             }
             FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "requirement/npc_door_reqs.txt", true);
@@ -469,11 +494,24 @@ public final class DataFromFile {
 
     public static List<String> getWinRequirements() {
         if(winRequirements == null) {
-            if(HolidaySettings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloween2019Mode()) {
                 winRequirements = FileUtils.getList("requirement/win/npc_win_reqs.txt");
             }
             else {
-                winRequirements = FileUtils.getList("requirement/win/win_reqs.txt");
+                List<Map.Entry<String, List<String>>> reqs = FileUtils.getListOfLists("requirement/win/win_reqs.txt", true);
+                String expectedWinType;
+                if(HolidaySettings.isHalloween2021Mode()) {
+                    expectedWinType = "Win: Halloween2021";
+                }
+                else {
+                    expectedWinType = "Win: Normal";
+                }
+                for(Map.Entry<String, List<String>> req : reqs) {
+                    if(expectedWinType.equals(req.getKey())) {
+                        winRequirements = req.getValue();
+                        break;
+                    }
+                }
             }
         }
         return winRequirements;

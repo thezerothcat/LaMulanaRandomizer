@@ -66,8 +66,23 @@ public class DatFileData {
     public Block getMulanaTalismanConversationBlock() {
         return datFileEntries.get(BlockConstants.ItemConversationMulanaTalisman);
     }
+    public Block getMulbrukStoneConversationBlock() {
+        return datFileEntries.get(BlockConstants.MulbrukStoneConversationBlock);
+    }
+    public Block getMulbrukWakingUpConversationBlock() {
+        return datFileEntries.get(BlockConstants.MulbrukWakingUpConversationBlock);
+    }
     public Block getMulbrukIntroConversationBlock() {
         return datFileEntries.get(BlockConstants.MulbrukIntroBlock);
+    }
+    public Block getMulbrukHTConversationBlock() {
+        return datFileEntries.get(BlockConstants.MulbrukHTConversationBlock);
+    }
+    public Block getRegularEscapeConversationBlock() {
+        return datFileEntries.get(BlockConstants.Conversation_MulbrukEscapeRegular);
+    }
+    public Block getSwimsuitEscapeConversationBlock() {
+        return datFileEntries.get(BlockConstants.Conversation_MulbrukEscapeSwimsuit);
     }
     public Block getBookOfTheDeadConversationBlock() {
         return datFileEntries.get(BlockConstants.ItemConversationBookOfTheDead);
@@ -176,6 +191,9 @@ public class DatFileData {
         return Arrays.asList(datFileEntries.get(BlockConstants.MulbrukRandomBlock1),
                 datFileEntries.get(BlockConstants.MulbrukRandomBlock2),
                 datFileEntries.get(BlockConstants.MulbrukRandomBlock3));
+    }
+    public MasterNpcBlock getMulbrukStoneConversationReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_Mulbruk_StoneConversation);
     }
     public List<Block> getEmailBlocks() {
         List<Block> emailBlocks = new ArrayList<>();

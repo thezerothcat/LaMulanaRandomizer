@@ -91,4 +91,10 @@ public class Spikes extends GameObject {
     public static boolean isFacingDown(GameObject gameObject) {
         return gameObject.getArgs().get(0) == 0 && gameObject.getArgs().get(1) == 0 && gameObject.getArgs().get(2) > 0 && gameObject.getArgs().get(3) == 0;
     }
+    public static boolean isFacingLeft(GameObject gameObject) {
+        return gameObject.getArgs().get(0) == 0 && gameObject.getArgs().get(1) == 0 && gameObject.getArgs().get(2) == 0 && gameObject.getArgs().get(3) > 0;
+    }
+    public static boolean isFacingRight(GameObject gameObject) {
+        return gameObject.getArgs().get(0) == 0 && gameObject.getArgs().get(1) > 0 && gameObject.getArgs().get(2) == 0 && gameObject.getArgs().get(3) == 0;
+    }
 }

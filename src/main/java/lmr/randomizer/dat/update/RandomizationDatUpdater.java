@@ -3,12 +3,11 @@ package lmr.randomizer.dat.update;
 import lmr.randomizer.*;
 import lmr.randomizer.dat.*;
 import lmr.randomizer.dat.blocks.Block;
-import lmr.randomizer.dat.blocks.contents.BlockContents;
-import lmr.randomizer.dat.blocks.contents.BlockFlagData;
-import lmr.randomizer.dat.blocks.contents.BlockItemData;
-import lmr.randomizer.dat.blocks.contents.BlockStringData;
+import lmr.randomizer.dat.blocks.MasterNpcBlock;
+import lmr.randomizer.dat.blocks.contents.*;
 import lmr.randomizer.dat.blocks.ShopBlock;
 import lmr.randomizer.randomization.ItemRandomizer;
+import lmr.randomizer.randomization.NpcRandomizer;
 import lmr.randomizer.randomization.ShopRandomizer;
 import lmr.randomizer.randomization.data.*;
 import lmr.randomizer.rcd.object.GameObject;
@@ -22,14 +21,16 @@ public class RandomizationDatUpdater extends DatUpdater {
 
     private ItemRandomizer itemRandomizer;
     private ShopRandomizer shopRandomizer;
+    private NpcRandomizer npcRandomizer;
     private FlagManager flagManager;
 
 //    private Map<GameObjectId, GameObjectId> mapOfItemLocationToNewContents = new HashMap<>();
 
-    public RandomizationDatUpdater(DatFileData datFileData, ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, FlagManager flagManager) {
+    public RandomizationDatUpdater(DatFileData datFileData, ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, NpcRandomizer npcRandomizer, FlagManager flagManager) {
         super(datFileData);
         this.itemRandomizer = itemRandomizer;
         this.shopRandomizer = shopRandomizer;
+        this.npcRandomizer = npcRandomizer;
         this.flagManager = flagManager;
     }
 
@@ -416,6 +417,28 @@ public class RandomizationDatUpdater extends DatUpdater {
     @Override
     void updateCustomShopBlock(ShopBlock shopBlock) {
         updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 0 (Default)"));
+    }
+
+    @Override
+    void updateMulbrukStoneConversationBlock(Block conversationBlock) {
+        if(Settings.isRandomizeNpcs()) {
+            String npcKey = npcRandomizer.getNpc("NPCL: Mulbruk").replaceAll("NPC: ", "").replaceAll("[ )('-.]", "");
+            String translatedNpcName = Translations.getText("npc." + npcKey);
+            replaceText(conversationBlock.getBlockContents(), Translations.getText("npc.Mulbruk"), translatedNpcName);
+        }
+    }
+
+    @Override
+    void updateMulbrukStoneConversationReferenceBlock(MasterNpcBlock referenceBlock) {
+        if(Settings.isRandomizeNpcs()) {
+            referenceBlock.setBackground(new BlockCmdSingle(ValueConstants.DAT_CONVERSATION_BACKGROUND_DRACUET));
+
+            String npcKey = npcRandomizer.getNpc("NPCL: Mulbruk").replaceAll("NPC: ", "").replaceAll("[ )('-.]", "");
+            String translatedNpcName = Translations.getText("npc." + npcKey);
+            BlockStringData blockStringData = new BlockStringData();
+            blockStringData.getData().addAll(FileUtils.stringToData(translatedNpcName));
+            referenceBlock.setNpcName(blockStringData);
+        }
     }
 
     private void updateShopBlock(ShopBlock shopBlock, ShopInventory shopInventory) {

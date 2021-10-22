@@ -1,18 +1,15 @@
 package lmr.randomizer;
 
+import lmr.randomizer.graphics.GraphicsFileUpdater;
 import lmr.randomizer.node.*;
 import lmr.randomizer.randomization.data.GameObjectId;
 import lmr.randomizer.util.LocationCoordinateMapper;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.security.MessageDigest;
-import java.util.List;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -21,10 +18,7 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.28.2";
-    public static final int EXISTING_FILE_WIDTH = 1024;
-    public static final int EXISTING_FILE_HEIGHT = 512;
-    public static final int GRAPHICS_VERSION = 5;
+    public static final String VERSION = "HALLOWEEN2021";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -186,7 +180,7 @@ public class FileUtils {
     }
 
     private static void addNode(Map<String, NodeWithRequirements> mapOfNodeNameToRequirementsObject, String name, List<String> requirementSet) {
-        for(String glitch : DataFromFile.POSSIBLE_GLITCHES) {
+        for(String glitch : DataFromFile.SUPPORTED_GLITCHES) {
             if(!Settings.getEnabledGlitches().contains(glitch)) {
                 if(requirementSet.contains("Glitch: " + glitch)) {
                     return; // This requirement set includes a glitch that's not enabled, don't include it.
@@ -266,6 +260,10 @@ public class FileUtils {
             else if (charAtIndex == '\n') {
                 dataString.add((short)0x0045);
             }
+            else if (charAtIndex == '%') {
+                data = (short)(CHAR_TO_SHORT_CONVERSION.indexOf('％') + 0x0100);
+                dataString.add(data);
+            }
             else {
                 data = (short)(CHAR_TO_SHORT_CONVERSION.indexOf(charAtIndex) + 0x0100);
                 dataString.add(data);
@@ -319,7 +317,7 @@ public class FileUtils {
                         if (assignment.contains("{") && assignment.contains("}")) {
                             String specialData = assignment.substring(assignment.indexOf("{") + 1).replace("}", "");
                             assignment = assignment.substring(0, assignment.indexOf('{')).trim();
-                            if (line.startsWith("Door ")) {
+                            if (line.startsWith("Door ") || line.startsWith("Door: ")) {
                                 customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomDoorPlacements().add(new CustomDoorPlacement(target, assignment, specialData));
                             }
@@ -336,13 +334,17 @@ public class FileUtils {
                                             new CustomItemPlacement(target, assignment, Short.parseShort(lineParts[0].trim()), null));
                                 }
                             }
+                            else if(line.startsWith("Transition")) {
+                                customPlacementData.setCustomized(true);
+                                customPlacementData.getCustomTransitionPlacements().add(new CustomTransitionPlacement(target, assignment, specialData.equals("Pipe")));
+                            }
                             else {
                                 customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomItemPlacements().add(
                                         new CustomItemPlacement(target, assignment, specialData));
                             }
                         } else {
-                            if(line.startsWith("Door ")) {
+                            if(line.startsWith("Door ") || line.startsWith("Door: ")) {
                                 customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomDoorPlacements().add(new CustomDoorPlacement(target, assignment, null));
                             }
@@ -832,7 +834,7 @@ public class FileUtils {
             writer.newLine();
         }
 
-        for(String glitchOption : DataFromFile.getAvailableGlitches()) {
+        for(String glitchOption : DataFromFile.SUPPORTED_GLITCHES) {
             writer.write(String.format("glitches.%s=%s", glitchOption, Settings.getEnabledGlitches().contains(glitchOption)));
             writer.newLine();
         }
@@ -918,13 +920,16 @@ public class FileUtils {
                 fileOutputStream.close();
             }
 
-            if(HolidaySettings.isHalloweenMode()) {
-                FileUtils.updateGraphicsFilesForHalloween(Settings.getGraphicsPack());
+            GraphicsFileUpdater.updateGraphicsFiles();
+            if(HolidaySettings.isHalloween2019Mode()) {
+                GraphicsFileUpdater.updateGraphicsFilesForHalloween2019(Settings.getGraphicsPack());
+            }
+            if(HolidaySettings.isHalloween2021Mode()) {
+                GraphicsFileUpdater.updateGraphicsFilesForHalloween2021(Settings.getGraphicsPack());
             }
             if(HolidaySettings.isFools2020Mode()) {
-                FileUtils.updateGraphicsFilesForFools2020(Settings.getGraphicsPack());
+                GraphicsFileUpdater.updateGraphicsFilesForFools2020(Settings.getGraphicsPack());
             }
-            FileUtils.updateGraphicsFiles();
 
             FileUtils.logFlush("Save file copy complete");
         }
@@ -942,338 +947,6 @@ public class FileUtils {
             throw new IOException("Entry is outside of target folder: " + zipEntry.getName());
         }
         return destinationFile;
-    }
-
-    private static boolean backupGraphicsFile(File graphicsPack) {
-        try {
-            File backup = new File(graphicsPack, "01effect.png.bak");
-            if(!backup.exists()) {
-                FileOutputStream fileOutputStream = new FileOutputStream(backup);
-                Files.copy(new File(graphicsPack, "01effect.png").toPath(), fileOutputStream);
-                fileOutputStream.flush();
-                fileOutputStream.close();
-            }
-            return true;
-        }
-        catch (IOException ex) {
-            return false;
-        }
-    }
-
-    private static boolean copyGraphicsFiles(File graphicsPack, File destinationFolder) {
-        try {
-            for(File graphicsFile : graphicsPack.listFiles()) {
-                if(graphicsFile.isFile()) {
-                    FileOutputStream fileOutputStream = new FileOutputStream(new File(destinationFolder, graphicsFile.getName()));
-                    Files.copy(graphicsFile.toPath(), fileOutputStream);
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
-                }
-            }
-            return true;
-        }
-        catch (IOException ex) {
-            return false;
-        }
-    }
-
-    public static boolean updateGraphicsFiles() {
-        BufferedImage custom;
-        try {
-            custom = ImageIO.read(FileUtils.class.getResource("01effect-custom.png"));
-        }
-        catch (IOException ex) {
-            return false;
-        }
-
-        for(File graphicsPack : getGraphicsPacks()) {
-            try {
-                if(!backupGraphicsFile(graphicsPack)) {
-                    return false;
-                }
-                File graphicsFile = new File(graphicsPack, "01effect.png");
-                BufferedImage existing = ImageIO.read(graphicsFile);
-                boolean updateGraphics = false;
-                if(existing.getHeight() < 1024) {
-                    updateGraphics = true;
-                }
-                else {
-                    int version = existing.getRGB(1023, 1023);
-                    if(version != GRAPHICS_VERSION) {
-                        updateGraphics = true;
-                    }
-                }
-                if(updateGraphics) {
-                    FileUtils.logFlush("Updating graphics file: " + graphicsFile.getAbsolutePath());
-                    // Hasn't been updated yet.
-                    BufferedImage newImage = new BufferedImage(EXISTING_FILE_WIDTH, EXISTING_FILE_HEIGHT + custom.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                    BufferedImage backupImage = ImageIO.read(new File(graphicsPack, "01effect.png.bak"));
-                    Graphics2D graphics2D = newImage.createGraphics();
-                    graphics2D.drawImage(backupImage, null, 0, 0); // Use backup to ensure no duplication of file
-                    graphics2D.drawImage(custom, null, 0, EXISTING_FILE_HEIGHT);
-                    graphics2D.dispose();
-                    newImage.setRGB(1023, 1023, GRAPHICS_VERSION);
-                    ImageIO.write(newImage, "png", graphicsFile);
-                    FileUtils.log("Graphics file successfully updated");
-                }
-                else {
-                    FileUtils.logFlush("Graphics file is already up to date: " + graphicsFile.getAbsolutePath());
-                }
-            }
-            catch (IOException ex) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static boolean updateGraphicsFilesForHalloween(String graphicsPack) {
-        String graphicsBase = Settings.getLaMulanaBaseDir() + "/data/graphics";
-        String halloweenFolderPath = graphicsBase + "/HALLOWEEN";
-        File halloweenGraphicsFolder = new File(halloweenFolderPath);
-        File graphicsBaseFolder = new File(graphicsBase, graphicsPack);
-        if(halloweenGraphicsFolder.exists()) {
-            halloweenGraphicsFolder.delete();
-        }
-        halloweenGraphicsFolder.mkdir();
-
-        if(!copyGraphicsFiles(graphicsBaseFolder, halloweenGraphicsFolder)) {
-            FileUtils.logFlush("Problem copying graphics from source folder " + graphicsPack);
-            halloweenGraphicsFolder.delete();
-            return false;
-        }
-
-        final List<String> modifiedFilesToCopy = Arrays.asList("02comenemy.png", "_banner.png",
-               "eveg01.png", "eveg03.png", "eveg04.png", "eveg05.png", "eveg06.png", "eveg08.png", "eveg09.png",
-                "eveg10.png", "eveg11.png", "eveg12.png", "eveg13.png", "eveg14.png", "eveg15.png", "eveg16.png",
-                "eveg17.png", "eveg18.png", "eveg19.png", "eveg20.png", "map18_1.png");
-        for(String file : modifiedFilesToCopy) {
-            try {
-                File graphicsFileToWrite = new File(halloweenFolderPath, file);
-                BufferedImage modified;
-                try {
-                    modified = ImageIO.read(FileUtils.class.getResource("graphics/halloween/" + file));
-                }
-                catch (IOException ex) {
-                    FileUtils.logFlush("Problem copying graphics file " + file);
-                    halloweenGraphicsFolder.delete();
-                    return false;
-                }
-                BufferedImage existingImage = ImageIO.read(graphicsFileToWrite);
-                BufferedImage newImage = new BufferedImage(existingImage.getWidth(), existingImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                Graphics2D graphics2D = newImage.createGraphics();
-                graphics2D.drawImage(modified, null, 0, 0); // Use backup to ensure no duplication of file
-                graphics2D.dispose();
-
-                ImageIO.write(newImage, "png", graphicsFileToWrite);
-            }
-            catch(IOException ex) {
-                FileUtils.logFlush("Problem copying graphics file " + file);
-                halloweenGraphicsFolder.delete();
-                return false;
-            }
-        }
-
-        if(!writeTitle01(halloweenFolderPath)) {
-            return false;
-        }
-        if(!write01Menu(halloweenFolderPath)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public static boolean updateGraphicsFilesForFools2020(String graphicsPack) {
-        String graphicsBase = Settings.getLaMulanaBaseDir() + "/data/graphics";
-        String foolFolderPath = graphicsBase + "/FOOLS2020";
-        File foolGraphicsFolder = new File(foolFolderPath);
-        File graphicsBaseFolder = new File(graphicsBase, graphicsPack);
-        if(foolGraphicsFolder.exists()) {
-            foolGraphicsFolder.delete();
-        }
-        foolGraphicsFolder.mkdir();
-
-        if(!copyGraphicsFiles(graphicsBaseFolder, foolGraphicsFolder)) {
-            FileUtils.logFlush("Problem copying graphics from source folder " + graphicsPack);
-            foolGraphicsFolder.delete();
-            return false;
-        }
-
-        final List<String> modifiedFilesToCopy = Arrays.asList("_banner.png");
-        for(String file : modifiedFilesToCopy) {
-            try {
-                File graphicsFileToWrite = new File(foolFolderPath, file);
-                BufferedImage modified;
-                try {
-                    modified = ImageIO.read(FileUtils.class.getResource("graphics/fools2020/" + file));
-                }
-                catch (IOException ex) {
-                    FileUtils.logFlush("Problem copying graphics file " + file);
-                    foolGraphicsFolder.delete();
-                    return false;
-                }
-                BufferedImage existingImage = ImageIO.read(graphicsFileToWrite);
-                BufferedImage newImage = new BufferedImage(existingImage.getWidth(), existingImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                Graphics2D graphics2D = newImage.createGraphics();
-                graphics2D.drawImage(modified, null, 0, 0); // Use backup to ensure no duplication of file
-                graphics2D.dispose();
-
-                ImageIO.write(newImage, "png", graphicsFileToWrite);
-            }
-            catch(IOException ex) {
-                FileUtils.logFlush("Problem copying graphics file " + file);
-                foolGraphicsFolder.delete();
-                return false;
-            }
-        }
-
-        if(!write01Menu(foolFolderPath)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private static boolean writeTitle01(String folderPath) {
-        String file = "title01.png";
-        try {
-            File graphicsFileToWrite = new File(folderPath, file);
-            BufferedImage modified;
-            try {
-                modified = ImageIO.read(FileUtils.class.getResource(getPathFromSettings(file)));
-            }
-            catch (IOException ex) {
-                return false;
-            }
-            BufferedImage existingImage = ImageIO.read(graphicsFileToWrite);
-            BufferedImage newImage = new BufferedImage(existingImage.getWidth(), existingImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics2D graphics2D = newImage.createGraphics();
-
-            BufferedImage leftPart = existingImage.getSubimage(0, 0, 942, 1024);
-            BufferedImage topPart = existingImage.getSubimage(942, 0, 82, 740);
-            BufferedImage replacedPart = modified.getSubimage(942, 740, 16, 20);
-            BufferedImage rightPart = existingImage.getSubimage(958, 740, 66, 20);
-            BufferedImage bottomPart = existingImage.getSubimage(942, 760, 82, 264);
-            graphics2D.drawImage(leftPart, null, 0, 0);
-            graphics2D.drawImage(topPart, null, 942, 0);
-            graphics2D.drawImage(replacedPart, null, 942, 740);
-            graphics2D.drawImage(rightPart, null, 958, 740);
-            graphics2D.drawImage(bottomPart, null, 942, 760);
-            graphics2D.dispose();
-
-            ImageIO.write(newImage, "png", graphicsFileToWrite);
-        }
-        catch(IOException ex) {
-            FileUtils.logFlush("Problem copying graphics file " + file);
-            return false;
-        }
-        return true;
-    }
-
-    private static boolean write01Menu(String folderPath) {
-        String file = "01menu.png";
-        String filepath = getPathFromSettings(file);
-
-        try {
-            File graphicsFileToWrite = new File(folderPath, file);
-            BufferedImage existingImage = ImageIO.read(graphicsFileToWrite);
-            BufferedImage newImage = new BufferedImage(existingImage.getWidth(), existingImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics2D graphics2D = newImage.createGraphics();
-
-            if(HolidaySettings.isHalloweenMode()) {
-                BufferedImage modified;
-                try {
-                    modified = ImageIO.read(FileUtils.class.getResource(filepath));
-                }
-                catch (IOException ex) {
-                    return false;
-                }
-                BufferedImage replacedPart = modified.getSubimage(780, 320, 40, 40);
-
-                BufferedImage leftPart = existingImage.getSubimage(0, 0, 780, 1024);
-                BufferedImage topPart = existingImage.getSubimage(780, 0, 244, 320);
-                BufferedImage rightPart = existingImage.getSubimage(820, 320, 204, 40);
-                BufferedImage bottomPart = existingImage.getSubimage(780, 360, 244, 664);
-                graphics2D.drawImage(leftPart, null, 0, 0);
-                graphics2D.drawImage(topPart, null, 780, 0);
-                graphics2D.drawImage(replacedPart, null, 780, 320);
-                graphics2D.drawImage(rightPart, null, 820, 320);
-                graphics2D.drawImage(bottomPart, null, 780, 360);
-            }
-            else if(HolidaySettings.isFools2020Mode()) {
-                final int itemsBeginX = 620;
-                final int itemsBeginY = 0;
-                final int itemsEndY = 440;
-                final int fullWidth = 1024;
-                final int fullHeight = 1024;
-                BufferedImage leftOfItems = existingImage.getSubimage(0, 0, itemsBeginX, fullHeight);
-                BufferedImage belowItems = existingImage.getSubimage(itemsBeginX, itemsEndY, fullWidth - itemsBeginX, fullHeight - itemsEndY);
-                graphics2D.drawImage(leftOfItems, null, 0, 0);
-                graphics2D.drawImage(belowItems, null, itemsBeginX, itemsEndY);
-
-                for(int verticalIndex = 0; verticalIndex < 11; verticalIndex++) {
-                    for(int horizontalIndex = 0; horizontalIndex < 10; horizontalIndex++) {
-                        int itemDrawBeginX = itemsBeginX + horizontalIndex * 40;
-                        int itemDrawBeginY = itemsBeginY + verticalIndex * 40;
-                        int sourceGraphicsBeginX = itemDrawBeginX;
-                        int sourceGraphicsBeginY = itemDrawBeginY;
-                        if(horizontalIndex == 7 && verticalIndex == 3) {
-                            // Heatproof case
-                            sourceGraphicsBeginX = itemsBeginX + 240;
-                            sourceGraphicsBeginY = itemsBeginY + 200;
-                        }
-                        else if(horizontalIndex == 6 && verticalIndex == 5) {
-                            // Scriptures
-                            sourceGraphicsBeginX = itemsBeginX + 280;
-                            sourceGraphicsBeginY = itemsBeginY + 120;
-                        }
-                        else if(horizontalIndex == 4 && verticalIndex == 8) {
-                            // Secret Treasure of Life
-                            sourceGraphicsBeginX = itemsBeginX + 120;
-                            sourceGraphicsBeginY = itemsBeginY + 200;
-                        }
-                        if(horizontalIndex != 0 || verticalIndex != 7) {
-                            BufferedImage itemGraphic = existingImage.getSubimage(sourceGraphicsBeginX, sourceGraphicsBeginY, 40, 40);
-                            graphics2D.drawImage(itemGraphic, null, itemDrawBeginX, itemDrawBeginY);
-                        }
-                    }
-                }
-            }
-
-            graphics2D.dispose();
-
-            ImageIO.write(newImage, "png", graphicsFileToWrite);
-        }
-        catch(IOException ex) {
-            FileUtils.logFlush("Problem copying graphics file " + file);
-            return false;
-        }
-        return true;
-    }
-
-    private static String getPathFromSettings(String file) {
-        if(HolidaySettings.isHalloweenMode()) {
-            return "graphics/halloween/" + file;
-        }
-        if(HolidaySettings.isFools2020Mode()) {
-            return "graphics/fools2020/" + file;
-        }
-        return  "";
-    }
-
-    private static List<File> getGraphicsPacks() {
-        File graphicsFolder = new File(Settings.getLaMulanaBaseDir() + "/data/graphics");
-        if(graphicsFolder.exists() && graphicsFolder.isDirectory()) {
-            List<File> graphicsSubfolders = new ArrayList<>();
-            for(File file : graphicsFolder.listFiles()) {
-                if(file.isDirectory()) {
-                    graphicsSubfolders.add(file);
-                }
-            }
-            return graphicsSubfolders;
-        }
-        return new ArrayList<>(0);
     }
 
     public static void logException(Exception ex) {

@@ -109,8 +109,5 @@ public class Fools2020DatUpdater extends DatUpdater {
 
         Block masterBlock = AddObject.buildMasterBlock(CustomBlockEnum.Fools2020ReferenceBlock_MulbrukEarlyExitPrompt, getCustomBlockIndex(CustomBlockEnum.Fools2020ConversationBlock_MulbrukEarlyExitPrompt));
         datFileData.addCustomBlock(CustomBlockEnum.Fools2020ReferenceBlock_MulbrukEarlyExitPrompt, masterBlock);
-
-        masterBlock = AddObject.buildMasterBlock(CustomBlockEnum.Fools2020ReferenceBlock_MulbrukBookOfTheDead, BlockConstants.ItemConversationBookOfTheDead);
-        datFileData.addCustomBlock(CustomBlockEnum.Fools2020ReferenceBlock_MulbrukBookOfTheDead, masterBlock);
     }
 }

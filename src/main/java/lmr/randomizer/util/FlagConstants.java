@@ -12,10 +12,11 @@ public final class FlagConstants {
     public static final int GUIDANCE_ELEVATOR = 0x134; // Value 0 > 1 when hitting the elevator block in the Guidance mouth (where Dracuet's door is), other increments via FlagTimer for animation
     public static final int GUIDANCE_PUZZLE_TREASURES_CHEST = 0x137; // Value 0 > 1 when using Pepper on the statue, 1 > 2 when the chest is done animating to make it possible to open.
     public static final int SURFACE_RUINS_OPENED = 0x145; // Set in vanilla first conversation with Xelpud, changed in randomizer to use 0xad0. For some reason, warp graphics sometimes test this flag.
+    public static final int SURFACE_PUZZLE_WATERFALL_WALL_SACRED_ORB = 0x14b; // Value 0 > 1 when the wall/Hitbox is broken for the wall that has bats behind it, also used as the puzzle flag for the chest
     public static final int SURFACE_UNDERPATH_VISIBLE = 0x14c; // Value 0 > 1 by Lemeza detector near the transitions into the Surface underpath, allowing you to navigate the area properly. One of the two detectors is added by randomizer; the other is vanilla.
     public static final int SURFACE_PUZZLE_SEAL_COIN_CHEST = 0x14d; // In vanilla, this is for opening the seal and opening the chest. In randomizer, the chest uses a different world flag, but this remains as the puzzle flag.
     public static final int SURFACE_WATERFALL_WALL_BATS = 0x151; // Value 0 > 1 when the wall/Hitbox is broken for the wall that has bats behind it, 1 > 2 as the wall cover despawns and bats spawn
-    public static final int SURFACE_PUZZLE_WATERFALL_WALL_SACRED_ORB = 0x14b; // Value 0 > 1 when the wall/Hitbox is broken for the wall that has bats behind it, also used as the puzzle flag for the chest
+    public static final int GUIDANCE_BATS_KILLED_COUNT = 0x159; // Value += 1 every time a bat is killed in Guidance.
     public static final int MAUSOLEUM_PUZZLE_ORB_CHEST = 0x165; // Value 0 > 1 when placing a weight at the proper giant's foot, unlocks the Mausoleum Sacred Orb chest
     public static final int HARDMODE = 0x16a; // Value 0 > 2 when hard mode is triggered.
     public static final int SPHINX_DESTROYED = 0x173; // Value 5 = destroyed
@@ -77,6 +78,7 @@ public final class FlagConstants {
     public static final int DIMENSIONAL_ANGEL_SHIELD_DAIS_LEFT = 0x2d2; // 0 > 1 when dais is pressed
     public static final int DIMENSIONAL_ANGEL_SHIELD_DAIS_RIGHT = 0x2d3; // 0 > 1 when activated by the other two daises being pressed
     public static final int SHRINE_FAIRY_BLOCK = 0x2d5; // Value 0 > 1 when spawned, 1 > 2 from talking to fairy queen, 2 > 3 for animation of removal
+    public static final int BEELZEBUB_STATE = 0x2df;
     public static final int SURFACE_TRANSFORM_WIND_HOWLING = 0x2e1; // Set to 1 when all 8 bosses are down, along with updates to 0x102 and others
     public static final short CONVERSATION_CANT_LEAVE = 0x2e4; // Set to 1 when entering a conversation that can't be interrupted, set back to 0 when it's okay to leave again.
     public static final int TRANSLATION_TABLETS_READ = 0x2e5; // Value += 1 for each translation tablet read.
@@ -106,6 +108,7 @@ public final class FlagConstants {
     public static final int LAMP_STATION_UNKNOWN = 0x3ed; // Gets set on the Lemeza detector that lights Lamp of Time. Probably to despawn the flame graphic
     public static final int ESCAPE_TRIGGERED = 0x403; // Value 0 > 1 alongside triggering the escape timer and screenshake.
     public static final int SURFACE_RUINS_FRONT_DOOR_OPEN = 0x414; // For the crusher covering the transition from Surface to Gate of Guidance
+    public static final int MAUSOLEUM_HARDMODE_SKULL_ANIMATION = 0x420; // Goes 0 > 1 by timer when HARDMODE (16a) set to 2, sets screen flag 0x28, and goes 1 > 2 by timer 40 frames later (after animation). Tested on RoomSpawner animation for == 1
     public static final int HT_SOLVED_ROOM33_PILLARS = 0x70d;
     public static final int HT_ROOM19_SPAWNS = 0x7dd; // Value 0 > 1 via FlagTimer based on the flag set when Mushussu is defeated; used for the test to spawn Mushussu and the tests for some enemies on that screen.
     public static final int HT_SOLVED_ROOM19 = 0x7e2; // Value 0 > 1 when Mushussu is defeated, used on the crushers.
@@ -131,7 +134,8 @@ public final class FlagConstants {
     public static final int MULBRUK_DOOR_UNSEALED = 0x18e; // 1=talked to 2=touched seal 3=talked to mulbruk again
     public static final int MULBRUK_CONVERSATION_AWAKE = 0x391;
     public static final int MULBRUK_CONVERSATIONS_EARLY = 0x079; // 1=unsealed 2=wedjet 3=left after wedjet 4 blah blah doesn't really matter
-    public static final int MULBRUK_CONVERSATION_BOOK = 0x32a; // Value 0 > 1 via rando-added timer on Xelpud's screen when Diary conversation is enabled
+    public static final int MULBRUK_CONVERSATION_BOOK = 0x32a; // Value 0 > 1 via Book of the Dead conversation.
+    public static final int MULBRUK_CONVERSATION_HT = 0x34a; // Nothing sets this value; it's been theorized that it represents owning the DLC on the Wii
 
     public static final int FAIRY_QUEEN_CONVERSATION_FAIRIES = 0x1f5; // Unlocking the ceiling in Buer's room (vanilla only; rando makes it breakable by default) with value 0 > 1; value goes to 2 after the conversation that unlocks fairies/fairy points
 
@@ -183,6 +187,7 @@ public final class FlagConstants {
 
     // Item world flags - determine if you've collected an item; value is always 0 uncollected > 2 collected, although opening a chest may set it to 1 on occasion
     public static final int WF_KNIFE = 0x07f;
+    public static final int WF_KEY_SWORD = 0x080;
     public static final int WF_FLARE_GUN = 0x086;
     public static final int WF_ANGEL_SHIELD = 0x08d;
     public static final int WF_ANKH_JEWEL_GUIDANCE = 0x08e;
@@ -193,18 +198,54 @@ public final class FlagConstants {
     public static final int WF_ANKH_JEWEL_BIRTH = 0x093;
     public static final int WF_ANKH_JEWEL_TWIN = 0x094;
     public static final int WF_ANKH_JEWEL_DIMENSIONAL = 0x095;
+    public static final int WF_ANKH_JEWEL_EXTRA = 0xad6;
+    public static final int WF_DJED_PILLAR = 0x097;
     public static final int WF_MINI_DOLL = 0x098;
+    public static final int WF_MAGATAMA_JEWEL = 0x099;
+    public static final int WF_COG_OF_THE_SOUL = 0x09a;
+    public static final int WF_POCHETTE_KEY = 0x09c;
     public static final int WF_VANILLA_DRAGON_BONE = 0x09d; // Vanilla-specific for Dragon Bone, but didn't work correctly
+    public static final int WF_CRYSTAL_SKULL = 0x09e;
+    public static final int WF_VESSEL = 0x09f;
+    public static final int WF_WOMAN_STATUE = 0x0a1;
+    public static final int WF_KEY_OF_ETERNITY = 0x0a2;
+    public static final int WF_SERPENT_STAFF = 0x0a3;
     public static final int WF_TALISMAN = 0x0a4;
     public static final int WF_SHELL_HORN = 0x0a7;
+    public static final int WF_GLOVE = 0x0a8;
+    public static final int WF_HOLY_GRAIL = 0x0a9;
     public static final int WF_ISIS_PENDANT = 0x0aa;
     public static final int WF_CRUCIFIX = 0x0ab;
+    public static final int WF_GRAPPLE_CLAW = 0x0ad;
     public static final int WF_BRONZE_MIRROR = 0x0ae;
+    public static final int WF_EYE_OF_TRUTH = 0x0af;
+    public static final int WF_SCALESPHERE = 0x0b1;
+    public static final int WF_GAUNTLET = 0x0b2;
     public static final int WF_PLANE_MODEL = 0x0b4;
     public static final int WF_PHILOSOPHERS_OCARINA = 0x0b5;
     public static final int WF_FEATHER = 0x0b6;
+    public static final int WF_FAIRY_CLOTHES = 0x0b8;
+    public static final int WF_SCRIPTURES = 0x0b9;
+    public static final int WF_FRUIT_OF_EDEN = 0x0bb;
+    public static final int WF_TWIN_STATUE = 0x0bc;
+    public static final int WF_PERFUME = 0x0be;
+    public static final int WF_SPAULDER = 0x0bf;
+    public static final int WF_DIMENSIONAL_KEY = 0x0c0;
+    public static final int WF_ICE_CAPE = 0x0c1;
+    public static final int WF_ORIGIN_SEAL = 0x0c2;
+    public static final int WF_BIRTH_SEAL = 0x0c3;
+    public static final int WF_LIFE_SEAL = 0x0c4;
+    public static final int WF_DEATH_SEAL = 0x0c5;
     public static final int WF_SACRED_ORB_GUIDANCE = 0x0c7;
+    public static final int WF_SACRED_ORB_SURFACE = 0x0c8;
+    public static final int WF_SACRED_ORB_MAUSOLEUM = 0x0c9;
     public static final int WF_SACRED_ORB_SUN = 0x0ca;
+    public static final int WF_SACRED_ORB_SPRING = 0x0cb;
+    public static final int WF_SACRED_ORB_EXTINCTION = 0x0cc;
+    public static final int WF_SACRED_ORB_TWIN = 0x0cd;
+    public static final int WF_SACRED_ORB_SHRINE = 0x0ce;
+    public static final int WF_SACRED_ORB_RUIN = 0x0cf;
+    public static final int WF_SACRED_ORB_DIMENSIONAL = 0x0d0;
     public static final int WF_MAP_SURFACE = 0x0d1;
     public static final int WF_MAP_GUIDANCE = 0x0d2;
     public static final int WF_MAP_MAUSOLEUM = 0x0d3;
@@ -228,14 +269,43 @@ public final class FlagConstants {
     public static final int WF_SOFTWARE_EMUSIC = 0x0eb;
     public static final int WF_SOFTWARE_BEOLAMU = 0x0ec;
     public static final int WF_SOFTWARE_MEKURI = 0x0f1;
+    public static final int WF_SOFTWARE_BOUNCE = 0x0f2;
+    public static final int WF_SOFTWARE_MIRAI = 0x0f4;
+    public static final int WF_SOFTWARE_LAMULANA = 0x0f5;
     public static final int WF_TREASURES = 0x103;
     public static final int WF_DIARY = 0x104;
     public static final int WF_MULANA_TALISMAN = 0x105;
     public static final int WF_PROVOCATIVE_BATHING_SUIT = 0x106;
     public static final int WF_MATERNITY_STATUE = 0x10b;
+    public static final int WF_COIN_SURFACE_GUIDANCE_TWO = 0x138;
+    public static final int WF_COIN_SURFACE_GUIDANCE_ONE = 0x13b;
+    public static final int WF_COIN_SURFACE_GUIDANCE_TRAP = 0x13c;
     public static final int WF_SOFTWARE_DEATHV = 0x14f;
+    public static final int WF_COIN_SURFACE_RUIN_PATH = 0x155;
+    public static final int WF_COIN_SURFACE_WATERFALL = 0x156;
+    public static final int WF_COIN_SURFACE_MAUSOLEUM = 0x166;
     public static final int WF_COIN_SUN = 0x18b;
+    public static final int WF_COIN_SPRING = 0x1a2;
+    public static final int WF_COIN_INFERNO_LAVA = 0x1ab;
+    public static final int WF_COIN_INFERNO_SPIKES = 0x1ba;
+    public static final int WF_COIN_TWIN_LOWER = 0x1ec;
+    public static final int WF_COIN_TWIN_WITCHES = 0x1ee;
+    public static final int WF_COIN_ENDLESS = 0x203;
+    public static final int WF_COIN_SHRINE = 0x216;
+    public static final int WF_COIN_ILLUSION_SPIKES = 0x22c;
+    public static final int WF_COIN_ILLUSION_KATANA = 0x233;
+    public static final int WF_COIN_GRAVEYARD = 0x242;
+    public static final int WF_COIN_MOONLIGHT = 0x25a;
+    public static final int WF_COIN_GODDESS_FAIRY = 0x27e;
+    public static final int WF_COIN_GODDESS_SHIELD = 0x286;
+    public static final int WF_COIN_BIRTH_NINJA = 0x2aa;
+    public static final int WF_COIN_BIRTH_SOUTHEAST = 0x2b1;
+    public static final int WF_COIN_BIRTH_DANCE = 0x2b3;
+    public static final int WF_COIN_RUIN = 0x2bb;
+    public static final int WF_COIN_DIMENSIONAL = 0x2bf;
     public static final int WF_MSX2 = 0x2e6;
+    public static final int WF_COIN_TWIN_ESCAPE = 0x3fc;
+    public static final int WF_COIN_EXTINCTION = 0x401;
     public static final int WF_PEPPER = 0xa8e;
     public static final int WF_BOOK_OF_THE_DEAD = 0xa8f;
     public static final int WF_ANCHOR = 0xa92;
@@ -306,11 +376,51 @@ public final class FlagConstants {
 
     // Mail flags
     public static final int MAIL_COUNT = 0x328;
+    public static final int MAIL_00 = 0x2ee;
+    public static final int MAIL_01 = 0x2ef;
+    public static final int MAIL_02 = 0x349;
+    public static final int MAIL_03 = 0x36e;
+    public static final int MAIL_04 = 0x2f0;
+    public static final int MAIL_05 = 0x2f1;
+    public static final int MAIL_06 = 0x2f2;
     public static final int MAIL_07 = 0x2f3;
+    public static final int MAIL_08 = 0x2f4;
+    public static final int MAIL_09 = 0x2f5;
+    public static final int MAIL_10 = 0x2f6;
+    public static final int MAIL_11 = 0x2f7;
+    public static final int MAIL_12 = 0x2f8;
+    public static final int MAIL_13 = 0x2f9;
+    public static final int MAIL_14 = 0x2fa;
+    public static final int MAIL_15 = 0x2fb;
+    public static final int MAIL_16 = 0x2fc;
+    public static final int MAIL_17 = 0x2fd;
     public static final int MAIL_18 = 0x2fe;
+    public static final int MAIL_19 = 0x2ff;
+    public static final int MAIL_20 = 0x300;
+    public static final int MAIL_21 = 0x301;
+    public static final int MAIL_22 = 0x302;
+    public static final int MAIL_23 = 0x303;
+    public static final int MAIL_24 = 0x304;
     public static final int MAIL_25 = 0x305;
+    public static final int MAIL_26 = 0x306;
+    public static final int MAIL_27 = 0x307;
+    public static final int MAIL_28 = 0x308;
+    public static final int MAIL_29 = 0x309;
+    public static final int MAIL_30 = 0x30a;
+    public static final int MAIL_31 = 0x30b;
+    public static final int MAIL_32 = 0x30c;
+    public static final int MAIL_33 = 0x30d;
+    public static final int MAIL_34 = 0x30e;
+    public static final int MAIL_35 = 0x30f;
+    public static final int MAIL_36 = 0x310;
+    public static final int MAIL_37 = 0x311;
+    public static final int MAIL_38 = 0x312;
+    public static final int MAIL_39 = 0x313;
+    public static final int MAIL_40 = 0x314;
     public static final int MAIL_41 = 0x315;
+    public static final int MAIL_42 = 0x316;
     public static final int MAIL_43 = 0x317;
+    public static final int MAIL_44 = 0x318;
 
     // Screen flags
     public static final int SCREEN_FLAG_0 = 0x000;
@@ -327,7 +437,7 @@ public final class FlagConstants {
     public static final int SCREEN_FLAG_B = 0x00b; // Commonly used for Shell Horn sounds
     public static final int SCREEN_FLAG_C = 0x00c;
     public static final int SCREEN_FLAG_D = 0x00d;
-    public static final int SCREEN_FLAG_E = 0x00e;
+    public static final int SCREEN_FLAG_E = 0x00e; // Often associated with a dais for a toll door
     public static final int SCREEN_FLAG_F = 0x00f;
     public static final int SCREEN_FLAG_10 = 0x010;
     public static final int SCREEN_FLAG_11 = 0x011;
@@ -366,7 +476,9 @@ public final class FlagConstants {
 
     public static final int ROOM_FLAG_35 = 0x035; // Used by fake Ankh Jewel trap in Twin Labyrinths for non-random traps.
     public static final int ROOM_FLAG_37 = 0x037; // Used for a weight door during the escape.
+    public static final int ROOM_FLAG_3B = 0x03b; // Used by Sun bats for Sacred Orb chest / cast down those that fly.
     public static final int ROOM_FLAG_3C = 0x03c; // Used by Graveyard trap chest for non-random traps.
+    public static final int ROOM_FLAG_3E = 0x03e;
     public static final int ROOM_FLAG_40 = 0x040; // Set by an arg on Tiamat's ankh when the fight starts
     public static final int ROOM_FLAG_45 = 0x045; // Used for a weight door during the escape.
 
@@ -374,16 +486,6 @@ public final class FlagConstants {
     public static final int XELPUD_TENT_OPEN = 0x21c; // For the two-second delay between game start and Xelpud's tent being open
     public static final int RETRO_XELPUD_DOOR_COVER = 0x2e3; // Set to 1 after talking to 8bit Elder on Gate of Time Surface in vanilla.
     public static final int XELPUD_READY_TO_TALK = 0x3b6; // Making sure you can't actually talk to Xelpud in his basic conversation if the tent is closed.
-
-    // Fools 2019
-
-    // Halloween 2019
-    public static final int CUSTOM_HALLOWEEN_MULBRUK_CONVERSATION = 0xaac; // 0 = not spoken, 1 = did intro, 2 = ready to talk about HT, 3 = HT unlocked
-    public static final int CUSTOM_HALLOWEEN_H4 = 0xaad; // Used to track progress for escaping H4. Can't use a screen/room flag because of the abnormal transitions.
-    public static final int CUSTOM_SECRET_SHOP = 0xacd; // Unlocks secret shop on the Surface for buying Scriptures / Perfume / Money
-    public static final int CUSTOM_HALLOWEEN_MULBRUK_HINT = 0xace; // Allows Mulbruk to cycle through NPC hints.
-    public static final int CUSTOM_HALLOWEEN_NPC_COUNT = 0xaca; // Incremented when visiting NPCs
-    public static final int CUSTOM_HALLOWEEN_FINAL_DRACUET = 0xaae; // Incremented when visiting NPCs
 
     // Fools 2020
     public static final int CUSTOM_WF_FAKE_FEATHER = 0xacf; // Triggers some platforms and pots to spawn.
@@ -410,6 +512,60 @@ public final class FlagConstants {
     public static final int CUSTOM_FOOLS2021_GRAIL_BIRTH = 0xab7; // Grail flag for Chamber of Birth warp, to avoid requiring the location for empowered grail.
     public static final int CUSTOM_FOOLS2021_GRAIL_TWIN_BACK = 0xab8; // Grail flag for Twin Labyrinths backside warp, to avoid requiring the location for empowered grail.
     public static final int CUSTOM_FOOLS2021_GRAIL_DIMENSIONAL = 0xab9; // Grail flag for Dimensional Corridor warp, to avoid requiring the location for empowered grail.
+
+    // Halloween 2019
+    public static final int CUSTOM_HALLOWEEN_MULBRUK_CONVERSATION = 0xaac; // 0 = not spoken, 1 = did intro, 2 = ready to talk about HT, 3 = HT unlocked
+    public static final int CUSTOM_HALLOWEEN_H4 = 0xaad; // Used to track progress for escaping H4. Can't use a screen/room flag because of the abnormal transitions.
+    public static final int CUSTOM_SECRET_SHOP = 0xacd; // Unlocks secret shop on the Surface for buying Scriptures / Perfume / Money
+    public static final int CUSTOM_HALLOWEEN_MULBRUK_HINT = 0xace; // Allows Mulbruk to cycle through NPC hints.
+    public static final int CUSTOM_HALLOWEEN_NPC_COUNT = 0xaca; // Incremented when visiting NPCs
+    public static final int CUSTOM_HALLOWEEN_FINAL_DRACUET = 0xaae; // Incremented when visiting NPCs
+
+    // Halloween 2021
+    public static final int CUSTOM_HALLOWEEN2021_CURSED = 0xaaa; // Incremented with curses.
+    public static final int CUSTOM_HALLOWEEN2021_BAT_LEVEL = 0xaab;
+    public static final int CUSTOM_HALLOWEEN2021_SKELETON_LEVEL = 0xaac;
+    public static final int CUSTOM_HALLOWEEN2021_BAT_RETRIBUTION = 0xaad;
+    public static final int CUSTOM_HALLOWEEN2021_MULBRUK_DRACUET = 0xaae;
+    public static final int CUSTOM_HALLOWEEN2021_MOTHER_STATE = 0xaaf; // Replaces 0x0fe to avoid side effects for escape sequence sounds.
+    public static final int CUSTOM_HALLOWEEN2021_MOTHER_DEFEATED = 0xab0; // Replaces 0x382 to avoid triggering escape sequence after Mother is defeated.
+    public static final short CUSTOM_HALLOWEEN2021_XELPUD_BONUS_CANDY_CONVERSATIONS = 0xab1;
+    public static final short CUSTOM_HALLOWEEN2021_ESCAPE_SPECIAL = 0xab2; // Triggers a different escape sequence door for 111% completion.
+    public static final short CUSTOM_HALLOWEEN2021_ESCAPE_CHEST = 0xab3; // Replaces escape chest world flag for autotracker consistency between random and nonrandom coin chests
+
+    // Steam achievements?
+    public static final int TALKED_TO_AWAKENED_MULBRUK = 0xaf0;
+    public static final int ACHIEVEMENT_MAP_COUNT = 0xc06; // Counts up to 17
+    public static final int ACHIEVEMENT_SOFTWARE_COUNT = 0xc07; // Counts up to 20
+
+    public static final int ACHIEVEMENT_ALL_SACRED_ORBS = 0xbda; // Set to 1 when sacred orbs collected becomes 10
+    public static final int ACHIEVEMENT_ALL_SOFTWARE = 0xbd5; // Set to 1 when software count becomes 20
+    public static final int ACHIEVEMENT_ALL_MAPS = 0xbd6; // Set to 1 when map count becomes 17
+    public static final int ACHIEVEMENT_ALL_COIN_CHESTS = 0xbd7; // Set to 1 when coin chests collected becomes 28
+    public static final int ACHIEVEMENT_ALL_EMAILS = 0xbdb; // Set to 1 when email count becomes 45
+
+    public static final int ACHIEVEMENT_SOFTWARE_COUNT_UPDATED_DEATHV = 0xc13; // Incremented when deathv.exe is collected.
+
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_SURFACE = 0xc1d; // Incremented when Surface map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_GUIDANCE = 0xc1c; // Incremented when Gate of Guidance map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_MAUSOLEUM = 0xc1e; // Incremented when Mausoleum of the Giants map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_SUN = 0xc1f; // Incremented when Temple of the Sun map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_SPRING = 0xc20; // Incremented when Spring in the Sky map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_INFERNO = 0xc21; // Incremented when Inferno Cavern map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_EXTINCTION = 0xc22; // Incremented when Chamber of Extinction map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_TWIN = 0xc23; // Incremented when Twin Labyrinths map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_ENDLESS = 0xc24; // Incremented when Endless Corridor map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_SHRINE = 0xc25; // Incremented when Shrine of the Mother map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_ILLUSION = 0xc26; // Incremented when Gate of Illusion map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_GRAVEYARD = 0xc27; // Incremented when Graveyard of the Giants map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_MOONLIGHT = 0xc28; // Incremented when Temple of Moonlight map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_GODDESS = 0xc29; // Incremented when Tower of the Goddess map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_RUIN = 0xc2a; // Incremented when Tower of Ruin map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_BIRTH = 0xc2b; // Incremented when Chamber of Birth map is collected.
+    public static final int ACHIEVEMENT_MAP_COUNT_UPDATED_DIMENSIONAL = 0xc2c; // Incremented when Dimensional Corridor map is collected.
+
+    // Version specific?
+    public static final int OLD_WF_DEATHV = 0x0ed; // Checked for achievement, unknown how/where it's set
 
     public static int getAnkhJewelFlag(int zoneIndex) {
         if(zoneIndex == ZoneConstants.GUIDANCE) {
@@ -501,6 +657,61 @@ public final class FlagConstants {
         return 0;
     }
 
+    public static int getMapCountUpdatedFlag(int mapWorldFlag) {
+        if(mapWorldFlag == WF_MAP_SURFACE) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_SURFACE;
+        }
+        if(mapWorldFlag == WF_MAP_GUIDANCE) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_GUIDANCE;
+        }
+        if(mapWorldFlag == WF_MAP_MAUSOLEUM) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_MAUSOLEUM;
+        }
+        if(mapWorldFlag == WF_MAP_SUN) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_SUN;
+        }
+        if(mapWorldFlag == WF_MAP_SPRING) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_SPRING;
+        }
+        if(mapWorldFlag == WF_MAP_INFERNO) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_INFERNO;
+        }
+        if(mapWorldFlag == WF_MAP_EXTINCTION) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_EXTINCTION;
+        }
+        if(mapWorldFlag == WF_MAP_TWIN) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_TWIN;
+        }
+        if(mapWorldFlag == WF_MAP_ENDLESS) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_ENDLESS;
+        }
+        if(mapWorldFlag == WF_MAP_SHRINE) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_SHRINE;
+        }
+        if(mapWorldFlag == WF_MAP_ILLUSION) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_ILLUSION;
+        }
+        if(mapWorldFlag == WF_MAP_GRAVEYARD) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_GRAVEYARD;
+        }
+        if(mapWorldFlag == WF_MAP_MOONLIGHT) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_MOONLIGHT;
+        }
+        if(mapWorldFlag == WF_MAP_GODDESS) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_GODDESS;
+        }
+        if(mapWorldFlag == WF_MAP_RUIN) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_RUIN;
+        }
+        if(mapWorldFlag == WF_MAP_BIRTH) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_BIRTH;
+        }
+        if(mapWorldFlag == WF_MAP_DIMENSIONAL) {
+            return ACHIEVEMENT_MAP_COUNT_UPDATED_DIMENSIONAL;
+        }
+        throw new RuntimeException("Unable to find flag for Map with world flag " + mapWorldFlag);
+    }
+
     public static int getNpcConversationFlag(int conversationBlockNumber) {
         if(conversationBlockNumber == BlockConstants.Master_Hiner) {
             return 0xac9;
@@ -590,6 +801,313 @@ public final class FlagConstants {
             return 0xaab;
         }
         return 0;
+    }
+
+    public static short getSafeScreenFlag(int locationWorldFlag) {
+        if(locationWorldFlag == WF_ANKH_JEWEL_DIMENSIONAL) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_ANKH_JEWEL_GUIDANCE) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_ANKH_JEWEL_MAUSOLEUM) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_ANKH_JEWEL_SPRING) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_ANKH_JEWEL_SUN) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_ANKH_JEWEL_RUIN) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_ANKH_JEWEL_TWIN) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_BIRTH_SEAL) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_SOFTWARE_BOUNCE) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_BRONZE_MIRROR) {
+            return SCREEN_FLAG_10;
+        }
+        if(locationWorldFlag == WF_COG_OF_THE_SOUL) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_CRUCIFIX) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_CRYSTAL_SKULL) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_DEATH_SEAL) {
+            return SCREEN_FLAG_10;
+        }
+        if(locationWorldFlag == WF_DIARY) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_DIMENSIONAL_KEY) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_DJED_PILLAR) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_EYE_OF_TRUTH) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_FAIRY_CLOTHES) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_FEATHER) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_FRUIT_OF_EDEN) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_GAUNTLET) {
+            return SCREEN_FLAG_10; // 9 is probably fine, but it's used in an adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_GLOVE) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_GRAPPLE_CLAW) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_HOLY_GRAIL) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_ICE_CAPE) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_ISIS_PENDANT) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_KEY_OF_ETERNITY) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_SOFTWARE_LAMULANA) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_LIFE_SEAL) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_MAGATAMA_JEWEL) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_MAP_BIRTH) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_MAP_EXTINCTION) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_MAP_DIMENSIONAL) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_MAP_ENDLESS) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_MAP_GUIDANCE) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_MAP_ILLUSION) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_MAP_GRAVEYARD) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_MAP_INFERNO) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_MAP_MAUSOLEUM) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_MAP_SHRINE) {
+            return SCREEN_FLAG_10; // 9 is probably fine, but it's used in the adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_MAP_SPRING) {
+            return SCREEN_FLAG_10;
+        }
+        if(locationWorldFlag == WF_MAP_MOONLIGHT) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_MAP_SUN) {
+            return SCREEN_FLAG_10; // 9 is probably fine, but it's used in the adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_MAP_RUIN) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_MAP_GODDESS) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_MAP_TWIN) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_SOFTWARE_MIRAI) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_ORIGIN_SEAL) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_PERFUME) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_PLANE_MODEL) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_POCHETTE_KEY) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_SACRED_ORB_GUIDANCE) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_SACRED_ORB_SURFACE) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_SACRED_ORB_MAUSOLEUM) {
+            return SCREEN_FLAG_11; // 10 is probably fine, but could be used if randomizing which giant opens the Sacred Orb chest.
+        }
+        if(locationWorldFlag == WF_SACRED_ORB_SUN) {
+            return SCREEN_FLAG_11; // 9 is probably fine, but it's used in the adjoining room so we'll stick with it for safety, and 10 is used for the coin chest in the also-adjoining room.
+        }
+        if(locationWorldFlag == WF_SACRED_ORB_SPRING) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_SACRED_ORB_EXTINCTION) {
+            return SCREEN_FLAG_11; // 9 and 10 are probably fine, but they're used in an adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_SACRED_ORB_DIMENSIONAL) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_SACRED_ORB_TWIN) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_SACRED_ORB_SHRINE) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_SACRED_ORB_RUIN) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_SCALESPHERE) {
+            return SCREEN_FLAG_10; // 9 is probably fine, but it's used in the adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_SERPENT_STAFF) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_SHELL_HORN) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_SPAULDER) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_TREASURES) {
+            return SCREEN_FLAG_10; // 9 is probably fine, but it's used in the adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_TWIN_STATUE) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_VESSEL) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_WOMAN_STATUE) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_SOFTWARE_YAGOSTR) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_SURFACE_WATERFALL) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_SURFACE_SEAL) {
+            return SCREEN_FLAG_10; // 9 is probably fine, but it's used in the adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_COIN_SURFACE_RUIN_PATH) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_SURFACE_GUIDANCE_ONE) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_SURFACE_GUIDANCE_TWO) {
+            return SCREEN_FLAG_10;
+        }
+        if(locationWorldFlag == WF_COIN_SURFACE_GUIDANCE_TRAP) {
+            return SCREEN_FLAG_10; // 9 is probably fine, but it's used in the adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_COIN_SURFACE_MAUSOLEUM) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_SUN) {
+            return SCREEN_FLAG_10;
+        }
+        if(locationWorldFlag == WF_COIN_SPRING) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_INFERNO_LAVA) {
+            return SCREEN_FLAG_10; // 9 is probably fine, but it's used in the adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_COIN_INFERNO_SPIKES) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_EXTINCTION) {
+            return SCREEN_FLAG_10;
+        }
+        if(locationWorldFlag == WF_COIN_TWIN_WITCHES) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_TWIN_LOWER) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_ENDLESS) {
+            return SCREEN_FLAG_10; // 9 is probably fine, but it's used in the adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_COIN_SHRINE) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_ILLUSION_KATANA) {
+            return SCREEN_FLAG_10;
+        }
+        if(locationWorldFlag == WF_COIN_ILLUSION_SPIKES) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_GRAVEYARD) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_MOONLIGHT) {
+            return SCREEN_FLAG_10; // 9 is probably fine, but it's used in the adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_COIN_GODDESS_SHIELD) {
+            return SCREEN_FLAG_10; // 9 is probably fine, but it's used in the adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_COIN_GODDESS_FAIRY) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_RUIN) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_BIRTH_NINJA) {
+            return SCREEN_FLAG_10; // 9 is probably fine, but it's used in the adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_COIN_BIRTH_DANCE) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_BIRTH_SOUTHEAST) {
+            return SCREEN_FLAG_9;
+        }
+        if(locationWorldFlag == WF_COIN_DIMENSIONAL) {
+            return SCREEN_FLAG_10; // 9 is probably fine, but it's used in the adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_TRAP_GRAVEYARD) {
+            return SCREEN_FLAG_11; // 9 and 10 are probably fine, but they're used in an adjoining room so we'll stick with it for safety.
+        }
+        if(locationWorldFlag == WF_TRAP_ILLUSION) {
+            return SCREEN_FLAG_10;
+        }
+        if(locationWorldFlag == WF_COIN_TWIN_ESCAPE) {
+            return SCREEN_FLAG_10; // 9 is probably fine, but it's used in the adjoining room so we'll stick with it for safety.
+        }
+        return FlagConstants.SCREEN_FLAG_2E;
     }
 
     private FlagConstants() { }

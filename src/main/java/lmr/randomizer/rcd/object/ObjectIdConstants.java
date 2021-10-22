@@ -47,7 +47,7 @@ public final class ObjectIdConstants {
     public static final short Enemy_Gyonin = 0x35;
     public static final short Enemy_Hippocamp = 0x37;
     public static final short Enemy_Kraken = 0x38;
-    public static final short Enemy_Leaper = 0x39;
+    public static final short Enemy_WaterLeaper = 0x39;
     public static final short Nuckelavee = 0x3a;
     public static final short Enemy_ExplodeRock = 0x3b; // Killer Rock
     public static final short Enemy_Slime = 0x3c;

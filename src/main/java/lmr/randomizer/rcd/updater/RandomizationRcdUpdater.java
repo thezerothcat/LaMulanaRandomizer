@@ -48,6 +48,22 @@ public class RandomizationRcdUpdater extends RcdUpdater {
     }
 
     @Override
+    boolean updateSeal(GameObject seal) {
+        if(Settings.isRandomizeNpcs()) {
+            Screen screen = (Screen)seal.getObjectContainer();
+            if(screen.getZoneIndex() == 3 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
+//                if(npcRandomizer.getNpc("NPCL: Mulbruk").equals("NPC: Mulbruk")) {
+//                    // Seal to wake Mulbruk - set the awake flag so we can skip the conversation that normally sets this flag.
+//                    seal.addUpdates(new WriteByteOperation(FlagConstants.MULBRUK_CONVERSATION_AWAKE, ByteOp.ASSIGN_FLAG, 1));
+//                }
+                seal.removeUpdate(new WriteByteOperation(FlagConstants.MULBRUK_CONVERSATIONS_EARLY, ByteOp.ASSIGN_FLAG, 1));
+            }
+        }
+
+        return super.updateSeal(seal);
+    }
+
+    @Override
     public void doShuffleUpdates(Random random) {
         updateItems(random);
         updateNpcDoors();
@@ -224,6 +240,21 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             }
             updateChestGraphic(chest, false, random);
             updateChestFlags(chest, locationContentsData.getLocationWorldFlag(), locationContentsData.getNewWorldFlag(), 2);
+            if(HolidaySettings.isHalloween2021Mode() && ((Screen)chest.getObjectContainer()).getZoneIndex() != ZoneConstants.SURFACE) {
+                int safeScreenFlag = FlagConstants.getSafeScreenFlag(locationContentsData.getLocationWorldFlag());
+                chest.setUpdateWhenCollected(new WriteByteOperation(safeScreenFlag, ByteOp.ASSIGN_FLAG, 1));
+                updateChestGraphic(chest, true, random);
+                AddObject.addFramesTimer(chest.getObjectContainer(), 0, Arrays.asList(
+                        new TestByteOperation(locationContentsData.getNewWorldFlag(), ByteOp.FLAG_GTEQ, 1),
+                        new TestByteOperation(safeScreenFlag, ByteOp.FLAG_EQUALS, 1)), Arrays.asList(
+                                new WriteByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_CURSED, ByteOp.ADD_FLAG, 1)));
+                AddObject.addSecondsTimer(chest.getObjectContainer(), 3, Arrays.asList(
+                        new TestByteOperation(locationContentsData.getNewWorldFlag(), ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(safeScreenFlag, ByteOp.FLAG_EQUALS, 1)),
+                        Arrays.asList(
+                                new WriteByteOperation(safeScreenFlag, ByteOp.ASSIGN_FLAG, 2)));
+                AddObject.addCurseEffect(chest, locationContentsData.getNewWorldFlag(), safeScreenFlag);
+            }
         }
         else if(locationContentsData.getCustomItemGraphic() != null) {
             chest.setDrops(locationContentsData.getCustomItemGraphic() + 11, 0);
@@ -232,6 +263,19 @@ public class RandomizationRcdUpdater extends RcdUpdater {
 
             if(chest.getUnlockedCheck().getIndex() != 0x032) {
                 AddObject.addItemGive(chest, locationContentsData.getItemInventoryArg(), locationContentsData.getNewWorldFlag(), locationContentsData.getItemWorldFlag());
+                ItemGive itemGive = AddObject.addItemGive(chest, locationContentsData.getItemInventoryArg(), locationContentsData.getNewWorldFlag(), locationContentsData.getItemWorldFlag());
+                if(HolidaySettings.isHalloween2021Mode() && ItemConstants.MAP != locationContentsData.getItemInventoryArg() && ((Screen)chest.getObjectContainer()).getZoneIndex() != ZoneConstants.SURFACE) {
+                    int safeScreenFlag = FlagConstants.getSafeScreenFlag(locationContentsData.getLocationWorldFlag());
+                    itemGive.addUpdates(
+                            new WriteByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_CURSED, ByteOp.ADD_FLAG, 1),
+                            new WriteByteOperation(safeScreenFlag, ByteOp.FLAG_EQUALS, 1));
+                    AddObject.addSecondsTimer(chest.getObjectContainer(), 3, Arrays.asList(
+                            new TestByteOperation(locationContentsData.getNewWorldFlag(), ByteOp.FLAG_GTEQ, 1),
+                            new TestByteOperation(safeScreenFlag, ByteOp.FLAG_EQUALS, 1)),
+                            Arrays.asList(
+                                    new WriteByteOperation(safeScreenFlag, ByteOp.ASSIGN_FLAG, 2)));
+                    AddObject.addCurseEffect(chest, locationContentsData.getNewWorldFlag(), safeScreenFlag);
+                }
             }
         }
         else {
@@ -239,9 +283,26 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             chest.setDrops(locationContentsData.getItemInventoryArg() + 11, 1);
             updateChestGraphic(chest, true, random);
             updateChestFlags(chest, locationContentsData.getLocationWorldFlag(), locationContentsData.getItemWorldFlag(), 1);
+
+            if(HolidaySettings.isHalloween2021Mode() && ItemConstants.MAP != locationContentsData.getItemInventoryArg() && ((Screen)chest.getObjectContainer()).getZoneIndex() != ZoneConstants.SURFACE) {
+                int safeScreenFlag = FlagConstants.getSafeScreenFlag(locationContentsData.getLocationWorldFlag());
+                chest.setUpdateWhenCollected(new WriteByteOperation(safeScreenFlag, ByteOp.ASSIGN_FLAG, 1));
+                AddObject.addFramesTimer(chest.getObjectContainer(), 0, Arrays.asList(
+                        new TestByteOperation(locationContentsData.getNewWorldFlag(), ByteOp.FLAG_GTEQ, 1),
+                        new TestByteOperation(safeScreenFlag, ByteOp.FLAG_EQUALS, 1)),
+                        Arrays.asList(
+                                new WriteByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_CURSED, ByteOp.ADD_FLAG, 1),
+                                new WriteByteOperation(locationContentsData.getNewWorldFlag(), ByteOp.ASSIGN_FLAG, 2)));
+                AddObject.addSecondsTimer(chest.getObjectContainer(), 3, Arrays.asList(
+                        new TestByteOperation(locationContentsData.getNewWorldFlag(), ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(safeScreenFlag, ByteOp.FLAG_EQUALS, 1)),
+                        Arrays.asList(
+                                new WriteByteOperation(safeScreenFlag, ByteOp.ASSIGN_FLAG, 2)));
+                AddObject.addCurseEffect(chest, locationContentsData.getNewWorldFlag(), safeScreenFlag);
+            }
         }
 
-        chest.setCursed(Settings.getCurrentCursedChests().contains(locationContentsData.getLocationName()));
+        chest.setCursed(itemRandomizer.isCursedChestLocation(locationContentsData.getLocationName(), locationContentsData.getItemName()));
         chest.setPercentCurseDamage(50);
     }
 
@@ -381,7 +442,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
     }
 
     private void updateEnemies(Random random) {
-        EnemyRandomizer enemyRandomizer = new EnemyRandomizer(random);
+        EnemyRandomizer enemyRandomizer = getEnemyRandomizer(random);
         for(GameObject enemy : enemyObjects) {
             enemyRandomizer.randomizeEnemy(enemy);
         }
@@ -495,6 +556,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             if("Transition: Dimensional D1".equals(transitionGateData.getGateName())) {
                 TransitionGateUpdates.updateScreenTransition(rcdFileData.getScreen(17, 0, 1), transitionGateData.getGateDestination());
             }
+            // todo: Spring L1, Surface R2
         }
     }
 
@@ -564,6 +626,9 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                 || "NPCL: Hiner".equals(npcDoorLocation) || "NPCL: Moger".equals(npcDoorLocation)) {
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_INTRO, ByteOp.FLAG_EQUALS, 1)); // Flag for having talked to Xelpud to open Surface tents
         }
+        if("NPCL: Mulbruk".equals(npcDoorLocation)) {
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_DOOR_UNSEALED, ByteOp.FLAG_GTEQ, 2));
+        }
         if("NPCL: Mr. Fishman (Original)".equals(npcDoorLocation)) {
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.FISH_SHOP_UNLOCKS, ByteOp.FLAG_GTEQ, 2));
         }
@@ -600,6 +665,12 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             conversationDoor.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_INTRO, ByteOp.ASSIGN_FLAG, 1));
             AddObject.addSpecialItemObjects(conversationDoor.getObjectContainer(), itemRandomizer.getNewContents("xmailer.exe"));
             AddObject.addSpecialItemObjects(conversationDoor.getObjectContainer(), itemRandomizer.getNewContents("Mulana Talisman"));
+        }
+        if("NPC: Mulbruk".equals(npcAssigned)) {
+            ConversationDoorUpdates.addMulbrukObjects(conversationDoor, getNpcItemFlag("Provocative Bathing Suit")); // Do this before adding tests, so we can carry over any tests based on the location.
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCORE, ByteOp.FLAG_GTEQ, 0));
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCORE, ByteOp.FLAG_LTEQ, ValueConstants.MULBRUK_RANDOM_SET_A_MAX_SCORE));
+            AddObject.addSpecialItemObjects(conversationDoor.getObjectContainer(), itemRandomizer.getNewContents("Book of the Dead"));
         }
         if("NPC: Former Mekuri Master".equals(npcAssigned)) {
             int itemFlag = getNpcItemFlag("mekuri.exe");
@@ -833,28 +904,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
         else if (gameObject.getId() == ObjectIdConstants.FlagTimer) {
             // Timer objects
             for (WriteByteOperation flagUpdate : gameObject.getWriteByteOperations()) {
-                if(flagUpdate.getIndex() == FlagConstants.HT_UNLOCK_PROGRESS_EARLY) {
-                    if(flagUpdate.getValue() == 8) {
-                        // Mulbruk swimsuit conversation timer.
-                        //OBJECT Type=0xb
-                        //TEST:
-                        //[0106] == 2
-                        //[034c] <= 7
-                        //UPDATE:
-                        //[034c]  = 8
-                        //ARG 0: 0
-                        //ARG 1: 0
-                        GameObjectId gameObjectId = new GameObjectId(ItemConstants.PROVOCATIVE_BATHING_SUIT, FlagConstants.WF_PROVOCATIVE_BATHING_SUIT);
-                        List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                        if (objects == null) {
-                            mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                            objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                        }
-                        objects.add(gameObject);
-                        return;
-                    }
-                }
-                else if(!Settings.isRandomizeNonBossDoors()) {
+                if(!Settings.isRandomizeNonBossDoors()) {
                     if(flagUpdate.getIndex() == FlagConstants.AMPHISBAENA_GATE_MIRROR_COVER || flagUpdate.getIndex() == FlagConstants.AMPHISBAENA_GATE_OPEN) {
                         String doorName = ((Screen)gameObject.getObjectContainer()).getZoneIndex() == 0
                                 ? "Door: F1" : "Door: B1";
@@ -1383,7 +1433,12 @@ public class RandomizationRcdUpdater extends RcdUpdater {
         }
         else if (gameObject.getId() == ObjectIdConstants.Enemy_Witch) {
             if(Settings.isRandomizeEnemies()) {
-                enemyObjects.add(gameObject);
+                Screen screen = (Screen) gameObject.getObjectContainer();
+                if(!(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 1)
+                        && !(screen.getZoneIndex() == 7 && screen.getRoomIndex() == 13 && screen.getScreenIndex() == 0)) {
+                    // Witches can be randomized, but leave the ones in Demon Altar alone.
+                    enemyObjects.add(gameObject);
+                }
             }
         }
         else if (gameObject.getId() == ObjectIdConstants.Enemy_Siren) {
@@ -1506,9 +1561,9 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             }
         }
         else if (gameObject.getId() == ObjectIdConstants.Enemy_SwordBird) {
-            if(Settings.isRandomizeEnemies()) {
-                enemyObjects.add(gameObject);
-            }
+//            if(Settings.isRandomizeEnemies()) {
+//                enemyObjects.add(gameObject);
+//            }
         }
         else if (gameObject.getId() == ObjectIdConstants.Enemy_Elephant) {
             if(Settings.isRandomizeEnemies()) {
@@ -1541,7 +1596,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
 //            }
 //        }
         else if (gameObject.getId() == ObjectIdConstants.Girtablilu) {
-            if(HolidaySettings.isHalloweenMode()) {
+            if(HolidaySettings.isHalloween2019Mode()) {
                 if(gameObject.getObjectContainer() instanceof Screen) {
                     Screen screen = (Screen) gameObject.getObjectContainer();
                     if(screen.getZoneIndex() == 24) {
@@ -1718,7 +1773,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                         doorName = "Door: B2";
                     }
                     else if(zone == ZoneConstants.MOONLIGHT) {
-                        // Temple of Moonlight [Lower] => Temple of the Sun [Main]
+                        // Temple of Moonlight [Lower] => Temple of the Sun [Lower]
                         doorName = "Door: B3";
                     }
                     else if(zone == ZoneConstants.GODDESS) {
@@ -1908,6 +1963,9 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             else if(blockNumber == BlockConstants.Master_ElderXelpudRandomSetA) {
                 mapOfNpcLocationToObject.put("NPCL: Elder Xelpud", (ConversationDoor)gameObject);
             }
+            else if(blockNumber == BlockConstants.Master_Mulbruk_Awake) {
+                mapOfNpcLocationToObject.put("NPCL: Mulbruk", (ConversationDoor)gameObject);
+            }
             else if(blockNumber == BlockConstants.Master_Hiner) {
                 mapOfNpcLocationToObject.put("NPCL: Hiner", (ConversationDoor)gameObject);
             }
@@ -1996,16 +2054,6 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             }
             else if(blockNumber == BlockConstants.Master_Dracuet_ProvocativeBathingSuit) {
                 // Dracuet Provocative Bathing Suit conversation - needs to depend on HT item instead.
-                GameObjectId gameObjectId = new GameObjectId(ItemConstants.PROVOCATIVE_BATHING_SUIT, FlagConstants.WF_PROVOCATIVE_BATHING_SUIT);
-                List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                if (objects == null) {
-                    mapOfChestIdentifyingInfoToGameObject.put(gameObjectId, new ArrayList<>());
-                    objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
-                }
-                objects.add(gameObject);
-            }
-            else if(blockNumber == 1013) {
-                // Mulbruk Provocative Bathing Suit conversation - needs to depend on HT item instead.
                 GameObjectId gameObjectId = new GameObjectId(ItemConstants.PROVOCATIVE_BATHING_SUIT, FlagConstants.WF_PROVOCATIVE_BATHING_SUIT);
                 List<GameObject> objects = mapOfChestIdentifyingInfoToGameObject.get(gameObjectId);
                 if (objects == null) {
@@ -2388,5 +2436,12 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                 }
             }
         }
+    }
+
+    private EnemyRandomizer getEnemyRandomizer(Random random) {
+        if(HolidaySettings.isHalloween2021Mode()) {
+            return new Halloween2021EnemyRandomizer(random);
+        }
+        return new EnemyRandomizer(random);
     }
 }

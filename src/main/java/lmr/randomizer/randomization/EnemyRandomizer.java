@@ -1,19 +1,16 @@
 package lmr.randomizer.randomization;
 
 import lmr.randomizer.HolidaySettings;
+import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.util.FlagConstants;
 import lmr.randomizer.Settings;
-import lmr.randomizer.rcd.object.ByteOp;
-import lmr.randomizer.rcd.object.GameObject;
-import lmr.randomizer.rcd.object.Screen;
-import lmr.randomizer.rcd.object.TestByteOperation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public final class EnemyRandomizer {
+public class EnemyRandomizer {
     private static final List<Integer> ENEMY_HEIGHT_RAISED = Arrays.asList(0x02, 0x1b, 0x21, 0x4c, 0x6e, 0x70, 0x7e, 0x81); // Bats are here for the purpose of flying ones sitting on ceilings - a normal enemy should be placed closer to the ground.
     private static final List<Integer> ENEMY_HEIGHT_LOWERED = Arrays.asList(0x3c, 0x41, 0x59, 0x74);
     private static final List<Integer> ENEMY_HEIGHT_NORMAL = Arrays.asList(0x01, 0x03, 0x05, 0x06, 0x16, 0x17,
@@ -31,7 +28,7 @@ public final class EnemyRandomizer {
     private static final List<Integer> SPAWNER_ENEMIES = Arrays.asList(0x1f, 0x6c, 0x7c);
     private static final List<Integer> NO_FLAG_UPDATE_ENEMIES = Arrays.asList(0x06, 0x3b);
 
-    private Random random;
+    protected Random random;
 
     public EnemyRandomizer(Random random) {
         this.random = random;
@@ -39,7 +36,7 @@ public final class EnemyRandomizer {
 
     public void randomizeEnemy(GameObject enemyObject) {
         int zoneIndex = ((Screen)enemyObject.getObjectContainer()).getZoneIndex();
-        replaceEnemyParams(enemyObject, getEnemyId(enemyObject, zoneIndex), zoneIndex);
+        replaceEnemyParams(enemyObject, getNewEnemyId(enemyObject, zoneIndex), zoneIndex);
     }
 
     public void modifyAnkh(GameObject ankh) {
@@ -49,10 +46,14 @@ public final class EnemyRandomizer {
         setAnkhArgs(ankh);
     }
 
-    private int getEnemyId(GameObject enemyObject, int zoneIndex) {
+    protected int getNewEnemyId(GameObject enemyObject, int zoneIndex) {
         int enemyId = (int)enemyObject.getId();
-        if(enemyId == 0x87 || enemyId == 0x88 || enemyId == 0x8d || enemyId == 0x8e || enemyId == 0x45 || enemyId == 0x2a) {
-            return HolidaySettings.isHalloweenMode() ? 0x20 : enemyId; // Miniboss swaps
+        if(enemyId == ObjectIdConstants.Kuusarikku || enemyId == ObjectIdConstants.Girtablilu || enemyId == ObjectIdConstants.Ushum
+                || enemyId == ObjectIdConstants.Mushussu || enemyId == ObjectIdConstants.Hekatonkheires || enemyId == ObjectIdConstants.Buer) {
+            return HolidaySettings.isHalloween2019Mode() ? ObjectIdConstants.GhostLord : enemyId; // Miniboss swaps
+        }
+        if(HolidaySettings.isHalloween2021Mode() && enemyId == ObjectIdConstants.RedSkeleton) {
+            return ObjectIdConstants.Enemy_Skeleton;
         }
 
         if(enemyId == 0x69) {
@@ -85,7 +86,7 @@ public final class EnemyRandomizer {
         if(newEnemyId == 0x01) {
             setMyrmecoleonArgs(enemy);
         }
-        else if(newEnemyId == 0x02) {
+        else if(newEnemyId == ObjectIdConstants.Enemy_Bat) {
             setBatArgs(enemy, zoneIndex);
         }
         else if(newEnemyId == 0x03) {
@@ -121,7 +122,7 @@ public final class EnemyRandomizer {
         else if(newEnemyId == 0x1f) {
             setGhostSpawnerArgs(enemy);
         }
-        else if(newEnemyId == 0x20) {
+        else if(newEnemyId == ObjectIdConstants.GhostLord) {
             setGhostLordArgs(enemy);
         }
         else if(newEnemyId == 0x21) {
@@ -149,7 +150,7 @@ public final class EnemyRandomizer {
             setJellyArgs(enemy);
         }
         else if(newEnemyId == 0x3e) {
-            setKakaojuuArgs(enemy);
+            setKakoujuuArgs(enemy);
         }
         else if(newEnemyId == 0x3b) {
             setExplodeRockArgs(enemy);
@@ -279,7 +280,7 @@ public final class EnemyRandomizer {
         else if(newEnemyId == 0x7c) {
             setMudmanSpawnerArgs(enemy);
         }
-        else if(newEnemyId == 0x7d) {
+        else if(newEnemyId == ObjectIdConstants.Enemy_SwordBird) {
             setSwordBirdArgs(enemy);
         }
         else if(newEnemyId == 0x7e) {
@@ -399,6 +400,21 @@ public final class EnemyRandomizer {
             enemyIds.addAll(getShrineEnemyIds(includeGround, isNoCollisionEnemy));
             enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
         }
+        else if(zoneIndex == 19) {
+            enemyIds.addAll(getRetroEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
+            enemyIds.addAll(getRetroEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
+        }
+        else if(zoneIndex == 20) {
+            enemyIds.addAll(getRetroEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
+            enemyIds.addAll(getRetroEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
+        }
+        else if(zoneIndex == 21) {
+            enemyIds.addAll(getRetroEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
+            enemyIds.addAll(getRetroEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
+            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
+        }
         else if(zoneIndex == 22) {
             // Night surface
             enemyIds.addAll(getSurfaceEnemyIds(includeGround, isNoCollisionEnemy));
@@ -412,8 +428,15 @@ public final class EnemyRandomizer {
         }
         if(enemyIds.isEmpty()) {
             enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
-            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
-            enemyIds.addAll(getSharedEnemyIds(includeGround, isNoCollisionEnemy, hasUpdateFlags));
+        }
+
+        if(includeGround && !isNoCollisionEnemy && HolidaySettings.isHalloween2021Mode()) {
+            while(enemyIds.contains((int)ObjectIdConstants.Enemy_Bat)) {
+                enemyIds.remove((Integer)((int)ObjectIdConstants.Enemy_Bat));
+            }
+            if(enemyIds.isEmpty()) {
+                enemyIds.add((int)ObjectIdConstants.Enemy_Bat);
+            }
         }
         return enemyIds.get(random.nextInt(enemyIds.size()));
     }
@@ -478,6 +501,9 @@ public final class EnemyRandomizer {
                 enemyIds.add(0x17); // Surface - Bird
             }
         }
+        if(HolidaySettings.isHalloween2021Mode()) {
+            enemyIds.add((int)ObjectIdConstants.Enemy_SwordBird); // Birth - Camio
+        }
         return enemyIds;
     }
     
@@ -487,7 +513,12 @@ public final class EnemyRandomizer {
             if(!HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x01); // Guidance - Myrmecoleon
             }
-            enemyIds.add(0x21); // Guidance - Red Skeleton
+            if(HolidaySettings.isHalloween2021Mode()) {
+                enemyIds.add((int)ObjectIdConstants.Enemy_SwordBird); // Birth - Camio
+            }
+            else {
+                enemyIds.add(0x21); // Guidance - Red Skeleton
+            }
         }
         return enemyIds;
     }
@@ -495,7 +526,7 @@ public final class EnemyRandomizer {
     private List<Integer> getMausoleumEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
 //        enemyIds.add(0x1f); // Mausoleum Ghosts
-//        enemyIds.add(0x20); // Mausoleum - Ghost Lord
+//        enemyIds.add(ObjectIdConstants.GhostLord); // Mausoleum - Ghost Lord
         if(!isNoCollisionEnemy) {
             if(!HolidaySettings.isHalloweenMode()) {
                 enemyIds.add(0x1e); // Mausoleum - Fist
@@ -537,7 +568,7 @@ public final class EnemyRandomizer {
         List<Integer> enemyIds = new ArrayList<>();
         if(!isNoCollisionEnemy && includeGround) {
             if(!HolidaySettings.isHalloweenMode()) {
-                enemyIds.add(0x3e); // Inferno - Kakaojuu / Fire Lizard
+                enemyIds.add(0x3e); // Inferno - Kakoujuu / Fire Lizard
             }
         }
         return enemyIds;
@@ -684,8 +715,8 @@ public final class EnemyRandomizer {
 
     private List<Integer> getBirthEnemyIds(boolean includeGround, boolean isNoCollisionEnemy) {
         List<Integer> enemyIds = new ArrayList<>();
+        enemyIds.add(0x7d); // Birth - Sword Bird
         if(!HolidaySettings.isHalloweenMode()) {
-            enemyIds.add(0x7d); // Birth - Sword Bird
             if(!isNoCollisionEnemy && includeGround) {
                 enemyIds.add(0x7e); // Birth - Elephant
             }
@@ -798,7 +829,7 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)(random.nextInt(7) + 2)); // Damage
     }
 
-    private void setBatArgs(GameObject enemy, int zoneIndex) {
+    protected void setBatArgs(GameObject enemy, int zoneIndex) {
         Integer contactDamage = getContactDamage(enemy);
 
         enemy.getArgs().clear();
@@ -1218,7 +1249,7 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)3); // "Probably Soul, but they don't seem able to drop anything"
     }
 
-    private void setKakaojuuArgs(GameObject enemy) {
+    private void setKakoujuuArgs(GameObject enemy) {
         int facing = getFacing(enemy);
 
         enemy.getArgs().clear();
@@ -1566,7 +1597,9 @@ public final class EnemyRandomizer {
             enemy.getArgs().add((short)4); // Health
         }
         else {
-            enemy.getArgs().add((short)((random.nextInt(3) / 2) + 2)); // Speed
+            random.nextInt(3);
+            enemy.getArgs().add((short)2); // Speed
+//            enemy.getArgs().add((short)((random.nextInt(3) / 2) + 2)); // Speed
             enemy.getArgs().add((short)(isHardmode
                     ? (random.nextInt(3) + 6)
                     : 4)); // Health
@@ -1978,48 +2011,60 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)2); // Flame Soul
     }
 
+    private void setMudmanSpawnerArgs(GameObject enemy) {
+        enemy.getArgs().clear();
+        enemy.getArgs().add((short)180); // UNKNOWN
+        enemy.getArgs().add((short)3); // Max on screen
+        enemy.getArgs().add((short)0); // UNKNOWN
+        enemy.getArgs().add((short)1); // Drop type
+        enemy.getArgs().add((short)(random.nextInt(2) + 1)); // UNKNOWN
+        enemy.getArgs().add((short)8); // Health
+        enemy.getArgs().add((short)7); // Contact Damage
+        enemy.getArgs().add((short)7); // UNKNOWN
+    }
+
     private void setSwordBirdArgs(GameObject enemy) {
         enemy.getArgs().clear();
         enemy.getArgs().add((short)random.nextInt(2)); // Facing?
-        enemy.getArgs().add((short)2); // Drop type - weights?
+        enemy.getArgs().add((short)2); // Drop type
         enemy.getArgs().add((short)(random.nextInt(2) + 2)); // Speed?
         enemy.getArgs().add((short)4); // Health
-        enemy.getArgs().add((short)8); // UNKNOWN - Contact damage?
+        enemy.getArgs().add((short)8); // Contact damage
         enemy.getArgs().add((short)6); // UNKNOWN
         enemy.getArgs().add((short)(random.nextInt(2) + 2)); // UNKNOWN
-        enemy.getArgs().add((short)6); // UNKNOWN
+        enemy.getArgs().add((short)6); // Projectile damage
     }
 
     private void setElephantArgs(GameObject enemy) {
         enemy.getArgs().clear();
         enemy.getArgs().add((short)random.nextInt(2)); // Facing?
-        enemy.getArgs().add((short)11); // UNKNOWN - maybe Drop type - 11 = "nothing for pots, coins or weights for skeletons"
+        enemy.getArgs().add((short)11); // Drop type
         enemy.getArgs().add((short)(random.nextInt(4) + 1)); // Speed?
         enemy.getArgs().add((short)30); // Health
-        enemy.getArgs().add((short)10); // UNKNOWN (Contact Damage?)
-        enemy.getArgs().add((short)10); // UNKNOWN (Contact Damage?)
+        enemy.getArgs().add((short)10); // Contact damage
+        enemy.getArgs().add((short)10); // UNKNOWN
         enemy.getArgs().add((short)36); // UNKNOWN
-        enemy.getArgs().add((short)20); // UNKNOWN
+        enemy.getArgs().add((short)20); // Stomp damage
     }
 
     private void setAmonArgs(GameObject enemy) {
         enemy.getArgs().clear();
         enemy.getArgs().add((short)random.nextInt(2)); // Facing?
-        enemy.getArgs().add((short)11); // UNKNOWN - maybe Drop type - 11 = "nothing for pots, coins or weights for skeletons"
+        enemy.getArgs().add((short)11); // Drop type
         enemy.getArgs().add((short)(random.nextInt(2) + 2)); // Speed?
         enemy.getArgs().add((short)15); // Health
-        enemy.getArgs().add((short)10); // UNKNOWN - contact damage?
+        enemy.getArgs().add((short)10); // Contact damage
         enemy.getArgs().add((short)11); // UNKNOWN
-        enemy.getArgs().add((short)(random.nextInt(2) + 2)); // UNKNOWN
-        enemy.getArgs().add((short)(random.nextInt(3) + 2)); // UNKNOWN
-        enemy.getArgs().add((short)10); // UNKNOWN - contact damage?
+        enemy.getArgs().add((short)(random.nextInt(2) + 2)); // Seems like something to do with projectile acceleration or tracking ability, at high numbers it speeds up after a while and gets really hard to dodge
+        enemy.getArgs().add((short)(random.nextInt(3) + 2)); // Projectile health
+        enemy.getArgs().add((short)10); // Projectile damage
         enemy.getArgs().add((short)3); // UNKNOWN
     }
 
     private void setDevilCrownSkullArgs(GameObject enemy) {
         enemy.getArgs().clear();
         enemy.getArgs().add((short)0); // UNKNOWN
-        enemy.getArgs().add((short)0); // UNKNOWN
+        enemy.getArgs().add((short)0); // Drop type
         enemy.getArgs().add((short)(random.nextInt(2) + 2)); // Speed?
         enemy.getArgs().add((short)18); // Health
         enemy.getArgs().add((short)16); // Contact damage
@@ -2032,13 +2077,13 @@ public final class EnemyRandomizer {
 
         enemy.getArgs().clear();
         enemy.getArgs().add((short)facing); // 0 = left, 1 = right
-        enemy.getArgs().add((short)11); // UNKNOWN - maybe Drop type - 11 = "nothing for pots, coins or weights for skeletons"
+        enemy.getArgs().add((short)11); // Drop type
         enemy.getArgs().add((short)(random.nextInt(2) + 2)); // Speed?
         enemy.getArgs().add((short)10); // Health
-        enemy.getArgs().add((short)8); // UNKNOWN - contact damage?
-        enemy.getArgs().add((short)8); // UNKNOWN - contact damage?
+        enemy.getArgs().add((short)8); // Contact damage
+        enemy.getArgs().add((short)8); // UNKNOWN
         enemy.getArgs().add((short)16); // UNKNOWN
-        enemy.getArgs().add((short)(random.nextInt(2) + 1)); // UNKNOWN
+        enemy.getArgs().add((short)(random.nextInt(2) + 1)); // Laser projectile damage
         enemy.getArgs().add((short)4); // UNKNOWN
         enemy.getArgs().add((short)(random.nextInt(2) + 2)); // UNKNOWN
         enemy.getArgs().add((short)(isGroundEnemy ? random.nextInt(2) : 1)); // 0 = start standing, 1 = start flying
@@ -2047,7 +2092,7 @@ public final class EnemyRandomizer {
     private void setMiniBossArgs(GameObject enemy) {
         enemy.getArgs().clear();
         enemy.getArgs().add((short)random.nextInt(2)); // Facing?
-        enemy.getArgs().add((short)1); // UNKNOWN
+        enemy.getArgs().add((short)1); // Drop type
         enemy.getArgs().add((short)2); // UNKNOWN
         enemy.getArgs().add((short)10); // Health
         enemy.getArgs().add((short)6); // Contact Damage
@@ -2055,7 +2100,7 @@ public final class EnemyRandomizer {
         enemy.getArgs().add((short)2); // UNKNOWN
         enemy.getArgs().add((short)300); // UNKNOWN
         enemy.getArgs().add((short)60); // UNKNOWN
-        enemy.getArgs().add((short)16); // UNKNOWN
+        enemy.getArgs().add((short)16); // Bomb explosion damage
         enemy.getArgs().add((short)0); // UNKNOWN
     }
 
@@ -2703,7 +2748,7 @@ public final class EnemyRandomizer {
             return (int)enemy.getArgs().get(4);
         }
         if(originalEnemyId == 0x7e) {
-            return (int)enemy.getArgs().get(4); // todo: verify - it's either this or 5
+            return (int)enemy.getArgs().get(4);
         }
         if(originalEnemyId == 0x81) {
             return (int)enemy.getArgs().get(4);
@@ -3090,8 +3135,5 @@ public final class EnemyRandomizer {
     }
 
     private void setNinjaSpawnerArgs(GameObject enemy) {
-    }
-
-    private void setMudmanSpawnerArgs(GameObject enemy) {
     }
 }

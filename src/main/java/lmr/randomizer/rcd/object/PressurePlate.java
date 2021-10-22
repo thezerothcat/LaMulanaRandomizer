@@ -36,6 +36,10 @@ public class PressurePlate extends GameObject {
         setDefaults();
     }
 
+    public PressurePlate(GameObject gameObject) {
+        super(gameObject);
+    }
+
     public void setDefaults() {
         setArg0(0);
         setSinkFrames(20);

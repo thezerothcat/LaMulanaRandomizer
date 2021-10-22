@@ -23,13 +23,13 @@ public class EventPanel extends JPanel {
     public EventPanel(TabbedPanel tabbedPanel) {
         super(new MigLayout("fillx, wrap"));
 
-        if (HolidaySettings.isHalloweenMode() || HolidaySettings.isFools2020Mode()) {
+        if (HolidaySettings.isHalloween2019Mode() || HolidaySettings.isHalloween2021Mode() || HolidaySettings.isFools2020Mode()) {
             holidayMode = new JCheckBox();
             holidayMode.setSelected(true);
             holidayMode.setEnabled(false);
         }
 
-        if(HolidaySettings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloween2019Mode()) {
             holidayOption1 = new JCheckBox();
             holidayOption1.setSelected(HolidaySettings.isIncludeHellTempleNPCs());
         }
@@ -50,12 +50,17 @@ public class EventPanel extends JPanel {
             fools2021Pt3.setSelected(true);
             fools2021Pt3.setEnabled(false);
         }
+        if(HolidaySettings.isHalloween2021Mode()) {
+            holidayOption1 = new JCheckBox();
+            holidayOption1.setSelected(true);
+            holidayOption1.setEnabled(false);
+        }
 
         CheckboxContainer checkboxContainer = new CheckboxContainer(1);
-        if (HolidaySettings.isHalloweenMode() || HolidaySettings.isFools2020Mode()) {
+        if (HolidaySettings.isHalloween2019Mode() || HolidaySettings.isHalloween2021Mode() || HolidaySettings.isFools2020Mode()) {
             checkboxContainer.add(holidayMode);
         }
-        if(HolidaySettings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloween2019Mode()) {
             checkboxContainer.add(holidayOption1);
         }
         if(HolidaySettings.isFools2020Mode()) {
@@ -65,6 +70,9 @@ public class EventPanel extends JPanel {
             checkboxContainer.add(fools2021Pt1);
             checkboxContainer.add(fools2021Pt2);
             checkboxContainer.add(fools2021Pt3);
+        }
+        if(HolidaySettings.isHalloween2021Mode()) {
+            checkboxContainer.add(holidayOption1);
         }
         add(checkboxContainer, "growx, wrap");
 
@@ -95,9 +103,13 @@ public class EventPanel extends JPanel {
     }
 
     public void updateTranslations() {
-        if(HolidaySettings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloween2019Mode()) {
             holidayMode.setText(Translations.getText("event.halloween"));
             holidayOption1.setText(Translations.getText("event.includeHTNPCs"));
+        }
+        else if(HolidaySettings.isHalloween2021Mode()) {
+            holidayMode.setText(Translations.getText("event.halloween2021.trick"));
+            holidayOption1.setText(Translations.getText("event.halloween2021.treat"));
         }
         else if(HolidaySettings.isFools2020Mode()) {
             holidayMode.setText(Translations.getText("event.fools2020"));
@@ -115,7 +127,7 @@ public class EventPanel extends JPanel {
     }
 
     public void updateSettings() {
-        if(HolidaySettings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloween2019Mode()) {
             HolidaySettings.setIncludeHellTempleNPCs(holidayOption1.isSelected(), true);
         }
         if(HolidaySettings.isFools2020Mode()) {
@@ -127,7 +139,7 @@ public class EventPanel extends JPanel {
     }
 
     public void reloadSettings() {
-        if(HolidaySettings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloween2019Mode()) {
             holidayOption1.setSelected(HolidaySettings.isIncludeHellTempleNPCs());
         }
         if(HolidaySettings.isFools2020Mode()) {

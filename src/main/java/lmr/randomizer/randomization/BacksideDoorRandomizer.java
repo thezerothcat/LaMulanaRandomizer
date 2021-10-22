@@ -81,8 +81,13 @@ public class BacksideDoorRandomizer {
 
     public void rebuildRequirementsMap() {
         mapOfNodeNameToDoorRequirementsObject.clear();
+        Integer bossNumber;
         for(String door : backsideDoorLocationMap.keySet()) {
-            addToMap(door, backsideDoorLocationMap.get(door), backsideDoorBossMap.get(door));
+            bossNumber = backsideDoorBossMap.get(door);
+            if(bossNumber != null && bossNumber == 0) {
+                bossNumber = null;
+            }
+            addToMap(door, backsideDoorLocationMap.get(door), bossNumber);
         }
     }
 
@@ -232,7 +237,10 @@ public class BacksideDoorRandomizer {
             bosses.add(9);
         }
         else {
+            backsideDoorBossMap.put("Door: F8", 0);
+            backsideDoorBossMap.put("Door: B8", 0);
             backsideDoorBossMap.put("Door: F9", 9);
+            backsideDoorBossMap.put("Door: B9", 0);
         }
 
         List<String> doors = new ArrayList<>(16);
@@ -260,23 +268,19 @@ public class BacksideDoorRandomizer {
         String door;
         String reverseDoor;
         String key1;
-        String key2;
         for(CustomDoorPlacement customDoorPlacement : DataFromFile.getCustomPlacementData().getCustomDoorPlacements()) {
             if(customDoorPlacement.getAssignedBoss() != null) {
-                door = customDoorPlacement.getTargetDoor().replace("Door ", "Door: ");
                 reverseDoor = customDoorPlacement.getDestinationDoor().replace("Door ", "Door: ");
-
                 key1 = swapFrontToBack(reverseDoor);
-                key2 = swapFrontToBack(door);
-
                 backsideDoorBossMap.put(key1, customDoorPlacement.getAssignedBoss());
-                if(customDoorPlacement.getAssignedBoss() != null && customDoorPlacement.getAssignedBoss() != 9) {
-                    backsideDoorBossMap.put(key2, customDoorPlacement.getAssignedBoss());
-                }
-
-                bosses.remove(customDoorPlacement.getAssignedBoss());
-                doors.remove(key1);
-                doors.remove(key2);
+            }
+        }
+        for(Integer bossNumber : backsideDoorBossMap.values()) {
+            bosses.remove(bossNumber);
+        }
+        for(String assignedDoor : backsideDoorBossMap.keySet()) {
+            if(backsideDoorBossMap.get(assignedDoor) != null) {
+                doors.remove(assignedDoor);
             }
         }
 
@@ -414,6 +418,7 @@ public class BacksideDoorRandomizer {
     public List<BacksideDoorData> getBacksideDoorData() {
         List<BacksideDoorData> backsideDoorData = new ArrayList<>();
         String doorToReplace;
+        Integer doorBoss;
         for(Map.Entry<String, String> doorKeyAndLocation : backsideDoorLocationMap.entrySet()) {
             doorToReplace = getDoorToLocation(doorKeyAndLocation.getValue());
             if(doorToReplace.startsWith("Door: B")) {
@@ -422,9 +427,11 @@ public class BacksideDoorRandomizer {
             else {
                 doorToReplace = doorToReplace.replace("Door: F", "Door: B");
             }
-
-            backsideDoorData.add(new BacksideDoorData(doorToReplace, doorKeyAndLocation.getKey(),
-                    backsideDoorBossMap.get(doorKeyAndLocation.getKey())));
+            doorBoss = backsideDoorBossMap.get(doorKeyAndLocation.getKey());
+            if(doorBoss != null && doorBoss == 0) {
+                doorBoss = null;
+            }
+            backsideDoorData.add(new BacksideDoorData(doorToReplace, doorKeyAndLocation.getKey(), doorBoss));
         }
         return backsideDoorData;
     }
@@ -595,10 +602,15 @@ public class BacksideDoorRandomizer {
     public void logBosses(Integer attemptNumber) {
         if(Settings.isRandomizeBacksideDoors() && Settings.isDetailedLoggingAttempt(attemptNumber)) {
             String doorLocation;
+            Integer boss;
             for(String door : backsideDoorLocationMap.keySet()) {
                 doorLocation = backsideDoorLocationMap.get(door);
                 if(!doorLocation.contains("Endless Corridor [1F]")) {
-                    FileUtils.log(Translations.getDoorLocation(doorLocation) + ": " + Translations.getText("bosses." + backsideDoorBossMap.get(door)));
+                    boss = backsideDoorBossMap.get(door);
+                    if(boss != null && boss == 0) {
+                        boss = null;
+                    }
+                    FileUtils.log(Translations.getDoorLocation(doorLocation) + ": " + Translations.getText("bosses." + boss));
                 }
             }
         }

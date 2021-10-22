@@ -17,10 +17,6 @@ public final class HolidaySettings {
         return singleton.changed;
     }
 
-    public static boolean isHalloweenMode() {
-        return false;
-    }
-
     public static boolean isFools2019Mode() {
         return false;
     }
@@ -37,9 +33,21 @@ public final class HolidaySettings {
         return false;
     }
 
+    public static boolean isHalloween2019Mode() {
+        return false;
+    }
+
+    public static boolean isHalloween2021Mode() {
+        return true;
+    }
+
     public static boolean isHolidayMode() {
         return isFools2019Mode() || isFools2020Mode() || isFools2021Mode() || isFools2022Mode()
-                || isHalloweenMode();
+                || isHalloween2019Mode() || isHalloween2021Mode();
+    }
+
+    public static boolean isHalloweenMode() {
+        return isHalloween2019Mode() || isHalloween2021Mode();
     }
 
     public static boolean isUpdatedVersion() {

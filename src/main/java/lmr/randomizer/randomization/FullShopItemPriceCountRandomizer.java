@@ -167,7 +167,7 @@ public class FullShopItemPriceCountRandomizer implements ShopItemPriceCountRando
 
     private Short getWeightPrice(String itemName) {
         if("Weights".equals(itemName)) {
-            if(Settings.isCheapConsumables()) {
+            if(Settings.isCheapWeights()) {
                 return 1;
             }
             if(!normalPriceWeightsPlaced) {
@@ -187,7 +187,7 @@ public class FullShopItemPriceCountRandomizer implements ShopItemPriceCountRando
     }
 
     private Short getAmmoPrice(String itemName) {
-        if(Settings.isCheapConsumables()) {
+        if(Settings.isCheapAmmo()) {
             if(itemName.contains("Ammo")) {
                 return 4;
             }
@@ -252,7 +252,7 @@ public class FullShopItemPriceCountRandomizer implements ShopItemPriceCountRando
 
     private short getCount(String item) {
         if("Weights".equals(item)) {
-            if(Settings.isCheapConsumables()) {
+            if(Settings.isRandomWeightCount()) {
                 return (short)(random.nextInt(10) + 1);
             }
             return 5;

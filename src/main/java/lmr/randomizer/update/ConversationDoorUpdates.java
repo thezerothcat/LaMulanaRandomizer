@@ -1,9 +1,12 @@
 package lmr.randomizer.update;
 
+import lmr.randomizer.HolidaySettings;
+import lmr.randomizer.Settings;
 import lmr.randomizer.randomization.data.ShopInventory;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.util.BlockConstants;
 import lmr.randomizer.util.FlagConstants;
+import lmr.randomizer.util.ValueConstants;
 
 import java.util.Arrays;
 
@@ -382,5 +385,117 @@ public final class ConversationDoorUpdates {
         }
         neburShop.getTestByteOperations().add(new TestByteOperation(itemFlagMSX2, ByteOp.FLAG_NOT_EQUAL, 0));
         doorObject.getObjectContainer().getObjects().add(neburShop);
+    }
+
+    /**
+     * @param doorObject the base npc door object, to use as a positional reference
+     */
+    public static void addMulbrukObjects(ConversationDoor doorObject, int itemFlagSwimsuit) {
+        AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
+                Arrays.asList(
+                        new TestByteOperation(FlagConstants.MULBRUK_CONVERSATIONS_EARLY, ByteOp.FLAG_LTEQ, 2),
+                        new TestByteOperation(FlagConstants.SCORE, ByteOp.FLAG_GTEQ, 56),
+                        new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_AWAKE, ByteOp.FLAG_EQUALS, 1)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.MULBRUK_CONVERSATIONS_EARLY, ByteOp.ASSIGN_FLAG, 3)));
+
+        if((Settings.isRandomizeForbiddenTreasure() && Settings.isHTFullRandom()) || Settings.isRandomizeDracuetShop()) {
+            // Skip 8-boss requirement on HT.
+            AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
+                    Arrays.asList(
+                            new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_HT, ByteOp.FLAG_EQUALS, 1),
+                            new TestByteOperation(FlagConstants.HT_UNLOCK_PROGRESS_EARLY, ByteOp.FLAG_EQUALS, 0)),
+                    Arrays.asList(new WriteByteOperation(FlagConstants.HT_UNLOCK_PROGRESS_EARLY, ByteOp.ASSIGN_FLAG, 1)));
+        }
+        else {
+            AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
+                    Arrays.asList(
+                            new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_HT, ByteOp.FLAG_EQUALS, 1),
+                            new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9),
+                            new TestByteOperation(FlagConstants.HT_UNLOCK_PROGRESS_EARLY, ByteOp.FLAG_EQUALS, 0)),
+                    Arrays.asList(new WriteByteOperation(FlagConstants.HT_UNLOCK_PROGRESS_EARLY, ByteOp.ASSIGN_FLAG, 1)));
+        }
+
+        AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
+                Arrays.asList(
+                        new TestByteOperation(FlagConstants.HT_UNLOCKED, ByteOp.FLAG_EQUALS, 1),
+                        new TestByteOperation(FlagConstants.HT_UNLOCK_PROGRESS_EARLY, ByteOp.FLAG_LTEQ, 5)),
+                Arrays.asList(new WriteByteOperation(FlagConstants.HT_UNLOCK_PROGRESS_EARLY, ByteOp.ASSIGN_FLAG, 6)));
+
+        if(HolidaySettings.isHalloween2021Mode()) {
+            AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
+                    Arrays.asList(
+                            new TestByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_MOTHER_DEFEATED, ByteOp.FLAG_EQUALS, 2),
+                            new TestByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_ESCAPE_CHEST, ByteOp.FLAG_EQUALS, 2)),
+                    Arrays.asList(new WriteByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_ESCAPE_SPECIAL, ByteOp.ASSIGN_FLAG, 1)));
+        }
+        else {
+            AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
+                    Arrays.asList(
+                            new TestByteOperation(itemFlagSwimsuit, ByteOp.FLAG_EQUALS, 2),
+                            new TestByteOperation(FlagConstants.HT_UNLOCK_PROGRESS_EARLY, ByteOp.FLAG_LTEQ, 7)),
+                    Arrays.asList(new WriteByteOperation(FlagConstants.HT_UNLOCK_PROGRESS_EARLY, ByteOp.ASSIGN_FLAG, 8)));
+        }
+
+        ConversationDoor mulbrukRandomSetB = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+        mulbrukRandomSetB.setDoorType(ConversationDoor.ConversationTree);
+        mulbrukRandomSetB.setBlockNumber(BlockConstants.Master_MulbrukRandomSetB);
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            mulbrukRandomSetB.getTestByteOperations().add(testByteOperation);
+        }
+        mulbrukRandomSetB.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCORE, ByteOp.FLAG_GTEQ, ValueConstants.MULBRUK_RANDOM_SET_A_MAX_SCORE + 1));
+        mulbrukRandomSetB.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCORE, ByteOp.FLAG_LTEQ, ValueConstants.MULBRUK_RANDOM_SET_B_MAX_SCORE));
+        doorObject.getObjectContainer().getObjects().add(mulbrukRandomSetB);
+
+        ConversationDoor mulbrukRandomSetC = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+        mulbrukRandomSetC.setDoorType(ConversationDoor.ConversationTree);
+        mulbrukRandomSetC.setBlockNumber(BlockConstants.Master_MulbrukRandomSetC);
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            mulbrukRandomSetC.getTestByteOperations().add(testByteOperation);
+        }
+        mulbrukRandomSetC.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCORE, ByteOp.FLAG_GTEQ, ValueConstants.MULBRUK_RANDOM_SET_B_MAX_SCORE + 1));
+        mulbrukRandomSetC.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0));
+        doorObject.getObjectContainer().getObjects().add(mulbrukRandomSetC);
+
+        if(!HolidaySettings.isHalloween2021Mode()) {
+            ConversationDoor mulbrukRunsFromSwimsuit = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+            mulbrukRunsFromSwimsuit.setDoorType(ConversationDoor.SingleConversation);
+            mulbrukRunsFromSwimsuit.setBlockNumber(BlockConstants.Master_Mulbruk_ProvocativeBathingSuitReaction);
+            for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+                mulbrukRunsFromSwimsuit.getTestByteOperations().add(testByteOperation);
+            }
+            mulbrukRunsFromSwimsuit.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_BIKINI_ENDING, ByteOp.FLAG_EQUALS, 0));
+            mulbrukRunsFromSwimsuit.getTestByteOperations().add(new TestByteOperation(itemFlagSwimsuit, ByteOp.FLAG_EQUALS, 2));
+            mulbrukRunsFromSwimsuit.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0));
+            doorObject.getObjectContainer().getObjects().add(mulbrukRunsFromSwimsuit);
+        }
+
+        ConversationDoor mulbrukEscapeRegular = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+        mulbrukEscapeRegular.setDoorType(ConversationDoor.SingleConversation);
+        mulbrukEscapeRegular.setBlockNumber(BlockConstants.Master_MulbrukEscapeRegular);
+        mulbrukEscapeRegular.setDisallowMusicChange(true);
+        // Skip location-based tests; escape sequence doesn't require it
+//        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+//            mulbrukEscapeRegular.getTestByteOperations().add(testByteOperation);
+//        }
+        mulbrukEscapeRegular.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1));
+        mulbrukEscapeRegular.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_BIKINI_ENDING, ByteOp.FLAG_EQUALS, 0));
+        doorObject.getObjectContainer().getObjects().add(mulbrukEscapeRegular);
+
+        ConversationDoor mulbrukEscapeSwimsuit = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+        mulbrukEscapeSwimsuit.setDoorType(ConversationDoor.SingleConversation);
+        mulbrukEscapeSwimsuit.setBlockNumber(BlockConstants.Master_MulbrukEscapeSwimsuit);
+        mulbrukEscapeSwimsuit.setDisallowMusicChange(true);
+        // Skip location-based tests; escape sequence doesn't require it
+//        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+//            mulbrukEscapeSwimsuit.getTestByteOperations().add(testByteOperation);
+//        }
+        mulbrukEscapeSwimsuit.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 1));
+        if(HolidaySettings.isHalloween2021Mode()) {
+            mulbrukEscapeSwimsuit.getTestByteOperations().add(new TestByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_ESCAPE_SPECIAL, ByteOp.FLAG_EQUALS, 1));
+        }
+        else {
+            mulbrukEscapeSwimsuit.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_BIKINI_ENDING, ByteOp.FLAG_EQUALS, 1));
+        }
+        doorObject.getObjectContainer().getObjects().add(mulbrukEscapeSwimsuit);
     }
 }

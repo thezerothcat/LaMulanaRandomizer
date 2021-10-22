@@ -79,6 +79,7 @@ public class NpcRandomizer {
             mapOfNpcDoorLocationToContents.put("NPCL: Nebur", "NPC: Nebur");
             mapOfNpcDoorLocationToContents.put("NPCL: Sidro", "NPC: Sidro");
             mapOfNpcDoorLocationToContents.put("NPCL: Modro", "NPC: Modro");
+            mapOfNpcDoorLocationToContents.put("NPCL: Mulbruk", "NPC: Mulbruk");
             mapOfNpcDoorLocationToContents.put("NPCL: Mud Man Qubert", "NPC: Mud Man Qubert");
             mapOfNpcDoorLocationToContents.put("NPCL: Priest Zarnac", "NPC: Priest Zarnac");
             mapOfNpcDoorLocationToContents.put("NPCL: 8bit Elder", "NPC: 8bit Elder");
@@ -139,6 +140,7 @@ public class NpcRandomizer {
             npcDoors.add("Nebur");
             npcDoors.add("Sidro");
             npcDoors.add("Modro");
+            npcDoors.add("Mulbruk");
             npcDoors.add("Mud Man Qubert");
             npcDoors.add("Priest Zarnac");
             npcDoors.add("8bit Elder");
@@ -191,6 +193,7 @@ public class NpcRandomizer {
             npcs.add("Nebur");
             npcs.add("Sidro");
             npcs.add("Modro");
+            npcs.add("Mulbruk");
             npcs.add("Mud Man Qubert");
             npcs.add("Priest Zarnac");
             npcs.add("8bit Elder");
@@ -284,6 +287,7 @@ public class NpcRandomizer {
             mapOfNpcDoorLocationToContents.put("NPCL: Nebur", "NPC: Nebur");
             mapOfNpcDoorLocationToContents.put("NPCL: Sidro", "NPC: Sidro");
             mapOfNpcDoorLocationToContents.put("NPCL: Modro", "NPC: Modro");
+            mapOfNpcDoorLocationToContents.put("NPCL: Mulbruk", "NPC: Mulbruk");
             mapOfNpcDoorLocationToContents.put("NPCL: Mud Man Qubert", "NPC: Mud Man Qubert");
             mapOfNpcDoorLocationToContents.put("NPCL: Priest Zarnac", "NPC: Priest Zarnac");
             mapOfNpcDoorLocationToContents.put("NPCL: 8bit Elder", "NPC: 8bit Elder");
@@ -526,7 +530,7 @@ public class NpcRandomizer {
         if("Priest Xanado".equals(npcName) || "Greedy Charlie".equals(npcName)) {
             return "Mausoleum of the Giants";
         }
-        if("Priest Madomono".equals(npcName)
+        if("Mulbruk".equals(npcName) || "Priest Madomono".equals(npcName)
                 || "Shalom III".equals(npcName) || "Usas VI".equals(npcName) || "Kingvalley I".equals(npcName)) {
             return "Temple of the Sun";
         }

@@ -56,7 +56,16 @@ public class MoneyChecker {
         String startingLocation = LocationCoordinateMapper.getStartingLocation();
         String startingExit = startingLocation.replace("Location:", "Exit:");
         computeAccessibleNodes(startingLocation, attemptNumber);
+
+        accessedMoney += getLocationMoneyValue(startingLocation);
+        String area = getAreaFromNode(startingLocation);
+        if(area != null) {
+            accessedAreas.add(area);
+        }
+        queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(startingLocation, attemptNumber));
+
         computeAccessibleNodes(startingExit, attemptNumber);
+        queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(startingExit, attemptNumber));
         queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits(startingExit, attemptNumber));
     }
 
@@ -148,6 +157,9 @@ public class MoneyChecker {
                 if(accessedAreas.contains("Tower of Ruin")) {
                     return accessedMoney < 80 ? accessedMoney : 80;
                 }
+                if(accessedAreas.contains("Retromausoleum")) {
+                    return accessedMoney < 50 ? accessedMoney : 50;
+                }
             }
             if("Fruit of Eden".equals(itemName) && accessedNodes.contains("Location: Gate of Illusion [Eden]")) {
                 return accessedMoney < 50 ? accessedMoney : 50;
@@ -172,6 +184,9 @@ public class MoneyChecker {
             if("Hermes' Boots".equals(itemName)
                     && (Settings.getEnabledGlitches().contains("Raindrop") || Settings.getEnabledGlitches().contains("Object Zip"))) {
                 return accessedMoney < 80 ? accessedMoney : 80;
+            }
+            if("Holy Grail".equals(itemName)) {
+                return accessedMoney < 70 ? accessedMoney : 70;
             }
             if(accessedAreas.contains("Temple of Moonlight")
                     && ("Shuriken".equals(itemName) || "Rolling Shuriken".equals(itemName)
@@ -346,6 +361,9 @@ public class MoneyChecker {
         if(locationNodeName.equals("Location: Dimensional Corridor [Grail]")) {
             return 20; // Girtablilu
         }
+        if(locationNodeName.equals("Location: Gate of Time [Surface]")) {
+            return 10;
+        }
         return 0;
     }
 
@@ -376,14 +394,14 @@ public class MoneyChecker {
 //    }
 
     private String getAreaFromNode(String nodeName) {
-        if(nodeName.contains("Surface")) {
-            return "Gate of Guidance";
+        if(nodeName.contains("Surface") && !nodeName.contains("Gate of Time")) {
+            return "Surface";
         }
         if(nodeName.contains("Gate of Guidance")) {
             return "Gate of Guidance";
         }
         if(nodeName.contains("Gate of Illusion")) {
-            return "Gate of Guidance";
+            return "Gate of Illusion";
         }
         if(nodeName.contains("Mausoleum of the Giants")) {
             return "Mausoleum of the Giants";
@@ -426,6 +444,17 @@ public class MoneyChecker {
         }
         if(nodeName.contains("Shrine of the Mother")) {
             return "Shrine of the Mother";
+        }
+        if(nodeName.contains("Gate of Time")) {
+            if(nodeName.contains("Mausoleum")) {
+                return "Retromausoleum";
+            }
+            if(nodeName.contains("Guidance")) {
+                return "Retroguidance";
+            }
+            if(nodeName.contains("Surface")) {
+                return "Retrosurface";
+            }
         }
         return null;
     }

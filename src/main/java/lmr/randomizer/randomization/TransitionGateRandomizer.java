@@ -443,24 +443,49 @@ public class TransitionGateRandomizer {
      * @param random for determining where to place the transition
      */
     public void placeTowerOfTheGoddessPassthroughPipe(Random random) {
-        List<String> leftTransitions = new ArrayList<>();
-        leftTransitions.add("Transition: Guidance L1");
-        leftTransitions.add("Transition: Mausoleum L1");
-        leftTransitions.add("Transition: Sun L1");
-//        leftTransitions.add("Transition: Extinction L1");
-//        leftTransitions.add("Transition: Extinction L2");
-        leftTransitions.add("Transition: Graveyard L1");
-        leftTransitions.add("Transition: Moonlight L1");
-        leftTransitions.add("Transition: Goddess L2");
-        leftTransitions.add("Transition: Ruin L1");
-        leftTransitions.add("Transition: Birth L1");
-        leftTransitions.add("Transition: Retroguidance L1");
-        String leftTransition = leftTransitions.get(random.nextInt(leftTransitions.size()));
-        String rightTransition = transitionGateDestinationMap.get(leftTransition);
-        transitionGateDestinationMap.put(leftTransition, "Transition: Pipe R1");
-        transitionGateDestinationMap.put("Transition: Pipe R1", leftTransition);
-        transitionGateDestinationMap.put(rightTransition, "Transition: Pipe L1");
-        transitionGateDestinationMap.put("Transition: Pipe L1", rightTransition);
+        boolean pipeTransitionUnplaced = true;
+        for(CustomTransitionPlacement customTransitionPlacement : DataFromFile.getCustomPlacementData().getCustomTransitionPlacements()) {
+            String transitionStart = customTransitionPlacement.getTargetTransition().replace("Transition ", "Transition: ");
+            String transitionEnd = customTransitionPlacement.getDestinationTransition().replace("Transition ", "Transition: ");
+            if(customTransitionPlacement.isPipeTransition()) {
+                String leftTransition;
+                String rightTransition;
+                if(Validation.isPipeSupportedLeftTransition(transitionStart)) {
+                    leftTransition = transitionStart;
+                    rightTransition = transitionEnd;
+                }
+                else {
+                    leftTransition = transitionEnd;
+                    rightTransition = transitionStart;
+                }
+                transitionGateDestinationMap.put(leftTransition, "Transition: Pipe R1");
+                transitionGateDestinationMap.put("Transition: Pipe R1", leftTransition);
+                transitionGateDestinationMap.put(rightTransition, "Transition: Pipe L1");
+                transitionGateDestinationMap.put("Transition: Pipe L1", rightTransition);
+                pipeTransitionUnplaced = false;
+                break;
+            }
+        }
+        if(pipeTransitionUnplaced) {
+            List<String> leftTransitions = new ArrayList<>();
+            leftTransitions.add("Transition: Guidance L1");
+            leftTransitions.add("Transition: Mausoleum L1");
+            leftTransitions.add("Transition: Sun L1");
+//            leftTransitions.add("Transition: Extinction L1");
+//            leftTransitions.add("Transition: Extinction L2");
+            leftTransitions.add("Transition: Graveyard L1");
+            leftTransitions.add("Transition: Moonlight L1");
+            leftTransitions.add("Transition: Goddess L2");
+            leftTransitions.add("Transition: Ruin L1");
+            leftTransitions.add("Transition: Birth L1");
+            leftTransitions.add("Transition: Retroguidance L1");
+            String leftTransition = leftTransitions.get(random.nextInt(leftTransitions.size()));
+            String rightTransition = transitionGateDestinationMap.get(leftTransition);
+            transitionGateDestinationMap.put(leftTransition, "Transition: Pipe R1");
+            transitionGateDestinationMap.put("Transition: Pipe R1", leftTransition);
+            transitionGateDestinationMap.put(rightTransition, "Transition: Pipe L1");
+            transitionGateDestinationMap.put("Transition: Pipe L1", rightTransition);
+        }
     }
 
     private List<String> getGatesFromLocation(String gateName) {

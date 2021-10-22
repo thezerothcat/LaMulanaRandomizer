@@ -26,13 +26,16 @@ public class EscapeChecker {
     private ItemRandomizer itemRandomizer;
     private ShopRandomizer shopRandomizer;
 
+    private String successNode;
+
     public EscapeChecker(BacksideDoorRandomizer backsideDoorRandomizer, TransitionGateRandomizer transitionGateRandomizer,
                          ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer,
-                         Set<String> accessedNodesFromValidation, String startingLocation) {
+                         Set<String> accessedNodesFromValidation, String startingLocation, String successNode) {
         this.backsideDoorRandomizer = backsideDoorRandomizer;
         this.transitionGateRandomizer = transitionGateRandomizer;
         this.itemRandomizer = itemRandomizer;
         this.shopRandomizer = shopRandomizer;
+        this.successNode = successNode;
         mapOfNodeNameToRequirementsObject = copyRequirementsMap(DataFromFile.getMapOfNodeNameToRequirementsObject());
 
         queuedUpdates.add(startingLocation);
@@ -41,7 +44,7 @@ public class EscapeChecker {
         if(accessedNodesFromValidation.contains("Transition: Moonlight L1")) {
             queuedUpdates.add("State: Phase 1 Moonlight Access");
         }
-        if(accessedNodesFromValidation.contains("Transition: Moonlight L1")) {
+        if(accessedNodesFromValidation.contains("Transition: Surface R1")) {
             queuedUpdates.add("State: Phase 1 Surface Access");
         }
         if(accessedNodesFromValidation.contains("Location: Tower of the Goddess [Grail]")
@@ -49,7 +52,7 @@ public class EscapeChecker {
             queuedUpdates.add("State: Phase 1 Shield Statue Access");
         }
         if(accessedNodesFromValidation.contains("Event: Flooded Temple of the Sun")
-                && accessedNodesFromValidation.contains("Origin Seal")
+                && accessedNodesFromValidation.contains("Seal: O3")
                 && accessedNodesFromValidation.contains("Location: Temple of the Sun [East]")) {
             queuedUpdates.add("State: Phase 1 Sun Exits Opened");
         }
@@ -60,7 +63,9 @@ public class EscapeChecker {
                     && !accessedNodeFromValidation.startsWith("Location:")
                     && !accessedNodeFromValidation.startsWith("Coin:")
                     && !accessedNodeFromValidation.startsWith("Transition:")
-                    && !accessedNodeFromValidation.startsWith("Exit:")
+                    && (!accessedNodeFromValidation.startsWith("Exit:") || Settings.isRandomizeNpcs())
+                    && !accessedNodeFromValidation.startsWith("NPC:")
+                    && !accessedNodeFromValidation.startsWith("NPCL:")
                     && !accessedNodeFromValidation.startsWith("Door:")) {
                 queuedUpdates.add(accessedNodeFromValidation);
             }
@@ -99,14 +104,14 @@ public class EscapeChecker {
     public boolean isSuccess() {
         while (!queuedUpdates.isEmpty()) {
             computeAccessibleNodes(queuedUpdates.iterator().next(), null);
-            if(accessedNodes.contains("Event: Escape")) {
+            if(accessedNodes.contains(successNode)) {
                 return true;
             }
         }
-        if(!accessedNodes.contains("Event: Escape")) {
+        if(!accessedNodes.contains(successNode)) {
             FileUtils.log("Nodes not accessed: " + mapOfNodeNameToRequirementsObject.keySet());
         }
-        return accessedNodes.contains("Event: Escape");
+        return accessedNodes.contains(successNode);
     }
 
     public void computeAccessibleNodes(String newState, Integer attemptNumber) {
@@ -130,31 +135,35 @@ public class EscapeChecker {
     private void handleNodeAccess(String nodeName, NodeType nodeType, Integer attemptNumber) {
         switch (nodeType) {
             case ITEM_LOCATION:
-                if(nodeName.startsWith("Coin:") && !Settings.isRandomizeCoinChests()) {
-                    break;
-                }
-                if(nodeName.startsWith("Trap:") && !Settings.isRandomizeTrapItems()) {
-                    break;
-                }
-                String item = itemRandomizer.getItem(nodeName);
-                if (item == null) {
-                    throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
-                }
-                if (!Settings.getCurrentRemovedItems().contains(item) && !Settings.getRemovedItems().contains(item) && !"Holy Grail".equals(item)) {
-                    FileUtils.logDetail("Found item " + item, attemptNumber);
-                    queuedUpdates.add(item);
+                if(!Settings.isRandomizeNpcs()) {
+                    if(nodeName.startsWith("Coin:") && !Settings.isRandomizeCoinChests()) {
+                        break;
+                    }
+                    if(nodeName.startsWith("Trap:") && !Settings.isRandomizeTrapItems()) {
+                        break;
+                    }
+                    String item = itemRandomizer.getItem(nodeName);
+                    if (item == null) {
+                        throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
+                    }
+                    if (!Settings.getCurrentRemovedItems().contains(item) && !Settings.getRemovedItems().contains(item) && !"Holy Grail".equals(item)) {
+                        FileUtils.logDetail("Found item " + item, attemptNumber);
+                        queuedUpdates.add(item);
+                    }
                 }
                 break;
             case SHOP:
-                for (String shopItem : shopRandomizer.getShopItems(nodeName)) {
-                    if (shopItem == null) {
-                        throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
-                    }
-                    if (!accessedNodes.contains(shopItem) && !queuedUpdates.contains(shopItem)
-                            && !Settings.getRemovedItems().contains(shopItem)
-                            && !Settings.getCurrentRemovedItems().contains(shopItem)) {
-                        FileUtils.logDetail("Found item " + shopItem, attemptNumber);
-                        queuedUpdates.add(shopItem);
+                if(!Settings.isRandomizeNpcs()) {
+                    for(String shopItem : shopRandomizer.getShopItems(nodeName)) {
+                        if(shopItem == null) {
+                            throw new RuntimeException("Unable to find item at " + nodeName + " location of type " + nodeType.toString());
+                        }
+                        if(!accessedNodes.contains(shopItem) && !queuedUpdates.contains(shopItem)
+                                && !Settings.getRemovedItems().contains(shopItem)
+                                && !Settings.getCurrentRemovedItems().contains(shopItem)) {
+                            FileUtils.logDetail("Found item " + shopItem, attemptNumber);
+                            queuedUpdates.add(shopItem);
+                        }
                     }
                 }
                 break;
@@ -163,9 +172,15 @@ public class EscapeChecker {
                 queuedUpdates.add(nodeName);
                 queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, null));
                 break;
-            case NPC:
-                FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
+            case NPC_LOCATION:
+                // todo: door contents and move npc randomizer in here
                 queuedUpdates.add(nodeName);
+                break;
+            case NPC:
+                if(!Settings.isRandomizeNpcs()) {
+                    FileUtils.logDetail("Gained access to node " + nodeName, attemptNumber);
+                    queuedUpdates.add(nodeName);
+                }
                 break;
             case STATE:
             case SETTING:
@@ -180,9 +195,11 @@ public class EscapeChecker {
                 }
                 break;
             case EXIT:
-                queuedUpdates.add(nodeName);
-                queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
-                queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits(nodeName, attemptNumber));
+                if(!Settings.isRandomizeNpcs()) {
+                    queuedUpdates.add(nodeName);
+                    queuedUpdates.addAll(backsideDoorRandomizer.getAvailableNodes(nodeName, attemptNumber));
+                    queuedUpdates.addAll(transitionGateRandomizer.getTransitionExits(nodeName, attemptNumber));
+                }
                 break;
             case TRANSITION:
                 queuedUpdates.add(nodeName);

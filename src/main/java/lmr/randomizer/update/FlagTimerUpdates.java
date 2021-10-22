@@ -2,6 +2,7 @@ package lmr.randomizer.update;
 
 import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
+import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.util.FlagConstants;
@@ -23,8 +24,22 @@ public class FlagTimerUpdates {
         if(isMulanaTalismanPuzzleTimer(flagTimer)) {
             return false;
         }
+        if(isMulbrukConversationTimer(flagTimer)) {
+            return false;
+        }
         if(isMSX2XelpudConversationTimer(flagTimer)) {
             return false;
+        }
+        if(HolidaySettings.isHalloween2021Mode()) {
+            if(isEscapeSequenceTimer(flagTimer)) {
+                return false;
+            }
+            if(isMailTimer(flagTimer)) {
+                return false;
+            }
+            if(isMapCountUpdateTimer(flagTimer)) {
+                return false;
+            }
         }
         ObjectContainer objectContainer = flagTimer.getObjectContainer();
         if(flagTimer.getObjectContainer() instanceof Screen) {
@@ -41,6 +56,7 @@ public class FlagTimerUpdates {
         updateTimerUpdates(flagTimer);
         updateTimerTests(flagTimer);
         updateTrueShrineTransformationTimer(flagTimer);
+        updateMail43Timer(flagTimer);
         return true;
     }
 
@@ -96,10 +112,33 @@ public class FlagTimerUpdates {
         return false;
     }
 
+    private static boolean isEscapeSequenceTimer(GameObject flagTimer) {
+        for (WriteByteOperation flagUpdate : flagTimer.getWriteByteOperations()) {
+            if(flagUpdate.getIndex() == FlagConstants.ESCAPE && flagUpdate.getValue() == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static boolean isMSX2XelpudConversationTimer(GameObject flagTimer) {
         for (TestByteOperation flagTest : flagTimer.getTestByteOperations()) {
             if(flagTest.getIndex() == FlagConstants.WF_MSX2) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isMulbrukConversationTimer(GameObject flagTimer) {
+        for (WriteByteOperation flagUpdate : flagTimer.getWriteByteOperations()) {
+            if(flagUpdate.getIndex() == FlagConstants.MULBRUK_CONVERSATIONS_EARLY && flagUpdate.getValue() == 3) {
+                return true;
+            }
+            if(flagUpdate.getIndex() == FlagConstants.HT_UNLOCK_PROGRESS_EARLY) {
+                if(flagUpdate.getValue() == 1 || flagUpdate.getValue() == 6 || flagUpdate.getValue() == 8) {
+                    return true;
+                }
             }
         }
         return false;
@@ -176,6 +215,65 @@ public class FlagTimerUpdates {
                         return true;
                     }
                 }
+            }
+        }
+        return false;
+    }
+
+    private static boolean isMailTimer(GameObject flagTimer) {
+        for(WriteByteOperation flagUpdate : flagTimer.getWriteByteOperations()) {
+            int flagIndex = flagUpdate.getIndex();
+            if(flagIndex == FlagConstants.MAIL_01
+                    || flagIndex == FlagConstants.MAIL_02 || flagIndex == FlagConstants.MAIL_03
+                    || flagIndex == FlagConstants.MAIL_04 || flagIndex == FlagConstants.MAIL_05
+                    || flagIndex == FlagConstants.MAIL_06 || flagIndex == FlagConstants.MAIL_07
+                    || flagIndex == FlagConstants.MAIL_08 || flagIndex == FlagConstants.MAIL_09
+                    || flagIndex == FlagConstants.MAIL_10 || flagIndex == FlagConstants.MAIL_11
+                    || flagIndex == FlagConstants.MAIL_12 || flagIndex == FlagConstants.MAIL_13
+                    || flagIndex == FlagConstants.MAIL_14 || flagIndex == FlagConstants.MAIL_15
+                    || flagIndex == FlagConstants.MAIL_16 || flagIndex == FlagConstants.MAIL_17
+                    || flagIndex == FlagConstants.MAIL_18 || flagIndex == FlagConstants.MAIL_19
+                    || flagIndex == FlagConstants.MAIL_20 || flagIndex == FlagConstants.MAIL_21
+                    || flagIndex == FlagConstants.MAIL_22 || flagIndex == FlagConstants.MAIL_23
+                    || flagIndex == FlagConstants.MAIL_24 || flagIndex == FlagConstants.MAIL_25
+                    || flagIndex == FlagConstants.MAIL_26 || flagIndex == FlagConstants.MAIL_27
+                    || flagIndex == FlagConstants.MAIL_28 || flagIndex == FlagConstants.MAIL_29
+                    || flagIndex == FlagConstants.MAIL_30 || flagIndex == FlagConstants.MAIL_31
+                    || flagIndex == FlagConstants.MAIL_32 || flagIndex == FlagConstants.MAIL_33
+                    || flagIndex == FlagConstants.MAIL_34 || flagIndex == FlagConstants.MAIL_35
+                    || flagIndex == FlagConstants.MAIL_36 || flagIndex == FlagConstants.MAIL_37
+                    || flagIndex == FlagConstants.MAIL_38 || flagIndex == FlagConstants.MAIL_39
+                    || flagIndex == FlagConstants.MAIL_40 || flagIndex == FlagConstants.MAIL_41
+                    || flagIndex == FlagConstants.MAIL_42 || flagIndex == FlagConstants.MAIL_44) {
+                // Note 1: Mail 00 is meant to be available by default, so won't be removed like the others.
+                // Note 2: Mail 43 is tied to Nebur shop transformation, so won't be treated like a normal mail.
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isMapCountUpdateTimer(GameObject flagTimer) {
+        for(WriteByteOperation flagUpdate : flagTimer.getWriteByteOperations()) {
+            int flagIndex = flagUpdate.getIndex();
+            if(flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_SURFACE
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_GUIDANCE
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_MAUSOLEUM
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_SUN
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_SPRING
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_INFERNO
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_EXTINCTION
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_TWIN
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_ENDLESS
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_SHRINE
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_ILLUSION
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_GRAVEYARD
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_MOONLIGHT
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_GODDESS
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_RUIN
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_BIRTH
+                    || flagIndex == FlagConstants.ACHIEVEMENT_MAP_COUNT_UPDATED_DIMENSIONAL) {
+                return true;
             }
         }
         return false;
@@ -319,43 +417,45 @@ public class FlagTimerUpdates {
                     }
                 }
             }
-            else if(flagUpdate.getIndex() == FlagConstants.HT_UNLOCK_PROGRESS_EARLY) {
-                if(flagUpdate.getValue() == 1) {
-                    if((Settings.isRandomizeForbiddenTreasure() && Settings.isHTFullRandom())
-                            || Settings.isRandomizeDracuetShop()) {
-                        // Get rid of 8-boss requirement on HT.
-                        Integer flagToRemoveIndex = null;
-                        for (int i = 0; i < flagTimer.getTestByteOperations().size(); i++) {
-                            if (flagTimer.getTestByteOperations().get(i).getIndex() == FlagConstants.BOSSES_SHRINE_TRANSFORM) {
-                                flagToRemoveIndex = i;
-                                break;
-                            }
-                        }
-                        if (flagToRemoveIndex != null) {
-                            flagTimer.getTestByteOperations().remove((int) flagToRemoveIndex);
-                        }
-                    }
-                }
-            }
         }
     }
 
     private static void updateTrueShrineTransformationTimer(GameObject flagTimer) {
-        if(Settings.isFoolsGameplay() && Settings.getCurrentBossCount() != 8) {
-            // Timers for unlocking true shrine, normally set value from 8 to 9
-            boolean addTest = false;
-            for(TestByteOperation testByteOperation : flagTimer.getTestByteOperations()) {
-                if (testByteOperation.getIndex() == FlagConstants.BOSSES_SHRINE_TRANSFORM
-                        && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())
-                        && testByteOperation.getValue() == 8) {
-                    addTest = true;
+        // Timers for unlocking true shrine, normally set value from 8 to 9
+        boolean isShrineTransformationTimer = false;
+        for(TestByteOperation testByteOperation : flagTimer.getTestByteOperations()) {
+            if (testByteOperation.getIndex() == FlagConstants.BOSSES_SHRINE_TRANSFORM
+                    && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())
+                    && testByteOperation.getValue() == 8) {
+                isShrineTransformationTimer = true;
+                if(Settings.isFoolsGameplay() && Settings.getCurrentBossCount() != 8) {
                     testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
                     testByteOperation.setValue((byte)9);
+                }
+                break;
+            }
+        }
+        if(isShrineTransformationTimer) {
+            if(Settings.isFoolsGameplay() && Settings.getCurrentBossCount() != 8) {
+                flagTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_GTEQ, Settings.getCurrentBossCount()));
+            }
+            flagTimer.removeUpdate(new WriteByteOperation(FlagConstants.TABLET_GRAIL_SHRINE_FRONT, ByteOp.ASSIGN_FLAG, 0));
+        }
+    }
+
+    private static void updateMail43Timer(GameObject flagTimer) {
+        if(HolidaySettings.isHalloween2021Mode()) {
+            // Separate mail 43 trigger from 4-boss Nebur behavior timer
+            boolean isMail43Timer = false;
+            for(WriteByteOperation writeByteOperation : flagTimer.getWriteByteOperations()) {
+                if (writeByteOperation.getIndex() == FlagConstants.MAIL_43) {
+                    isMail43Timer = true;
                     break;
                 }
             }
-            if(addTest) {
-                flagTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_GTEQ, Settings.getCurrentBossCount()));
+            if(isMail43Timer) {
+                flagTimer.getWriteByteOperations().clear();
+                flagTimer.addUpdates(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_MSX2, ByteOp.ASSIGN_FLAG, 1));
             }
         }
     }

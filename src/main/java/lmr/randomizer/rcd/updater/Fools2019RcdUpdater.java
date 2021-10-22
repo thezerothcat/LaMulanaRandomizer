@@ -16,7 +16,7 @@ public class Fools2019RcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateBat(GameObject bat) {
+    boolean updateBat(Bat bat) {
         ObjectContainer objectContainer = bat.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
             return true;
@@ -36,7 +36,7 @@ public class Fools2019RcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateSkeleton(GameObject skeleton) {
+    boolean updateSkeleton(Skeleton skeleton) {
         ObjectContainer objectContainer = skeleton.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
             return true;

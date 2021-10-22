@@ -32,8 +32,11 @@ public class CustomDoorPlacement {
                 return Integer.parseInt(bossText);
             }
             catch (NumberFormatException ex) {
-                return -1;
+                return null;
             }
+        }
+        if("None".equals(bossText)) {
+            return 0;
         }
         if("Amphisbaena".equals(bossText)) {
             return 1;
@@ -62,6 +65,6 @@ public class CustomDoorPlacement {
         if("Key Fairy".equals(bossText)) {
             return 9;
         }
-        return -1;
+        return null;
     }
 }

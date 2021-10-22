@@ -354,11 +354,11 @@ public class Fools2020RcdUpdater extends RcdUpdater {
         List<GameObject> keptObjects = new ArrayList<>();
         for(GameObject gameObject : mulbrukScreen.getObjects()) {
             if(gameObject.getId() == 0xa0) {
-                if(gameObject.getArgs().get(4) == BlockConstants.MulbrukEscapeRegular) {
+                if(gameObject.getArgs().get(4) == BlockConstants.Master_MulbrukEscapeRegular) {
                     escapeConversationNormal = gameObject;
                     keptObjects.add(gameObject);
                 }
-                else if(gameObject.getArgs().get(4) == BlockConstants.MulbrukEscapeSwimsuit) {
+                else if(gameObject.getArgs().get(4) == BlockConstants.Master_MulbrukEscapeSwimsuit) {
                     keptObjects.add(gameObject);
                 }
             }
@@ -367,6 +367,7 @@ public class Fools2020RcdUpdater extends RcdUpdater {
             }
         }
 
+        // todo: this conversation door might not be needed as of random Mulbruk changes
         GameObject bookOfTheDeadConversation = new GameObject(escapeConversationNormal);
         bookOfTheDeadConversation.getArgs().set(4, getCustomBlockIndex(CustomBlockEnum.Fools2020ReferenceBlock_MulbrukBookOfTheDead));
         bookOfTheDeadConversation.getTestByteOperations().clear();

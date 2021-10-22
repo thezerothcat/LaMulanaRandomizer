@@ -30,7 +30,7 @@ public class GameUpdater {
         this.flagManager = flagManager;
     }
 
-    public void updateDat(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer) {
+    public void updateDat(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, NpcRandomizer npcRandomizer) {
         datUpdaters.add(new BaseDatUpdater(datFileData));
 //        if(HolidaySettings.isFools2019Mode()) {
 //            updaters.add(new Fools2019DatUpdater(datFileData));
@@ -44,10 +44,13 @@ public class GameUpdater {
         if(HolidaySettings.isFools2022Mode()) {
             datUpdaters.add(new Fools2022DatUpdater(datFileData));
         }
-        if(HolidaySettings.isHalloweenMode()) {
-            datUpdaters.add(new HalloweenDatUpdater(datFileData));
+        if(HolidaySettings.isHalloween2019Mode()) {
+            datUpdaters.add(new Halloween2019DatUpdater(datFileData));
         }
-        datUpdaters.add(new RandomizationDatUpdater(datFileData, itemRandomizer, shopRandomizer, flagManager));
+        if(HolidaySettings.isHalloween2021Mode()) {
+            datUpdaters.add(new Halloween2021DatUpdater(datFileData));
+        }
+        datUpdaters.add(new RandomizationDatUpdater(datFileData, itemRandomizer, shopRandomizer, npcRandomizer, flagManager));
 
         for(DatUpdater datUpdater : datUpdaters) {
             datUpdater.addCustomBlocks(datFileData);
@@ -73,8 +76,11 @@ public class GameUpdater {
         if(HolidaySettings.isFools2022Mode()) {
             rcdUpdaters.add(new Fools2022RcdUpdater(rcdFileData, datFileData));
         }
-        if(HolidaySettings.isHalloweenMode()) {
-            rcdUpdaters.add(new HalloweenRcdUpdater(rcdFileData, datFileData));
+        if(HolidaySettings.isHalloween2019Mode()) {
+            rcdUpdaters.add(new Halloween2019RcdUpdater(rcdFileData, datFileData));
+        }
+        if(HolidaySettings.isHalloween2021Mode()) {
+            rcdUpdaters.add(new Halloween2021RcdUpdater(rcdFileData, datFileData));
         }
         rcdUpdaters.add(new RandomizationRcdUpdater(rcdFileData, datFileData, flagManager,
                 itemRandomizer, shopRandomizer, npcRandomizer, sealRandomizer,

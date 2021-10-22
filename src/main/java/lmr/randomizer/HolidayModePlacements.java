@@ -2,17 +2,17 @@ package lmr.randomizer;
 
 import lmr.randomizer.node.CustomDoorPlacement;
 import lmr.randomizer.node.CustomItemPlacement;
+import lmr.randomizer.node.CustomNPCPlacement;
 import lmr.randomizer.node.CustomTransitionPlacement;
 import lmr.randomizer.randomization.ShopRandomizationEnum;
+import lmr.randomizer.util.ZoneConstants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HolidayModePlacements {
     public static void applyCustomPlacements() {
-        if(HolidaySettings.isHalloweenMode()) {
-            addCustomPlacementsHalloween();
-        }
-        else if(HolidaySettings.isFools2019Mode()) {
+        if(HolidaySettings.isFools2019Mode()) {
             addCustomPlacementsFools2019();
         }
         else if(HolidaySettings.isFools2020Mode()) {
@@ -21,9 +21,15 @@ public class HolidayModePlacements {
         else if(HolidaySettings.isFools2021Mode()) {
             addCustomPlacementsFools2021();
         }
+        else if(HolidaySettings.isHalloween2019Mode()) {
+            addCustomPlacementsHalloween2019();
+        }
+        else if(HolidaySettings.isHalloween2021Mode()) {
+            addCustomPlacementsHalloween2021();
+        }
     }
 
-    private static void addCustomPlacementsHalloween() {
+    private static void addCustomPlacementsHalloween2019() {
 //        DataFromFile.getCustomPlacementData().setStartingLocation(24);
 //        DataFromFile.getCustomPlacementData().setStartingLocation(23);
 //        DataFromFile.getCustomPlacementData().setStartingLocation(0);
@@ -34,6 +40,173 @@ public class HolidayModePlacements {
 
         customItemPlacement = new CustomItemPlacement("Shop 2 (Surface) Item 3", "Buckler", (short)5, (short)1);
         DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+    }
+
+    private static void addCustomPlacementsHalloween2021() {
+        DataFromFile.getCustomPlacementData().setStartingLocation(ZoneConstants.NIGHT_SURFACE);
+        DataFromFile.getCustomPlacementData().setStartingWeapon("Whip");
+        Settings.setAllowSubweaponStart(false, false);
+        if(!Settings.isAllowWhipStart() && !Settings.isAllowMainWeaponStart()) {
+            Settings.setAllowMainWeaponStart(true, false);
+        }
+
+        Settings.setRandomizeGraphics(false, false);
+        Settings.setMinRandomRemovedItems(0, false);
+        Settings.setMaxRandomRemovedItems(0, false);
+        Settings.setRandomizeCursedChests(true, false);
+        Settings.setReplaceMapsWithWeights(false, false);
+        Settings.setRequireFullAccess(false, false);
+
+        List<String> enabledDamageBoosts = new ArrayList<>(Settings.getEnabledDamageBoosts());
+        enabledDamageBoosts.remove("Enemy");
+        Settings.setEnabledDamageBoosts(enabledDamageBoosts, false);
+
+        Settings.setRandomizeForbiddenTreasure(true, false);
+        Settings.setHTFullRandom(true, false);
+        Settings.setAlternateMotherAnkh(true, false); // Allows Ankh Jewel (Extra) at Provocative Bathing Suit
+
+        Settings.setMedicineColor("Yellow");
+
+        if(Settings.isRandomizeNpcs()) {
+            DataFromFile.getCustomPlacementData().getCustomNPCPlacements().add(new CustomNPCPlacement("Elder Xelpud", "Elder Xelpud"));
+            DataFromFile.getCustomPlacementData().getCustomNPCPlacements().add(new CustomNPCPlacement("Sidro", "Sidro"));
+            DataFromFile.getCustomPlacementData().getCustomNPCPlacements().add(new CustomNPCPlacement("Modro", "Modro"));
+        }
+
+        List<CustomItemPlacement> customItemPlacements = DataFromFile.getCustomPlacementData().getCustomItemPlacements();
+
+        customItemPlacements.add(new CustomItemPlacement("xmailer.exe", "xmailer.exe", null));
+        customItemPlacements.add(new CustomItemPlacement("Provocative Bathing Suit", "Ankh Jewel (Extra)", null));
+
+        customItemPlacements.add(new CustomItemPlacement("Shop 1 (Surface) Item 1", "Provocative Bathing Suit", (short)1, (short)1));
+        customItemPlacements.add(new CustomItemPlacement("Shop 1 (Surface) Item 2", "Vessel", (short)1, (short)1));
+        customItemPlacements.add(new CustomItemPlacement("Shop 1 (Surface) Item 3", "Mulana Talisman", (short)1, (short)1));
+        customItemPlacements.add(new CustomItemPlacement("Shop 3 (Surface) Item 3", "Buckler", (short)5, (short)1));
+
+        if(Settings.isRandomizeEscapeChest()) {
+            Settings.setRandomizeEscapeChest(false, false);
+            if(Settings.isRandomizeCoinChests()) {
+                customItemPlacements.add(new CustomItemPlacement("Coin: Twin (Escape)", "Coin: Extinction", null));
+            }
+        }
+
+        if(!Settings.isRandomizeTransitionGates()) {
+            Settings.setRandomizeTransitionGates(true, false);
+            Settings.setRandomizeOneWayTransitions(true, false);
+
+            List<CustomTransitionPlacement> transitions = DataFromFile.getCustomPlacementData().getCustomTransitionPlacements();
+            transitions.add(new CustomTransitionPlacement("Transition: Surface R1", "Transition: Guidance L1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Surface D1", "Transition: Inferno U2"));
+            transitions.add(new CustomTransitionPlacement("Transition: Surface D2", "Transition: Extinction U2"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Guidance L1", "Transition: Surface R1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Guidance U1", "Transition: Spring D1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Guidance D1", "Transition: Mausoleum U1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Guidance D2", "Transition: Sun U1"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Mausoleum L1", "Transition: Endless R1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Mausoleum U1", "Transition: Guidance D1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Mausoleum D1", "Transition: Twin U1"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Sun L1", "Transition: Inferno R1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Sun R1", "Transition: Extinction L1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Sun R2", "Transition: Extinction L2"));
+            transitions.add(new CustomTransitionPlacement("Transition: Sun U1", "Transition: Guidance D2"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Spring D1", "Transition: Guidance U1"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Inferno R1", "Transition: Sun L1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Inferno U1", "Transition: Twin D1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Inferno U2", "Transition: Surface D1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Inferno W1", "Transition: Extinction U3"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Extinction L1", "Transition: Sun R1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Extinction L2", "Transition: Sun R2"));
+            transitions.add(new CustomTransitionPlacement("Transition: Extinction U1", "Transition: Shrine D1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Extinction U2", "Transition: Surface D2"));
+            transitions.add(new CustomTransitionPlacement("Transition: Extinction U3", "Transition: Inferno W1"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Twin U1", "Transition: Mausoleum D1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Twin U2", "Transition: Shrine D3"));
+            transitions.add(new CustomTransitionPlacement("Transition: Twin U3", "Transition: Dimensional D1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Twin D1", "Transition: Inferno U1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Twin D2", "Transition: Moonlight U2"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Endless R1", "Transition: Mausoleum L1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Endless D1", "Transition: Shrine U1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Endless U1", "Transition: Shrine D2"));
+            transitions.add(new CustomTransitionPlacement("Transition: Endless L1", "Transition: Endless R1"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Shrine U1", "Transition: Endless D1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Shrine D1", "Transition: Extinction U1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Shrine D2", "Transition: Endless U1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Shrine D3", "Transition: Twin U2"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Illusion D1", "Transition: Graveyard U1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Illusion D2", "Transition: Moonlight U1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Illusion R1", "Transition: Goddess L1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Illusion R2", "Transition: Ruin L1"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Graveyard L1", "Transition: Ruin R2"));
+            transitions.add(new CustomTransitionPlacement("Transition: Graveyard R1", "Transition: Moonlight L1", true));
+            transitions.add(new CustomTransitionPlacement("Transition: Graveyard U1", "Transition: Illusion D1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Graveyard U2", "Transition: Goddess D1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Graveyard D1", "Transition: Birth U1"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Moonlight L1", "Transition: Graveyard R1", true));
+            transitions.add(new CustomTransitionPlacement("Transition: Moonlight U1", "Transition: Illusion D2"));
+            transitions.add(new CustomTransitionPlacement("Transition: Moonlight U2", "Transition: Twin D2"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Goddess L1", "Transition: Illusion R1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Goddess L2", "Transition: Ruin R1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Goddess U1", "Transition: Birth D1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Goddess D1", "Transition: Graveyard U2"));
+            transitions.add(new CustomTransitionPlacement("Transition: Goddess W1", "Transition: Retromausoleum D1"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Ruin L1", "Transition: Illusion R2"));
+            transitions.add(new CustomTransitionPlacement("Transition: Ruin R1", "Transition: Goddess L2"));
+            transitions.add(new CustomTransitionPlacement("Transition: Ruin R2", "Transition: Graveyard L1"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Birth L1", "Transition: Birth R1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Birth R1", "Transition: Birth L1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Birth U1", "Transition: Graveyard D1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Birth D1", "Transition: Goddess U1"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Dimensional D1", "Transition: Twin U3"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Retromausoleum U1", "Transition: Retroguidance D1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Retromausoleum D1", "Transition: Goddess W1"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Retroguidance D1", "Transition: Retromausoleum U1"));
+            transitions.add(new CustomTransitionPlacement("Transition: Retroguidance L1", "Transition: Retrosurface R1"));
+
+            transitions.add(new CustomTransitionPlacement("Transition: Retrosurface R1", "Transition: Retroguidance L1"));
+        }
+
+        if(!Settings.isRandomizeBacksideDoors()) {
+            Settings.setRandomizeBacksideDoors(true, false);
+            Settings.setRandomizeNonBossDoors(true, false);
+
+            List<CustomDoorPlacement> doors = DataFromFile.getCustomPlacementData().getCustomDoorPlacements();
+            doors.add(new CustomDoorPlacement("Door: F1", "Door: B1", "Amphisbaena"));
+            doors.add(new CustomDoorPlacement("Door: B1", "Door: F1", "Amphisbaena"));
+            doors.add(new CustomDoorPlacement("Door: F2", "Door: B2", "Sakit"));
+            doors.add(new CustomDoorPlacement("Door: B2", "Door: F2", "Sakit"));
+            doors.add(new CustomDoorPlacement("Door: F3", "Door: B3", "Ellmac"));
+            doors.add(new CustomDoorPlacement("Door: B3", "Door: F3", "Ellmac"));
+            doors.add(new CustomDoorPlacement("Door: F4", "Door: B4", "Bahamut"));
+            doors.add(new CustomDoorPlacement("Door: B4", "Door: F4", "Bahamut"));
+            doors.add(new CustomDoorPlacement("Door: F5", "Door: B5", "Viy"));
+            doors.add(new CustomDoorPlacement("Door: B5", "Door: F5", "Viy"));
+            doors.add(new CustomDoorPlacement("Door: F6", "Door: B6", "Palenque"));
+            doors.add(new CustomDoorPlacement("Door: B6", "Door: F6", "Palenque"));
+            doors.add(new CustomDoorPlacement("Door: F7", "Door: B7", "Baphomet"));
+            doors.add(new CustomDoorPlacement("Door: B7", "Door: F7", "Baphomet"));
+            doors.add(new CustomDoorPlacement("Door: F8", "Door: B8", "None"));
+            doors.add(new CustomDoorPlacement("Door: B8", "Door: F8", "None"));
+            doors.add(new CustomDoorPlacement("Door: F9", "Door: B9", "Key Fairy"));
+            doors.add(new CustomDoorPlacement("Door: B9", "Door: F9", "None"));
+        }
     }
 
     private static void addCustomPlacementsFools2019() {

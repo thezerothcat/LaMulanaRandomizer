@@ -23,12 +23,12 @@ public class BaseRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updatePot(GameObject pot) {
+    boolean updatePot(Pot pot) {
         return potUpdater.updatePot(pot);
     }
 
     @Override
-    boolean updateBat(GameObject bat) {
+    boolean updateBat(Bat bat) {
         ObjectContainer objectContainer = bat.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
             return true;
@@ -54,7 +54,7 @@ public class BaseRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateSkeleton(GameObject skeleton) {
+    boolean updateSkeleton(Skeleton skeleton) {
         ObjectContainer objectContainer = skeleton.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
             return true;
@@ -146,7 +146,7 @@ public class BaseRcdUpdater extends RcdUpdater {
             return true;
         }
         Screen screen = (Screen)objectContainer;
-        if(Settings.isRandomizeTransitionGates()) {
+        if(Settings.isRandomizeTransitionGates() || HolidaySettings.isHalloween2021Mode()) {
             if(screen.getZoneIndex() == 0 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 0) {
                 // Guidance to Surface escape blockage
                 for (TestByteOperation flagTest : roomSpawner.getTestByteOperations()) {
@@ -164,6 +164,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
             }
             else if(screen.getZoneIndex() == 6) {
+                // Rubble in place of Spriggan
                 if(screen.getRoomIndex() == 1 && screen.getScreenIndex() == 1) {
                     for(TestByteOperation flagTest : roomSpawner.getTestByteOperations()) {
                         if(flagTest.getIndex() == FlagConstants.MOTHER_STATE && flagTest.getValue() == 3) {
@@ -172,6 +173,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                     }
                 }
                 if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
+                    // Rubble blocking Gate of Time door
                     for(TestByteOperation flagTest : roomSpawner.getTestByteOperations()) {
                         if(flagTest.getIndex() == FlagConstants.ESCAPE && flagTest.getValue() == 1) {
                             return false;
@@ -180,6 +182,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
             }
             else if(screen.getZoneIndex() == 11 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+                // Rubble blocking...Tower of the Goddess entrance from Graveyard? // todo: Probably meant to be 11 - 2 - 1 (Temple of Moonlight)
                 for (TestByteOperation flagTest : roomSpawner.getTestByteOperations()) {
                     if(flagTest.getIndex() == FlagConstants.MOTHER_STATE && flagTest.getValue() == 3) {
                         return false;
@@ -187,6 +190,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
             }
             else if(screen.getZoneIndex() == 12 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
+                // Rubble blocking Moonlight L1/pipe entrance
                 for (TestByteOperation flagTest : roomSpawner.getTestByteOperations()) {
                     if(flagTest.getIndex() == FlagConstants.MOTHER_STATE && flagTest.getValue() == 3) {
                         return false;
@@ -194,6 +198,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
             }
             else if(screen.getZoneIndex() == 13 && screen.getRoomIndex() == 0 && screen.getScreenIndex() == 1) {
+                // Rubble in place of Tower of the Goddess backside door
                 for (TestByteOperation flagTest : roomSpawner.getTestByteOperations()) {
                     if(flagTest.getIndex() == FlagConstants.MOTHER_STATE && flagTest.getValue() == 3) {
                         return false;
@@ -525,10 +530,6 @@ public class BaseRcdUpdater extends RcdUpdater {
             return true;
         }
         Screen screen = (Screen)objectContainer;
-        if (screen.getZoneIndex() == 3 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
-            // Seal to wake Mulbruk - set the awake flag so we can skip the conversation that normally sets this flag.
-            seal.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MULBRUK_CONVERSATION_AWAKE, ByteOp.ASSIGN_FLAG, 1));
-        }
         if(screen.getZoneIndex() == 18 && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 0) {
             if(Settings.isFeatherlessMode()) {
                 if(seal.getY() == 240) {
@@ -567,7 +568,7 @@ public class BaseRcdUpdater extends RcdUpdater {
 
     @Override
     boolean updateSpriggan(GameObject spriggan) {
-        if(Settings.isRandomizeTransitionGates()) {
+        if(Settings.isRandomizeTransitionGates() || HolidaySettings.isHalloween2021Mode()) {
             // Spriggan statue still reachable during the escape sequence.
             Integer flagIndexToRemove = null;
             for(int i = 0; i < spriggan.getTestByteOperations().size(); i++) {
@@ -585,7 +586,7 @@ public class BaseRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateAnubis(GameObject anubis) {
+    boolean updateBigAnubis(GameObject anubis) {
         // Fighting Anubis shouldn't prevent Mulbruk from giving you Book of the Dead.
         Integer flagUpdateToRemove = null;
         for (int i = 0; i < anubis.getWriteByteOperations().size(); i++) {
@@ -877,22 +878,9 @@ public class BaseRcdUpdater extends RcdUpdater {
                 return false;
             }
         }
-        else if(blockNumber == 485) {
-            // Remove the flags that prevent normal Mulbruk convos if you have Forbidden Treasure/Provocative Bathing Suit.
-            // Also remove score requirement on Mulbruk conversation.
-            Integer flagToRemoveIndex = null;
-            for (int i = 0; i < conversationDoor.getTestByteOperations().size(); i++) {
-                TestByteOperation flagTest = conversationDoor.getTestByteOperations().get(i);
-                if (flagTest.getIndex() == FlagConstants.MULBRUK_BIKINI_ENDING) {
-                    flagToRemoveIndex = i;
-                }
-                else if(flagTest.getIndex() == FlagConstants.SCORE && flagTest.getValue() == 56) {
-                    flagTest.setValue((byte)0);
-                }
-            }
-            if(flagToRemoveIndex != null) {
-                conversationDoor.getTestByteOperations().remove((int)flagToRemoveIndex);
-            }
+        else if(blockNumber == BlockConstants.Master_MulbrukRandomSetA) {
+            // To be removed and re-added for NPC shuffling simplicity.
+            return false;
         }
         else if(blockNumber == 676) {
             // Giltoriyo, Alsedana, Samaranta, Fobos conversations without Philosopher's Ocarina
@@ -902,7 +890,7 @@ public class BaseRcdUpdater extends RcdUpdater {
             // Conversation to inform of unlocking Big Brother's shop, to be removed and re-added for NPC shuffling simplicity.
             return false;
         }
-        else if(blockNumber == BlockConstants.Master_FairyQueen_RequestPendant && !HolidaySettings.isHalloweenMode()) {
+        else if(blockNumber == BlockConstants.Master_FairyQueen_RequestPendant && !HolidaySettings.isHalloween2019Mode()) {
             // First Fairy Queen conversation, completely unneeded for randomizer outside of Halloween.
             return false;
         }
@@ -963,7 +951,7 @@ public class BaseRcdUpdater extends RcdUpdater {
             // Fobos main conversation, to be removed and re-added for NPC shuffling simplicity.
             return false;
         }
-        else if(blockNumber == 719) {
+        else if(blockNumber == BlockConstants.Removed_MulbrukLowScore) {
             // Low-score version of Mulbruk which could interfere with getting Book of the Dead.
             return false;
         }
@@ -979,12 +967,16 @@ public class BaseRcdUpdater extends RcdUpdater {
             // To be removed and re-added for NPC shuffling simplicity.
             return false;
         }
-        else if(blockNumber == 990) {
-            // Mulbruk misc conversation priority below Book of the Dead
-            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_BOOK, ByteOp.FLAG_NOT_EQUAL, 1));
+        else if(blockNumber == BlockConstants.Master_MulbrukEscapeRegular
+                || blockNumber == BlockConstants.Master_MulbrukEscapeSwimsuit) {
+            // To be removed and re-added for NPC shuffling simplicity.
+            return false;
         }
-        else if(blockNumber == 1014) {
-            // Mulbruk conversation after she runs away from the Provocative Bathing Suit.
+        else if(blockNumber == BlockConstants.Master_Mulbruk_ProvocativeBathingSuitReaction) {
+            // To be removed and re-added for NPC shuffling simplicity.
+            return false;
+        }
+        else if(blockNumber == BlockConstants.Removed_MulbrukEmptyAfterProvocativeBathingSuit) {
             return false;
         }
         else if(blockNumber == BlockConstants.Master_ElderXelpudRandomSetC_Rug
@@ -993,18 +985,10 @@ public class BaseRcdUpdater extends RcdUpdater {
             // To be removed and re-added for NPC shuffling simplicity.
             return false;
         }
-        else if(blockNumber == 1082 || blockNumber == 1083 || blockNumber == BlockConstants.MulbrukEscapeRegular) {
-            // Remove the flags that prevent normal Mulbruk convos if you have Forbidden Treasure/Provocative Bathing Suit
-            Integer flagToRemoveIndex = null;
-            for (int i = 0; i < conversationDoor.getTestByteOperations().size(); i++) {
-                if (conversationDoor.getTestByteOperations().get(i).getIndex() == FlagConstants.MULBRUK_BIKINI_ENDING) {
-                    flagToRemoveIndex = i;
-                    break;
-                }
-            }
-            if(flagToRemoveIndex != null) {
-                conversationDoor.getTestByteOperations().remove((int)flagToRemoveIndex);
-            }
+        else if(blockNumber == BlockConstants.Master_MulbrukRandomSetB
+                || blockNumber == BlockConstants.Master_MulbrukRandomSetC) {
+            // To be removed and re-added for NPC shuffling simplicity.
+            return false;
         }
         return true;
     }
@@ -1107,9 +1091,6 @@ public class BaseRcdUpdater extends RcdUpdater {
             motherAnkh.getWriteByteOperations().get(1).setValue((byte) 2);
             motherAnkh.setY(motherAnkh.getY() + 60);
         }
-//        for(int i = 1; i <= 23; i++) {
-//            motherAnkh.getArgs().set(i, (short) 1);
-//        }
         return true;
     }
 
@@ -1665,7 +1646,12 @@ public class BaseRcdUpdater extends RcdUpdater {
         else if(zoneIndex == 6) {
             if(roomIndex == 2 && screenIndex == 0) {
                 if(Settings.isRandomizeTransitionGates()) {
-                    AddObject.addExtinctionTorch(screen);
+                    AddObject.addExtinctionTorch(screen, 60, 80);
+                }
+            }
+            if(roomIndex == 3 && screenIndex == 1) {
+                if(Settings.isRandomizeTransitionGates()) {
+                    AddObject.addExtinctionTorch(screen, 680, 240);
                 }
             }
             if(Settings.isBossCheckpoints()) {
@@ -1711,6 +1697,7 @@ public class BaseRcdUpdater extends RcdUpdater {
         }
         else if(zoneIndex == 9) {
             if(roomIndex == 7 && screenIndex == 0) {
+                AddObject.addGrailTrueShrineBackupDoor(screen);
                 if(Settings.isFeatherlessMode()) {
                     AddObject.addPot(screen, 280, 240, PotGraphic.SHRINE, DropType.NOTHING, 0, new ArrayList<>(0), new ArrayList<>(0));
                 }
@@ -1799,6 +1786,9 @@ public class BaseRcdUpdater extends RcdUpdater {
                                     new TestByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.FLAG_EQUALS, 0)),
                             new WriteByteOperation(FlagConstants.SCREEN_FLAG_2, ByteOp.ASSIGN_FLAG, 1));
                 }
+            }
+            else if (roomIndex == 7 && screenIndex == 0) {
+                AddObject.addGrailUntrueShrineBackupDoor(screen);
             }
             else if (roomIndex == 8 && screenIndex == 1) {
                 AddObject.addLowerUntrueShrineBackupDoor(screen);

@@ -45,6 +45,10 @@ public class Bat extends GameObject {
         getArgs().set(3, (short)(frontsideBat ? 0 : 1));
     }
 
+    public int getDamage() {
+        return getArgs().get(4);
+    }
+
     public void setDamage(int damage) {
         getArgs().set(4, (short)damage);
     }

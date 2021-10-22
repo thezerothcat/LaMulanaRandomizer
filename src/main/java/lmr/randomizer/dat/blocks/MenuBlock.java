@@ -54,7 +54,7 @@ public class MenuBlock extends Block {
 //    public static final int SoftwareMenu_MemorySpaceDenominatorMSX2 = 35;
 //    public static final int SoftwareMenu_SoftwareHeader = 36;
 
-//    public static final int Unknown_XelpudMailer = 37;
+    public static final int XelpudMailer_AppHeaderText = 37;
 //    public static final int Unknown_ColonSymbol = 38;
     public static final int ListData_Unknown39 = 39;
     public static final int ListData_Unknown40 = 40;
@@ -152,7 +152,7 @@ public class MenuBlock extends Block {
     public static final int ListData_UnknownSelectedTextColor = 202;
     public static final int ListData_EmusicHighlightedLineColor = 203;
 
-    public static final int ListData_ShieldHp = 204;
+    public static final int ListData_ShieldHp = 204; // HP and some other value - Buckler 20hp, Silver Shield 70hp, Angel Shield 10000hp (hardcoded infinite), Fake Silver Shield 1hp
 //    public static final int BossDefeat_Congratulations = 205;
 //    public static final int BossDefeat_AdventureContinues = 206;
 //    public static final int BossDefeat_JourneyNearEnd = 207;
@@ -187,6 +187,10 @@ public class MenuBlock extends Block {
     }
     public void setFakeSilverShieldHp(int hp) {
         ((ListEntry)getBlockContents().get(ListData_ShieldHp)).getData().set(6, (short)hp);
+    }
+
+    public void setXmailerAppHeader(TextEntry newAppHeader) {
+        getBlockContents().set(XelpudMailer_AppHeaderText, newAppHeader);
     }
 
     public void setMantraName(int mantra, TextEntry newMantraName) {

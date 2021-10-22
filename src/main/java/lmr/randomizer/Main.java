@@ -4,6 +4,7 @@ import lmr.randomizer.dat.*;
 import lmr.randomizer.dat.blocks.Block;
 import lmr.randomizer.dat.blocks.ItemDescriptionBlock;
 import lmr.randomizer.dat.blocks.contents.entries.TextEntry;
+import lmr.randomizer.graphics.GraphicsFileUpdater;
 import lmr.randomizer.node.AccessChecker;
 import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.node.CustomPlacementData;
@@ -289,8 +290,6 @@ public class Main {
             FileUtils.saveSettings();
 
             HolidayModePlacements.applyCustomPlacements();
-
-            // Any forced temporary plando settings can go here.
 
             progressDialog.updateProgress(10, Translations.getText("setup.backup"));
 
@@ -616,7 +615,10 @@ public class Main {
             if(!Validation.validateSettingCombinations(this)) {
                 return false;
             }
-            if(!Validation.validateHalloween(this)) {
+            if(!Validation.validateHalloween2019(this)) {
+                return false;
+            }
+            if(!Validation.validateHalloween2021(this)) {
                 return false;
             }
             if(!Validation.validateFools2020(this)) {
@@ -747,6 +749,7 @@ public class Main {
                 itemRandomizer.placeForbiddenTreasureItem(random);
             }
             shopRandomizer.determineItemTypes(random);
+            itemRandomizer.placeChestOnlyItems(random);
             accessChecker.determineCursedChests(random);
 
             if(!itemRandomizer.placeNoRequirementItems(new ArrayList<>(initiallyAccessibleItems), random)) {
@@ -855,7 +858,7 @@ public class Main {
                 dialog.updateProgress(95, Translations.getText("progress.write"));
                 shopRandomizer.initShopItemPriceCountRandomizer(isSubweaponOnly(), moneyChecker, random);
                 GameUpdater gameUpdater = new GameUpdater(rcdFileData, datFileData, flagManager);
-                gameUpdater.updateDat(itemRandomizer, shopRandomizer);
+                gameUpdater.updateDat(itemRandomizer, shopRandomizer, npcRandomizer);
                 gameUpdater.updateRcd(itemRandomizer, shopRandomizer, npcRandomizer, sealRandomizer,
                         transitionGateRandomizer, backsideDoorRandomizer, random);
 
@@ -882,21 +885,28 @@ public class Main {
                     writeSaveFile();
                 }
 
-                if(HolidaySettings.isHalloweenMode()) {
-                    if(!FileUtils.updateGraphicsFilesForHalloween(Settings.getGraphicsPack())) {
+                GraphicsFileUpdater.updateGraphicsFiles(); // Always want to update graphics files, for backup Shrine door and possibly other things.
+                if(HolidaySettings.isHalloween2019Mode()) {
+                    if(!GraphicsFileUpdater.updateGraphicsFilesForHalloween2019(Settings.getGraphicsPack())) {
                         JOptionPane.showMessageDialog(f,
                                 Translations.getText("Unable to create Halloween graphics"),
                                 "Randomizer error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
+                if(HolidaySettings.isHalloween2021Mode()) {
+                    if(!GraphicsFileUpdater.updateGraphicsFilesForHalloween2021(Settings.getGraphicsPack())) {
+                        JOptionPane.showMessageDialog(f,
+                                Translations.getText("Unable to create Halloween 2021 graphics"),
+                                "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
                 if(HolidaySettings.isFools2020Mode()) {
-                    if(!FileUtils.updateGraphicsFilesForFools2020(Settings.getGraphicsPack())) {
+                    if(!GraphicsFileUpdater.updateGraphicsFilesForFools2020(Settings.getGraphicsPack())) {
                         JOptionPane.showMessageDialog(f,
                                 Translations.getText("Unable to create Fools 2020 graphics"),
                                 "Randomizer error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
-                FileUtils.updateGraphicsFiles(); // Always want to update graphics files, for backup Shrine door and possibly other things.
 
                 FileUtils.logFlush("Copying settings file");
                 File settingsFile = new File("randomizer-config.txt");
@@ -1186,7 +1196,7 @@ public class Main {
 //                saveData[0x11 + FlagConstants.GODDESS_LIGHTS_ON] = 3;
 //            }
         }
-        if(HolidaySettings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloween2019Mode()) {
             // Unlock Mulbruk so you can get Halloween hints.
             saveData[0x11 + FlagConstants.MULBRUK_CONVERSATIONS_EARLY] = (byte)1;
             saveData[0x11 + FlagConstants.MULBRUK_DOOR_UNSEALED] = (byte)2;
@@ -1215,6 +1225,9 @@ public class Main {
 ////            saveData[0x11 + 0x7ef] = (byte)1; // room 32
 ////            saveData[0x11 + 0x7f0] = (byte)1; // room 33
 //            saveData[0x11 + 0x70c] = (byte)1; // room 34
+        }
+        if(HolidaySettings.isHalloween2021Mode()) {
+            saveData[0x046 * 2 + 0x1011 + 1] = (byte)1; // Map count
         }
         if(Settings.isFeatherlessMode()) {
             // Ice block puzzle forced.

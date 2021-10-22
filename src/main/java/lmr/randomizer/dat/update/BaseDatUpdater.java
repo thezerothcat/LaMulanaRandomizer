@@ -96,6 +96,23 @@ public class BaseDatUpdater extends DatUpdater {
     }
 
     @Override
+    void updateMulbrukWakingUpConversationBlock(Block conversationBlock) {
+        // Move flag update from ConversationDoor into conversation
+        Integer blockContentIndex = null;
+        for(int i = 0; i < conversationBlock.getBlockContents().size(); i++) {
+            BlockContents blockContents = conversationBlock.getBlockContents().get(i);
+            if(blockContents instanceof BlockFlagData) {
+                BlockFlagData blockFlagData = (BlockFlagData) blockContents;
+                if(blockFlagData.getWorldFlag() == FlagConstants.MULBRUK_CONVERSATIONS_EARLY) {
+                    blockContentIndex = i;
+                }
+            }
+        }
+        conversationBlock.getBlockContents().add(blockContentIndex,
+                new BlockFlagData(FlagConstants.MULBRUK_CONVERSATION_AWAKE, 1));
+    }
+
+    @Override
     public void updateMiniDollConversationBlock(Block conversationBlock) {
         // Remove Mini Doll's becoming small flag from conversation.
         Integer becomingSmallFlagIndex = null;
@@ -125,7 +142,7 @@ public class BaseDatUpdater extends DatUpdater {
             }
         }
         conversationBlock.getBlockContents().add(blockContentIndex,
-                new BlockFlagData((short)FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER, (short)1));
+                new BlockFlagData(FlagConstants.MR_SLUSHFUND_CONVERSATION_PEPPER, 1));
     }
 
     @Override
@@ -249,7 +266,7 @@ public class BaseDatUpdater extends DatUpdater {
                 }
             }
         }
-        blockFlagData = new BlockFlagData((short)FlagConstants.WF_BOOK_OF_THE_DEAD, (short)2);
+        blockFlagData = new BlockFlagData(FlagConstants.WF_BOOK_OF_THE_DEAD, 2);
         conversationBlock.getBlockContents().add(flagIndexOfConversationFlagUpdate, blockFlagData);
     }
 
@@ -332,10 +349,19 @@ public class BaseDatUpdater extends DatUpdater {
         }
 
         List<BlockListData> flagChecks = new ArrayList<>(flagCheckBlock.getFlagCheckReferences().size());
-        flagChecks.add(flagCheckBlock.getFlagCheckReferences().get(3));
-        flagChecks.addAll(flagCheckBlock.getFlagCheckReferences().subList(13, flagCheckBlock.getFlagCheckReferences().size()));
-        flagChecks.addAll(flagCheckBlock.getFlagCheckReferences().subList(0, 3));
-        flagChecks.addAll(flagCheckBlock.getFlagCheckReferences().subList(4, 13));
+        flagChecks.add(flagCheckBlock.getFlagCheckReferences().get(3)); // Book of the Dead conversation
+        flagChecks.addAll(flagCheckBlock.getFlagCheckReferences().subList(13, flagCheckBlock.getFlagCheckReferences().size())); // HT conversations
+
+        // Mulbruk waking up conversation
+        BlockListData blockListData = new BlockListData((short)4);
+        blockListData.getData().add((short)FlagConstants.MULBRUK_CONVERSATION_AWAKE);
+        blockListData.getData().add((short)0);
+        blockListData.getData().add((short)BlockConstants.MulbrukWakingUpConversationBlock);
+        blockListData.getData().add((short)0);
+        flagChecks.add(blockListData);
+
+        flagChecks.addAll(flagCheckBlock.getFlagCheckReferences().subList(1, 3)); // MULBRUK_CONVERSATIONS_EARLY
+        flagChecks.addAll(flagCheckBlock.getFlagCheckReferences().subList(4, 13)); // Misc Mulbruk conversations
         flagCheckBlock.getFlagCheckReferences().clear();
         flagCheckBlock.getFlagCheckReferences().addAll(flagChecks);
     }

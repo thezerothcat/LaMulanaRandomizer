@@ -16,16 +16,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class HalloweenRcdUpdater extends RcdUpdater {
+public class Halloween2019RcdUpdater extends RcdUpdater {
     private List<GameObject> npcObjects;
 
-    public HalloweenRcdUpdater(RcdFileData rcdFileData, DatFileData datFileData) {
+    public Halloween2019RcdUpdater(RcdFileData rcdFileData, DatFileData datFileData) {
         super(rcdFileData, datFileData);
         npcObjects = new ArrayList<>();
     }
 
     @Override
-    boolean updateBat(GameObject bat) {
+    boolean updateBat(Bat bat) {
         ObjectContainer objectContainer = bat.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
             return true;
@@ -38,7 +38,7 @@ public class HalloweenRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateSkeleton(GameObject skeleton) {
+    boolean updateSkeleton(Skeleton skeleton) {
         if(HolidaySettings.isIncludeHellTempleNPCs()) {
             ObjectContainer objectContainer = skeleton.getObjectContainer();
             if(!(objectContainer instanceof Screen)) {
@@ -491,12 +491,12 @@ public class HalloweenRcdUpdater extends RcdUpdater {
                 }
             }
         }
-        else if(conversationDoor.getArgs().get(4) == BlockConstants.MulbrukEscapeRegular) {
+        else if(conversationDoor.getArgs().get(4) == BlockConstants.Master_MulbrukEscapeRegular) {
             if(HolidaySettings.isIncludeHellTempleNPCs()) {
                 return false;
             }
         }
-        else if(conversationDoor.getArgs().get(4) == BlockConstants.MulbrukEscapeSwimsuit) {
+        else if(conversationDoor.getArgs().get(4) == BlockConstants.Master_MulbrukEscapeSwimsuit) {
             if(HolidaySettings.isIncludeHellTempleNPCs()) {
                 return false;
             }
@@ -752,7 +752,9 @@ public class HalloweenRcdUpdater extends RcdUpdater {
                         // Add escape door in place of normal HT to Guidance door
                         AddObject.addCreditsDoor(screen, 300, 320);
                         AddObject.addHTSkipTablet(screen, getCustomBlockIndex(CustomBlockEnum.HalloweenHTSkip));
-                        AddObject.addHTGrailWarningTablet(screen, getCustomBlockIndex(CustomBlockEnum.HalloweenHTGrailWarning));
+                        if(!Settings.getStartingItemsIncludingCustom().contains("Holy Grail")) {
+                            AddObject.addHTGrailWarningTablet(screen, getCustomBlockIndex(CustomBlockEnum.HalloweenHTGrailWarning));
+                        }
                     }
                 }
                 if(roomIndex == 1) {
@@ -979,8 +981,79 @@ public class HalloweenRcdUpdater extends RcdUpdater {
         }
     }
 
+    private void addHalloweenGhosts(Screen screen) {
+        final int speedAndDropTypeMain = 1;
+        final int spawnRateMain = 120;
+
+        final int speedAndDropTypeHT = 0;
+        final int spawnRateHT = 240;
+
+        int zoneIndex = screen.getZoneIndex();
+        int roomIndex = screen.getRoomIndex();
+        int screenIndex = screen.getScreenIndex();
+
+        if(zoneIndex != 0 && zoneIndex != 7) {
+            // Guidance can't have ghosts because of red skeletons.
+            // Twin labs can't have ghosts because of witches.
+//            if(zoneIndex == 3 && roomIndex == 8 && screenIndex == 0) {
+//                // Ellmac
+//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(FlagConstants.BAHAMUT_STATE, ByteOp.FLAG_EQUALS, 0));
+//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(FlagConstants.BAHAMUT_STATE, ByteOp.FLAG_GT, 2));
+//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_1, ByteOp.FLAG_EQUALS, 1));
+//                AddObject.addTimer(screen, 10,
+//                        Arrays.asList(new TestByteOperation(FlagConstants.BAHAMUT_STATE, ByteOp.FLAG_EQUALS, 2)),
+//                        Arrays.asList(new WriteByteOperation(FlagConstants.SCREEN_FLAG_1, ByteOp.ASSIGN_FLAG, 1)));
+//            }
+//            if(zoneIndex == 4 && roomIndex == 4 && screenIndex == 0) {
+//                // Bahamut
+//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(FlagConstants.BAHAMUT_STATE, ByteOp.FLAG_EQUALS, 0));
+//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(FlagConstants.BAHAMUT_STATE, ByteOp.FLAG_GT, 2));
+//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_1, ByteOp.FLAG_EQUALS, 1));
+//                AddObject.addTimer(screen, 10,
+//                        Arrays.asList(new TestByteOperation(FlagConstants.BAHAMUT_STATE, ByteOp.FLAG_EQUALS, 2)),
+//                        Arrays.asList(new WriteByteOperation(FlagConstants.SCREEN_FLAG_1, ByteOp.ASSIGN_FLAG, 1)));
+//            }
+//            else {
+            if(zoneIndex == 2) {
+//                if(roomIndex == 3 && screenIndex != 0) {
+                AddObject.addGhostSpawner(screen, 3, 2, spawnRateMain, speedAndDropTypeMain);
+//                }
+//                else if(roomIndex == 5 && screenIndex != 1) {
+//                    AddObject.addGhostSpawner(screen, 120);
+//                }
+//                else if(roomIndex == 9 && screenIndex != 0) {
+//                    AddObject.addGhostSpawner(screen, 120);
+//                }
+//                else if(roomIndex != 7 && roomIndex != 8) {
+//                    AddObject.addGhostSpawner(screen, 120);
+//                }
+            }
+            else if(zoneIndex == 19) { // todo: not sure why the below were excluded
+//                if(roomIndex == 0 && screenIndex != 0) {
+//                    AddObject.addGhostSpawner(screen, maxGhosts, spawnRate, speedAndDropTypePrimary, tests);
+//                }
+//                else if(roomIndex != 1) {
+//                    AddObject.addGhostSpawner(screen, maxGhosts, spawnRate, speedAndDropTypePrimary, tests);
+//                }
+            }
+            else if(zoneIndex == 23) {
+                if(roomIndex != 22 || screenIndex != 1) {
+                    // No ghosts in The Boss's room.
+                    AddObject.addGhostSpawner(screen, 3, 2, spawnRateHT, speedAndDropTypeHT);
+                }
+            }
+            else if(zoneIndex == 24) {
+                AddObject.addGhostSpawner(screen, 3, 2, spawnRateHT, speedAndDropTypeHT);
+            }
+            else {
+                AddObject.addGhostSpawner(screen, 3, 2, spawnRateMain, speedAndDropTypeMain);
+            }
+        }
+    }
+
     @Override
     void addUntrackedCustomNoPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
+        addHalloweenGhosts(screen);
         if(zoneIndex == 0) {
             if(roomIndex == 4 && screenIndex == 1) {
                 // Priest Zarnac - 674

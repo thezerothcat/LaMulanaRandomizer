@@ -115,8 +115,10 @@ public final class AddObject {
         obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0));
 
         obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.XELPUD_CONVERSATION_MSX2, ByteOp.ASSIGN_FLAG, 1));
-        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAIL_43, ByteOp.ASSIGN_FLAG, 1));
-        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAIL_COUNT, ByteOp.ADD_FLAG, 1));
+        if(!HolidaySettings.isHalloween2021Mode()) {
+            obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAIL_43, ByteOp.ASSIGN_FLAG, 1));
+            obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MAIL_COUNT, ByteOp.ADD_FLAG, 1));
+        }
 
         screen.getObjects().add(0, obj);
     }
@@ -273,7 +275,7 @@ public final class AddObject {
     }
 
     /**
-     * Add timer for failed Flail Whip puzzle.
+     * Add timer to track sacred orb count incremented
      * @param screen the screen to add the timers to
      */
     public static void addSacredOrbCountTimers(Screen screen) {
@@ -320,6 +322,58 @@ public final class AddObject {
         GraphicsTextureDraw backupShrineDoorGraphic = new GraphicsTextureDraw(screen, 240, 760);
 
         backupShrineDoorGraphic.getTestByteOperations().add(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9));
+
+        backupShrineDoorGraphic.setLayer(-1);
+        backupShrineDoorGraphic.setImageFile("01effect.png");
+        backupShrineDoorGraphic.setImageX(0);
+        backupShrineDoorGraphic.setImageY(512);
+        backupShrineDoorGraphic.setImageWidth(80);
+        backupShrineDoorGraphic.setImageHeight(80);
+        backupShrineDoorGraphic.setAnimation(0, 0, 1, 0);
+        backupShrineDoorGraphic.setCollision(HitTile.Air);
+        backupShrineDoorGraphic.setRGBAMax(0, 0, 0, 255);
+        backupShrineDoorGraphic.setArg23(1);
+
+        screen.getObjects().add(backupShrineDoorGraphic);
+    }
+
+    /**
+     * Add a backup door from transformed Shrine of the Mother grail to untransformed Shrine of the Mother grail.
+     * @param screen the screen to add the objects to
+     */
+    public static void addGrailUntrueShrineBackupDoor(Screen screen) {
+        addWarpDoor(screen, 500, 80, 9, 7, 0, 500, 80,
+                Arrays.asList(new TestByteOperation(LocationCoordinateMapper.getGrailFlag(ZoneConstants.SHRINE_FRONT, true), ByteOp.FLAG_EQUALS, 1)));
+
+        GraphicsTextureDraw backupShrineDoorGraphic = new GraphicsTextureDraw(screen, 480, 40);
+
+        backupShrineDoorGraphic.getTestByteOperations().add(new TestByteOperation(LocationCoordinateMapper.getGrailFlag(ZoneConstants.SHRINE_FRONT, true), ByteOp.FLAG_EQUALS, 1));
+
+        backupShrineDoorGraphic.setLayer(-1);
+        backupShrineDoorGraphic.setImageFile("01effect.png");
+        backupShrineDoorGraphic.setImageX(0);
+        backupShrineDoorGraphic.setImageY(512);
+        backupShrineDoorGraphic.setImageWidth(80);
+        backupShrineDoorGraphic.setImageHeight(80);
+        backupShrineDoorGraphic.setAnimation(0, 0, 1, 0);
+        backupShrineDoorGraphic.setCollision(HitTile.Air);
+        backupShrineDoorGraphic.setRGBAMax(0, 0, 0, 255);
+        backupShrineDoorGraphic.setArg23(1);
+
+        screen.getObjects().add(backupShrineDoorGraphic);
+    }
+
+    /**
+     * Add a backup door from untransformed Shrine of the Mother grail to transformed Shrine of the Mother grail.
+     * @param screen the screen to add the objects to
+     */
+    public static void addGrailTrueShrineBackupDoor(Screen screen) {
+        addWarpDoor(screen, 500, 80,18, 7, 0, 500, 80,
+                Arrays.asList(new TestByteOperation(LocationCoordinateMapper.getGrailFlag(ZoneConstants.SHRINE_BACK, false), ByteOp.FLAG_EQUALS, 1)));
+
+        GraphicsTextureDraw backupShrineDoorGraphic = new GraphicsTextureDraw(screen, 480, 40);
+
+        backupShrineDoorGraphic.getTestByteOperations().add(new TestByteOperation(LocationCoordinateMapper.getGrailFlag(ZoneConstants.SHRINE_BACK, false), ByteOp.FLAG_EQUALS, 1));
 
         backupShrineDoorGraphic.setLayer(-1);
         backupShrineDoorGraphic.setImageFile("01effect.png");
@@ -502,6 +556,7 @@ public final class AddObject {
         FlagTimer mantraTimer = new FlagTimer(screen);
 
         mantraTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.MANTRA_FINAL, ByteOp.FLAG_NOT_EQUAL, 4));
+        mantraTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_KEY_SWORD, ByteOp.FLAG_GTEQ, 2));
 
         WriteByteOperation writeByteOperation = new WriteByteOperation(FlagConstants.MANTRA_FINAL, ByteOp.ASSIGN_FLAG, 4);
         mantraTimer.getWriteByteOperations().add(writeByteOperation);
@@ -1019,6 +1074,90 @@ public final class AddObject {
         objectContainer.getObjects().add(0, noItemSoundEffect);
     }
 
+    /**
+     * Adds sound effect for curse
+     * @param chest reference for effect
+     * @param newWorldFlag flag to update once the sound has been played, so it will only play once
+     * @param screenFlag screen flag (non-permanent) to indicate that the sound should be played
+     */
+    public static void addCurseEffect(Chest chest, Short newWorldFlag, Integer screenFlag) {
+        SoundEffect curseSoundEffect = new SoundEffect(chest.getObjectContainer());
+        curseSoundEffect.setSoundEffect(SoundEffect.HardmodeActivated);
+        curseSoundEffect.setVolumeBalancePitch(127, 64, 0);
+        curseSoundEffect.setPriority(15);
+        curseSoundEffect.setArg8(0);
+        curseSoundEffect.setFramesDelay(5); // 5 / 35 / 65
+//        curseSoundEffect.setControllerRumble(false);
+        curseSoundEffect.setRumbleStrength(10);
+
+        curseSoundEffect.addTests(
+                new TestByteOperation(newWorldFlag, ByteOp.FLAG_GT, 0),
+                new TestByteOperation(screenFlag, ByteOp.FLAG_EQUALS, 1));
+
+        chest.getObjectContainer().getObjects().add(0, curseSoundEffect);
+
+        GraphicsTextureDraw curseGraphic = new GraphicsTextureDraw(chest.getObjectContainer(), 640 * (chest.getX() / 640) + 260, 480 * (chest.getY() / 480) + 80);
+
+        curseGraphic.setLayer(10); // todo: fix
+        curseGraphic.setImageFile("01effect.png");
+        curseGraphic.setImageX(0);
+        curseGraphic.setImageY(712);
+        curseGraphic.setImageWidth(120);
+        curseGraphic.setImageHeight(180);
+        curseGraphic.setAnimation(0, 1, 0, 0);
+        curseGraphic.setEntryEffect(GraphicsTextureDraw.EntryEffect_FadeIn);
+        curseGraphic.setExitEffect(GraphicsTextureDraw.ExitEffect_BreakGlass);
+        curseGraphic.setCollision(HitTile.Air);
+        curseGraphic.setRGBAMax(0, 0, 0, 255);
+        curseGraphic.setBlendMode(GraphicsTextureDraw.BlendMode_Add);
+        curseGraphic.setArg23(1);
+        curseGraphic.addTests(
+                new TestByteOperation(newWorldFlag, ByteOp.FLAG_GT, 0),
+                new TestByteOperation(screenFlag, ByteOp.FLAG_EQUALS, 1));
+        chest.getObjectContainer().getObjects().add(curseGraphic);
+    }
+
+    /**
+     * Add graphics for the given Spikes object
+     * @param spikes object to add graphics for
+     * @param spikeDirection whether the spikes should face up, down, left or right - value from Spikes constant
+     * @return GraphicsTextureDraw for spikes
+     */
+    public static GraphicsTextureDraw addSpikesGraphic(Spikes spikes, int spikeDirection) {
+        GraphicsTextureDraw spikesGraphic = new GraphicsTextureDraw(spikes.getObjectContainer(), spikes.getX(), spikes.getY());
+        spikesGraphic.addTests(spikes.getTestByteOperations());
+
+        spikesGraphic.setLayer(2);
+        spikesGraphic.setImageFile("01effect.png");
+
+        if(spikeDirection == Spikes.FACE_DOWN) {
+            spikesGraphic.setImageX(160);
+            spikesGraphic.setImageY(712);
+        }
+        else if(spikeDirection == Spikes.FACE_UP) {
+            spikesGraphic.setImageX(160);
+            spikesGraphic.setImageY(752);
+        }
+        else if(spikeDirection == Spikes.FACE_LEFT) {
+            spikesGraphic.setImageX(360);
+            spikesGraphic.setImageY(712);
+        }
+        else if(spikeDirection == Spikes.FACE_RIGHT) {
+            spikesGraphic.setImageX(120);
+            spikesGraphic.setImageY(712);
+        }
+
+        spikesGraphic.setImageWidth(spikes.getWidth() * 20);
+        spikesGraphic.setImageHeight(spikes.getHeight() * 20);
+        spikesGraphic.setAnimation(0, 1, 0, 0);
+        spikesGraphic.setEntryEffect(GraphicsTextureDraw.EntryEffect_FadeIn);
+        spikesGraphic.setCollision(HitTile.Air);
+        spikesGraphic.setRGBAMax(0, 0, 0, 255);
+        spikesGraphic.setArg23(1);
+        spikes.getObjectContainer().getObjects().add(spikesGraphic);
+        return spikesGraphic;
+    }
+
     public static void addBat(ObjectContainer objectContainer, int xPos, int yPos, int screenFlag) {
         Bat bat = new Bat(objectContainer, xPos, yPos);
         bat.setFrontsideBat(true);
@@ -1027,7 +1166,7 @@ public final class AddObject {
         bat.setArg2(2);
         bat.setDamage(3);
 
-        bat.addTests(new TestByteOperation(screenFlag, ByteOp.FLAG_EQUALS, 1));
+        bat.addTests(new TestByteOperation(screenFlag, ByteOp.FLAG_GTEQ, 1));
 
         objectContainer.getObjects().add(bat);
     }
@@ -1056,9 +1195,13 @@ public final class AddObject {
     }
 
     public static void addFoolsExplosion(ObjectContainer objectContainer, int xPos, int yPos, int newWorldFlag) {
+        addFullscreenExplosion(objectContainer, xPos, yPos, 60, newWorldFlag);
+    }
+
+    public static void addFullscreenExplosion(ObjectContainer objectContainer, int xPos, int yPos, int percentDamage, int newWorldFlag) {
         Explosion explosion = new Explosion(objectContainer, 640 * (xPos / 640), 480 * (yPos / 480));
         explosion.setSize(640);
-        explosion.setPercentDamage(60);
+        explosion.setPercentDamage(percentDamage);
         explosion.addTests(new TestByteOperation(newWorldFlag, ByteOp.FLAG_EQUALS, 1));
         explosion.addUpdates(new WriteByteOperation(newWorldFlag, ByteOp.ASSIGN_FLAG, 2));
         objectContainer.getObjects().add(explosion);
@@ -1422,7 +1565,7 @@ public final class AddObject {
         escapeTimer.setXPosition(264);
         escapeTimer.setYPosition(20);
 
-        if(HolidaySettings.isHalloweenMode() && HolidaySettings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isHalloween2019Mode() && HolidaySettings.isIncludeHellTempleNPCs()) {
             escapeTimer.setMinutes(10);
             escapeTimer.setSeconds(31);
         }
@@ -1472,7 +1615,8 @@ public final class AddObject {
         escapeTimer.setXPosition(264);
         escapeTimer.setYPosition(20);
 
-        if(HolidaySettings.isHalloweenMode() && HolidaySettings.isIncludeHellTempleNPCs()) {
+        if(HolidaySettings.isHalloween2021Mode()
+                || (HolidaySettings.isHalloween2019Mode() && HolidaySettings.isIncludeHellTempleNPCs())) {
             escapeTimer.setMinutes(10);
             escapeTimer.setSeconds(31);
         }
@@ -1540,83 +1684,51 @@ public final class AddObject {
         addFramesTimer(screen, 0, Arrays.asList(new TestByteOperation(flag, ByteOp.FLAG_EQUALS, 1)), updates);
     }
 
-    public static void addHalloweenGhosts(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
-        if(zoneIndex != 0 && zoneIndex != 7) {
-            // Guidance can't have ghosts because of red skeletons.
-            // Twin labs can't have ghosts because of witches.
-//            if(zoneIndex == 3 && roomIndex == 8 && screenIndex == 0) {
-//                // Ellmac
-//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(FlagConstants.BAHAMUT_STATE, ByteOp.FLAG_EQUALS, 0));
-//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(FlagConstants.BAHAMUT_STATE, ByteOp.FLAG_GT, 2));
-//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_1, ByteOp.FLAG_EQUALS, 1));
-//                AddObject.addTimer(screen, 10,
-//                        Arrays.asList(new TestByteOperation(FlagConstants.BAHAMUT_STATE, ByteOp.FLAG_EQUALS, 2)),
-//                        Arrays.asList(new WriteByteOperation(FlagConstants.SCREEN_FLAG_1, ByteOp.ASSIGN_FLAG, 1)));
-//            }
-//            if(zoneIndex == 4 && roomIndex == 4 && screenIndex == 0) {
-//                // Bahamut
-//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(FlagConstants.BAHAMUT_STATE, ByteOp.FLAG_EQUALS, 0));
-//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(FlagConstants.BAHAMUT_STATE, ByteOp.FLAG_GT, 2));
-//                AddObject.addGhostSpawner(screen).getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_1, ByteOp.FLAG_EQUALS, 1));
-//                AddObject.addTimer(screen, 10,
-//                        Arrays.asList(new TestByteOperation(FlagConstants.BAHAMUT_STATE, ByteOp.FLAG_EQUALS, 2)),
-//                        Arrays.asList(new WriteByteOperation(FlagConstants.SCREEN_FLAG_1, ByteOp.ASSIGN_FLAG, 1)));
-//            }
-//            else {
-            if(zoneIndex == 2) {
-//                if(roomIndex == 3 && screenIndex != 0) {
-                AddObject.addGhostSpawner(screen, 120);
-//                }
-//                else if(roomIndex == 5 && screenIndex != 1) {
-//                    AddObject.addGhostSpawner(screen, 120);
-//                }
-//                else if(roomIndex == 9 && screenIndex != 0) {
-//                    AddObject.addGhostSpawner(screen, 120);
-//                }
-//                else if(roomIndex != 7 && roomIndex != 8) {
-//                    AddObject.addGhostSpawner(screen, 120);
-//                }
-            }
-            else if(zoneIndex == 19) {
-                if(roomIndex == 0 && screenIndex != 0) {
-                    AddObject.addGhostSpawner(screen, 120);
-                }
-                else if(roomIndex != 1) {
-                    AddObject.addGhostSpawner(screen, 120);
-                }
-            }
-            else if(zoneIndex == 23) {
-                if(roomIndex != 22 || screenIndex != 1) {
-                    // No ghosts in The Boss's room.
-                    AddObject.addGhostSpawner(screen, 240);
-                }
-            }
-            else if(zoneIndex == 24) {
-                AddObject.addGhostSpawner(screen, 240);
-            }
-            else {
-                AddObject.addGhostSpawner(screen, 120);
-            }
-        }
+    public static void addChonchonSpawner(Screen screen,
+                                          int maxChonchons, int damage, int spawnRate, int speed, int amplitude,
+                                          DropType dropType, TestByteOperation... tests) {
+        ChonchonSpawner chonchonSpawner = new ChonchonSpawner(screen);
+        chonchonSpawner.setSpawnRate(spawnRate);
+        chonchonSpawner.setMaxChonchons(maxChonchons);
+        chonchonSpawner.setOscillationAmplitude(amplitude);
+        chonchonSpawner.setHealth(1);
+        chonchonSpawner.setDamage(damage);
+        chonchonSpawner.setDropType(dropType.getValue());
+        chonchonSpawner.setSpeed(speed);
+        chonchonSpawner.addTests(tests);
+        screen.getObjects().add(0, chonchonSpawner);
     }
 
-    public static void addGhostSpawner(Screen screen, int spawnRate) {
+    public static void addGhostSpawner(Screen screen, int maxGhosts, int damageAndSoul, int spawnRate, int speedAndDropType, TestByteOperation... tests) {
         GhostSpawner ghostSpawner = new GhostSpawner(screen);
         ghostSpawner.setSpawnRate(spawnRate);
-        ghostSpawner.setMaxGhosts(3);
+        ghostSpawner.setMaxGhosts(maxGhosts);
         ghostSpawner.setArg2(0);
-
-        if(screen.getZoneIndex() == 23) {
-            ghostSpawner.setGhostSpeedAndDropType(0);
-        }
-        else {
-            ghostSpawner.setGhostSpeedAndDropType(1);
-        }
+        ghostSpawner.setGhostSpeedAndDropType(speedAndDropType);
         ghostSpawner.setGhostHealth(1);
-        ghostSpawner.setGhostDamageAndSoul(2);
+        ghostSpawner.setGhostDamageAndSoul(damageAndSoul);
         ghostSpawner.setArg6(3);
 
+        ghostSpawner.addTests(tests);
+
         screen.getObjects().add(0, ghostSpawner);
+    }
+
+    public static Skeleton addSkeleton(Screen screen, int x, int y, TestByteOperation... tests) {
+        Skeleton skeleton = new Skeleton(screen, x, y);
+        skeleton.setFacing(0);
+        skeleton.setDropType(DropType.RANDOM_COINS_WEIGHTS_SOUL);
+        skeleton.setSpeed(1);
+        skeleton.setInitiallyWalking(true);
+        skeleton.setSkeletonType(Skeleton.TYPE_SKULLETON);
+        skeleton.setHealth(4);
+        skeleton.setContactDamage(4);
+        skeleton.setProjectileDamage(2);
+        skeleton.setSoul(3);
+        skeleton.setProjectileSpeed(2);
+
+        screen.getObjects().add(skeleton);
+        return skeleton;
     }
 
     public static GameObject addGhostLord(Screen screen, int x, int y, int speed, int health, int damage, int soul) {
@@ -1863,7 +1975,7 @@ public final class AddObject {
         return dance;
     }
 
-    public static void addItemGive(GameObject referenceObj, int inventoryArg, int randomizeGraphicsFlag, int worldFlag) {
+    public static ItemGive addItemGive(GameObject referenceObj, int inventoryArg, int randomizeGraphicsFlag, int worldFlag) {
         int x = (referenceObj.getX() / 640) * 640;
         int y = (referenceObj.getY() / 480) * 480;
         ItemGive itemGive = new ItemGive(referenceObj.getObjectContainer(), x, y);
@@ -1878,6 +1990,7 @@ public final class AddObject {
         itemGive.getWriteByteOperations().add(new WriteByteOperation(worldFlag, ByteOp.ASSIGN_FLAG, 2));
 
         referenceObj.getObjectContainer().getObjects().add(itemGive);
+        return itemGive;
     }
 
     public static ItemGive addItemGive(GameObject referenceObj, int inventoryArg) {
@@ -2158,8 +2271,8 @@ public final class AddObject {
         return mirrorCoverGraphic;
     }
 
-    public static void addExtinctionTorch(Screen screen) {
-        Hitbox extinctionTorchHitbox = new Hitbox(screen, 60, 80);
+    public static void addExtinctionTorch(Screen screen, int x, int y) {
+        Hitbox extinctionTorchHitbox = new Hitbox(screen, x, y);
 //        extinctionTorchHitbox.setVisual(0);
         extinctionTorchHitbox.setHealth(1);
         extinctionTorchHitbox.setBreakable(Hitbox.AnyDirection, Hitbox.FlareGun);
@@ -2174,7 +2287,7 @@ public final class AddObject {
 
         screen.getObjects().add(extinctionTorchHitbox);
 
-        GraphicsTextureDraw extinctionTorchLight = new GraphicsTextureDraw(screen, 60, 80);
+        GraphicsTextureDraw extinctionTorchLight = new GraphicsTextureDraw(screen, x, y);
         extinctionTorchLight.setLayer(0);
         extinctionTorchLight.setImageFile("map*_1.png");
         extinctionTorchLight.setImageX(80);
@@ -2193,7 +2306,7 @@ public final class AddObject {
 
         screen.getObjects().add(extinctionTorchLight);
 
-        GraphicsTextureDraw extinctionTorch = new GraphicsTextureDraw(screen, 60, 80);
+        GraphicsTextureDraw extinctionTorch = new GraphicsTextureDraw(screen, x, y);
         extinctionTorch.setLayer(-1);
         extinctionTorch.setImageFile("map*_1.png");
         extinctionTorch.setImageX(40);
@@ -2402,13 +2515,23 @@ public final class AddObject {
         return introBlock;
     }
 
+    public static Block buildBonusCandyBlock(int bonusCount) {
+        Block bonusCandyBlock = new Block();
+        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween2021.bonus" + bonusCount));
+        for(Short shortCharacter : stringCharacters) {
+            bonusCandyBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        bonusCandyBlock.getBlockContents().add(new BlockFlagData(FlagConstants.CUSTOM_HALLOWEEN2021_XELPUD_BONUS_CANDY_CONVERSATIONS, 2 * bonusCount));
+        return bonusCandyBlock;
+    }
+
     public static ShopBlock buildSecretShopBlock() {
         ShopBlock shopBlock = new ShopBlock();
 
         BlockListData shopBlockData = new BlockListData((short)3);
         shopBlockData.getData().add(DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Scriptures").getInventoryArg());
         shopBlockData.getData().add(DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get("Perfume").getInventoryArg());
-        shopBlockData.getData().add((short)0x06a);
+        shopBlockData.getData().add(ItemConstants.COIN);
         shopBlock.setInventoryItemArgsList(shopBlockData);
 
         shopBlockData = new BlockListData((short)3);
@@ -2570,20 +2693,30 @@ public final class AddObject {
         BlockListData danceMove = new BlockListData((short)1);
         danceMove.getData().add((short)1); // Jump
         danceBlock.getBlockContents().add(danceMove);
-        danceBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        danceBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.EndOfEntry));
 
         danceMove = new BlockListData((short)1);
         danceMove.getData().add((short)3); // Swing right
         danceBlock.getBlockContents().add(danceMove);
-        danceBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        danceBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.EndOfEntry));
+
+        danceMove = new BlockListData((short)1);
+        danceMove.getData().add((short)2); // Swing left
+        danceBlock.getBlockContents().add(danceMove);
+        danceBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.EndOfEntry));
 
         danceMove = new BlockListData((short)1);
         danceMove.getData().add((short)1); // Jump
         danceBlock.getBlockContents().add(danceMove);
-        danceBlock.getBlockContents().add(new BlockSingleData((short)0x000a));
+        danceBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.EndOfEntry));
 
         danceMove = new BlockListData((short)1);
         danceMove.getData().add((short)2); // Swing left
+        danceBlock.getBlockContents().add(danceMove);
+        danceBlock.getBlockContents().add(new BlockSingleData(BlockDataConstants.EndOfEntry));
+
+        danceMove = new BlockListData((short)1);
+        danceMove.getData().add((short)3); // Swing right
         danceBlock.getBlockContents().add(danceMove);
 
         return danceBlock;
@@ -3097,12 +3230,12 @@ public final class AddObject {
                 allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
             }
         }
-        allNpcsBlock.getBlockContents().add(new BlockColorsData(BlockDataConstants.ColorChange, (short)0x96, (short)0x32, (short)0));
+        allNpcsBlock.getBlockContents().add(new BlockColorsData((short)0x96, (short)0x32, (short)0));
         stringCharacters = FileUtils.stringToData(Translations.getText("event.halloween.mulbruk"));
         for (Short shortCharacter : stringCharacters) {
             allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
-        allNpcsBlock.getBlockContents().add(new BlockColorsData(BlockDataConstants.ColorChange, (short)0, (short)0, (short)0));
+        allNpcsBlock.getBlockContents().add(new BlockColorsData((short)0, (short)0, (short)0));
         stringCharacters = FileUtils.stringToData(textParts[textParts.length > 0 ? 1 : 0]);
         for (Short shortCharacter : stringCharacters) {
             allNpcsBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
@@ -3731,7 +3864,7 @@ public final class AddObject {
             addTransformedShop(conversationDoor, customBlockIndex, shopInventoryData.getWorldFlag());
 
         }
-        if(shopInventoryData.getInventoryArg() == ItemConstants.KEY_SWORD) {
+        if(Settings.isAutomaticMantras() && shopInventoryData.getInventoryArg() == ItemConstants.KEY_SWORD) {
             AddObject.addAutomaticMantrasTimer(conversationDoor.getObjectContainer());
         }
         if(shopInventoryData.getInventoryArg() == ItemConstants.MEDICINE_OF_THE_MIND_YELLOW
@@ -3751,6 +3884,89 @@ public final class AddObject {
         conversationDoor.getObjectContainer().getObjects().add(newConversationDoor);
 
         conversationDoor.addTests(new TestByteOperation(transformShopFlag, ByteOp.FLAG_LT, 2));
+    }
+
+    public static Trapdoor addTrapdoor(Screen screen, int x, int y) {
+        Trapdoor trapdoor = new Trapdoor(screen, x, y);
+        trapdoor.setOpenFlagIndex(0);
+        trapdoor.setFrameDelayOrFlagValue(1);
+        trapdoor.setFramesOpenAfterAnimation(60);
+        trapdoor.setImageCoordinates(screen.getZoneIndex());
+        screen.getObjects().add(trapdoor);
+
+        return trapdoor;
+    }
+
+    public static Spikes addSpikes(Screen screen, int x, int y, int width, int height, int spikeDirection, TestByteOperation... tests) {
+        Spikes spikes = new Spikes(screen, x, y);
+        spikes.setFacing(spikeDirection);
+        spikes.setWidth(width);
+        spikes.setHeight(height);
+        spikes.setDamage(false, 15);
+        spikes.addTests(tests);
+        screen.getObjects().add(spikes);
+
+        addSpikesGraphic(spikes, spikeDirection);
+
+        return spikes;
+    }
+
+    public static PressurePlate addPressurePlate(Screen screen, int x, int y) {
+        PressurePlate pressurePlate = new PressurePlate(screen, x, y);
+        pressurePlate.setGraphicsFromZone(screen.getZoneIndex());
+        pressurePlate.setDetectionType(PressurePlate.Detection_Lemeza);
+        screen.getObjects().add(pressurePlate);
+
+        return pressurePlate;
+    }
+
+    public static void addHalloweenEmailTimers(ObjectContainer objectContainer, int maxCurseLevel) {
+        addHalloweenEmailTimer(objectContainer, ValueConstants.ENEMY_THRESHOLD1, FlagConstants.MAIL_01).addUpdates(
+                new WriteByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_BAT_LEVEL, ByteOp.ASSIGN_FLAG, 1),
+                new WriteByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_SKELETON_LEVEL, ByteOp.ASSIGN_FLAG, 1)
+        );
+
+        addHalloweenEmailTimer(objectContainer, ValueConstants.GHOST_WITCH_THRESHOLD1, FlagConstants.MAIL_02);
+
+        addHalloweenEmailTimer(objectContainer, ValueConstants.TRAPDOOR_THRESHOLD, FlagConstants.MAIL_03);
+
+        addHalloweenEmailTimer(objectContainer, ValueConstants.TIME_THRESHOLD, FlagConstants.MAIL_04);
+
+        addHalloweenEmailTimer(objectContainer, ValueConstants.SPIKES_THRESHOLD, FlagConstants.MAIL_05);
+
+        addHalloweenEmailTimer(objectContainer, ValueConstants.BAT_RETRIBUTION_THRESHOLD, FlagConstants.MAIL_06).addUpdates(
+                new WriteByteOperation(FlagConstants.GUIDANCE_BATS_KILLED_COUNT, ByteOp.ASSIGN_FLAG, 0),
+                new WriteByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_BAT_RETRIBUTION, ByteOp.ASSIGN_FLAG, 1));
+
+        addHalloweenEmailTimer(objectContainer, ValueConstants.POVERTY_CHEST_THRESHOLD, FlagConstants.MAIL_07);
+
+        addHalloweenEmailTimer(objectContainer, ValueConstants.STRONGER_ENEMIES_THRESHOLD, FlagConstants.MAIL_08).addUpdates(
+                new WriteByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_BAT_LEVEL, ByteOp.ASSIGN_FLAG, 2),
+                new WriteByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_SKELETON_LEVEL, ByteOp.ASSIGN_FLAG, 2));
+
+        addHalloweenEmailTimer(objectContainer, ValueConstants.NON_WALKABLE_SPIKE_THRESHOLD, FlagConstants.MAIL_09);
+        addHalloweenEmailTimer(objectContainer, ValueConstants.GHOST_THRESHOLD3, FlagConstants.MAIL_10);
+        addHalloweenEmailTimer(objectContainer, maxCurseLevel, FlagConstants.MAIL_11);
+    }
+
+    private static GameObject addHalloweenEmailTimer(ObjectContainer objectContainer, int curseThreshold, int mailFlagIndex) {
+        return addFramesTimer(objectContainer, 3,
+                Arrays.asList(
+                        new TestByteOperation(mailFlagIndex, ByteOp.FLAG_EQUALS, 0),
+                        new TestByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_CURSED, ByteOp.FLAG_EQUALS, curseThreshold)),
+                Arrays.asList(
+                        new WriteByteOperation(mailFlagIndex, ByteOp.ASSIGN_FLAG, 1),
+                        new WriteByteOperation(FlagConstants.MAIL_COUNT, ByteOp.ADD_FLAG, 1)));
+    }
+
+    public static void addMapCountTimer(ObjectContainer objectContainer, int mapWorldFlag) {
+        int mapCountFlag = FlagConstants.getMapCountUpdatedFlag(mapWorldFlag);
+        addFramesTimer(objectContainer, 0, Arrays.asList(
+                new TestByteOperation(mapCountFlag, ByteOp.FLAG_EQUALS, 0),
+                new TestByteOperation(mapWorldFlag, ByteOp.FLAG_EQUALS, 2)),
+                Arrays.asList(
+                        new WriteByteOperation(mapCountFlag, ByteOp.ASSIGN_FLAG, 1),
+                        new WriteByteOperation(FlagConstants.ACHIEVEMENT_MAP_COUNT, ByteOp.ADD_FLAG, 1)));
     }
 
     /**

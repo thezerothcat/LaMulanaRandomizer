@@ -149,7 +149,7 @@ public class AccessChecker {
                         || NodeType.EXIT.equals(nodeType)|| NodeType.SETTING.equals(nodeType) || NodeType.TRANSITION.equals(nodeType) ) {
                     continue;
                 }
-                else if(!HolidaySettings.isHalloweenMode() && NodeType.NPC.equals(nodeType)) {
+                else if(NodeType.NPC.equals(nodeType)) {
                     continue;
                 }
                 else if(NodeType.ITEM_LOCATION.equals(nodeType)) {
@@ -206,13 +206,14 @@ public class AccessChecker {
     }
 
     private boolean isEscapeSuccess() {
-        if(HolidaySettings.isHalloweenMode()) {
+        if(HolidaySettings.isHalloween2019Mode()) {
             if(HolidaySettings.isIncludeHellTempleNPCs()) {
                 return true; // Don't have to have a path to Temple of the Sun since the escape ends when you get out.
             }
             else {
-                for(String locationToEscape : DataFromFile.NPC_LOCATIONS) {
-                    if(!new EscapeChecker(backsideDoorRandomizer, transitionGateRandomizer, itemRandomizer, shopRandomizer, accessedNodes, locationToEscape).isSuccess()) {
+                String escapeSuccessNode = getEscapeSuccessNode();
+                for(String locationToEscape : getEscapeStartingLocations()) {
+                    if(!new EscapeChecker(backsideDoorRandomizer, transitionGateRandomizer, itemRandomizer, shopRandomizer, accessedNodes, locationToEscape, escapeSuccessNode).isSuccess()) {
                         FileUtils.log("Failed escape from " + locationToEscape);
                         return false;
                     }
@@ -220,8 +221,350 @@ public class AccessChecker {
                 return true;
             }
         }
+        if(HolidaySettings.isHalloween2021Mode()) {
+            String escapeSuccessNode = getEscapeSuccessNode();
+            for(String locationToEscape : getEscapeStartingLocations()) {
+                if(!new EscapeChecker(backsideDoorRandomizer, transitionGateRandomizer, itemRandomizer, shopRandomizer, accessedNodes, locationToEscape, escapeSuccessNode).isSuccess()) {
+                    FileUtils.log("Failed escape from " + locationToEscape);
+                    return false;
+                }
+            }
+            return true;
+        }
         return (!Settings.isRandomizeTransitionGates() && LocationCoordinateMapper.isSurfaceStart())
-                || new EscapeChecker(backsideDoorRandomizer, transitionGateRandomizer, itemRandomizer, shopRandomizer, accessedNodes, "Location: True Shrine of the Mother").isSuccess();
+                || new EscapeChecker(backsideDoorRandomizer, transitionGateRandomizer, itemRandomizer, shopRandomizer, accessedNodes, "Location: True Shrine of the Mother", getEscapeSuccessNode()).isSuccess();
+    }
+
+    private List<String> getEscapeStartingLocations() {
+        List<String> locations = new ArrayList<>();
+        if(HolidaySettings.isHalloween2019Mode()) {
+            locations.addAll(DataFromFile.NPC_LOCATIONS);
+        }
+        else if(HolidaySettings.isHalloween2021Mode()) {
+            for(String itemLocation : itemRandomizer.getItemLocations()) {
+                if(itemRandomizer.getNewContents(itemLocation).startsWith("Map")) {
+                    locations.add(getLocationFromItemLocation(itemLocation));
+                }
+            }
+        }
+        else {
+            locations.add("Location: True Shrine of the Mother");
+        }
+        return locations;
+    }
+
+    private String getEscapeSuccessNode() {
+        if(Settings.isRandomizeNpcs()) {
+            return npcRandomizer.getNpcLocation("Mulbruk");
+        }
+        return "Event: Escape";
+    }
+
+    private String getLocationFromItemLocation(String itemLocation) {
+        if("Ankh Jewel (Dimensional Corridor)".equals(itemLocation)) {
+            return "Location: Dimensional Corridor [Upper]";
+        }
+        if("Ankh Jewel (Gate of Guidance)".equals(itemLocation)) {
+            return "Location: Gate of Guidance [Main]";
+        }
+        if("Ankh Jewel (Mausoleum of the Giants)".equals(itemLocation)) {
+            return "Location: Mausoleum of the Giants";
+        }
+        if("Ankh Jewel (Spring in the Sky)".equals(itemLocation)) {
+            return "Location: Spring in the Sky [Drain]";
+        }
+        if("Ankh Jewel (Temple of the Sun)".equals(itemLocation)) {
+            return "Location: Temple of the Sun [Main]"; // todo: "Location: Temple of the Sun [Lower]"
+        }
+        if("Ankh Jewel (Tower of Ruin)".equals(itemLocation)) {
+            return "Location: Tower of Ruin [Lower]";
+        }
+        if("Ankh Jewel (Twin Labyrinths)".equals(itemLocation)) {
+            return "Location: Twin Labyrinths [Jewel]";
+        }
+        if("Birth Seal".equals(itemLocation)) {
+            return "Location: Surface [Main]";
+        }
+        if("bounce.exe".equals(itemLocation)) {
+            return "Location: Shrine of the Mother [Main]";
+        }
+        if("Bronze Mirror".equals(itemLocation)) {
+            return "Location: Temple of the Sun [East]";
+        }
+        if("Cog of the Soul".equals(itemLocation)) {
+            return "Location: Gate of Illusion [Upper]";
+        }
+        if("Crucifix".equals(itemLocation)) {
+            return "Location: Gate of Guidance [Main]";
+        }
+        if("Crystal Skull".equals(itemLocation)) {
+            return "Location: Shrine of the Mother [Main]";
+        }
+        if("Death Seal".equals(itemLocation)) {
+            return "Location: Shrine of the Mother [Seal]";
+        }
+        if("Diary".equals(itemLocation)) {
+            return "Location: Shrine of the Mother [Main]";
+        }
+        if("Dimensional Key".equals(itemLocation)) {
+            return "Location: Chamber of Birth [West]";
+        }
+        if("Djed Pillar".equals(itemLocation)) {
+            return "Location: Tower of Ruin [Top]";
+        }
+        if("Eye of Truth".equals(itemLocation)) {
+            return "Location: Tower of the Goddess [Lower]";
+        }
+        if("Fairy Clothes".equals(itemLocation)) {
+            return "Location: Gate of Illusion [Middle]";
+        }
+        if("Feather".equals(itemLocation)) {
+            return "Location: Surface [Main]";
+        }
+        if("Fruit of Eden".equals(itemLocation)) {
+            return "Location: Temple of Moonlight [Upper]";
+        }
+        if("Gauntlet".equals(itemLocation)) {
+            return "Location: Graveyard of the Giants [West]";
+        }
+        if("Glove".equals(itemLocation)) {
+            return "Location: Spring in the Sky [Upper]";
+        }
+        if("Grapple Claw".equals(itemLocation)) {
+            return "Location: Temple of Moonlight [Grapple]";
+        }
+        if("Holy Grail".equals(itemLocation)) {
+            return "Location: Gate of Guidance [Main]";
+        }
+        if("Ice Cape".equals(itemLocation)) {
+            return "Location: Inferno Cavern [Main]";
+        }
+        if("Isis' Pendant".equals(itemLocation)) {
+            return "Location: Temple of the Sun [West]";
+        }
+        if("Key of Eternity".equals(itemLocation)) {
+            return "Location: Gate of Illusion [Grail]";
+        }
+        if("lamulana.exe".equals(itemLocation)) {
+            return "Location: Gate of Time [Surface]";
+        }
+        if("Life Seal".equals(itemLocation)) {
+            return "Location: Chamber of Extinction [Main]";
+        }
+        if("Magatama Jewel".equals(itemLocation)) {
+            return "Location: Dimensional Corridor [Upper]";
+        }
+        if("Map (Chamber of Birth)".equals(itemLocation)) {
+            return "Location: Chamber of Birth [West]";
+        }
+        if("Map (Chamber of Extinction)".equals(itemLocation)) {
+            return "Location: Chamber of Extinction [Map]";
+        }
+        if("Map (Dimensional Corridor)".equals(itemLocation)) {
+            return "Location: Dimensional Corridor [Lower]";
+        }
+        if("Map (Endless Corridor)".equals(itemLocation)) {
+            return "Location: Endless Corridor [1F]";
+        }
+        if("Map (Gate of Guidance)".equals(itemLocation)) {
+            return "Location: Gate of Guidance [Main]";
+        }
+        if("Map (Gate of Illusion)".equals(itemLocation)) {
+            return "Location: Gate of Illusion [Lower]";
+        }
+        if("Map (Graveyard of the Giants)".equals(itemLocation)) {
+            return "Location: Graveyard of the Giants [West]";
+        }
+        if("Map (Inferno Cavern)".equals(itemLocation)) {
+            return "Location: Inferno Cavern [Main]";
+        }
+        if("Map (Mausoleum of the Giants)".equals(itemLocation)) {
+            return "Location: Mausoleum of the Giants";
+        }
+        if("Map (Shrine of the Mother)".equals(itemLocation)) {
+            return "Location: Shrine of the Mother [Map]";
+        }
+        if("Map (Spring in the Sky)".equals(itemLocation)) {
+            return "Location: Spring in the Sky [Main]";
+        }
+        if("Map (Temple of Moonlight)".equals(itemLocation)) {
+            return "Location: Temple of Moonlight [Map]";
+        }
+        if("Map (Temple of the Sun)".equals(itemLocation)) {
+            return "Location: Temple of the Sun [Grail]";
+        }
+        if("Map (Tower of Ruin)".equals(itemLocation)) {
+            return "Location: Tower of Ruin [Illusion]";
+        }
+        if("Map (Tower of the Goddess)".equals(itemLocation)) {
+            return "Location: Tower of the Goddess [Lower]";
+        }
+        if("Map (Twin Labyrinths)".equals(itemLocation)) {
+            return "Location: Twin Labyrinths [Poison 1]";
+        }
+        if("mirai.exe".equals(itemLocation)) {
+            return "Location: Graveyard of the Giants [West]";
+        }
+        if("Origin Seal".equals(itemLocation)) {
+            return "Location: Spring in the Sky [Upper]";
+        }
+        if("Perfume".equals(itemLocation)) {
+            return "Location: Chamber of Birth [Northeast]";
+        }
+        if("Plane Model".equals(itemLocation)) {
+            return "Location: Tower of the Goddess [Grail]";
+        }
+        if("Pochette Key".equals(itemLocation)) {
+            return "Location: Chamber of Birth [Skanda]";
+        }
+        if("Sacred Orb (Gate of Guidance)".equals(itemLocation)) {
+            return "Location: Gate of Guidance [Main]";
+        }
+        if("Sacred Orb (Chamber of Extinction)".equals(itemLocation)) {
+            return "Location: Chamber of Extinction [Main]";
+        }
+        if("Sacred Orb (Dimensional Corridor)".equals(itemLocation)) {
+            return "Location: Dimensional Corridor [Upper]";
+        }
+        if("Sacred Orb (Mausoleum of the Giants)".equals(itemLocation)) {
+            return "Location: Mausoleum of the Giants";
+        }
+        if("Sacred Orb (Shrine of the Mother)".equals(itemLocation)) {
+            return "Location: Shrine of the Mother [Main]";
+        }
+        if("Sacred Orb (Spring in the Sky)".equals(itemLocation)) {
+            return "Location: Spring in the Sky [Main]";
+        }
+        if("Sacred Orb (Surface)".equals(itemLocation)) {
+            return "Location: Surface [Main]";
+        }
+        if("Sacred Orb (Temple of the Sun)".equals(itemLocation)) {
+            return "Location: Temple of the Sun [Main]"; // todo: "Location: Temple of the Sun [Lower]"
+        }
+        if("Sacred Orb (Tower of Ruin)".equals(itemLocation)) {
+            return "Location: Tower of Ruin [Southeast]";
+        }
+        if("Sacred Orb (Twin Labyrinths)".equals(itemLocation)) {
+            return "Location: Twin Labyrinths [Lower]";
+        }
+        if("Scalesphere".equals(itemLocation)) {
+            return "Location: Spring in the Sky [Upper]";
+        }
+        if("Serpent Staff".equals(itemLocation)) {
+            return "Location: Temple of Moonlight [Southeast]";
+        }
+        if("Shell Horn".equals(itemLocation)) {
+            return "Location: Surface [Main]";
+        }
+        if("Spaulder".equals(itemLocation)) {
+            return "Location: Tower of the Goddess [Grail]";
+        }
+        if("Treasures".equals(itemLocation)) {
+            return "Location: Gate of Guidance [Main]";
+        }
+        if("Twin Statue".equals(itemLocation)) {
+            return "Location: Endless Corridor [3F Lower]";
+        }
+        if("Vessel".equals(itemLocation)) {
+            return "Location: Chamber of Birth [Northeast]";
+        }
+        if("Woman Statue".equals(itemLocation)) {
+            return "Location: Chamber of Birth [Southeast]";
+        }
+        if("yagostr.exe".equals(itemLocation)) {
+            return "Location: Gate of Guidance [Door]";
+        }
+        if("Coin: Surface (Waterfall)".equals(itemLocation)) {
+            return "Location: Surface [Main]";
+        }
+        if("Coin: Surface (Seal)".equals(itemLocation)) {
+            return "Location: Surface [Main]";
+        }
+        if("Coin: Surface (Ruin Path)".equals(itemLocation)) {
+            return "Location: Surface [Ruin Path Upper]";
+        }
+        if("Coin: Guidance (One)".equals(itemLocation)) {
+            return "Location: Gate of Guidance [Shuriken]";
+        }
+        if("Coin: Guidance (Two)".equals(itemLocation)) {
+            return "Location: Gate of Guidance [Shuriken]";
+        }
+        if("Coin: Guidance (Trap)".equals(itemLocation)) {
+            return "Location: Gate of Guidance [Main]";
+        }
+        if("Coin: Mausoleum".equals(itemLocation)) {
+            return "Location: Mausoleum of the Giants";
+        }
+        if("Coin: Sun (Pyramid)".equals(itemLocation)) {
+            return "Location: Temple of the Sun [Main]"; // todo: "Location: Temple of the Sun [Lower]"
+        }
+        if("Coin: Spring".equals(itemLocation)) {
+            return "Location: Spring in the Sky [Main]";
+        }
+        if("Coin: Inferno (Lava)".equals(itemLocation)) {
+            return "Location: Inferno Cavern [Main]";
+        }
+        if("Coin: Inferno (Spikes)".equals(itemLocation)) {
+            return "Location: Inferno Cavern [Spikes]";
+        }
+        if("Coin: Extinction".equals(itemLocation)) {
+            return "Location: Chamber of Extinction [Left Main]";
+        }
+        if("Coin: Twin (Witches)".equals(itemLocation)) {
+            return "Location: Twin Labyrinths [Lower]";
+        }
+        if("Coin: Twin (Lower)".equals(itemLocation)) {
+            return "Location: Twin Labyrinths [Lower]";
+        }
+        if("Coin: Endless".equals(itemLocation)) {
+            return "Location: Endless Corridor [3F Upper]";
+        }
+        if("Coin: Shrine".equals(itemLocation)) {
+            return "Location: Shrine of the Mother [Main]";
+        }
+        if("Coin: Illusion (Katana)".equals(itemLocation)) {
+            return "Location: Gate of Illusion [Middle]";
+        }
+        if("Coin: Illusion (Spikes)".equals(itemLocation)) {
+            return "Location: Gate of Illusion [Lower]";
+        }
+        if("Coin: Graveyard".equals(itemLocation)) {
+            return "Location: Graveyard of the Giants [West]";
+        }
+        if("Coin: Moonlight".equals(itemLocation)) {
+            return "Location: Temple of Moonlight [Eden]";
+        }
+        if("Coin: Goddess (Shield)".equals(itemLocation)) {
+            return "Location: Tower of the Goddess [Grail]";
+        }
+        if("Coin: Goddess (Fairy)".equals(itemLocation)) {
+            return "Location: Tower of the Goddess [Lower]";
+        }
+        if("Coin: Ruin".equals(itemLocation)) {
+            return "Location: Tower of Ruin [Spirits]";
+        }
+        if("Coin: Birth (Ninja)".equals(itemLocation)) {
+            return "Location: Chamber of Birth [Northeast]";
+        }
+        if("Coin: Birth (Dance)".equals(itemLocation)) {
+            return "Location: Chamber of Birth [Dance]";
+        }
+        if("Coin: Birth (Southeast)".equals(itemLocation)) {
+            return "Location: Chamber of Birth [Southeast]";
+        }
+        if("Coin: Dimensional".equals(itemLocation)) {
+            return "Location: Dimensional Corridor [Grail]";
+        }
+        if(DataFromFile.GRAVEYARD_TRAP_CHEST_NAME.equals(itemLocation)) {
+            return "Location: Graveyard of the Giants [West]";
+        }
+        if(DataFromFile.EXPLODING_CHEST_NAME.equals(itemLocation)) {
+            return "Location: Gate of Illusion [Dracuet]";
+        }
+//        if(DataFromFile.ESCAPE_CHEST_NAME.equals(itemLocation)) {
+//            return "Location: Twin Labyrinths [Upper Left]";
+//        }
+        throw new RuntimeException("Unable to find location for chest " + itemLocation);
     }
 
     private void logAccess(String requiredNode, List<String> loggedRequirements) {
@@ -527,6 +870,7 @@ public class AccessChecker {
                 queuedUpdates.add(nodeName);
                 break;
             case NPC_LOCATION:
+                queuedUpdates.add(nodeName);
                 queuedUpdates.add(npcRandomizer.getNpc(nodeName));
                 break;
             case MAP_LOCATION:
@@ -657,6 +1001,9 @@ public class AccessChecker {
                     return false;
                 }
             }
+            if(HolidaySettings.isHalloween2021Mode() && !itemRandomizer.isChestLocation(location)) {
+                return false;
+            }
         }
         else if(item.startsWith("Trap:")) {
             // Shop, NPC, torude scan can't give traps.
@@ -679,6 +1026,26 @@ public class AccessChecker {
                     return false;
                 }
             }
+            if(HolidaySettings.isHalloween2021Mode()) {
+                // Maintain trap types
+                if(isFloatingItemLocation(location)) {
+                    if(DataFromFile.GRAVEYARD_TRAP_CHEST_NAME.equals(item)) {
+                        // Force Graveyard trap chest into a chest
+                        return false;
+                    }
+                }
+                else if(itemRandomizer.isChestLocation(location)) {
+                    if(DataFromFile.FAKE_ANKH_TRAP_NAME.equals(item)) {
+                        return false;
+                    }
+                    if(DataFromFile.FAKE_ORB_TRAP_NAME.equals(item)) {
+                        return false;
+                    }
+                }
+                else {
+                    return false;
+                }
+            }
         }
         else if(item.startsWith("Coin:")) {
             // Shop, floating item, torude scan, item give can't give coins.
@@ -693,6 +1060,12 @@ public class AccessChecker {
             }
             if("Map (Surface)".equals(location)) {
                 return false;
+            }
+            if(HolidaySettings.isHalloween2021Mode()) {
+                // Coins allowed in chests only
+                if(DataFromFile.LOCATIONS_RELATED_TO_BLOCKS.contains(location)) {
+                    return false;
+                }
             }
         }
         else if(item.equals("Whip") || item.equals("Chain Whip") || item.equals("Buckler") || item.contains("Silver Shield")) {
@@ -719,7 +1092,7 @@ public class AccessChecker {
         }
 
         if(Settings.isRandomizeCursedChests() && Settings.getMaxRandomRemovedItems() == 0
-                && "Mulana Talisman".equals(item) && Settings.getCurrentCursedChests().contains(location)) {
+                && "Mulana Talisman".equals(item) && itemRandomizer.isCursedChestLocation(location, item)) {
             return false;
         }
 
@@ -747,7 +1120,7 @@ public class AccessChecker {
 
     public void logAnkhJewelLock() {
         FileUtils.log("Accessible bosses: " + accessibleBossNodes.toString());
-        FileUtils.logFlush("Total ankh jewels: " + numberOfAccessibleAnkhJewels);
+        FileUtils.logFlush("Total ankh jewels: " + numberOfCollectedAnkhJewels);
     }
 
     public void setItemRandomizer(ItemRandomizer itemRandomizer) {

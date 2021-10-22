@@ -268,11 +268,120 @@ public final class RcdReader {
     }
 
     private static GameObject convertObject(GameObject object) { // todo: eventually just parse this properly in the first place
+        if(object.getId() == ObjectIdConstants.Pot) {
+            return new Pot(object);
+        }
+        if(object.getId() == ObjectIdConstants.Enemy_Bat) {
+            return new Bat(object);
+        }
+        if(object.getId() == ObjectIdConstants.Enemy_Skeleton) {
+            return new Skeleton(object);
+        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Fist) {
+//            return new Fist(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.GhostSpawner) {
+//            return new GhostSpawner(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Sonic) {
+//            return new Sonic(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Slime) {
+//            return new Slime(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.LavaRock) {
+//            return new LavaRock(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Hundun) {
+//            return updateHundun(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Pan) {
+//            return updatePan(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Hanuman) {
+//            return updateHanuman(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Enkidu) {
+//            return updateEnkidu(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Marchosias) {
+//            return updateMarchosias(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Witch) {
+//            return updateWitch(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_LizardMan) {
+//            return updateLizardMan(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.ChiYou) {
+//            return updateChiYou(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Toujin) {
+//            return updateToujin(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_IceWizard) {
+//            return updateIceWizard(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Anubis) {
+//            return updateAnubis(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.NinjaSpawner) {
+//            return updateNinjaSpawner(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Andras) {
+//            return updateAndras(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.ChonchonSpawner) {
+//            return updateChonchonSpawner(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Vimana) {
+//            return updateVimana(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_SwordBird) {
+//            return updateSwordBird(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Elephant) {
+//            return updateElephant(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Amon) {
+//            return updateAmon(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Satan) {
+//            return updateSatan(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_Devil) {
+//            return updateDevil(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.UmuDabrutu) {
+//            return updateUmuDabrutu(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Urmahlullu) {
+//            return updateUrmahlullu(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Mushnahhu) {
+//            return updateMushnahhu(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Ushum) {
+//            return updateUshum(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Mushussu) {
+//            return updateMushussu(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.Enemy_MiniBoss) {
+//            return updateMiniBoss(object);
+//        }
+//        if(object.getId() == ObjectIdConstants.TheBoss) {
+//            return updateTheBoss(object);
+//        }
+
         if(object.getId() == ObjectIdConstants.Chest) {
             return new Chest(object);
         }
         if(object.getId() == ObjectIdConstants.FloatingItem) {
             return new FloatingItem(object);
+        }
+        if(object.getId() == ObjectIdConstants.PressurePlate) {
+            return new PressurePlate(object);
         }
         if(object.getId() == ObjectIdConstants.ConversationDoor) {
             return new ConversationDoor(object);

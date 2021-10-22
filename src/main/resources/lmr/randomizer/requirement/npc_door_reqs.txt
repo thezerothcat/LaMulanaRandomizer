@@ -13,6 +13,7 @@ NPCL: Penadvent of ghost => Location: Gate of Guidance [Main] # Shop 4 (Guidance
 NPCL: Priest Xanado => Location: Mausoleum of the Giants # generic NPC up by hardmode tablet, 2-2-0
 NPCL: Greedy Charlie => Location: Mausoleum of the Giants, Attack: Chest-Any
 # Temple of the Sun
+NPCL: Mulbruk => Location: Temple of the Sun [Main], Event: Mulbruk Awakened
 NPCL: Priest Madomono => Location: Temple of the Sun [Sphinx]
 NPCL: Shalom III => Location: Temple of the Sun [Main], Attack: Shuriken
 NPCL: Shalom III => Location: Temple of the Sun [Main], Attack: Chakram, Feather
