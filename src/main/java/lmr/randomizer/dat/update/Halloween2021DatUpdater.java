@@ -113,21 +113,21 @@ public class Halloween2021DatUpdater extends DatUpdater {
                 BlockColorsData.COLOR_ITEMS_GREEN));
         xelpudBlockContents.add(new BlockSingleData(BlockDataConstants.Cls));
 
-        xelpudBlockContents.addAll(buildBlockContents(Translations.getText("event.halloween2021.intro2")));
-        xelpudBlockContents.add(new BlockSingleData(BlockDataConstants.Cls));
-
         xelpudBlockContents.addAll(buildBlockContentsWithColor(
-                Translations.getText("event.halloween2021.intro3"),
-                Translations.getText("event.halloween2021.intro3a"),
+                Translations.getText("event.halloween2021.intro2"),
+                Translations.getText("event.halloween2021.intro2a"),
                 BlockColorsData.COLOR_THREATS_RED));
         xelpudBlockContents.add(new BlockItemData(ItemConstants.SOFTWARE_XMAILER));
         xelpudBlockContents.add(new BlockFlagData(FlagConstants.WF_SOFTWARE_XMAILER, 2));
         xelpudBlockContents.add(new BlockSingleData(BlockDataConstants.Cls));
 
         xelpudBlockContents.addAll(buildBlockContentsWithColor(
-                Translations.getText("event.halloween2021.intro4"),
+                Translations.getText("event.halloween2021.intro3"),
                 Translations.getText("event.halloween.halloweenCandy"),
                 BlockColorsData.COLOR_ITEMS_GREEN));
+        xelpudBlockContents.add(new BlockSingleData(BlockDataConstants.Cls));
+
+        xelpudBlockContents.addAll(buildBlockContents(Translations.getText("event.halloween2021.intro4")));
         xelpudBlockContents.add(new BlockSingleData(BlockDataConstants.Cls));
 
         xelpudBlockContents.addAll(buildBlockContentsWithColor(

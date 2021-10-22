@@ -7,10 +7,12 @@ public final class HolidaySettings {
 
     private boolean updatedVersion;
     private boolean includeHellTempleNPCs;
+    private boolean includeOptionalContent;
 
     private HolidaySettings() {
         updatedVersion = true;
         includeHellTempleNPCs = true;
+        includeOptionalContent = true;
     }
 
     public static boolean isChanged() {
@@ -70,5 +72,16 @@ public final class HolidaySettings {
             singleton.changed = true;
         }
         singleton.includeHellTempleNPCs = includeHellTempleNPCs;
+    }
+
+    public static boolean isIncludeOptionalContent() {
+        return singleton.includeOptionalContent;
+    }
+
+    public static void setIncludeOptionalContent(boolean includeOptionalContent, boolean update) {
+        if(update && includeOptionalContent != singleton.includeOptionalContent) {
+            singleton.changed = true;
+        }
+        singleton.includeOptionalContent = includeOptionalContent;
     }
 }

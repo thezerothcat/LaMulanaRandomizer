@@ -499,17 +499,24 @@ public final class DataFromFile {
             }
             else {
                 List<Map.Entry<String, List<String>>> reqs = FileUtils.getListOfLists("requirement/win/win_reqs.txt", true);
-                String expectedWinType;
+                List<String> expectedWinTypes = new ArrayList<>();
                 if(HolidaySettings.isHalloween2021Mode()) {
-                    expectedWinType = "Win: Halloween2021";
+                    expectedWinTypes.add("Win: Halloween2021");
                 }
-                else {
-                    expectedWinType = "Win: Normal";
+                if(!HolidaySettings.isHalloween2021Mode() || HolidaySettings.isIncludeOptionalContent()) {
+                    expectedWinTypes.add("Win: Normal");
                 }
-                for(Map.Entry<String, List<String>> req : reqs) {
-                    if(expectedWinType.equals(req.getKey())) {
-                        winRequirements = req.getValue();
-                        break;
+                winRequirements = new ArrayList<>();
+                for(String expectedWinType : expectedWinTypes) {
+                    for(Map.Entry<String, List<String>> req : reqs) {
+                        if(expectedWinType.equals(req.getKey())) {
+                            for(String requirement : req.getValue()) {
+                                if(!winRequirements.contains(requirement)) {
+                                    winRequirements.add(requirement);
+                                }
+                            }
+                            break;
+                        }
                     }
                 }
             }
