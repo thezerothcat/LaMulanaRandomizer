@@ -1121,8 +1121,18 @@ public final class Settings {
             }
         }
 
-        // Parse seed from string
-        int seed = Integer.parseInt(parts[1], 16);
+        int seed;
+        if (parts.length == 10) {
+            String[] partsSkipSeed = new String[parts.length + 1];
+            seed = new Random().nextInt(Integer.MAX_VALUE);
+            for (int i = 0; i < parts.length; i++) {
+                partsSkipSeed[i + 1] = parts[i];
+            }
+            parts = partsSkipSeed;
+        } else {
+            // Parse seed from string
+            seed = Integer.parseInt(parts[1], 16);
+        }
 
         // Parse boolean settings from string
         int booleanSettingsFlag = Integer.parseInt(parts[2], 16);
