@@ -1858,10 +1858,8 @@ public class BaseRcdUpdater extends RcdUpdater {
                     AddObject.addSphinxRemovalTimer(screen);
                 }
             }
-            if(Settings.isRandomizeTransitionGates()) {
-                if(roomIndex == 7 && screenIndex == 0) {
-                    AddObject.addWeightDoorTimer(screen, 0x032);
-                }
+            if(roomIndex == 7 && screenIndex == 0) {
+                AddObject.addWeightDoorTimer(screen, 0x032);
             }
         }
         else if(zoneIndex == 6) {
@@ -1914,6 +1912,11 @@ public class BaseRcdUpdater extends RcdUpdater {
                 }
                 else if(screenIndex == 1) {
                     AddObject.addWeightDoorTimer(screen, FlagConstants.ROOM_FLAG_45);
+                }
+            }
+            if(roomIndex == 3) {
+                if(screenIndex == 0) {
+                    AddObject.addWeightDoorTimer(screen, FlagConstants.ROOM_FLAG_37);
                 }
             }
         }

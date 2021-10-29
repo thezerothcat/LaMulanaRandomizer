@@ -988,11 +988,15 @@ public class Halloween2021RcdUpdater extends RcdUpdater {
             if(Spikes.isFacingUp(spikes)) {
                 screen = (Screen)spikes.getObjectContainer();
                 if(!(screen.getZoneIndex() == 18 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0)) {
-                    Spikes nonWalkableSpikes = new Spikes(spikes);
-                    spikes.addTests(new TestByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_CURSED, ByteOp.FLAG_LT, ValueConstants.NON_WALKABLE_SPIKE_THRESHOLD));
-                    nonWalkableSpikes.addTests(new TestByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_CURSED, ByteOp.FLAG_GTEQ, ValueConstants.NON_WALKABLE_SPIKE_THRESHOLD));
-                    nonWalkableSpikes.setDirections(true, true, true, true);
-                    spikes.getObjectContainer().getObjects().add(nonWalkableSpikes);
+                    if((!(screen.getZoneIndex() == 8 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 2)
+                            && !(screen.getZoneIndex() == 8 && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 3))
+                            || spikes.getY() != 80) {
+                        Spikes nonWalkableSpikes = new Spikes(spikes);
+                        spikes.addTests(new TestByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_CURSED, ByteOp.FLAG_LT, ValueConstants.NON_WALKABLE_SPIKE_THRESHOLD));
+                        nonWalkableSpikes.addTests(new TestByteOperation(FlagConstants.CUSTOM_HALLOWEEN2021_CURSED, ByteOp.FLAG_GTEQ, ValueConstants.NON_WALKABLE_SPIKE_THRESHOLD));
+                        nonWalkableSpikes.setDirections(true, true, true, true);
+                        spikes.getObjectContainer().getObjects().add(nonWalkableSpikes);
+                    }
                 }
             }
             else if(Spikes.isFacingDown(spikes)) {
