@@ -1,0 +1,895 @@
+########################################################################################
+# This is a template file with all supported custom placements (and some unsupported). #
+#                                                                                      #
+# Remove the # preceding any line you want to enable. Validation for custom placements #
+# will not protect against all impossible arrangements, so if you are unable to        #
+# successfully generate a seed, check that you haven't placed the ruins in an          #
+# impossible configuration.                                                            #
+#                                                                                      #
+# Users will be warned if custom placements conflict with their settings.              #
+#                                                                                      #
+# This file is divided into sections by headers. Additional notes may be present.      #
+########################################################################################
+
+##################
+# Starting Items #
+##################
+
+#Start: Anchor
+#Start: Angel Shield
+#Start: Ankh Jewel (Gate of Guidance)
+#Start: Ankh Jewel (Mausoleum of the Giants)
+#Start: Ankh Jewel (Temple of the Sun)
+#Start: Ankh Jewel (Spring in the Sky)
+#Start: Ankh Jewel (Tower of Ruin)
+#Start: Ankh Jewel (Chamber of Birth)
+#Start: Ankh Jewel (Twin Labyrinths)
+#Start: Ankh Jewel (Dimensional Corridor)
+#Start: Ankh Jewel (Extra)
+#Start: Axe
+#Start: beolamu.exe
+#Start: Birth Seal
+#Start: Bomb
+#Start: Book of the Dead
+#Start: bounce.exe
+#Start: Bracelet
+#Start: Bronze Mirror
+#Start: Buckler
+#Start: bunemon.exe
+#Start: bunplus.com
+#Start: Caltrops
+#Start: capstar.exe
+#Start: Chain Whip
+#Start: Chakram
+#Start: Cog of the Soul
+#Start: Crucifix
+#Start: Crystal Skull
+#Start: Death Seal
+#Start: deathv.exe
+#Start: Diary
+#Start: Dimensional Key
+#Start: Djed Pillar
+#Start: Dragon Bone
+#Start: Earth Spear
+#Start: emusic.exe
+#Start: Eye of Truth
+#Start: Fairy Clothes
+#Start: Fake Silver Shield
+#Start: Feather
+#Start: Flail Whip
+#Start: Flare Gun
+#Start: Fruit of Eden
+#Start: Gauntlet
+#Start: Glove
+#Start: Grapple Claw
+#Start: guild.exe
+#Start: Hand Scanner
+#Start: Heatproof Case
+#Start: Helmet
+#Start: Hermes' Boots
+#Start: Holy Grail
+#Start: Ice Cape
+#Start: Isis' Pendant
+#Start: Katana
+#Start: Key of Eternity
+#Start: Key Sword
+#Start: Knife
+#Start: Lamp of Time
+#Start: lamulana.exe
+#Start: Life Seal
+#Start: mantra.exe
+#Start: Magatama Jewel
+#Start: Map (Surface)
+#Start: Map (Gate of Guidance)
+#Start: Map (Mausoleum of the Giants)
+#Start: Map (Temple of the Sun)
+#Start: Map (Spring in the Sky)
+#Start: Map (Inferno Cavern)
+#Start: Map (Chamber of Extinction)
+#Start: Map (Twin Labyrinths)
+#Start: Map (Endless Corridor)
+#Start: Map (Shrine of the Mother)
+#Start: Map (Gate of Illusion)
+#Start: Map (Graveyard of the Giants)
+#Start: Map (Temple of Moonlight)
+#Start: Map (Tower of the Goddess)
+#Start: Map (Tower of Ruin)
+#Start: Map (Chamber of Birth)
+#Start: Map (Dimensional Corridor)
+#Start: Maternity Statue
+#Start: mekuri.exe
+#Start: Mini Doll
+#Start: miracle.exe
+#Start: mirai.exe
+#Start: Mobile Super X2
+#Start: move.exe
+#Start: Mulana Talisman
+#Start: Origin Seal
+#Start: Pepper
+#Start: Perfume
+#Start: Philosopher's Ocarina
+#Start: Pistol
+#Start: Plane Model
+#Start: Pochette Key
+#Start: Provocative Bathing Suit
+#Start: randc.exe
+#Start: reader.exe
+#Start: Ring
+#Start: Rolling Shuriken
+#Start: Sacred Orb (Surface)
+#Start: Sacred Orb (Gate of Guidance)
+#Start: Sacred Orb (Mausoleum of the Giants)
+#Start: Sacred Orb (Temple of the Sun)
+#Start: Sacred Orb (Spring in the Sky)
+#Start: Sacred Orb (Chamber of Extinction)
+#Start: Sacred Orb (Twin Labyrinths)
+#Start: Sacred Orb (Shrine of the Mother)
+#Start: Sacred Orb (Tower of Ruin)
+#Start: Sacred Orb (Dimensional Corridor)
+#Start: Scalesphere
+#Start: Scriptures
+#Start: Serpent Staff
+#Start: Shell Horn
+#Start: Shuriken
+#Start: Silver Shield
+#Start: Spaulder
+#Start: Talisman
+#Start: torude.exe
+#Start: Treasures
+#Start: Twin Statue
+#Start: Vessel
+#Start: Waterproof Case
+#Start: Woman Statue
+#Start: xmailer.exe
+#Start: yagomap.exe
+#Start: yagostr.exe
+
+####################
+# Starting Weapons #
+####################
+
+#Weapon: Whip
+#Weapon: Knife
+#Weapon: Key Sword
+#Weapon: Axe
+#Weapon: Katana
+
+#Weapon: Chain Whip
+#Weapon: Flail Whip
+
+#Weapon: Shuriken
+#Weapon: Rolling Shuriken
+#Weapon: Earth Spear
+#Weapon: Flare Gun
+#Weapon: Bomb
+#Weapon: Chakram
+#Weapon: Caltrops
+#Weapon: Pistol
+
+######################
+# Starting Locations #
+######################
+
+#Location: Surface
+#Location: Gate of Guidance
+#Location: Mausoleum of the Giants
+#Location: Temple of the Sun
+#Location: Spring in the Sky
+#Location: Inferno Cavern
+#Location: Chamber of Extinction
+#Location: Twin Labyrinths (Frontside)
+#Location: Endless Corridor
+##Location: Shrine of the Mother # Not supported
+#Location: Gate of Illusion
+#Location: Graveyard of the Giants
+#Location: Temple of Moonlight
+#Location: Tower of the Goddess
+##Location: Tower of Ruin # Not supported
+#Location: Chamber of Birth
+#Location: Twin Labyrinths (Backside)
+#Location: Dimensional Corridor
+##Location: Retromausoleum # Not supported
+##Location: Retroguidance # Not supported
+#Location: Retrosurface
+
+###################
+# Item Placements #
+###################
+
+# Note 1: Coins cannot be placed at Snapshots scan locations, nor shops, nor floating items (behind weapon covers, etc), nor at Map (Surface)
+# Note 2: Removed items cannot be placed at Snapshots scan locations
+# Note 3: Maps cannot be placed at Snapshots scan locations, nor given by NPCs.
+# Note 4: Ankh jewels cannot be placed at Snapshots scan locations.
+# Note 5: Traps cannot be placed at Snapshots scan locations, nor shops, nor given by NPCs.
+# Note 6: The exploding trap must be placed in a chest.
+# Note 7: Dimensional Key cannot be placed inside Dimensional Corridor.
+# Note 8: Removed items cannot be placed at Snapshots scan locations
+# Note 9: Basic whip must be placed if starting weapon is randomized.
+
+#Anchor=Anchor
+#Angel Shield=Angel Shield
+#Ankh Jewel (Gate of Guidance)=Ankh Jewel (Gate of Guidance)
+#Ankh Jewel (Mausoleum of the Giants)=Ankh Jewel (Mausoleum of the Giants)
+#Ankh Jewel (Temple of the Sun)=Ankh Jewel (Temple of the Sun)
+#Ankh Jewel (Spring in the Sky)=Ankh Jewel (Spring in the Sky)
+#Ankh Jewel (Tower of Ruin)=Ankh Jewel (Tower of Ruin)
+#Ankh Jewel (Twin Labyrinths)=Ankh Jewel (Twin Labyrinths)
+#Ankh Jewel (Dimensional Corridor)=Ankh Jewel (Dimensional Corridor)
+#Axe=Axe
+#beolamu.exe=beolamu.exe
+#Birth Seal=Birth Seal
+#Bomb=Bomb
+#Book of the Dead=Book of the Dead
+#bounce.exe=bounce.exe
+#Bronze Mirror=Bronze Mirror
+#bunplus.com=bunplus.com
+#Caltrops=Caltrops
+#Chain Whip=Chain Whip
+#Chakram=Chakram
+#Cog of the Soul=Cog of the Soul
+#Crucifix=Crucifix
+#Crystal Skull=Crystal Skull
+#Death Seal=Death Seal
+#deathv.exe=deathv.exe
+#Diary=Diary
+#Dimensional Key=Dimensional Key
+#Djed Pillar=Djed Pillar
+#Earth Spear=Earth Spear
+#emusic.exe=emusic.exe
+#Eye of Truth=Eye of Truth
+#Fairy Clothes=Fairy Clothes
+#Feather=Feather
+#Flail Whip=Flail Whip
+#Flare Gun=Flare Gun
+#Fruit of Eden=Fruit of Eden
+#Gauntlet=Gauntlet
+#Glove=Glove
+#Grapple Claw=Grapple Claw
+#Holy Grail=Holy Grail
+#Ice Cape=Ice Cape
+#Isis' Pendant=Isis' Pendant
+#Katana=Katana
+#Key of Eternity=Key of Eternity
+#Key Sword=Key Sword
+#Knife=Knife
+#lamulana.exe=lamulana.exe
+#Life Seal=Life Seal
+#mantra.exe=mantra.exe
+#Magatama Jewel=Magatama Jewel
+#Map (Surface)=Map (Surface)
+#Map (Gate of Guidance)=Map (Gate of Guidance)
+#Map (Mausoleum of the Giants)=Map (Mausoleum of the Giants)
+#Map (Temple of the Sun)=Map (Temple of the Sun)
+#Map (Spring in the Sky)=Map (Spring in the Sky)
+#Map (Inferno Cavern)=Map (Inferno Cavern)
+#Map (Chamber of Extinction)=Map (Chamber of Extinction)
+#Map (Twin Labyrinths)=Map (Twin Labyrinths)
+#Map (Endless Corridor)=Map (Endless Corridor)
+#Map (Shrine of the Mother)=Map (Shrine of the Mother)
+#Map (Gate of Illusion)=Map (Gate of Illusion)
+#Map (Graveyard of the Giants)=Map (Graveyard of the Giants)
+#Map (Temple of Moonlight)=Map (Temple of Moonlight)
+#Map (Tower of the Goddess)=Map (Tower of the Goddess)
+#Map (Tower of Ruin)=Map (Tower of Ruin)
+#Map (Chamber of Birth)=Map (Chamber of Birth)
+#Map (Dimensional Corridor)=Map (Dimensional Corridor)
+#mekuri.exe=mekuri.exe
+#Mini Doll=Mini Doll
+#mirai.exe=mirai.exe
+#Mobile Super X2=Mobile Super X2
+#Mulana Talisman=Mulana Talisman
+#Origin Seal=Origin Seal
+#Pepper=Pepper
+#Perfume=Perfume
+#Philosopher's Ocarina=Philosopher's Ocarina
+#Plane Model=Plane Model
+#Pochette Key=Pochette Key
+#Provocative Bathing Suit=Provocative Bathing Suit
+#Ring=Ring
+#Rolling Shuriken=Rolling Shuriken
+#Sacred Orb (Surface)=Sacred Orb (Surface)
+#Sacred Orb (Gate of Guidance)=Sacred Orb (Gate of Guidance)
+#Sacred Orb (Mausoleum of the Giants)=Sacred Orb (Mausoleum of the Giants)
+#Sacred Orb (Temple of the Sun)=Sacred Orb (Temple of the Sun)
+#Sacred Orb (Spring in the Sky)=Sacred Orb (Spring in the Sky)
+#Sacred Orb (Chamber of Extinction)=Sacred Orb (Chamber of Extinction)
+#Sacred Orb (Twin Labyrinths)=Sacred Orb (Twin Labyrinths)
+#Sacred Orb (Shrine of the Mother)=Sacred Orb (Shrine of the Mother)
+#Sacred Orb (Tower of Ruin)=Sacred Orb (Tower of Ruin)
+#Sacred Orb (Dimensional Corridor)=Sacred Orb (Dimensional Corridor)
+#Scalesphere=Scalesphere
+#Serpent Staff=Serpent Staff
+#Shell Horn=Shell Horn
+#Shuriken=Shuriken
+#Silver Shield=Silver Shield
+#Spaulder=Spaulder
+#Talisman=Talisman
+#Treasures=Treasures
+#Twin Statue=Twin Statue
+#Vessel=Vessel
+#Woman Statue=Woman Statue
+#xmailer.exe=xmailer.exe
+#yagostr.exe=yagostr.exe
+
+##Maternity Statue=Maternity Statue # Not supported
+
+#########################
+# Coin Chest Placements #
+#########################
+
+#Coin: Surface (Waterfall)=Coin: Surface (Waterfall)
+#Coin: Surface (Seal)=Coin: Surface (Seal)
+#Coin: Surface (Ruin Path)=Coin: Surface (Ruin Path)
+#Coin: Guidance (One)=Coin: Guidance (One)
+#Coin: Guidance (Two)=Coin: Guidance (Two)
+#Coin: Guidance (Trap)=Coin: Guidance (Trap)
+#Coin: Mausoleum=Coin: Mausoleum
+#Coin: Sun (Pyramid)=Coin: Sun (Pyramid)
+#Coin: Spring=Coin: Spring
+#Coin: Inferno (Lava)=Coin: Inferno (Lava)
+#Coin: Inferno (Spikes)=Coin: Inferno (Spikes)
+#Coin: Extinction=Coin: Extinction
+#Coin: Twin (Witches)=Coin: Twin (Witches)
+#Coin: Twin (Lower)=Coin: Twin (Lower)
+#Coin: Endless=Coin: Endless
+#Coin: Shrine=Coin: Shrine
+#Coin: Illusion (Katana)=Coin: Illusion (Katana)
+#Coin: Illusion (Spikes)=Coin: Illusion (Spikes)
+#Coin: Graveyard=Coin: Graveyard
+#Coin: Moonlight=Coin: Moonlight
+#Coin: Goddess (Shield)=Coin: Goddess (Shield)
+#Coin: Goddess (Fairy)=Coin: Goddess (Fairy)
+#Coin: Ruin=Coin: Ruin
+#Coin: Birth (Ninja)=Coin: Birth (Ninja)
+#Coin: Birth (Dance)=Coin: Birth (Dance)
+#Coin: Birth (Southeast)=Coin: Birth (Southeast)
+#Coin: Dimensional=Coin: Dimensional
+
+#Coin: Twin (Escape)=Coin: Twin (Escape)
+
+###################
+# Trap Placements #
+###################
+
+# Note 1: Using {Sacred Orb (Tower of Ruin)} will make the trap look like a Sacred Orb, if possible.
+# Note 2: Specifying custom graphics is optional, and only supported for some item locations at this time.
+
+#Trap: Graveyard=Trap: Graveyard
+#Trap: Inferno Orb=Trap: Inferno Orb {Sacred Orb (Tower of Ruin)}
+#Trap: Twin Ankh=Trap: Twin Ankh {Ankh Jewel (Twin Labyrinths)}
+
+#Trap: Exploding=Trap: Exploding
+
+#############################
+# Shop Inventory Placements #
+#############################
+
+# Note 1: Each shop can only have one non-removed Sacred Orb, except for Nebur's shop, which cannot have any.
+# Note 2: Nebur's shop after four bosses must have a non-removed unique Item 1, and Item 2/Item 3 will be the same as the pre-bosses shop.
+# Note 3: Using {2, 3} specifies that you are purchasing 2 of the item for 3 coins.
+# Note 4: Using {10} specifies that the item costs 10 coins and gives you the default amount for the type of item.
+# Note 5: The count/price specification is optional, and will be determined by the randomizer's usual rules if omitted.
+# Note 6: The example prices here are from vanilla, and may not line up well with the randomizer's handling of money.
+
+#Shop 1 (Surface) Item 1=Hand Scanner {1, 10}
+#Shop 1 (Surface) Item 2=Pistol Ammo {1, 400}
+#Shop 1 (Surface) Item 3=Shuriken Ammo {10, 10}
+#Shop 2 (Surface) Item 1=Weights {5, 10}
+#Shop 2 (Surface) Item 2=reader.exe {1, 50}
+#Shop 2 (Surface) Item 3=yagomap.exe {1, 20}
+#Shop 2 Alt (Surface) Item 1=Mobile Super X2 {1, 250}
+##Shop 2 Alt (Surface) Item 2=reader.exe {1, 50} # Should be unnecessary
+##Shop 2 Alt (Surface) Item 3=yagomap.exe {1, 20} # Should be unnecessary
+#Shop 3 (Surface) Item 1=Buckler {1, 10}
+#Shop 3 (Surface) Item 2=Waterproof Case {1, 50}
+#Shop 3 (Surface) Item 3=Pistol {1, 100}
+#Shop 4 (Guidance) Item 1=Shuriken Ammo {10, 10}
+#Shop 4 (Guidance) Item 2=guild.exe {1, 60}
+#Shop 4 (Guidance) Item 3=Weights {5, 10}
+#Shop 5 (Illusion) Item 1=move.exe {1, 300}
+#Shop 5 (Illusion) Item 2=Bomb Ammo {10, 100}
+#Shop 5 (Illusion) Item 3=Weights {5, 20}
+#Shop 6 (Mausoleum) Item 1=Hermes' Boots {1, 60}
+#Shop 6 (Mausoleum) Item 2=Rolling Shuriken {10, 10}
+#Shop 6 (Mausoleum) Item 3=Weights {5, 10}
+#Shop 7 (Graveyard) Item 1=Earth Spear Ammo {10, 25}
+#Shop 7 (Graveyard) Item 2=Fake Silver Shield {1, 100}
+#Shop 7 (Graveyard) Item 3=Weights {5, 15}
+#Shop 8 (Sun) Item 1=Rolling Shuriken Ammo {10, 10}
+#Shop 8 (Sun) Item 2=Earth Spear Ammo {10, 20}
+#Shop 8 (Sun) Item 3=bunemon.exe {1, 50}
+#Shop 9 (Sun) Item 1=Heatproof Case {1, 80}
+#Shop 9 (Sun) Item 2=Flare Gun Ammo {10, 40}
+#Shop 9 (Sun) Item 3=Weights {5, 10}
+#Shop 10 (Sun) Item 1=Pistol Ammo {1, 350}
+#Shop 10 (Sun) Item 2=Bomb Ammo {10, 80}
+#Shop 10 (Sun) Item 3=Shuriken Ammo {20, 10}
+#Shop 11 (Moonlight) Item 1=Scriptures {1, 400}
+#Shop 11 (Moonlight) Item 2=Shuriken Ammo {10, 15}
+#Shop 11 (Moonlight) Item 3=Pistol Ammo {3, 400}
+#Shop 12 (Spring) Item 1=Weights {5, 10}
+#Shop 12 (Spring) Item 2=Shuriken Ammo {10, 10}
+#Shop 12 (Spring) Item 3=Caltrops Ammo {10, 30}
+#Shop 12 Alt (Spring) Item 1=Shell Horn {1, 50}
+#Shop 12 Alt (Spring) Item 2=guild.exe {1, 60}
+#Shop 12 Alt (Spring) Item 3=randc.exe {1, 300}
+#Shop 13 (Goddess) Item 1=miracle.exe {1, 300}
+#Shop 13 (Goddess) Item 2=Caltrops Ammo {10, 40}
+#Shop 13 (Goddess) Item 3=Weights {5, 20}
+#Shop 14 (Inferno) Item 1=capstar.exe {1, 150}
+#Shop 14 (Inferno) Item 2=Earth Spear Ammo {10, 20}
+#Shop 14 (Inferno) Item 3=Weights {5, 10}
+#Shop 15 (Ruin) Item 1=torude.exe {1, 200}
+#Shop 15 (Ruin) Item 2=Bomb Ammo {10, 110}
+#Shop 15 (Ruin) Item 3=Flare Gun Ammo {10, 50}
+#Shop 16 (Extinction) Item 1=Earth Spear Ammo {10, 25}
+#Shop 16 (Extinction) Item 2=Flare Gun Ammo {10, 45}
+#Shop 16 (Extinction) Item 3=Chakram Ammo {2, 55}
+#Shop 17 (Birth) Item 1=Pistol Ammo {1, 400}
+#Shop 17 (Birth) Item 2=Ankh Jewel (Chamber of Birth) {1, 150}
+#Shop 17 (Birth) Item 3=Weights {5, 20}
+#Shop 18 (Lil Bro) Item 1=Helmet {1, 60}
+#Shop 18 (Lil Bro) Item 2=Caltrops Ammo {10, 30}
+#Shop 18 (Lil Bro) Item 3=Weights {5, 10}
+#Shop 19 (Big Bro) Item 1=Dragon Bone {1, 100}
+#Shop 19 (Big Bro) Item 2=Earth Spear Ammo {10, 20}
+#Shop 19 (Big Bro) Item 3=Flare Gun Ammo {10, 40}
+#Shop 20 (Twin Labs) Item 1=Bracelet {1, 150}
+#Shop 20 (Twin Labs) Item 2=Bomb Ammo {10, 100}
+#Shop 20 (Twin Labs) Item 3=Caltrops Ammo {10, 30}
+#Shop 21 (Unsolvable) Item 1=Lamp of Time {1, 200}
+#Shop 21 (Unsolvable) Item 2=Shuriken Ammo {10, 10}
+#Shop 21 (Unsolvable) Item 3=Chakram Ammo {2, 50}
+#Shop 22 (Endless) Item 1=Bomb Ammo {10, 100}
+#Shop 22 (Endless) Item 2=Caltrops Ammo {10, 30}
+#Shop 22 (Endless) Item 3=Weights {5, 10}
+#Shop 23 (HT) Item 1=Flare Gun Ammo {10, 50}
+#Shop 23 (HT) Item 2=Bomb Ammo {10, 120}
+#Shop 23 (HT) Item 3=Pistol Ammo {1, 400}
+
+# Only applicable with random (non-Surface) starting location; disables Surface start
+#Shop 0 (Default) Item 1=Weights {5, 10}
+#Shop 0 (Default) Item 2=Shuriken Ammo {10, 10}
+#Shop 0 (Default) Item 3=Bomb Ammo {10, 80}
+
+##################
+# NPC Placements #
+##################
+
+# Surface
+#NPC: Elder Xelpud=Elder Xelpud
+#NPC: Nebur=Nebur
+#NPC: Sidro=Sidro
+#NPC: Modro=Modro
+#NPC: Hiner=Hiner
+#NPC: Moger=Moger
+#NPC: Former Mekuri Master=Former Mekuri Master
+
+# Gate of Guidance
+#NPC: Priest Zarnac=Priest Zarnac
+#NPC: Penadvent of ghost=Penadvent of ghost
+
+# Mausoleum of the Giants
+#NPC: Priest Xanado=Priest Xanado
+#NPC: Greedy Charlie=Greedy Charlie
+
+# Temple of the Sun
+#NPC: Mulbruk=Mulbruk
+#NPC: Priest Madomono=Priest Madomono
+#NPC: Shalom III=Shalom III
+#NPC: Usas VI=Usas VI
+#NPC: Kingvalley I=Kingvalley I
+
+# Spring in the Sky
+#NPC: Priest Hidlyda=Priest Hidlyda
+#NPC: Philosopher Giltoriyo=Philosopher Giltoriyo
+#NPC: Mr. Fishman (Original)=Mr. Fishman (Original)
+#NPC: Mr. Fishman (Alt)=Mr. Fishman (Alt)
+
+# Inferno Cavern
+#NPC: Priest Gailious=Priest Gailious
+#NPC: Priest Romancis=Priest Romancis
+#NPC: Hot-blooded Nemesistwo=Hot-blooded Nemesistwo
+
+# Chamber of Extinction
+#NPC: Priest Aramo=Priest Aramo
+#NPC: Priest Triton=Priest Triton
+#NPC: Operator Combaker=Operator Combaker
+
+# Twin Labyrinths
+#NPC: Yiegah Kungfu=Yiegah Kungfu
+#NPC: Yiear Kungfu=Yiear Kungfu
+#NPC: Arrogant Sturdy Snake=Arrogant Sturdy Snake
+#NPC: Arrogant Metagear=Arrogant Metagear
+#NPC: Priest Jaguarfiv=Priest Jaguarfiv
+
+# Endless Corridor
+#NPC: The Fairy Queen=The Fairy Queen
+#NPC: Affected Knimare=Affected Knimare
+
+# Gate of Illusion
+#NPC: duplex=duplex
+#NPC: Mr. Slushfund=Mr. Slushfund
+#NPC: Priest Alest=Priest Alest
+#NPC: Mover Athleland=Mover Athleland
+
+# Graveyard of the Giants
+#NPC: Giant Mopiran=Giant Mopiran
+#NPC: Giant Thexde=Giant Thexde
+
+# Temple of Moonlight
+#NPC: Philosopher Alsedana=Philosopher Alsedana
+#NPC: Samieru=Samieru
+#NPC: Kingvalley II=Kingvalley II
+
+# Tower of the Goddess
+#NPC: Philosopher Samaranta=Philosopher Samaranta
+#NPC: Naramura=Naramura
+#NPC: Energetic Belmont=Energetic Belmont
+
+# Tower of Ruin
+#NPC: Priest Laydoc=Priest Laydoc
+#NPC: Mechanical Efspi=Mechanical Efspi
+
+# Chamber of Birth
+#NPC: Priest Ashgine=Priest Ashgine
+#NPC: Mud Man Qubert=Mud Man Qubert
+
+# Dimensional Corridor
+#NPC: Philosopher Fobos=Philosopher Fobos
+
+# Gate of Time (Surface)
+#NPC: 8bit Elder=8bit Elder
+
+# Hell Temple
+#NPC: Tailor Dracuet=Tailor Dracuet # This is just the shop; the Provocative Bathing Suit door is not supported for randomization at this time.
+
+#########################
+# Transition Placements #
+#########################
+
+# Note 1: All transitions except Endless L1 are expected to be bi-directional at this time.
+# Note 2: Include {Pipe} at the end of a transition to mark it as the one that goes through the Tower of the Goddess pipe.
+
+#Transition: Surface R1=Transition: Guidance L1
+#Transition: Surface D1=Transition: Inferno U2
+#Transition: Surface D2=Transition: Extinction U2
+
+#Transition: Guidance L1=Transition: Surface R1
+#Transition: Guidance U1=Transition: Spring D1
+#Transition: Guidance D1=Transition: Mausoleum U1
+#Transition: Guidance D2=Transition: Sun U1
+
+#Transition: Mausoleum L1=Transition: Endless R1
+#Transition: Mausoleum U1=Transition: Guidance D1
+#Transition: Mausoleum D1=Transition: Twin U1
+
+#Transition: Sun L1=Transition: Inferno R1
+#Transition: Sun R1=Transition: Extinction L1
+#Transition: Sun R2=Transition: Extinction L2
+#Transition: Sun U1=Transition: Guidance D2
+
+#Transition: Spring D1=Transition: Guidance U1
+
+#Transition: Inferno R1=Transition: Sun L1
+#Transition: Inferno U1=Transition: Twin D1
+#Transition: Inferno U2=Transition: Surface D1
+#Transition: Inferno W1=Transition: Extinction U3
+
+#Transition: Extinction L1=Transition: Sun R1
+#Transition: Extinction L2=Transition: Sun R2
+#Transition: Extinction U1=Transition: Shrine D1
+#Transition: Extinction U2=Transition: Surface D2
+#Transition: Extinction U3=Transition: Inferno W1
+
+#Transition: Twin U1=Transition: Mausoleum D1
+#Transition: Twin U2=Transition: Shrine D3
+#Transition: Twin U3=Transition: Dimensional D1
+#Transition: Twin D1=Transition: Inferno U1
+#Transition: Twin D2=Transition: Moonlight U2
+
+#Transition: Endless R1=Transition: Mausoleum L1
+#Transition: Endless D1=Transition: Shrine U1
+#Transition: Endless U1=Transition: Shrine D2
+#Transition: Endless L1=Transition: Endless R1
+
+#Transition: Shrine U1=Transition: Endless D1
+#Transition: Shrine D1=Transition: Extinction U1
+#Transition: Shrine D2=Transition: Endless U1
+#Transition: Shrine D3=Transition: Twin U2
+
+#Transition: Illusion D1=Transition: Graveyard U1
+#Transition: Illusion D2=Transition: Moonlight U1
+#Transition: Illusion R1=Transition: Goddess L1
+#Transition: Illusion R2=Transition: Ruin L1
+
+#Transition: Graveyard L1=Transition: Ruin R2
+#Transition: Graveyard R1=Transition: Moonlight L1 {Pipe}
+#Transition: Graveyard U1=Transition: Illusion D1
+#Transition: Graveyard U2=Transition: Goddess D1
+#Transition: Graveyard D1=Transition: Birth U1
+
+#Transition: Moonlight L1=Transition: Graveyard R1 {Pipe}
+#Transition: Moonlight U1=Transition: Illusion D2
+#Transition: Moonlight U2=Transition: Twin D2
+
+#Transition: Goddess L1=Transition: Illusion R1
+#Transition: Goddess L2=Transition: Ruin R1
+#Transition: Goddess U1=Transition: Birth D1
+#Transition: Goddess D1=Transition: Graveyard U2
+#Transition: Goddess W1=Transition: Retromausoleum D1
+
+#Transition: Ruin L1=Transition: Illusion R2
+#Transition: Ruin R1=Transition: Goddess L2
+#Transition: Ruin R2=Transition: Graveyard L1
+
+#Transition: Birth L1=Transition: Birth R1
+#Transition: Birth R1=Transition: Birth L1
+#Transition: Birth U1=Transition: Graveyard D1
+#Transition: Birth D1=Transition: Goddess U1
+
+#Transition: Dimensional D1=Transition: Twin U3
+
+#Transition: Retromausoleum U1=Transition: Retroguidance D1
+#Transition: Retromausoleum D1=Transition: Goddess W1
+
+#Transition: Retroguidance D1=Transition: Retromausoleum U1
+#Transition: Retroguidance L1=Transition: Retrosurface R1
+
+#Transition: Retrosurface R1=Transition: Retroguidance L1
+
+############################
+# Backside Door Placements #
+############################
+
+# Note 1: All doors are expected to be bi-directional at this time.
+# Note 2: Bosses can be specified by name or number, with Amphisbaena = 1 through Baphomet = 7.
+# Note 3: Instead of a boss name, you can also specify None or Key Fairy.
+# Note 4: The key fairy door can be one-sided, with None on the opposite side.
+# Note 5: Door: B9 must be Key Fairy or None. Boss doors are not supported at this time.
+# Note 6: Door: B8 must be None.
+
+#Door: F1=Door: B1 {Amphisbaena}
+#Door: B1=Door: F1 {Amphisbaena}
+#Door: F2=Door: B2 {Sakit}
+#Door: B2=Door: F2 {Sakit}
+#Door: F3=Door: B3 {Ellmac}
+#Door: B3=Door: F3 {Ellmac}
+#Door: F4=Door: B4 {Bahamut}
+#Door: B4=Door: F4 {Bahamut}
+#Door: F5=Door: B5 {Viy}
+#Door: B5=Door: F5 {Viy}
+#Door: F6=Door: B6 {Palenque}
+#Door: B6=Door: F6 {Palenque}
+#Door: F7=Door: B7 {Baphomet}
+#Door: B7=Door: F7 {Baphomet}
+#Door: F8=Door: B8 {None}
+#Door: B8=Door: F8 {None}
+#Door: F9=Door: B9 {Key Fairy}
+#Door: B9=Door: F9 {None}
+
+###########
+# Removal #
+###########
+
+# Note: Removed items cannot be placed at Snapshots scan locations
+
+#Remove Anchor
+#Remove Angel Shield
+#Remove Ankh Jewel (Gate of Guidance)
+#Remove Ankh Jewel (Mausoleum of the Giants)
+#Remove Ankh Jewel (Temple of the Sun)
+#Remove Ankh Jewel (Spring in the Sky)
+#Remove Ankh Jewel (Tower of Ruin)
+#Remove Ankh Jewel (Chamber of Birth)
+#Remove Ankh Jewel (Twin Labyrinths)
+#Remove Ankh Jewel (Dimensional Corridor)
+#Remove Ankh Jewel (Extra)
+#Remove Axe
+#Remove beolamu.exe
+#Remove Birth Seal
+#Remove Bomb
+#Remove Book of the Dead
+#Remove bounce.exe
+#Remove Bracelet
+#Remove Bronze Mirror
+#Remove Buckler
+#Remove bunemon.exe
+#Remove bunplus.com
+#Remove Caltrops
+#Remove capstar.exe
+#Remove Chain Whip
+#Remove Chakram
+#Remove Cog of the Soul
+#Remove Crucifix
+#Remove Crystal Skull
+#Remove Death Seal
+#Remove deathv.exe
+#Remove Diary
+#Remove Dimensional Key
+#Remove Djed Pillar
+#Remove Dragon Bone
+#Remove Earth Spear
+#Remove emusic.exe
+#Remove Eye of Truth
+#Remove Fairy Clothes
+#Remove Fake Silver Shield
+#Remove Feather
+#Remove Flail Whip
+#Remove Flare Gun
+#Remove Fruit of Eden
+#Remove Gauntlet
+#Remove Glove
+#Remove Grapple Claw
+#Remove guild.exe
+#Remove Hand Scanner
+#Remove Heatproof Case
+#Remove Helmet
+#Remove Hermes' Boots
+#Remove Holy Grail
+#Remove Ice Cape
+#Remove Isis' Pendant
+#Remove Katana
+#Remove Key of Eternity
+#Remove Key Sword
+#Remove Knife
+#Remove Lamp of Time
+#Remove lamulana.exe
+#Remove Life Seal
+#Remove mantra.exe
+#Remove Magatama Jewel
+#Remove Map (Surface)
+#Remove Map (Gate of Guidance)
+#Remove Map (Mausoleum of the Giants)
+#Remove Map (Temple of the Sun)
+#Remove Map (Spring in the Sky)
+#Remove Map (Inferno Cavern)
+#Remove Map (Chamber of Extinction)
+#Remove Map (Twin Labyrinths)
+#Remove Map (Endless Corridor)
+#Remove Map (Shrine of the Mother)
+#Remove Map (Gate of Illusion)
+#Remove Map (Graveyard of the Giants)
+#Remove Map (Temple of Moonlight)
+#Remove Map (Tower of the Goddess)
+#Remove Map (Tower of Ruin)
+#Remove Map (Chamber of Birth)
+#Remove Map (Dimensional Corridor)
+#Remove Maternity Statue
+#Remove mekuri.exe
+#Remove Mini Doll
+#Remove miracle.exe
+#Remove mirai.exe
+#Remove Mobile Super X2
+#Remove move.exe
+#Remove Mulana Talisman
+#Remove Origin Seal
+#Remove Pepper
+#Remove Perfume
+#Remove Philosopher's Ocarina
+#Remove Pistol
+#Remove Plane Model
+#Remove Pochette Key
+#Remove Provocative Bathing Suit
+#Remove randc.exe
+#Remove reader.exe
+#Remove Ring
+#Remove Rolling Shuriken
+#Remove Sacred Orb (Surface)
+#Remove Sacred Orb (Gate of Guidance)
+#Remove Sacred Orb (Mausoleum of the Giants)
+#Remove Sacred Orb (Temple of the Sun)
+#Remove Sacred Orb (Spring in the Sky)
+#Remove Sacred Orb (Chamber of Extinction)
+#Remove Sacred Orb (Twin Labyrinths)
+#Remove Sacred Orb (Shrine of the Mother)
+#Remove Sacred Orb (Tower of Ruin)
+#Remove Sacred Orb (Dimensional Corridor)
+#Remove Scalesphere
+#Remove Scriptures
+#Remove Serpent Staff
+#Remove Shell Horn
+#Remove Shuriken
+#Remove Silver Shield
+#Remove Spaulder
+#Remove Talisman
+#Remove torude.exe
+#Remove Treasures
+#Remove Twin Statue
+#Remove Vessel
+#Remove Waterproof Case
+#Remove Woman Statue
+#Remove xmailer.exe
+#Remove yagomap.exe
+#Remove yagostr.exe
+
+##########
+# Curses #
+##########
+
+# Note 1: Cursing any chest disables random distribution of cursed chests, so no other chests will be cursed
+# Note 2: This curses the chest location, not the item location; non-chest locations will not be supported
+
+#Curse Ankh Jewel (Gate of Guidance)
+#Curse Ankh Jewel (Mausoleum of the Giants)
+#Curse Ankh Jewel (Temple of the Sun)
+#Curse Ankh Jewel (Spring in the Sky)
+#Curse Ankh Jewel (Tower of Ruin)
+#Curse Ankh Jewel (Twin Labyrinths)
+#Curse Ankh Jewel (Dimensional Corridor)
+#Curse Birth Seal
+#Curse bounce.exe
+#Curse Bronze Mirror
+#Curse Cog of the Soul
+#Curse Crucifix
+#Curse Crystal Skull
+#Curse Death Seal
+#Curse Diary
+#Curse Dimensional Key
+#Curse Djed Pillar
+#Curse Eye of Truth
+#Curse Fairy Clothes
+#Curse Feather
+#Curse Fruit of Eden
+#Curse Gauntlet
+#Curse Glove
+#Curse Grapple Claw
+#Curse Holy Grail
+#Curse Ice Cape
+#Curse Isis' Pendant
+#Curse Key of Eternity
+#Curse lamulana.exe
+#Curse Life Seal
+#Curse Magatama Jewel
+#Curse Map (Gate of Guidance)
+#Curse Map (Mausoleum of the Giants)
+#Curse Map (Temple of the Sun)
+#Curse Map (Spring in the Sky)
+#Curse Map (Inferno Cavern)
+#Curse Map (Chamber of Extinction)
+#Curse Map (Twin Labyrinths)
+#Curse Map (Endless Corridor)
+#Curse Map (Shrine of the Mother)
+#Curse Map (Gate of Illusion)
+#Curse Map (Graveyard of the Giants)
+#Curse Map (Temple of Moonlight)
+#Curse Map (Tower of the Goddess)
+#Curse Map (Tower of Ruin)
+#Curse Map (Chamber of Birth)
+#Curse Map (Dimensional Corridor)
+#Curse mirai.exe
+#Curse Origin Seal
+#Curse Perfume
+##Curse Philosopher's Ocarina # Not supported
+#Curse Plane Model
+#Curse Pochette Key
+#Curse Sacred Orb (Surface)
+#Curse Sacred Orb (Gate of Guidance)
+#Curse Sacred Orb (Mausoleum of the Giants)
+#Curse Sacred Orb (Temple of the Sun)
+#Curse Sacred Orb (Spring in the Sky)
+#Curse Sacred Orb (Chamber of Extinction)
+#Curse Sacred Orb (Twin Labyrinths)
+#Curse Sacred Orb (Shrine of the Mother)
+#Curse Sacred Orb (Tower of Ruin)
+#Curse Sacred Orb (Dimensional Corridor)
+#Curse Scalesphere
+#Curse Serpent Staff
+#Curse Shell Horn
+#Curse Spaulder
+#Curse Treasures
+#Curse Twin Statue
+#Curse Vessel
+#Curse Woman Statue
+#Curse yagostr.exe
+
+#################
+# Miscellaneous #
+#################
+
+#Alternate Mother Ankh
+#Skip Mantras
+
+#Fill Vessel Green
+#Fill Vessel Red
+#Fill Vessel Yellow
