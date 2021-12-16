@@ -5,6 +5,10 @@ https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 -----------------------------
 Included Mulbruk when randomizing NPC/shop doors.
 
+Room names are now accurate when recording NPC conversations.
+
+Philosopher conversations can now be recorded prior to finding the Philosopher's Ocarina.
+
 Made some additions and improvements to custom placements.
 
 Fixed a bug causing Key Sword to always be empowered when purchased in a shop.
