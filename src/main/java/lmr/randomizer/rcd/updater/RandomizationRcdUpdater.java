@@ -679,23 +679,23 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             AddObject.addSpecialItemObjects(conversationDoor.getObjectContainer(), itemRandomizer.getNewContents("mekuri.exe"));
         }
         if("NPC: Philosopher Giltoriyo".equals(npcAssigned)) {
-            ConversationDoorUpdates.addPhilosopherStoneDoor(conversationDoor); // Do this before adding tests, so we can carry over any tests based on the location.
+            ConversationDoorUpdates.addPhilosopherStoneDoor(conversationDoor, getCustomBlockIndex(CustomBlockEnum.RecordableStonePhilosopherGiltoriyo)); // Do this before adding tests, so we can carry over any tests based on the location.
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2));
             conversationDoor.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.GILTORIYO_LADDER, ByteOp.ASSIGN_FLAG, 1)); // Trigger for spawning Endless Corridor Philosopher ladder
             conversationDoor.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.MANTRAS_UNLOCKED, ByteOp.ASSIGN_FLAG, 1)); // Trigger for spawning MARDUK mantra, changed in randomizer from 0x12b
         }
         if("NPC: Philosopher Alsedana".equals(npcAssigned)) {
-            ConversationDoorUpdates.addPhilosopherStoneDoor(conversationDoor); // Do this before adding tests, so we can carry over any tests based on the location.
+            ConversationDoorUpdates.addPhilosopherStoneDoor(conversationDoor, getCustomBlockIndex(CustomBlockEnum.RecordableStonePhilosopherAlsedana)); // Do this before adding tests, so we can carry over any tests based on the location.
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2));
             conversationDoor.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.ALSEDANA_LADDER, ByteOp.ASSIGN_FLAG, 1)); // Trigger for spawning Nuwa's pyramid Philosopher ladder
         }
         if("NPC: Philosopher Samaranta".equals(npcAssigned)) {
-            ConversationDoorUpdates.addPhilosopherStoneDoor(conversationDoor); // Do this before adding tests, so we can carry over any tests based on the location.
+            ConversationDoorUpdates.addPhilosopherStoneDoor(conversationDoor, getCustomBlockIndex(CustomBlockEnum.RecordableStonePhilosopherSamaranta)); // Do this before adding tests, so we can carry over any tests based on the location.
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2));
             conversationDoor.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SAMARANTA_LADDER, ByteOp.ASSIGN_FLAG, 1)); // Trigger for spawning Scales of the Heart puzzle room Philosopher ladder
         }
         if("NPC: Philosopher Fobos".equals(npcAssigned)) {
-            ConversationDoorUpdates.addFobosDoors(conversationDoor); // Do this before adding tests, so we can carry over any tests based on the location.
+            ConversationDoorUpdates.addFobosDoors(conversationDoor, getCustomBlockIndex(CustomBlockEnum.RecordableStonePhilosopherFobos)); // Do this before adding tests, so we can carry over any tests based on the location.
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_PHILOSOPHERS_OCARINA, ByteOp.FLAG_EQUALS, 2));
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.MEDICINE_SOLVED, ByteOp.FLAG_EQUALS, 1)); // Medicine puzzle solved
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.FOBOS_LADDER, ByteOp.FLAG_NOT_EQUAL, 0)); // Fobos spoken to
@@ -1960,10 +1960,10 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                     mapOfNpcLocationToObject.put("NPCL: Tailor Dracuet", (ConversationDoor)gameObject);
                 }
             }
-            else if(blockNumber == BlockConstants.Master_ElderXelpudRandomSetA) {
+            else if(blockNumber == BlockConstants.MultiMaster_ElderXelpudRandomSetA) {
                 mapOfNpcLocationToObject.put("NPCL: Elder Xelpud", (ConversationDoor)gameObject);
             }
-            else if(blockNumber == BlockConstants.Master_Mulbruk_Awake) {
+            else if(blockNumber == BlockConstants.MultiMaster_Mulbruk_Awake) {
                 mapOfNpcLocationToObject.put("NPCL: Mulbruk", (ConversationDoor)gameObject);
             }
             else if(blockNumber == BlockConstants.Master_Hiner) {
@@ -1999,7 +1999,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             else if(blockNumber == BlockConstants.Master_PriestJaguarfiv) {
                 mapOfNpcLocationToObject.put("NPCL: Priest Jaguarfiv", (ConversationDoor)gameObject);
             }
-            else if(blockNumber == 686) {
+            else if(blockNumber == BlockConstants.Master_FairyQueen_UnlockFairies) {
                 // The Fairy Queen - Endless NPC, 08-01-00
                 mapOfNpcLocationToObject.put("NPCL: The Fairy Queen", (ConversationDoor)gameObject);
             }
@@ -2027,7 +2027,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             else if(blockNumber == BlockConstants.Master_PriestAshgine) {
                 mapOfNpcLocationToObject.put("NPCL: Priest Ashgine", (ConversationDoor)gameObject);
             }
-            else if(blockNumber == BlockConstants.Master_Fobos_MedicineCheck) {
+            else if(blockNumber == BlockConstants.Master_PhilosopherFobos_MedicineCheck) {
                 // Post-Medicine version of Fobos
                 mapOfNpcLocationToObject.put("NPCL: Philosopher Fobos", (ConversationDoor)gameObject);
             }

@@ -27,13 +27,6 @@ public final class BlockConstants {
     public static final int ItemConversationMapSurface = 716;
     public static final int ItemConversationProvocativeBathingSuit = 1012;
 
-    public static final int Master_ElderXelpudRandomSetA = 484; // Elder Xelpud - Surface NPC, 01-02-01
-    public static final int Master_MulbrukRandomSetA = 485; // Mulbruk, Sun NPC, 03-03-00
-    public static final int Master_ElderXelpudRandomSetC_Rug = 1019;
-    public static final int Master_ElderXelpudRandomSetB = 1080;
-    public static final int Master_ElderXelpudRandomSetC_NoRug = 1081;
-    public static final int Master_MulbrukRandomSetB = 1082;
-    public static final int Master_MulbrukRandomSetC = 1083;
     public static final int Master_Hiner = 671; // Hiner - Surface NPC, 01-00-02
     public static final int Master_Moger = 672; // Moger - Surface NPC, 01-02-00
     public static final int Master_FormerMekuriMaster_Mekuri = 673; // Former Mekuri Master - Surface NPC, 01-07-00
@@ -45,7 +38,11 @@ public final class BlockConstants {
     public static final int Master_PriestAramo = 680; // Priest Aramo - Extinction NPC, 06-06-00
     public static final int Master_PriestTriton = 681; // Priest Triton - Extinction NPC, 06-09-01
     public static final int Master_PriestJaguarfiv = 683; // Priest Jaguarfiv - Twin Labs NPC, 07-10-01
-    public static final int Master_FairyQueen_RequestPendant = 684;
+    public static final int Master_FairyQueen_RequestPendant = 684; // The Fairy Queen - Endless NPC, 08-01-00
+    public static final short Master_FairyQueen_WaitingForPendant = 685; // The Fairy Queen - Endless NPC, 08-01-00
+    public static final int Master_FairyQueen_UnlockFairies = 686; // The Fairy Queen - Endless NPC, 08-01-00
+    public static final short Master_FairyQueen_WhenTheTimeComes = 687; // The Fairy Queen - Endless NPC, 08-01-00
+    public static final short Master_FairyQueen_TrueShrine1 = 688; // The Fairy Queen - Endless NPC, 08-01-00
     public static final int Master_MrSlushfund_Pepper = 689; // Mr. Slushfund - Illusion NPC, 10-08-00 - References ItemConversationPepper
     public static final short Master_MrSlushfund_WaitingForTreasures = 690;
     public static final int Master_MrSlushfund_Anchor = 691; // References ItemConversationAnchor
@@ -58,7 +55,7 @@ public final class BlockConstants {
     public static final int Master_PriestLaydoc = 701; // Priest Laydoc - Ruin NPC, 14-00-01
     public static final int Master_PriestAshgine = 702; // Priest Ashgine - Birth NPC, 16-01-00
     public static final int Master_PhilosopherFobos_Ladder = 704;
-    public static final int Master_Fobos_MedicineCheck = 705; // Philosopher Fobos - Dimensional NPC, 17-02-00
+    public static final int Master_PhilosopherFobos_MedicineCheck = 705; // Philosopher Fobos - Dimensional NPC, 17-02-00
     public static final int Master_8BitElder = 706; // 8bit Elder - Gate of Time NPC, 21-00-00
     public static final int Master_duplex = 707; // duplex - Illusion NPC, 10-02-02
     public static final int Master_Samieru = 708; // Samieru - Moonlight NPC, 12-03-00
@@ -66,18 +63,31 @@ public final class BlockConstants {
     public static final int Master_8BitFairy = 710; // 8bit Fairy - Gate of Time NPC, 20-00-01
     public static final int Master_PriestMadomono = 718; // Priest Madomono - Sun NPC, 03-04-02
     public static final int Master_PriestGailious = 723; // Priest Gailious - Inferno NPC, 05-02-01
-    public static final int Master_Dracuet_WaitForNightfall = 726; // Tailor Dracuet - Guidance NPC, 00-06-00
     public static final short Master_Mulbruk_StoneConversation = 912; // 0x390; Mulbruk, Sun NPC, 03-03-00
     public static final short Master_PriestAlest_NoItem = 915;
     public static final int Master_MulbrukEscapeRegular = 924; // 0x39c
     public static final int Master_MulbrukEscapeSwimsuit = 926; // 0x39e
-    public static final int Master_Mulbruk_Awake = 990; // Mulbruk, Sun NPC, 03-03-00
+    public static final short Master_FairyQueen_TrueShrine2 = 985; // The Fairy Queen - Endless NPC, 08-01-00
+    public static final int Master_Mulbruk_ProvocativeBathingSuitReaction = 1013;
+
+    public static final int Master_Dracuet_WaitForNightfall = 726; // Tailor Dracuet - Guidance NPC, 00-06-00
     public static final int Master_Dracuet_BackInTime = 991; // Tailor Dracuet - Illusion NPC, 10-07-00
     public static final int Master_Dracuet_HugeCasket = 993; // Tailor Dracuet - Gate of Time NPC, 20-03-01
     public static final int Master_Fairy_NightSurface = 998; // Fairy - Night Surface NPC, 22-07-00
     public static final int Master_Dracuet_HTUnlocked = 1000; // Tailor Dracuet - Goddess NPC, 13-01-00
     public static final int Master_Dracuet_ProvocativeBathingSuit = 1011; // References ItemConversationProvocativeBathingSuit
-    public static final int Master_Mulbruk_ProvocativeBathingSuitReaction = 1013;
+
+    public static final int MultiMaster_ElderXelpudRandomSetA = 484; // Elder Xelpud - Surface NPC, 01-02-01
+    public static final int MultiMaster_MulbrukRandomSetA = 485; // Mulbruk, Sun NPC, 03-03-00
+    public static final int MultiMaster_Mulbruk_Awake = 990; // Mulbruk, Sun NPC, 03-03-00
+    public static final int MultiMaster_ElderXelpudRandomSetC_Rug = 1019;
+    public static final int MultiMaster_ElderXelpudRandomSetB = 1080;
+    public static final int MultiMaster_ElderXelpudRandomSetC_NoRug = 1081;
+    public static final int MultiMaster_MulbrukRandomSetB = 1082;
+    public static final int MultiMaster_MulbrukRandomSetC = 1083;
+
+    public static final int Sprite_Xelpud = 732; // Includes Xelpud bunemon info
+    public static final int Sprite_Mulbruk = 736; // Includes Mulbruk bunemon info
 
     public static final int ShopBlockNebur = 34;
     public static final int ShopBlockNeburAlt = 490;

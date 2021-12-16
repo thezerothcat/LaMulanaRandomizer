@@ -11,6 +11,7 @@ import lmr.randomizer.dat.blocks.contents.entries.GrailPointEntry;
 import lmr.randomizer.dat.blocks.CheckBlock;
 import lmr.randomizer.dat.blocks.contents.BlockStringData;
 import lmr.randomizer.dat.blocks.ShopBlock;
+import lmr.randomizer.update.AddBlock;
 import lmr.randomizer.update.AddObject;
 import lmr.randomizer.randomization.data.CustomBlockEnum;
 import lmr.randomizer.util.LocationCoordinateMapper;
@@ -377,7 +378,22 @@ public class BaseDatUpdater extends DatUpdater {
         }
 
         if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || HolidaySettings.isFools2019Mode() || HolidaySettings.isFools2020Mode()) {
-            datFileData.addCustomBlock(CustomBlockEnum.CustomXelpudIntro, AddObject.buildXelpudIntroBlock());
+            datFileData.addCustomBlock(CustomBlockEnum.CustomXelpudIntro, AddBlock.buildXelpudIntroBlock());
         }
+        datFileData.addCustomBlock(CustomBlockEnum.RecordableStoneConversation,
+                AddBlock.buildRecordableStoneConversationBlock());
+        int recordableStoneConversationBlockIndex = getCustomBlockIndex(CustomBlockEnum.RecordableStoneConversation);
+        datFileData.addCustomBlock(CustomBlockEnum.RecordableStonePhilosopherGiltoriyo,
+                AddBlock.buildRecordableStoneConversationMasterBlock(CustomBlockEnum.RecordableStonePhilosopherGiltoriyo,
+                        recordableStoneConversationBlockIndex));
+        datFileData.addCustomBlock(CustomBlockEnum.RecordableStonePhilosopherAlsedana,
+                AddBlock.buildRecordableStoneConversationMasterBlock(CustomBlockEnum.RecordableStonePhilosopherAlsedana,
+                        recordableStoneConversationBlockIndex));
+        datFileData.addCustomBlock(CustomBlockEnum.RecordableStonePhilosopherSamaranta,
+                AddBlock.buildRecordableStoneConversationMasterBlock(CustomBlockEnum.RecordableStonePhilosopherSamaranta,
+                        recordableStoneConversationBlockIndex));
+        datFileData.addCustomBlock(CustomBlockEnum.RecordableStonePhilosopherFobos,
+                AddBlock.buildRecordableStoneConversationMasterBlock(CustomBlockEnum.RecordableStonePhilosopherFobos,
+                        recordableStoneConversationBlockIndex));
     }
 }

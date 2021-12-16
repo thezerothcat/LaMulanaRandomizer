@@ -16,6 +16,10 @@ public class BlockStringData implements BlockContents {
     public BlockStringData() {
     }
 
+    public BlockStringData(List<Short> data) {
+        this.data.addAll(data);
+    }
+
     public BlockStringData(BlockStringData objectToCopy) {
         this.itemNameStartIndex = objectToCopy.itemNameStartIndex;
         this.itemNameEndIndex = objectToCopy.itemNameEndIndex;

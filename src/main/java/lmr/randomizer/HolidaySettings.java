@@ -40,7 +40,7 @@ public final class HolidaySettings {
     }
 
     public static boolean isHalloween2021Mode() {
-        return true;
+        return false;
     }
 
     public static boolean isHolidayMode() {

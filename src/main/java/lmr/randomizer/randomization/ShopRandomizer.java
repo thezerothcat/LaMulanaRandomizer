@@ -63,7 +63,8 @@ public abstract class ShopRandomizer {
         if(mapOfShopNameToShopInventory.containsKey(shopName)) {
             return mapOfShopNameToShopInventory.get(shopName);
         }
-        ShopInventory shopInventory = new ShopInventory(shopName, npcRandomizer.getNpcName(shopName));
+        String npcName = npcRandomizer.getShopNpcName(shopName);
+        ShopInventory shopInventory = new ShopInventory(shopName, npcName, npcName == null ? null : npcRandomizer.getNpcLocation(npcName).replaceAll("NPCL: ", ""));
         ShopInventoryData shopInventoryData;
         String shopItem;
         boolean removedItem;
@@ -206,7 +207,7 @@ public abstract class ShopRandomizer {
                 writer.newLine();
             }
             else {
-                String shopNpcName = npcRandomizer.getNpcName(shop);
+                String shopNpcName = npcRandomizer.getShopNpcName(shop);
                 String npcLocationKey = npcRandomizer.getNpcLocation(shopNpcName);
                 if(npcLocationKey != null) {
                     npcLocationKey = npcLocationKey.replaceAll("NPCL: ", "");

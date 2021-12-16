@@ -1,8 +1,8 @@
 package lmr.randomizer.util;
 
 public final class BlockDataConstants {
-    public static final short EndOfEntry = 0x000a;
-    public static final short Space = 0x0020;
+    public static final short EndOfEntry = 0x000a; // 10
+    public static final short Space = 0x0020; // 32
     public static final short Unknown_C = 0x000c;
     public static final short Flag = 0x0040;
     public static final short Flag_Alt = 0x0041; // Apparently no difference between this and 0x0040?

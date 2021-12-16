@@ -1,6 +1,24 @@
 Please see the wiki page on github for information on how to use the randomizer, and other things you may need to know about it.
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
+2.29
+-----------------------------
+Included Mulbruk when randomizing NPC/shop doors.
+
+Made some additions and improvements to custom placements.
+
+Fixed a bug causing Key Sword to always be empowered when purchased in a shop.
+
+Removed the bugged chest in transformed Shrine of the Mother which could interfere with collecting Hand Scanner if opened.
+
+Fixed door cover graphics for Hiner's tent on the Surface.
+
+Fixed a few scenarios where early-game shop items were unintentionally overpriced.
+
+Added doors to travel between transformed and untransformed Shrine of the Mother grail tablets after acquiring them.
+
+Fixed a vanilla bug where the small Palenque mural could fail to respond to the Pochette Key permanently.
+
 2.28
 -----------------------------
 Included Elder Xelpud, Nebur, Mr. Slushfund, Priest Alest, and Former Mekuri Master when randomizing NPC/shop doors.

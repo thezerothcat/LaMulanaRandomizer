@@ -3,18 +3,22 @@ package lmr.randomizer.randomization.data;
 public class ShopInventory {
     private String shopName;
     private String npcName;
+    private String npcLocation; // The name of the NPC that would normally be in this location; for use with updating bunemon locations.
+
     private ShopInventoryData item1;
     private ShopInventoryData item2;
     private ShopInventoryData item3;
 
-    public ShopInventory(String shopName, String npcName) {
+    public ShopInventory(String shopName, String npcName, String npcLocation) {
         this.shopName = shopName;
         this.npcName = npcName;
+        this.npcLocation = npcLocation;
     }
 
     public ShopInventory(ShopInventory shopInventory) {
         this.shopName = shopInventory.getShopName();
         this.npcName = shopInventory.getNpcName();
+        this.npcLocation = shopInventory.getNpcLocation();
         this.item1 = new ShopInventoryData(shopInventory.getItem1());
         this.item2 = new ShopInventoryData(shopInventory.getItem2());
         this.item3 = new ShopInventoryData(shopInventory.getItem3());
@@ -30,6 +34,10 @@ public class ShopInventory {
 
     public String getNpcName() {
         return npcName;
+    }
+
+    public String getNpcLocation() {
+        return npcLocation;
     }
 
     public ShopInventoryData getItem1() {

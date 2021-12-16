@@ -603,22 +603,21 @@ public final class AddObject {
     }
 
     public static void addTransformedMrFishmanShopDoorGraphic(ObjectContainer objectContainer) {
-        GraphicsTextureDraw backupFishNewDoorGraphic = new GraphicsTextureDraw(objectContainer, 180, 1520);
-        backupFishNewDoorGraphic.getTestByteOperations().add(new TestByteOperation(FlagConstants.FISH_SHOP_UNLOCKS, ByteOp.FLAG_EQUALS, 3));
-        backupFishNewDoorGraphic.getTestByteOperations().add(new TestByteOperation(FlagConstants.MOTHER_STATE, ByteOp.FLAG_NOT_EQUAL, 3));
+        GraphicsTextureDraw transformedMrFishmanShopDoorGraphic = new GraphicsTextureDraw(objectContainer, 180, 1520);
+        transformedMrFishmanShopDoorGraphic.getTestByteOperations().add(new TestByteOperation(FlagConstants.FISH_SHOP_UNLOCKS, ByteOp.FLAG_EQUALS, 3));
 
-        backupFishNewDoorGraphic.setLayer(-1);
-        backupFishNewDoorGraphic.setImageFile("map*_1.png");
-        backupFishNewDoorGraphic.setImageX(260);
-        backupFishNewDoorGraphic.setImageY(0);
-        backupFishNewDoorGraphic.setImageWidth(40);
-        backupFishNewDoorGraphic.setImageHeight(40);
-        backupFishNewDoorGraphic.setAnimation(0, 1, 0, 0);
-        backupFishNewDoorGraphic.setCollision(HitTile.Air);
-        backupFishNewDoorGraphic.setRGBAMax(0, 0, 0, 255);
-//        backupFishNewDoorGraphic.setArg23(1); // todo: for some reason this was 0?
+        transformedMrFishmanShopDoorGraphic.setLayer(-1);
+        transformedMrFishmanShopDoorGraphic.setImageFile("map*_1.png");
+        transformedMrFishmanShopDoorGraphic.setImageX(260);
+        transformedMrFishmanShopDoorGraphic.setImageY(0);
+        transformedMrFishmanShopDoorGraphic.setImageWidth(40);
+        transformedMrFishmanShopDoorGraphic.setImageHeight(40);
+        transformedMrFishmanShopDoorGraphic.setAnimation(0, 1, 0, 0);
+        transformedMrFishmanShopDoorGraphic.setCollision(HitTile.Air);
+        transformedMrFishmanShopDoorGraphic.setRGBAMax(0, 0, 0, 255);
+//        transformedMrFishmanShopDoorGraphic.setArg23(1); // todo: for some reason this was 0?
 
-        objectContainer.getObjects().add(backupFishNewDoorGraphic);
+        objectContainer.getObjects().add(transformedMrFishmanShopDoorGraphic);
     }
 
     /**
@@ -2500,19 +2499,6 @@ public final class AddObject {
         blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.noMoneyItem3String")));
         shopBlock.setString(blockStringData, 17);
         return shopBlock;
-    }
-
-    public static Block buildXelpudIntroBlock() {
-        Block introBlock = new Block();
-        introBlock.getBlockContents().add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
-        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText(HolidaySettings.isFools2019Mode() ? "fools.xelpudText" : "text.xelpudWarn"));
-        for(Short shortCharacter : stringCharacters) {
-            introBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
-        }
-        introBlock.getBlockContents().add(new BlockFlagData((short)FlagConstants.RANDOMIZER_SAVE_LOADED, (short)2));
-        introBlock.getBlockContents().add(new BlockFlagData((short)FlagConstants.XELPUD_CONVERSATION_INTRO, (short)1));
-        introBlock.getBlockContents().add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)0));
-        return introBlock;
     }
 
     public static Block buildBonusCandyBlock(int bonusCount) {

@@ -3,6 +3,11 @@ package lmr.randomizer.randomization.data;
 public enum CustomBlockEnum {
     DefaultShopBlock,
     CustomXelpudIntro,
+    RecordableStoneConversation,
+    RecordableStonePhilosopherGiltoriyo,
+    RecordableStonePhilosopherAlsedana,
+    RecordableStonePhilosopherSamaranta,
+    RecordableStonePhilosopherFobos,
     HalloweenNoCandyConversationBlock,
     HalloweenNoCandyReferenceBlock_DracuetWaitForNightfall,
     HalloweenNoCandyReferenceBlock_DracuetBackInTime,

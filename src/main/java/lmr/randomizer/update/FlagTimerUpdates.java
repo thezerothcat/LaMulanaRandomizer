@@ -12,6 +12,7 @@ public class FlagTimerUpdates {
     private FlagTimerUpdates() { }
 
     public static boolean updateFlagTimer(GameObject flagTimer) {
+        updateMail02Timer(flagTimer); // Do this before vanilla shop item timers, or it gets removed by that
         if(isVanillaShopItemTimer(flagTimer)) {
             return false;
         }
@@ -440,6 +441,20 @@ public class FlagTimerUpdates {
                 flagTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_GTEQ, Settings.getCurrentBossCount()));
             }
             flagTimer.removeUpdate(new WriteByteOperation(FlagConstants.TABLET_GRAIL_SHRINE_FRONT, ByteOp.ASSIGN_FLAG, 0));
+        }
+    }
+
+    private static void updateMail02Timer(GameObject flagTimer) {
+        // Mail 02 shouldn't affect Hand Scanner world flag
+        boolean isMail02Timer = false;
+        for(WriteByteOperation writeByteOperation : flagTimer.getWriteByteOperations()) {
+            if (writeByteOperation.getIndex() == FlagConstants.MAIL_02) {
+                isMail02Timer = true;
+                break;
+            }
+        }
+        if(isMail02Timer) {
+            flagTimer.removeUpdate(new WriteByteOperation(FlagConstants.WF_HAND_SCANNER, ByteOp.ASSIGN_FLAG, 2));
         }
     }
 

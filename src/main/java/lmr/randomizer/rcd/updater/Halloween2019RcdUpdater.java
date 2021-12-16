@@ -516,7 +516,7 @@ public class Halloween2019RcdUpdater extends RcdUpdater {
                 conversationDoor.getWriteByteOperations().remove((int)flagToRemoveIndex);
             }
         }
-        else if(blockNumber == 686) {
+        else if(blockNumber == BlockConstants.Master_FairyQueen_UnlockFairies) {
             // The Fairy Queen - Endless NPC, 08-01-00
             conversationDoor.getTestByteOperations().clear();
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.FAIRY_QUEEN_CONVERSATION_FAIRIES, ByteOp.FLAG_EQUALS, 2));
@@ -554,7 +554,7 @@ public class Halloween2019RcdUpdater extends RcdUpdater {
         else if(blockNumber == BlockConstants.Master_MrSlushfund_NeverComeBack) {
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper), ByteOp.FLAG_GT, 0));
         }
-        else if(blockNumber == BlockConstants.Master_Fobos_MedicineCheck) {
+        else if(blockNumber == BlockConstants.Master_PhilosopherFobos_MedicineCheck) {
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag((short)704), ByteOp.FLAG_GT, 0));
         }
         else if(blockNumber == 714) {

@@ -107,6 +107,7 @@ public final class FlagConstants {
     public static final int KILL_FLAG = 0x3e9; // Instant death when set
     public static final int LAMP_STATION_UNKNOWN = 0x3ed; // Gets set on the Lemeza detector that lights Lamp of Time. Probably to despawn the flame graphic
     public static final int ESCAPE_TRIGGERED = 0x403; // Value 0 > 1 alongside triggering the escape timer and screenshake.
+    public static final int PALENQUE_SMALL_MURAL_ANIMATION_TRIGGERED = 0x40e; // Value 0 > 1 when Palenque's small mural is triggered to animate sliding into place.
     public static final int SURFACE_RUINS_FRONT_DOOR_OPEN = 0x414; // For the crusher covering the transition from Surface to Gate of Guidance
     public static final int MAUSOLEUM_HARDMODE_SKULL_ANIMATION = 0x420; // Goes 0 > 1 by timer when HARDMODE (16a) set to 2, sets screen flag 0x28, and goes 1 > 2 by timer 40 frames later (after animation). Tested on RoomSpawner animation for == 1
     public static final int HT_SOLVED_ROOM33_PILLARS = 0x70d;
@@ -198,6 +199,7 @@ public final class FlagConstants {
     public static final int WF_ANKH_JEWEL_BIRTH = 0x093;
     public static final int WF_ANKH_JEWEL_TWIN = 0x094;
     public static final int WF_ANKH_JEWEL_DIMENSIONAL = 0x095;
+    public static final int WF_HAND_SCANNER = 0x096;
     public static final int WF_ANKH_JEWEL_EXTRA = 0xad6;
     public static final int WF_DJED_PILLAR = 0x097;
     public static final int WF_MINI_DOLL = 0x098;

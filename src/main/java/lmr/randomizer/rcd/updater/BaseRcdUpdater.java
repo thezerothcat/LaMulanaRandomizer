@@ -408,7 +408,7 @@ public class BaseRcdUpdater extends RcdUpdater {
 
     @Override
     boolean updateChest(GameObject chest) {
-        int inventoryArg = chest.getArgs().get(0) - 11;
+        int inventoryArg = chest.getArgs().get(0) - ValueConstants.CHEST_ITEM_OFFSET;
         if(inventoryArg == ItemConstants.COG_OF_THE_SOUL) {
             // Cog of the Soul chest
             TestByteOperation cogChestTest = chest.getTestByteOperations().get(0);
@@ -428,6 +428,15 @@ public class BaseRcdUpdater extends RcdUpdater {
             }
             // Require showing Talisman to Xelpud (normally required for Shawn to appear)
             chest.getTestByteOperations().add(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_TALISMAN_FOUND, ByteOp.FLAG_GTEQ, 2));
+        }
+        else if(inventoryArg == DropType.NOTHING.getValue() - ValueConstants.CHEST_ITEM_OFFSET) {
+            if(chest.getObjectContainer() instanceof Screen) {
+                Screen screen = (Screen)chest.getObjectContainer();
+                if(screen.getZoneIndex() == 18 && screen.getRoomIndex() == 1 && screen.getScreenIndex() == 0) {
+                    // Remove buggy empty chest in transformed Shrine of the Mother
+                    return false;
+                }
+            }
         }
 
         if(Settings.isRandomizeTrapItems()) {
@@ -878,7 +887,7 @@ public class BaseRcdUpdater extends RcdUpdater {
                 return false;
             }
         }
-        else if(blockNumber == BlockConstants.Master_MulbrukRandomSetA) {
+        else if(blockNumber == BlockConstants.MultiMaster_MulbrukRandomSetA) {
             // To be removed and re-added for NPC shuffling simplicity.
             return false;
         }
@@ -979,14 +988,14 @@ public class BaseRcdUpdater extends RcdUpdater {
         else if(blockNumber == BlockConstants.Removed_MulbrukEmptyAfterProvocativeBathingSuit) {
             return false;
         }
-        else if(blockNumber == BlockConstants.Master_ElderXelpudRandomSetC_Rug
-                || blockNumber == BlockConstants.Master_ElderXelpudRandomSetB
-                || blockNumber == BlockConstants.Master_ElderXelpudRandomSetC_NoRug) {
+        else if(blockNumber == BlockConstants.MultiMaster_ElderXelpudRandomSetC_Rug
+                || blockNumber == BlockConstants.MultiMaster_ElderXelpudRandomSetB
+                || blockNumber == BlockConstants.MultiMaster_ElderXelpudRandomSetC_NoRug) {
             // To be removed and re-added for NPC shuffling simplicity.
             return false;
         }
-        else if(blockNumber == BlockConstants.Master_MulbrukRandomSetB
-                || blockNumber == BlockConstants.Master_MulbrukRandomSetC) {
+        else if(blockNumber == BlockConstants.MultiMaster_MulbrukRandomSetB
+                || blockNumber == BlockConstants.MultiMaster_MulbrukRandomSetC) {
             // To be removed and re-added for NPC shuffling simplicity.
             return false;
         }
@@ -1863,7 +1872,25 @@ public class BaseRcdUpdater extends RcdUpdater {
             }
         }
         else if(zoneIndex == 6) {
-            if(roomIndex == 9 && screenIndex == 1) {
+            if(roomIndex == 0 && screenIndex == 1) {
+                AddObject.addFramesTimer(screen, 0,
+                        Arrays.asList(new TestByteOperation(FlagConstants.PALENQUE_SMALL_MURAL_ANIMATION_TRIGGERED, ByteOp.FLAG_EQUALS, 1),
+                                new TestByteOperation(FlagConstants.PALENQUE_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 1)),
+                        Arrays.asList(new WriteByteOperation(FlagConstants.PALENQUE_ANKH_PUZZLE, ByteOp.ASSIGN_FLAG, 2)));
+            }
+            else if(roomIndex == 2 && screenIndex == 0) {
+                AddObject.addFramesTimer(screen, 0,
+                        Arrays.asList(new TestByteOperation(FlagConstants.PALENQUE_SMALL_MURAL_ANIMATION_TRIGGERED, ByteOp.FLAG_EQUALS, 1),
+                                new TestByteOperation(FlagConstants.PALENQUE_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 1)),
+                        Arrays.asList(new WriteByteOperation(FlagConstants.PALENQUE_ANKH_PUZZLE, ByteOp.ASSIGN_FLAG, 2)));
+            }
+            else if(roomIndex == 3 && screenIndex == 0) {
+                AddObject.addFramesTimer(screen, 0,
+                        Arrays.asList(new TestByteOperation(FlagConstants.PALENQUE_SMALL_MURAL_ANIMATION_TRIGGERED, ByteOp.FLAG_EQUALS, 1),
+                                new TestByteOperation(FlagConstants.PALENQUE_ANKH_PUZZLE, ByteOp.FLAG_EQUALS, 1)),
+                        Arrays.asList(new WriteByteOperation(FlagConstants.PALENQUE_ANKH_PUZZLE, ByteOp.ASSIGN_FLAG, 2)));
+            }
+            else if(roomIndex == 9 && screenIndex == 1) {
                 AddObject.addPalenqueMSX2Timer(screen);
                 if(Settings.isRandomizeBosses()) {
                     AddObject.addTwinLabsPoisonTimerRemoval(screen, true);

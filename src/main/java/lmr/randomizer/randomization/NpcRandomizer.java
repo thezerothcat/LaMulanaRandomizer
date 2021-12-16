@@ -343,7 +343,7 @@ public class NpcRandomizer {
     public boolean isDimensionalCorridor(String itemLocation) {
         if(itemLocation.startsWith("Shop")) {
             return getNpc("NPCL: Philosopher Fobos").replaceAll("NPC: ", "")
-                    .equals(getNpcName(itemLocation));
+                    .equals(getShopNpcName(itemLocation));
         }
         return false;
     }
@@ -352,7 +352,7 @@ public class NpcRandomizer {
         return npc == null ? null : findDoorLocationForNpc("NPC: " + npc);
     }
 
-    public String getNpcName(String shopName) {
+    public String getShopNpcName(String shopName) {
         if("Shop 1 (Surface)".equals(shopName)) {
             return "Modro";
         }

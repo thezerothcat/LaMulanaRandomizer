@@ -175,11 +175,149 @@ public class DatFileData {
         Short customBlockIndex = getCustomBlockIndex(CustomBlockEnum.DefaultShopBlock);
         return customBlockIndex == null ? null : (ShopBlock)datFileEntries.get(customBlockIndex);
     }
+    public MasterNpcBlock getHinerReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_Hiner);
+    }
+    public MasterNpcBlock getMogerReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_Moger);
+    }
+    public MasterNpcBlock getFormerMekuriMasterReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_FormerMekuriMaster_Mekuri);
+    }
+    public MasterNpcBlock getPriestZarnacReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PriestZarnac);
+    }
+    public MasterNpcBlock getPriestXanadoReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PriestXanado);
+    }
+    public MasterNpcBlock getPhilosopherGiltoriyoReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PhilosopherGiltoriyo);
+    }
+    public MasterNpcBlock getPriestHidlydaReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PriestHidlyda);
+    }
+    public MasterNpcBlock getPriestRomancisReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PriestRomancis);
+    }
+    public MasterNpcBlock getPriestAramoReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PriestAramo);
+    }
+    public MasterNpcBlock getPriestTritonReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PriestTriton);
+    }
+    public MasterNpcBlock getPriestJaguarfivReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PriestJaguarfiv);
+    }
+    public MasterNpcBlock getFairyQueenWaitingForPendantReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_FairyQueen_WaitingForPendant);
+    }
+    public MasterNpcBlock getFairyQueenUnlockFairiesReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_FairyQueen_UnlockFairies);
+    }
+    public MasterNpcBlock getFairyQueenWhenTheTimeComesReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_FairyQueen_WhenTheTimeComes);
+    }
+    public MasterNpcBlock getFairyQueenTrueShrine1ReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_FairyQueen_TrueShrine1);
+    }
+    public MasterNpcBlock getFairyQueenTrueShrine2ReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_FairyQueen_TrueShrine2);
+    }
+    public MasterNpcBlock getMrSlushfundPepperReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_MrSlushfund_Pepper);
+    }
+    public MasterNpcBlock getMrSlushfundWaitingForTreasuresReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_MrSlushfund_WaitingForTreasures);
+    }
+    public MasterNpcBlock getMrSlushfundAnchorReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_MrSlushfund_Anchor);
+    }
+    public MasterNpcBlock getMrSlushfundNeverComeBackReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_MrSlushfund_NeverComeBack);
+    }
+    public MasterNpcBlock getPriestAlestReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PriestAlest);
+    }
+    public MasterNpcBlock getStrayFairyReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_StrayFairy);
+    }
+    public MasterNpcBlock getGiantThexdeReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_GiantThexde);
+    }
+    public MasterNpcBlock getPhilosopherAlsedanaReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PhilosopherAlsedana);
+    }
+    public MasterNpcBlock getPhilosopherSamarantaReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PhilosopherSamaranta);
+    }
+    public MasterNpcBlock getPriestLaydocReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PriestLaydoc);
+    }
+    public MasterNpcBlock getPriestAshgineReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PriestAshgine);
+    }
+    public MasterNpcBlock getPhilosopherFobosLadderReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PhilosopherFobos_Ladder);
+    }
+    public MasterNpcBlock getPhilosopherFobosMedicineReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PhilosopherFobos_MedicineCheck);
+    }
+    public MasterNpcBlock get8BitElderReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_8BitElder);
+    }
+    public MasterNpcBlock getDuplexReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_duplex);
+    }
+    public MasterNpcBlock getSamieruReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_Samieru);
+    }
+    public MasterNpcBlock getNaramuraReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_Naramura);
+    }
+    public MasterNpcBlock get8BitFairyReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_8BitFairy);
+    }
+    public MasterNpcBlock getPriestMadomonoReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PriestMadomono);
+    }
+    public MasterNpcBlock getPriestGailiousReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PriestGailious);
+    }
+    public MasterNpcBlock getMulbrukStoneConversationReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_Mulbruk_StoneConversation);
+    }
+    public MasterNpcBlock getPriestAlestNoItemReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_PriestAlest_NoItem);
+    }
+    public MasterNpcBlock getMulbrukEscapeRegularReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_MulbrukEscapeRegular);
+    }
+    public MasterNpcBlock getMulbrukEscapeSwimsuitReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_MulbrukEscapeSwimsuit);
+    }
+    public MasterNpcBlock getMulbrukProvocativeBathingSuitReactionReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_Mulbruk_ProvocativeBathingSuitReaction);
+    }
+    public MasterNpcBlock getPhilosopherGiltoriyoStoneReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(getCustomBlockIndex(CustomBlockEnum.RecordableStonePhilosopherGiltoriyo));
+    }
+    public MasterNpcBlock getPhilosopherAlsedanaStoneReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(getCustomBlockIndex(CustomBlockEnum.RecordableStonePhilosopherAlsedana));
+    }
+    public MasterNpcBlock getPhilosopherSamarantaStoneReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(getCustomBlockIndex(CustomBlockEnum.RecordableStonePhilosopherSamaranta));
+    }
+    public MasterNpcBlock getPhilosopherFobosStoneReferenceBlock() {
+        return (MasterNpcBlock)datFileEntries.get(getCustomBlockIndex(CustomBlockEnum.RecordableStonePhilosopherFobos));
+    }
     public CheckBlock getXelpudFlagCheckBlock() {
         return (CheckBlock)datFileEntries.get(BlockConstants.XelpudFlagCheckBlock);
     }
     public CheckBlock getXelpudScoreCheckBlock() {
         return (CheckBlock)datFileEntries.get(BlockConstants.XelpudScoreCheckBlock);
+    }
+    public Block getXelpudSpriteBlock() {
+        return datFileEntries.get(BlockConstants.Sprite_Xelpud);
     }
     public CheckBlock getMulbrukFlagCheckBlock() {
         return (CheckBlock)datFileEntries.get(BlockConstants.MulbrukFlagCheckBlock);
@@ -192,8 +330,8 @@ public class DatFileData {
                 datFileEntries.get(BlockConstants.MulbrukRandomBlock2),
                 datFileEntries.get(BlockConstants.MulbrukRandomBlock3));
     }
-    public MasterNpcBlock getMulbrukStoneConversationReferenceBlock() {
-        return (MasterNpcBlock)datFileEntries.get(BlockConstants.Master_Mulbruk_StoneConversation);
+    public Block getMulbrukSpriteBlock() {
+        return datFileEntries.get(BlockConstants.Sprite_Mulbruk);
     }
     public List<Block> getEmailBlocks() {
         List<Block> emailBlocks = new ArrayList<>();

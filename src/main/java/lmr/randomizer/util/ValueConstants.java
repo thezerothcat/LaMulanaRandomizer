@@ -20,6 +20,15 @@ public class ValueConstants {
     public static final int TOTAL_MAPS = 17;
     public static final int ITEM_COLLECTED = 2;
 
+    public static final int CHEST_ITEM_OFFSET = 11;
+
+    public static final int NPC_BACKGROUND_STATUE = 0x01a;
+    public static final int NPC_SPRITE_DISABLE_SPEECH = 0; // Use this sprite and the conversation text will be ignored; vanilla uses for stone philosophers
+    public static final int NPC_SPRITE_USE_BACKGROUND = 0x2f0;
+    public static final int NPC_MUSIC_STONE_PHILOSOPHER = 0x012;
+
+    public static final short DAT_CHARACTER_SPACE = 32;
+
     public static final int SUN_WATCHTOWER_PLATFORMS_SPAWNED = 3;
     public static final int MOTHER_FIGHT_STARTED = 2;
 

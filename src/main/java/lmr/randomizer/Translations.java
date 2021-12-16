@@ -31,6 +31,11 @@ public final class Translations {
     }
 
     public static String getLocationAndNpc(String locationKey, String npcKey) {
+        if(npcKey == null && locationKey == null) {
+            return getText("shops.Shop0Default");
+        }
+        npcKey = npcKey.replaceAll("[ )('-.]", "");
+        locationKey = locationKey.replaceAll("[ )('-.]", "");
         if("jp".equals(Settings.getLanguage())) {
             return getJapaneseTranslation(locationKey) + "" + getJapaneseTranslation(npcKey);
         }

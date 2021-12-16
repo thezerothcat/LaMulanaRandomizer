@@ -882,8 +882,17 @@ public final class DatReader {
                 || blockIndex == BlockConstants.Master_PriestAramo
                 || blockIndex == BlockConstants.Master_PriestTriton
                 || blockIndex == BlockConstants.Master_PriestJaguarfiv
+                || blockIndex == BlockConstants.Master_FairyQueen_WaitingForPendant
+                || blockIndex == BlockConstants.Master_FairyQueen_UnlockFairies
+                || blockIndex == BlockConstants.Master_FairyQueen_WhenTheTimeComes
+                || blockIndex == BlockConstants.Master_FairyQueen_TrueShrine1
+                || blockIndex == BlockConstants.Master_FairyQueen_TrueShrine2
                 || blockIndex == BlockConstants.Master_MrSlushfund_Pepper
+                || blockIndex == BlockConstants.Master_MrSlushfund_WaitingForTreasures
+                || blockIndex == BlockConstants.Master_MrSlushfund_Anchor
+                || blockIndex == BlockConstants.Master_MrSlushfund_NeverComeBack
                 || blockIndex == BlockConstants.Master_PriestAlest
+                || blockIndex == BlockConstants.Master_PriestAlest_NoItem
                 || blockIndex == BlockConstants.Master_StrayFairy
                 || blockIndex == BlockConstants.Master_GiantThexde
                 || blockIndex == BlockConstants.Master_PhilosopherAlsedana
@@ -891,6 +900,7 @@ public final class DatReader {
                 || blockIndex == BlockConstants.Master_PriestLaydoc
                 || blockIndex == BlockConstants.Master_PriestAshgine
                 || blockIndex == BlockConstants.Master_PhilosopherFobos_Ladder
+                || blockIndex == BlockConstants.Master_PhilosopherFobos_MedicineCheck
                 || blockIndex == BlockConstants.Master_8BitElder
                 || blockIndex == BlockConstants.Master_duplex
                 || blockIndex == BlockConstants.Master_Samieru
@@ -905,7 +915,8 @@ public final class DatReader {
                 || blockIndex == BlockConstants.Master_Dracuet_BackInTime
                 || blockIndex == BlockConstants.Master_Dracuet_HugeCasket
                 || blockIndex == BlockConstants.Master_Fairy_NightSurface
-                || blockIndex == BlockConstants.Master_Dracuet_HTUnlocked;
+                || blockIndex == BlockConstants.Master_Dracuet_HTUnlocked
+                || blockIndex == BlockConstants.Master_Mulbruk_ProvocativeBathingSuitReaction;
     }
 
     private static DataInputStream getDatFile(boolean loadFromBackup) throws Exception {

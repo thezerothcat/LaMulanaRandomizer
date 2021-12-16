@@ -246,7 +246,7 @@ public class ConversationDoor extends GameObject {
             return BlockConstants.ShopBlockHotbloodedNemesistwo;
         }
         if("NPC: Elder Xelpud".equals(npcAssigned)) {
-            return BlockConstants.Master_ElderXelpudRandomSetA;
+            return BlockConstants.MultiMaster_ElderXelpudRandomSetA;
         }
         if("NPC: Hiner".equals(npcAssigned)) {
             return BlockConstants.Master_Hiner;
@@ -282,7 +282,7 @@ public class ConversationDoor extends GameObject {
             return BlockConstants.Master_PriestJaguarfiv;
         }
         if("NPC: The Fairy Queen".equals(npcAssigned)) {
-            return 686;
+            return BlockConstants.Master_FairyQueen_UnlockFairies;
         }
         if("NPC: Mr. Slushfund".equals(npcAssigned)) {
             return BlockConstants.Master_MrSlushfund_Pepper;
@@ -309,7 +309,7 @@ public class ConversationDoor extends GameObject {
             return BlockConstants.Master_PriestAshgine;
         }
         if("NPC: Philosopher Fobos".equals(npcAssigned)) {
-            return BlockConstants.Master_Fobos_MedicineCheck;
+            return BlockConstants.Master_PhilosopherFobos_MedicineCheck;
         }
         if("NPC: 8bit Elder".equals(npcAssigned)) {
             return BlockConstants.Master_8BitElder;
@@ -333,7 +333,7 @@ public class ConversationDoor extends GameObject {
             return BlockConstants.Master_PriestGailious;
         }
         if("NPC: Mulbruk".equals(npcAssigned)) {
-            return BlockConstants.Master_MulbrukRandomSetA;
+            return BlockConstants.MultiMaster_MulbrukRandomSetA;
         }
         if("NPC: Tailor Dracuet".equals(npcAssigned)) {
             return BlockConstants.ShopBlockTailorDracuet;

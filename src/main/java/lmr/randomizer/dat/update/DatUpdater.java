@@ -81,12 +81,59 @@ public abstract class DatUpdater {
             updateCustomShopBlock(datFileData.getCustomShopBlock());
         }
 
+        updateHinerReferenceBlock(datFileData.getHinerReferenceBlock());
+        updateMogerReferenceBlock(datFileData.getMogerReferenceBlock());
+        updateFormerMekuriMasterReferenceBlock(datFileData.getFormerMekuriMasterReferenceBlock());
+        updatePriestZarnacReferenceBlock(datFileData.getPriestZarnacReferenceBlock());
+        updatePriestXanadoReferenceBlock(datFileData.getPriestXanadoReferenceBlock());
+        updatePhilosopherGiltoriyoReferenceBlock(datFileData.getPhilosopherGiltoriyoReferenceBlock());
+        updatePriestHidlydaReferenceBlock(datFileData.getPriestHidlydaReferenceBlock());
+        updatePriestRomancisReferenceBlock(datFileData.getPriestRomancisReferenceBlock());
+        updatePriestAramoReferenceBlock(datFileData.getPriestAramoReferenceBlock());
+        updatePriestTritonReferenceBlock(datFileData.getPriestTritonReferenceBlock());
+        updatePriestJaguarfivReferenceBlock(datFileData.getPriestJaguarfivReferenceBlock());
+        updateFairyQueenWaitingForPendantReferenceBlock(datFileData.getFairyQueenWaitingForPendantReferenceBlock());
+        updateFairyQueenUnlockFairiesReferenceBlock(datFileData.getFairyQueenUnlockFairiesReferenceBlock());
+        updateFairyQueenWhenTheTimeComesReferenceBlock(datFileData.getFairyQueenWhenTheTimeComesReferenceBlock());
+        updateFairyQueenTrueShrine1ReferenceBlock(datFileData.getFairyQueenTrueShrine1ReferenceBlock());
+        updateFairyQueenTrueShrine2ReferenceBlock(datFileData.getFairyQueenTrueShrine2ReferenceBlock());
+        updateMrSlushfundPepperReferenceBlock(datFileData.getMrSlushfundPepperReferenceBlock());
+        updateMrSlushfundWaitingForTreasuresReferenceBlock(datFileData.getMrSlushfundWaitingForTreasuresReferenceBlock());
+        updateMrSlushfundAnchorReferenceBlock(datFileData.getMrSlushfundAnchorReferenceBlock());
+        updateMrSlushfundNeverComeBackReferenceBlock(datFileData.getMrSlushfundNeverComeBackReferenceBlock());
+        updatePriestAlestReferenceBlock(datFileData.getPriestAlestReferenceBlock());
+        updateStrayFairyReferenceBlock(datFileData.getStrayFairyReferenceBlock());
+        updateGiantThexdeReferenceBlock(datFileData.getGiantThexdeReferenceBlock());
+        updatePhilosopherAlsedanaReferenceBlock(datFileData.getPhilosopherAlsedanaReferenceBlock());
+        updatePhilosopherSamarantaReferenceBlock(datFileData.getPhilosopherSamarantaReferenceBlock());
+        updatePriestLaydocReferenceBlock(datFileData.getPriestLaydocReferenceBlock());
+        updatePriestAshgineReferenceBlock(datFileData.getPriestAshgineReferenceBlock());
+        updatePhilosopherFobosLadderReferenceBlock(datFileData.getPhilosopherFobosLadderReferenceBlock());
+        updatePhilosopherFobosMedicineReferenceBlock(datFileData.getPhilosopherFobosMedicineReferenceBlock());
+        update8BitElderReferenceBlock(datFileData.get8BitElderReferenceBlock());
+        updateDuplexReferenceBlock(datFileData.getDuplexReferenceBlock());
+        updateSamieruReferenceBlock(datFileData.getSamieruReferenceBlock());
+        updateNaramuraReferenceBlock(datFileData.getNaramuraReferenceBlock());
+        update8BitFairyReferenceBlock(datFileData.get8BitFairyReferenceBlock());
+        updatePriestMadomonoReferenceBlock(datFileData.getPriestMadomonoReferenceBlock());
+        updatePriestGailiousReferenceBlock(datFileData.getPriestGailiousReferenceBlock());
+        updateMulbrukStoneConversationReferenceBlock(datFileData.getMulbrukStoneConversationReferenceBlock());
+        updatePriestAlestNoItemReferenceBlock(datFileData.getPriestAlestNoItemReferenceBlock());
+        updateMulbrukEscapeRegularReferenceBlock(datFileData.getMulbrukEscapeRegularReferenceBlock());
+        updateMulbrukEscapeSwimsuitReferenceBlock(datFileData.getMulbrukEscapeSwimsuitReferenceBlock());
+        updateMulbrukProvocativeBathingSuitReactionReferenceBlock(datFileData.getMulbrukProvocativeBathingSuitReactionReferenceBlock());
+        updatePhilosopherGiltoriyoStoneReferenceBlock(datFileData.getPhilosopherGiltoriyoStoneReferenceBlock());
+        updatePhilosopherAlsedanaStoneReferenceBlock(datFileData.getPhilosopherAlsedanaStoneReferenceBlock());
+        updatePhilosopherSamarantaStoneReferenceBlock(datFileData.getPhilosopherSamarantaStoneReferenceBlock());
+        updatePhilosopherFobosStoneReferenceBlock(datFileData.getPhilosopherFobosStoneReferenceBlock());
+
         updateXelpudFlagCheckBlock(datFileData.getXelpudFlagCheckBlock());
         updateXelpudScoreCheckBlock(datFileData.getXelpudScoreCheckBlock());
+        updateXelpudSpriteBlock(datFileData.getXelpudSpriteBlock());
         updateMulbrukFlagCheckBlock(datFileData.getMulbrukFlagCheckBlock());
         updateMulbrukScoreCheckBlock(datFileData.getMulbrukScoreCheckBlock());
         updateMulbrukRandomBlocks(datFileData.getMulbrukRandomBlocks());
-        updateMulbrukStoneConversationReferenceBlock(datFileData.getMulbrukStoneConversationReferenceBlock());
+        updateMulbrukSpriteBlock(datFileData.getMulbrukSpriteBlock());
         for(Block emailBlock : datFileData.getEmailBlocks()) {
             updateEmailBlock(emailBlock);
         }
@@ -123,6 +170,10 @@ public abstract class DatUpdater {
             }
             else if(blockContents instanceof BlockSingleData) {
                 if(BlockDataConstants.Cls == blockContents.getRawData().get(0)) {
+                    keptBlockContents.addAll(buildBlockContents(temp));
+                    keptBlockContents.add(blockContents);
+                }
+                else if(BlockDataConstants.EndOfEntry == blockContents.getRawData().get(0)) {
                     keptBlockContents.addAll(buildBlockContents(temp));
                     keptBlockContents.add(blockContents);
                 }
@@ -226,12 +277,59 @@ public abstract class DatUpdater {
     void updateRegularEscapeConversationBlock(Block conversationBlock) { }
     void updateSwimsuitEscapeConversationBlock(Block conversationBlock) { }
 
+    void updateHinerReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateMogerReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateFormerMekuriMasterReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePriestZarnacReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePriestXanadoReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePhilosopherGiltoriyoReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePriestHidlydaReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePriestRomancisReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePriestAramoReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePriestTritonReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePriestJaguarfivReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateFairyQueenWaitingForPendantReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateFairyQueenUnlockFairiesReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateFairyQueenWhenTheTimeComesReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateFairyQueenTrueShrine1ReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateFairyQueenTrueShrine2ReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateMrSlushfundPepperReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateMrSlushfundWaitingForTreasuresReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateMrSlushfundAnchorReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateMrSlushfundNeverComeBackReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePriestAlestReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateStrayFairyReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateGiantThexdeReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePhilosopherAlsedanaReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePhilosopherSamarantaReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePriestLaydocReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePriestAshgineReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePhilosopherFobosLadderReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePhilosopherFobosMedicineReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void update8BitElderReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateDuplexReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateSamieruReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateNaramuraReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void update8BitFairyReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePriestMadomonoReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePriestGailiousReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateMulbrukStoneConversationReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePriestAlestNoItemReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateMulbrukEscapeRegularReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateMulbrukEscapeSwimsuitReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateMulbrukProvocativeBathingSuitReactionReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePhilosopherGiltoriyoStoneReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePhilosopherAlsedanaStoneReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePhilosopherSamarantaStoneReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updatePhilosopherFobosStoneReferenceBlock(MasterNpcBlock referenceBlock) { }
+
     void updateXelpudFlagCheckBlock(CheckBlock flagCheckBlock) { }
     void updateXelpudScoreCheckBlock(CheckBlock scoreCheckBlock) { }
+    void updateXelpudSpriteBlock(Block spriteBlock) { }
     void updateMulbrukFlagCheckBlock(CheckBlock flagCheckBlock) { }
     void updateMulbrukScoreCheckBlock(CheckBlock scoreCheckBlock) { }
     void updateMulbrukRandomBlocks(List<Block> randomBlocks) { }
-    void updateMulbrukStoneConversationReferenceBlock(MasterNpcBlock referenceBlock) { }
+    void updateMulbrukSpriteBlock(Block spriteBlock) { }
 
     void updateEmailBlock(Block emailBlock) { }
 }

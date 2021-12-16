@@ -423,21 +423,245 @@ public class RandomizationDatUpdater extends DatUpdater {
     void updateMulbrukStoneConversationBlock(Block conversationBlock) {
         if(Settings.isRandomizeNpcs()) {
             String npcKey = npcRandomizer.getNpc("NPCL: Mulbruk").replaceAll("NPC: ", "").replaceAll("[ )('-.]", "");
+            if(npcKey.startsWith("MrFishman")) {
+                npcKey = "MrFishman"; // Avoid awkward naming in conversation.
+            }
             String translatedNpcName = Translations.getText("npc." + npcKey);
             replaceText(conversationBlock.getBlockContents(), Translations.getText("npc.Mulbruk"), translatedNpcName);
         }
     }
 
     @Override
+    void updateHinerReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Hiner");
+    }
+
+    @Override
+    void updateMogerReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Moger");
+    }
+
+    @Override
+    void updateFormerMekuriMasterReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Former Mekuri Master");
+    }
+
+    @Override
+    void updatePriestZarnacReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Priest Zarnac");
+    }
+
+    @Override
+    void updatePriestXanadoReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Priest Xanado");
+    }
+
+    @Override
+    void updatePhilosopherGiltoriyoReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Philosopher Giltoriyo");
+    }
+
+    @Override
+    void updatePriestHidlydaReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Priest Hidlyda");
+    }
+
+    @Override
+    void updatePriestRomancisReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Priest Romancis");
+    }
+
+    @Override
+    void updatePriestAramoReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Priest Aramo");
+    }
+
+    @Override
+    void updatePriestTritonReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Priest Triton");
+    }
+
+    @Override
+    void updatePriestJaguarfivReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Priest Jaguarfiv");
+    }
+
+    @Override
+    void updateFairyQueenWaitingForPendantReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "The Fairy Queen");
+    }
+
+    @Override
+    void updateFairyQueenUnlockFairiesReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "The Fairy Queen");
+    }
+
+    @Override
+    void updateFairyQueenWhenTheTimeComesReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "The Fairy Queen");
+    }
+
+    @Override
+    void updateFairyQueenTrueShrine1ReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "The Fairy Queen");
+    }
+
+    @Override
+    void updateFairyQueenTrueShrine2ReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "The Fairy Queen");
+    }
+
+    @Override
+    void updateMrSlushfundPepperReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Mr. Slushfund");
+    }
+
+    @Override
+    void updateMrSlushfundWaitingForTreasuresReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Mr. Slushfund");
+    }
+
+    @Override
+    void updateMrSlushfundAnchorReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Mr. Slushfund");
+    }
+
+    @Override
+    void updateMrSlushfundNeverComeBackReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Mr. Slushfund");
+    }
+
+    @Override
+    void updatePriestAlestReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Priest Alest");
+    }
+
+    @Override
+    void updateGiantThexdeReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Giant Thexde");
+    }
+
+    @Override
+    void updatePhilosopherAlsedanaReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Philosopher Alsedana");
+    }
+
+    @Override
+    void updatePhilosopherSamarantaReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Philosopher Samaranta");
+    }
+
+    @Override
+    void updatePriestLaydocReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Priest Laydoc");
+    }
+
+    @Override
+    void updatePriestAshgineReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Priest Ashgine");
+    }
+
+    @Override
+    void updatePhilosopherFobosLadderReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Philosopher Fobos");
+    }
+
+    @Override
+    void updatePhilosopherFobosMedicineReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Philosopher Fobos");
+    }
+
+    @Override
+    void update8BitElderReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "8bit Elder");
+    }
+
+    @Override
+    void updateDuplexReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "duplex");
+    }
+
+    @Override
+    void updateSamieruReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Samieru");
+    }
+
+    @Override
+    void updateNaramuraReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Naramura");
+    }
+
+    @Override
+    void updatePriestMadomonoReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Priest Madomono");
+    }
+
+    @Override
+    void updatePriestGailiousReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Priest Gailious");
+    }
+
+    @Override
     void updateMulbrukStoneConversationReferenceBlock(MasterNpcBlock referenceBlock) {
         if(Settings.isRandomizeNpcs()) {
-            referenceBlock.setBackground(new BlockCmdSingle(ValueConstants.DAT_CONVERSATION_BACKGROUND_DRACUET));
+            if(!"NPC: Mulbruk".equals(npcRandomizer.getNpc("NPCL: Mulbruk"))) {
+                referenceBlock.setBackground(new BlockCmdSingle(ValueConstants.DAT_CONVERSATION_BACKGROUND_DRACUET));
+                updateBunemonLocation(referenceBlock, npcRandomizer.getNpc("NPCL: Mulbruk").replaceAll("NPC: ", ""));
+            }
+        }
+    }
 
-            String npcKey = npcRandomizer.getNpc("NPCL: Mulbruk").replaceAll("NPC: ", "").replaceAll("[ )('-.]", "");
-            String translatedNpcName = Translations.getText("npc." + npcKey);
-            BlockStringData blockStringData = new BlockStringData();
-            blockStringData.getData().addAll(FileUtils.stringToData(translatedNpcName));
-            referenceBlock.setNpcName(blockStringData);
+    @Override
+    void updatePriestAlestNoItemReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Priest Alest");
+    }
+
+    @Override
+    void updateMulbrukEscapeRegularReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Mulbruk");
+    }
+
+    @Override
+    void updateMulbrukEscapeSwimsuitReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Mulbruk");
+    }
+
+    @Override
+    void updateMulbrukProvocativeBathingSuitReactionReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Mulbruk");
+    }
+
+    @Override
+    void updatePhilosopherGiltoriyoStoneReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Philosopher Giltoriyo");
+    }
+
+    @Override
+    void updatePhilosopherAlsedanaStoneReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Philosopher Alsedana");
+    }
+
+    @Override
+    void updatePhilosopherSamarantaStoneReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Philosopher Samaranta");
+    }
+
+    @Override
+    void updatePhilosopherFobosStoneReferenceBlock(MasterNpcBlock referenceBlock) {
+        updateBunemonLocation(referenceBlock, "Philosopher Fobos");
+    }
+
+    @Override
+    void updateXelpudSpriteBlock(Block spriteBlock) {
+        updateBunemonLocation(spriteBlock.getBlockContents(), "Elder Xelpud");
+    }
+
+    @Override
+    void updateMulbrukSpriteBlock(Block spriteBlock) {
+        if(Settings.isRandomizeNpcs()) {
+            String npcLocationKey = npcRandomizer.getNpcLocation("Mulbruk").replaceAll("NPCL: ", "").replaceAll("[ )('-.]", "");
+            String translatedNpcLocationName = Translations.getText("npcl." + npcLocationKey);
+            replaceText(spriteBlock.getBlockContents(), Translations.getText("npcl.Mulbruk"), translatedNpcLocationName);
         }
     }
 
@@ -469,6 +693,9 @@ public class RandomizationDatUpdater extends DatUpdater {
         updateBunemonText(bunemonData, shopInventory.getItem2(), shopBlock.getItem2Price());
         bunemonData.addAll(FileUtils.stringToData(" , "));
         updateBunemonText(bunemonData, shopInventory.getItem3(), shopBlock.getItem3Price());
+
+        shopBlock.setBunemonLocation(new BlockStringData(FileUtils.stringToData(
+                Translations.getLocationAndNpc(shopInventory.getNpcLocation(), shopInventory.getNpcName()))));
     }
 
     private CustomBlockEnum getCustomBlockEnumForTransformedShop(String npcName) {
@@ -553,6 +780,21 @@ public class RandomizationDatUpdater extends DatUpdater {
         newBlockData.addAll(blockStringData.getData().subList(blockStringData.getItemNameEndIndex(), blockStringData.getData().size()));
         blockStringData.getData().clear();
         blockStringData.getData().addAll(newBlockData);
+    }
+
+    private void updateBunemonLocation(List<BlockContents> blockContents, String npcName) {
+        if(Settings.isRandomizeNpcs()) {
+            String npcLocationKey = npcRandomizer.getNpcLocation(npcName).replaceAll("NPCL: ", "").replaceAll("[ )('-.]", "");
+            String translatedNpcLocationName = Translations.getText("npcl." + npcLocationKey);
+            replaceText(blockContents, Translations.getText("npcl." + npcName.replaceAll("[ )('-.]", "")), translatedNpcLocationName);
+        }
+    }
+
+    private void updateBunemonLocation(MasterNpcBlock referenceBlock, String npcName) {
+        if(Settings.isRandomizeNpcs()) {
+            referenceBlock.setNpcName(new BlockStringData(FileUtils.stringToData(
+                    Translations.getLocationAndNpc(npcRandomizer.getNpcLocation(npcName).replaceAll("NPCL: ", ""), npcName))));
+        }
     }
 
     private void updateBunemonText(List<Short> bunemonData, ShopInventoryData shopInventoryData, Short itemPrice) {

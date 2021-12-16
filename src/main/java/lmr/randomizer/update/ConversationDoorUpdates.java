@@ -87,14 +87,14 @@ public final class ConversationDoorUpdates {
     /**
      * @param doorObject the base npc door object, to use as a positional reference
      */
-    public static void addPhilosopherStoneDoor(GameObject doorObject) {
+    public static void addPhilosopherStoneDoor(GameObject doorObject, short philosopherMasterBlock) {
         GameObject philosopherStoneConversation = new GameObject(doorObject.getObjectContainer());
         philosopherStoneConversation.setId(ObjectIdConstants.ConversationDoor);
         philosopherStoneConversation.getArgs().add((short)0);
         philosopherStoneConversation.getArgs().add((short)0);
         philosopherStoneConversation.getArgs().add((short)0);
         philosopherStoneConversation.getArgs().add((short)0);
-        philosopherStoneConversation.getArgs().add((short)676);
+        philosopherStoneConversation.getArgs().add(philosopherMasterBlock);
         philosopherStoneConversation.getArgs().add((short)0);
         philosopherStoneConversation.getArgs().add((short)0);
         philosopherStoneConversation.setX(doorObject.getX());
@@ -109,8 +109,8 @@ public final class ConversationDoorUpdates {
     /**
      * @param doorObject the base npc door object, to use as a positional reference
      */
-    public static void addFobosDoors(GameObject doorObject) {
-        addPhilosopherStoneDoor(doorObject);
+    public static void addFobosDoors(GameObject doorObject, short philosopherMasterBlock) {
+        addPhilosopherStoneDoor(doorObject, philosopherMasterBlock);
         GameObject fobosConversation = new GameObject(doorObject.getObjectContainer());
         fobosConversation.setId(ObjectIdConstants.ConversationDoor);
         fobosConversation.getArgs().add((short)0);
@@ -160,7 +160,7 @@ public final class ConversationDoorUpdates {
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.getArgs().add((short)0);
-        fairyQueenConversation.getArgs().add((short)685);
+        fairyQueenConversation.getArgs().add(BlockConstants.Master_FairyQueen_WaitingForPendant);
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.setX(doorObject.getX());
@@ -178,7 +178,7 @@ public final class ConversationDoorUpdates {
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.getArgs().add((short)0);
-        fairyQueenConversation.getArgs().add((short)687);
+        fairyQueenConversation.getArgs().add(BlockConstants.Master_FairyQueen_WhenTheTimeComes);
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.setX(doorObject.getX());
@@ -196,7 +196,7 @@ public final class ConversationDoorUpdates {
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.getArgs().add((short)0);
-        fairyQueenConversation.getArgs().add((short)688);
+        fairyQueenConversation.getArgs().add(BlockConstants.Master_FairyQueen_TrueShrine1);
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.setX(doorObject.getX());
@@ -215,7 +215,7 @@ public final class ConversationDoorUpdates {
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.getArgs().add((short)0);
-        fairyQueenConversation.getArgs().add((short)985);
+        fairyQueenConversation.getArgs().add(BlockConstants.Master_FairyQueen_TrueShrine2);
         fairyQueenConversation.getArgs().add((short)0);
         fairyQueenConversation.getArgs().add((short)1);
         fairyQueenConversation.setX(doorObject.getX());
@@ -325,7 +325,7 @@ public final class ConversationDoorUpdates {
 
         ConversationDoor xelpudConversation = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
         xelpudConversation.setDoorType(ConversationDoor.ConversationTree);
-        xelpudConversation.setBlockNumber(BlockConstants.Master_ElderXelpudRandomSetB);
+        xelpudConversation.setBlockNumber(BlockConstants.MultiMaster_ElderXelpudRandomSetB);
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
             xelpudConversation.getTestByteOperations().add(testByteOperation);
         }
@@ -335,7 +335,7 @@ public final class ConversationDoorUpdates {
 
         xelpudConversation = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
         xelpudConversation.setDoorType(ConversationDoor.ConversationTree);
-        xelpudConversation.setBlockNumber(BlockConstants.Master_ElderXelpudRandomSetC_NoRug);
+        xelpudConversation.setBlockNumber(BlockConstants.MultiMaster_ElderXelpudRandomSetC_NoRug);
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
             xelpudConversation.getTestByteOperations().add(testByteOperation);
         }
@@ -346,7 +346,7 @@ public final class ConversationDoorUpdates {
         xelpudConversation = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
         xelpudConversation.setArg2(2);
         xelpudConversation.setDoorType(ConversationDoor.ConversationTree);
-        xelpudConversation.setBlockNumber(BlockConstants.Master_ElderXelpudRandomSetC_Rug);
+        xelpudConversation.setBlockNumber(BlockConstants.MultiMaster_ElderXelpudRandomSetC_Rug);
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
             xelpudConversation.getTestByteOperations().add(testByteOperation);
         }
@@ -438,7 +438,7 @@ public final class ConversationDoorUpdates {
 
         ConversationDoor mulbrukRandomSetB = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
         mulbrukRandomSetB.setDoorType(ConversationDoor.ConversationTree);
-        mulbrukRandomSetB.setBlockNumber(BlockConstants.Master_MulbrukRandomSetB);
+        mulbrukRandomSetB.setBlockNumber(BlockConstants.MultiMaster_MulbrukRandomSetB);
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
             mulbrukRandomSetB.getTestByteOperations().add(testByteOperation);
         }
@@ -448,7 +448,7 @@ public final class ConversationDoorUpdates {
 
         ConversationDoor mulbrukRandomSetC = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
         mulbrukRandomSetC.setDoorType(ConversationDoor.ConversationTree);
-        mulbrukRandomSetC.setBlockNumber(BlockConstants.Master_MulbrukRandomSetC);
+        mulbrukRandomSetC.setBlockNumber(BlockConstants.MultiMaster_MulbrukRandomSetC);
         for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
             mulbrukRandomSetC.getTestByteOperations().add(testByteOperation);
         }
