@@ -263,16 +263,19 @@ public class Validation {
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
-                if(placedTargetAndDestination.values().contains(customTransitionPlacement.getTargetTransition())) {
-                    if(!customTransitionPlacement.getTargetTransition().equals(placedTargetAndDestination.get(customTransitionPlacement.getDestinationTransition()))) {
+                String reverseTransition;
+                if(placedTargetAndDestination.containsValue(customTransitionPlacement.getTargetTransition())) {
+                    reverseTransition = placedTargetAndDestination.get(customTransitionPlacement.getDestinationTransition());
+                    if(reverseTransition != null && !customTransitionPlacement.getTargetTransition().equals(reverseTransition)) {
                         JOptionPane.showMessageDialog(randomizerUI,
                                 "Support for non-reversible transition placement does not exist at this time; please update assignment for " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", "") + " or " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", ""),
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
                         return false;
                     }
                 }
-                if(placedTargetAndDestination.keySet().contains(customTransitionPlacement.getDestinationTransition())) {
-                    if(!customTransitionPlacement.getDestinationTransition().equals(placedTargetAndDestination.get(customTransitionPlacement.getTargetTransition()))) {
+                if(placedTargetAndDestination.containsKey(customTransitionPlacement.getDestinationTransition())) {
+                    reverseTransition = placedTargetAndDestination.get(customTransitionPlacement.getTargetTransition());
+                    if(reverseTransition != null && !customTransitionPlacement.getDestinationTransition().equals(reverseTransition)) {
                         JOptionPane.showMessageDialog(randomizerUI,
                                 "Support for non-reversible transition placement does not exist at this time; please update assignment for " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", "") + " or " + customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", ""),
                                 "Custom placement error", JOptionPane.ERROR_MESSAGE);
@@ -908,6 +911,9 @@ public class Validation {
                 || contents.equals("Earth Spear Ammo") || contents.equals("Pistol Ammo") || contents.equals("Bomb Ammo")) {
             return true;
         }
+        if(contents.startsWith("Hint")) {
+            return true;
+        }
         return false;
     }
 
@@ -915,9 +921,7 @@ public class Validation {
         String formattedTransition = transition.replace("Transition ", "Transition: ");
         return "Transition: Goddess W1".equals(formattedTransition)
                 || "Transition: Inferno W1".equals(formattedTransition)
-                || (TransitionGateRandomizer.getTransitionList().contains(formattedTransition)
-                && !formattedTransition.startsWith("Transition: Sun R")
-                && !formattedTransition.startsWith("Transition: Extinction L"));
+                || (TransitionGateRandomizer.getTransitionList().contains(formattedTransition));
     }
 
     public static boolean isPipeSupportedLeftTransition(String transition) {
