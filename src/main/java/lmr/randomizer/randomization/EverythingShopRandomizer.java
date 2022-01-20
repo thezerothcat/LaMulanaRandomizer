@@ -357,6 +357,12 @@ public class EverythingShopRandomizer extends ShopRandomizer {
         List<String> unassignedSubweapons = new ArrayList<>(ItemRandomizer.ALL_SUBWEAPONS);
         unassignedSubweapons.removeAll(Settings.getRemovedItems());
         unassignedSubweapons.removeAll(Settings.getCurrentRemovedItems());
+        for(Map.Entry<String, Short> globalShopCountEntry : DataFromFile.getCustomPlacementData().getCustomShopCounts().entrySet()) {
+            if(globalShopCountEntry.getValue() == 0) {
+                if(globalShopCountEntry.getKey().endsWith(" Ammo"))
+                unassignedSubweapons.remove(globalShopCountEntry.getKey().replace(" Ammo", ""));
+            }
+        }
         int totalSubweaponLocations = unassignedShopItemLocations.size() - itemRandomizer.getTotalShopItems();
 
         List<String> availableSubweapons = new ArrayList<>(unassignedSubweapons);

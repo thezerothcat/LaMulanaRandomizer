@@ -277,6 +277,9 @@ public final class RcdReader {
         if(object.getId() == ObjectIdConstants.Enemy_Skeleton) {
             return new Skeleton(object);
         }
+        if(object.getId() == ObjectIdConstants.Hitbox) {
+            return new Hitbox(object);
+        }
 //        if(object.getId() == ObjectIdConstants.Enemy_Fist) {
 //            return new Fist(object);
 //        }
@@ -382,6 +385,12 @@ public final class RcdReader {
         }
         if(object.getId() == ObjectIdConstants.PressurePlate) {
             return new PressurePlate(object);
+        }
+        if(object.getId() == ObjectIdConstants.FairyPoint) {
+            return new FairyPoint(object);
+        }
+        if(object.getId() == ObjectIdConstants.Scannable) {
+            return new Scannable(object);
         }
         if(object.getId() == ObjectIdConstants.ConversationDoor) {
             return new ConversationDoor(object);

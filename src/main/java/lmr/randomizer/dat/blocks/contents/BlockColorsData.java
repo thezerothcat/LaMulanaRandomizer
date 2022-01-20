@@ -16,6 +16,7 @@ public class BlockColorsData implements BlockContents {
     public static final BlockColorsData COLOR_ITEMS_GREEN = new BlockColorsData((short)0x96, (short)0, (short)0x64);
     public static final BlockColorsData COLOR_PEOPLE_PLACES_BLUE = new BlockColorsData((short)0x96, (short)0x32, (short)0);
     public static final BlockColorsData COLOR_THREATS_RED = new BlockColorsData((short)0, (short)0x78, (short)0x78);
+    public static final BlockColorsData COLOR_MANTRAS_DARKRED = new BlockColorsData((short)0, (short)0xc8, (short)0xc8);
 
     private short data;
     private short color1;

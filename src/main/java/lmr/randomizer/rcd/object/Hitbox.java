@@ -53,6 +53,10 @@ public class Hitbox extends GameObject {
         setY(y);
     }
 
+    public Hitbox(GameObject gameObject) {
+        super(gameObject);
+    }
+
     public void setVisual(int visual) {
         // visual 1:dust >1: star
         getArgs().set(0, (short)visual);

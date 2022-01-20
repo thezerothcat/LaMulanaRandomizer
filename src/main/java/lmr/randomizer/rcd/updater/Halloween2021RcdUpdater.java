@@ -1436,7 +1436,7 @@ public class Halloween2021RcdUpdater extends RcdUpdater {
                     }
                 }
                 if(nightSurfaceScreen.getRoomIndex() == 9 && nightSurfaceScreen.getScreenIndex() == 0) {
-                    AddObject.addDanceDetector(nightSurfaceScreen, getCustomBlockIndex(CustomBlockEnum.HalloweenDanceBlock));
+                    AddObject.addDanceDetector(nightSurfaceScreen, 0, 0, getCustomBlockIndex(CustomBlockEnum.HalloweenDanceBlock));
                     AddObject.addSecretShop(nightSurfaceScreen, getCustomBlockIndex(CustomBlockEnum.HalloweenSecretShopBlock));
                 }
 

@@ -10,6 +10,7 @@ public final class ObjectIdConstants {
     public static final short Enemy_KodamaRat = 0x06;
     public static final short Ladder = 0x07;
     public static final short Dais = 0x08;
+    public static final short DynamicWall = 0x09;
     public static final short MovingRoomSpawner = 0x0a;
     public static final short FlagTimer = 0x0b;
     public static final short MovingPlatform = 0x0c;
@@ -123,6 +124,7 @@ public final class ObjectIdConstants {
     public static final short Scannable = 0x9e;
     public static final short Autosave = 0x9f;
     public static final short ConversationDoor = 0xa0;
+    public static final short FallingSun = 0xa1;
     public static final short Statue = 0xa2;
     public static final short Animation = 0xa3;
     public static final short KeyFairySpot = 0xa7;
@@ -134,6 +136,7 @@ public final class ObjectIdConstants {
     public static final short ItemGive = 0xb5;
     public static final short SavePoint = 0xb6;
     public static final short GrailToggle = 0xb7;
+    public static final short DanceDetector = 0xb8;
     public static final short XelpudPillar = 0xbb;
     public static final short MotherAnkh = 0xc0;
     public static final short MantraDetector = 0xc2;

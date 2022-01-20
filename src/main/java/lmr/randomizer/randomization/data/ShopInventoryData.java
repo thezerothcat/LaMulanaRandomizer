@@ -6,6 +6,7 @@ public class ShopInventoryData {
     private short inventoryArg;
     private short worldFlag;
     private ItemPriceCount itemPriceCount;
+    private Integer customTextNumber;
 
     public ShopInventoryData() {
     }
@@ -14,6 +15,7 @@ public class ShopInventoryData {
         worldFlag = shopInventoryData.getWorldFlag();
         inventoryArg = shopInventoryData.getInventoryArg();
         itemPriceCount = new ItemPriceCount(shopInventoryData.getItemPriceCount());
+        customTextNumber = shopInventoryData.getCustomTextNumber();
     }
 
     public ShopInventoryData(String itemName, ItemPriceCount itemPriceCount) {
@@ -44,6 +46,14 @@ public class ShopInventoryData {
 
     public void setItemPriceCount(ItemPriceCount itemPriceCount) {
         this.itemPriceCount = itemPriceCount;
+    }
+
+    public Integer getCustomTextNumber() {
+        return customTextNumber;
+    }
+
+    public void setCustomTextNumber(int customTextNumber) {
+        this.customTextNumber = customTextNumber;
     }
 
     public static short getInventoryArg(String itemName) {

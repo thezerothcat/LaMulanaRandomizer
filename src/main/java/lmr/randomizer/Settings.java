@@ -58,7 +58,7 @@ public final class Settings {
     private boolean ushumgalluAssist;
     private boolean bossCheckpoints;
     private boolean bossSpecificAnkhJewels;
-    private boolean foolsGameplay;
+    private boolean reducedBossCount;
     private boolean randomizeSeals;
     private boolean randomizeNpcs;
     private boolean screenshakeDisabled;
@@ -127,7 +127,7 @@ public final class Settings {
         randomizeBacksideDoors = false;
         randomizeNonBossDoors = false;
         bossSpecificAnkhJewels = false;
-        foolsGameplay = false;
+        reducedBossCount = false;
         randomizeSeals = false;
         randomizeNpcs = false;
         removeSpaulder = false;
@@ -257,10 +257,15 @@ public final class Settings {
     }
 
     public static void setLanguage(String language, boolean update) {
+        boolean reloadTranslations = false;
         if(update && !language.equals(singleton.language)) {
             singleton.changed = true;
+            reloadTranslations = true;
         }
         singleton.language = language;
+        if(reloadTranslations) {
+            Translations.reloadTranslations();
+        }
     }
 
     public static String getBackupDatFile() {
@@ -598,15 +603,15 @@ public final class Settings {
         singleton.bossSpecificAnkhJewels = bossSpecificAnkhJewels;
     }
 
-    public static boolean isFoolsGameplay() {
-        return HolidaySettings.isFools2021Mode();
+    public static boolean isReducedBossCount() {
+        return HolidaySettings.isFools2021Mode() || singleton.reducedBossCount;
     }
 
-    public static void setFoolsGameplay(boolean foolsGameplay, boolean update) {
-        if(update && foolsGameplay != singleton.foolsGameplay) {
+    public static void setReducedBossCount(boolean reducedBossCount, boolean update) {
+        if(update && reducedBossCount != singleton.reducedBossCount) {
             singleton.changed = true;
         }
-        singleton.foolsGameplay= foolsGameplay;
+        singleton.reducedBossCount = reducedBossCount;
     }
 
     public static boolean isRandomizeSeals() {
@@ -872,6 +877,14 @@ public final class Settings {
                 return "Maternity Statue";
             }
         }
+        if(HolidaySettings.isFools2022Mode()) {
+            if(originalContents.endsWith(" Ammo") && !"Pistol Ammo".equals(originalContents)) {
+                return originalContents.replace(" Ammo", "");
+            }
+            else if("Lamp of Time".equals(originalContents)) {
+                return "Unlit Lamp of Time";
+            }
+        }
 //        if("Djed Pillar".equals(originalContents)) {
 //            newContents = "Ankh Jewel (Extra)";
 //        }
@@ -971,7 +984,7 @@ public final class Settings {
 
     public static boolean isSaveFileNeeded() {
         return isAllowMainWeaponStart() || isAllowSubweaponStart() || isRandomizeStartingLocation()
-                || HolidaySettings.isHalloweenMode() || HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2021Mode();
+                || HolidaySettings.isSaveFileNeeded();
     }
 
     public static boolean isCheapAmmo() {
@@ -1082,7 +1095,7 @@ public final class Settings {
         int booleanSettings2 = 0;
         booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeNpcs, 10);
         booleanSettings2 |= processBooleanFlag.apply(singleton.randomizeSeals, 9);
-        booleanSettings2 |= processBooleanFlag.apply(singleton.foolsGameplay, 8);
+        booleanSettings2 |= processBooleanFlag.apply(singleton.reducedBossCount, 8);
         booleanSettings2 |= processBooleanFlag.apply(singleton.bossCheckpoints, 7);
         booleanSettings2 |= processBooleanFlag.apply(singleton.screenshakeDisabled, 6);
         booleanSettings2 |= processBooleanFlag.apply(false, 5); // todo: put something else here
@@ -1173,7 +1186,7 @@ public final class Settings {
         int booleanSettingsFlag2 = Integer.parseInt(parts[10], 16);
         singleton.randomizeNpcs = getBoolFlagFromInt.apply(booleanSettingsFlag2, 10);
         singleton.randomizeSeals = getBoolFlagFromInt.apply(booleanSettingsFlag2, 9);
-        singleton.foolsGameplay = getBoolFlagFromInt.apply(booleanSettingsFlag2, 8);
+        singleton.reducedBossCount = getBoolFlagFromInt.apply(booleanSettingsFlag2, 8);
         singleton.bossCheckpoints = getBoolFlagFromInt.apply(booleanSettingsFlag2, 7);
         singleton.screenshakeDisabled = getBoolFlagFromInt.apply(booleanSettingsFlag2, 6);
         // todo: put something else here - getBoolFlagFromInt.apply(booleanSettingsFlag2, 5);

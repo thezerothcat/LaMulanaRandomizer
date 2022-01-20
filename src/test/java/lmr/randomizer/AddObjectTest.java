@@ -4719,7 +4719,7 @@ public class AddObjectTest {
 
         Screen screen = new Screen();
 
-        AddObject.addDanceDetector(screen, danceBlock);
+        AddObject.addDanceDetector(screen, 0, 0, danceBlock);
 
         GameObject gameObject = screen.getObjects().get(0);
         Assert.assertEquals(gameObject.getId(), 0xb8);

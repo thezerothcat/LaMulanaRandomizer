@@ -1013,6 +1013,9 @@ public class Main {
         else {
             startingNodes.add("Setting: Not Fools2021");
         }
+        if(Settings.isReducedBossCount()) {
+            startingNodes.add("Setting: Reduced Boss Count");
+        }
 
         startingNodes.add("Setting: " + Settings.getCurrentBossCount() + " Bosses");
         startingNodes.add("Setting: Normal Pushing");
@@ -1246,6 +1249,10 @@ public class Main {
         if(HolidaySettings.isFools2021Mode()) {
             saveData[0x11 + FlagConstants.ELLMAC_ANKH_PUZZLE] = (byte)5; // Ellmac ankh puzzle solved
 
+            saveData[0x11 + FlagConstants.EXTINCTION_TEMP_LIGHT] = (byte)1; // Default Extinction lighting
+        }
+
+        if(Settings.isReducedBossCount()) {
             saveData[0x11 + FlagConstants.TABLET_GRAIL_GUIDANCE] = (byte)1; // guidance
             saveData[0x11 + FlagConstants.TABLET_GRAIL_MAUSOLEUM] = (byte)1; // maus
             saveData[0x11 + FlagConstants.TABLET_GRAIL_SUN] = (byte)1; // sun
@@ -1262,8 +1269,6 @@ public class Main {
             saveData[0x11 + FlagConstants.TABLET_GRAIL_BIRTH] = (byte)1; // birth
             saveData[0x11 + FlagConstants.TABLET_GRAIL_TWIN_BACK] = (byte)1; // twin-b
             saveData[0x11 + FlagConstants.TABLET_GRAIL_DIMENSIONAL] = (byte)1; // dimensional
-
-            saveData[0x11 + FlagConstants.EXTINCTION_TEMP_LIGHT] = (byte)1; // Default Extinction lighting
         }
 
         FileUtils.logFlush("Writing save file");
@@ -1446,7 +1451,7 @@ public class Main {
     }
 
     private static void determineFoolsGameplay(Random random) {
-        if(!Settings.isFoolsGameplay()) {
+        if(!Settings.isReducedBossCount()) {
             Settings.setCurrentBossCount(8);
             FileUtils.logFlush("Using default boss count: 8");
             return;

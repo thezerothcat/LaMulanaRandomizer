@@ -1,15 +1,19 @@
 package lmr.randomizer.node;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CustomPlacementData {
     private List<CustomItemPlacement> customItemPlacements = new ArrayList<>();
     private List<CustomNPCPlacement> customNPCPlacements = new ArrayList<>();
     private List<CustomDoorPlacement> customDoorPlacements = new ArrayList<>();
     private List<CustomTransitionPlacement> customTransitionPlacements = new ArrayList<>();
+    private Map<String, Short> customShopPrices = new HashMap<>();
+    private Map<String, Short> customShopCounts = new HashMap<>();
     private List<String> removedLogicNodes = new ArrayList<>();
-    private List<String> removedItems = new ArrayList<>();
+    private List<String> removedItems = new ArrayList<>(); // Items that can be placed, but the player will never collect them/will receive something else instead.
     private List<String> cursedChests = new ArrayList<>();
     private List<String> startingItems = new ArrayList<>();
     private String startingWeapon;
@@ -23,6 +27,14 @@ public class CustomPlacementData {
 
     public List<CustomItemPlacement> getCustomItemPlacements() {
         return customItemPlacements;
+    }
+
+    public Map<String, Short> getCustomShopPrices() {
+        return customShopPrices;
+    }
+
+    public Map<String, Short> getCustomShopCounts() {
+        return customShopCounts;
     }
 
     public List<CustomNPCPlacement> getCustomNPCPlacements() {

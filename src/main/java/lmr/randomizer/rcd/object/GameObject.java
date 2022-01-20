@@ -117,6 +117,47 @@ public class GameObject {
         }
     }
 
+    public boolean hasTest(TestByteOperation testToLookFor) {
+        TestByteOperation testByteOperation;
+        for(int i = 0; i < testByteOperations.size(); i++) {
+            testByteOperation = testByteOperations.get(i);
+            if(testByteOperation.getIndex() != testToLookFor.getIndex()) {
+                continue;
+            }
+            if(testToLookFor.getOp() != null && !testByteOperation.getOp().equals(testToLookFor.getOp())) {
+                continue;
+            }
+            if(testByteOperation.getValue() != testToLookFor.getValue()) {
+                continue;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeTest(TestByteOperation testToRemove) {
+        Integer indexToRemove = null;
+        TestByteOperation testByteOperation;
+        for(int i = 0; i < testByteOperations.size(); i++) {
+            testByteOperation = testByteOperations.get(i);
+            if(testByteOperation.getIndex() != testToRemove.getIndex()) {
+                continue;
+            }
+            if(testToRemove.getOp() != null && !testByteOperation.getOp().equals(testToRemove.getOp())) {
+                continue;
+            }
+            if(testByteOperation.getValue() != testToRemove.getValue()) {
+                continue;
+            }
+            indexToRemove = i;
+        }
+        if(indexToRemove != null) {
+            testByteOperations.remove((int)indexToRemove);
+            return true;
+        }
+        return false;
+    }
+
     public void addUpdates(WriteByteOperation... updates) {
         for(WriteByteOperation update : updates) {
             writeByteOperations.add(update);

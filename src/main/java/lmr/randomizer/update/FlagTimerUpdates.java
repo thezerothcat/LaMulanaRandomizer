@@ -185,7 +185,7 @@ public class FlagTimerUpdates {
         if(Settings.isRandomizeTransitionGates()) {
             if(zoneIndex != ZoneConstants.SUN && zoneIndex != ZoneConstants.TWIN_FRONT) {
                 for(TestByteOperation testByteOperation : flagTimer.getTestByteOperations()) {
-                    if(testByteOperation.getIndex() == FlagConstants.TWINS_POISON) {
+                    if(testByteOperation.getIndex() == FlagConstants.TWINS_POISON_TIMER) {
                         return true;
                     }
                 }
@@ -429,7 +429,7 @@ public class FlagTimerUpdates {
                     && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())
                     && testByteOperation.getValue() == 8) {
                 isShrineTransformationTimer = true;
-                if(Settings.isFoolsGameplay() && Settings.getCurrentBossCount() != 8) {
+                if(Settings.isReducedBossCount() && Settings.getCurrentBossCount() != 8) {
                     testByteOperation.setOp(ByteOp.FLAG_NOT_EQUAL);
                     testByteOperation.setValue((byte)9);
                 }
@@ -437,7 +437,7 @@ public class FlagTimerUpdates {
             }
         }
         if(isShrineTransformationTimer) {
-            if(Settings.isFoolsGameplay() && Settings.getCurrentBossCount() != 8) {
+            if(Settings.isReducedBossCount() && Settings.getCurrentBossCount() != 8) {
                 flagTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_GTEQ, Settings.getCurrentBossCount()));
             }
             flagTimer.removeUpdate(new WriteByteOperation(FlagConstants.TABLET_GRAIL_SHRINE_FRONT, ByteOp.ASSIGN_FLAG, 0));

@@ -1,15 +1,15 @@
 package lmr.randomizer.dat.update;
 
+import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
-import lmr.randomizer.dat.blocks.Block;
-import lmr.randomizer.dat.blocks.contents.*;
-import lmr.randomizer.randomization.data.CustomBlockEnum;
 import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.dat.blocks.*;
+import lmr.randomizer.dat.blocks.contents.*;
 import lmr.randomizer.dat.blocks.contents.entries.TextEntry;
-import lmr.randomizer.dat.blocks.CheckBlock;
-import lmr.randomizer.dat.blocks.ShopBlock;
+import lmr.randomizer.randomization.data.CustomBlockEnum;
+import lmr.randomizer.randomization.data.GameObjectId;
 import lmr.randomizer.util.BlockDataConstants;
+import lmr.randomizer.util.MantraConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,6 +137,9 @@ public abstract class DatUpdater {
         for(Block emailBlock : datFileData.getEmailBlocks()) {
             updateEmailBlock(emailBlock);
         }
+        for(ScannableBlock customizableTabletBlock : datFileData.getCustomizableTabletBlocks()) {
+            updateScannableBlock(customizableTabletBlock);
+        }
     }
 
     public void addCustomBlocks(DatFileData datFileData) { }
@@ -149,6 +152,118 @@ public abstract class DatUpdater {
         TextEntry textEntry = new TextEntry();
         textEntry.getData().addAll(FileUtils.stringToData(textToUse));
         return textEntry;
+    }
+
+    protected TextEntry buildTextEntryWithCommands(String textToUse) {
+        TextEntry textEntry = new TextEntry();
+        for(String section : extractSections(textToUse)) {
+            if(section.startsWith("{COLOR=")) {
+                textEntry.getData().addAll(
+                        getColor(section.replaceAll("\\{COLOR=", "").replaceAll("}", "")).getRawData());
+            }
+            else if(section.startsWith("{MANTRA=")) {
+                textEntry.getData().addAll(
+                        getMantra(section.replaceAll("\\{MANTRA=", "").replaceAll("}", "")).getRawData());
+            }
+            else if(section.startsWith("{ITEM=")) {
+                BlockItemData itemData = getItem(section.replaceAll("\\{ITEM=", "").replaceAll("}", ""));
+                if(itemData != null) {
+                    textEntry.getData().addAll(itemData.getRawData());
+                }
+            }
+            else {
+                textEntry.getData().addAll(FileUtils.stringToData(section));
+            }
+        }
+        return textEntry;
+    }
+
+    private List<String> extractSections(String originalText) {
+        List<String> tokens = new ArrayList<>();
+        int specialDataStartIndex;
+        int specialDataEndIndex;
+        while(originalText.contains("{")) {
+            specialDataStartIndex = originalText.indexOf('{');
+            specialDataEndIndex = originalText.indexOf('}');
+            if(specialDataStartIndex > 0) {
+                tokens.add(originalText.substring(0, specialDataStartIndex));
+            }
+            tokens.add(originalText.substring(specialDataStartIndex, specialDataEndIndex + 1));
+            originalText = originalText.substring(specialDataEndIndex + 1);
+        }
+        if(!originalText.isEmpty()) {
+            tokens.add(originalText);
+        }
+        return tokens;
+    }
+
+    private BlockColorsData getColor(String color) {
+        if(color != null) {
+            color = color.toUpperCase();
+            if("MANTRA".equals(color)) {
+                return BlockColorsData.COLOR_MANTRAS_DARKRED;
+            }
+            if(color.contains("THREAT") || color.contains("ENEMY") || "RED".equals(color)) {
+                return BlockColorsData.COLOR_THREATS_RED;
+            }
+            if(color.contains("ITEM") || "GREEN".equals(color)) {
+                return BlockColorsData.COLOR_ITEMS_GREEN;
+            }
+            if(color.contains("PERSON") || color.contains("PLACE") || "BLUE".equals(color)) {
+                return BlockColorsData.COLOR_PEOPLE_PLACES_BLUE;
+            }
+            if(color.contains("SOFTWARE") || "YELLOW".equals(color)) {
+                return BlockColorsData.COLOR_SOFTWARE_YELLOW;
+            }
+        }
+        return BlockColorsData.COLOR_DEFAULT;
+    }
+
+    private BlockMantraData getMantra(String mantra) {
+        if(mantra != null) {
+            mantra = mantra.toUpperCase();
+            if("BIRTH".equals(mantra) || "0".equals(mantra)) {
+                return new BlockMantraData(MantraConstants.BIRTH);
+            }
+            if("DEATH".equals(mantra) || "1".equals(mantra)) {
+                return new BlockMantraData(MantraConstants.DEATH);
+            }
+            if("MARDUK".equals(mantra) || "2".equals(mantra)) {
+                return new BlockMantraData(MantraConstants.MARDUK);
+            }
+            if("SABBAT".equals(mantra) || "3".equals(mantra)) {
+                return new BlockMantraData(MantraConstants.SABBAT);
+            }
+            if("MU".equals(mantra) || "4".equals(mantra)) {
+                return new BlockMantraData(MantraConstants.MU);
+            }
+            if("VIY".equals(mantra) || "5".equals(mantra)) {
+                return new BlockMantraData(MantraConstants.VIY);
+            }
+            if("BAHRUN".equals(mantra) || "6".equals(mantra)) {
+                return new BlockMantraData(MantraConstants.BAHRUN);
+            }
+            if("WEDJET".equals(mantra) || "7".equals(mantra)) {
+                return new BlockMantraData(MantraConstants.WEDJET);
+            }
+            if("ABUTO".equals(mantra) || "8".equals(mantra)) {
+                return new BlockMantraData(MantraConstants.ABUTO);
+            }
+            if("LAMULANA".equals(mantra) || "9".equals(mantra)) {
+                return new BlockMantraData(MantraConstants.LAMULANA);
+            }
+        }
+        return new BlockMantraData(MantraConstants.BIRTH);
+    }
+
+    private BlockItemData getItem(String item) {
+        if(item != null) {
+            GameObjectId itemInfo = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(item);
+            if(itemInfo != null) {
+                return new BlockItemData(itemInfo.getInventoryArg());
+            }
+        }
+        return null;
     }
 
     protected void replaceText(List<BlockContents> blockContentsList, String textToReplace, String replacement) {
@@ -217,6 +332,19 @@ public abstract class DatUpdater {
         blockContents.add(BlockColorsData.COLOR_DEFAULT);
         blockContents.addAll(buildBlockContents(texts[texts.length > 0 ? 1 : 0]));
         return blockContents;
+    }
+
+    protected static List<Short> buildStringDataWithColor(String text, String subsection, BlockColorsData color) {
+        List<Short> stringData = new ArrayList<>();
+        String[] texts = text.split("%s");
+        if(texts.length > 0) {
+            stringData.addAll(FileUtils.stringToData(texts[0]));
+        }
+        stringData.addAll(color.getRawData());
+        stringData.addAll(FileUtils.stringToData(subsection));
+        stringData.addAll(BlockColorsData.COLOR_DEFAULT.getRawData());
+        stringData.addAll(FileUtils.stringToData(texts[texts.length > 0 ? 1 : 0]));
+        return stringData;
     }
 
     void updateItemNames(ItemNameBlock itemNameBlock) { }
@@ -332,4 +460,5 @@ public abstract class DatUpdater {
     void updateMulbrukSpriteBlock(Block spriteBlock) { }
 
     void updateEmailBlock(Block emailBlock) { }
+    void updateScannableBlock(ScannableBlock scannableBlock) { }
 }

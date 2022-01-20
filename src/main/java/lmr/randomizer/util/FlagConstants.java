@@ -1,5 +1,8 @@
 package lmr.randomizer.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class FlagConstants {
     public static final int TOTAL_COIN_CHESTS = 0x077; // 28 to get luck fairy in the credits
     public static final int GILTORIYO_LADDER = 0x078; // Value 0 > 1 when talking to Giltoriyo, spawns the philosopher ladder in Endless Corridor with frame timers for animation
@@ -20,9 +23,13 @@ public final class FlagConstants {
     public static final int MAUSOLEUM_PUZZLE_ORB_CHEST = 0x165; // Value 0 > 1 when placing a weight at the proper giant's foot, unlocks the Mausoleum Sacred Orb chest
     public static final int HARDMODE = 0x16a; // Value 0 > 2 when hard mode is triggered.
     public static final int SPHINX_DESTROYED = 0x173; // Value 5 = destroyed
+    public static final int SUN_GEYSER = 0x174; // Crusher; 1 = ascending; 2 = seal activated and now receding; 3 = gone
     public static final int SUN_WATCHTOWER_LIGHTS = 0x179; // 1,2=triggered 3=seen
     public static final int SPHINX_DESTROYED_V2 = 0x17d; // Value 0 > 1 when 0x173 set to 5, not sure why both flags exist
+    public static final int SUN_PYRAMID_SUN_FALLEN = 0x17e; // Set from hitting the hitbox to make the Sun fall; incremented when the Sun actually falls.
+    public static final int SUN_FLOODED = 0x180; // Value 1 = flooded and spawns waterfalls; waterfalls are gone
     public static final int SUN_MAP_CHEST_LADDER_DESPAWNED = 0x183; // Used to despawn the ladder for the Sun map chest in vanilla // todo: can this be claimed for something?
+    public static final int SUN_UNSEALED_EXTINCTION = 0x187; // Set to 1 when triggering Seal: O3
     public static final int SUN_MAP_CHEST_LADDER_RESTORED = 0x188; // Set to 1 after pushing the statue to respawn the ladder
     public static final int SPRING_FLOODED = 0x193; // Value 0 > 1 after breaking the left hatch in Spring to flood the left side of Goddess.
     public static final int SPRING_LEFT_HATCH = 0x194; // Value 0 > 1 after breaking the left hatch in Spring to flood the left side of Goddess.
@@ -38,7 +45,7 @@ public final class FlagConstants {
     public static final int EXTINCTION_PALENQUE_SCREEN_MURAL = 0x1ca; // Value 0 > 1 after placing the weight in the Extinction <> Birth teleport area, 2 and 3 for animation of mural falling
     public static final int EXTINCTION_TEMP_LIGHT = 0x1cd; // Value 0 > 1 when lighting Extinction via Flare Gun
     public static final int EXTINCTION_TRAP_FAKE_ANKH = 0x1cf; // Triggers crushers via Lemeza detector on approaching the fake ankh
-    public static final int TWINS_POISON = 0x1d7; // 2 = elevator moving
+    public static final int TWINS_POISON_TIMER = 0x1d7; // 1=counting down, 2=fatal in the twins race rooms
     public static final int TWINS_FRONT_GRAIL_ELEVATOR = 0x1db; // Value 0 > 1 when pressing first dais to release the twins, 1 > 2 when pressing second dais
     public static final int TWINS_RELEASED = 0x1dc; // Value 0 > 1 when pressing first dais to release the twins, 1 > 2 when pressing second dais
     public static final short TWIN_UNSOLVABLE_PUZZLE = 0x1e4; // Value 0 > 1 when solving the block pushing puzzle in Twin Labyrinths on the screen with the lamp recharge station/Lamp of Time Shop
@@ -59,6 +66,8 @@ public final class FlagConstants {
     public static final int GRAVEYARD_ILLUSION_LADDER_BLOCKAGE = 0x23f; // Set to 1 after bombing the wall in Graveyard to open up emusic.exe scan
     public static final int GRAVEYARD_WALL_SNAPSHOTS_MURAL = 0x24f; // The small breakable thing that prevents the ice block from dropping so you can push the block in place and spawn the ladder. Looks like it may be used to animate the block dropping
     public static final int MOONLIGHT_DEV_ROOM_BREAKABLE_FLOOR = 0x256; // Value 0 > 1 when the floor is broken
+    public static final int MOONLIGHT_HIDDEN_TABLET_COLLAPSING_FLOOR = 0x257; // Value 0 > 1 when the floor is broken
+    public static final int GRAVEYARD_BOMBABLE_WALL = 0x253; // Value 0 > 1 when the wall is broken
     public static final int MOONLIGHT_TO_TWIN_BREAKABLE_FLOOR = 0x25e; // Value 0 > 1 when the floor is broken
     public static final int MOONLIGHT_3_WOMEN_FACES = 0x262; // Set to 1 after hitting the face in Moon-gazing pit with a subweapon.
     public static final int RUIN_LADDER_NUWA_V2 = 0x265; // Don't remember how/why this is different from 0x369
@@ -103,6 +112,7 @@ public final class FlagConstants {
     public static final int EXTINCTION_BACKUP_JEWEL = 0x3b8; // Value 0 > 1 by timer after failing the Palenque fight, 1 > 2 when collecting the backup ankh jewel.
     public static final int HT_UNLOCK_CHAIN_PRIMARY = 0x3ba; // 1=hear about dracuets from mulbruk 2=dracuets in mouth 3=night 4=xelpud 5=fairy 6=upside down door 7=talked to dracuets inside door 8=talked to dracuets in gate of time 9=talked to dracuets in tower of the goddess
     public static final int HT_UNLOCKED = 0x3bb; // Value 0 > 1 when unlocked (normally at the end of the unlock sequence)
+    public static final int BIRTH_MOVING_PLATFORM_NEAR_SKANDA = 0x3c0; // Value 0 > 1 when placing the weight next to the Dimensional Key wall, causing the MovingPlatform to start moving left to right.
     public static final int BIRTH_GANESHA_SCANNED = 0x3c8; // Value 0 > 1 when scanning the mural of Ganesha in Chamber of Birth, activates 0x3e2 via FlagTimer to unblock the warp.
     public static final int KILL_FLAG = 0x3e9; // Instant death when set
     public static final int LAMP_STATION_UNKNOWN = 0x3ed; // Gets set on the Lemeza detector that lights Lamp of Time. Probably to despawn the flame graphic
@@ -221,6 +231,7 @@ public final class FlagConstants {
     public static final int WF_GRAPPLE_CLAW = 0x0ad;
     public static final int WF_BRONZE_MIRROR = 0x0ae;
     public static final int WF_EYE_OF_TRUTH = 0x0af;
+    public static final int WF_RING = 0x0b0;
     public static final int WF_SCALESPHERE = 0x0b1;
     public static final int WF_GAUNTLET = 0x0b2;
     public static final int WF_PLANE_MODEL = 0x0b4;
@@ -424,6 +435,318 @@ public final class FlagConstants {
     public static final int MAIL_43 = 0x317;
     public static final int MAIL_44 = 0x318;
 
+    // Tablet glow flags
+    public static final int TABLET_GLOW_GUIDANCE_ENTRANCE = 0x44c; // Tablet block 44; room 00-00-00
+    public static final int TABLET_GLOW_GUIDANCE_OFFER_3_LIGHTS = 0x44e; // Tablet block 55; room 00-01-01
+    public static final int TABLET_GLOW_GUIDANCE_HOLY_GROUND = 0x44f; // Tablet block 48; room 00-02-00
+    public static final int TABLET_GLOW_GUIDANCE_PROVE_THINE_COURAGE = 0x450; // Tablet block 49; room 00-02-00
+    public static final int TABLET_GLOW_GUIDANCE_CROSS_THE_SACRED_LAKE = 0x451; // Tablet block 63; room 00-02-01
+    public static final int TABLET_GLOW_GUIDANCE_DEATH_AWAITS_THE_POWERLESS = 0x452; // Tablet block 43; room 00-03-01
+    public static final int TABLET_GLOW_GUIDANCE_8_ANKHS = 0x453; // Tablet block 56; room 00-04-00
+    public static final int TABLET_GLOW_GUIDANCE_PUSH_THE_WHITE_BOX = 0x454;; // Tablet block 550; room 00-04-02
+    public static final int TABLET_GLOW_GUIDANCE_CHI_YOU = 0x456; // Tablet block 61; room 00-05-00
+    public static final int TABLET_GLOW_GUIDANCE_IT_SHALL_CONNECT = 0x457; // Tablet block 71; room 00-06-00
+    public static final int TABLET_GLOW_GUIDANCE_WATCHTOWER = 0x458; // Tablet block 67; room 00-07-01
+    public static final int TABLET_GLOW_GUIDANCE_HOLY_GRAIL_MEMORIES = 0x459;; // Tablet block 65; room 00-08-00
+    public static final int TABLET_GLOW_GUIDANCE_GUILD_DAMAGED = 0x45a; // Tablet block 47; room 00-09-00
+    public static final int TABLET_GLOW_GUIDANCE_GIANTS_HISTORY = 0x45b; // Tablet block 57; room 00-09-00
+
+    public static final int TABLET_GLOW_SURFACE_RUINS_ENTRANCE = 0x45d; // Tablet block 473; room 01-11-01
+
+    public static final int TABLET_GLOW_MAUSOLEUM_ABUTO = 0x45f; // Tablet block 79; room 02-00-01
+    public static final int TABLET_GLOW_MAUSOLEUM_GHOST_LORD_DAMAGED = 0x460; // Tablet block 85; room 02-01-00
+    public static final int TABLET_GLOW_MAUSOLEUM_MIGELA = 0x461; // Tablet block 86; room 02-01-01
+    public static final int TABLET_GLOW_MAUSOLEUM_THOU_ART_TINY = 0x462; // Tablet block 80; room 02-02-00
+    public static final int TABLET_GLOW_MAUSOLEUM_LEDO = 0x463; // Tablet block 87; room 02-02-01
+    public static final int TABLET_GLOW_MAUSOLEUM_RIBU = 0x465; // Tablet block 83; room 02-03-00
+    public static final int TABLET_GLOW_MAUSOLEUM_ABUTO_JI_RIBU_SAKIT = 0x466; // Tablet block 92; room 02-04-00
+    public static final int TABLET_GLOW_MAUSOLEUM_JI = 0x467; // Tablet block 89; room 02-05-00
+    public static final int TABLET_GLOW_MAUSOLEUM_ZEBU = 0x468; // Tablet block 93; room 02-05-01
+    public static final int TABLET_GLOW_MAUSOLEUM_NUMBERS = 0x469; // Tablet block 96; room 02-05-02
+    public static final int TABLET_GLOW_MAUSOLEUM_BADO_MIGELA_LEDO_FUTO = 0x46a; // Tablet block 97; room 02-05-02
+    public static final int TABLET_GLOW_MAUSOLEUM_BADO = 0x46c; // Tablet block 90; room 02-04-00
+    public static final int TABLET_GLOW_MAUSOLEUM_MIGELA_LEFT_HANDED = 0x46d; // Tablet block 91; room 02-06-01
+    public static final int TABLET_GLOW_MAUSOLEUM_RED_LIGHT_DAMAGED = 0x46e; // Tablet block 94; room 02-07-00
+    public static final int TABLET_GLOW_MAUSOLEUM_ZEBU_UNABLE_TO_MOVE = 0x46f; // Tablet block 95; room 02-07-02
+    public static final int TABLET_GLOW_MAUSOLEUM_NINE_BROTHERS = 0x470; // Tablet block 98; room 02-08-00
+    public static final int TABLET_GLOW_MAUSOLEUM_SAKIT = 0x471; // Tablet block 99; room 02-08-02
+    public static final int TABLET_GLOW_MAUSOLEUM_CELESTIAL_BODIES = 0x472; // Tablet block 76; room 02-09-00
+
+    public static final int TABLET_GLOW_SUN_JUMP_INTO_THE_SUN = 0x473; // Tablet block 106; room 03-00-01
+    public static final int TABLET_GLOW_SUN_STATUE_OF_THE_GIANT = 0x474; // Tablet block 62; room 03-01-00
+    public static final int TABLET_GLOW_SUN_CAST_A_LIGHT = 0x475; // Tablet block 109; room 03-01-00
+    public static final int TABLET_GLOW_SUN_AIM_AND_SHOOT = 0x477; // Tablet block 717; room 03-01-02
+    public static final int TABLET_GLOW_SUN_CHALLENGE_THE_INFERNO_CAVERN = 0x479; // Tablet block 107; room 03-02-01
+    public static final int TABLET_GLOW_SUN_FIRST_MANTRA = 0x47a; // Tablet block 114; room 03-03-00
+    public static final int TABLET_GLOW_SUN_SECOND_MANTRA = 0x47c; // Tablet block 116; room 03-03-00
+    public static final int TABLET_GLOW_SUN_THIRD_MANTRA = 0x47d; // Tablet block 117; room 03-03-00
+    public static final int TABLET_GLOW_SUN_MANTRA_ORDER = 0x47e; // Tablet block 118; room 03-03-00
+    public static final int TABLET_GLOW_SUN_FOURTH_MANTRA = 0x47f; // Tablet block 119; room 03-03-00
+    public static final int TABLET_GLOW_SUN_FIFTH_MANTRA = 0x480; // Tablet block 120; room 03-03-00
+    public static final int TABLET_GLOW_SUN_SEVENTH_MANTRA = 0x481; // Tablet block 121; room 03-03-00
+    public static final int TABLET_GLOW_SUN_LAST_MANTRA = 0x482; // Tablet block 122; room 03-03-00
+    public static final int TABLET_GLOW_SUN_MAN_WOMAN_WEAPON = 0x483; // Tablet block 123; room 03-04-00
+    public static final int TABLET_GLOW_SUN_PATH_THAT_CONNECTS_TWO_PYRAMIDS = 0x484; // Tablet block 112; room 03-04-01
+    public static final int TABLET_GLOW_SUN_MOON_GAZING_PIT = 0x485; // Tablet block 113; room 03-04-02
+    public static final int TABLET_GLOW_SUN_THOSE_THAT_FLY_SHALL_BE_CAST_DOWN = 0x486; // Tablet block 127; room 03-04-03
+    public static final int TABLET_GLOW_SUN_WOMAN_WITH_CHILD = 0x487; // Tablet block 124; room 03-04-04
+    public static final int TABLET_GLOW_SUN_FILL_THIS_PLACE_WITH_WATER_DAMAGED = 0x488; // Tablet block 125; room 03-04-05
+    public static final int TABLET_GLOW_SUN_NO_LIGHT_UP_AHEAD = 0x489; // Tablet block 126; room 03-05-00
+    public static final int TABLET_GLOW_SUN_SOLVED_ALL_PUZZLES = 0x48a; // Tablet block 130; room 03-06-00
+    public static final int TABLET_GLOW_SUN_MEDITATE_UNDER_WEDJET = 0x48b; // Tablet block 128; room 03-06-01
+    public static final int TABLET_GLOW_SUN_POWER_OF_THE_TWINS = 0x48c; // Tablet block 129; room 03-07-00
+    public static final int TABLET_GLOW_SUN_SCALESPHERE = 0x48d; // Tablet block 111; room 03-07-01
+
+    public static final int TABLET_GLOW_SPRING_OPEN_THE_FLOODGATE = 0x48e; // Tablet block 140; room 04-00-02
+    public static final int TABLET_GLOW_SPRING_FAIRY = 0x48f; // Tablet block 139; room 04-00-02
+    public static final int TABLET_GLOW_SPRING_OANNES_FORM_OF_A_FISH = 0x492; // Tablet block 142; room 04-00-02
+    public static final int TABLET_GLOW_SPRING_CHILD_WAS_BORN = 0x493; // Tablet block 53; room 04-05-00
+    public static final int TABLET_GLOW_SPRING_COLLECT_THE_FOUR_SIGILS = 0x494; // Tablet block 144; room 04-05-01
+    public static final int TABLET_GLOW_SPRING_SAIL_AWAY = 0x495; // Tablet block 143; room 04-06-00
+    public static final int TABLET_GLOW_SPRING_WATER_MOVES_THE_TOWER_DAMAGED = 0x496; // Tablet block 145; room 04-07-00
+    public static final int TABLET_GLOW_SPRING_MOTHERS_WRATH = 0x497; // Tablet block 146; room 04-07-00
+    public static final int TABLET_GLOW_SPRING_ABOVE_THE_SUN = 0x498; // Tablet block 138; room 04-07-01
+    public static final int TABLET_GLOW_SPRING_THOSE_SEEKING_EDEN = 0x499; // Tablet block 147; room 04-08-01
+
+    public static final int TABLET_GLOW_INFERNO_SWING_YOUR_WEAPON = 0x49a; // Tablet block 474; room 05-00-00
+    public static final int TABLET_GLOW_INFERNO_SNAKES_ARE_ENRAGED = 0x49b; // Tablet block 150; room 05-01-00
+    public static final int TABLET_GLOW_INFERNO_STICK_TO_THE_WALLS = 0x49c; // Tablet block 155; room 05-02-00
+    public static final int TABLET_GLOW_INFERNO_TREAD_A_DIFFERENT_PATH = 0x49d; // Tablet block 159; room 05-02-02
+    public static final int TABLET_GLOW_INFERNO_PHILOSOPHERS_STONE_DAMAGED = 0x49e; // Tablet block 157; room 05-03-02
+    public static final int TABLET_GLOW_INFERNO_ERR_JUST_ONCE = 0x49f; // Tablet block 156; room 05-03-02
+    public static final int TABLET_GLOW_INFERNO_CLOAK_MADE_FROM_ICE_DAMAGED = 0x4a0; // Tablet block 160; room 05-05-00
+    public static final int TABLET_GLOW_INFERNO_BOTTOM_OF_THIS_LAND = 0x4a1; // Tablet block 162; room 05-05-01
+    public static final int TABLET_GLOW_INFERNO_THOSE_SEEKING_EDEN = 0x4a2; // Tablet block 163; room 05-07-01
+    public static final int TABLET_GLOW_INFERNO_TUNE_OF_THINE_OCARINA = 0x4a3; // Tablet block 161; room 05-08-00
+    public static final int TABLET_GLOW_INFERNO_LAST_JEWEL_LIES_WITHIN = 0x4a4; // Tablet block 183; room 05-09-01
+
+    public static final int TABLET_GLOW_EXTINCTION_SEEK_THE_RIGHTEOUS_SPIRIT = 0x4a5; // Tablet block 171; room 06-00-01
+    public static final int TABLET_GLOW_EXTINCTION_NUWA_SLEEPS = 0x4a6; // Tablet block 184; room 06-01-01
+    public static final int TABLET_GLOW_EXTINCTION_LARGE_CRUCIFIX_SUMMON_PALENQUE = 0x4a7; // Tablet block 179; room 06-02-00
+    public static final int TABLET_GLOW_EXTINCTION_LET_THE_LIGHT_BURN_HERE = 0x4a8; // Tablet block 175; room 06-02-00
+    public static final int TABLET_GLOW_EXTINCTION_DRAGON_BONE = 0x4aa; // Tablet block 177; room 06-03-00
+    public static final int TABLET_GLOW_EXTINCTION_SPRIGGAN_STATUE = 0x4ab; // Tablet block 176; room 06-03-01
+    public static final int TABLET_GLOW_EXTINCTION_COG_OF_THE_SOUL_GIVES_LIFE = 0x4ac; // Tablet block 178; room 06-04-00
+    public static final int TABLET_GLOW_EXTINCTION_LET_THE_MAP_GUIDE_ITS_PLACEMENT = 0x4ad; // Tablet block 180; room 06-04-01
+    public static final int TABLET_GLOW_EXTINCTION_THOSE_SEEKING_EDEN = 0x4ae; // Tablet block 230; room 06-05-00
+    public static final int TABLET_GLOW_EXTINCTION_EVERY_HEART_HAS_A_COLOR = 0x4af; // Tablet block 182; room 06-05-01
+    public static final int TABLET_GLOW_EXTINCTION_GATEKEEPERS = 0x4b0; // Tablet block 154; room 06-06-01
+    public static final int TABLET_GLOW_EXTINCTION_SHELL_IN_THE_LEFT_HAND_POINTS = 0x4b1; // Tablet block 174; room 06-07-00
+    public static final int TABLET_GLOW_EXTINCTION_PROCEED_THROUGH_THE_WALL = 0x4b2; // Tablet block 181; room 06-07-00
+    public static final int TABLET_GLOW_EXTINCTION_TWO_ANGEL_SHIELD = 0x4b3; // Tablet block 173; room 06-08-01
+
+    public static final int TABLET_GLOW_TWIN_IDIGNA_BURANUN_HERMES = 0x4b4; // Tablet block 192; room 07-00-00
+    public static final int TABLET_GLOW_TWIN_BLACK_ONYX_PURPLE_AMETHYST = 0x4b5; // Tablet block 189; room 07-00-01
+    public static final int TABLET_GLOW_TWIN_FRONT_AND_BACK_DAMAGED = 0x4b6; // Tablet block 190; room 07-01-00
+    public static final int TABLET_GLOW_TWIN_FOOT_OF_THE_FOOTLESS_NEPTUNE_DAMAGED = 0x4b8; // Tablet block 194; room 07-02-01
+    public static final int TABLET_GLOW_TWIN_CHANT_A_SPELL_TO_THE_SPIRIT = 0x4ba; // Tablet block 195; room 07-02-02
+    public static final int TABLET_GLOW_TWIN_HERO_OF_THE_THIRD_CHILD = 0x4bb; // Tablet block 193; room 07-03-00
+    public static final int TABLET_GLOW_TWIN_BEYOND_THE_SKULL_DAMAGED = 0x4bc; // Tablet block 196; room 07-03-01
+    public static final int TABLET_GLOW_TWIN_INNOCENT_GIRL = 0x4be; // Tablet block 210; room 07-06-00
+    public static final int TABLET_GLOW_TWIN_UNSOLVABLE_PUZZLE = 0x4bf; // Tablet block 198; room 07-06-01
+    public static final int TABLET_GLOW_TWIN_BEELZEBUB = 0x4c0; // Tablet block 201; room 07-07-00
+    public static final int TABLET_GLOW_TWIN_REVEAL_THE_LIGHT = 0x4c2; // Tablet block 202; room 07-08-00
+    public static final int TABLET_GLOW_TWIN_FIVE_WITCHES_PLUS_ONE_MORE = 0x4c3; // Tablet block 199; room 07-08-01
+    public static final int TABLET_GLOW_TWIN_HATCH_SKULD_VERDANDI = 0x4c6; // Tablet block 207; room 07-10-01
+    public static final int TABLET_GLOW_TWIN_PRIESTS_BECAME_PHILOSOPHERS = 0x4c7; // Tablet block 208; room 07-11-00
+    public static final int TABLET_GLOW_TWIN_ANKH_IS_ALWAYS_IN_THE_FRONT = 0x4c8; // Tablet block 209; room 07-11-01
+    public static final int TABLET_GLOW_TWIN_DANCE_OF_LIFE = 0x4c9; // Tablet block 197; room 07-11-02
+    public static final int TABLET_GLOW_TWIN_DESTROYED_IN_2015 = 0x4cc; // Tablet block 214; room 07-12-02
+    public static final int TABLET_GLOW_TWIN_ZU_PERYTON_DAMAGED = 0x4cd; // Tablet block 211; room 07-13-00
+    public static final int TABLET_GLOW_TWIN_POWER_TO_STOP_TIME = 0x4ce; // Tablet block 212; room 07-14-00
+    public static final int TABLET_GLOW_TWIN_BROTHER_SHOPS = 0x552; // Tablet block 213; room 07-14-01
+
+    public static final int TABLET_GLOW_ENDLESS_DRAGON = 0x4d1; // Tablet block 224; room 08-00-01
+    public static final int TABLET_GLOW_ENDLESS_BORN_LIVES_REPRODUCE_ASCENSION = 0x4d2; // Tablet block 225; room 08-02-00
+    public static final int TABLET_GLOW_ENDLESS_TOILS_FOR_NAUGHT = 0x4d3; // Tablet block 226; room 08-03-01
+    public static final int TABLET_GLOW_ENDLESS_MAP_COLOR = 0x4d4; // Tablet block 612; room 08-03-02
+    public static final int TABLET_GLOW_ENDLESS_MIGHT_OR_WISDOM = 0x4d5; // Tablet block 227; room 08-03-03
+    public static final int TABLET_GLOW_ENDLESS_ENDURE_TRIALS = 0x4d7; // Tablet block 228; room 08-04-02
+
+    public static final int TABLET_GLOW_SHRINE_CHOSEN_ONLY = 0x4d9; // Tablet block 615; room 09-00-00
+    public static final int TABLET_GLOW_SHRINE_ENDLESSNESS_AND_DIMENSIONS = 0x4da; // Tablet block 233; room 09-00-01
+    public static final int TABLET_GLOW_SHRINE_PHILOSOPHER_CHOSEN_ONE = 0x4db; // Tablet block 235; room 09-01-00
+    public static final int TABLET_GLOW_SHRINE_EIGHT_SPIRITS = 0x4dc; // Tablet block 238; room 09-03-01
+    public static final int TABLET_GLOW_SHRINE_SECRET_TREASURE_OF_LIFE = 0x4dd; // Tablet block 240; room 09-04-00
+    public static final int TABLET_GLOW_SHRINE_PHILOSOPHER_IMMORTAL = 0x4de; // Tablet block 241; room 09-04-01
+    public static final int TABLET_GLOW_SHRINE_SEVENTH_CHILDREN = 0x4df; // Tablet block 242; room 09-05-01
+    public static final int TABLET_GLOW_SHRINE_SLEEP_WITHIN_THE_WOMAN = 0x4e0; // Tablet block 243; room 09-08-01
+    public static final int TABLET_GLOW_SHRINE_WALL_OF_YOUR_CALLING = 0x4e1; // Tablet block 234; room 09-08-01
+//    public static final int TABLET_GLOW_SHRINE_ROSETTA = 0x4e2; // Tablet block 239; room 09-09-00
+    public static final int TABLET_GLOW_SHRINE_MUSHUSSU_COMBO = 0x4e3; // Tablet block 236; room 09-09-01
+
+    public static final int TABLET_GLOW_ILLUSION_VIRTUAL_WISE_MAN = 0x4e5; // Tablet block 253; room 10-01-00
+    public static final int TABLET_GLOW_ILLUSION_DEVICE_THAT_CREATES_LIFE = 0x4ea; // Tablet block 252; room 10-02-00
+    public static final int TABLET_GLOW_ILLUSION_POSSESS_THE_WISDOM_OF_A_WISE_MAN = 0x4ec; // Tablet block 256; room 10-02-01
+    public static final int TABLET_GLOW_ILLUSION_FOOL_DESERVES_NAUGHT_BUT_DEATH = 0x4ed; // Tablet block 259; room 10-02-02
+    public static final int TABLET_GLOW_ILLUSION_KEY_TO_ENDLESS_CORRIDOR = 0x4ee; // Tablet block 251; room 10-03-00
+    public static final int TABLET_GLOW_ILLUSION_TIAMAT_GRAIL_POWERLESS = 0x4ef; // Tablet block 254; room 10-04-00
+    public static final int TABLET_GLOW_ILLUSION_GIVE_UP_LEFT = 0x4f0; // Tablet block 258; room 10-04-01
+    public static final int TABLET_GLOW_ILLUSION_GIVE_UP_MIDDLE = 0x553; // Tablet block 258; room 10-04-01
+    public static final int TABLET_GLOW_ILLUSION_GIVE_UP_RIGHT = 0x554; // Tablet block 258; room 10-04-01
+    public static final int TABLET_GLOW_ILLUSION_FREE_THYSELF_OF_DOUBT_AND_ILLUSION = 0x4f1; // Tablet block 257; room 10-05-00
+    public static final int TABLET_GLOW_ILLUSION_THE_FAIRIES_UNLOCK_IT = 0x4f3; // Tablet block 260; room 10-06-00
+    public static final int TABLET_GLOW_ILLUSION_UNDERSTANDING_IS_IMPRESSIVE = 0x4f5; // Tablet block 262; room 10-07-02
+    public static final int TABLET_GLOW_ILLUSION_FOOL_PUZZLE = 0x4f6; // Tablet block 263; room 10-07-02
+    public static final int TABLET_GLOW_ILLUSION_WANDER_THE_LABYRINTH_FOR_ETERNITY = 0x4f8; // Tablet block 261; room 10-08-00
+    public static final int TABLET_GLOW_ILLUSION_FOOL_WILL_NEVER_FIND_HIS_WAY = 0x4f9; // Tablet block 264; room 10-08-01
+    public static final int TABLET_GLOW_ILLUSION_SEARCH_ON_BENDED_KNEE = 0x4fa; // Tablet block 270; room 10-09-00
+    public static final int TABLET_GLOW_ILLUSION_EXTINGUISH_THE_WHOLE = 0x4fb; // Tablet block 265; room 10-09-01
+    public static final int TABLET_GLOW_ILLUSION_ENTER_EDEN = 0x4fd; // Tablet block 271; room 10-09-01
+
+    public static final int TABLET_GLOW_EDEN = 0x4fc; // Tablet block 967; room 10-09-01
+
+    public static final int TABLET_GLOW_GRAVEYARD_TOUJIN = 0x4fe; // Tablet block 276; room 11-00-01
+    public static final int TABLET_GLOW_GRAVEYARD_THOSE_SEEKING_EDEN = 0x4ff; // Tablet block 232; room 11-00-02
+    public static final int TABLET_GLOW_GRAVEYARD_MONEY_CANT_BUY_THE_REAL_THING = 0x500; // Tablet block 279; room 11-01-00
+    public static final int TABLET_GLOW_GRAVEYARD_MEETING_OF_MAN_AND_WOMAN = 0x501; // Tablet block 280; room 11-01-01
+    public static final int TABLET_GLOW_GRAVEYARD_DEMON_ENDLESSLY_CONSUMES_LIFE = 0x502; // Tablet block 281; room 11-02-00
+    public static final int TABLET_GLOW_GRAVEYARD_MEANINGS_ARE_INFUSED_INTO_THE_GEMSTONES = 0x503; // Tablet block 283; room 11-03-00
+    public static final int TABLET_GLOW_GRAVEYARD_MU_IS_THE_NAMELESS_ONE = 0x504; // Tablet block 277; room 11-04-02
+    public static final int TABLET_GLOW_GRAVEYARD_EYES_ARE_NOT_HOLLOWED_OUT_HOLES = 0x505; // Tablet block 278; room 11-04-03
+    public static final int TABLET_GLOW_GRAVEYARD_WE_SHALL_AWAIT_THEE_AHEAD = 0x506; // Tablet block 288; room 11-05-00
+    public static final int TABLET_GLOW_GRAVEYARD_NEW_WEAPON_TAKE_DOWN_THE_WALL = 0x507; // Tablet block 284; room 11-07-00
+    public static final int TABLET_GLOW_GRAVEYARD_JEWEL_SHOP_WHERE_LIFE_SPRINGS_FORTH = 0x509; // Tablet block 287; room 11-07-01
+    public static final int TABLET_GLOW_GRAVEYARD_SPAULDER_GODDESS = 0x50a; // Tablet block 285; room 11-09-00
+    public static final int TABLET_GLOW_GRAVEYARD_CURSED_TREASURE_RED_STONE = 0x50b; // Tablet block 286; room 11-09-01
+
+    public static final int TABLET_GLOW_MOONLIGHT_ATOP_THE_NAVEL_OF_NEPTUNE = 0x50c; // Tablet block 294; room 12-00-01
+    public static final int TABLET_GLOW_MOONLIGHT_EVERY_HEART_HAS_A_WEIGHT = 0x50d; // Tablet block 292; room 12-01-00
+    public static final int TABLET_GLOW_MOONLIGHT_MIND_THY_MANNERS = 0x50e; // Tablet block 293; room 12-02-00
+    public static final int TABLET_GLOW_MOONLIGHT_ULTIMATE_SACRIFICE_FOR_POWER = 0x50f; // Tablet block 295; room 12-03-00
+    public static final int TABLET_GLOW_MOONLIGHT_OCARINA_WOMAN_WITH_CHILD = 0x510; // Tablet block 296; room 12-04-00
+    public static final int TABLET_GLOW_MOONLIGHT_GRIND_DOWN_THE_PYRAMID = 0x511; // Tablet block 300; room 12-04-03
+    public static final int TABLET_GLOW_MOONLIGHT_WATER_WILL_PROVIDE_THE_POWER = 0x512; // Tablet block 298; room 12-05-01
+    public static final int TABLET_GLOW_MOONLIGHT_SIGIL_OF_SPIRIT_THAT_CONTROLS_LIFE = 0x513; // Tablet block 302; room 12-06-01
+    public static final int TABLET_GLOW_MOONLIGHT_WEDGES_GIVE_FORM_TO_THE_SOUL = 0x514; // Tablet block 297; room 12-07-00
+    public static final int TABLET_GLOW_MOONLIGHT_BOOK_OF_THE_DEAD = 0x515; // Tablet block 299; room 12-08-00
+    public static final int TABLET_GLOW_MOONLIGHT_UNDERWORLD_PALACE = 0x516; // Tablet block 301; room 12-09-00
+    public static final int TABLET_GLOW_MOONLIGHT_EDEN_SEARCH_OUT_THE_PLACE = 0x517; // Tablet block 191; room 12-09-01
+
+    public static final int TABLET_GLOW_GODDESS_FLY_WITH_THE_GOLDEN_WINGS = 0x518; // Tablet block 312; room 13-00-00
+//    public static final int TABLET_GLOW_GODDESS_WATER_TO_THE_TOWER = 0x519; // Tablet block 310; room 13-01-00
+    public static final int TABLET_GLOW_GODDESS_MAGATAMA_JEWEL = 0x51a; // Tablet block 314; room 13-01-01
+    public static final int TABLET_GLOW_GODDESS_HUNK_OF_FLYING_IRON = 0x51b; // Tablet block 306; room 13-02-01
+    public static final int TABLET_GLOW_GODDESS_A_BAO_A_QU = 0x51c; // Tablet block 309; room 13-02-02
+    public static final int TABLET_GLOW_GODDESS_RUSALII_YAKSI_DAKINI = 0x51d; // Tablet block 318; room 13-03-01
+    public static final int TABLET_GLOW_GODDESS_CHALLENGE_THE_CHAMBER_OF_BIRTH = 0x51e; // Tablet block 311; room 13-04-00
+    public static final int TABLET_GLOW_GODDESS_ILLUSION_OF_GODDESS_STATUES = 0x51f; // Tablet block 320; room 13-04-01
+//    public static final int TABLET_GLOW_GODDESS_FLAIL_WHIP_PUZZLE = 0x520; // Tablet block 315; room 13-05-00
+    public static final int TABLET_GLOW_GODDESS_BALANCE_THE_SPIRITS = 0x521; // Tablet block 316; room 13-05-01
+    public static final int TABLET_GLOW_GODDESS_AFTER_THINE_ASCENSION_TO_THE_TOWER = 0x522; // Tablet block 317; room 13-06-03
+    public static final int TABLET_GLOW_GODDESS_SECRET_OF_LIFE_POWER_OF_DESTRUCTION = 0x523; // Tablet block 307; room 13-06-03
+    public static final int TABLET_GLOW_GODDESS_CANNOT_GRANT_THE_MOTHERS_WISH = 0x524; // Tablet block 308; room 13-07-02
+
+    public static final int TABLET_GLOW_RUIN_UNINTENTIONAL_MISCHIEF = 0x525; // Tablet block 334; room 14-00-00
+    public static final int TABLET_GLOW_RUIN_FOLLOW_THE_NAME_THAT_MEANS_UNNAMED = 0x526; // Tablet block 335; room 14-00-02
+    public static final int TABLET_GLOW_RUIN_SKANDA = 0x527; // Tablet block 332; room 14-01-00
+    public static final int TABLET_GLOW_RUIN_WHITE_DIAMOND_REPRESENTS_PURITY = 0x528; // Tablet block 336; room 14-02-01
+//    public static final int TABLET_GLOW_RUIN_ROSETTA = 0x529; // Tablet block 333; room 14-03-00
+    public static final int TABLET_GLOW_RUIN_GREAT_BIRD_MERCY_CRUSHING_THAT_HAND = 0x52a; // Tablet block 331; room 14-03-01
+    public static final int TABLET_GLOW_RUIN_TOO_QUICK_FOR_THE_EYES = 0x52b; // Tablet block 330; room 14-04-00
+    public static final int TABLET_GLOW_RUIN_GLOWING_RED_CRUCIFIX_BEACON = 0x52c; // Tablet block 328; room 14-04-01
+    public static final int TABLET_GLOW_RUIN_THE_ONES_THAT_CREATED_NUWA = 0x52d; // Tablet block 329; room 14-05-00
+    public static final int TABLET_GLOW_RUIN_IDENTIFY_THE_SEDUCTRESS = 0x52e; // Tablet block 325; room 14-06-01
+    public static final int TABLET_GLOW_RUIN_THE_ONE_WHO_CHALLENGES_NUWA = 0x52f; // Tablet block 326; room 14-07-00
+    public static final int TABLET_GLOW_RUIN_FACE_THE_LAST_TRIAL = 0x530; // Tablet block 327; room 14-07-01
+
+//    public static final int TABLET_GLOW_BIRTH_SWORDS_ROSETTA = 0x531; // Tablet block 353; room 15-00-00
+    public static final int TABLET_GLOW_BIRTH_SWORDS_BRIGHT_LIGHT_WITHIN_THE_DARKNESS = 0x532; // Tablet block 340; room 15-01-00
+    public static final int TABLET_GLOW_BIRTH_SWORDS_CONTINUES_WITHOUT_END_BIRTH_DEATH = 0x533; // Tablet block 350; room 15-01-01
+    public static final int TABLET_GLOW_BIRTH_SWORDS_SHALL_NOT_MAKE_IT_WITH_THINE_POWER = 0x534; // Tablet block 342; room 15-02-00
+    public static final int TABLET_GLOW_BIRTH_SWORDS_PALENQUE_SLUMBERS = 0x535; // Tablet block 346; room 15-02-01
+    public static final int TABLET_GLOW_BIRTH_SWORDS_VISHNU_BEHEADED_ASURA = 0x536; // Tablet block 352; room 15-03-00
+    public static final int TABLET_GLOW_BIRTH_SWORDS_STRIKE_THE_WEDGE_DISTURB_THE_MOTHER = 0x537; // Tablet block 347; room 15-03-01
+
+    public static final int TABLET_GLOW_BIRTH_SKANDA_CLAY_DOLLS_BECOME_HUMAN = 0x538; // Tablet block 344; room 16-00-00
+    public static final int TABLET_GLOW_BIRTH_SKANDA_BECAME_HUMAN_AND_PROSPERED = 0x539; // Tablet block 345; room 16-00-01
+    public static final int TABLET_GLOW_BIRTH_SKANDA_PRAISE_LIFE_CLAY_DOLL_GOLDEN_KEY = 0x53a; // Tablet block 348; room 16-01-00
+    public static final int TABLET_GLOW_BIRTH_SKANDA_BEYOND_THE_MANY_CORPSES_A_WOMAN_WAITS = 0x53b; // Tablet block 349; room 16-01-01
+    public static final int TABLET_GLOW_BIRTH_SKANDA_BE_PREPARED_FOR_DEATH = 0x53c; // Tablet block 343; room 16-02-00
+    public static final int TABLET_GLOW_BIRTH_SKANDA_GOLDEN_GLOW_THINLY_STRETCHED_LIGHT = 0x53e; // Tablet block 341; room 16-03-00
+    public static final int TABLET_GLOW_BIRTH_SKANDA_CHALLENGE_PALENQUE = 0x53f; // Tablet block 351; room 16-03-01
+    public static final int TABLET_GLOW_BIRTH_SKANDA_WHITE_OPAL_REPRESENTS_JOY = 0x540; // Tablet block 354; room 16-04-00
+    public static final int TABLET_GLOW_BIRTH_SKANDA_CRYSTAL_SKULL_SUPPRESSES_TIAMAT = 0x541; // Tablet block 355; room 16-04-01
+    public static final int TABLET_GLOW_BIRTH_SKANDA_DANCE_IN_THIS_PLACE = 0x542; // Tablet block 356; room 16-04-02
+
+    public static final int TABLET_GLOW_DIMENSIONAL_BEYOND_THE_BOUNDARIES_OF_TIME = 0x543; // Tablet block 359; room 17-01-00
+    public static final int TABLET_GLOW_DIMENSIONAL_LIVES_THE_11_CHILDREN_HAVE = 0x544; // Tablet block 362; room 17-01-01
+//    public static final int TABLET_GLOW_DIMENSIONAL_BIRTH_MANTRA = 0x545; // Tablet block 1021; room 17-02-00
+//    public static final int TABLET_GLOW_DIMENSIONAL_DEATH_MANTRA = 0x546; // Tablet block 1022; room 17-02-00
+    public static final int TABLET_GLOW_DIMENSIONAL_ROAD_TO_TREASURE = 0x547; // Tablet block 360; room 17-04-00
+    public static final int TABLET_GLOW_DIMENSIONAL_TWO_VESSELS = 0x548; // Tablet block 361; room 17-04-00
+    public static final int TABLET_GLOW_DIMENSIONAL_THRUST_INFINITY_THERE = 0x549; // Tablet block 363; room 17-05-01
+    public static final int TABLET_GLOW_DIMENSIONAL_ONLY_ONE_PATH_TO_SURVIVAL = 0x54a; // Tablet block 670; room 17-07-01
+
+    public static final int TABLET_GLOW_HT_SLEEP_ALSO_SET_BY_RETROMAUSOLEUM_ENTRANCE = 0x54b; // Tablet block 1004 (HT) and 516 (Retromausoleum); room 23-13-00 and room 19-00-01
+    public static final int TABLET_GLOW_HT_I_EXIST_HERE = 0x54c; // Tablet block 1005; room 23-18-00
+    public static final int TABLET_GLOW_HT_CLOTH_TO_MAKE_THE_TREASURE = 0x54d; // Tablet block 1009; room 23-22-00
+
+    // Broken tablets
+    public static final int TABLET_GLOW_GUIDANCE_ENTRANCE_BROKEN = 0x44d; // Tablet block 471; room 00-00-00
+    public static final int TABLET_GLOW_GUIDANCE_BACKSIDE_DOOR_BROKEN = 0x455; // Tablet block 471; room 00-05-00
+    public static final int TABLET_GLOW_GUIDANCE_SHOP_BROKEN = 0x45c; // Tablet block 471; room 00-09-01
+    public static final int TABLET_GLOW_MAUSOLEUM_TOP_BROKEN = 0x45e; // Tablet block 471; room 02-00-00
+    public static final int TABLET_GLOW_MAUSOLEUM_TRAPDOOR_BROKEN = 0x464; // Tablet block 471; room 02-02-01
+    public static final int TABLET_GLOW_MAUSOLEUM_ELEVATOR_SHAFT_BROKEN = 0x46b; // Tablet block 471; room 02-05-02
+    public static final int TABLET_GLOW_SUN_ABOVE_MULBRUK_BROKEN = 0x476; // Tablet block 471; room 03-01-01
+    public static final int TABLET_GLOW_SUN_MULBRUK_SCREEN_BROKEN = 0x54f; // Tablet block 471; room 03-03-00
+    public static final int TABLET_GLOW_SPRING_SACRED_LAKE_BROKEN = 0x490; // Tablet block 471; room 04-02-00
+    public static final int TABLET_GLOW_SPRING_MAP_SCREEN_BROKEN = 0x491; // Tablet block 471; room 04-02-01
+    public static final int TABLET_GLOW_EXTINCTION_SMALL_MURAL_BROKEN = 0x4a9; // Tablet block 471; room 06-02-01
+    public static final int TABLET_GLOW_TWIN_UPPER_LEFT_BROKEN = 0x4b7; // Tablet block 471; room 07-01-01
+    public static final int TABLET_GLOW_TWIN_MAP_SCREEN_BROKEN = 0x4b9; // Tablet block 471; room 07-02-02
+    public static final int TABLET_GLOW_TWIN_YIEGAH_SCREEN_BROKEN = 0x4bd; // Tablet block 471; room 07-02-02
+    public static final int TABLET_GLOW_TWIN_BELOW_ZU_BROKEN = 0x550; // Tablet block 471; room 07-05-01
+    public static final int TABLET_GLOW_TWIN_IDIGNA_BROKEN = 0x4c1; // Tablet block 471; room 07-07-01
+    public static final int TABLET_GLOW_TWIN_POISON_2_BROKEN = 0x4c4; // Tablet block 471; room 07-09-01
+    public static final int TABLET_GLOW_TWIN_RIGHT_OF_POISON_2_BROKEN = 0x4c5; // Tablet block 471; room 07-10-00
+    public static final int TABLET_GLOW_TWIN_FAKE_ANKH_JEWEL_BROKEN = 0x4ca; // Tablet block 471; room 07-12-00
+    public static final int TABLET_GLOW_TWIN_ABOVE_YIEAR_BROKEN = 0x4cb; // Tablet block 471; room 07-12-01
+    public static final int TABLET_GLOW_TWIN_ARROGANT_STURDY_SNAKE_BROKEN = 0x4cf; // Tablet block 471; room 07-14-00
+    public static final int TABLET_GLOW_TWIN_LEFT_OF_BACKSIDE_GRAIL_BROKEN = 0x4d0; // Tablet block 471; room 07-15-00
+    public static final int TABLET_GLOW_ENDLESS_FAIRY_SCREEN_BROKEN = 0x4d6; // Tablet block 471; room 08-03-03
+    public static final int TABLET_GLOW_ILLUSION_CHILDS_ROOM_BROKEN = 0x4e9; // Tablet block 471; room 10-01-01
+    public static final int TABLET_GLOW_ILLUSION_BACKSIDE_DOOR_BROKEN = 0x551; // Tablet block 471; room 10-03-00
+    public static final int TABLET_GLOW_ILLUSION_MOVER_ATHLELAND_SCREEN_BROKEN = 0x4f2; // Tablet block 471; room 10-03-00
+    public static final int TABLET_GLOW_ILLUSION_FOOLS_CONFUSION_CORRIDOR_BROKEN = 0x4f4; // Tablet block 471; room 10-07-00
+    public static final int TABLET_GLOW_ILLUSION_FOOLS_CONFUSION_CORRIDOR_SCAN_ROOM_BROKEN = 0x4f7; // Tablet block 471; room 10-07-02
+    public static final int TABLET_GLOW_GRAVEYARD_GIANT_THEXDE_SCREEN_BROKEN = 0x508; // Tablet block 471; room 11-07-00
+    public static final int TABLET_GLOW_BIRTH_SKANDA_ASURAS_ROOM_BROKEN = 0x53d; // Tablet block 471; room 16-02-00
+
+    public static final List<Integer> BLANK_TABLET_GLOW_FLAGS = Arrays.asList(
+            TABLET_GLOW_GUIDANCE_ENTRANCE_BROKEN,
+            TABLET_GLOW_GUIDANCE_BACKSIDE_DOOR_BROKEN,
+            TABLET_GLOW_GUIDANCE_SHOP_BROKEN,
+            TABLET_GLOW_MAUSOLEUM_TOP_BROKEN,
+            TABLET_GLOW_MAUSOLEUM_TRAPDOOR_BROKEN,
+            TABLET_GLOW_MAUSOLEUM_ELEVATOR_SHAFT_BROKEN,
+            TABLET_GLOW_SUN_ABOVE_MULBRUK_BROKEN,
+            TABLET_GLOW_SUN_MULBRUK_SCREEN_BROKEN,
+            TABLET_GLOW_SPRING_SACRED_LAKE_BROKEN,
+            TABLET_GLOW_SPRING_MAP_SCREEN_BROKEN,
+            TABLET_GLOW_EXTINCTION_SMALL_MURAL_BROKEN,
+            TABLET_GLOW_TWIN_UPPER_LEFT_BROKEN,
+            TABLET_GLOW_TWIN_MAP_SCREEN_BROKEN,
+            TABLET_GLOW_TWIN_YIEGAH_SCREEN_BROKEN,
+            TABLET_GLOW_TWIN_BELOW_ZU_BROKEN,
+            TABLET_GLOW_TWIN_IDIGNA_BROKEN,
+            TABLET_GLOW_TWIN_POISON_2_BROKEN,
+            TABLET_GLOW_TWIN_RIGHT_OF_POISON_2_BROKEN,
+            TABLET_GLOW_TWIN_FAKE_ANKH_JEWEL_BROKEN,
+            TABLET_GLOW_TWIN_ABOVE_YIEAR_BROKEN,
+            TABLET_GLOW_TWIN_ARROGANT_STURDY_SNAKE_BROKEN,
+            TABLET_GLOW_TWIN_LEFT_OF_BACKSIDE_GRAIL_BROKEN,
+            TABLET_GLOW_ENDLESS_FAIRY_SCREEN_BROKEN,
+            TABLET_GLOW_ILLUSION_CHILDS_ROOM_BROKEN,
+            TABLET_GLOW_ILLUSION_BACKSIDE_DOOR_BROKEN,
+            TABLET_GLOW_ILLUSION_MOVER_ATHLELAND_SCREEN_BROKEN,
+            TABLET_GLOW_ILLUSION_FOOLS_CONFUSION_CORRIDOR_BROKEN,
+            TABLET_GLOW_ILLUSION_FOOLS_CONFUSION_CORRIDOR_SCAN_ROOM_BROKEN,
+            TABLET_GLOW_GRAVEYARD_GIANT_THEXDE_SCREEN_BROKEN,
+            TABLET_GLOW_BIRTH_SKANDA_ASURAS_ROOM_BROKEN
+    );
+
     // Screen flags
     public static final int SCREEN_FLAG_0 = 0x000;
     public static final int SCREEN_FLAG_1 = 0x001;
@@ -469,7 +792,7 @@ public final class FlagConstants {
     public static final int SCREEN_FLAG_29 = 0x029;
     public static final int SCREEN_FLAG_2A = 0x02a; // Used in randomizer, for Shrine map sound effect
     public static final short SCREEN_FLAG_2B = 0x02b; // Used in randomizer, for fake item and/or trap screen flag for floating items (spawns bats)
-    public static final int SCREEN_FLAG_2C = 0x02c;
+    public static final int SCREEN_FLAG_2C = 0x02c; // Commonly used for mantra detection
     public static final int SCREEN_FLAG_2D = 0x02d;
     public static final short SCREEN_FLAG_2E = 0x02e; // Used in randomizer, for fake item and/or trap screen flag for chests (spawns bats); also doubles as screen flag for one of the crushers on Chain Whip puzzle; also used in Halloween 2019 on Mr. Slushfund's screen
     public static final int SCREEN_FLAG_2F = 0x02f; // Used in randomizer, for the other crusher on Chain Whip puzzle
@@ -537,6 +860,7 @@ public final class FlagConstants {
 
     // Steam achievements?
     public static final int TALKED_TO_AWAKENED_MULBRUK = 0xaf0;
+    public static final int ACHIEVEMENT_ENTERED_RUINS = 0xbb8; // Set to 1 when opening the ruins
     public static final int ACHIEVEMENT_MAP_COUNT = 0xc06; // Counts up to 17
     public static final int ACHIEVEMENT_SOFTWARE_COUNT = 0xc07; // Counts up to 20
 

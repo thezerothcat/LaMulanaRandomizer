@@ -8,6 +8,7 @@ import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.update.AddObject;
 import lmr.randomizer.update.FlagTimerUpdates;
 import lmr.randomizer.update.GraphicsTextureDrawUpdates;
+import lmr.randomizer.update.ScannableUpdates;
 import lmr.randomizer.util.*;
 
 import java.util.ArrayList;
@@ -279,7 +280,7 @@ public class BaseRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateHitbox(GameObject hitbox) {
+    boolean updateHitbox(Hitbox hitbox) {
         ObjectContainer objectContainer = hitbox.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
             return true;
@@ -769,81 +770,8 @@ public class BaseRcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateScannable(GameObject scannable) {
-        ObjectContainer objectContainer = scannable.getObjectContainer();
-        if(!(objectContainer instanceof Screen)) {
-            return true;
-        }
-        Screen screen = (Screen)objectContainer;
-        if(Settings.isRandomizeNonBossDoors()) {
-            if (screen.getZoneIndex() == 1 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
-                for(TestByteOperation testByteOperation : scannable.getTestByteOperations()) {
-                    if (testByteOperation.getIndex() == FlagConstants.VIY_GATE_MIRROR_COVER) {
-                        return false;
-                    }
-                }
-            }
-            if (screen.getZoneIndex() == 6 && screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
-                for(TestByteOperation testByteOperation : scannable.getTestByteOperations()) {
-                    if (testByteOperation.getIndex() == FlagConstants.KEY_FAIRY_DOOR_UNLOCKED) {
-                        return false;
-                    }
-                }
-            }
-
-            for(TestByteOperation testByteOperation : scannable.getTestByteOperations()) {
-                if (testByteOperation.getIndex() == FlagConstants.WF_BRONZE_MIRROR
-                        && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())
-                        && testByteOperation.getValue() == 0) {
-                    return false;
-                }
-            }
-        }
-
-        if(LocationCoordinateMapper.getStartingZone() == ZoneConstants.BIRTH_SKANDA) {
-            if(screen.getZoneIndex() == ZoneConstants.BIRTH_SKANDA
-                    && screen.getRoomIndex() == LocationCoordinateMapper.getStartingRoom()
-                    && screen.getScreenIndex() == LocationCoordinateMapper.getStartingScreen()
-                    && scannable.getX() == 340 && scannable.getY() == 320) {
-                // Move Chamber of Birth grail point when starting in that area.
-                scannable.setX(200);
-                scannable.setY(380);
-            }
-        }
-
-        int languageBlock = scannable.getArgs().get(0);
-
-        if(languageBlock == 648) {
-            for (TestByteOperation flagTest : scannable.getTestByteOperations()) {
-                if (flagTest.getIndex() == FlagConstants.MANTRA_FINAL && flagTest.getValue() == 4) {
-                    flagTest.setIndex(FlagConstants.MANTRA_LAMULANA);
-                    flagTest.setValue((byte)1);
-                    break;
-                }
-            }
-        }
-
-        for (TestByteOperation flagTest : scannable.getTestByteOperations()) {
-            if(flagTest.getIndex() == FlagConstants.COG_MUDMEN_STATE) {
-                if(flagTest.getValue() == 3) {
-                    if(ByteOp.FLAG_EQUALS.equals(flagTest.getOp())) {
-                        flagTest.setOp(ByteOp.FLAG_LTEQ);
-                        scannable.setX(scannable.getX() - 60);
-                        break;
-                    }
-                    if(ByteOp.FLAG_LTEQ.equals(flagTest.getOp())) {
-                        flagTest.setValue((byte)4);
-                        flagTest.setOp(ByteOp.FLAG_LT);
-                        break;
-                    }
-                }
-                else if(flagTest.getValue() != 4) {
-                    flagTest.setIndex(FlagConstants.ILLUSION_PUZZLE_COG_CHEST);
-                    break;
-                }
-            }
-        }
-        return true;
+    boolean updateScannable(Scannable scannable) {
+        return ScannableUpdates.updateScannable(scannable);
     }
 
     @Override

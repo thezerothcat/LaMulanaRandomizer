@@ -1,6 +1,5 @@
 package lmr.randomizer.util;
 
-import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
 
 public final class LocationCoordinateMapper {
@@ -346,57 +345,57 @@ public final class LocationCoordinateMapper {
     }
 
     public static short getGrailFlag(int zone, boolean front) {
-        if(HolidaySettings.isFools2021Mode()) {
+        if(Settings.isReducedBossCount()) {
             if(zone == 0) {
-                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_GUIDANCE;
+                return FlagConstants.TABLET_GLOW_GUIDANCE_BACKSIDE_DOOR_BROKEN;
             }
             if(zone == 1) {
                 return FlagConstants.TABLET_GRAIL_SURFACE;
             }
             if(zone == 2) {
-                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_MAUSOLEUM;
+                return FlagConstants.TABLET_GLOW_GUIDANCE_SHOP_BROKEN;
             }
             if(zone == 3) {
-                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_SUN;
+                return FlagConstants.TABLET_GLOW_MAUSOLEUM_TOP_BROKEN;
             }
             if(zone == 4) {
-                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_SPRING;
+                return FlagConstants.TABLET_GLOW_MAUSOLEUM_TRAPDOOR_BROKEN;
             }
             if(zone == 5) {
-                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_INFERNO;
+                return FlagConstants.TABLET_GLOW_MAUSOLEUM_ELEVATOR_SHAFT_BROKEN;
             }
             if(zone == 6) {
-                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_EXTINCTION;
+                return FlagConstants.TABLET_GLOW_SUN_ABOVE_MULBRUK_BROKEN;
             }
             if(zone == 7) {
-                return front ? (short)FlagConstants.CUSTOM_FOOLS2021_GRAIL_TWIN_FRONT : FlagConstants.CUSTOM_FOOLS2021_GRAIL_TWIN_BACK;
+                return front ? (short)FlagConstants.TABLET_GLOW_SUN_MULBRUK_SCREEN_BROKEN : FlagConstants.TABLET_GLOW_SPRING_SACRED_LAKE_BROKEN;
             }
             if(zone == 8) {
-                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_ENDLESS;
+                return FlagConstants.TABLET_GLOW_SPRING_MAP_SCREEN_BROKEN;
             }
             if(zone == 9) {
                 return FlagConstants.TABLET_GRAIL_SHRINE_FRONT;
             }
             if(zone == 10) {
-                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_ILLUSION;
+                return FlagConstants.TABLET_GLOW_EXTINCTION_SMALL_MURAL_BROKEN;
             }
             if(zone == 11) {
-                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_GRAVEYARD;
+                return FlagConstants.TABLET_GLOW_TWIN_UPPER_LEFT_BROKEN;
             }
             if(zone == 12) {
-                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_MOONLIGHT;
+                return FlagConstants.TABLET_GLOW_TWIN_MAP_SCREEN_BROKEN;
             }
             if(zone == 13) {
-                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_GODDESS;
+                return FlagConstants.TABLET_GLOW_TWIN_YIEGAH_SCREEN_BROKEN;
             }
             if(zone == 14) {
-                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_RUIN;
+                return FlagConstants.TABLET_GLOW_TWIN_BELOW_ZU_BROKEN;
             }
             if(zone == 15 || zone == 16) {
-                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_BIRTH;
+                return FlagConstants.TABLET_GLOW_TWIN_IDIGNA_BROKEN;
             }
             if(zone == 17) {
-                return FlagConstants.CUSTOM_FOOLS2021_GRAIL_DIMENSIONAL;
+                return FlagConstants.TABLET_GLOW_TWIN_POISON_2_BROKEN;
             }
         }
         return getOriginalGrailFlag(zone, front);

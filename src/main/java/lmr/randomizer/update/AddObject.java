@@ -147,9 +147,9 @@ public final class AddObject {
         FlagTimer obj = new FlagTimer(screen);
 
         obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.TWINS_RELEASED, ByteOp.FLAG_LTEQ, 1));
-        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.TWINS_POISON, ByteOp.FLAG_NOT_EQUAL, 0));
+        obj.getTestByteOperations().add(new TestByteOperation(FlagConstants.TWINS_POISON_TIMER, ByteOp.FLAG_NOT_EQUAL, 0));
 
-        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.TWINS_POISON, ByteOp.ASSIGN_FLAG, 0));
+        obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.TWINS_POISON_TIMER, ByteOp.ASSIGN_FLAG, 0));
 
         if(resetPuzzle) {
             obj.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.TWINS_RELEASED, ByteOp.ASSIGN_FLAG, 0));
@@ -1957,21 +1957,32 @@ public final class AddObject {
         return shop;
     }
 
-    public static GameObject addDanceDetector(Screen screen, int danceBlock) {
-        GameObject dance = new GameObject(screen);
-        dance.setId((short) 0xb8);
-        dance.setX(0);
-        dance.setY(0);
+    public static DanceDetector addDanceDetector(Screen screen, int x, int y, int danceBlock) {
+        DanceDetector danceDetector = new DanceDetector(screen, x, y);
 
-        dance.getArgs().add((short)danceBlock);
-        dance.getArgs().add((short)32);
-        dance.getArgs().add((short)24);
+        danceDetector.setBlockNumber(danceBlock);
+        danceDetector.setWidth(32);
+        danceDetector.setHeight(24);
 
-        dance.getTestByteOperations().add(new TestByteOperation(FlagConstants.CUSTOM_SECRET_SHOP, ByteOp.FLAG_EQUALS, 0));
-        dance.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.CUSTOM_SECRET_SHOP, ByteOp.ASSIGN_FLAG, 1));
+        danceDetector.getTestByteOperations().add(new TestByteOperation(FlagConstants.CUSTOM_SECRET_SHOP, ByteOp.FLAG_EQUALS, 0));
+        danceDetector.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.CUSTOM_SECRET_SHOP, ByteOp.ASSIGN_FLAG, 1));
 
-        screen.getObjects().add(dance);
-        return dance;
+        screen.getObjects().add(danceDetector);
+        return danceDetector;
+    }
+
+    public static DanceDetector addDanceDetector(Screen screen, int x, int y, int danceBlock, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        DanceDetector danceDetector = new DanceDetector(screen, x, y);
+
+        danceDetector.setBlockNumber(danceBlock);
+        danceDetector.setWidth(32);
+        danceDetector.setHeight(24);
+
+        danceDetector.addTests(tests);
+        danceDetector.addUpdates(updates);
+
+        screen.getObjects().add(danceDetector);
+        return danceDetector;
     }
 
     public static ItemGive addItemGive(GameObject referenceObj, int inventoryArg, int randomizeGraphicsFlag, int worldFlag) {
@@ -3736,12 +3747,53 @@ public final class AddObject {
     }
 
     /**
+     * Add MantraDetector
+     * @param screen to add to
+     * @param mantraNumber which mantra to recite
+     */
+    public static MantraDetector addMantraDetector(Screen screen, int mantraNumber) {
+        MantraDetector mantraDetector = new MantraDetector(screen);
+        mantraDetector.setMantraNumber(mantraNumber);
+        screen.getObjects().add(0, mantraDetector);
+        return mantraDetector;
+    }
+
+    /**
+     * Add OneWayDoor
+     * @param screen to add to
+     * @param x
+     * @param y
+     * @param direction
+     */
+    public static OneWayDoor addOneWayDoor(Screen screen, int x, int y, int direction) {
+        OneWayDoor oneWayDoor = new OneWayDoor(screen, x, y);
+        oneWayDoor.setDirection(direction);
+        screen.getObjects().add(oneWayDoor);
+        return oneWayDoor;
+    }
+
+    /**
+     * Add DynamicWall
+     * @param screen to add to
+     * @param x
+     * @param y
+     * @param height
+     */
+    public static DynamicWall addDynamicWall(Screen screen, int x, int y, int height) {
+        DynamicWall dynamicWall = new DynamicWall(screen, x, y);
+        dynamicWall.setHeight(height);
+        dynamicWall.setGraphicsFromZone(screen.getZoneIndex());
+        screen.getObjects().add(dynamicWall);
+        return dynamicWall;
+    }
+
+    /**
      * Add 0x2e object
      * @param screen to add to
      * @param x position
      * @param y position
      */
-    public static void addAmphisbaenaAnkh(Screen screen, int x, int y, int damage, List<TestByteOperation> tests) {
+    public static GameObject addAmphisbaenaAnkh(Screen screen, int x, int y, int damage, List<TestByteOperation> tests) {
         GameObject amphisbaenaAnkh = new GameObject(screen);
 
         amphisbaenaAnkh.setId((short) 0x2e);
@@ -3789,6 +3841,7 @@ public final class AddObject {
         amphisbaenaAnkh.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.AMPHISBAENA_ANKH_PUZZLE, ByteOp.ASSIGN_FLAG, (byte)6));
 
         screen.getObjects().add(amphisbaenaAnkh);
+        return amphisbaenaAnkh;
     }
 
     /**

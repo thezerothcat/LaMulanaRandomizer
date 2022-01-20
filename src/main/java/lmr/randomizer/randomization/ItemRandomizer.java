@@ -23,7 +23,6 @@ public class ItemRandomizer {
     private Map<String, Short> mapOfItemLocationToItemGraphicInventoryArg = new HashMap<>();
     private DropType subweaponPotContents = DropType.SHURIKEN_AMMO;
 
-    private List<String> allItems; // All possible items.
     private List<String> unplacedItems; // Items that haven't been placed yet.
 
     private List<String> unassignedNonShopItemLocations;
@@ -32,8 +31,7 @@ public class ItemRandomizer {
     private AccessChecker accessChecker;
 
     public ItemRandomizer() {
-        allItems = new ArrayList<>(DataFromFile.getAllNonShopItemsPlusAllRandomizedShopItemsPlusAllRandomizedCoinChests());
-        unplacedItems = new ArrayList<>(allItems);
+        unplacedItems = new ArrayList<>(DataFromFile.getAllPlaceableItems());
         if(!"Whip".equals(Settings.getCurrentStartingWeapon())) {
             unplacedItems.add("Whip");
             unplacedItems.remove(Settings.getCurrentStartingWeapon());
@@ -46,7 +44,6 @@ public class ItemRandomizer {
     }
 
     public ItemRandomizer(ItemRandomizer itemRandomizer) {
-        allItems = new ArrayList<>(itemRandomizer.allItems);
         unplacedItems = new ArrayList<>(itemRandomizer.unplacedItems);
         unassignedNonShopItemLocations = new ArrayList<>(itemRandomizer.unassignedNonShopItemLocations);
         mapOfItemLocationToItem = new HashMap<>(itemRandomizer.mapOfItemLocationToItem);
@@ -78,7 +75,12 @@ public class ItemRandomizer {
             if(customLocation != null && !customLocation.startsWith("Shop ")) {
                 mapOfItemLocationToItem.put(customLocation, customItemPlacement.getContents());
                 unassignedNonShopItemLocations.remove(customLocation);
-                unplacedItems.remove(customItemPlacement.getContents());
+                if("Unlit Lamp of Time".equals(customItemPlacement.getContents())) {
+                    unplacedItems.remove("Lamp of Time");
+                }
+                else {
+                    unplacedItems.remove(customItemPlacement.getContents());
+                }
             }
         }
     }

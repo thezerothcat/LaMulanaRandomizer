@@ -10,6 +10,7 @@ public final class ItemConstants {
     public static final int HEATPROOF_CASE = 37;
     public static final int HOLY_GRAIL = 40;
     public static final int CRUCIFIX = 42;
+    public static final int RING = 47;
     public static final int ANCHOR = 50;
     public static final int PLANE_MODEL = 51;
     public static final int BOOK_OF_THE_DEAD = 54;
@@ -36,6 +37,7 @@ public final class ItemConstants {
     public static final int SOFTWARE_MEKURI = 100;
     public static final short WEIGHT = 105;
     public static final short COIN = 106;
+    public static final short MANTRA_MARDUK = 223;
 
     private ItemConstants() { }
 }

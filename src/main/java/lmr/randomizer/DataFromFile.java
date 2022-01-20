@@ -6,6 +6,7 @@ import lmr.randomizer.randomization.ShopRandomizationEnum;
 import lmr.randomizer.randomization.data.GameObjectId;
 import lmr.randomizer.util.LocationCoordinateMapper;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -88,7 +89,7 @@ public final class DataFromFile {
     private static List<String> allShops;
     private static List<String> allItems;
     private static List<String> allCoinChests;
-    private static List<String> allNonShopItemsPlusAllRandomizedShopItems;
+    private static List<String> allPlaceableItems;
     private static List<String> nonRandomizedItems;
     private static List<String> randomizedShopItems;
     private static List<String> randomRemovableItems;
@@ -132,21 +133,21 @@ public final class DataFromFile {
         return allItems;
     }
 
-    public static List<String> getAllNonShopItemsPlusAllRandomizedShopItemsPlusAllRandomizedCoinChests() {
-        if(allNonShopItemsPlusAllRandomizedShopItems == null) {
-            allNonShopItemsPlusAllRandomizedShopItems = new ArrayList<>(getNonShopItemLocations());
+    public static List<String> getAllPlaceableItems() {
+        if(allPlaceableItems == null) {
+            allPlaceableItems = new ArrayList<>(getNonShopItemLocations());
             if(!ShopRandomizationEnum.NONE.equals(Settings.getShopRandomization())) {
                 for(String item : getRandomizedShopItems()) {
-                    if(!allNonShopItemsPlusAllRandomizedShopItems.contains(item)) {
-                        allNonShopItemsPlusAllRandomizedShopItems.add(item);
+                    if(!allPlaceableItems.contains(item)) {
+                        allPlaceableItems.add(item);
                     }
                 }
             }
-            if(allNonShopItemsPlusAllRandomizedShopItems == null) {
-                allNonShopItemsPlusAllRandomizedShopItems = new ArrayList<>(0); // todo: NPE more likely
+            if(allPlaceableItems == null) {
+                allPlaceableItems = new ArrayList<>(0); // todo: NPE more likely
             }
         }
-        return allNonShopItemsPlusAllRandomizedShopItems;
+        return allPlaceableItems;
     }
 
     public static List<String> getNonShopItemLocations() {
@@ -290,7 +291,7 @@ public final class DataFromFile {
             boolean requirePlaneModelAndTwinStatueAndLiteracy = !Settings.getEnabledGlitches().contains("Raindrop");
             boolean requireEarthSpearAndBronzeMirror = !Settings.getEnabledGlitches().contains("Lamp Glitch") && !Settings.getEnabledGlitches().contains("Raindrop");
             for(String itemName : getAllItems()) {
-                if(!Settings.isFoolsGameplay() && itemName.startsWith("Ankh Jewel")) {
+                if(!Settings.isReducedBossCount() && itemName.startsWith("Ankh Jewel")) {
                     continue; // Don't remove ankh jewels unless it's allowed.
                 }
                 if(HolidaySettings.isFools2021Mode()) {
@@ -352,16 +353,16 @@ public final class DataFromFile {
                 if(!Settings.isFeatherlessMode() && "Feather".equals(itemName)) {
                     continue;
                 }
-                if(!Settings.isFoolsGameplay() && Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
+                if(!Settings.isReducedBossCount() && Settings.isRequireFlaresForExtinction() && "Flare Gun".equals(itemName)) {
                     continue; // Can't get Extinction grail without flares according to this logic. Only matters if Extinction grail is required.
                 }
                 if(Settings.isRequireIceCapeForLava() && "Ice Cape".equals(itemName)) {
                     continue; // Needed for Viy
                 }
-                if(!Settings.isFoolsGameplay() && requireFruitOfEden && "Fruit of Eden".equals(itemName)) {
+                if(!Settings.isReducedBossCount() && requireFruitOfEden && "Fruit of Eden".equals(itemName)) {
                     continue; // Can't get Illusion grail without this. Only matters if Illusion grail is required.
                 }
-                if(!Settings.isFoolsGameplay() && requireSerpentStaffAndChakrams && ("Chakram".equals(itemName) || "Serpent Staff".equals(itemName))) {
+                if(!Settings.isReducedBossCount() && requireSerpentStaffAndChakrams && ("Chakram".equals(itemName) || "Serpent Staff".equals(itemName))) {
                     continue; // Can't get Birth grail without these. Only matters if Birth grail is required.
                 }
                 if(requirePlaneModelAndTwinStatueAndLiteracy && ("Plane Model".equals(itemName) || "Twin Statue".equals(itemName))) {
@@ -458,7 +459,9 @@ public final class DataFromFile {
             if(LocationCoordinateMapper.isSurfaceStart() || Settings.getCurrentStartingLocation() == 23 || Settings.getCurrentStartingLocation() == 24) {
                 mapOfNodeNameToRequirementsObject.remove(DataFromFile.CUSTOM_SHOP_NAME);
             }
-//            FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "custom-reqs.txt", false);
+            if (new File("custom-reqs.txt").exists()) {
+                FileUtils.populateRequirements(mapOfNodeNameToRequirementsObject, "custom-reqs.txt", false);
+            }
 
             for(NodeWithRequirements nodeWithRequirements : mapOfNodeNameToRequirementsObject.values()) {
                 nodeWithRequirements.expandRequirements();
@@ -577,7 +580,7 @@ public final class DataFromFile {
 
     public static void clearAllData() {
         if(Settings.isChanged()) {
-            allNonShopItemsPlusAllRandomizedShopItems = null;
+            allPlaceableItems = null;
             nonRandomizedItems = null;
             allShops = null;
             randomizedShopItems = null;

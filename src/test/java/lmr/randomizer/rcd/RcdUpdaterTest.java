@@ -331,7 +331,7 @@ public class RcdUpdaterTest {
     }
 
     private static void determineFoolsGameplay(Random random) {
-        if(!Settings.isFoolsGameplay()) {
+        if(!Settings.isReducedBossCount()) {
             Settings.setCurrentBossCount(8);
             FileUtils.logFlush("Using default boss count: 8");
             return;

@@ -609,13 +609,13 @@ public class Validation {
                 ankhJewelsRemoved += 1;
             }
         }
-        if(!Settings.isFoolsGameplay() && ankhJewelsRemoved > 0) {
+        if(!Settings.isReducedBossCount() && ankhJewelsRemoved > 0) {
             JOptionPane.showMessageDialog(randomizerUI,
                     "Current settings do not allow Ankh Jewels to be removed",
                     "Custom placement error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if(Settings.isFoolsGameplay() && ankhJewelsRemoved > 4) {
+        if(Settings.isReducedBossCount() && ankhJewelsRemoved > 4) {
             JOptionPane.showMessageDialog(randomizerUI,
                     "Current settings do not allow more than 4 Ankh Jewels to be removed",
                     "Custom placement error", JOptionPane.ERROR_MESSAGE);

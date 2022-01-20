@@ -24,7 +24,7 @@ public class AnkhJewelLockChecker implements Runnable {
         if(accessChecker.isEnoughAnkhJewelsToDefeatAllAccessibleBosses()) {
             return false;
         }
-        if(!Settings.isFoolsGameplay()) {
+        if(!Settings.isReducedBossCount()) {
             // Not enough jewels for all bosses, and all bosses are required.
             return true;
         }

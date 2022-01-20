@@ -102,6 +102,9 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Skeleton) {
             return updateSkeleton((Skeleton)gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.TogSpawner) {
+            return updateTogSpawner(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Snouter) {
             return updateSnouter(gameObject);
         }
@@ -120,11 +123,14 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.RoomSpawner) {
             return updateRoomSpawner(gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.OneWayDoor) {
+            return updateOneWayDoor(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.Crusher) {
             return updateCrusher(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.Hitbox) {
-            return updateHitbox(gameObject);
+            return updateHitbox((Hitbox)gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.LemezaDetector) {
             return updateLemezaDetector(gameObject);
@@ -152,6 +158,12 @@ public abstract class RcdUpdater {
         }
         else if(gameObject.getId() == ObjectIdConstants.GhostSpawner) {
             return updateGhostSpawner(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.GhostLord) {
+            return updateGhostLord(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.RedSkeleton) {
+            return updateRedSkeleton(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.Steam) {
             return updateSteam(gameObject);
@@ -403,13 +415,16 @@ public abstract class RcdUpdater {
             return updateUseItemDetector(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.Scannable) {
-            return updateScannable(gameObject);
+            return updateScannable((Scannable)gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.Autosave) {
             return updateAutosave(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.ConversationDoor) {
             return updateConversationDoor(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.FallingSun) {
+            return updateFallingSun(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.Animation) {
             return updateAnimation(gameObject);
@@ -471,6 +486,9 @@ public abstract class RcdUpdater {
     boolean updateSkeleton(Skeleton skeleton) {
         return true;
     }
+    boolean updateTogSpawner(GameObject togSpawner) {
+        return true;
+    }
     boolean updateSnouter(GameObject snouter) {
         return true;
     }
@@ -489,10 +507,13 @@ public abstract class RcdUpdater {
     boolean updateRoomSpawner(GameObject roomSpawner) {
         return true;
     }
+    boolean updateOneWayDoor(GameObject oneWayDoor) {
+        return true;
+    }
     boolean updateCrusher(GameObject crusher) {
         return true;
     }
-    boolean updateHitbox(GameObject hitbox) {
+    boolean updateHitbox(Hitbox hitbox) {
         return true;
     }
     boolean updateLemezaDetector(GameObject lemezaDetector) {
@@ -520,6 +541,12 @@ public abstract class RcdUpdater {
         return true;
     }
     boolean updateGhostSpawner(GameObject ghostSpawner) {
+        return true;
+    }
+    boolean updateGhostLord(GameObject ghostLord) {
+        return true;
+    }
+    boolean updateRedSkeleton(GameObject redSkeleton) {
         return true;
     }
     boolean updateSteam(GameObject steam) {
@@ -771,10 +798,13 @@ public abstract class RcdUpdater {
     boolean updateUseItemDetector(GameObject useItemDetector) {
         return true;
     }
-    boolean updateScannable(GameObject scannable) {
+    boolean updateScannable(Scannable scannable) {
         return true;
     }
     boolean updateAutosave(GameObject autosave) {
+        return true;
+    }
+    boolean updateFallingSun(GameObject fallingSun) {
         return true;
     }
     boolean updateConversationDoor(GameObject conversationDoor) {

@@ -87,6 +87,7 @@ public class FullShopItemPriceCountRandomizer implements ShopItemPriceCountRando
     public ItemPriceCount getItemPriceCount(String itemName, String location, boolean isRemovedItem) {
         Short price = null;
         Short count = null;
+        // Check custom price/count by location
         for(CustomItemPlacement customItemPlacement : DataFromFile.getCustomPlacementData().getCustomItemPlacements()) {
             if(customItemPlacement.getLocation().equals(location) && customItemPlacement.getContents().equals(itemName)
                     && customItemPlacement.getShopPrice() != null) {
@@ -94,6 +95,18 @@ public class FullShopItemPriceCountRandomizer implements ShopItemPriceCountRando
                 count = customItemPlacement.getShopCount();
             }
         }
+        // Check global custom price
+        if(price == null) {
+            price = DataFromFile.getCustomPlacementData().getCustomShopPrices().get(itemName);
+        }
+        // Check global custom count
+        if(count == null) {
+            count = DataFromFile.getCustomPlacementData().getCustomShopCounts().get(itemName);
+        }
+        if(count != null && count == -1) {
+            count = getRandomCount();
+        }
+
         if(price == null && count == null && !specialAmmoPlaced && !subweaponOnly
                 && "Pistol Ammo".equals(itemName) && !"Pistol".equals(Settings.getCurrentStartingWeapon())) {
             // Special case
@@ -282,5 +295,9 @@ public class FullShopItemPriceCountRandomizer implements ShopItemPriceCountRando
             return subweaponOnly || Settings.getCurrentStartingWeapon().equals("Pistol") ? (short)3 : 1;
         }
         return 1;
+    }
+
+    private short getRandomCount() {
+        return (short)(random.nextInt(10) + 1);
     }
 }

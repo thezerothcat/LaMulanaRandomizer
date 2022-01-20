@@ -4,6 +4,7 @@ import lmr.randomizer.DataFromFile;
 import lmr.randomizer.Settings;
 import lmr.randomizer.Translations;
 import lmr.randomizer.node.AccessChecker;
+import lmr.randomizer.node.CustomItemPlacement;
 import lmr.randomizer.node.MoneyChecker;
 import lmr.randomizer.randomization.data.ItemPriceCount;
 import lmr.randomizer.randomization.data.ShopInventory;
@@ -52,7 +53,7 @@ public abstract class ShopRandomizer {
         String shopItem;
         for (int i = 1; i <= 3; i++) {
             shopItem = mapOfShopInventoryItemToContents.get(String.format("%s Item %d", shopName, i));
-            if (shopItem != null && !"Weights".equals(shopItem)) {
+            if (shopItem != null && !"Weights".equals(shopItem) && !shopItem.startsWith("Hint")) {
                 shopItems.add(shopItem);
             }
         }
@@ -66,23 +67,43 @@ public abstract class ShopRandomizer {
         String npcName = npcRandomizer.getShopNpcName(shopName);
         ShopInventory shopInventory = new ShopInventory(shopName, npcName, npcName == null ? null : npcRandomizer.getNpcLocation(npcName).replaceAll("NPCL: ", ""));
         ShopInventoryData shopInventoryData;
+        String shopItemLocation;
         String shopItem;
         boolean removedItem;
         for (int i = 1; i <= 3; i++) {
-            shopItem = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(String.format("%s Item %d", shopName, i)));
+            shopItemLocation = String.format("%s Item %d", shopName, i);
+            shopItem = Settings.getUpdatedContents(mapOfShopInventoryItemToContents.get(shopItemLocation));
             removedItem = isRemovedItem(shopItem);
             if(removedItem) {
                 shopItem = "Weights";
             }
 
             shopInventoryData = new ShopInventoryData();
-            shopInventoryData.setInventoryArg(ShopInventoryData.getInventoryArg(shopItem));
+            Short customItemGraphic = getCustomItemGraphic(shopItemLocation);
+            if(customItemGraphic == null) {
+                shopInventoryData.setInventoryArg(ShopInventoryData.getInventoryArg(shopItem));
+            }
+            else {
+                shopInventoryData.setInventoryArg(customItemGraphic);
+            }
             shopInventoryData.setWorldFlag(ShopInventoryData.getWorldFlag(shopItem));
             shopInventoryData.setItemPriceCount(getItemPriceCount(shopItem, shopName, i, removedItem));
+            if(shopItem.startsWith("Custom")) {
+                shopInventoryData.setCustomTextNumber(Integer.parseInt(shopItem.replaceAll("^Custom ?", "")));
+            }
             shopInventory.setItem(i, shopInventoryData);
         }
         mapOfShopNameToShopInventory.put(shopName, shopInventory);
         return shopInventory;
+    }
+
+    private Short getCustomItemGraphic(String shopItemLocation) {
+        for(CustomItemPlacement customItemPlacement : DataFromFile.getCustomPlacementData().getCustomItemPlacements()) {
+            if(customItemPlacement.getItemGraphic() != null && customItemPlacement.getLocation().equals(shopItemLocation)) {
+                return DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(customItemPlacement.getItemGraphic()).getInventoryArg();
+            }
+        }
+        return null;
     }
 
     private boolean isRemovedItem(String shopItem) {

@@ -15,6 +15,14 @@ public class CustomItemPlacement {
         this.shopCount = shopCount;
     }
 
+    public CustomItemPlacement(String location, String contents, String itemGraphic, Short shopPrice, Short shopCount) {
+        this.location = location;
+        this.contents = contents;
+        this.itemGraphic = itemGraphic;
+        this.shopPrice = shopPrice;
+        this.shopCount = shopCount;
+    }
+
     public CustomItemPlacement(String location, String contents, String itemGraphic) {
         this.location = location;
         this.contents = contents;

@@ -15,8 +15,8 @@ public class LocationContentsData {
     private boolean isRemovedItem;
 
     public LocationContentsData(String locationName, String itemName) {
-        this.itemName = itemName;
         this.locationName = locationName;
+        this.itemName = itemName;
     }
 
     public String getLocationName() {

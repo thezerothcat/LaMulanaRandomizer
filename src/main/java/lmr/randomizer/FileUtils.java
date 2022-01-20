@@ -18,7 +18,7 @@ import java.util.zip.ZipInputStream;
  * Created by thezerothcat on 7/10/2017.
  */
 public class FileUtils {
-    public static final String VERSION = "2.29.1";
+    public static final String VERSION = "2.30.0b1";
 
     private static BufferedWriter logWriter;
     private static final List<String> KNOWN_RCD_FILE_HASHES = new ArrayList<>();
@@ -351,6 +351,16 @@ public class FileUtils {
                             else if(line.startsWith("Transition")) {
                                 customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomTransitionPlacements().add(new CustomTransitionPlacement(target, assignment));
+                            }
+                            else if(line.startsWith("Universal Shop Price")) {
+                                customPlacementData.setCustomized(true);
+                                target = target.replaceAll("Universal Shop Price:? ?", "");
+                                customPlacementData.getCustomShopPrices().put(target, Short.parseShort(assignment));
+                            }
+                            else if(line.startsWith("Universal Shop Quantity")) {
+                                customPlacementData.setCustomized(true);
+                                target = target.replaceAll("Universal Shop Quantity:? ?", "");
+                                customPlacementData.getCustomShopCounts().put(target, assignment.equalsIgnoreCase("random") ? -1 : Short.parseShort(assignment));
                             }
                             else if(line.contains("NPC")) {
                                 customPlacementData.setCustomized(true);

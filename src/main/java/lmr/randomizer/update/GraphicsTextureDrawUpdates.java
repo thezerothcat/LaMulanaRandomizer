@@ -55,7 +55,8 @@ public class GraphicsTextureDrawUpdates {
                 return false;
             }
         }
-        updateTests(graphicsTextureDraw, zoneIndex);
+        updateTabletGlowTests(graphicsTextureDraw);
+        updateMiscTests(graphicsTextureDraw, zoneIndex);
         return true;
     }
 
@@ -182,7 +183,16 @@ public class GraphicsTextureDrawUpdates {
         }
     }
 
-    private static void updateTests(GameObject graphicsTextureDraw, int zoneIndex) {
+    private static void updateTabletGlowTests(GameObject graphicsTextureDraw) {
+        for (int flagIndex = 0; flagIndex < graphicsTextureDraw.getTestByteOperations().size(); flagIndex++) {
+            TestByteOperation flagTest = graphicsTextureDraw.getTestByteOperations().get(flagIndex);
+            if(FlagConstants.BLANK_TABLET_GLOW_FLAGS.contains(flagTest.getIndex())) {
+                flagTest.setIndex(FlagConstants.TABLET_GLOW_GUIDANCE_ENTRANCE_BROKEN);
+            }
+        }
+    }
+
+    private static void updateMiscTests(GameObject graphicsTextureDraw, int zoneIndex) {
         Integer removeFlagIndex = null;
         for (int flagIndex = 0; flagIndex < graphicsTextureDraw.getTestByteOperations().size(); flagIndex++) {
             TestByteOperation flagTest = graphicsTextureDraw.getTestByteOperations().get(flagIndex);

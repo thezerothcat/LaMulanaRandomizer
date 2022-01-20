@@ -46,6 +46,22 @@ public class RcdFileData {
         return objects;
     }
 
+    public List<GameObject> getObjectsById(int id, int zoneFilter) {
+        List<GameObject> objects = new ArrayList<>();
+        for(Zone zone : zones) {
+            if(zone.getZoneIndex() == zoneFilter) {
+                objects.addAll(zone.getObjectsById(id));
+                for(Room room : zone.getRooms()) {
+                    objects.addAll(room.getObjectsById(id));
+                    for(Screen screen : room.getScreens()) {
+                        objects.addAll(screen.getObjectsById(id));
+                    }
+                }
+            }
+        }
+        return objects;
+    }
+
     public List<Zone> getZones() {
         return zones;
     }

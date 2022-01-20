@@ -621,7 +621,7 @@ public class HolidayModePlacements {
     }
 
     private static void addCustomPlacementsFools2021() {
-        if(Settings.isFoolsGameplay()) {
+        if(Settings.isReducedBossCount()) {
             DataFromFile.getCustomPlacementData().setAutomaticMantras(true);
             DataFromFile.getCustomPlacementData().setAlternateMotherAnkh(false);
             DataFromFile.getCustomPlacementData().setMedicineColor("Yellow");

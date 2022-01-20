@@ -84,4 +84,8 @@ public final class HolidaySettings {
         }
         singleton.includeOptionalContent = includeOptionalContent;
     }
+
+    public static boolean isSaveFileNeeded() {
+        return isHalloweenMode() || isFools2020Mode() ||isFools2021Mode() || isFools2022Mode();
+    }
 }

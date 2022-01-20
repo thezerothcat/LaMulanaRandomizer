@@ -183,6 +183,20 @@ public final class DatReader {
         ListEntry listEntry = buildListEntry(dataInputStream, false);
         dataIndex += listEntry.getSize() / 2;
         scannableBlock.getBlockContents().add(listEntry);
+
+        if(scannableBlock.getSlate() > 0) {
+            dataInputStream.readShort(); // 0x000a
+            dataIndex += 2;
+            listEntry.setIncludeEndRecordIndicator(true);
+
+            listEntry = buildListEntry(dataInputStream, true);
+            dataIndex += listEntry.getSize() / 2;
+            scannableBlock.getBlockContents().add(listEntry);
+
+            listEntry = buildListEntry(dataInputStream, false);
+            dataIndex += listEntry.getSize() / 2;
+            scannableBlock.getBlockContents().add(listEntry);
+        }
         return scannableBlock;
     }
 
@@ -743,7 +757,7 @@ public final class DatReader {
 //                    cmd = "{MANTRA %d}" % ord(b[0])
 //                    b = b[1:]
 
-                    block.getBlockContents().add(new BlockMantraData(data, dataInputStream.readShort()));
+                    block.getBlockContents().add(new BlockMantraData(dataInputStream.readShort()));
                     ++dataIndex;
                 }
                 else if (data == BlockDataConstants.ColorChange) {
@@ -955,10 +969,11 @@ public final class DatReader {
             else if(blockIndex == BlockConstants.HTMapNamesLimitedBlock) {
                 block = buildMapNamesLimitedBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
-            else if(blockIndex == BlockConstants.FootOfFuto) {
+            else if(blockIndex == BlockConstants.FootOfFuto
+                    || BlockConstants.TABLET_BLOCKS.contains(blockIndex)) {
                 block = buildScannableBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
-            else if(blockIndex == 273) {
+            else if(blockIndex == BlockConstants.ShopBlockGiantMopiranAngelShield) {
                 block = buildShopBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             else if(blockIndex == BlockConstants.XelpudFlagCheckBlock || blockIndex == BlockConstants.XelpudScoreCheckBlock

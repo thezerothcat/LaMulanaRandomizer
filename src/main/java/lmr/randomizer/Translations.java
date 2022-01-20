@@ -1,5 +1,6 @@
 package lmr.randomizer;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,21 +10,45 @@ import java.util.Properties;
  * Created by thezerothcat on 10/4/2017.
  */
 public final class Translations {
-    private static Properties enTranslations;
-    private static Properties jpTranslations;
+    private static Properties baseTranslations;
+    private static Properties allTranslations;
 
     public static void initTranslations() throws IOException {
-        enTranslations = new Properties();
-        jpTranslations = null;
+        baseTranslations = new Properties();
+        loadTranslations(baseTranslations, "en");
+        if("jp".equals(Settings.getLanguage())) {
+            Properties jpTranslations = new Properties(baseTranslations);
+            loadTranslations(jpTranslations, "jp");
+            loadCustomTranslations(jpTranslations);
+        }
+        else {
+            loadCustomTranslations(baseTranslations);
+        }
+    }
 
-        loadTranslations(enTranslations, "en");
+    public static void reloadTranslations() {
+        if("jp".equals(Settings.getLanguage())) {
+            Properties jpTranslations = new Properties(baseTranslations);
+            try {
+                loadTranslations(jpTranslations, "jp");
+                loadCustomTranslations(jpTranslations);
+            }
+            catch(IOException ex) {
+                // Ignored
+            }
+        }
+        else {
+            try {
+                loadCustomTranslations(baseTranslations);
+            }
+            catch(IOException ex) {
+                // Ignored
+            }
+        }
     }
 
     public static String getText(String key) {
-        if("jp".equals(Settings.getLanguage())) {
-            return getJapaneseTranslation(key);
-        }
-        return enTranslations.getProperty(key);
+        return allTranslations.getProperty(key);
     }
 
     public static String getLocationAndNpc(String npc) {
@@ -36,24 +61,7 @@ public final class Translations {
         }
         npcKey = npcKey.replaceAll("[ )('-.]", "");
         locationKey = locationKey.replaceAll("[ )('-.]", "");
-        if("jp".equals(Settings.getLanguage())) {
-            return getJapaneseTranslation(locationKey) + "" + getJapaneseTranslation(npcKey);
-        }
-        return enTranslations.getProperty("npcl." + locationKey) + "" + enTranslations.getProperty("npc." + npcKey);
-    }
-
-    protected static String getJapaneseTranslation(String key) {
-        if(jpTranslations == null) {
-            jpTranslations = new Properties(enTranslations);
-            try {
-                loadTranslations(jpTranslations, "jp");
-            }
-            catch (Exception ex) {
-                FileUtils.log("Unable to load translations");
-                enTranslations.getProperty(key);
-            }
-        }
-        return jpTranslations.getProperty(key);
+        return baseTranslations.getProperty("npcl." + locationKey) + "" + baseTranslations.getProperty("npc." + npcKey);
     }
 
     protected static void loadTranslations(Properties toLoad, String langCode) throws IOException {
@@ -64,6 +72,17 @@ public final class Translations {
         catch (Exception ex) {
             toLoad.load(new InputStreamReader(FileUtils.class.getResourceAsStream(
                     String.format("lang/lang_%s.properties", langCode)), "UTF-8"));
+        }
+    }
+
+    protected static void loadCustomTranslations(Properties defaultProperties) throws IOException {
+        try {
+            allTranslations = new Properties(defaultProperties);
+            if ((new File("custom-text.properties").exists())) {
+                allTranslations.load(new InputStreamReader(new FileInputStream("custom-text.properties"), "UTF-8"));
+            }
+        }
+        catch (Exception ex) {
         }
     }
 

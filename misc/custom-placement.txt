@@ -187,7 +187,7 @@
 ##Location: Tower of Ruin # Not supported
 #Location: Chamber of Birth
 #Location: Twin Labyrinths (Backside)
-#Location: Dimensional Corridor
+##Location: Dimensional Corridor # Not supported
 ##Location: Retromausoleum # Not supported
 ##Location: Retroguidance # Not supported
 #Location: Retrosurface
@@ -648,25 +648,28 @@
 # Note 4: The key fairy door can be one-sided, with None on the opposite side.
 # Note 5: Door: B9 must be Key Fairy or None. Boss doors are not supported at this time.
 # Note 6: Door: B8 must be None.
+# Note 7: Doors are identified by their vanilla boss number and whether they appear in a frontside (F) or backside (B) field.
+# Note 8: Surface is considered frontside, Retromausoleum/Gate of Time is considered backside, the doors between Endless Corridor/Dimensional Corridor are assigned 8, and the Extinction/Gate of Time Key Fairy doors are assigned 9.
+# Note 9: See additional comments below for help identifying doors.
 
-#Door: F1=Door: B1 {Amphisbaena}
-#Door: B1=Door: F1 {Amphisbaena}
-#Door: F2=Door: B2 {Sakit}
-#Door: B2=Door: F2 {Sakit}
-#Door: F3=Door: B3 {Ellmac}
-#Door: B3=Door: F3 {Ellmac}
-#Door: F4=Door: B4 {Bahamut}
-#Door: B4=Door: F4 {Bahamut}
-#Door: F5=Door: B5 {Viy}
-#Door: B5=Door: F5 {Viy}
-#Door: F6=Door: B6 {Palenque}
-#Door: B6=Door: F6 {Palenque}
-#Door: F7=Door: B7 {Baphomet}
-#Door: B7=Door: F7 {Baphomet}
-#Door: F8=Door: B8 {None}
-#Door: B8=Door: F8 {None}
-#Door: F9=Door: B9 {Key Fairy}
-#Door: B9=Door: F9 {None}
+#Door: F1=Door: B1 {Amphisbaena} ## Gate of Guidance goes to Gate of Illusion
+#Door: B1=Door: F1 {Amphisbaena} ## Gate of Illusion goes to Gate of Guidance
+#Door: F2=Door: B2 {Sakit} ## Mausoleum of the Giants goes to Graveyard of the Giants
+#Door: B2=Door: F2 {Sakit} ## Graveyard of the Giants goes to Mausoleum of the Giants
+#Door: F3=Door: B3 {Ellmac} ## Temple of the Sun goes to Temple of Moonlight
+#Door: B3=Door: F3 {Ellmac} ## Temple of Moonlight goes to Temple of the Sun
+#Door: F4=Door: B4 {Bahamut} ## Inferno Cavern (Darkness Sanctuary) goes to Tower of Ruin (Tower of Babel)
+#Door: B4=Door: F4 {Bahamut} ## Tower of Ruin (Tower of Babel) goes to Inferno Cavern (Darkness Sanctuary)
+#Door: F5=Door: B5 {Viy} ## Surface goes to Tower of the Goddess
+#Door: B5=Door: F5 {Viy} ## Tower of the Goddess goes to Surface
+#Door: F6=Door: B6 {Palenque} ## Chamber of Extinction (Approach to the Sanctuary) goes to Chamber of Birth
+#Door: B6=Door: F6 {Palenque} ## Chamber of Birth goes to Chamber of Extinction (Approach to the Sanctuary)
+#Door: F7=Door: B7 {Baphomet} ## Inferno Cavern (Echidna's Chamber) goes to Tower of Ruin (Nüwa's Pyramid)
+#Door: B7=Door: F7 {Baphomet} ## Tower of Ruin (Nüwa's Pyramid) goes to Inferno Cavern (Echidna's Chamber)
+#Door: F8=Door: B8 {None} ## Endless Corridor doesn't actually go to Dimensional Corridor, since there is no backside door in Endless Corridor.
+#Door: B8=Door: F8 {None} ## Dimensional Corridor goes to Endless Corridor (one-way)
+#Door: F9=Door: B9 {Key Fairy} ## Chamber of Extinction (Path of Life) goes to Gate of Time (Mausoleum)
+#Door: B9=Door: F9 {None} ## Gate of Time (Mausoleum) goes to Chamber of Extinction (Path of Life)
 
 ###########
 # Removal #
@@ -887,9 +890,28 @@
 # Miscellaneous #
 #################
 
+# Note: Forces activation of Mother ankh via Ankh Jewel instead of empowered Key Sword
 #Alternate Mother Ankh
+
+# Note: Automatically empowers Key Sword as soon as it's collected
 #Skip Mantras
 
+# Note: Enable one of the below to place a specific color of Medicine of the Mind instead of the empty Vessel
 #Fill Vessel Green
 #Fill Vessel Red
 #Fill Vessel Yellow
+
+# Note 1: Use this to modify price without having to specify location. All occurrences of the specified item in shops will use the price specified below.
+# Note 2: Prices specified under Shop Inventory Placements are given priority. If you assign a price for a specific location there, it will be used, and all other locations will use the universal price.
+# Note 3: This does not force an item to appear in a shop. If you want to guarantee that an item will be placed in a shop, you'll need to decide the location under Shop Inventory Placements.
+#Universal Shop Price: Weights=10
+
+# Note 1: Use this to modify quantity without having to specify location. All occurrences of the specified item in shops will use the quantity specified below.
+# Note 2: Quantities specified under Shop Inventory Placements are given priority. If you assign a quantity for a specific location there, it will be used, and all other locations will use the universal quantity.
+# Note 3: This does not force an item to appear in a shop. If you want to guarantee that an item will be placed in a shop, you'll need to decide the location under Shop Inventory Placements.
+# Note 4: If you specify a quantity of 0 for any type of ammo, that ammo type will not be randomly placed in any shops.
+# Note 5: Specifying "random" will randomly assign a quantity ranging from 1 to 10 for each occurrence of the item. If you want consistent quantities, you'll have to pick a specific number instead.
+# Note 6: For most regular items, quantity is irrelevant and will not affect gameplay. This is primarily intended for weights and subweapon ammo.
+#Universal Shop Quantity: Weights=5
+#Universal Shop Quantity: Weights=random
+#Universal Shop Quantity: Bomb Ammo=0

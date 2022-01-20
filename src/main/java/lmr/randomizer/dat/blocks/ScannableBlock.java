@@ -25,6 +25,10 @@ public class ScannableBlock extends Block {
         ((ListEntry)getBlockContents().get(1)).getData().set(0, (short)language);
     }
 
+    public int getSlate() {
+        return ((ListEntry)getBlockContents().get(1)).getData().get(1);
+    }
+
     public void setSlate(int slate) {
         ((ListEntry)getBlockContents().get(1)).getData().set(1, (short)slate);
     }

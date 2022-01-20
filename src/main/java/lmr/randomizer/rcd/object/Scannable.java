@@ -44,6 +44,14 @@ public class Scannable extends GameObject {
         setY(y);
     }
 
+    public Scannable(GameObject scannable) {
+        super(scannable);
+    }
+
+    public int getTextBlock() {
+        return getArgs().get(0);
+    }
+
     public void setTextBlock(int textBlock) {
         getArgs().set(0, (short)textBlock);
     }

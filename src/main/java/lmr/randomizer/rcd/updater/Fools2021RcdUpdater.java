@@ -188,7 +188,7 @@ public class Fools2021RcdUpdater extends RcdUpdater {
             }
         }
 
-        if(Settings.isFoolsGameplay() && Settings.getCurrentBossCount() != 8) {
+        if(Settings.isReducedBossCount() && Settings.getCurrentBossCount() != 8) {
             // Timers for unlocking true shrine, normally set value from 8 to 9
             boolean addTest = false;
             for(TestByteOperation testByteOperation : flagTimer.getTestByteOperations()) {
@@ -245,7 +245,7 @@ public class Fools2021RcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateHitbox(GameObject hitbox) {
+    boolean updateHitbox(Hitbox hitbox) {
         ObjectContainer objectContainer = hitbox.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
             return true;
@@ -561,7 +561,7 @@ public class Fools2021RcdUpdater extends RcdUpdater {
     }
 
     @Override
-    boolean updateScannable(GameObject scannable) {
+    boolean updateScannable(Scannable scannable) {
         ObjectContainer objectContainer = scannable.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
             return true;

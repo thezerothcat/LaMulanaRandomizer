@@ -383,6 +383,14 @@ public class DatFileData {
         return emailBlocks;
     }
 
+    public List<ScannableBlock> getCustomizableTabletBlocks() {
+        List<ScannableBlock> tabletBlocks = new ArrayList<>();
+        for(int blockNumber : BlockConstants.TABLET_BLOCKS) {
+            tabletBlocks.add((ScannableBlock)datFileEntries.get(blockNumber));
+        }
+        return tabletBlocks;
+    }
+
     public void addCustomBlock(CustomBlockEnum customBlockId, Block block) {
         block.setBlockNumber(datFileEntries.size());
         datFileEntries.add(block);

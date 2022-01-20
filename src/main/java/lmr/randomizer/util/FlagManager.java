@@ -66,6 +66,20 @@ public class FlagManager {
         availableFlags.add(FlagConstants.REMOVED_MAP_RUIN);
         availableFlags.add(FlagConstants.REMOVED_MAP_BIRTH);
         availableFlags.add(FlagConstants.REMOVED_MAP_DIMENSIONAL);
+        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_RIGHT_OF_POISON_2_BROKEN);
+        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_FAKE_ANKH_JEWEL_BROKEN);
+        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_ABOVE_YIEAR_BROKEN);
+        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_ARROGANT_STURDY_SNAKE_BROKEN);
+        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_LEFT_OF_BACKSIDE_GRAIL_BROKEN);
+        availableFlags.add(FlagConstants.TABLET_GLOW_ENDLESS_FAIRY_SCREEN_BROKEN);
+        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_CHILDS_ROOM_BROKEN);
+        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_BACKSIDE_DOOR_BROKEN);
+        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_MOVER_ATHLELAND_SCREEN_BROKEN);
+        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_FOOLS_CONFUSION_CORRIDOR_BROKEN);
+        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_FOOLS_CONFUSION_CORRIDOR_SCAN_ROOM_BROKEN);
+        availableFlags.add(FlagConstants.TABLET_GLOW_GRAVEYARD_GIANT_THEXDE_SCREEN_BROKEN);
+        availableFlags.add(FlagConstants.TABLET_GLOW_BIRTH_SKANDA_ASURAS_ROOM_BROKEN);
+
         for(int flag = FIRST_AVAILABLE_RANDOM_GRAPHICS_FLAG; flag < LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG; flag++) {
             availableFlags.add(flag);
         }

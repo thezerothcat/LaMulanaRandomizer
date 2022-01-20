@@ -1,30 +1,25 @@
 package lmr.randomizer.dat.update;
 
 import lmr.randomizer.*;
-import lmr.randomizer.dat.*;
+import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.dat.blocks.Block;
 import lmr.randomizer.dat.blocks.MasterNpcBlock;
-import lmr.randomizer.dat.blocks.contents.*;
 import lmr.randomizer.dat.blocks.ShopBlock;
+import lmr.randomizer.dat.blocks.contents.*;
 import lmr.randomizer.randomization.ItemRandomizer;
 import lmr.randomizer.randomization.NpcRandomizer;
 import lmr.randomizer.randomization.ShopRandomizer;
 import lmr.randomizer.randomization.data.*;
-import lmr.randomizer.rcd.object.GameObject;
 import lmr.randomizer.util.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RandomizationDatUpdater extends DatUpdater {
-    private Map<Integer, List<GameObject>> mapOfShopBlockToShopObjects = new HashMap<>();
-    private Map<GameObjectId, List<Block>> mapOfChestIdentifyingInfoToBlock = new HashMap<>();
-
     private ItemRandomizer itemRandomizer;
     private ShopRandomizer shopRandomizer;
     private NpcRandomizer npcRandomizer;
     private FlagManager flagManager;
-
-//    private Map<GameObjectId, GameObjectId> mapOfItemLocationToNewContents = new HashMap<>();
 
     public RandomizationDatUpdater(DatFileData datFileData, ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer, NpcRandomizer npcRandomizer, FlagManager flagManager) {
         super(datFileData);
@@ -686,6 +681,10 @@ public class RandomizationDatUpdater extends DatUpdater {
         updateAskItemName(shopBlock.getString(4), shopInventory.getItem2());
         updateAskItemName(shopBlock.getString(5), shopInventory.getItem3());
 
+        updateSoldText(shopBlock.getString(6), shopInventory.getItem1());
+        updateSoldText(shopBlock.getString(7), shopInventory.getItem2());
+        updateSoldText(shopBlock.getString(8), shopInventory.getItem3());
+
         List<Short> bunemonData = shopBlock.getBunemonText().getData();
         bunemonData.clear();
         updateBunemonText(bunemonData, shopInventory.getItem1(), shopBlock.getItem1Price());
@@ -754,6 +753,18 @@ public class RandomizationDatUpdater extends DatUpdater {
     }
 
     private void updateAskItemName(BlockStringData blockStringData, ShopInventoryData shopInventoryData) {
+        if(shopInventoryData.getCustomTextNumber() != null) {
+            blockStringData.getData().clear();
+            blockStringData.getData().addAll(buildStringDataWithColor(
+                    Translations.getText("CustomShopText.Offer" + shopInventoryData.getCustomTextNumber()),
+                    Translations.getText("CustomShopText.Name" + shopInventoryData.getCustomTextNumber()),
+                    BlockColorsData.COLOR_SOFTWARE_YELLOW));
+            if(shopInventoryData.getCustomTextNumber() == 2) {
+                blockStringData.getData().addAll(new BlockMantraData(MantraConstants.LAMULANA).getRawData());
+            }
+            return;
+        }
+
         if(blockStringData.getItemNameStartIndex() == null || blockStringData.getItemNameEndIndex() == null) {
             return;
         }
@@ -780,6 +791,28 @@ public class RandomizationDatUpdater extends DatUpdater {
         newBlockData.addAll(blockStringData.getData().subList(blockStringData.getItemNameEndIndex(), blockStringData.getData().size()));
         blockStringData.getData().clear();
         blockStringData.getData().addAll(newBlockData);
+    }
+
+    private void updateSoldText(BlockStringData blockStringData, ShopInventoryData shopInventoryData) {
+        if(shopInventoryData.getCustomTextNumber() != null) {
+            blockStringData.getData().clear();
+            String text = Translations.getText("CustomShopText.Purchase" + shopInventoryData.getCustomTextNumber());
+            if(text == null) {
+                int subIndex = 1;
+                boolean multiWindow = false;
+                text = Translations.getText("CustomShopText.Purchase" + shopInventoryData.getCustomTextNumber() + "." + subIndex++);
+                while(text != null) {
+                    if(multiWindow) {
+                        blockStringData.getData().add(BlockDataConstants.Cls);
+                    }
+                    blockStringData.getData().addAll(FileUtils.stringToData(text));
+                    text = Translations.getText("CustomShopText.Purchase" + shopInventoryData.getCustomTextNumber() + "." + subIndex++);
+                }
+            }
+            else {
+                blockStringData.getData().addAll(FileUtils.stringToData(text));
+            }
+        }
     }
 
     private void updateBunemonLocation(List<BlockContents> blockContents, String npcName) {
