@@ -153,7 +153,7 @@ public class Validation {
                     return false;
                 }
                 if(customDoorPlacement.getAssignedBoss() != null
-                        && customDoorPlacement.getAssignedBoss() != 9 && (customDoorPlacement.getAssignedBoss() < 1 || customDoorPlacement.getAssignedBoss() > 7)) {
+                        && customDoorPlacement.getAssignedBoss() != 9 && (customDoorPlacement.getAssignedBoss() < 0 || customDoorPlacement.getAssignedBoss() > 7)) {
                     JOptionPane.showMessageDialog(randomizerUI,
                             "Assigned boss for backside door " + customDoorPlacement.getTargetDoor() + " could not be processed; please use boss name or numbers 1-7",
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
@@ -176,7 +176,8 @@ public class Validation {
                     }
                 }
                 Integer existingBoss = placedDoorsAndBosses.get(customDoorPlacement.getDestinationDoor());
-                if(existingBoss != null && !existingBoss.equals(customDoorPlacement.getAssignedBoss())) {
+                if(existingBoss != null && existingBoss != 0 && customDoorPlacement.getAssignedBoss() != 0
+                        && !existingBoss.equals(customDoorPlacement.getAssignedBoss())) {
                     JOptionPane.showMessageDialog(randomizerUI,
                             "A pair of backside doors cannot be assigned two different bosses at this time; please update assignment for " + customDoorPlacement.getTargetDoor() + " or " + customDoorPlacement.getDestinationDoor(),
                             "Custom placement error", JOptionPane.ERROR_MESSAGE);
