@@ -10,6 +10,7 @@ public class CustomPlacementData {
     private List<CustomNPCPlacement> customNPCPlacements = new ArrayList<>();
     private List<CustomDoorPlacement> customDoorPlacements = new ArrayList<>();
     private List<CustomTransitionPlacement> customTransitionPlacements = new ArrayList<>();
+    private Map<String, Short> customSealPlacements = new HashMap<>();
     private Map<String, Short> customShopPrices = new HashMap<>();
     private Map<String, Short> customShopCounts = new HashMap<>();
     private List<String> removedLogicNodes = new ArrayList<>();
@@ -47,6 +48,10 @@ public class CustomPlacementData {
 
     public List<CustomTransitionPlacement> getCustomTransitionPlacements() {
         return customTransitionPlacements;
+    }
+
+    public Map<String, Short> getCustomSealPlacements() {
+        return customSealPlacements;
     }
 
     public List<String> getRemovedLogicNodes() {

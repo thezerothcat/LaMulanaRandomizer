@@ -671,6 +671,40 @@
 #Door: F9=Door: B9 {Key Fairy} ## Chamber of Extinction (Path of Life) goes to Gate of Time (Mausoleum)
 #Door: B9=Door: F9 {None} ## Gate of Time (Mausoleum) goes to Chamber of Extinction (Path of Life)
 
+############################
+# Seal Placements #
+############################
+
+#Seal: O1=Origin # Surface/Night Surface - Birth Seal chest
+#Seal: O2=Origin # Sun - Mulbruk's seal
+#Seal: O3=Origin # Sun - Bronze Mirror chest room/access to Sun right exits
+#Seal: O4=Origin # Spring - Mr Gyonin's shop
+#Seal: O5=Origin # Spring - Bahamut's room
+#Seal: O6=Origin # Endless - Shop seal
+#Seal: O7=Origin # Shrine - 4 Seals, Origin edition
+#Seal: O8=Origin # Shrine - Mother Ankh seal, Origin edition
+#Seal: B1=Birth # Spring - Sacred Orb chest
+#Seal: B2=Birth # Inferno - seal blocking entry to Pazuzu
+#Seal: B3=Birth # Extinction - Life Seal chest
+#Seal: B4=Birth # Shrine - 4 Seals, Birth edition
+#Seal: B5=Birth # Illusion - Chi You seal
+#Seal: B6=Birth # Moonlight - Path to Anubis
+#Seal: B7=Birth # Shrine - Mother Ankh seal, Birth edition
+#Seal: L1=Life # Guidance - Crucifix seal / Offer 3 lights
+#Seal: L2=Life # Surface/Night Surface - coin chest
+#Seal: L3=Life # Extinction - Extinction perma-light
+#Seal: L4=Life # Shrine - Crystal Skull chest
+#Seal: L5=Life # Shrine - 4 Seals, Life edition
+#Seal: L6=Life # Graveyard - Gauntlet chest
+#Seal: L7=Life # Birth - Extinction perma-light
+#Seal: L8=Life # Shrine - Mother Ankh seal, Life edition
+#Seal: D1=Death # Sun - Discount shop
+#Seal: D2=Death # Shrine - 4 Seals, Death edition
+#Seal: D3=Death # Shrine - Laptop room
+#Seal: D4=Death # Ruin - Nuwa
+#Seal: D5=Death # Dimensional - Sacred Orb chest
+#Seal: D6=Death # Shrine - Mother Ankh seal, Death edition
+
 ###########
 # Removal #
 ###########

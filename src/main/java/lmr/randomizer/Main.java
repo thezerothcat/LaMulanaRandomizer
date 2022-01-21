@@ -843,7 +843,7 @@ public class Main {
                 itemRandomizer.assignRandomGraphics(flagManager.getTotalUnallocatedFlags(), random);
 
                 dialog.updateProgress(85, Translations.getText("progress.spoiler"));
-                outputLocations(itemRandomizer, shopRandomizer, npcRandomizer, transitionGateRandomizer, backsideDoorRandomizer, attempt);
+                outputLocations(itemRandomizer, shopRandomizer, npcRandomizer, transitionGateRandomizer, backsideDoorRandomizer, sealRandomizer, attempt);
 
                 dialog.updateProgress(90, Translations.getText("progress.read"));
 
@@ -1792,7 +1792,8 @@ public class Main {
 
     private static void outputLocations(ItemRandomizer itemRandomizer, ShopRandomizer shopRandomizer,
                                         NpcRandomizer npcRandomizer, TransitionGateRandomizer transitionGateRandomizer,
-                                        BacksideDoorRandomizer backsideDoorRandomizer, int attempt) throws IOException {
+                                        BacksideDoorRandomizer backsideDoorRandomizer, SealRandomizer sealRandomizer,
+                                        int attempt) throws IOException {
         BufferedWriter writer = FileUtils.getFileWriter(String.format("%d/spoiler.txt", Settings.getStartingSeed()));
         if (writer == null) {
             return;
@@ -1807,6 +1808,9 @@ public class Main {
         }
         if(Settings.isRandomizeBacksideDoors()) {
             backsideDoorRandomizer.outputLocations(writer, attempt);
+        }
+        if(Settings.isRandomizeSeals()) {
+            sealRandomizer.outputLocations(writer, attempt);
         }
         writer.flush();
         writer.close();

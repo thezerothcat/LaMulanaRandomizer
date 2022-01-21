@@ -262,7 +262,6 @@ public class RandomizationRcdUpdater extends RcdUpdater {
             updateChestFlags(chest, locationContentsData.getLocationWorldFlag(), locationContentsData.getNewWorldFlag(), 1);
 
             if(chest.getUnlockedCheck().getIndex() != 0x032) {
-                AddObject.addItemGive(chest, locationContentsData.getItemInventoryArg(), locationContentsData.getNewWorldFlag(), locationContentsData.getItemWorldFlag());
                 ItemGive itemGive = AddObject.addItemGive(chest, locationContentsData.getItemInventoryArg(), locationContentsData.getNewWorldFlag(), locationContentsData.getItemWorldFlag());
                 if(HolidaySettings.isHalloween2021Mode() && ItemConstants.MAP != locationContentsData.getItemInventoryArg() && ((Screen)chest.getObjectContainer()).getZoneIndex() != ZoneConstants.SURFACE) {
                     int safeScreenFlag = FlagConstants.getSafeScreenFlag(locationContentsData.getLocationWorldFlag());

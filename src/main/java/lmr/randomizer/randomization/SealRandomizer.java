@@ -1,12 +1,17 @@
 package lmr.randomizer.randomization;
 
+import lmr.randomizer.DataFromFile;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
+import lmr.randomizer.Translations;
 import lmr.randomizer.rcd.object.GameObject;
 import lmr.randomizer.rcd.object.Screen;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class SealRandomizer {
@@ -61,71 +66,112 @@ public class SealRandomizer {
             lifeSeals.clear();
             deathSeals.clear();
 
+            for(Map.Entry<String, Short> customSealPlacement : DataFromFile.getCustomPlacementData().getCustomSealPlacements().entrySet()) {
+                if(customSealPlacement.getValue() == 0) {
+                    originSeals.add(customSealPlacement.getKey());
+                }
+                if(customSealPlacement.getValue() == 1) {
+                    birthSeals.add(customSealPlacement.getKey());
+                }
+                if(customSealPlacement.getValue() == 2) {
+                    lifeSeals.add(customSealPlacement.getKey());
+                }
+                if(customSealPlacement.getValue() == 3) {
+                    deathSeals.add(customSealPlacement.getKey());
+                }
+            }
+
+            String sealName;
+
             // Origin seals
             for (int i = 1; i <= 8; i++) {
+                sealName = "Seal: O" + i;
+                if(originSeals.contains(sealName) || birthSeals.contains(sealName)
+                        || lifeSeals.contains(sealName) || deathSeals.contains(sealName)) {
+                    continue;
+                }
+
                 int sealNumber = random.nextInt(4);
                 if(sealNumber == 0) {
-                    originSeals.add("Seal: O" + i);
+                    originSeals.add(sealName);
                 }
                 else if(sealNumber == 1) {
-                    birthSeals.add("Seal: O" + i);
+                    birthSeals.add(sealName);
                 }
                 else if(sealNumber == 2) {
-                    lifeSeals.add("Seal: O" + i);
+                    lifeSeals.add(sealName);
                 }
                 else if(sealNumber == 3) {
-                    deathSeals.add("Seal: O" + i);
+                    deathSeals.add(sealName);
                 }
             }
 
             // Birth seals
             for (int i = 1; i <= 7; i++) {
+                sealName = "Seal: B" + i;
+                if(originSeals.contains(sealName) || birthSeals.contains(sealName)
+                        || lifeSeals.contains(sealName) || deathSeals.contains(sealName)) {
+                    continue;
+                }
+
                 int sealNumber = random.nextInt(4);
                 if(sealNumber == 0) {
-                    originSeals.add("Seal: B" + i);
+                    originSeals.add(sealName);
                 }
                 else if(sealNumber == 1) {
-                    birthSeals.add("Seal: B" + i);
+                    birthSeals.add(sealName);
                 }
                 else if(sealNumber == 2) {
-                    lifeSeals.add("Seal: B" + i);
+                    lifeSeals.add(sealName);
                 }
                 else if(sealNumber == 3) {
-                    deathSeals.add("Seal: B" + i);
+                    deathSeals.add(sealName);
                 }
             }
 
             // Life seals
             for (int i = 1; i <= 8; i++) {
+                sealName = "Seal: L" + i;
+                if(originSeals.contains(sealName) || birthSeals.contains(sealName)
+                        || lifeSeals.contains(sealName) || deathSeals.contains(sealName)) {
+                    continue;
+                }
+
                 int sealNumber = random.nextInt(4);
                 if(sealNumber == 0) {
-                    originSeals.add("Seal: L" + i);
+                    originSeals.add(sealName);
                 }
                 else if(sealNumber == 1) {
-                    birthSeals.add("Seal: L" + i);
+                    birthSeals.add(sealName);
                 }
                 else if(sealNumber == 2) {
-                    lifeSeals.add("Seal: L" + i);
+                    lifeSeals.add(sealName);
                 }
                 else if(sealNumber == 3) {
-                    deathSeals.add("Seal: L" + i);
+                    deathSeals.add(sealName);
                 }
             }
 
             // Death seals
             for (int i = 1; i <= 6; i++) {
+                sealName = "Seal: D" + i;
+                if(originSeals.contains(sealName) || birthSeals.contains(sealName)
+                        || lifeSeals.contains(sealName) || deathSeals.contains(sealName)) {
+                    continue;
+                }
+
                 int sealNumber = random.nextInt(4);
                 if(sealNumber == 0) {
-                    originSeals.add("Seal: D" + i);
+                    originSeals.add(sealName);
                 }
                 else if(sealNumber == 1) {
-                    birthSeals.add("Seal: D" + i);
+                    birthSeals.add(sealName);
                 }
                 else if(sealNumber == 2) {
-                    lifeSeals.add("Seal: D" + i);
+                    lifeSeals.add(sealName);
                 }
                 else if(sealNumber == 3) {
-                    deathSeals.add("Seal: D" + i);
+                    deathSeals.add(sealName);
                 }
             }
         }
@@ -369,5 +415,36 @@ public class SealRandomizer {
         }
         FileUtils.logFlush("Unable to find node name for seal object");
         return null;
+    }
+
+    public void outputLocations(BufferedWriter writer, int attemptNumber) throws IOException {
+        writer.newLine();
+        writer.write(Translations.getText("items.OriginSeal") + ":");
+        writer.newLine();
+        for(String seal : originSeals) {
+            writer.write(Translations.getText("seals." + seal.replaceAll("Seal: ", "")));
+            writer.newLine();
+        }
+        writer.newLine();
+        writer.write(Translations.getText("items.BirthSeal") + ":");
+        writer.newLine();
+        for(String seal : birthSeals) {
+            writer.write(Translations.getText("seals." + seal.replaceAll("Seal: ", "")));
+            writer.newLine();
+        }
+        writer.newLine();
+        writer.write(Translations.getText("items.LifeSeal") + ":");
+        writer.newLine();
+        for(String seal : lifeSeals) {
+            writer.write(Translations.getText("seals." + seal.replaceAll("Seal: ", "")));
+            writer.newLine();
+        }
+        writer.newLine();
+        writer.write(Translations.getText("items.DeathSeal") + ":");
+        writer.newLine();
+        for(String seal : deathSeals) {
+            writer.write(Translations.getText("seals." + seal.replaceAll("Seal: ", "")));
+            writer.newLine();
+        }
     }
 }

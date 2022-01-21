@@ -352,6 +352,10 @@ public class FileUtils {
                                 customPlacementData.setCustomized(true);
                                 customPlacementData.getCustomTransitionPlacements().add(new CustomTransitionPlacement(target, assignment));
                             }
+                            else if(line.startsWith("Seal ") || line.startsWith("Seal: ")) {
+                                customPlacementData.setCustomized(true);
+                                customPlacementData.getCustomSealPlacements().put(target.replaceAll("^Seal ", ""), getAssignedSeal(assignment));
+                            }
                             else if(line.startsWith("Universal Shop Price")) {
                                 customPlacementData.setCustomized(true);
                                 target = target.replaceAll("Universal Shop Price:? ?", "");
@@ -450,6 +454,23 @@ public class FileUtils {
             FileUtils.log("Unable to read file custom-placement.txt, " + ex.getMessage());
         }
         return customPlacementData;
+    }
+
+    private static Short getAssignedSeal(String assignment) {
+        assignment = assignment.replaceAll(" Seal", "");
+        if("Origin".equalsIgnoreCase(assignment)) {
+            return 0;
+        }
+        if("Birth".equalsIgnoreCase(assignment)) {
+            return 1;
+        }
+        if("Life".equalsIgnoreCase(assignment)) {
+            return 2;
+        }
+        if("Death".equalsIgnoreCase(assignment)) {
+            return 3;
+        }
+        return null;
     }
 
     public static void readSettings() throws IOException {
