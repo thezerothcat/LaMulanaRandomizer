@@ -636,6 +636,9 @@ public class FileUtils {
             else if(line.startsWith("randomizeNpcs")) {
                 Settings.setRandomizeNpcs(Boolean.valueOf(line.split("=")[1]), false);
             }
+            else if(line.startsWith("reducedBossCount")) {
+                Settings.setReducedBossCount(Boolean.valueOf(line.split("=")[1]), false);
+            }
             else if(line.startsWith("screenshakeDisabled")) {
                 Settings.setScreenshakeDisabled(Boolean.valueOf(line.split("=")[1]), false);
             }
@@ -820,6 +823,9 @@ public class FileUtils {
         writer.newLine();
 
         writer.write(String.format("randomizeNpcs=%s", Settings.isRandomizeNpcs()));
+        writer.newLine();
+
+        writer.write(String.format("reducedBossCount=%s", Settings.isReducedBossCount()));
         writer.newLine();
 
         writer.write(String.format("screenshakeDisabled=%s", Settings.isScreenshakeDisabled()));
