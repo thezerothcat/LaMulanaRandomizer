@@ -44,7 +44,7 @@ public class BaseDatUpdater extends DatUpdater {
 
     @Override
     public void updateGrailPoints(GrailPointBlock grailPointBlock) {
-        if(!LocationCoordinateMapper.isSurfaceStart() || HolidaySettings.isFools2021Mode() || Settings.getCurrentStartingLocation() == 22) {
+        if(!LocationCoordinateMapper.isSurfaceStart() || Settings.isReducedBossCount() || HolidaySettings.isFools2021Mode() || Settings.getCurrentStartingLocation() == 2) {
             boolean front = LocationCoordinateMapper.isFrontsideStart();
 
             DefaultGrailPointEntry defaultGrailPointEntry = grailPointBlock.getDefaultGrailPointEntry();

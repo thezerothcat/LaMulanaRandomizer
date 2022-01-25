@@ -4,6 +4,7 @@ public final class ItemConstants {
     public static final int KEY_SWORD = 4;
     public static final int FLARE_GUN = 11;
     public static final int ANKH_JEWEL = 19;
+    public static final int HAND_SCANNER = 20;
     public static final int MINI_DOLL = 22;
     public static final int COG_OF_THE_SOUL = 24;
     public static final int PEPPER = 30;

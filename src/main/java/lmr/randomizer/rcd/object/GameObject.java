@@ -97,7 +97,7 @@ public class GameObject {
         return objectContainer;
     }
 
-    public void addTests(TestByteOperation... tests) {
+    public GameObject addTests(TestByteOperation... tests) {
         for(TestByteOperation test : tests) {
             testByteOperations.add(test);
         }
@@ -105,9 +105,10 @@ public class GameObject {
             FileUtils.logFlush("Attempted to add more than 4 tests to object:\n" + toString());
             throw new RuntimeException("Too many tests on rcd object");
         }
+        return this;
     }
 
-    public void addTests(List<TestByteOperation> tests) {
+    public GameObject addTests(List<TestByteOperation> tests) {
         for(TestByteOperation test : tests) {
             testByteOperations.add(test);
         }
@@ -115,6 +116,7 @@ public class GameObject {
             FileUtils.logFlush("Attempted to add more than 4 tests to object:\n" + toString());
             throw new RuntimeException("Too many tests on rcd object");
         }
+        return this;
     }
 
     public boolean hasTest(TestByteOperation testToLookFor) {
@@ -158,7 +160,7 @@ public class GameObject {
         return false;
     }
 
-    public void addUpdates(WriteByteOperation... updates) {
+    public GameObject addUpdates(WriteByteOperation... updates) {
         for(WriteByteOperation update : updates) {
             writeByteOperations.add(update);
         }
@@ -166,9 +168,10 @@ public class GameObject {
             FileUtils.logFlush("Attempted to add more than 4 tests to object:\n" + toString());
             throw new RuntimeException("Too many tests on rcd object");
         }
+        return this;
     }
 
-    public void addUpdates(List<WriteByteOperation> updates) {
+    public GameObject addUpdates(List<WriteByteOperation> updates) {
         for(WriteByteOperation update : updates) {
             writeByteOperations.add(update);
         }
@@ -176,6 +179,7 @@ public class GameObject {
             FileUtils.logFlush("Attempted to add more than 4 tests to object:\n" + toString());
             throw new RuntimeException("Too many tests on rcd object");
         }
+        return this;
     }
 
     public boolean hasUpdate(WriteByteOperation updateToLookFor) {

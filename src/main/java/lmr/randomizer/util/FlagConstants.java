@@ -68,7 +68,8 @@ public final class FlagConstants {
     public static final int MOONLIGHT_DEV_ROOM_BREAKABLE_FLOOR = 0x256; // Value 0 > 1 when the floor is broken
     public static final int MOONLIGHT_HIDDEN_TABLET_COLLAPSING_FLOOR = 0x257; // Value 0 > 1 when the floor is broken
     public static final int GRAVEYARD_BOMBABLE_WALL = 0x253; // Value 0 > 1 when the wall is broken
-    public static final int MOONLIGHT_TO_TWIN_BREAKABLE_FLOOR = 0x25e; // Value 0 > 1 when the floor is broken
+    public static final int MOONLIGHT_TO_TWIN_BREAKABLE_FLOOR = 0x25e; // Value 0 > 1 when the floor is broken. Pairs with MOONLIGHT_TO_TWIN_BLOCK_LADDER_STATE to determine shortcut access.
+    public static final int MOONLIGHT_TO_TWIN_BLOCK_LADDER_STATE = 0x25f; // Value 0 > 1 when falling state, 2 when landed. Pairs with MOONLIGHT_TO_TWIN_BREAKABLE_FLOOR to determine shortcut access.
     public static final int MOONLIGHT_3_WOMEN_FACES = 0x262; // Set to 1 after hitting the face in Moon-gazing pit with a subweapon.
     public static final int RUIN_LADDER_NUWA_V2 = 0x265; // Don't remember how/why this is different from 0x369
     public static final int MOONLIGHT_SCAN_DANCING_MAN = 0x270; // Set to 1 after scanning the Dancing Man
@@ -145,7 +146,7 @@ public final class FlagConstants {
     public static final int MULBRUK_DOOR_UNSEALED = 0x18e; // 1=talked to 2=touched seal 3=talked to mulbruk again
     public static final int MULBRUK_CONVERSATION_AWAKE = 0x391;
     public static final int MULBRUK_CONVERSATIONS_EARLY = 0x079; // 1=unsealed 2=wedjet 3=left after wedjet 4 blah blah doesn't really matter
-    public static final int MULBRUK_CONVERSATION_BOOK = 0x32a; // Value 0 > 1 via Book of the Dead conversation.
+    public static final int MULBRUK_CONVERSATION_BOOK = 0x32a; // Value 0 > 1 in Anubis's room, 1 > 2 via Book of the Dead conversation. Vanilla also sets 1 > 2 on killing Anubis.
     public static final int MULBRUK_CONVERSATION_HT = 0x34a; // Nothing sets this value; it's been theorized that it represents owning the DLC on the Wii
 
     public static final int FAIRY_QUEEN_CONVERSATION_FAIRIES = 0x1f5; // Unlocking the ceiling in Buer's room (vanilla only; rando makes it breakable by default) with value 0 > 1; value goes to 2 after the conversation that unlocks fairies/fairy points
@@ -386,6 +387,28 @@ public final class FlagConstants {
     public static final int TABLET_GRAIL_TWIN_BACK = 0x073;
     public static final int TABLET_GRAIL_DIMENSIONAL = 0x074;
     public static final int TABLET_GRAIL_SHRINE_BACK = 0x075;
+
+    public static final List<Integer> GRAIL_TABLET_GLOW_FLAGS = Arrays.asList(
+            TABLET_GRAIL_SURFACE,
+            TABLET_GRAIL_GUIDANCE,
+            TABLET_GRAIL_MAUSOLEUM,
+            TABLET_GRAIL_SUN,
+            TABLET_GRAIL_SPRING,
+            TABLET_GRAIL_INFERNO,
+            TABLET_GRAIL_EXTINCTION,
+            TABLET_GRAIL_TWIN_FRONT,
+            TABLET_GRAIL_ENDLESS,
+            TABLET_GRAIL_SHRINE_FRONT,
+            TABLET_GRAIL_ILLUSION,
+            TABLET_GRAIL_GRAVEYARD,
+            TABLET_GRAIL_MOONLIGHT,
+            TABLET_GRAIL_GODDESS,
+            TABLET_GRAIL_RUIN,
+            TABLET_GRAIL_BIRTH,
+            TABLET_GRAIL_TWIN_BACK,
+            TABLET_GRAIL_DIMENSIONAL,
+            TABLET_GRAIL_SHRINE_BACK
+    );
 
     // Mail flags
     public static final int MAIL_COUNT = 0x328;
@@ -951,6 +974,34 @@ public final class FlagConstants {
 //        }
         if(bossNumber == 9) {
             return KEY_FAIRY_DOOR_UNLOCKED;
+        }
+        return null;
+    }
+
+    public static Integer getBacksideDoorGateFlag(Integer bossNumber) {
+        if(bossNumber == null) {
+            return null;
+        }
+        if(bossNumber == 1) {
+            return FlagConstants.AMPHISBAENA_GATE_OPEN;
+        }
+        if(bossNumber == 2) {
+            return FlagConstants.SAKIT_GATE_OPEN;
+        }
+        if(bossNumber == 3) {
+            return FlagConstants.ELLMAC_GATE_OPEN;
+        }
+        if(bossNumber == 4) {
+            return FlagConstants.BAHAMUT_GATE_OPEN;
+        }
+        if(bossNumber == 5) {
+            return FlagConstants.VIY_GATE_OPEN;
+        }
+        if(bossNumber == 6) {
+            return FlagConstants.PALENQUE_GATE_OPEN;
+        }
+        if(bossNumber == 7) {
+            return FlagConstants.BAPHOMET_GATE_OPEN;
         }
         return null;
     }

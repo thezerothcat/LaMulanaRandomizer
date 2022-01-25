@@ -3759,6 +3759,20 @@ public final class AddObject {
     }
 
     /**
+     * Add MantraDetector
+     * @param screen to add to
+     * @param itemName to detect usage of
+     */
+    public static UseItemDetector addUseItemDetector(Screen screen, int x, int y, int width, int height, String itemName) {
+        UseItemDetector useItemDetector = new UseItemDetector(screen, x, y);
+        useItemDetector.setItem(itemName);
+        useItemDetector.setWidth(width);
+        useItemDetector.setHeight(height);
+        screen.getObjects().add(useItemDetector);
+        return useItemDetector;
+    }
+
+    /**
      * Add OneWayDoor
      * @param screen to add to
      * @param x

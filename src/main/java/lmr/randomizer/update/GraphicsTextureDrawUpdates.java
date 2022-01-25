@@ -4,6 +4,7 @@ import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.util.FlagConstants;
+import lmr.randomizer.util.LocationCoordinateMapper;
 import lmr.randomizer.util.ZoneConstants;
 
 public class GraphicsTextureDrawUpdates {
@@ -188,6 +189,14 @@ public class GraphicsTextureDrawUpdates {
             TestByteOperation flagTest = graphicsTextureDraw.getTestByteOperations().get(flagIndex);
             if(FlagConstants.BLANK_TABLET_GLOW_FLAGS.contains(flagTest.getIndex())) {
                 flagTest.setIndex(FlagConstants.TABLET_GLOW_GUIDANCE_ENTRANCE_BROKEN);
+            }
+        }
+        if(Settings.isReducedBossCount()) {
+            for(int flagIndex = 0; flagIndex < graphicsTextureDraw.getTestByteOperations().size(); flagIndex++) {
+                TestByteOperation flagTest = graphicsTextureDraw.getTestByteOperations().get(flagIndex);
+                if(FlagConstants.GRAIL_TABLET_GLOW_FLAGS.contains(flagTest.getIndex())) {
+                    flagTest.setIndex(LocationCoordinateMapper.getGrailFlagByOriginalFlag(flagTest.getIndex()));
+                }
             }
         }
     }

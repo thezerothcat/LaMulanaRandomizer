@@ -401,6 +401,67 @@ public final class LocationCoordinateMapper {
         return getOriginalGrailFlag(zone, front);
     }
 
+    public static short getGrailFlagByOriginalFlag(int flag) {
+        if(flag == FlagConstants.TABLET_GRAIL_SURFACE) {
+            return getGrailFlag(ZoneConstants.SURFACE, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_GUIDANCE) {
+            return getGrailFlag(ZoneConstants.GUIDANCE, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_MAUSOLEUM) {
+            return getGrailFlag(ZoneConstants.MAUSOLEUM, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_SUN) {
+            return getGrailFlag(ZoneConstants.SUN, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_SPRING) {
+            return getGrailFlag(ZoneConstants.SPRING, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_INFERNO) {
+            return getGrailFlag(ZoneConstants.INFERNO, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_EXTINCTION) {
+            return getGrailFlag(ZoneConstants.EXTINCTION, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_TWIN_FRONT) {
+            return getGrailFlag(ZoneConstants.TWIN_FRONT, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_TWIN_BACK) {
+            return getGrailFlag(ZoneConstants.TWIN_FRONT, false);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_ENDLESS) {
+            return getGrailFlag(ZoneConstants.ENDLESS, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_SHRINE_FRONT) {
+            return getGrailFlag(ZoneConstants.SHRINE_FRONT, LocationCoordinateMapper.isFrontsideStart());
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_SHRINE_BACK) {
+            return getGrailFlag(ZoneConstants.SHRINE_BACK, !LocationCoordinateMapper.isFrontsideStart());
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_ILLUSION) {
+            return getGrailFlag(ZoneConstants.ILLUSION, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_GRAVEYARD) {
+            return getGrailFlag(ZoneConstants.GRAVEYARD, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_MOONLIGHT) {
+            return getGrailFlag(ZoneConstants.MOONLIGHT, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_GODDESS) {
+            return getGrailFlag(ZoneConstants.GODDESS, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_RUIN) {
+            return getGrailFlag(ZoneConstants.RUIN, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_BIRTH) {
+            return getGrailFlag(ZoneConstants.BIRTH_SKANDA, true);
+        }
+        if(flag == FlagConstants.TABLET_GRAIL_DIMENSIONAL) {
+            return getGrailFlag(ZoneConstants.DIMENSIONAL, true);
+        }
+        return getGrailFlag(ZoneConstants.GUIDANCE, true); // Default
+    }
+
     public static short getOriginalGrailFlag(int zone, boolean front) {
         if(zone == 0) {
             return FlagConstants.TABLET_GRAIL_GUIDANCE;

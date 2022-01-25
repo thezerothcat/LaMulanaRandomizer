@@ -20,6 +20,48 @@ public final class BlockConstants {
     public static final int MulbrukIntroBlock = 393; // Replaced for Helloween 2019
     public static final int MulbrukHTConversationBlock = 414; // 0x19e; Replaced for Halloween 2021
 
+    public static final int MapText_GateOfGuidance = 10;
+    public static final int MapText_Surface = 11;
+    public static final int MapText_Mausoleum = 12;
+    public static final int MapText_Sun = 13;
+    public static final int MapText_Spring = 14;
+    public static final int MapText_Inferno = 15;
+    public static final int MapText_Extinction = 16;
+    public static final int MapText_TwinLabyrinths = 17;
+    public static final int MapText_Endless = 18;
+    public static final int MapText_Shrine = 19;
+    public static final int MapText_Illusion = 20;
+    public static final int MapText_Graveyard = 21;
+    public static final int MapText_Moonlight = 22;
+    public static final int MapText_Goddess = 23;
+    public static final int MapText_Ruin = 24;
+    public static final int MapText_Birth_Swords = 25;
+    public static final int MapText_Birth_Skanda = 26;
+    public static final int MapText_Dimensional = 27;
+    public static final int MapText_HT = 28;
+    public static final int MapText_GateOfTime1 = 29;
+    public static final int MapText_GateOfTime2 = 30;
+
+    public static final int MapGraphics_GateOfGuidance = 497; // 0x1f1
+    public static final int MapGraphics_Surface = 498;
+    public static final int MapGraphics_Mausoleum = 499;
+    public static final int MapGraphics_Sun = 500;
+    public static final int MapGraphics_Spring = 501;
+    public static final int MapGraphics_Inferno = 502;
+    public static final int MapGraphics_Extinction = 503;
+    public static final int MapGraphics_TwinLabyrinths = 504;
+    public static final int MapGraphics_Endless = 505;
+    public static final int MapGraphics_Shrine = 506;
+    public static final int MapGraphics_Illusion = 507;
+    public static final int MapGraphics_Graveyard = 508;
+    public static final int MapGraphics_Moonlight = 509;
+    public static final int MapGraphics_Goddess = 510;
+    public static final int MapGraphics_Ruin = 511;
+    public static final int MapGraphics_Birth_Swords = 512;
+    public static final int MapGraphics_Birth_Skanda = 995;
+    public static final int MapGraphics_Dimensional = 513;
+    public static final int MapGraphics_HT = 1030;
+
     public static final int ItemConversationMekuri = 37;
     public static final int ItemConversationPepper = 245;
     public static final int ItemConversationAnchor = 247;
@@ -29,6 +71,27 @@ public final class BlockConstants {
     public static final int ItemConversationBookOfTheDead = 397;
     public static final int ItemConversationMapSurface = 716;
     public static final int ItemConversationProvocativeBathingSuit = 1012;
+
+    public static final int NpcConversation_Hiner = 33; // Hiner - Surface NPC, 01-00-02
+    public static final int NpcConversation_PriestZarnac = 40; // Priest Zarnac - Guidance NPC, 00-04-01
+    public static final int NpcConversation_PriestXanado = 73; // Priest Xanado - Mausoleum NPC, 02-02-00
+    public static final int NpcConversation_PriestHidlyda = 101; // Priest Hidlyda - Spring NPC, 04-06-01
+    public static final int NpcConversation_PhilosopherGiltoriyo = 134; // Philosopher Giltoriyo - Spring NPC, 04-00-01
+    public static final int NpcConversation_PriestMadomono = 135; // Priest Madomono - Sun NPC, 03-04-02
+    public static final int NpcConversation_PriestGailious = 148; // Priest Gailious - Inferno NPC, 05-02-01
+    public static final int NpcConversation_PriestRomancis = 158; // Priest Romancis - Inferno NPC, 05-03-02
+    public static final int NpcConversation_PriestAramo = 168; // Priest Aramo - Extinction NPC, 06-06-00
+    public static final int NpcConversation_PriestTriton = 169; // Priest Triton - Extinction NPC, 06-09-01
+    public static final int NpcConversation_PriestJaguarfiv = 203; // Priest Jaguarfiv - Twin Labs NPC, 07-10-01
+    public static final int NpcConversation_GiantThexde = 274; // Giant Thexde - Graveyard NPC, 11-07-00
+    public static final int NpcConversation_PhilosopherAlsedana = 289; // Philosopher Alsedana - Moonlight NPC, 12-06-00
+    public static final int NpcConversation_PhilosopherSamaranta = 304; // Philosopher Samaranta - Goddess NPC, 13-05-01
+    public static final int NpcConversation_PriestLaydoc = 322; // Priest Laydoc - Ruin NPC, 14-00-01
+    public static final int NpcConversation_PriestAshgine = 338; // Priest Ashgine - Birth NPC, 16-01-00
+    public static final int NpcConversation_PhilosopherFobos_Ladder = 357;
+    public static final int NpcConversation_Moger = 472; // Moger - Surface NPC, 01-02-00
+    public static final int NpcConversation_PhilosopherFobos_MedicineCheck = 478; // Philosopher Fobos - Dimensional NPC, 17-02-00
+    public static final int NpcConversation_8BitElder = 514; // 8bit Elder - Gate of Time NPC, 21-00-00
 
     public static final int Master_Hiner = 671; // Hiner - Surface NPC, 01-00-02
     public static final int Master_Moger = 672; // Moger - Surface NPC, 01-02-00
@@ -355,6 +418,25 @@ public final class BlockConstants {
     public static final int Tablet_HT_Sleep = 1004; // Glow flag = TABLET_GLOW_HT_SLEEP_ALSO_SET_BY_RETROMAUSOLEUM_ENTRANCE
     public static final int Tablet_HT_IExistHere = 1005; // Glow flag = TABLET_GLOW_HT_I_EXIST_HERE
     public static final int Tablet_HT_ClothToMakeTheTreasure = 1009; // Glow flag = TABLET_GLOW_HT_CLOTH_TO_MAKE_THE_TREASURE
+
+    public static final int GrailTablet_Surface = 38;
+    public static final int GrailTablet_Guidance = 41;
+    public static final int GrailTablet_Mausoleum = 75;
+    public static final int GrailTablet_Sun = 104;
+    public static final int GrailTablet_Spring = 136;
+    public static final int GrailTablet_Inferno = 149;
+    public static final int GrailTablet_Extinction = 170;
+    public static final int GrailTablet_TwinFront = 188;
+    public static final int GrailTablet_Endless = 221;
+    public static final int GrailTablet_Shrine = 231;
+    public static final int GrailTablet_Illusion = 250;
+    public static final int GrailTablet_Graveyard = 275;
+    public static final int GrailTablet_Moonlight = 291;
+    public static final int GrailTablet_Goddess = 305;
+    public static final int GrailTablet_Ruin = 323;
+    public static final int GrailTablet_Birth = 339;
+    public static final int GrailTablet_TwinBack = 206;
+    public static final int GrailTablet_Dimensional = 358;
 
     public static final int BrokenTablet_NoText = 471; // Many flags for tablet glow; rando will use TABLET_GLOW_GUIDANCE_ENTRANCE_BROKEN for all
 

@@ -120,6 +120,9 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.FlagTimer) {
             return updateFlagTimer(gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.CycleTimer) {
+            return updateCycleTimer(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.RoomSpawner) {
             return updateRoomSpawner(gameObject);
         }
@@ -134,6 +137,9 @@ public abstract class RcdUpdater {
         }
         else if(gameObject.getId() == ObjectIdConstants.LemezaDetector) {
             return updateLemezaDetector(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Argus) {
+            return updateArgus(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Snake) {
             return updateSnake(gameObject);
@@ -180,6 +186,9 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.Enemy_PharaohHead) {
             return updatePharaohHead(gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.Buer) {
+            return updateBuer(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.Chest) {
             return updateChest(gameObject);
         }
@@ -204,6 +213,9 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Gyonin) {
             return updateGyonin(gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.MrGyonin) {
+            return updateMrGyonin(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Hippocamp) {
             return updateHippocamp(gameObject);
         }
@@ -212,6 +224,9 @@ public abstract class RcdUpdater {
         }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_WaterLeaper) {
             return updateWaterLeaper(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Nuckelavee) {
+            return updateNuckelavee(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_ExplodeRock) {
             return updateExplodeRock(gameObject);
@@ -225,6 +240,9 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Kakoujuu) {
             return updateKakoujuu(gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.Pazuzu) {
+            return updatePazuzu(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Mandrake) {
             return updateMandrake(gameObject);
         }
@@ -234,8 +252,17 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Garuda) {
             return updateGaruda(gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.Enemy_Blob) {
+            return updateBlob(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Hekatonkheires) {
+            return updateHekatonkheires(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.Spriggan) {
             return updateSpriggan(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.OxHeadAndHorseFace) {
+            return updateOxHeadAndHorseFace(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Bonnacon) {
             return updateBonnacon(gameObject);
@@ -252,6 +279,12 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.Enemy_RongXuanwangCorpse) {
             return updateRongXuanwangCorpse(gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.Backbeard) {
+            return updateBackbeard(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.TaiSui) {
+            return updateTaiSui(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Hundun) {
             return updateHundun(gameObject);
         }
@@ -266,6 +299,9 @@ public abstract class RcdUpdater {
         }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Marchosias) {
             return updateMarchosias(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Beelzebub) {
+            return updateBeelzebub(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Witch) {
             return updateWitch(gameObject);
@@ -282,6 +318,12 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Leucrotta) {
             return updateLeucrotta(gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.Peryton) {
+            return updatePeryton(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Zu) {
+            return updateZu(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_LizardMan) {
             return updateLizardMan(gameObject);
         }
@@ -290,6 +332,9 @@ public abstract class RcdUpdater {
         }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Kui) {
             return updateKui(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Ba) {
+            return updateBa(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.ChiYou) {
             return updateChiYou(gameObject);
@@ -308,6 +353,9 @@ public abstract class RcdUpdater {
         }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_BaiZe) {
             return updateBaiZe(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Kamaitachi) {
+            return updateKamaitachi(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Anubis) {
             return updateAnubis(gameObject);
@@ -345,6 +393,24 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Salamander) {
             return updateSalamander(gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.Skyfish) {
+            return updateSkyfish(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Thunderbird) {
+            return updateThunderbird(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Rusalii) {
+            return updateRusalii(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Yaksi) {
+            return updateYaksi(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Dakini) {
+            return updateDakini(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Nuwa) {
+            return updateNuwa(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.MudManSpawner) {
             return updateMudManSpawner(gameObject);
         }
@@ -353,6 +419,9 @@ public abstract class RcdUpdater {
         }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Elephant) {
             return updateElephant(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Skanda) {
+            return updateSkanda(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.Enemy_Amon) {
             return updateAmon(gameObject);
@@ -369,8 +438,26 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.Urmahlullu) {
             return updateUrmahlullu(gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.Ugallu) {
+            return updateUgallu(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Kuusarikku) {
+            return updateKuusarikku(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Girtablilu) {
+            return updateGirtablilu(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Kulullu) {
+            return updateKulullu(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.Mushnahhu) {
             return updateMushnahhu(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Lahamu) {
+            return updateLahamu(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Ushumgallu) {
+            return updateUshumgallu(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.Ushum) {
             return updateUshum(gameObject);
@@ -504,6 +591,9 @@ public abstract class RcdUpdater {
     boolean updateFlagTimer(GameObject flagTimer) {
         return true;
     }
+    boolean updateCycleTimer(GameObject flagTimer) {
+        return true;
+    }
     boolean updateRoomSpawner(GameObject roomSpawner) {
         return true;
     }
@@ -517,6 +607,9 @@ public abstract class RcdUpdater {
         return true;
     }
     boolean updateLemezaDetector(GameObject lemezaDetector) {
+        return true;
+    }
+    boolean updateArgus(GameObject argus) {
         return true;
     }
     boolean updateSnake(GameObject snake) {
@@ -564,6 +657,9 @@ public abstract class RcdUpdater {
     boolean updatePharaohHead(GameObject pharaohHead) {
         return true;
     }
+    boolean updateBuer(GameObject buer) {
+        return true;
+    }
     boolean updateChest(GameObject chest) {
         return true;
     }
@@ -588,6 +684,9 @@ public abstract class RcdUpdater {
     boolean updateGyonin(GameObject gyonin) {
         return true;
     }
+    boolean updateMrGyonin(GameObject mrGyonin) {
+        return true;
+    }
     boolean updateHippocamp(GameObject hippocamp) {
         return true;
     }
@@ -595,6 +694,9 @@ public abstract class RcdUpdater {
         return true;
     }
     boolean updateWaterLeaper(GameObject waterLeaper) {
+        return true;
+    }
+    boolean updateNuckelavee(GameObject nuckelavee) {
         return true;
     }
     boolean updateExplodeRock(GameObject explodeRock) {
@@ -609,6 +711,9 @@ public abstract class RcdUpdater {
     boolean updateKakoujuu(GameObject kakoujuu) {
         return true;
     }
+    boolean updatePazuzu(GameObject pazuzu) {
+        return true;
+    }
     boolean updateMandrake(GameObject mandrake) {
         return true;
     }
@@ -618,7 +723,16 @@ public abstract class RcdUpdater {
     boolean updateGaruda(GameObject garuda) {
         return true;
     }
+    boolean updateBlob(GameObject blob) {
+        return true;
+    }
+    boolean updateHekatonkheires(GameObject hekatonkheires) {
+        return true;
+    }
     boolean updateSpriggan(GameObject spriggan) {
+        return true;
+    }
+    boolean updateOxHeadAndHorseFace(GameObject oxHeadAndHorseFace) {
         return true;
     }
     boolean updateBonnacon(GameObject bonnacon) {
@@ -636,6 +750,12 @@ public abstract class RcdUpdater {
     boolean updateRongXuanwangCorpse(GameObject rongXuanwangCorpse) {
         return true;
     }
+    boolean updateBackbeard(GameObject backbeard) {
+        return true;
+    }
+    boolean updateTaiSui(GameObject taiSui) {
+        return true;
+    }
     boolean updateHundun(GameObject hundun) {
         return true;
     }
@@ -649,6 +769,9 @@ public abstract class RcdUpdater {
         return true;
     }
     boolean updateMarchosias(GameObject marchosias) {
+        return true;
+    }
+    boolean updateBeelzebub(GameObject beelzebub) {
         return true;
     }
     boolean updateWitch(GameObject witch) {
@@ -666,6 +789,12 @@ public abstract class RcdUpdater {
     boolean updateLeucrotta(GameObject leucrotta) {
         return true;
     }
+    boolean updatePeryton(GameObject peryton) {
+        return true;
+    }
+    boolean updateZu(GameObject zu) {
+        return true;
+    }
     boolean updateLizardMan(GameObject lizardMan) {
         return true;
     }
@@ -673,6 +802,9 @@ public abstract class RcdUpdater {
         return true;
     }
     boolean updateKui(GameObject kui) {
+        return true;
+    }
+    boolean updateBa(GameObject ba) {
         return true;
     }
     boolean updateChiYou(GameObject chiYou) {
@@ -691,6 +823,9 @@ public abstract class RcdUpdater {
         return true;
     }
     boolean updateBaiZe(GameObject baiZe) {
+        return true;
+    }
+    boolean updateKamaitachi(GameObject baiZe) {
         return true;
     }
     boolean updateAnubis(GameObject anubis) {
@@ -729,6 +864,24 @@ public abstract class RcdUpdater {
     boolean updateSalamander(GameObject salamander) {
         return true;
     }
+    boolean updateSkyfish(GameObject salamander) {
+        return true;
+    }
+    boolean updateThunderbird(GameObject thunderbird) {
+        return true;
+    }
+    boolean updateRusalii(GameObject rusalii) {
+        return true;
+    }
+    boolean updateYaksi(GameObject yaksi) {
+        return true;
+    }
+    boolean updateDakini(GameObject dakini) {
+        return true;
+    }
+    boolean updateNuwa(GameObject nuwa) {
+        return true;
+    }
     boolean updateMudManSpawner(GameObject mudManSpawner) {
         return true;
     }
@@ -736,6 +889,9 @@ public abstract class RcdUpdater {
         return true;
     }
     boolean updateElephant(GameObject elephant) {
+        return true;
+    }
+    boolean updateSkanda(GameObject skanda) {
         return true;
     }
     boolean updateAmon(GameObject amon) {
@@ -753,7 +909,25 @@ public abstract class RcdUpdater {
     boolean updateUrmahlullu(GameObject urmahlullu) {
         return true;
     }
+    boolean updateUgallu(GameObject ugallu) {
+        return true;
+    }
+    boolean updateKuusarikku(GameObject kuusarikku) {
+        return true;
+    }
+    boolean updateGirtablilu(GameObject girtablilu) {
+        return true;
+    }
+    boolean updateKulullu(GameObject kulullu) {
+        return true;
+    }
     boolean updateMushnahhu(GameObject mushnahhu) {
+        return true;
+    }
+    boolean updateLahamu(GameObject lahamu) {
+        return true;
+    }
+    boolean updateUshumgallu(GameObject ushumgallu) {
         return true;
     }
     boolean updateUshum(GameObject ushum) {

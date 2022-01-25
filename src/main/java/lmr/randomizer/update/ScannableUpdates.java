@@ -17,6 +17,7 @@ public class ScannableUpdates {
         }
         updateBlankTabletFlag(scannable);
         Screen screen = (Screen)objectContainer;
+        updateGrailFlag(scannable, screen.getZoneIndex());
         if(Settings.isRandomizeNonBossDoors()) {
             if (screen.getZoneIndex() == 1 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
                 for(TestByteOperation testByteOperation : scannable.getTestByteOperations()) {
@@ -92,6 +93,42 @@ public class ScannableUpdates {
         if(scannable.getTextBlock() == BlockConstants.BrokenTablet_NoText) {
             if(!scannable.getWriteByteOperations().isEmpty()) {
                 scannable.getWriteByteOperations().get(0).setIndex(FlagConstants.TABLET_GLOW_GUIDANCE_ENTRANCE_BROKEN);
+            }
+        }
+    }
+
+    private static void updateGrailFlag(Scannable scannable, int zoneIndex) {
+        if(scannable.getTextBlock() == BlockConstants.GrailTablet_Surface
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Guidance
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Mausoleum
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Sun
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Spring
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Inferno
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Extinction
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_TwinFront
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Endless
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Shrine
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Illusion
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Graveyard
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Moonlight
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Goddess
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Ruin
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Birth
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_TwinBack
+                || scannable.getTextBlock() == BlockConstants.GrailTablet_Dimensional) {
+            if(zoneIndex == ZoneConstants.TWIN_FRONT) {
+                boolean frontside = scannable.hasUpdate(new WriteByteOperation(FlagConstants.TABLET_GRAIL_TWIN_FRONT, ByteOp.ASSIGN_FLAG, 1));
+                scannable.getTestByteOperations().clear();
+                scannable.getTestByteOperations().add(new TestByteOperation(LocationCoordinateMapper.getGrailFlag(zoneIndex, frontside), ByteOp.FLAG_EQUALS, 0));
+                scannable.getWriteByteOperations().clear();
+                scannable.getWriteByteOperations().add(new WriteByteOperation(LocationCoordinateMapper.getGrailFlag(zoneIndex, frontside), ByteOp.ASSIGN_FLAG, 1));
+            }
+            else {
+                scannable.getTestByteOperations().clear();
+                scannable.getTestByteOperations().add(new TestByteOperation(LocationCoordinateMapper.getGrailFlag(zoneIndex, true), ByteOp.FLAG_EQUALS, 0));
+
+                scannable.getWriteByteOperations().clear();
+                scannable.getWriteByteOperations().add(new WriteByteOperation(LocationCoordinateMapper.getGrailFlag(zoneIndex, true), ByteOp.ASSIGN_FLAG, 1));
             }
         }
     }

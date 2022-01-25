@@ -13,7 +13,7 @@ public final class BacksideDoorUpdates {
 
     public static void updateBacksideDoorV1(BacksideDoorData backsideDoorData, List<GameObject> objectsToModify) {
         int bossFlag = FlagConstants.getBossFlag(backsideDoorData.getDoorBoss());
-        int gateFlag = getGateFlag(backsideDoorData.getDoorBoss());
+        int gateFlag = FlagConstants.getBacksideDoorGateFlag(backsideDoorData.getDoorBoss());
         int mirrorCoverFlag = getMirrorCoverFlag(backsideDoorData.getDoorBoss());
         for(GameObject gameObject : objectsToModify) {
             if(gameObject.getId() == ObjectIdConstants.WarpDoor) {
@@ -41,7 +41,7 @@ public final class BacksideDoorUpdates {
     }
 
     public static void updateBacksideDoorV2(BacksideDoorData backsideDoorData, List<GameObject> objectsToModify) {
-        Integer gateFlag = getGateFlag(backsideDoorData.getDoorBoss());
+        Integer gateFlag = FlagConstants.getBacksideDoorGateFlag(backsideDoorData.getDoorBoss());
         for(GameObject gameObject : objectsToModify) {
             replaceBacksideDoorFlags(gameObject, backsideDoorData.getDoorBoss(), gateFlag, isDoorDisabledForEscape(backsideDoorData.getDoorName()));
             replaceBacksideDoorArgs(gameObject, backsideDoorData.getDoorDestination());
@@ -272,34 +272,6 @@ public final class BacksideDoorUpdates {
             }
         }
         return false;
-    }
-
-    private static Integer getGateFlag(Integer bossNumber) {
-        if(bossNumber == null) {
-            return null;
-        }
-        if(bossNumber == 1) {
-            return FlagConstants.AMPHISBAENA_GATE_OPEN;
-        }
-        if(bossNumber == 2) {
-            return FlagConstants.SAKIT_GATE_OPEN;
-        }
-        if(bossNumber == 3) {
-            return FlagConstants.ELLMAC_GATE_OPEN;
-        }
-        if(bossNumber == 4) {
-            return FlagConstants.BAHAMUT_GATE_OPEN;
-        }
-        if(bossNumber == 5) {
-            return FlagConstants.VIY_GATE_OPEN;
-        }
-        if(bossNumber == 6) {
-            return FlagConstants.PALENQUE_GATE_OPEN;
-        }
-        if(bossNumber == 7) {
-            return FlagConstants.BAPHOMET_GATE_OPEN;
-        }
-        return null;
     }
 
     private static int getMirrorCoverFlag(Integer bossNumber) {

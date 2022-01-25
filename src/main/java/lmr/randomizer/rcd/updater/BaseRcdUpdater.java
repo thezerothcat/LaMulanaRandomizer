@@ -781,12 +781,23 @@ public class BaseRcdUpdater extends RcdUpdater {
             return true;
         }
         Screen screen = (Screen)objectContainer;
-        if(!LocationCoordinateMapper.isSurfaceStart()) {
+        if(!LocationCoordinateMapper.isSurfaceStart() || Settings.isReducedBossCount()) {
             int zoneIndex = screen.getZoneIndex();
-            if(zoneIndex == ZoneConstants.SURFACE) {
+            if(zoneIndex == ZoneConstants.TWIN_FRONT) {
+                boolean frontside = autosave.hasUpdate(new WriteByteOperation(FlagConstants.TABLET_GRAIL_TWIN_FRONT, ByteOp.ASSIGN_FLAG, 1));
+                autosave.getTestByteOperations().clear();
+                autosave.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0));
+                autosave.getTestByteOperations().add(new TestByteOperation(LocationCoordinateMapper.getGrailFlag(zoneIndex, frontside), ByteOp.FLAG_EQUALS, 1));
                 autosave.getWriteByteOperations().clear();
-                autosave.getTestByteOperations().add(new TestByteOperation(FlagConstants.TABLET_GRAIL_SURFACE, ByteOp.FLAG_EQUALS, 1));
-                autosave.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.TABLET_GRAIL_SURFACE, ByteOp.ASSIGN_FLAG, 1));
+                autosave.getWriteByteOperations().add(new WriteByteOperation(LocationCoordinateMapper.getGrailFlag(zoneIndex, frontside), ByteOp.ASSIGN_FLAG, 1));
+            }
+            else {
+                autosave.getTestByteOperations().clear();
+                autosave.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0));
+                autosave.getTestByteOperations().add(new TestByteOperation(LocationCoordinateMapper.getGrailFlag(zoneIndex, true), ByteOp.FLAG_EQUALS, 1));
+
+                autosave.getWriteByteOperations().clear();
+                autosave.getWriteByteOperations().add(new WriteByteOperation(LocationCoordinateMapper.getGrailFlag(zoneIndex, true), ByteOp.ASSIGN_FLAG, 1));
             }
             if(zoneIndex == ZoneConstants.BIRTH_SKANDA && LocationCoordinateMapper.getStartingZone() == ZoneConstants.BIRTH_SKANDA) {
                 // Move Chamber of Birth grail point when starting in that area.
