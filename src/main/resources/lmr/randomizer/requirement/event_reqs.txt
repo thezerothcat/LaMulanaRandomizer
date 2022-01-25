@@ -112,6 +112,7 @@ Event: Skanda Block Removed => Event: Skanda Accessible, Event: Skanda Defeated
 Event: Tiamat All Children Defeated => Event: Tiamat Angel Shield Children Defeated, Event: Tiamat Left Side Children Defeated, Event: Tiamat Right Side Children Defeated, Event: Ushumgallu Defeated, Event: Mushussu Defeated # Girtablilu doesn't count because having the ability to clear the others makes it pretty free
 Event: Twin Poison Cleared => Location: Twin Labyrinths [Poison 1], Twin Statue
 Event: Twin Poison Cleared => Location: Twin Labyrinths [Upper Grail], State: Frontside Warp, State: Pre-Escape, Glitch: Raindrop # Frontside Warp lets you start with a refreshed timer and do the second poison room first so the timer is a non-issue
+Event: Twin Poison Cleared => Location: Twin Labyrinths [Poison 2], Exit: Twin Labyrinths [Poison 2], Location: Twin Labyrinths [Poison 1]
 #Event: Twin Poison Cleared => Entering from the room with Shrine first would be valid for this
 Fairy: Surface [Main] => State: Key Fairy Access, State: Frontside Warp, Location: Surface [Main]
 Fairy: Surface [Main] => State: Key Fairy Access, State: Pre-Escape, Glitch: Raindrop
