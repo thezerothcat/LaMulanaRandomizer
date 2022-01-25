@@ -44,6 +44,7 @@ public final class ObjectIdConstants {
     public static final short Ankh = 0x2e;
     public static final short FloatingItem = 0x2f;
     public static final short Trapdoor = 0x30;
+    public static final short AlwaysOnTurret = 0x31; // Spawned by turret
     public static final short PressurePlate = 0x32;
     public static final short CounterweightElevator = 0x33;
     public static final short Seal = 0x34;

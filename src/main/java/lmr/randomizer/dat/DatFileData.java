@@ -87,11 +87,71 @@ public class DatFileData {
     public Block getBookOfTheDeadConversationBlock() {
         return datFileEntries.get(BlockConstants.ItemConversationBookOfTheDead);
     }
-    public Block getSurfaceMapScannableBlock() {
-        return datFileEntries.get(BlockConstants.ItemConversationMapSurface);
+    public Block getHinerConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_Hiner);
+    }
+    public Block getMogerConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_Moger);
+    }
+    public Block getPriestZarnacConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PriestZarnac);
+    }
+    public Block getPriestXanadoConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PriestXanado);
+    }
+    public Block getPriestHidlydaConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PriestHidlyda);
+    }
+    public Block getPriestMadomonoConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PriestMadomono);
+    }
+    public Block getPriestGailiousConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PriestGailious);
+    }
+    public Block getPriestRomancisConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PriestRomancis);
+    }
+    public Block getPriestAramoConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PriestAramo);
+    }
+    public Block getPriestTritonConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PriestTriton);
+    }
+    public Block getPriestJaguarfivConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PriestJaguarfiv);
+    }
+    public Block getPriestLaydocConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PriestLaydoc);
+    }
+    public Block getPriestAshgineConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PriestAshgine);
+    }
+    public Block getGiantThexdeConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_GiantThexde);
+    }
+    public Block get8BitElderConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_8BitElder);
+    }
+    public Block getPhilosopherGiltoriyoConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PhilosopherGiltoriyo);
+    }
+    public Block getPhilosopherAlsedanaConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PhilosopherAlsedana);
+    }
+    public Block getPhilosopherSamarantaConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PhilosopherSamaranta);
+    }
+    public Block getPhilosopherFobosLadderConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PhilosopherFobos_Ladder);
+    }
+    public Block getPhilosopherFobosMedicineConversationBlock() {
+        return datFileEntries.get(BlockConstants.NpcConversation_PhilosopherFobos_MedicineCheck);
     }
     public Block getProvocativeBathingSuitConversationBlock() {
         return datFileEntries.get(BlockConstants.ItemConversationProvocativeBathingSuit);
+    }
+    public Block getSurfaceMapScannableBlock() {
+        return datFileEntries.get(BlockConstants.ItemConversationMapSurface);
     }
     public ShopBlock getNeburShopBlock() {
         return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockNebur);

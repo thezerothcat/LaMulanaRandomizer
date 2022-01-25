@@ -48,8 +48,28 @@ public abstract class DatUpdater {
         updateXelpudPillarConversationBlock(datFileData.getXelpudPillarConversationBlock());
         updateMulanaTalismanConversationBlock(datFileData.getMulanaTalismanConversationBlock());
         updateBookOfTheDeadConversationBlock(datFileData.getBookOfTheDeadConversationBlock());
-        updateSurfaceMapScannableBlock(datFileData.getSurfaceMapScannableBlock());
         updateProvocativeBathingSuitConversationBlock(datFileData.getProvocativeBathingSuitConversationBlock());
+
+        updateHinerConversationBlock(datFileData.getHinerConversationBlock());
+        updateMogerConversationBlock(datFileData.getMogerConversationBlock());
+        updatePriestZarnacConversationBlock(datFileData.getPriestZarnacConversationBlock());
+        updatePriestXanadoConversationBlock(datFileData.getPriestXanadoConversationBlock());
+        updatePriestHidlydaConversationBlock(datFileData.getPriestHidlydaConversationBlock());
+        updatePriestMadomonoConversationBlock(datFileData.getPriestMadomonoConversationBlock());
+        updatePriestGailiousConversationBlock(datFileData.getPriestGailiousConversationBlock());
+        updatePriestRomancisConversationBlock(datFileData.getPriestRomancisConversationBlock());
+        updatePriestAramoConversationBlock(datFileData.getPriestAramoConversationBlock());
+        updatePriestTritonConversationBlock(datFileData.getPriestTritonConversationBlock());
+        updatePriestJaguarfivConversationBlock(datFileData.getPriestJaguarfivConversationBlock());
+        updatePriestLaydocConversationBlock(datFileData.getPriestLaydocConversationBlock());
+        updatePriestAshgineConversationBlock(datFileData.getPriestAshgineConversationBlock());
+        updateGiantThexdeConversationBlock(datFileData.getGiantThexdeConversationBlock());
+        update8BitElderConversationBlock(datFileData.get8BitElderConversationBlock());
+        updatePhilosopherGiltoriyoConversationBlock(datFileData.getPhilosopherGiltoriyoConversationBlock());
+        updatePhilosopherAlsedanaConversationBlock(datFileData.getPhilosopherAlsedanaConversationBlock());
+        updatePhilosopherSamarantaConversationBlock(datFileData.getPhilosopherSamarantaConversationBlock());
+        updatePhilosopherFobosLadderConversationBlock(datFileData.getPhilosopherFobosLadderConversationBlock());
+        updatePhilosopherFobosMedicineConversationBlock(datFileData.getPhilosopherFobosMedicineConversationBlock());
 
         updateNeburShopBlock(datFileData.getNeburShopBlock());
         updateNeburAltShopBlock(datFileData.getNeburAltShopBlock());
@@ -137,9 +157,11 @@ public abstract class DatUpdater {
         for(Block emailBlock : datFileData.getEmailBlocks()) {
             updateEmailBlock(emailBlock);
         }
+
         for(ScannableBlock customizableTabletBlock : datFileData.getCustomizableTabletBlocks()) {
             updateScannableBlock(customizableTabletBlock);
         }
+        updateSurfaceMapScannableBlock(datFileData.getSurfaceMapScannableBlock());
     }
 
     public void addCustomBlocks(DatFileData datFileData) { }
@@ -176,6 +198,30 @@ public abstract class DatUpdater {
             }
         }
         return textEntry;
+    }
+
+    protected List<Short> buildRawDataWithCommands(String textToUse) {
+        List<Short> rawData = new ArrayList<>();
+        for(String section : extractSections(textToUse)) {
+            if(section.startsWith("{COLOR=")) {
+                rawData.addAll(
+                        getColor(section.replaceAll("\\{COLOR=", "").replaceAll("}", "")).getRawData());
+            }
+            else if(section.startsWith("{MANTRA=")) {
+                rawData.addAll(
+                        getMantra(section.replaceAll("\\{MANTRA=", "").replaceAll("}", "")).getRawData());
+            }
+            else if(section.startsWith("{ITEM=")) {
+                BlockItemData itemData = getItem(section.replaceAll("\\{ITEM=", "").replaceAll("}", ""));
+                if(itemData != null) {
+                    rawData.addAll(itemData.getRawData());
+                }
+            }
+            else {
+                rawData.addAll(FileUtils.stringToData(section));
+            }
+        }
+        return rawData;
     }
 
     private List<String> extractSections(String originalText) {
@@ -366,7 +412,6 @@ public abstract class DatUpdater {
     void updateXelpudPillarConversationBlock(Block conversationBlock) { }
     void updateMulanaTalismanConversationBlock(Block conversationBlock) { }
     void updateBookOfTheDeadConversationBlock(Block conversationBlock) { }
-    void updateSurfaceMapScannableBlock(Block scannableBlock) { }
     void updateProvocativeBathingSuitConversationBlock(Block conversationBlock) { }
 
     void updateNeburShopBlock(ShopBlock shopBlock) { }
@@ -404,6 +449,27 @@ public abstract class DatUpdater {
     void updateMulbrukHTConversationBlock(Block conversationBlock) { }
     void updateRegularEscapeConversationBlock(Block conversationBlock) { }
     void updateSwimsuitEscapeConversationBlock(Block conversationBlock) { }
+
+    void updateHinerConversationBlock(Block conversationBlock) { }
+    void updateMogerConversationBlock(Block conversationBlock) { }
+    void updatePriestZarnacConversationBlock(Block conversationBlock) { }
+    void updatePriestXanadoConversationBlock(Block conversationBlock) { }
+    void updatePriestHidlydaConversationBlock(Block conversationBlock) { }
+    void updatePriestMadomonoConversationBlock(Block conversationBlock) { }
+    void updatePriestGailiousConversationBlock(Block conversationBlock) { }
+    void updatePriestRomancisConversationBlock(Block conversationBlock) { }
+    void updatePriestAramoConversationBlock(Block conversationBlock) { }
+    void updatePriestTritonConversationBlock(Block conversationBlock) { }
+    void updatePriestJaguarfivConversationBlock(Block conversationBlock) { }
+    void updatePriestLaydocConversationBlock(Block conversationBlock) { }
+    void updatePriestAshgineConversationBlock(Block conversationBlock) { }
+    void updateGiantThexdeConversationBlock(Block conversationBlock) { }
+    void update8BitElderConversationBlock(Block conversationBlock) { }
+    void updatePhilosopherGiltoriyoConversationBlock(Block conversationBlock) { }
+    void updatePhilosopherAlsedanaConversationBlock(Block conversationBlock) { }
+    void updatePhilosopherSamarantaConversationBlock(Block conversationBlock) { }
+    void updatePhilosopherFobosLadderConversationBlock(Block conversationBlock) { }
+    void updatePhilosopherFobosMedicineConversationBlock(Block conversationBlock) { }
 
     void updateHinerReferenceBlock(MasterNpcBlock referenceBlock) { }
     void updateMogerReferenceBlock(MasterNpcBlock referenceBlock) { }
@@ -461,4 +527,5 @@ public abstract class DatUpdater {
 
     void updateEmailBlock(Block emailBlock) { }
     void updateScannableBlock(ScannableBlock scannableBlock) { }
+    void updateSurfaceMapScannableBlock(Block scannableBlock) { }
 }

@@ -494,6 +494,38 @@ public class GraphicsFileData {
         return graphicsFileEntries;
     }
 
+    public static final int MAP_BACKSIDE_DOOR = 0;
+    public static final int MAP_CROSS_OF_LIGHT = 1;
+    public static final int MAP_LOWER_RIGHT_PART = 2;
+    public static final int MAP_LEFT_PART = 3;
+    public static final int MAP_RIGHT_PART = 4;
+
+    public static Map<Integer, GraphicsFileEntry> getLargeMapGraphicsFileEntries() {
+        Map<Integer, GraphicsFileEntry> graphicsFileEntries = new HashMap<>();
+        graphicsFileEntries.put(MAP_BACKSIDE_DOOR, new GraphicsFileEntry(920, 0, 80, 80));
+        graphicsFileEntries.put(MAP_CROSS_OF_LIGHT, new GraphicsFileEntry(920, 80, 80, 80));
+        graphicsFileEntries.put(MAP_LOWER_RIGHT_PART, new GraphicsFileEntry(920, 160, 80, 864));
+        graphicsFileEntries.put(MAP_LEFT_PART, new GraphicsFileEntry(0, 0, 920, 1024));
+        graphicsFileEntries.put(MAP_RIGHT_PART, new GraphicsFileEntry(1000, 0, 24, 1024));
+        return graphicsFileEntries;
+    }
+
+    public static final int SMALL_MAP_BACKSIDE_DOOR = 0;
+    public static final int SMALL_MAP_CROSS_OF_LIGHT = 1;
+    public static final int SMALL_MAP_LOWER_RIGHT_PART = 2;
+    public static final int SMALL_MAP_LEFT_PART = 3;
+    public static final int SMALL_MAP_RIGHT_PART = 4;
+
+    public static Map<Integer, GraphicsFileEntry> getSmallMapGraphicsFileEntries() {
+        Map<Integer, GraphicsFileEntry> graphicsFileEntries = new HashMap<>();
+        graphicsFileEntries.put(SMALL_MAP_BACKSIDE_DOOR, new GraphicsFileEntry(920, 0, 80, 80));
+        graphicsFileEntries.put(SMALL_MAP_CROSS_OF_LIGHT, new GraphicsFileEntry(920, 80, 80, 80));
+        graphicsFileEntries.put(SMALL_MAP_LOWER_RIGHT_PART, new GraphicsFileEntry(920, 160, 80, 352));
+        graphicsFileEntries.put(SMALL_MAP_LEFT_PART, new GraphicsFileEntry(0, 0, 920, 512));
+        graphicsFileEntries.put(SMALL_MAP_RIGHT_PART, new GraphicsFileEntry(1000, 0, 24, 512));
+        return graphicsFileEntries;
+    }
+
     public static final int COCKATRICE_1 = 0;
     public static final int COCKATRICE_2 = 1;
     public static final int COCKATRICE_3 = 2;
