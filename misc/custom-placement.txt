@@ -205,6 +205,7 @@
 # Note 7: Dimensional Key cannot be placed inside Dimensional Corridor.
 # Note 8: Removed items cannot be placed at Snapshots scan locations
 # Note 9: Basic whip must be placed if starting weapon is randomized.
+# Note 10: Placing {Anchor} at the end of a line will make the trap look like an Anchor, if possible. Applies only to chests and floating items at this time.
 
 #Anchor=Anchor
 #Angel Shield=Angel Shield
