@@ -378,4 +378,6 @@ Exit: Gate of Time [Guidance] => Holy Grail
 Exit: Gate of Time [Guidance] => State: Pre-Escape, Glitch: Raindrop
 Exit: Gate of Time [Guidance] => Exit: Retroguidance L1
 Exit: Gate of Time [Guidance] => Exit: Retroguidance D1
-#Exit: Gate of Time [Surface] => Exit: Retrosurface R1 # Pointless
+Exit: Gate of Time [Surface] => Holy Grail
+Exit: Gate of Time [Surface] => State: Pre-Escape, Glitch: Raindrop
+Exit: Gate of Time [Surface] => Exit: Retrosurface R1

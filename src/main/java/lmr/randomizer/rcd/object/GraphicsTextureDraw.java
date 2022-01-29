@@ -63,8 +63,9 @@ public class GraphicsTextureDraw extends GameObject {
     public static int ImageFile_eveg = 1;
     public static int ImageFile_00prof = 2;
     public static int ImageFile_02comenemy = 3;
-    public static int ImageFile_00item = 4; // Also 6
+    public static int ImageFile_00item = 4;
     public static int ImageFile_01menu = 5;
+    public static int ImageFile_00item_alt = 6;
     public static int ImageFile_01effect = 7;
 
     public GraphicsTextureDraw(ObjectContainer objectContainer, int x, int y) {

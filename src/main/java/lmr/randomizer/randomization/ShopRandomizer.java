@@ -9,6 +9,7 @@ import lmr.randomizer.node.MoneyChecker;
 import lmr.randomizer.randomization.data.ItemPriceCount;
 import lmr.randomizer.randomization.data.ShopInventory;
 import lmr.randomizer.randomization.data.ShopInventoryData;
+import lmr.randomizer.util.LocationCoordinateMapper;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -216,6 +217,10 @@ public abstract class ShopRandomizer {
         String location;
         boolean addNewline = false;
         for(String shop : randomizedShops) {
+            if(LocationCoordinateMapper.isSurfaceStart() && DataFromFile.CUSTOM_SHOP_NAME.equals(shop)) {
+                continue;
+            }
+
             if(addNewline) {
                 writer.newLine();
             }

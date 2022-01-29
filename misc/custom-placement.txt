@@ -205,7 +205,7 @@
 # Note 7: Dimensional Key cannot be placed inside Dimensional Corridor.
 # Note 8: Removed items cannot be placed at Snapshots scan locations
 # Note 9: Basic whip must be placed if starting weapon is randomized.
-# Note 10: Placing {Anchor} at the end of a line will make the trap look like an Anchor, if possible. Applies only to chests and floating items at this time.
+# Note 10: Placing {Anchor} at the end of a line will make the item look like an Anchor or other specified item, if possible. Applies only to chests and floating items at this time.
 
 #Anchor=Anchor
 #Angel Shield=Angel Shield
@@ -354,6 +354,7 @@
 
 # Note 1: Using {Sacred Orb (Tower of Ruin)} will make the trap look like a Sacred Orb, if possible.
 # Note 2: Specifying custom graphics is optional, and only supported for some item locations at this time.
+# Note 3: The exploding trap cannot have custom graphics.
 
 #Trap: Graveyard=Trap: Graveyard
 #Trap: Inferno Orb=Trap: Inferno Orb {Sacred Orb (Tower of Ruin)}
