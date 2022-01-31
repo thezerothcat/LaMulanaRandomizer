@@ -1,6 +1,10 @@
 Please see the wiki page on github for information on how to use the randomizer, and other things you may need to know about it.
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
+2.31
+-----------------------------
+Logic fixes for reduced boss count.
+
 2.30
 -----------------------------
 Added an option for reduced boss count, which will transform Shrine of the Mother after any 7 bosses and empower the Holy Grail based solely on acquiring the transformed Shrine of the Mother grail point.
