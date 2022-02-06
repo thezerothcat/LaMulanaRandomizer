@@ -1,5 +1,6 @@
 package lmr.randomizer.update;
 
+import lmr.randomizer.DataFromFile;
 import lmr.randomizer.Settings;
 import lmr.randomizer.rcd.object.*;
 import lmr.randomizer.util.BlockConstants;
@@ -17,6 +18,7 @@ public class ScannableUpdates {
         }
         updateBlankTabletFlag(scannable);
         Screen screen = (Screen)objectContainer;
+        updateScannableReadFlag(scannable);
         updateGrailFlag(scannable, screen.getZoneIndex());
         if(Settings.isRandomizeNonBossDoors()) {
             if (screen.getZoneIndex() == 1 && screen.getRoomIndex() == 8 && screen.getScreenIndex() == 0) {
@@ -129,6 +131,21 @@ public class ScannableUpdates {
 
                 scannable.getWriteByteOperations().clear();
                 scannable.getWriteByteOperations().add(new WriteByteOperation(LocationCoordinateMapper.getGrailFlag(zoneIndex, true), ByteOp.ASSIGN_FLAG, 1));
+            }
+        }
+    }
+
+    private static void updateScannableReadFlag(GameObject scannable) {
+        if(scannable.getArgs().get(0) == BlockConstants.Tablet_Retromausoleum_An8BitWorld) {
+            scannable.getWriteByteOperations().clear();
+            return;
+        }
+        if(scannable.getWriteByteOperations().size() == 1) {
+            WriteByteOperation writeByteOperation = scannable.getWriteByteOperations().get(0);
+            if(writeByteOperation.getValue() == 1
+                    && ByteOp.ASSIGN_FLAG.equals(writeByteOperation.getOp())
+                    && DataFromFile.getRemovedTabletGlowFlags().contains(writeByteOperation.getIndex())) {
+                scannable.removeUpdate(new WriteByteOperation(writeByteOperation.getIndex(), ByteOp.ASSIGN_FLAG, 1));
             }
         }
     }

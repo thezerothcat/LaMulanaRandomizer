@@ -1,6 +1,10 @@
 Please see the wiki page on github for information on how to use the randomizer, and other things you may need to know about it.
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
+2.32
+-----------------------------
+Fixes for reduced boss count setting interactions, and some assorted logic updates.
+
 2.31
 -----------------------------
 Logic fixes for reduced boss count.

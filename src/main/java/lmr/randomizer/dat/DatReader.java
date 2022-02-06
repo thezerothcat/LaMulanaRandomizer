@@ -340,6 +340,30 @@ public final class DatReader {
         return masterNpcBlock;
     }
 
+    private static MapGraphicsBlock buildMapGraphicsBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        int dataIndex = 0;
+        MapGraphicsBlock mapGraphicsBlock = new MapGraphicsBlock(blockIndex);
+        MapGraphicsEntry mapGraphicsEntry;
+
+        while(dataIndex < numberOfShortsInThisBlock) {
+            dataInputStream.readShort(); // CMD
+            ++dataIndex;
+            dataInputStream.readShort(); // List length is always 2
+            ++dataIndex;
+            int positionData = dataInputStream.readShort();
+            ++dataIndex;
+            int appearanceData = dataInputStream.readShort();
+            ++dataIndex;
+            mapGraphicsEntry = new MapGraphicsEntry(positionData, appearanceData);
+            if(dataIndex < numberOfShortsInThisBlock) {
+                dataInputStream.readShort(); // 0x000a
+                ++dataIndex;
+            }
+            mapGraphicsBlock.addRoom(mapGraphicsEntry);
+        }
+        return mapGraphicsBlock;
+    }
+
     private static Block buildCheckBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         int dataIndex = 0;
         CheckBlock checkBlock = new CheckBlock(blockIndex);
@@ -933,6 +957,28 @@ public final class DatReader {
                 || blockIndex == BlockConstants.Master_Mulbruk_ProvocativeBathingSuitReaction;
     }
 
+    private static boolean isMapGraphicsBlock(int blockIndex) {
+        return blockIndex == BlockConstants.MapGraphics_GateOfGuidance
+                || blockIndex == BlockConstants.MapGraphics_Surface
+                || blockIndex == BlockConstants.MapGraphics_Mausoleum
+                || blockIndex == BlockConstants.MapGraphics_Sun
+                || blockIndex == BlockConstants.MapGraphics_Spring
+                || blockIndex == BlockConstants.MapGraphics_Inferno
+                || blockIndex == BlockConstants.MapGraphics_Extinction
+                || blockIndex == BlockConstants.MapGraphics_TwinLabyrinths
+                || blockIndex == BlockConstants.MapGraphics_Endless
+                || blockIndex == BlockConstants.MapGraphics_Shrine
+                || blockIndex == BlockConstants.MapGraphics_Illusion
+                || blockIndex == BlockConstants.MapGraphics_Graveyard
+                || blockIndex == BlockConstants.MapGraphics_Moonlight
+                || blockIndex == BlockConstants.MapGraphics_Goddess
+                || blockIndex == BlockConstants.MapGraphics_Ruin
+                || blockIndex == BlockConstants.MapGraphics_Birth_Swords
+                || blockIndex == BlockConstants.MapGraphics_Birth_Skanda
+                || blockIndex == BlockConstants.MapGraphics_Dimensional
+                || blockIndex == BlockConstants.MapGraphics_HT;
+    }
+
     private static DataInputStream getDatFile(boolean loadFromBackup) throws Exception {
         if(loadFromBackup) {
             return new DataInputStream(new FileInputStream(Settings.getBackupDatFile()));
@@ -982,6 +1028,9 @@ public final class DatReader {
             }
             else if(isMasterNpcBlock(blockIndex)) {
                 block = buildMasterNpcBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
+            else if(isMapGraphicsBlock(blockIndex)) {
+                block = buildMapGraphicsBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             else if(DataFromFile.getMapOfShopNameToShopBlock().values().contains((Integer)blockIndex)) {
                 block = buildShopBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);

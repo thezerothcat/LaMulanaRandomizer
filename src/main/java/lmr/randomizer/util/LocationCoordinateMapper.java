@@ -184,6 +184,17 @@ public final class LocationCoordinateMapper {
         return 1;
     }
 
+    public static short getGrailX() {
+        return getGrailX(LocationCoordinateMapper.getStartingZone(), isFrontsideStart());
+    }
+
+    public static short getGrailX(int zone, boolean front) {
+        if(zone == 1) {
+            return 1120;
+        }
+        return getStartingX(zone, front);
+    }
+
     public static short getStartingX() {
         return getStartingX(LocationCoordinateMapper.getStartingZone(), isFrontsideStart());
     }
@@ -193,9 +204,6 @@ public final class LocationCoordinateMapper {
             return 140;
         }
         if(zone == 1) {
-            if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation()) {
-                return 1120;
-            }
             return 940;
         }
         if(zone == 2) {
@@ -264,6 +272,17 @@ public final class LocationCoordinateMapper {
         return 940;
     }
 
+    public static short getGrailY() {
+        return getGrailY(LocationCoordinateMapper.getStartingZone(), isFrontsideStart());
+    }
+
+    public static short getGrailY(int zone, boolean front) {
+        if(zone == 1) {
+            return 72;
+        }
+        return getStartingY(zone, front);
+    }
+
     public static short getStartingY() {
         return getStartingY(LocationCoordinateMapper.getStartingZone(), isFrontsideStart());
     }
@@ -273,9 +292,6 @@ public final class LocationCoordinateMapper {
             return 392;
         }
         if(zone == 1) {
-            if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation()) {
-                return 72;
-            }
             return 160;
         }
         if(zone == 2) {

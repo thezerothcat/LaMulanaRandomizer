@@ -1,14 +1,14 @@
 package lmr.randomizer.dat.update;
 
-import lmr.randomizer.DataFromFile;
-import lmr.randomizer.FileUtils;
+import lmr.randomizer.*;
 import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.dat.blocks.*;
 import lmr.randomizer.dat.blocks.contents.*;
 import lmr.randomizer.dat.blocks.contents.entries.TextEntry;
-import lmr.randomizer.randomization.data.CustomBlockEnum;
-import lmr.randomizer.randomization.data.GameObjectId;
+import lmr.randomizer.randomization.data.*;
 import lmr.randomizer.util.BlockDataConstants;
+import lmr.randomizer.util.FlagConstants;
+import lmr.randomizer.util.ItemConstants;
 import lmr.randomizer.util.MantraConstants;
 
 import java.util.ArrayList;
@@ -528,4 +528,180 @@ public abstract class DatUpdater {
     void updateEmailBlock(Block emailBlock) { }
     void updateScannableBlock(ScannableBlock scannableBlock) { }
     void updateSurfaceMapScannableBlock(Block scannableBlock) { }
+
+    protected void updateShopBlock(ShopBlock shopBlock, ShopInventory shopInventory) {
+        shopBlock.getInventoryItemArgsList().getData().clear();
+        shopBlock.getInventoryItemArgsList().getData().add(shopInventory.getItem1().getInventoryArg());
+        shopBlock.getInventoryItemArgsList().getData().add(shopInventory.getItem2().getInventoryArg());
+        shopBlock.getInventoryItemArgsList().getData().add(shopInventory.getItem3().getInventoryArg());
+
+        updatePriceAndCount(shopBlock, shopInventory);
+        updateShopFlags(shopBlock, shopInventory);
+
+        updateAskItemName(shopBlock.getString(3), shopInventory.getItem1());
+        updateAskItemName(shopBlock.getString(4), shopInventory.getItem2());
+        updateAskItemName(shopBlock.getString(5), shopInventory.getItem3());
+
+        updateSoldText(shopBlock.getString(6), shopInventory.getItem1());
+        updateSoldText(shopBlock.getString(7), shopInventory.getItem2());
+        updateSoldText(shopBlock.getString(8), shopInventory.getItem3());
+
+        List<Short> bunemonData = shopBlock.getBunemonText().getData();
+        bunemonData.clear();
+        updateBunemonText(bunemonData, shopInventory.getItem1(), shopBlock.getItem1Price());
+        bunemonData.addAll(FileUtils.stringToData(" , "));
+        updateBunemonText(bunemonData, shopInventory.getItem2(), shopBlock.getItem2Price());
+        bunemonData.addAll(FileUtils.stringToData(" , "));
+        updateBunemonText(bunemonData, shopInventory.getItem3(), shopBlock.getItem3Price());
+
+        shopBlock.setBunemonLocation(new BlockStringData(FileUtils.stringToData(
+                Translations.getLocationAndNpc(shopInventory.getNpcLocation(), shopInventory.getNpcName()))));
+    }
+
+    private void updatePriceAndCount(ShopBlock shopBlock, ShopInventory shopInventory) {
+        ItemPriceCount itemPriceCount = shopInventory.getItem1().getItemPriceCount();
+        if(itemPriceCount != null) {
+            if(itemPriceCount.getPrice() != null) {
+                shopBlock.setItem1Price(itemPriceCount.getPrice());
+            }
+            if(itemPriceCount.getCount() != null) {
+                shopBlock.setItem1Count(itemPriceCount.getCount());
+            }
+        }
+        itemPriceCount = shopInventory.getItem2().getItemPriceCount();
+        if(itemPriceCount != null) {
+            if(itemPriceCount.getPrice() != null) {
+                shopBlock.setItem2Price(itemPriceCount.getPrice());
+            }
+            if(itemPriceCount.getCount() != null) {
+                shopBlock.setItem2Count(itemPriceCount.getCount());
+            }
+        }
+        itemPriceCount = shopInventory.getItem3().getItemPriceCount();
+        if(itemPriceCount != null) {
+            if(itemPriceCount.getPrice() != null) {
+                shopBlock.setItem3Price(itemPriceCount.getPrice());
+            }
+            if(itemPriceCount.getCount() != null) {
+                shopBlock.setItem3Count(itemPriceCount.getCount());
+            }
+        }
+    }
+
+    public void updateShopFlags(ShopBlock shopBlock, ShopInventory shopInventory) {
+        short shopItem1Flag = shopInventory.getItem1().getWorldFlag();
+        short shopItem2Flag = shopInventory.getItem2().getWorldFlag();
+        short shopItem3Flag = shopInventory.getItem3().getWorldFlag();
+
+        shopBlock.getFlagList().getData().clear();
+        shopBlock.getFlagList().getData().add(shopItem1Flag);
+        shopBlock.getFlagList().getData().add(shopItem2Flag);
+        shopBlock.getFlagList().getData().add(shopItem3Flag);
+
+        if(!"Yiegah Kungfu".equals(shopInventory.getNpcName())) {
+            shopBlock.getExitFlagList().getData().clear();
+            shopBlock.getExitFlagList().getData().add(shopItem1Flag);
+            shopBlock.getExitFlagList().getData().add(shopItem2Flag);
+            shopBlock.getExitFlagList().getData().add(shopItem3Flag);
+        }
+    }
+
+    private void updateAskItemName(BlockStringData blockStringData, ShopInventoryData shopInventoryData) {
+        if(shopInventoryData.getCustomTextNumber() != null) {
+            blockStringData.getData().clear();
+            blockStringData.getData().addAll(buildStringDataWithColor(
+                    Translations.getText("CustomShopText.Offer" + shopInventoryData.getCustomTextNumber()),
+                    Translations.getText("CustomShopText.Name" + shopInventoryData.getCustomTextNumber()),
+                    BlockColorsData.COLOR_SOFTWARE_YELLOW));
+            if(shopInventoryData.getCustomTextNumber() == 2) {
+                blockStringData.getData().addAll(new BlockMantraData(MantraConstants.LAMULANA).getRawData());
+            }
+            return;
+        }
+
+        if(blockStringData.getItemNameStartIndex() == null || blockStringData.getItemNameEndIndex() == null) {
+            return;
+        }
+
+        List<Short> newBlockData = new ArrayList<>(blockStringData.getData().subList(0, blockStringData.getItemNameStartIndex()));
+        if(HolidaySettings.isFools2020Mode()) {
+            if(shopInventoryData.getInventoryArg() == ItemConstants.SCRIPTURES) {
+                newBlockData.addAll(FileUtils.stringToData(Translations.getText("items.HeatproofCase")));
+            }
+            else if(shopInventoryData.getInventoryArg() == ItemConstants.HEATPROOF_CASE) {
+                newBlockData.addAll(FileUtils.stringToData(Translations.getText("items.Scriptures")));
+            }
+            else {
+                addShrinePrefixIfNeeded(newBlockData, shopInventoryData);
+                newBlockData.add(BlockDataConstants.ItemName);
+                newBlockData.add(shopInventoryData.getInventoryArg());
+            }
+        }
+        else {
+            addShrinePrefixIfNeeded(newBlockData, shopInventoryData);
+            newBlockData.add(BlockDataConstants.ItemName);
+            newBlockData.add(shopInventoryData.getInventoryArg());
+        }
+        newBlockData.addAll(blockStringData.getData().subList(blockStringData.getItemNameEndIndex(), blockStringData.getData().size()));
+        blockStringData.getData().clear();
+        blockStringData.getData().addAll(newBlockData);
+    }
+
+    private void updateSoldText(BlockStringData blockStringData, ShopInventoryData shopInventoryData) {
+        if(HolidaySettings.isFools2022Mode() && ItemConstants.HAND_SCANNER == shopInventoryData.getInventoryArg()) {
+            blockStringData.getData().clear();
+            blockStringData.getData().addAll(buildRawDataWithCommands(Translations.getText("event.fools2022.Purchase.HandScanner")));
+            return;
+        }
+
+        if(shopInventoryData.getCustomTextNumber() != null) {
+            blockStringData.getData().clear();
+            String text = Translations.getText("CustomShopText.Purchase" + shopInventoryData.getCustomTextNumber());
+            if(text == null) {
+                int subIndex = 1;
+                boolean multiWindow = false;
+                text = Translations.getText("CustomShopText.Purchase" + shopInventoryData.getCustomTextNumber() + "." + subIndex++);
+                while(text != null) {
+                    if(multiWindow) {
+                        blockStringData.getData().add(BlockDataConstants.Cls);
+                    }
+                    blockStringData.getData().addAll(FileUtils.stringToData(text));
+                    text = Translations.getText("CustomShopText.Purchase" + shopInventoryData.getCustomTextNumber() + "." + subIndex++);
+                }
+            }
+            else {
+                blockStringData.getData().addAll(FileUtils.stringToData(text));
+            }
+        }
+    }
+
+    private void updateBunemonText(List<Short> bunemonData, ShopInventoryData shopInventoryData, Short itemPrice) {
+        if(HolidaySettings.isFools2020Mode()) {
+            if(shopInventoryData.getInventoryArg() == ItemConstants.SCRIPTURES) {
+                bunemonData.addAll(FileUtils.stringToData(Translations.getText("items.HeatproofCase")));
+            }
+            else if(shopInventoryData.getInventoryArg() == ItemConstants.HEATPROOF_CASE) {
+                bunemonData.addAll(FileUtils.stringToData(Translations.getText("items.Scriptures")));
+            }
+            else {
+                addShrinePrefixIfNeeded(bunemonData, shopInventoryData);
+                bunemonData.add(BlockDataConstants.ItemName);
+                bunemonData.add(shopInventoryData.getInventoryArg());
+            }
+        }
+        else {
+            addShrinePrefixIfNeeded(bunemonData, shopInventoryData);
+            bunemonData.add(BlockDataConstants.ItemName);
+            bunemonData.add(shopInventoryData.getInventoryArg());
+        }
+
+        bunemonData.add(BlockDataConstants.Space);
+        bunemonData.addAll(FileUtils.stringToData(Short.toString(itemPrice)));
+    }
+
+    private void addShrinePrefixIfNeeded(List<Short> bunemonData, ShopInventoryData shopInventoryData) {
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_SHRINE) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.shrinePrefix")));
+        }
+    }
 }

@@ -4,7 +4,10 @@ import lmr.randomizer.node.CustomPlacementData;
 import lmr.randomizer.node.NodeWithRequirements;
 import lmr.randomizer.randomization.ShopRandomizationEnum;
 import lmr.randomizer.randomization.data.GameObjectId;
+import lmr.randomizer.util.BlockConstants;
+import lmr.randomizer.util.FlagConstants;
 import lmr.randomizer.util.LocationCoordinateMapper;
+import lmr.randomizer.util.MiscConstants;
 
 import java.io.File;
 import java.util.*;
@@ -105,6 +108,8 @@ public final class DataFromFile {
     private static List<String> availableGlitches;
     private static List<String> winRequirements;
     private static List<String> chestOnlyLocations;
+
+    private static List<Integer> removedTabletGlowFlags;
 
     private static CustomPlacementData customPlacementData;
 
@@ -541,6 +546,32 @@ public final class DataFromFile {
         return allCoinChests;
     }
 
+    public static List<Integer> getRemovedTabletGlowFlags() {
+        if(removedTabletGlowFlags == null ) {
+            removedTabletGlowFlags = getFlagsForRemovedTabletGlow();
+        }
+        return removedTabletGlowFlags;
+    }
+
+    private static List<Integer> getFlagsForRemovedTabletGlow() {
+        List<Integer> tabletGlowFlags = new ArrayList<>();
+        boolean customTabletExists = false;
+        for(Integer tabletGlowFlag : FlagConstants.CUSTOMIZABLE_TABLET_GLOW_FLAGS) {
+            if(hasCustomTablet(tabletGlowFlag)) {
+                customTabletExists = true;
+            }
+            else {
+                tabletGlowFlags.add(tabletGlowFlag);
+            }
+        }
+        return customTabletExists ? tabletGlowFlags : new ArrayList<>(0);
+    }
+
+    private static boolean hasCustomTablet(int tabletGlowFlag) {
+        Integer blockNumber = BlockConstants.getTabletBlockFromGlowFlag(tabletGlowFlag);
+        return blockNumber != null && (Translations.hasKey(MiscConstants.getScannableId(blockNumber) + ".Text"));
+    }
+
     public static List<String> getHTItems(List<String> possibleItems) {
         List<String> enabledItems = new ArrayList<>(possibleItems.size());
         if(Settings.isHTFullRandom()) {
@@ -593,5 +624,6 @@ public final class DataFromFile {
         initialShops = null;
         initialNonShopItemLocations = null;
         bannedTrapLocations = null;
+        removedTabletGlowFlags = null;
     }
 }

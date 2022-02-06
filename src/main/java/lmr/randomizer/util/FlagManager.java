@@ -79,6 +79,7 @@ public class FlagManager {
         availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_FOOLS_CONFUSION_CORRIDOR_SCAN_ROOM_BROKEN);
         availableFlags.add(FlagConstants.TABLET_GLOW_GRAVEYARD_GIANT_THEXDE_SCREEN_BROKEN);
         availableFlags.add(FlagConstants.TABLET_GLOW_BIRTH_SKANDA_ASURAS_ROOM_BROKEN);
+        availableFlags.add(FlagConstants.OBSOLETE_FREE_FLAG);
 
         for(int flag = FIRST_AVAILABLE_RANDOM_GRAPHICS_FLAG; flag < LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG; flag++) {
             availableFlags.add(flag);

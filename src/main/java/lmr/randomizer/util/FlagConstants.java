@@ -14,12 +14,16 @@ public final class FlagConstants {
     public static final int FAIRY_POINTS_ACTIVE = 0x118; // Value 0 > 1 when talking to The Fairy Queen after collecting Isis' Pendant, activates fairy points
     public static final int GUIDANCE_ELEVATOR = 0x134; // Value 0 > 1 when hitting the elevator block in the Guidance mouth (where Dracuet's door is), other increments via FlagTimer for animation
     public static final int GUIDANCE_PUZZLE_TREASURES_CHEST = 0x137; // Value 0 > 1 when using Pepper on the statue, 1 > 2 when the chest is done animating to make it possible to open.
+    public static final int GUIDANCE_PUZZLE_ANKH_JEWEL_TABLETS_LADDER = 0x13f; // Value 0 > 1 when destroying the 4 tablets, which causes the ladder to spawn in the room to the right, for access to the isolated dais.
     public static final int SURFACE_RUINS_OPENED = 0x145; // Set in vanilla first conversation with Xelpud, changed in randomizer to use 0xad0. For some reason, warp graphics sometimes test this flag.
+    public static final int SURFACE_ARGUS_DEFEATED = 0x148;
     public static final int SURFACE_PUZZLE_WATERFALL_WALL_SACRED_ORB = 0x14b; // Value 0 > 1 when the wall/Hitbox is broken for the wall that has bats behind it, also used as the puzzle flag for the chest
     public static final int SURFACE_UNDERPATH_VISIBLE = 0x14c; // Value 0 > 1 by Lemeza detector near the transitions into the Surface underpath, allowing you to navigate the area properly. One of the two detectors is added by randomizer; the other is vanilla.
     public static final int SURFACE_PUZZLE_SEAL_COIN_CHEST = 0x14d; // In vanilla, this is for opening the seal and opening the chest. In randomizer, the chest uses a different world flag, but this remains as the puzzle flag.
+    public static final int SURFACE_MEKURI_WALL = 0x150;
     public static final int SURFACE_WATERFALL_WALL_BATS = 0x151; // Value 0 > 1 when the wall/Hitbox is broken for the wall that has bats behind it, 1 > 2 as the wall cover despawns and bats spawn
     public static final int GUIDANCE_BATS_KILLED_COUNT = 0x159; // Value += 1 every time a bat is killed in Guidance.
+    public static final int MAUSOLEUM_PUZZLE_COIN_CHEST = 0x160; // For breaking the wall/unlocking the coin chest; goes to 1 for hitting the wall, set to 2 by a FlagTimer to open the chest.
     public static final int MAUSOLEUM_PUZZLE_ORB_CHEST = 0x165; // Value 0 > 1 when placing a weight at the proper giant's foot, unlocks the Mausoleum Sacred Orb chest
     public static final int HARDMODE = 0x16a; // Value 0 > 2 when hard mode is triggered.
     public static final int SPHINX_DESTROYED = 0x173; // Value 5 = destroyed
@@ -36,6 +40,7 @@ public final class FlagConstants {
     public static final int FISH_SHOP_UNLOCKS = 0x197; // Value 0 > 1 after bulling Mr. Fishman, 1 > 2 after using the seal to open the shop, 2 > 3 after using a Key Fairy to unlock the alternate shop.
     public static final int SPRING_BAHAMUT_ROOM_FLOODED = 0x199; // Value 0 > 1 after hitting the gear outside Bahamut's room.
     public static final int INFERNO_VIY_MANTRA_STATUE = 0x1a9; // 1=break it 2=statue will disappear 3=statue disappears
+    public static final int INFERNO_PUZZLE_LAVA_COIN_CHEST = 0x1aa; // For the breakable wall covering Coin: Inferno (Lava) chest.
     public static final int INFERNO_FAKE_ORB_CRUSHER = 0x1ac; // For the fake Sacred Orb trap in Inferno Cavern, made up of a graphic, a Lemeza detector, and a crusher. // todo: can this be claimed for something?
     public static final int INFERNO_CHAIN_WHIP_CRUSHER_LEFT = 0x1b1; // Vanilla sets this when the left crusher starts going up. Randomizer swaps this for a screen flag so it can't perma-fail.
     public static final int INFERNO_CHAIN_WHIP_CRUSHER_RIGHT = 0x1b2; // Vanilla sets this when the right crusher starts going up. Randomizer swaps this for a screen flag so it can't perma-fail.
@@ -50,6 +55,7 @@ public final class FlagConstants {
     public static final int TWINS_RELEASED = 0x1dc; // Value 0 > 1 when pressing first dais to release the twins, 1 > 2 when pressing second dais
     public static final short TWIN_UNSOLVABLE_PUZZLE = 0x1e4; // Value 0 > 1 when solving the block pushing puzzle in Twin Labyrinths on the screen with the lamp recharge station/Lamp of Time Shop
     public static final int LITTLE_BROTHER_PURCHASES = 0x1ea; // Value += 1 for each purchase made from little brother
+    public static final int TWIN_PUZZLE_LOWER_COIN_CHEST = 0x1eb;
     public static final int BIG_BROTHER_UNLOCKED = 0x1f0; // Value 0 > 1 when unlocked, 1 > 2 when confirmed by chatting with little brother
     public static final int ENDLESS_PUZZLE_MAP_CHEST = 0x1f6; // Value 0 > 1 when chest is unlocked
     public static final int ILLUSION_PUZZLE_EXPLODING_CHEST = 0x20a; // Exploding chest uses
@@ -99,6 +105,9 @@ public final class FlagConstants {
     public static final int LAMP_OF_TIME_STATE = 0x34d; // 0 = empty lamp, 1 = full lamp
     public static final int GODDESS_STATUE_SHIELD_EXISTS = 0x34e; // Value 0 > 1 after Goddess statue has thrown its shield or you've left the screen after triggering the animation start
     public static final int MEDICINE_SOLVED = 0x34f; // Value 0 > 1 after reciting BIRTH/DEATH; allows re-doing the puzzle for alternate medicine color.
+    public static final int DIMENSIONAL_LEFT_SIDE_STATE = 0x350; // 2 = cleared?
+    public static final int DIMENSIONAL_RIGHT_SIDE_STATE = 0x351; // 2 = cleared?
+    public static final int DIMENSIONAL_UPPER_STATE = 0x352; // 2 = cleared?
     public static final int SACRED_ORB_COUNT = 0x354; // Value += 1 for each orb collected; incremented via FlagTimer so may not reflect actual HP if cheating with orb duplication.
     public static final int ORB_COUNT_INCREMENTED_GUIDANCE = 0x355; // Value 0 > 1 when updating 0x355 to ensure it only happens once. One for each orb, spanning 0x355 through 0x35e
     public static final int RUIN_LADDER_NUWA = 0x369; // 0 > 1 from the dais, may go to 2 somehow?
@@ -115,6 +124,12 @@ public final class FlagConstants {
     public static final int HT_UNLOCKED = 0x3bb; // Value 0 > 1 when unlocked (normally at the end of the unlock sequence)
     public static final int BIRTH_MOVING_PLATFORM_NEAR_SKANDA = 0x3c0; // Value 0 > 1 when placing the weight next to the Dimensional Key wall, causing the MovingPlatform to start moving left to right.
     public static final int BIRTH_GANESHA_SCANNED = 0x3c8; // Value 0 > 1 when scanning the mural of Ganesha in Chamber of Birth, activates 0x3e2 via FlagTimer to unblock the warp.
+    public static final int DIMENSIONAL_KULULLU_MARKED_DEAD = 0x3d9; // Set to 1 by FlagTimer in rooms adjacent to Kulullu's room; used for enemy spawns in that room to ensure the don't appear until you leave and come back
+    public static final int DIMENSIONAL_KUUSARIKKU_MARKED_DEAD = 0x3da; // Set to 1 by FlagTimer in rooms adjacent to Kuusarikku's room; used for enemy spawns in that room to ensure the don't appear until you leave and come back
+    public static final int DIMENSIONAL_USHUM_MARKED_DEAD = 0x3db; // Set to 1 by FlagTimer in rooms adjacent to Ushum's room; used for enemy spawns in that room to ensure the don't appear until you leave and come back
+    public static final int DIMENSIONAL_LAHAMU_MARKED_DEAD = 0x3dc; // Set to 1 by FlagTimer in rooms adjacent to Lahamu's room; used for enemy spawns in that room to ensure the don't appear until you leave and come back
+    public static final int DIMENSIONAL_URMAHLULLU_MARKED_DEAD = 0x3dd; // Set to 1 by FlagTimer in rooms adjacent to Lahamu's room; used for enemy spawns in that room to ensure the don't appear until you leave and come back
+    public static final int DIMENSIONAL_CHILDREN_DEAD_POST_KEY_RESET = 0x3e7; // Set to 1 first time visiting Dimensional corridor with Dimensional Key
     public static final int KILL_FLAG = 0x3e9; // Instant death when set
     public static final int LAMP_STATION_UNKNOWN = 0x3ed; // Gets set on the Lemeza detector that lights Lamp of Time. Probably to despawn the flame graphic
     public static final int ESCAPE_TRIGGERED = 0x403; // Value 0 > 1 alongside triggering the escape timer and screenshake.
@@ -129,7 +144,7 @@ public final class FlagConstants {
     public static final int HT_ROOM1_SHORTCUT_OPEN = 0x7f4; // Value 0 > 1 via FlagTimer when all 3 daises in room 30 (witches) are pressed.
     public static final int MOTHER_ANKH_JEWEL_RECOVERY = 0xad2; // Rando-specific; 0 > 1 after the sound effect has played to indicate that Shrine map was collected.
     public static final int RANDOMIZER_SAVE_LOADED = 0xad1; // Rando-specific; this gets set in the save file generated by randomizer, and no other way. It's checked as a means of killing the player if they didn't load their save file.
-    public static final int WRONG_COLOR_MEDICINE = 0xad4; // Rando-specific; used on a FlagTimer that tests == 0 and assigns = 1 when setting medicine statue to match wrong-color medicine.
+    public static final int OBSOLETE_FREE_FLAG = 0xad4;
     public static final int GRAVEYARD_PUZZLE_TRAP_CHEST = 0xad8; // Rando-specific; for unlocking the trap chest at the bottom of Graveyard which normally spawns a hadouken turtle.
     public static final int MANTRAS_RECITED_COUNT = 0xae9; // Rando-specific; += 1 for each mantra recited
     public static final int MANTRAS_UNLOCKED = 0xaeb; // Rando-specific; 0 > 1 after talking to Giltoriyo to spawn all mantras
@@ -177,7 +192,16 @@ public final class FlagConstants {
     // Sub-boss state flags
     public static final int BUER_STATE = 0x17a;
     public static final int SKANDA_STATE = 0x2a6; // Value 0 > 1 from dance of life, 1 > 2 when Skanda dies
-    public static final int USHUMGALLU_STATE = 0x2cc; // Value 0 > 1 when Ushumgallu dies, 1 > 2 via FlagTimer
+    public static final int GIRTABLILU_STATE = 0x2c3; // 0 = alive, 1 = defeated, 2 = counted toward DIMENSIONAL_CHILDREN_PARITY and DIMENSIONAL_CHILDREN_DEAD
+    public static final int KULULLU_STATE = 0x2c4; // 0 = alive, 1 = defeated, 2 = counted toward DIMENSIONAL_CHILDREN_PARITY and DIMENSIONAL_CHILDREN_DEAD
+    public static final int KUUSARIKKU_STATE = 0x2c5; // 0 = alive, 1 = defeated, 2 = counted toward DIMENSIONAL_CHILDREN_PARITY and DIMENSIONAL_CHILDREN_DEAD
+    public static final int URMAHLULLU_STATE = 0x2c6; // 0 = alive, 1 = defeated, 2 = counted toward DIMENSIONAL_CHILDREN_PARITY and DIMENSIONAL_CHILDREN_DEAD
+    public static final int UGALLU_STATE = 0x2c7; // 0 = alive, 1 = defeated, 2 = counted toward DIMENSIONAL_CHILDREN_PARITY and DIMENSIONAL_CHILDREN_DEAD
+    public static final int USHUM_STATE = 0x2c8; // 0 = alive, 1 = defeated, 2 = counted toward DIMENSIONAL_CHILDREN_PARITY and DIMENSIONAL_CHILDREN_DEAD
+    public static final int LAHAMU_STATE = 0x2c9; // 0 = alive, 1 = defeated, 2 = counted toward DIMENSIONAL_CHILDREN_PARITY and DIMENSIONAL_CHILDREN_DEAD
+    public static final int MUSHNAHHU_STATE = 0x2ca; // 0 = alive, 1 = defeated, 2 = counted toward DIMENSIONAL_CHILDREN_PARITY and DIMENSIONAL_CHILDREN_DEAD
+    public static final int UMU_DABRUTU_STATE = 0x2cb; // 0 = alive, 1 = defeated, 2 = counted toward DIMENSIONAL_CHILDREN_PARITY and DIMENSIONAL_CHILDREN_DEAD
+    public static final int USHUMGALLU_STATE = 0x2cc; // 0 = alive, 1 = defeated, 2 = counted toward DIMENSIONAL_CHILDREN_PARITY and DIMENSIONAL_CHILDREN_DEAD
 
     // Backside door unlock flags
     public static final int AMPHISBAENA_GATE_MIRROR_COVER = 0x15c;
@@ -290,6 +314,9 @@ public final class FlagConstants {
     public static final int WF_DIARY = 0x104;
     public static final int WF_MULANA_TALISMAN = 0x105;
     public static final int WF_PROVOCATIVE_BATHING_SUIT = 0x106;
+    public static final int WF_MEDICINE_YELLOW = 0x108;
+    public static final int WF_MEDICINE_GREEN = 0x109;
+    public static final int WF_MEDICINE_RED = 0x10a;
     public static final int WF_MATERNITY_STATUE = 0x10b;
     public static final int WF_COIN_SURFACE_GUIDANCE_TWO = 0x138;
     public static final int WF_COIN_SURFACE_GUIDANCE_ONE = 0x13b;
@@ -704,6 +731,228 @@ public final class FlagConstants {
     public static final int TABLET_GLOW_HT_SLEEP_ALSO_SET_BY_RETROMAUSOLEUM_ENTRANCE = 0x54b; // Tablet block 1004 (HT) and 516 (Retromausoleum); room 23-13-00 and room 19-00-01
     public static final int TABLET_GLOW_HT_I_EXIST_HERE = 0x54c; // Tablet block 1005; room 23-18-00
     public static final int TABLET_GLOW_HT_CLOTH_TO_MAKE_THE_TREASURE = 0x54d; // Tablet block 1009; room 23-22-00
+
+    public static final List<Integer> CUSTOMIZABLE_TABLET_GLOW_FLAGS = Arrays.asList(
+            TABLET_GLOW_GUIDANCE_ENTRANCE,
+            TABLET_GLOW_GUIDANCE_OFFER_3_LIGHTS,
+            TABLET_GLOW_GUIDANCE_HOLY_GROUND,
+            TABLET_GLOW_GUIDANCE_PROVE_THINE_COURAGE,
+            TABLET_GLOW_GUIDANCE_CROSS_THE_SACRED_LAKE,
+            TABLET_GLOW_GUIDANCE_DEATH_AWAITS_THE_POWERLESS,
+            TABLET_GLOW_GUIDANCE_8_ANKHS,
+            TABLET_GLOW_GUIDANCE_PUSH_THE_WHITE_BOX,
+            TABLET_GLOW_GUIDANCE_CHI_YOU,
+            TABLET_GLOW_GUIDANCE_IT_SHALL_CONNECT,
+            TABLET_GLOW_GUIDANCE_WATCHTOWER,
+            TABLET_GLOW_GUIDANCE_HOLY_GRAIL_MEMORIES,
+            TABLET_GLOW_GUIDANCE_GUILD_DAMAGED,
+            TABLET_GLOW_GUIDANCE_GIANTS_HISTORY,
+            TABLET_GLOW_SURFACE_RUINS_ENTRANCE,
+            TABLET_GLOW_MAUSOLEUM_ABUTO,
+            TABLET_GLOW_MAUSOLEUM_GHOST_LORD_DAMAGED,
+            TABLET_GLOW_MAUSOLEUM_MIGELA,
+            TABLET_GLOW_MAUSOLEUM_THOU_ART_TINY,
+            TABLET_GLOW_MAUSOLEUM_LEDO,
+            TABLET_GLOW_MAUSOLEUM_RIBU,
+            TABLET_GLOW_MAUSOLEUM_ABUTO_JI_RIBU_SAKIT,
+            TABLET_GLOW_MAUSOLEUM_JI,
+            TABLET_GLOW_MAUSOLEUM_ZEBU,
+            TABLET_GLOW_MAUSOLEUM_NUMBERS,
+            TABLET_GLOW_MAUSOLEUM_BADO_MIGELA_LEDO_FUTO,
+            TABLET_GLOW_MAUSOLEUM_BADO,
+            TABLET_GLOW_MAUSOLEUM_MIGELA_LEFT_HANDED,
+            TABLET_GLOW_MAUSOLEUM_RED_LIGHT_DAMAGED,
+            TABLET_GLOW_MAUSOLEUM_ZEBU_UNABLE_TO_MOVE,
+            TABLET_GLOW_MAUSOLEUM_NINE_BROTHERS,
+            TABLET_GLOW_MAUSOLEUM_SAKIT,
+            TABLET_GLOW_MAUSOLEUM_CELESTIAL_BODIES,
+            TABLET_GLOW_SUN_JUMP_INTO_THE_SUN,
+            TABLET_GLOW_SUN_STATUE_OF_THE_GIANT,
+            TABLET_GLOW_SUN_CAST_A_LIGHT,
+            TABLET_GLOW_SUN_AIM_AND_SHOOT,
+            TABLET_GLOW_SUN_CHALLENGE_THE_INFERNO_CAVERN,
+            TABLET_GLOW_SUN_FIRST_MANTRA,
+            TABLET_GLOW_SUN_SECOND_MANTRA,
+            TABLET_GLOW_SUN_THIRD_MANTRA,
+            TABLET_GLOW_SUN_MANTRA_ORDER,
+            TABLET_GLOW_SUN_FOURTH_MANTRA,
+            TABLET_GLOW_SUN_FIFTH_MANTRA,
+            TABLET_GLOW_SUN_SEVENTH_MANTRA,
+            TABLET_GLOW_SUN_LAST_MANTRA,
+            TABLET_GLOW_SUN_MAN_WOMAN_WEAPON,
+            TABLET_GLOW_SUN_PATH_THAT_CONNECTS_TWO_PYRAMIDS,
+            TABLET_GLOW_SUN_MOON_GAZING_PIT,
+            TABLET_GLOW_SUN_THOSE_THAT_FLY_SHALL_BE_CAST_DOWN,
+            TABLET_GLOW_SUN_WOMAN_WITH_CHILD,
+            TABLET_GLOW_SUN_FILL_THIS_PLACE_WITH_WATER_DAMAGED,
+            TABLET_GLOW_SUN_NO_LIGHT_UP_AHEAD,
+            TABLET_GLOW_SUN_SOLVED_ALL_PUZZLES,
+            TABLET_GLOW_SUN_MEDITATE_UNDER_WEDJET,
+            TABLET_GLOW_SUN_POWER_OF_THE_TWINS,
+            TABLET_GLOW_SUN_SCALESPHERE,
+            TABLET_GLOW_SPRING_OPEN_THE_FLOODGATE,
+            TABLET_GLOW_SPRING_FAIRY,
+            TABLET_GLOW_SPRING_OANNES_FORM_OF_A_FISH,
+            TABLET_GLOW_SPRING_CHILD_WAS_BORN,
+            TABLET_GLOW_SPRING_COLLECT_THE_FOUR_SIGILS,
+            TABLET_GLOW_SPRING_SAIL_AWAY,
+            TABLET_GLOW_SPRING_WATER_MOVES_THE_TOWER_DAMAGED,
+            TABLET_GLOW_SPRING_MOTHERS_WRATH,
+            TABLET_GLOW_SPRING_ABOVE_THE_SUN,
+            TABLET_GLOW_SPRING_THOSE_SEEKING_EDEN,
+            TABLET_GLOW_INFERNO_SWING_YOUR_WEAPON,
+            TABLET_GLOW_INFERNO_SNAKES_ARE_ENRAGED,
+            TABLET_GLOW_INFERNO_STICK_TO_THE_WALLS,
+            TABLET_GLOW_INFERNO_TREAD_A_DIFFERENT_PATH,
+            TABLET_GLOW_INFERNO_PHILOSOPHERS_STONE_DAMAGED,
+            TABLET_GLOW_INFERNO_ERR_JUST_ONCE,
+            TABLET_GLOW_INFERNO_CLOAK_MADE_FROM_ICE_DAMAGED,
+            TABLET_GLOW_INFERNO_BOTTOM_OF_THIS_LAND,
+            TABLET_GLOW_INFERNO_THOSE_SEEKING_EDEN,
+            TABLET_GLOW_INFERNO_TUNE_OF_THINE_OCARINA,
+            TABLET_GLOW_INFERNO_LAST_JEWEL_LIES_WITHIN,
+            TABLET_GLOW_EXTINCTION_SEEK_THE_RIGHTEOUS_SPIRIT,
+            TABLET_GLOW_EXTINCTION_NUWA_SLEEPS,
+            TABLET_GLOW_EXTINCTION_LARGE_CRUCIFIX_SUMMON_PALENQUE,
+            TABLET_GLOW_EXTINCTION_LET_THE_LIGHT_BURN_HERE,
+            TABLET_GLOW_EXTINCTION_DRAGON_BONE,
+            TABLET_GLOW_EXTINCTION_SPRIGGAN_STATUE,
+            TABLET_GLOW_EXTINCTION_COG_OF_THE_SOUL_GIVES_LIFE,
+            TABLET_GLOW_EXTINCTION_LET_THE_MAP_GUIDE_ITS_PLACEMENT,
+            TABLET_GLOW_EXTINCTION_THOSE_SEEKING_EDEN,
+            TABLET_GLOW_EXTINCTION_EVERY_HEART_HAS_A_COLOR,
+            TABLET_GLOW_EXTINCTION_GATEKEEPERS,
+            TABLET_GLOW_EXTINCTION_SHELL_IN_THE_LEFT_HAND_POINTS,
+            TABLET_GLOW_EXTINCTION_PROCEED_THROUGH_THE_WALL,
+            TABLET_GLOW_EXTINCTION_TWO_ANGEL_SHIELD,
+            TABLET_GLOW_TWIN_IDIGNA_BURANUN_HERMES,
+            TABLET_GLOW_TWIN_BLACK_ONYX_PURPLE_AMETHYST,
+            TABLET_GLOW_TWIN_FRONT_AND_BACK_DAMAGED,
+            TABLET_GLOW_TWIN_FOOT_OF_THE_FOOTLESS_NEPTUNE_DAMAGED,
+            TABLET_GLOW_TWIN_CHANT_A_SPELL_TO_THE_SPIRIT,
+            TABLET_GLOW_TWIN_HERO_OF_THE_THIRD_CHILD,
+            TABLET_GLOW_TWIN_BEYOND_THE_SKULL_DAMAGED,
+            TABLET_GLOW_TWIN_INNOCENT_GIRL,
+            TABLET_GLOW_TWIN_UNSOLVABLE_PUZZLE,
+            TABLET_GLOW_TWIN_BEELZEBUB,
+            TABLET_GLOW_TWIN_REVEAL_THE_LIGHT,
+            TABLET_GLOW_TWIN_FIVE_WITCHES_PLUS_ONE_MORE,
+            TABLET_GLOW_TWIN_HATCH_SKULD_VERDANDI,
+            TABLET_GLOW_TWIN_PRIESTS_BECAME_PHILOSOPHERS,
+            TABLET_GLOW_TWIN_ANKH_IS_ALWAYS_IN_THE_FRONT,
+            TABLET_GLOW_TWIN_DANCE_OF_LIFE,
+            TABLET_GLOW_TWIN_DESTROYED_IN_2015,
+            TABLET_GLOW_TWIN_ZU_PERYTON_DAMAGED,
+            TABLET_GLOW_TWIN_POWER_TO_STOP_TIME,
+            TABLET_GLOW_TWIN_BROTHER_SHOPS,
+            TABLET_GLOW_ENDLESS_DRAGON,
+            TABLET_GLOW_ENDLESS_BORN_LIVES_REPRODUCE_ASCENSION,
+            TABLET_GLOW_ENDLESS_TOILS_FOR_NAUGHT,
+            TABLET_GLOW_ENDLESS_MAP_COLOR,
+            TABLET_GLOW_ENDLESS_MIGHT_OR_WISDOM,
+            TABLET_GLOW_ENDLESS_ENDURE_TRIALS,
+            TABLET_GLOW_SHRINE_CHOSEN_ONLY,
+            TABLET_GLOW_SHRINE_ENDLESSNESS_AND_DIMENSIONS,
+            TABLET_GLOW_SHRINE_PHILOSOPHER_CHOSEN_ONE,
+            TABLET_GLOW_SHRINE_EIGHT_SPIRITS,
+            TABLET_GLOW_SHRINE_SECRET_TREASURE_OF_LIFE,
+            TABLET_GLOW_SHRINE_PHILOSOPHER_IMMORTAL,
+            TABLET_GLOW_SHRINE_SEVENTH_CHILDREN,
+            TABLET_GLOW_SHRINE_SLEEP_WITHIN_THE_WOMAN,
+            TABLET_GLOW_SHRINE_WALL_OF_YOUR_CALLING,
+            TABLET_GLOW_SHRINE_MUSHUSSU_COMBO,
+            TABLET_GLOW_ILLUSION_VIRTUAL_WISE_MAN,
+            TABLET_GLOW_ILLUSION_DEVICE_THAT_CREATES_LIFE,
+            TABLET_GLOW_ILLUSION_POSSESS_THE_WISDOM_OF_A_WISE_MAN,
+            TABLET_GLOW_ILLUSION_FOOL_DESERVES_NAUGHT_BUT_DEATH,
+            TABLET_GLOW_ILLUSION_KEY_TO_ENDLESS_CORRIDOR,
+            TABLET_GLOW_ILLUSION_TIAMAT_GRAIL_POWERLESS,
+            TABLET_GLOW_ILLUSION_GIVE_UP_LEFT,
+            TABLET_GLOW_ILLUSION_GIVE_UP_MIDDLE,
+            TABLET_GLOW_ILLUSION_GIVE_UP_RIGHT,
+            TABLET_GLOW_ILLUSION_FREE_THYSELF_OF_DOUBT_AND_ILLUSION,
+            TABLET_GLOW_ILLUSION_THE_FAIRIES_UNLOCK_IT,
+            TABLET_GLOW_ILLUSION_UNDERSTANDING_IS_IMPRESSIVE,
+            TABLET_GLOW_ILLUSION_FOOL_PUZZLE,
+            TABLET_GLOW_ILLUSION_WANDER_THE_LABYRINTH_FOR_ETERNITY,
+            TABLET_GLOW_ILLUSION_FOOL_WILL_NEVER_FIND_HIS_WAY,
+            TABLET_GLOW_ILLUSION_SEARCH_ON_BENDED_KNEE,
+            TABLET_GLOW_ILLUSION_EXTINGUISH_THE_WHOLE,
+            TABLET_GLOW_ILLUSION_ENTER_EDEN,
+            TABLET_GLOW_EDEN,
+            TABLET_GLOW_GRAVEYARD_TOUJIN,
+            TABLET_GLOW_GRAVEYARD_THOSE_SEEKING_EDEN,
+            TABLET_GLOW_GRAVEYARD_MONEY_CANT_BUY_THE_REAL_THING,
+            TABLET_GLOW_GRAVEYARD_MEETING_OF_MAN_AND_WOMAN,
+            TABLET_GLOW_GRAVEYARD_DEMON_ENDLESSLY_CONSUMES_LIFE,
+            TABLET_GLOW_GRAVEYARD_MEANINGS_ARE_INFUSED_INTO_THE_GEMSTONES,
+            TABLET_GLOW_GRAVEYARD_MU_IS_THE_NAMELESS_ONE,
+            TABLET_GLOW_GRAVEYARD_EYES_ARE_NOT_HOLLOWED_OUT_HOLES,
+            TABLET_GLOW_GRAVEYARD_WE_SHALL_AWAIT_THEE_AHEAD,
+            TABLET_GLOW_GRAVEYARD_NEW_WEAPON_TAKE_DOWN_THE_WALL,
+            TABLET_GLOW_GRAVEYARD_JEWEL_SHOP_WHERE_LIFE_SPRINGS_FORTH,
+            TABLET_GLOW_GRAVEYARD_SPAULDER_GODDESS,
+            TABLET_GLOW_GRAVEYARD_CURSED_TREASURE_RED_STONE,
+            TABLET_GLOW_MOONLIGHT_ATOP_THE_NAVEL_OF_NEPTUNE,
+            TABLET_GLOW_MOONLIGHT_EVERY_HEART_HAS_A_WEIGHT,
+            TABLET_GLOW_MOONLIGHT_MIND_THY_MANNERS,
+            TABLET_GLOW_MOONLIGHT_ULTIMATE_SACRIFICE_FOR_POWER,
+            TABLET_GLOW_MOONLIGHT_OCARINA_WOMAN_WITH_CHILD,
+            TABLET_GLOW_MOONLIGHT_GRIND_DOWN_THE_PYRAMID,
+            TABLET_GLOW_MOONLIGHT_WATER_WILL_PROVIDE_THE_POWER,
+            TABLET_GLOW_MOONLIGHT_SIGIL_OF_SPIRIT_THAT_CONTROLS_LIFE,
+            TABLET_GLOW_MOONLIGHT_WEDGES_GIVE_FORM_TO_THE_SOUL,
+            TABLET_GLOW_MOONLIGHT_BOOK_OF_THE_DEAD,
+            TABLET_GLOW_MOONLIGHT_UNDERWORLD_PALACE,
+            TABLET_GLOW_MOONLIGHT_EDEN_SEARCH_OUT_THE_PLACE,
+            TABLET_GLOW_GODDESS_FLY_WITH_THE_GOLDEN_WINGS,
+            TABLET_GLOW_GODDESS_MAGATAMA_JEWEL,
+            TABLET_GLOW_GODDESS_HUNK_OF_FLYING_IRON,
+            TABLET_GLOW_GODDESS_A_BAO_A_QU,
+            TABLET_GLOW_GODDESS_RUSALII_YAKSI_DAKINI,
+            TABLET_GLOW_GODDESS_CHALLENGE_THE_CHAMBER_OF_BIRTH,
+            TABLET_GLOW_GODDESS_ILLUSION_OF_GODDESS_STATUES,
+            TABLET_GLOW_GODDESS_BALANCE_THE_SPIRITS,
+            TABLET_GLOW_GODDESS_AFTER_THINE_ASCENSION_TO_THE_TOWER,
+            TABLET_GLOW_GODDESS_SECRET_OF_LIFE_POWER_OF_DESTRUCTION,
+            TABLET_GLOW_GODDESS_CANNOT_GRANT_THE_MOTHERS_WISH,
+            TABLET_GLOW_RUIN_UNINTENTIONAL_MISCHIEF,
+            TABLET_GLOW_RUIN_FOLLOW_THE_NAME_THAT_MEANS_UNNAMED,
+            TABLET_GLOW_RUIN_SKANDA,
+            TABLET_GLOW_RUIN_WHITE_DIAMOND_REPRESENTS_PURITY,
+            TABLET_GLOW_RUIN_GREAT_BIRD_MERCY_CRUSHING_THAT_HAND,
+            TABLET_GLOW_RUIN_TOO_QUICK_FOR_THE_EYES,
+            TABLET_GLOW_RUIN_GLOWING_RED_CRUCIFIX_BEACON,
+            TABLET_GLOW_RUIN_THE_ONES_THAT_CREATED_NUWA,
+            TABLET_GLOW_RUIN_IDENTIFY_THE_SEDUCTRESS,
+            TABLET_GLOW_RUIN_THE_ONE_WHO_CHALLENGES_NUWA,
+            TABLET_GLOW_RUIN_FACE_THE_LAST_TRIAL,
+            TABLET_GLOW_BIRTH_SWORDS_BRIGHT_LIGHT_WITHIN_THE_DARKNESS,
+            TABLET_GLOW_BIRTH_SWORDS_CONTINUES_WITHOUT_END_BIRTH_DEATH,
+            TABLET_GLOW_BIRTH_SWORDS_SHALL_NOT_MAKE_IT_WITH_THINE_POWER,
+            TABLET_GLOW_BIRTH_SWORDS_PALENQUE_SLUMBERS,
+            TABLET_GLOW_BIRTH_SWORDS_VISHNU_BEHEADED_ASURA,
+            TABLET_GLOW_BIRTH_SWORDS_STRIKE_THE_WEDGE_DISTURB_THE_MOTHER,
+            TABLET_GLOW_BIRTH_SKANDA_CLAY_DOLLS_BECOME_HUMAN,
+            TABLET_GLOW_BIRTH_SKANDA_BECAME_HUMAN_AND_PROSPERED,
+            TABLET_GLOW_BIRTH_SKANDA_PRAISE_LIFE_CLAY_DOLL_GOLDEN_KEY,
+            TABLET_GLOW_BIRTH_SKANDA_BEYOND_THE_MANY_CORPSES_A_WOMAN_WAITS,
+            TABLET_GLOW_BIRTH_SKANDA_BE_PREPARED_FOR_DEATH,
+            TABLET_GLOW_BIRTH_SKANDA_GOLDEN_GLOW_THINLY_STRETCHED_LIGHT,
+            TABLET_GLOW_BIRTH_SKANDA_CHALLENGE_PALENQUE,
+            TABLET_GLOW_BIRTH_SKANDA_WHITE_OPAL_REPRESENTS_JOY,
+            TABLET_GLOW_BIRTH_SKANDA_CRYSTAL_SKULL_SUPPRESSES_TIAMAT,
+            TABLET_GLOW_BIRTH_SKANDA_DANCE_IN_THIS_PLACE,
+            TABLET_GLOW_DIMENSIONAL_BEYOND_THE_BOUNDARIES_OF_TIME,
+            TABLET_GLOW_DIMENSIONAL_LIVES_THE_11_CHILDREN_HAVE,
+            TABLET_GLOW_DIMENSIONAL_ROAD_TO_TREASURE,
+            TABLET_GLOW_DIMENSIONAL_TWO_VESSELS,
+            TABLET_GLOW_DIMENSIONAL_THRUST_INFINITY_THERE,
+            TABLET_GLOW_DIMENSIONAL_ONLY_ONE_PATH_TO_SURVIVAL,
+            TABLET_GLOW_HT_SLEEP_ALSO_SET_BY_RETROMAUSOLEUM_ENTRANCE,
+            TABLET_GLOW_HT_I_EXIST_HERE,
+            TABLET_GLOW_HT_CLOTH_TO_MAKE_THE_TREASURE
+    );
 
     // Broken tablets
     public static final int TABLET_GLOW_GUIDANCE_ENTRANCE_BROKEN = 0x44d; // Tablet block 471; room 00-00-00

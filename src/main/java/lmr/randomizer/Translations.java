@@ -51,6 +51,10 @@ public final class Translations {
         return allTranslations.getProperty(key);
     }
 
+    public static boolean hasKey(String key) {
+        return allTranslations.stringPropertyNames().contains(key);
+    }
+
     public static String getLocationAndNpc(String npc) {
         return getLocationAndNpc(npc, npc);
     }

@@ -794,7 +794,9 @@ public class BaseRcdUpdater extends RcdUpdater {
             else {
                 autosave.getTestByteOperations().clear();
                 autosave.getTestByteOperations().add(new TestByteOperation(FlagConstants.ESCAPE, ByteOp.FLAG_EQUALS, 0));
-                autosave.getTestByteOperations().add(new TestByteOperation(LocationCoordinateMapper.getGrailFlag(zoneIndex, true), ByteOp.FLAG_EQUALS, 1));
+                if(zoneIndex != ZoneConstants.SURFACE || !LocationCoordinateMapper.isSurfaceStart()) {
+                    autosave.getTestByteOperations().add(new TestByteOperation(LocationCoordinateMapper.getGrailFlag(zoneIndex, true), ByteOp.FLAG_EQUALS, 1));
+                }
 
                 autosave.getWriteByteOperations().clear();
                 autosave.getWriteByteOperations().add(new WriteByteOperation(LocationCoordinateMapper.getGrailFlag(zoneIndex, true), ByteOp.ASSIGN_FLAG, 1));

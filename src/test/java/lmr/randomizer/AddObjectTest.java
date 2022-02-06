@@ -2938,8 +2938,9 @@ public class AddObjectTest {
     @Test
     public void testAddMedicineStatueTimer() {
         Screen screen = new Screen();
+        int medicineFlag = 123;
 
-        AddObject.addMedicineStatueTimer(screen);
+        AddObject.addMedicineStatueTimer(screen, medicineFlag);
 
         GameObject gameObject = screen.getObjects().get(0);
         Assert.assertEquals(gameObject.getId(), 0x0b);
@@ -2948,12 +2949,11 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(0), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
         Assert.assertEquals(gameObject.getArgs().size(), 2);
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(2772, ByteOp.FLAG_EQUALS, 0)));
+        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(medicineFlag, ByteOp.FLAG_EQUALS, 2)));
         Assert.assertTrue(containsTest(gameObject, new TestByteOperation(0x34f, ByteOp.FLAG_EQUALS, 0)));
         Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x34f, ByteOp.ASSIGN_FLAG, 1)));
-        Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(2772, ByteOp.ASSIGN_FLAG, 1)));
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 2);
-        Assert.assertEquals(gameObject.getWriteByteOperations().size(), 2);
+        Assert.assertEquals(gameObject.getWriteByteOperations().size(), 1);
     }
 
     @Test

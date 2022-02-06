@@ -984,7 +984,7 @@ public final class Settings {
 
     public static boolean isSaveFileNeeded() {
         return isAllowMainWeaponStart() || isAllowSubweaponStart() || isRandomizeStartingLocation()
-                || HolidaySettings.isSaveFileNeeded();
+                || isReducedBossCount() || HolidaySettings.isSaveFileNeeded();
     }
 
     public static boolean isCheapAmmo() {

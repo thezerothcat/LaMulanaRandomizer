@@ -1,5 +1,6 @@
 package lmr.randomizer.update;
 
+import lmr.randomizer.DataFromFile;
 import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
 import lmr.randomizer.rcd.object.*;
@@ -55,6 +56,9 @@ public class GraphicsTextureDrawUpdates {
             else if(isBossDoorMirrorCoverOrGate(graphicsTextureDraw)) {
                 return false;
             }
+        }
+        if(isRemovedTabletGlow(graphicsTextureDraw)) {
+            return false;
         }
         updateTabletGlowTests(graphicsTextureDraw);
         updateMiscTests(graphicsTextureDraw, zoneIndex);
@@ -148,6 +152,23 @@ public class GraphicsTextureDrawUpdates {
                     || flagTest.getIndex() == FlagConstants.PALENQUE_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.PALENQUE_GATE_OPEN
                     || flagTest.getIndex() == FlagConstants.BAPHOMET_GATE_MIRROR_COVER || flagTest.getIndex() == FlagConstants.BAPHOMET_GATE_OPEN) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isRemovedTabletGlow(GameObject graphicsTextureDraw) {
+        int imageFile = graphicsTextureDraw.getArgs().get(1);
+        int imageX = graphicsTextureDraw.getArgs().get(2);
+        int imageY = graphicsTextureDraw.getArgs().get(3);
+        if((imageFile == GraphicsTextureDraw.ImageFile_00item || imageFile == GraphicsTextureDraw.ImageFile_00item_alt)
+                && (imageX >= 820 && imageX <= 940) && (imageY == 540 || imageY == 560)) {
+            for(TestByteOperation testByteOperation : graphicsTextureDraw.getTestByteOperations()) {
+                if(testByteOperation.getValue() == 0
+                        && ByteOp.FLAG_EQUALS.equals(testByteOperation.getOp())
+                        && DataFromFile.getRemovedTabletGlowFlags().contains(testByteOperation.getIndex())) {
+                    return true;
+                }
             }
         }
         return false;

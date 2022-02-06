@@ -1,6 +1,9 @@
 package lmr.randomizer.dat.update;
 
-import lmr.randomizer.*;
+import lmr.randomizer.DataFromFile;
+import lmr.randomizer.FileUtils;
+import lmr.randomizer.Settings;
+import lmr.randomizer.Translations;
 import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.dat.blocks.Block;
 import lmr.randomizer.dat.blocks.MasterNpcBlock;
@@ -9,10 +12,15 @@ import lmr.randomizer.dat.blocks.contents.*;
 import lmr.randomizer.randomization.ItemRandomizer;
 import lmr.randomizer.randomization.NpcRandomizer;
 import lmr.randomizer.randomization.ShopRandomizer;
-import lmr.randomizer.randomization.data.*;
-import lmr.randomizer.util.*;
+import lmr.randomizer.randomization.data.CustomBlockEnum;
+import lmr.randomizer.randomization.data.GameObjectId;
+import lmr.randomizer.randomization.data.ShopInventory;
+import lmr.randomizer.randomization.data.ShopInventoryData;
+import lmr.randomizer.util.FlagConstants;
+import lmr.randomizer.util.FlagManager;
+import lmr.randomizer.util.ItemConstants;
+import lmr.randomizer.util.ValueConstants;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RandomizationDatUpdater extends DatUpdater {
@@ -284,134 +292,134 @@ public class RandomizationDatUpdater extends DatUpdater {
 
     @Override
     void updateNeburShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 2 (Surface)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 2 (Surface)"));
     }
 
     @Override
     void updateNeburAltShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 2 Alt (Surface)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 2 Alt (Surface)"));
     }
 
     @Override
     void updateSidroShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 3 (Surface)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 3 (Surface)"));
     }
 
     @Override
     void updateModroShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 1 (Surface)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 1 (Surface)"));
     }
 
     @Override
     void updatePenadventOfGhostShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 4 (Guidance)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 4 (Guidance)"));
     }
 
     @Override
     void updateGreedyCharlieShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 6 (Mausoleum)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 6 (Mausoleum)"));
     }
 
     @Override
     void updateShalomIIIShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 8 (Sun)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 8 (Sun)"));
     }
 
     @Override
     void updateUsasVIShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 9 (Sun)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 9 (Sun)"));
     }
 
     @Override
     void updateKingvalleyIShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 10 (Sun)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 10 (Sun)"));
     }
 
     @Override
     void updateMrFishmanShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 12 (Spring)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 12 (Spring)"));
     }
 
     @Override
     void updateMrFishmanAltShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 12 Alt (Spring)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 12 Alt (Spring)"));
     }
 
     @Override
     void updateOperatorCombakerShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 16 (Extinction)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 16 (Extinction)"));
     }
 
     @Override
     void updateYiegahKungfuShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 18 (Lil Bro)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 18 (Lil Bro)"));
     }
 
     @Override
     void updateArrogantMetagearShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 21 (Unsolvable)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 21 (Unsolvable)"));
     }
 
     @Override
     void updateArrogantSturdySnakeShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 20 (Twin Labs)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 20 (Twin Labs)"));
     }
 
     @Override
     void updateYiearKungfuShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 19 (Big Bro)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 19 (Big Bro)"));
     }
 
     @Override
     void updateAffectedKnimareShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 22 (Endless)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 22 (Endless)"));
     }
 
     @Override
     void updateMoverAthlelandShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 5 (Illusion)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 5 (Illusion)"));
     }
 
     @Override
     void updateGiantMopiranShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 7 (Graveyard)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 7 (Graveyard)"));
     }
 
     @Override
     void updateKingvalleyIIShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 11 (Moonlight)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 11 (Moonlight)"));
     }
 
     @Override
     void updateEnergeticBelmontShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 13 (Goddess)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 13 (Goddess)"));
     }
 
     @Override
     void updateMechanicalEfspiShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 15 (Ruin)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 15 (Ruin)"));
     }
 
     @Override
     void updateMudManQubertShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 17 (Birth)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 17 (Birth)"));
     }
 
     @Override
     void updateHotbloodedNemesistwoShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 14 (Inferno)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 14 (Inferno)"));
     }
 
     @Override
     void updateTailorDracuetShopBlock(ShopBlock shopBlock) {
         if(Settings.isRandomizeDracuetShop()) {
-            updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 23 (HT)"));
+            updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 23 (HT)"));
         }
     }
 
     @Override
     void updateCustomShopBlock(ShopBlock shopBlock) {
-        updateShopBlock(shopBlock, shopRandomizer.getShopInventory("Shop 0 (Default)"));
+        updateShopBlockCheckTransformation(shopBlock, shopRandomizer.getShopInventory("Shop 0 (Default)"));
     }
 
     @Override
@@ -660,7 +668,7 @@ public class RandomizationDatUpdater extends DatUpdater {
         }
     }
 
-    private void updateShopBlock(ShopBlock shopBlock, ShopInventory shopInventory) {
+    private void updateShopBlockCheckTransformation(ShopBlock shopBlock, ShopInventory shopInventory) {
         ShopInventory transformedShopInventory = getTransformedShopInventory(shopInventory);
         if(transformedShopInventory != null) {
             ShopBlock noOrbShopBlock = new ShopBlock(shopBlock);
@@ -668,33 +676,7 @@ public class RandomizationDatUpdater extends DatUpdater {
 
             datFileData.addCustomBlock(getCustomBlockEnumForTransformedShop(shopInventory.getNpcName()), noOrbShopBlock);
         }
-
-        shopBlock.getInventoryItemArgsList().getData().clear();
-        shopBlock.getInventoryItemArgsList().getData().add(shopInventory.getItem1().getInventoryArg());
-        shopBlock.getInventoryItemArgsList().getData().add(shopInventory.getItem2().getInventoryArg());
-        shopBlock.getInventoryItemArgsList().getData().add(shopInventory.getItem3().getInventoryArg());
-
-        updatePriceAndCount(shopBlock, shopInventory);
-        updateShopFlags(shopBlock, shopInventory);
-
-        updateAskItemName(shopBlock.getString(3), shopInventory.getItem1());
-        updateAskItemName(shopBlock.getString(4), shopInventory.getItem2());
-        updateAskItemName(shopBlock.getString(5), shopInventory.getItem3());
-
-        updateSoldText(shopBlock.getString(6), shopInventory.getItem1());
-        updateSoldText(shopBlock.getString(7), shopInventory.getItem2());
-        updateSoldText(shopBlock.getString(8), shopInventory.getItem3());
-
-        List<Short> bunemonData = shopBlock.getBunemonText().getData();
-        bunemonData.clear();
-        updateBunemonText(bunemonData, shopInventory.getItem1(), shopBlock.getItem1Price());
-        bunemonData.addAll(FileUtils.stringToData(" , "));
-        updateBunemonText(bunemonData, shopInventory.getItem2(), shopBlock.getItem2Price());
-        bunemonData.addAll(FileUtils.stringToData(" , "));
-        updateBunemonText(bunemonData, shopInventory.getItem3(), shopBlock.getItem3Price());
-
-        shopBlock.setBunemonLocation(new BlockStringData(FileUtils.stringToData(
-                Translations.getLocationAndNpc(shopInventory.getNpcLocation(), shopInventory.getNpcName()))));
+        updateShopBlock(shopBlock, shopInventory);
     }
 
     private CustomBlockEnum getCustomBlockEnumForTransformedShop(String npcName) {
@@ -702,117 +684,6 @@ public class RandomizationDatUpdater extends DatUpdater {
             return CustomBlockEnum.TransformedShopBlock_Default;
         }
         return CustomBlockEnum.valueOf("TransformedShopBlock_" + npcName.replaceAll("[ )(-.]", ""));
-    }
-
-    private void updatePriceAndCount(ShopBlock shopBlock, ShopInventory shopInventory) {
-        ItemPriceCount itemPriceCount = shopInventory.getItem1().getItemPriceCount();
-        if(itemPriceCount != null) {
-            if(itemPriceCount.getPrice() != null) {
-                shopBlock.setItem1Price(itemPriceCount.getPrice());
-            }
-            if(itemPriceCount.getCount() != null) {
-                shopBlock.setItem1Count(itemPriceCount.getCount());
-            }
-        }
-        itemPriceCount = shopInventory.getItem2().getItemPriceCount();
-        if(itemPriceCount != null) {
-            if(itemPriceCount.getPrice() != null) {
-                shopBlock.setItem2Price(itemPriceCount.getPrice());
-            }
-            if(itemPriceCount.getCount() != null) {
-                shopBlock.setItem2Count(itemPriceCount.getCount());
-            }
-        }
-        itemPriceCount = shopInventory.getItem3().getItemPriceCount();
-        if(itemPriceCount != null) {
-            if(itemPriceCount.getPrice() != null) {
-                shopBlock.setItem3Price(itemPriceCount.getPrice());
-            }
-            if(itemPriceCount.getCount() != null) {
-                shopBlock.setItem3Count(itemPriceCount.getCount());
-            }
-        }
-    }
-
-    public void updateShopFlags(ShopBlock shopBlock, ShopInventory shopInventory) {
-        short shopItem1Flag = shopInventory.getItem1().getWorldFlag();
-        short shopItem2Flag = shopInventory.getItem2().getWorldFlag();
-        short shopItem3Flag = shopInventory.getItem3().getWorldFlag();
-
-        shopBlock.getFlagList().getData().clear();
-        shopBlock.getFlagList().getData().add(shopItem1Flag);
-        shopBlock.getFlagList().getData().add(shopItem2Flag);
-        shopBlock.getFlagList().getData().add(shopItem3Flag);
-
-        if(!"Yiegah Kungfu".equals(shopInventory.getNpcName())) {
-            shopBlock.getExitFlagList().getData().clear();
-            shopBlock.getExitFlagList().getData().add(shopItem1Flag);
-            shopBlock.getExitFlagList().getData().add(shopItem2Flag);
-            shopBlock.getExitFlagList().getData().add(shopItem3Flag);
-        }
-    }
-
-    private void updateAskItemName(BlockStringData blockStringData, ShopInventoryData shopInventoryData) {
-        if(shopInventoryData.getCustomTextNumber() != null) {
-            blockStringData.getData().clear();
-            blockStringData.getData().addAll(buildStringDataWithColor(
-                    Translations.getText("CustomShopText.Offer" + shopInventoryData.getCustomTextNumber()),
-                    Translations.getText("CustomShopText.Name" + shopInventoryData.getCustomTextNumber()),
-                    BlockColorsData.COLOR_SOFTWARE_YELLOW));
-            if(shopInventoryData.getCustomTextNumber() == 2) {
-                blockStringData.getData().addAll(new BlockMantraData(MantraConstants.LAMULANA).getRawData());
-            }
-            return;
-        }
-
-        if(blockStringData.getItemNameStartIndex() == null || blockStringData.getItemNameEndIndex() == null) {
-            return;
-        }
-
-        List<Short> newBlockData = new ArrayList<>(blockStringData.getData().subList(0, blockStringData.getItemNameStartIndex()));
-        if(HolidaySettings.isFools2020Mode()) {
-            if(shopInventoryData.getInventoryArg() == ItemConstants.SCRIPTURES) {
-                newBlockData.addAll(FileUtils.stringToData(Translations.getText("items.HeatproofCase")));
-            }
-            else if(shopInventoryData.getInventoryArg() == ItemConstants.HEATPROOF_CASE) {
-                newBlockData.addAll(FileUtils.stringToData(Translations.getText("items.Scriptures")));
-            }
-            else {
-                addShrinePrefixIfNeeded(newBlockData, shopInventoryData);
-                newBlockData.add(BlockDataConstants.ItemName);
-                newBlockData.add(shopInventoryData.getInventoryArg());
-            }
-        }
-        else {
-            addShrinePrefixIfNeeded(newBlockData, shopInventoryData);
-            newBlockData.add(BlockDataConstants.ItemName);
-            newBlockData.add(shopInventoryData.getInventoryArg());
-        }
-        newBlockData.addAll(blockStringData.getData().subList(blockStringData.getItemNameEndIndex(), blockStringData.getData().size()));
-        blockStringData.getData().clear();
-        blockStringData.getData().addAll(newBlockData);
-    }
-
-    private void updateSoldText(BlockStringData blockStringData, ShopInventoryData shopInventoryData) {
-        if(shopInventoryData.getCustomTextNumber() != null) {
-            blockStringData.getData().clear();
-            String text = Translations.getText("CustomShopText.Purchase" + shopInventoryData.getCustomTextNumber());
-            if(text == null) {
-                int subIndex = 1;
-                boolean multiWindow = false;
-                text = Translations.getText("CustomShopText.Purchase" + shopInventoryData.getCustomTextNumber() + "." + subIndex++);
-                while(text != null) {
-                    if(multiWindow) {
-                        blockStringData.getData().add(BlockDataConstants.Cls);
-                    }
-                    blockStringData.getData().addAll(FileUtils.stringToData(text));
-                    text = Translations.getText("CustomShopText.Purchase" + shopInventoryData.getCustomTextNumber() + "." + subIndex++);
-                }
-            }
-            else {
-                blockStringData.getData().addAll(FileUtils.stringToData(text));
-            }
-        }
     }
 
     private void updateBunemonLocation(List<BlockContents> blockContents, String npcName) {
@@ -828,30 +699,6 @@ public class RandomizationDatUpdater extends DatUpdater {
             referenceBlock.setNpcName(new BlockStringData(FileUtils.stringToData(
                     Translations.getLocationAndNpc(npcRandomizer.getNpcLocation(npcName).replaceAll("NPCL: ", ""), npcName))));
         }
-    }
-
-    private void updateBunemonText(List<Short> bunemonData, ShopInventoryData shopInventoryData, Short itemPrice) {
-        if(HolidaySettings.isFools2020Mode()) {
-            if(shopInventoryData.getInventoryArg() == ItemConstants.SCRIPTURES) {
-                bunemonData.addAll(FileUtils.stringToData(Translations.getText("items.HeatproofCase")));
-            }
-            else if(shopInventoryData.getInventoryArg() == ItemConstants.HEATPROOF_CASE) {
-                bunemonData.addAll(FileUtils.stringToData(Translations.getText("items.Scriptures")));
-            }
-            else {
-                addShrinePrefixIfNeeded(bunemonData, shopInventoryData);
-                bunemonData.add(BlockDataConstants.ItemName);
-                bunemonData.add(shopInventoryData.getInventoryArg());
-            }
-        }
-        else {
-            addShrinePrefixIfNeeded(bunemonData, shopInventoryData);
-            bunemonData.add(BlockDataConstants.ItemName);
-            bunemonData.add(shopInventoryData.getInventoryArg());
-        }
-
-        bunemonData.add(BlockDataConstants.Space);
-        bunemonData.addAll(FileUtils.stringToData(Short.toString(itemPrice)));
     }
 
     private ShopInventory getTransformedShopInventory(ShopInventory shopInventory) {
@@ -872,12 +719,6 @@ public class RandomizationDatUpdater extends DatUpdater {
             return transformedShopInventory;
         }
         return null;
-    }
-
-    private void addShrinePrefixIfNeeded(List<Short> bunemonData, ShopInventoryData shopInventoryData) {
-        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_SHRINE) {
-            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.shrinePrefix")));
-        }
     }
 
 //    private static void addShrinePrefixIfNeeded(List<Short> bunemonData, String shopItem) {
