@@ -189,6 +189,15 @@ public final class FlagConstants {
     public static final int MOTHER_STATE = 0x0fe; // Goes to 3 when dead; vanilla shops test for value = 3 to close doors during the escape
     public static final int THE_BOSS_STATE = 0x7f1;
 
+    public static final int BOSSES_DEFEATED_COUNT_AMPHISBAENA = 0x2d6; // Value 0 > 1 via timer which increments BOSSES_SHRINE_TRANSFORM
+    public static final int BOSSES_DEFEATED_COUNT_SAKIT = 0x2d7; // Value 0 > 1 via timer which increments BOSSES_SHRINE_TRANSFORM
+    public static final int BOSSES_DEFEATED_COUNT_ELLMAC = 0x2d8; // Value 0 > 1 via timer which increments BOSSES_SHRINE_TRANSFORM
+    public static final int BOSSES_DEFEATED_COUNT_BAHAMUT = 0x2d9; // Value 0 > 1 via timer which increments BOSSES_SHRINE_TRANSFORM
+    public static final int BOSSES_DEFEATED_COUNT_VIY = 0x2da; // Value 0 > 1 via timer which increments BOSSES_SHRINE_TRANSFORM
+    public static final int BOSSES_DEFEATED_COUNT_PALENQUE = 0x2db; // Value 0 > 1 via timer which increments BOSSES_SHRINE_TRANSFORM
+    public static final int BOSSES_DEFEATED_COUNT_BAPHOMET = 0x2dc; // Value 0 > 1 via timer which increments BOSSES_SHRINE_TRANSFORM
+    public static final int BOSSES_DEFEATED_COUNT_TIAMAT = 0x2dd; // Value 0 > 1 via timer which increments BOSSES_SHRINE_TRANSFORM
+
     // Sub-boss state flags
     public static final int BUER_STATE = 0x17a;
     public static final int SKANDA_STATE = 0x2a6; // Value 0 > 1 from dance of life, 1 > 2 when Skanda dies

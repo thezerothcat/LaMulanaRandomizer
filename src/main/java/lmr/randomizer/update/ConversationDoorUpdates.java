@@ -358,6 +358,20 @@ public final class ConversationDoorUpdates {
     /**
      * @param doorObject the base npc door object, to use as a positional reference
      */
+    public static void addXelpudDoorObjects(ConversationDoor doorObject, short loadSaveFileMasterBlock) {
+        ConversationDoor loadSaveFileConversation = new ConversationDoor(doorObject.getObjectContainer(), doorObject.getX(), doorObject.getY());
+        loadSaveFileConversation.setDoorType(ConversationDoor.SingleConversation);
+        loadSaveFileConversation.setBlockNumber(loadSaveFileMasterBlock);
+        for(TestByteOperation testByteOperation : doorObject.getTestByteOperations()) {
+            loadSaveFileConversation.getTestByteOperations().add(testByteOperation);
+        }
+        loadSaveFileConversation.getTestByteOperations().add(new TestByteOperation(FlagConstants.RANDOMIZER_SAVE_LOADED, ByteOp.FLAG_EQUALS, 0));
+        doorObject.getObjectContainer().getObjects().add(loadSaveFileConversation);
+    }
+
+    /**
+     * @param doorObject the base npc door object, to use as a positional reference
+     */
     public static void addNeburObjects(ConversationDoor doorObject, int itemFlagMSX2) {
         AddObject.addFramesTimer(doorObject.getObjectContainer(), 0,
                 Arrays.asList(

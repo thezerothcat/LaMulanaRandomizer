@@ -309,16 +309,6 @@ public class BaseDatUpdater extends DatUpdater {
         blockListData.getData().add((short)BlockConstants.ItemConversationXmailer);
         blockListData.getData().add((short)0);
         flagCheckBlock.getFlagCheckReferences().add(0, blockListData);
-
-        if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || HolidaySettings.isFools2019Mode() || HolidaySettings.isFools2020Mode()) {
-            // Changing xmailer conversation to use a custom flag instead of a held item check
-            blockListData = new BlockListData((short)4);
-            blockListData.getData().add((short)FlagConstants.RANDOMIZER_SAVE_LOADED);
-            blockListData.getData().add((short)0);
-            blockListData.getData().add(getCustomBlockIndex(CustomBlockEnum.CustomXelpudIntro));
-            blockListData.getData().add((short)0);
-            flagCheckBlock.getFlagCheckReferences().add(0, blockListData);
-        }
     }
 
     @Override
@@ -386,8 +376,14 @@ public class BaseDatUpdater extends DatUpdater {
             }
         }
 
-        if(Settings.isAllowMainWeaponStart() || Settings.isAllowSubweaponStart() || Settings.isRandomizeStartingLocation() || HolidaySettings.isFools2019Mode() || HolidaySettings.isFools2020Mode()) {
-            datFileData.addCustomBlock(CustomBlockEnum.CustomXelpudIntro, AddBlock.buildXelpudIntroBlock());
+        if(HolidaySettings.isFools2019Mode() || HolidaySettings.isFools2020Mode()) {
+            datFileData.addCustomBlock(CustomBlockEnum.CustomXelpudIntro, AddBlock.buildCustomXelpudIntroBlock());
+        }
+        if(Settings.isSaveFileNeeded()) {
+            datFileData.addCustomBlock(CustomBlockEnum.XelpudDoor_LoadSaveFile_ConversationBlock,
+                    AddBlock.buildLoadSaveFileConversationBlock());
+            datFileData.addCustomBlock(CustomBlockEnum.XelpudDoor_LoadSaveFile_ReferenceBlock,
+                    AddBlock.buildLoadSaveFileReferenceBlock(getCustomBlockIndex(CustomBlockEnum.XelpudDoor_LoadSaveFile_ConversationBlock)));
         }
         datFileData.addCustomBlock(CustomBlockEnum.RecordableStoneConversation,
                 AddBlock.buildRecordableStoneConversationBlock());

@@ -451,6 +451,30 @@ public class DatFileData {
         return tabletBlocks;
     }
 
+    public List<MapGraphicsBlock> getMapGraphicsBlocks() {
+        List<MapGraphicsBlock> mapGraphicsBlocks = new ArrayList<>();
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_GateOfGuidance));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Surface));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Mausoleum));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Sun));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Spring));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Inferno));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Extinction));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_TwinLabyrinths));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Endless));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Shrine));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Illusion));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Graveyard));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Moonlight));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Goddess));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Ruin));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Birth_Swords));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Birth_Skanda));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Dimensional));
+        mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_HT));
+        return mapGraphicsBlocks;
+    }
+
     public void addCustomBlock(CustomBlockEnum customBlockId, Block block) {
         block.setBlockNumber(datFileEntries.size());
         datFileEntries.add(block);

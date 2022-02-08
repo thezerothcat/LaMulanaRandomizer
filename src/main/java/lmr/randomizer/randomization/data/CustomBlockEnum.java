@@ -2,6 +2,8 @@ package lmr.randomizer.randomization.data;
 
 public enum CustomBlockEnum {
     DefaultShopBlock,
+    XelpudDoor_LoadSaveFile_ReferenceBlock,
+    XelpudDoor_LoadSaveFile_ConversationBlock,
     CustomXelpudIntro,
     RecordableStoneConversation,
     RecordableStonePhilosopherGiltoriyo,

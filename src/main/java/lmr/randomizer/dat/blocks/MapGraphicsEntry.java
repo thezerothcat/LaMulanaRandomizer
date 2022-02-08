@@ -8,11 +8,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * x/y are map square indices.
+ * x = 1 is the leftmost column of rooms
+ * y = 1 is usually the topmost row of rooms, but Goddess and Spring y seem to be 0-based instead.
+ */
 public class MapGraphicsEntry implements BlockContents {
     public static int Icon_Blank = 0;
     public static int Icon_BacksideDoor = 1;
     public static int Icon_GrailTablet = 2;
-    public static int Icon_CrossOfLight = 3;
+    public static int Icon_CrossOfLight = 3; // Works only as icon2, unless there's another icon with it (in which case it needs to be icon1).
     public static int Icon_FairyPoint = 4;
     public static int Icon_BrownDoor = 5;
     public static int Icon_BlueDoor = 6;
@@ -23,13 +28,13 @@ public class MapGraphicsEntry implements BlockContents {
     public static int Icon_RightExit = 11;
     public static int Icon_DragonBone = 12;
 
-    public static int IconColor_Invisible = 0;
-    public static int IconColor_White = 1;
-    public static int IconColor_Green = 2;
-    public static int IconColor_Yellow = 3;
-    public static int IconColor_Red = 4;
-    public static int IconColor_Blue = 5;
-    public static int IconColor_Transparent = 6;
+    public static int BackgroundColor_Invisible = 0;
+    public static int BackgroundColor_White = 1;
+    public static int BackgroundColor_Green = 2;
+    public static int BackgroundColor_Yellow = 3;
+    public static int BackgroundColor_Red = 4;
+    public static int BackgroundColor_Blue = 5;
+    public static int BackgroundColor_None = 6;
 
     private int positionData; // position = issecret * 10000 + X*100 + Y
     private int appearanceData;// appearance: Icon1 * 1000 + Icon2 * 10 + Color
@@ -47,24 +52,24 @@ public class MapGraphicsEntry implements BlockContents {
         return appearanceData % 1000 / 10;
     }
 
-    public int getIconColor() {
+    public int getBackgroundColor() {
         return appearanceData % 10;
     }
 
     public void setIcon1(int icon) {
-        setAppearanceData(icon, getIcon2(), getIconColor());
+        setAppearanceData(icon, getIcon2(), getBackgroundColor());
     }
 
     public void setIcon2(int icon) {
-        setAppearanceData(getIcon1(), icon, getIconColor());
+        setAppearanceData(getIcon1(), icon, getBackgroundColor());
     }
 
-    public void setIconColor(int iconColor) {
-        setAppearanceData(getIcon1(), getIcon2(), iconColor);
+    public void setBackgroundColor(int backgroundColor) {
+        setAppearanceData(getIcon1(), getIcon2(), backgroundColor);
     }
 
-    private void setAppearanceData(int icon1, int icon2, int iconColor) {
-        appearanceData = icon1 * 1000 + icon2 * 10 + iconColor;
+    private void setAppearanceData(int icon1, int icon2, int backgroundColor) {
+        appearanceData = icon1 * 1000 + icon2 * 10 + backgroundColor;
     }
 
     public boolean isSecret() {

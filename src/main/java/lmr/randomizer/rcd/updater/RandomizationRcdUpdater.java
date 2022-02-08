@@ -625,6 +625,12 @@ public class RandomizationRcdUpdater extends RcdUpdater {
                 || "NPCL: Hiner".equals(npcDoorLocation) || "NPCL: Moger".equals(npcDoorLocation)) {
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.XELPUD_CONVERSATION_INTRO, ByteOp.FLAG_EQUALS, 1)); // Flag for having talked to Xelpud to open Surface tents
         }
+        if("NPCL: Elder Xelpud".equals(npcDoorLocation)) {
+            if(Settings.isSaveFileNeeded()) {
+                ConversationDoorUpdates.addXelpudDoorObjects(conversationDoor, getCustomBlockIndex(CustomBlockEnum.XelpudDoor_LoadSaveFile_ReferenceBlock));
+                conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.RANDOMIZER_SAVE_LOADED, ByteOp.FLAG_GTEQ, 1));
+            }
+        }
         if("NPCL: Mulbruk".equals(npcDoorLocation)) {
             conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.MULBRUK_DOOR_UNSEALED, ByteOp.FLAG_GTEQ, 2));
         }

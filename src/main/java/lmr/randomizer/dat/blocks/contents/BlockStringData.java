@@ -16,8 +16,8 @@ public class BlockStringData implements BlockContents {
     public BlockStringData() {
     }
 
-    public BlockStringData(List<Short> data) {
-        this.data.addAll(data);
+    public BlockStringData(String text) {
+        this.data.addAll(FileUtils.stringToData(text));
     }
 
     public BlockStringData(BlockStringData objectToCopy) {

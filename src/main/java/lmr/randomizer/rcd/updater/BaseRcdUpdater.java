@@ -1778,18 +1778,18 @@ public class BaseRcdUpdater extends RcdUpdater {
             }
             else if(roomIndex == 2) {
                 if(screenIndex == 0) {
-                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation() || HolidaySettings.isFools2020Mode()) {
+                    if (Settings.isSaveFileNeeded()) {
                         AddObject.addSurfaceKillTimer(screen, false);
                     }
                 }
                 if(screenIndex == 1) {
-                    if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation() || HolidaySettings.isFools2020Mode()) {
+                    if (Settings.isSaveFileNeeded()) {
                         AddObject.addSurfaceKillTimer(screen, true);
                     }
                 }
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                if (!"Whip".equals(Settings.getCurrentStartingWeapon()) || Settings.isRandomizeStartingLocation() || HolidaySettings.isFools2020Mode()) {
+                if (Settings.isSaveFileNeeded()) {
                     AddObject.addSurfaceKillTimer(screen, false);
                 }
             }

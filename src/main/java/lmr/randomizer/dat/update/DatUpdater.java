@@ -157,6 +157,9 @@ public abstract class DatUpdater {
         for(Block emailBlock : datFileData.getEmailBlocks()) {
             updateEmailBlock(emailBlock);
         }
+        for(MapGraphicsBlock mapGraphicsBlock : datFileData.getMapGraphicsBlocks()) {
+            updateMapGraphicsBlock(mapGraphicsBlock);
+        }
 
         for(ScannableBlock customizableTabletBlock : datFileData.getCustomizableTabletBlocks()) {
             updateScannableBlock(customizableTabletBlock);
@@ -526,6 +529,7 @@ public abstract class DatUpdater {
     void updateMulbrukSpriteBlock(Block spriteBlock) { }
 
     void updateEmailBlock(Block emailBlock) { }
+    void updateMapGraphicsBlock(MapGraphicsBlock mapGraphicsBlock) { }
     void updateScannableBlock(ScannableBlock scannableBlock) { }
     void updateSurfaceMapScannableBlock(Block scannableBlock) { }
 
@@ -554,8 +558,7 @@ public abstract class DatUpdater {
         bunemonData.addAll(FileUtils.stringToData(" , "));
         updateBunemonText(bunemonData, shopInventory.getItem3(), shopBlock.getItem3Price());
 
-        shopBlock.setBunemonLocation(new BlockStringData(FileUtils.stringToData(
-                Translations.getLocationAndNpc(shopInventory.getNpcLocation(), shopInventory.getNpcName()))));
+        shopBlock.setBunemonLocation(new BlockStringData(Translations.getLocationAndNpc(shopInventory.getNpcLocation(), shopInventory.getNpcName())));
     }
 
     private void updatePriceAndCount(ShopBlock shopBlock, ShopInventory shopInventory) {

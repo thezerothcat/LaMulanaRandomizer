@@ -1,7 +1,6 @@
 package lmr.randomizer.dat.update;
 
 import lmr.randomizer.DataFromFile;
-import lmr.randomizer.FileUtils;
 import lmr.randomizer.Settings;
 import lmr.randomizer.Translations;
 import lmr.randomizer.dat.DatFileData;
@@ -696,8 +695,8 @@ public class RandomizationDatUpdater extends DatUpdater {
 
     private void updateBunemonLocation(MasterNpcBlock referenceBlock, String npcName) {
         if(Settings.isRandomizeNpcs()) {
-            referenceBlock.setNpcName(new BlockStringData(FileUtils.stringToData(
-                    Translations.getLocationAndNpc(npcRandomizer.getNpcLocation(npcName).replaceAll("NPCL: ", ""), npcName))));
+            referenceBlock.setNpcName(new BlockStringData(
+                    Translations.getLocationAndNpc(npcRandomizer.getNpcLocation(npcName).replaceAll("NPCL: ", ""), npcName)));
         }
     }
 

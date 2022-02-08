@@ -24,9 +24,14 @@ public class ValueConstants {
     public static final int SAVE_FILE_FLAG_VALUE_OFFSET = 0x11;
     public static final int SAVE_FILE_ITEM_COUNT_OFFSET = 0x1011;
 
+    public static final int NPC_BACKGROUND_TENT_CONVERSATION = 0x000;
+    public static final int NPC_BACKGROUND_TENT_SHOP = 0x004;
     public static final int NPC_BACKGROUND_STATUE = 0x01a;
     public static final int NPC_SPRITE_DISABLE_SPEECH = 0; // Use this sprite and the conversation text will be ignored; vanilla uses for stone philosophers
+    public static final int NPC_SPRITE_ELDER_XELPUD = 0x2dc;
     public static final int NPC_SPRITE_USE_BACKGROUND = 0x2f0;
+
+    public static final int NPC_MUSIC_ELDER_XELPUD = 0x004;
     public static final int NPC_MUSIC_STONE_PHILOSOPHER = 0x012;
 
     public static final short DAT_CHARACTER_SPACE = 32;

@@ -18,10 +18,22 @@ import java.util.List;
 public final class AddBlock {
     private AddBlock() { }
 
-    public static Block buildXelpudIntroBlock() {
+    public static Block buildCustomXelpudIntroBlock() {
         Block introBlock = new Block();
         introBlock.getBlockContents().add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
         List<Short> stringCharacters = FileUtils.stringToData(Translations.getText(HolidaySettings.isFools2019Mode() ? "fools.xelpudText" : "text.xelpudWarn"));
+        for(Short shortCharacter : stringCharacters) {
+            introBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
+        }
+        introBlock.getBlockContents().add(new BlockFlagData((short)FlagConstants.XELPUD_CONVERSATION_INTRO, (short)1));
+        introBlock.getBlockContents().add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)0));
+        return introBlock;
+    }
+
+    public static Block buildLoadSaveFileConversationBlock() {
+        Block introBlock = new Block();
+        introBlock.getBlockContents().add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)1));
+        List<Short> stringCharacters = FileUtils.stringToData(Translations.getText("text.xelpudWarn"));
         for(Short shortCharacter : stringCharacters) {
             introBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
@@ -29,6 +41,13 @@ public final class AddBlock {
         introBlock.getBlockContents().add(new BlockFlagData((short)FlagConstants.XELPUD_CONVERSATION_INTRO, (short)1));
         introBlock.getBlockContents().add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, (short)0));
         return introBlock;
+    }
+
+    public static Block buildLoadSaveFileReferenceBlock(short loadSaveFileConversationBlock) {
+        return new MasterNpcBlock(loadSaveFileConversationBlock,
+                ValueConstants.NPC_BACKGROUND_TENT_CONVERSATION,
+                ValueConstants.NPC_SPRITE_ELDER_XELPUD,
+                ValueConstants.NPC_MUSIC_ELDER_XELPUD, new BlockStringData(Translations.getLocationAndNpc("ElderXelpud")));
     }
 
     public static Block buildRecordableStoneConversationBlock() {

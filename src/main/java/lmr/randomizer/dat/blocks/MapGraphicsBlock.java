@@ -18,7 +18,11 @@ public class MapGraphicsBlock extends Block {
         roomGraphics.add(mapGraphicsEntry);
     }
 
-    private MapGraphicsEntry getMapGraphics(int roomNumber) {
+    public List<MapGraphicsEntry> getMapGraphics() {
+        return roomGraphics;
+    }
+
+    public MapGraphicsEntry getMapGraphics(int roomNumber) {
         return roomGraphics.get(roomNumber);
     }
 
