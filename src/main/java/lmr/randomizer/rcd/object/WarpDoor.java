@@ -12,7 +12,7 @@ package lmr.randomizer.rcd.object;
 public class WarpDoor extends GameObject {
     public WarpDoor(ObjectContainer objectContainer, int x, int y) {
         super(objectContainer, 6);
-        setId((short)0x98);
+        setId(ObjectIdConstants.WarpDoor);
         setX(x);
         setY(y);
     }

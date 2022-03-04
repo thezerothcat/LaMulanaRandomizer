@@ -1,5 +1,7 @@
 package lmr.randomizer.util;
 
+import lmr.randomizer.HolidaySettings;
+
 public final class MiscConstants {
     private MiscConstants() { }
 
@@ -663,6 +665,92 @@ public final class MiscConstants {
         }
         if(blockNumber == BlockConstants.Tablet_HT_ClothToMakeTheTreasure) {
             return "Tablet_HT_ClothToMakeTheTreasure";
+        }
+        if(HolidaySettings.isFools2022Mode()) {
+            if(blockNumber == BlockConstants.MantraTablet_MARDUK) {
+                return "MantraTablet_MARDUK";
+            }
+            if(blockNumber == BlockConstants.MantraTablet_SABBAT) {
+                return "MantraTablet_SABBAT";
+            }
+            if(blockNumber == BlockConstants.MantraTablet_MU) {
+                return "MantraTablet_MU";
+            }
+            if(blockNumber == BlockConstants.MantraTablet_VIY) {
+                return "MantraTablet_VIY";
+            }
+            if(blockNumber == BlockConstants.MantraTablet_BAHRUN) {
+                return "MantraTablet_BAHRUN";
+            }
+            if(blockNumber == BlockConstants.MantraTablet_WEDJET) {
+                return "MantraTablet_WEDJET";
+            }
+            if(blockNumber == BlockConstants.MantraTablet_ABUTO) {
+                return "MantraTablet_ABUTO";
+            }
+            if(blockNumber == BlockConstants.MantraTablet_LAMULANA) {
+                return "MantraTablet_LAMULANA";
+            }
+            if(blockNumber == BlockConstants.MantraTablet_BIRTH) {
+                return "MantraTablet_BIRTH";
+            }
+            if(blockNumber == BlockConstants.MantraTablet_DEATH) {
+                return "MantraTablet_DEATH";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Surface) {
+                return "GrailTablet_Surface";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Guidance) {
+                return "GrailTablet_Guidance";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Mausoleum) {
+                return "GrailTablet_Mausoleum";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Sun) {
+                return "GrailTablet_Sun";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Spring) {
+                return "GrailTablet_Spring";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Inferno) {
+                return "GrailTablet_Inferno";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Extinction) {
+                return "GrailTablet_Extinction";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_TwinFront) {
+                return "GrailTablet_TwinFront";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Endless) {
+                return "GrailTablet_Endless";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Shrine) {
+                return "GrailTablet_Shrine";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Illusion) {
+                return "GrailTablet_Illusion";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Graveyard) {
+                return "GrailTablet_Graveyard";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Moonlight) {
+                return "GrailTablet_Moonlight";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Goddess) {
+                return "GrailTablet_Goddess";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Ruin) {
+                return "GrailTablet_Ruin";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Birth) {
+                return "GrailTablet_Birth";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_TwinBack) {
+                return "GrailTablet_TwinBack";
+            }
+            if(blockNumber == BlockConstants.GrailTablet_Dimensional) {
+                return "GrailTablet_Dimensional";
+            }
         }
         return null;
     }

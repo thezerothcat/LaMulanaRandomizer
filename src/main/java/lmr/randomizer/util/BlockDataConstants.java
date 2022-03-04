@@ -16,6 +16,13 @@ public final class BlockDataConstants {
     public static final short DataList = 0x004e;
     public static final short Anime = 0x004f; // Scene
 
+    public static final short BlockNoPrompt = 0;
+    public static final short RandomBlockListSize = 2;
+    public static final short FlagBlockListSize = 4;
+    public static final short HeldItemBlockListSize = 4;
+    public static final short ScoreBlockListSize = 4;
+    public static final short ConversationTreeReferenceBlocksListSize = 4;
+
 
     private BlockDataConstants() { }
 }

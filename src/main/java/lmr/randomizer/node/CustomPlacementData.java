@@ -25,6 +25,7 @@ public class CustomPlacementData {
     private boolean customized;
     private boolean alternateMotherAnkh;
     private boolean automaticMantras;
+    private boolean customOnlyMode;
 
     public List<CustomItemPlacement> getCustomItemPlacements() {
         return customItemPlacements;
@@ -116,5 +117,13 @@ public class CustomPlacementData {
 
     public void setAutomaticMantras(boolean automaticMantras) {
         this.automaticMantras = automaticMantras;
+    }
+
+    public boolean isCustomOnlyMode() {
+        return customOnlyMode;
+    }
+
+    public void setCustomOnlyMode(boolean customOnlyMode) {
+        this.customOnlyMode = customOnlyMode;
     }
 }

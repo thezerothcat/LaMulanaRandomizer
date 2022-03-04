@@ -38,6 +38,10 @@ public class Chest extends GameObject {
         setDropQuantity(quantity);
     }
 
+    public int getDropType() {
+        return getArgs().get(0);
+    }
+
     public void setDropType(int dropType) {
         getArgs().set(0, (short)dropType);
     }

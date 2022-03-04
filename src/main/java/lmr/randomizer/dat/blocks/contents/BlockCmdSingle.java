@@ -17,6 +17,10 @@ public class BlockCmdSingle implements BlockContents {
         this.data = data;
     }
 
+    public BlockCmdSingle(int data) {
+        this.data = (short)data;
+    }
+
     public BlockCmdSingle(BlockCmdSingle objectToCopy) {
         this.data = objectToCopy.data;
     }

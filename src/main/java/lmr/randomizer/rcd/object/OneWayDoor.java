@@ -12,6 +12,16 @@ public class OneWayDoor extends GameObject {
     public static int EXIT_RIGHT = 0;
     public static int EXIT_LEFT = 1;
 
+    // Unconfirmed, but likely
+    public static int ImageFile_map = 0;
+    public static int ImageFile_eveg = 1; // Confirmed
+    public static int ImageFile_00prof = 2;
+    public static int ImageFile_02comenemy = 3;
+    public static int ImageFile_00item = 4;
+    public static int ImageFile_01menu = 5;
+    public static int ImageFile_00item_alt = 6;
+    public static int ImageFile_01effect = 7;
+
     public OneWayDoor(ObjectContainer objectContainer, int x, int y) {
         super(objectContainer, 5);
         setId(ObjectIdConstants.OneWayDoor);
@@ -20,14 +30,30 @@ public class OneWayDoor extends GameObject {
         setDefaults();
     }
 
+    public OneWayDoor(GameObject gameObject) {
+        super(gameObject);
+    }
+
     public void setDefaults() {
         setImageFile(3);
         setImageX(818);
         setImageY(0);
     }
 
+    public short getDirection() {
+        return getArgs().get(0);
+    }
+
     public void setDirection(int direction) {
         getArgs().set(0, (short)direction);
+    }
+
+    public void swapDirection() {
+        setDirection(getDirection() == EXIT_RIGHT ? EXIT_LEFT : EXIT_RIGHT);
+    }
+
+    public int getImageFile() {
+        return getArgs().get(2);
     }
 
     public void setImageFile(int imageFile) {
@@ -62,13 +88,26 @@ public class OneWayDoor extends GameObject {
         }
     }
 
+    public int getImageX() {
+        return getArgs().get(3);
+    }
+
     public void setImageX(int imageX) {
         // X-component of top left corner for where to begin drawing, on the image file
         getArgs().set(3, (short)imageX);
     }
 
+    public int getImageY() {
+        return getArgs().get(4);
+    }
+
     public void setImageY(int imageY) {
         // Y-component of top left corner for where to begin drawing, on the image file
         getArgs().set(4, (short)imageY);
+    }
+
+    public void setImagePosition(int x, int y) {
+        setImageX(x);
+        setImageY(y);
     }
 }

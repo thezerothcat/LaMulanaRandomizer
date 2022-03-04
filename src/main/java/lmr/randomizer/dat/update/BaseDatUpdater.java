@@ -3,10 +3,7 @@ package lmr.randomizer.dat.update;
 import lmr.randomizer.*;
 import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.dat.blocks.*;
-import lmr.randomizer.dat.blocks.contents.BlockContents;
-import lmr.randomizer.dat.blocks.contents.BlockFlagData;
-import lmr.randomizer.dat.blocks.contents.BlockListData;
-import lmr.randomizer.dat.blocks.contents.BlockStringData;
+import lmr.randomizer.dat.blocks.contents.*;
 import lmr.randomizer.dat.blocks.contents.entries.DefaultGrailPointEntry;
 import lmr.randomizer.dat.blocks.contents.entries.GrailPointEntry;
 import lmr.randomizer.randomization.data.CustomBlockEnum;
@@ -348,6 +345,24 @@ public class BaseDatUpdater extends DatUpdater {
         flagChecks.addAll(flagCheckBlock.getFlagCheckReferences().subList(4, 13)); // Misc Mulbruk conversations
         flagCheckBlock.getFlagCheckReferences().clear();
         flagCheckBlock.getFlagCheckReferences().addAll(flagChecks);
+    }
+
+    @Override
+    void updateEmailBlock(Block emailBlock, int mailNumber) {
+        List<BlockContents> blockContents = emailBlock.getBlockContents();
+        String baseKey = "Mail" + mailNumber;
+        String titleKey = baseKey + ".Title";
+        String textKey = baseKey + ".Text";
+        if(Translations.hasKey(titleKey) && Translations.hasKey(textKey)) {
+            blockContents.clear();
+            for(Short singleCharacter : buildRawDataWithCommands(Translations.getText(titleKey))) {
+                blockContents.add(new BlockSingleData(singleCharacter));
+            }
+            blockContents.add(new BlockSingleData(BlockDataConstants.EndOfEntry));
+            for(Short singleCharacter : buildRawDataWithCommands(Translations.getText(textKey))) {
+                blockContents.add(new BlockSingleData(singleCharacter));
+            }
+        }
     }
 
     @Override

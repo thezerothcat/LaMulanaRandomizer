@@ -9,7 +9,7 @@ package lmr.randomizer.rcd.object;
  */
 public class SnapshotsScan extends GameObject {
 
-    public SnapshotsScan(ObjectContainer objectContainer, int x, int y) {
+    public SnapshotsScan(ObjectContainer objectContainer) {
         super(objectContainer, 4);
         setId(ObjectIdConstants.SnapshotsScan);
         setX(-1);

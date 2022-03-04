@@ -12,6 +12,8 @@ public final class FlagConstants {
     public static final int BOSSES_SHRINE_TRANSFORM = 0x102; // Value += 1 every time a boss is killed; 4-boss item checks this flag (for value = 4); set to 9 for transformed Shrine of the Mother
     public static final int FOBOS_LADDER = 0x10d; // Value 0 > 1 when talking to Fobos, spawns the philosopher ladder in Shrine of the Mother
     public static final int FAIRY_POINTS_ACTIVE = 0x118; // Value 0 > 1 when talking to The Fairy Queen after collecting Isis' Pendant, activates fairy points
+    public static final int GUIDANCE_PUZZLE_CRUCIFIX_CHEST = 0x12d; // Value > 1 when hitting the seal, value > 3 when all 3 torches are lit
+    public static final int GUIDANCE_PUZZLE_MAP_CHEST = 0x12e; // Value > 1 when using the dais
     public static final int GUIDANCE_ELEVATOR = 0x134; // Value 0 > 1 when hitting the elevator block in the Guidance mouth (where Dracuet's door is), other increments via FlagTimer for animation
     public static final int GUIDANCE_PUZZLE_TREASURES_CHEST = 0x137; // Value 0 > 1 when using Pepper on the statue, 1 > 2 when the chest is done animating to make it possible to open.
     public static final int GUIDANCE_PUZZLE_ANKH_JEWEL_TABLETS_LADDER = 0x13f; // Value 0 > 1 when destroying the 4 tablets, which causes the ladder to spawn in the room to the right, for access to the isolated dais.
@@ -20,12 +22,16 @@ public final class FlagConstants {
     public static final int SURFACE_PUZZLE_WATERFALL_WALL_SACRED_ORB = 0x14b; // Value 0 > 1 when the wall/Hitbox is broken for the wall that has bats behind it, also used as the puzzle flag for the chest
     public static final int SURFACE_UNDERPATH_VISIBLE = 0x14c; // Value 0 > 1 by Lemeza detector near the transitions into the Surface underpath, allowing you to navigate the area properly. One of the two detectors is added by randomizer; the other is vanilla.
     public static final int SURFACE_PUZZLE_SEAL_COIN_CHEST = 0x14d; // In vanilla, this is for opening the seal and opening the chest. In randomizer, the chest uses a different world flag, but this remains as the puzzle flag.
+    public static final int SURFACE_PUZZLE_WATERFALL_COIN_CHEST = 0x14e; // Set to 1 when breaking the wall, set to 2 by timer.
     public static final int SURFACE_MEKURI_WALL = 0x150;
     public static final int SURFACE_WATERFALL_WALL_BATS = 0x151; // Value 0 > 1 when the wall/Hitbox is broken for the wall that has bats behind it, 1 > 2 as the wall cover despawns and bats spawn
+    public static final int MAUSOLEUM_PROVE_THOU_ART_SMALL = 0x158;
     public static final int GUIDANCE_BATS_KILLED_COUNT = 0x159; // Value += 1 every time a bat is killed in Guidance.
+    public static final int NEBRA_SKY_DISK = 0x15f; // 0=unset 1=star 2=moon 3=sun
     public static final int MAUSOLEUM_PUZZLE_COIN_CHEST = 0x160; // For breaking the wall/unlocking the coin chest; goes to 1 for hitting the wall, set to 2 by a FlagTimer to open the chest.
     public static final int MAUSOLEUM_PUZZLE_ORB_CHEST = 0x165; // Value 0 > 1 when placing a weight at the proper giant's foot, unlocks the Mausoleum Sacred Orb chest
     public static final int HARDMODE = 0x16a; // Value 0 > 2 when hard mode is triggered.
+    public static final int SUN_USAS_VI_SHOP_POT_BROKEN = 0x16f; // Value 0 > 1 when the pot breaks.
     public static final int SPHINX_DESTROYED = 0x173; // Value 5 = destroyed
     public static final int SUN_GEYSER = 0x174; // Crusher; 1 = ascending; 2 = seal activated and now receding; 3 = gone
     public static final int SUN_WATCHTOWER_LIGHTS = 0x179; // 1,2=triggered 3=seen
@@ -35,10 +41,13 @@ public final class FlagConstants {
     public static final int SUN_MAP_CHEST_LADDER_DESPAWNED = 0x183; // Used to despawn the ladder for the Sun map chest in vanilla // todo: can this be claimed for something?
     public static final int SUN_UNSEALED_EXTINCTION = 0x187; // Set to 1 when triggering Seal: O3
     public static final int SUN_MAP_CHEST_LADDER_RESTORED = 0x188; // Set to 1 after pushing the statue to respawn the ladder
-    public static final int SPRING_FLOODED = 0x193; // Value 0 > 1 after breaking the left hatch in Spring to flood the left side of Goddess.
+    public static final int SUN_PUZZLE_WEDJET = 0x18f; // Set to 1 to solve the wedjet puzzle/unlock the Ankh Jewel chest in Sun.
+    public static final int SPRING_FLOODED = 0x193;
     public static final int SPRING_LEFT_HATCH = 0x194; // Value 0 > 1 after breaking the left hatch in Spring to flood the left side of Goddess.
     public static final int FISH_SHOP_UNLOCKS = 0x197; // Value 0 > 1 after bulling Mr. Fishman, 1 > 2 after using the seal to open the shop, 2 > 3 after using a Key Fairy to unlock the alternate shop.
     public static final int SPRING_BAHAMUT_ROOM_FLOODED = 0x199; // Value 0 > 1 after hitting the gear outside Bahamut's room.
+    public static final int SPRING_PUZZLE_ANKH_JEWEL_CHEST = 0x19d; // Value 0 > 1 after hitting Mr. Fishman
+    public static final int SPRING_WALL_PRIEST_HIDLYDA = 0x19d; // Value 0 > 1 after hitting the wall
     public static final int INFERNO_VIY_MANTRA_STATUE = 0x1a9; // 1=break it 2=statue will disappear 3=statue disappears
     public static final int INFERNO_PUZZLE_LAVA_COIN_CHEST = 0x1aa; // For the breakable wall covering Coin: Inferno (Lava) chest.
     public static final int INFERNO_FAKE_ORB_CRUSHER = 0x1ac; // For the fake Sacred Orb trap in Inferno Cavern, made up of a graphic, a Lemeza detector, and a crusher. // todo: can this be claimed for something?
@@ -50,14 +59,23 @@ public final class FlagConstants {
     public static final int EXTINCTION_PALENQUE_SCREEN_MURAL = 0x1ca; // Value 0 > 1 after placing the weight in the Extinction <> Birth teleport area, 2 and 3 for animation of mural falling
     public static final int EXTINCTION_TEMP_LIGHT = 0x1cd; // Value 0 > 1 when lighting Extinction via Flare Gun
     public static final int EXTINCTION_TRAP_FAKE_ANKH = 0x1cf; // Triggers crushers via Lemeza detector on approaching the fake ankh
+    public static final int MAUSOLEUM_SAKIT_STATUE_STATE = 0x1d6; // 0=Sakit alive, statue exists on screen; 1=Sakit dead, statue isn't there
     public static final int TWINS_POISON_TIMER = 0x1d7; // 1=counting down, 2=fatal in the twins race rooms
     public static final int TWINS_FRONT_GRAIL_ELEVATOR = 0x1db; // Value 0 > 1 when pressing first dais to release the twins, 1 > 2 when pressing second dais
     public static final int TWINS_RELEASED = 0x1dc; // Value 0 > 1 when pressing first dais to release the twins, 1 > 2 when pressing second dais
+    public static final short TWIN_PUZZLE_MAP_CHEST = 0x1dd; // Value 0 > 1 when breaking the wall covering the Map (Twin Labyrinths) chest
+    public static final short TWIN_BRING_LIGHT_BURANUN = 0x1de; // Value 0 > 1 when using Flare Gun on the right side statue of the twin (Buranun)
     public static final short TWIN_UNSOLVABLE_PUZZLE = 0x1e4; // Value 0 > 1 when solving the block pushing puzzle in Twin Labyrinths on the screen with the lamp recharge station/Lamp of Time Shop
+    public static final short TWIN_ANKH_JEWEL_CHEST_PUZZLE = 0x1e5; // Value 0 > 1 when using Flare Gun on the left side statue of the twin (Idigna); spawns the dais in the upper section, and using the dais sets value from 1 to 2
     public static final int LITTLE_BROTHER_PURCHASES = 0x1ea; // Value += 1 for each purchase made from little brother
-    public static final int TWIN_PUZZLE_LOWER_COIN_CHEST = 0x1eb;
+    public static final int TWIN_PUZZLE_LOWER_COIN_CHEST = 0x1eb; // Value > 1 when hitting the hitbox, set to 2 by timer for animation delays.
+    public static final int TWIN_PUZZLE_WITCHES_COIN_CHEST = 0x1ed; // Value > 1 when hitting the hitbox, set to 2 by timer for animation delays.
     public static final int BIG_BROTHER_UNLOCKED = 0x1f0; // Value 0 > 1 when unlocked, 1 > 2 when confirmed by chatting with little brother
     public static final int ENDLESS_PUZZLE_MAP_CHEST = 0x1f6; // Value 0 > 1 when chest is unlocked
+    public static final int ENDLESS_PUZZLE_WEAPON_COVER = 0x1f7; // Value 0 > 1 from hitting the WeaponCover
+    public static final int ENDLESS_4F_SOLVED = 0x1fb; // Value 0 > 1 by using the dais, 1 > 2 by using Key of Eternity at the keyhole
+    public static final int ENDLESS_D1_LADDER_WALL = 0x1fc; // Value 0 > 1 when Tai Sui is defeated, to remove the wall that blocks the ladder
+    public static final int ENDLESS_5F_SHORTCUT = 0x1ff; // Value 0 > 1 to break the shortcut in the room left of the lamp recharge station
     public static final int ILLUSION_PUZZLE_EXPLODING_CHEST = 0x20a; // Exploding chest uses
     public static final int ILLUSION_WARP_MAZE_ACTIVE = 0x20c; // Removed in randomizer // todo: can this be claimed for something?
     public static final int SHRINE_PUZZLE_DIARY_CHEST = 0x212; // Changed in randomizer. Original: 1=xelpud 2=left room after collecting 3=reported in and got the la-mulana talisman
@@ -68,6 +86,8 @@ public final class FlagConstants {
     public static final int ILLUSION_PROGRESS_SKELETON_DAIS_TO_ELEVATOR = 0x227; // Value 0 > 1 when placing a weight on the skeleton in lower Illusion, 2 after solving "extinguish the whole", 3 via Lemeza detector in the elevator room on the way up to the grail
     public static final int MR_SLUSHFUND_CONVERSATION = 0x228; // Set to 1 in the conversation for receiving Pepper, set to 2 in the conversation for receiving Anchor.
     public static final int PROVE_THOU_ART_SMALL = 0x22a; // 2=doll, 3=small, 4=read, 5=block disappears
+    public static final int ILLUSION_PUZZLE_SPIKES_COIN_CHEST = 0x22b; // Value > 1 when hitting the hitbox, set to 2 by timer for animation delays.
+    public static final int ILLUSION_LADDER_BIRDS_ROOM = 0x236;
     public static final int COG_MUDMEN_STATE = 0x23a; // Value 4 when using the Cog of the Soul at the expected tablet to spawn mudmen
     public static final int GRAVEYARD_ILLUSION_LADDER_BLOCKAGE = 0x23f; // Set to 1 after bombing the wall in Graveyard to open up emusic.exe scan
     public static final int GRAVEYARD_WALL_SNAPSHOTS_MURAL = 0x24f; // The small breakable thing that prevents the ice block from dropping so you can push the block in place and spawn the ladder. Looks like it may be used to animate the block dropping
@@ -78,15 +98,22 @@ public final class FlagConstants {
     public static final int MOONLIGHT_TO_TWIN_BLOCK_LADDER_STATE = 0x25f; // Value 0 > 1 when falling state, 2 when landed. Pairs with MOONLIGHT_TO_TWIN_BREAKABLE_FLOOR to determine shortcut access.
     public static final int MOONLIGHT_3_WOMEN_FACES = 0x262; // Set to 1 after hitting the face in Moon-gazing pit with a subweapon.
     public static final int RUIN_LADDER_NUWA_V2 = 0x265; // Don't remember how/why this is different from 0x369
+    public static final int MOONLIGHT_PYRAMID_OPEN = 0x267; // Set to 1 by LemezaDetector at warp endpoint
     public static final int MOONLIGHT_SCAN_DANCING_MAN = 0x270; // Set to 1 after scanning the Dancing Man
     public static final int GODDESS_LIGHTS_ON = 0x271; // 3 = lights on
+    public static final int GODDESS_WALL_SNAPSHOTS_SCAN = 0x274; // Value 0 > 1 when the wall is destroyed
     public static final int GODDESS_STATUE_RUIN = 0x278; // Value 0 > 1 to remove the Goddess statue blocking entry to Tower of Ruin
     public static final int GODDESS_PUZZLE_FLAIL_WHIP = 0x27b; // Value 0 > 1 when reading the tablet, 1 > 2 when solved, 2 > 3 when weapon cover is gone
     public static final int GODDESS_STATUE_SHIELD_ANIMATION = 0x284; // Goes to 2 when activated; 2 > 3 when gone
+    public static final int RUIN_PUZZLE_ANKH_JEWEL_CHEST = 0x28c; // Set to 2 by FlagTimer to unlock Ankh Jewel (Tower of Ruin) chest
+    public static final int RUIN_MEDICINE_STATUE_UNCOVERED = 0x28f; // Skyfish puzzle
     public static final int RUIN_PUZZLE_NUWA = 0x298; // 0 > 1 when hitting the seal, 2 when pressing the dais at the bottom of the philosopher ladder, 3 when Nuwa is dead?
+    public static final int RUIN_CRUSHER_MEDICINE_STATUE_SCREEN = 0x29a;
     public static final int MOONLIGHT_SCAN_HANDS = 0x29c; // Set to 1 after scanning the hands of the four
     public static final int MOONLIGHT_SCAN_TRAP = 0x29d; // Set to 1 after scanning the phenomenal trap
     public static final int MOONLIGHT_SCAN_FACE = 0x29e; // Set to 1 after scanning the face of highest rank
+    public static final int BIRTH_NINJA_COIN_CHEST_PUZZLE_FLAG = 0x2a9;
+    public static final int BIRTH_MURAL_INSIDE_VISIBLE = 0x2ac;
     public static final int TRUE_SHRINE_TENTACLE = 0x2b7; // Set to 1 after hitting the tentacle to move it out of the way on the path to the Mother ankh
     public static final int GATE_OF_TIME_FAIRY_UNKNOWN = 0x2b8; // Presumably related to puzzle reset conversations for 8bit fairy
     public static final int DIMENSIONAL_PUZZLE_ANGEL_SHIELD = 0x2c1; // 0 > 1 when activated by the other two daises being pressed, 1 > 2 when weapon cover is gone
@@ -123,6 +150,7 @@ public final class FlagConstants {
     public static final int HT_UNLOCK_CHAIN_PRIMARY = 0x3ba; // 1=hear about dracuets from mulbruk 2=dracuets in mouth 3=night 4=xelpud 5=fairy 6=upside down door 7=talked to dracuets inside door 8=talked to dracuets in gate of time 9=talked to dracuets in tower of the goddess
     public static final int HT_UNLOCKED = 0x3bb; // Value 0 > 1 when unlocked (normally at the end of the unlock sequence)
     public static final int BIRTH_MOVING_PLATFORM_NEAR_SKANDA = 0x3c0; // Value 0 > 1 when placing the weight next to the Dimensional Key wall, causing the MovingPlatform to start moving left to right.
+    public static final int BIRTH_ASURA_BEHEADED = 0x3c6; // Value 0 > 1 when hitting Asura with the Chakram.
     public static final int BIRTH_GANESHA_SCANNED = 0x3c8; // Value 0 > 1 when scanning the mural of Ganesha in Chamber of Birth, activates 0x3e2 via FlagTimer to unblock the warp.
     public static final int DIMENSIONAL_KULULLU_MARKED_DEAD = 0x3d9; // Set to 1 by FlagTimer in rooms adjacent to Kulullu's room; used for enemy spawns in that room to ensure the don't appear until you leave and come back
     public static final int DIMENSIONAL_KUUSARIKKU_MARKED_DEAD = 0x3da; // Set to 1 by FlagTimer in rooms adjacent to Kuusarikku's room; used for enemy spawns in that room to ensure the don't appear until you leave and come back
@@ -132,6 +160,8 @@ public final class FlagConstants {
     public static final int DIMENSIONAL_CHILDREN_DEAD_POST_KEY_RESET = 0x3e7; // Set to 1 first time visiting Dimensional corridor with Dimensional Key
     public static final int KILL_FLAG = 0x3e9; // Instant death when set
     public static final int LAMP_STATION_UNKNOWN = 0x3ed; // Gets set on the Lemeza detector that lights Lamp of Time. Probably to despawn the flame graphic
+    public static final int BIRTH_DEATH_TABLETS_SPAWNED = 0x3f1; // Set to 1 from talking to Fobos, set to 2 by FlagTimer in the room containing the tablets
+    public static final int ENDLESS_5F_BROKEN_FLOOR = 0x3fb; // Set to 1 by FlagTimer during the escape sequence
     public static final int ESCAPE_TRIGGERED = 0x403; // Value 0 > 1 alongside triggering the escape timer and screenshake.
     public static final int PALENQUE_SMALL_MURAL_ANIMATION_TRIGGERED = 0x40e; // Value 0 > 1 when Palenque's small mural is triggered to animate sliding into place.
     public static final int SURFACE_RUINS_FRONT_DOOR_OPEN = 0x414; // For the crusher covering the transition from Surface to Gate of Guidance
@@ -171,7 +201,7 @@ public final class FlagConstants {
     public static final int SAKIT_ANKH_PUZZLE = 0x164; // State of Sakit ankh; 1 when the ankh spawns, 2 when Sakit is dead
     public static final int ELLMAC_ANKH_PUZZLE = 0x178; // State of Ellmac ankh; 1 when minecart is unlocked, 2-5 for pushing on each screen, 6 when Ellmac is dead
     public static final int BAHAMUT_ANKH_PUZZLE = 0x19f; // State of Bahamut ankh; 1 when ankh is spawned, 2 when Bahamut is dead
-    public static final int VIY_ANKH_PUZZLE = 0x1b4; // State of Viy ankh; 1 when visiting the screen above Viy's ankh, 2 when Sakit is dead
+    public static final int VIY_ANKH_PUZZLE = 0x1b4; // State of Viy ankh; 1 when visiting the screen above Viy's ankh, ... 5 when Viy is dead
     public static final int PALENQUE_ANKH_PUZZLE = 0x1c3; // State of Palenque ankh; 1 after placing the weight in the Extinction <> Birth teleport area, 2 when the Pochette Key mural is spawned, 3 after using Pochette Key, 4 when Palenque is dead
     public static final int BAPHOMET_ANKH_PUZZLE = 0x1e0; // State of Baphomet ankh; 1 for white witch, 2 when ankh is spawned, 3 when Baphomet is dead
     public static final int TIAMAT_ANKH_PUZZLE = 0x2ed; // State of Tiamat ankh; 1 when ankh is spawned, 2 when Tiamat is dead
@@ -199,7 +229,9 @@ public final class FlagConstants {
     public static final int BOSSES_DEFEATED_COUNT_TIAMAT = 0x2dd; // Value 0 > 1 via timer which increments BOSSES_SHRINE_TRANSFORM
 
     // Sub-boss state flags
+    public static final int GHOST_LORD_STATE = 0x162; // 0 = alive, 1 = defeated
     public static final int BUER_STATE = 0x17a;
+    public static final int TAI_SUI_STATE = 0x1f4;
     public static final int SKANDA_STATE = 0x2a6; // Value 0 > 1 from dance of life, 1 > 2 when Skanda dies
     public static final int GIRTABLILU_STATE = 0x2c3; // 0 = alive, 1 = defeated, 2 = counted toward DIMENSIONAL_CHILDREN_PARITY and DIMENSIONAL_CHILDREN_DEAD
     public static final int KULULLU_STATE = 0x2c4; // 0 = alive, 1 = defeated, 2 = counted toward DIMENSIONAL_CHILDREN_PARITY and DIMENSIONAL_CHILDREN_DEAD
@@ -257,6 +289,8 @@ public final class FlagConstants {
     public static final int WF_KEY_OF_ETERNITY = 0x0a2;
     public static final int WF_SERPENT_STAFF = 0x0a3;
     public static final int WF_TALISMAN = 0x0a4;
+    public static final int WF_WATERPROOF_CASE = 0x0a5;
+    public static final int WF_HEATPROOF_CASE = 0x0a6;
     public static final int WF_SHELL_HORN = 0x0a7;
     public static final int WF_GLOVE = 0x0a8;
     public static final int WF_HOLY_GRAIL = 0x0a9;
@@ -317,6 +351,7 @@ public final class FlagConstants {
     public static final int WF_SOFTWARE_BEOLAMU = 0x0ec;
     public static final int WF_SOFTWARE_MEKURI = 0x0f1;
     public static final int WF_SOFTWARE_BOUNCE = 0x0f2;
+    public static final int WF_SOFTWARE_MIRACLE = 0x0f3;
     public static final int WF_SOFTWARE_MIRAI = 0x0f4;
     public static final int WF_SOFTWARE_LAMULANA = 0x0f5;
     public static final int WF_TREASURES = 0x103;
@@ -1080,12 +1115,15 @@ public final class FlagConstants {
     public static final int SCREEN_FLAG_30 = 0x030;
     public static final int SCREEN_FLAG_31 = 0x031;
 
+    public static final int ROOM_FLAG_32 = 0x032; // Used by shortcut from Gate of Time (Mausoleum)/Retromausoleum to Tower of the Goddess
+    public static final int ROOM_FLAG_33 = 0x033; // Used by Ankh Jewel (Temple of the Sun) chest puzzle / wedjet to fail the puzzle if the dais is pressed.
     public static final int ROOM_FLAG_35 = 0x035; // Used by fake Ankh Jewel trap in Twin Labyrinths for non-random traps.
     public static final int ROOM_FLAG_37 = 0x037; // Used for a weight door during the escape.
-    public static final int ROOM_FLAG_3B = 0x03b; // Used by Sun bats for Sacred Orb chest / cast down those that fly.
+    public static final int ROOM_FLAG_3B = 0x03b; // Used by Sun bats for Sacred Orb chest / cast down those that fly; used for the Endless Corridor door number puzzle
     public static final int ROOM_FLAG_3C = 0x03c; // Used by Graveyard trap chest for non-random traps.
     public static final int ROOM_FLAG_3E = 0x03e;
     public static final int ROOM_FLAG_40 = 0x040; // Set by an arg on Tiamat's ankh when the fight starts
+    public static final int ROOM_FLAG_43 = 0x043; // Related to killing Ugallu in Dimensional Corridor
     public static final int ROOM_FLAG_45 = 0x045; // Used for a weight door during the escape.
 
     // Flags used in vanilla reclaimed for randomizer
@@ -1098,10 +1136,6 @@ public final class FlagConstants {
     public static final short CUSTOM_WF_SPAULDER = 0xaca; // Triggers Spaulder to spawn.
 
     // Fools 2021
-    public static final int CUSTOM_ESCAPE_TIMER_STATE = 0xaba; // Incremented when the timer runs out
-    public static final int CUSTOM_XMAILER_RECEIVED = 0xabb; // Incremented when given xmailer after the timer runs out
-    public static final int CUSTOM_FOOLS2021_TREASURY_SPAULDER = 0xabc; // Spaulder "reward" for doing treasury zip
-    public static final int CUSTOM_FOOLS2021_ENDLESS_5F_SPAULDER = 0xabd; // Spaulder "reward" at the bottom of Endless Corridor during the escape sequence.
     public static final int CUSTOM_FOOLS2021_GRAIL_GUIDANCE = 0xaaa; // Grail flag for Gate of Guidance warp, to avoid requiring the location for empowered grail.
     public static final int CUSTOM_FOOLS2021_GRAIL_MAUSOLEUM = 0xaab; // Grail flag for Mausoleum of the Giants warp, to avoid requiring the location for empowered grail.
     public static final int CUSTOM_FOOLS2021_GRAIL_SUN = 0xaac; // Grail flag for Temple of the Sun warp, to avoid requiring the location for empowered grail.
@@ -1118,6 +1152,10 @@ public final class FlagConstants {
     public static final int CUSTOM_FOOLS2021_GRAIL_BIRTH = 0xab7; // Grail flag for Chamber of Birth warp, to avoid requiring the location for empowered grail.
     public static final int CUSTOM_FOOLS2021_GRAIL_TWIN_BACK = 0xab8; // Grail flag for Twin Labyrinths backside warp, to avoid requiring the location for empowered grail.
     public static final int CUSTOM_FOOLS2021_GRAIL_DIMENSIONAL = 0xab9; // Grail flag for Dimensional Corridor warp, to avoid requiring the location for empowered grail.
+    public static final int CUSTOM_FOOLS2021_ESCAPE_TIMER_STATE = 0xaba; // Incremented when the timer runs out
+    public static final int CUSTOM_FOOLS2021_XMAILER_RECEIVED = 0xabb; // Incremented when given xmailer after the timer runs out
+    public static final int CUSTOM_FOOLS2021_TREASURY_SPAULDER = 0xabc; // Spaulder "reward" for doing treasury zip
+    public static final int CUSTOM_FOOLS2021_ENDLESS_5F_SPAULDER = 0xabd; // Spaulder "reward" at the bottom of Endless Corridor during the escape sequence.
 
     // Halloween 2019
     public static final int CUSTOM_HALLOWEEN_MULBRUK_CONVERSATION = 0xaac; // 0 = not spoken, 1 = did intro, 2 = ready to talk about HT, 3 = HT unlocked

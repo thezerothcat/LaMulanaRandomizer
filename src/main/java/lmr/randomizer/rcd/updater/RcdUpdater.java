@@ -120,6 +120,9 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.FlagTimer) {
             return updateFlagTimer(gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.MovingPlatform) {
+            return updateMovingPlatform(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.CycleTimer) {
             return updateCycleTimer(gameObject);
         }
@@ -188,6 +191,9 @@ public abstract class RcdUpdater {
         }
         else if(gameObject.getId() == ObjectIdConstants.Buer) {
             return updateBuer(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.Sphinx) {
+            return updateSphinx(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.Chest) {
             return updateChest(gameObject);
@@ -516,6 +522,9 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.Animation) {
             return updateAnimation(gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.ScreenShake) {
+            return updateScreenShake(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.KeyFairySpot) {
             return updateKeyFairySpot(gameObject);
         }
@@ -528,6 +537,9 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.HotSpring) {
             return updateHotSpring(gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.Shawn) {
+            return updateShawn(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.Explosion) {
             return updateExplosion(gameObject);
         }
@@ -539,6 +551,9 @@ public abstract class RcdUpdater {
         }
         else if(gameObject.getId() == ObjectIdConstants.GrailToggle) {
             return updateGrailToggle(gameObject);
+        }
+        else if(gameObject.getId() == ObjectIdConstants.DeathLaserStatue) {
+            return updateDeathLaserStatue(gameObject);
         }
         else if(gameObject.getId() == ObjectIdConstants.MotherAnkh) {
             return updateMotherAnkh(gameObject);
@@ -589,6 +604,9 @@ public abstract class RcdUpdater {
         return true;
     }
     boolean updateFlagTimer(GameObject flagTimer) {
+        return true;
+    }
+    boolean updateMovingPlatform(GameObject movingPlatform) {
         return true;
     }
     boolean updateCycleTimer(GameObject flagTimer) {
@@ -658,6 +676,9 @@ public abstract class RcdUpdater {
         return true;
     }
     boolean updateBuer(GameObject buer) {
+        return true;
+    }
+    boolean updateSphinx(GameObject sphinx) {
         return true;
     }
     boolean updateChest(GameObject chest) {
@@ -987,6 +1008,9 @@ public abstract class RcdUpdater {
     boolean updateAnimation(GameObject animation) {
         return true;
     }
+    boolean updateScreenShake(GameObject animation) {
+        return true;
+    }
     boolean updateKeyFairySpot(GameObject keyFairySpot) {
         return true;
     }
@@ -999,6 +1023,9 @@ public abstract class RcdUpdater {
     boolean updateHotSpring(GameObject hotSpring) {
         return true;
     }
+    boolean updateShawn(GameObject shawn) {
+        return true;
+    }
     boolean updateExplosion(GameObject explosion) {
         return true;
     }
@@ -1009,6 +1036,9 @@ public abstract class RcdUpdater {
         return true;
     }
     boolean updateGrailToggle(GameObject grailToggle) {
+        return true;
+    }
+    boolean updateDeathLaserStatue(GameObject deathLaserStatue) {
         return true;
     }
     boolean updateMotherAnkh(GameObject motherAnkh) {

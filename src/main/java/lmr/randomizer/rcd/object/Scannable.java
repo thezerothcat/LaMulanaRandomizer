@@ -96,6 +96,10 @@ public class Scannable extends GameObject {
         getArgs().set(10, (short)pixelWidth);
     }
 
+    public short getHeight() {
+        return getArgs().get(11);
+    }
+
     public void setHeight(int pixelHeight) {
         getArgs().set(11, (short)pixelHeight);
     }

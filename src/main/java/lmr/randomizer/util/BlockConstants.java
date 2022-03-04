@@ -10,11 +10,18 @@ public final class BlockConstants {
     public static final int SoftwareBlock = 5;
     public static final int GrailPointBlock = 7;
     public static final int HTMapNamesLimitedBlock = 28;
+
     public static final int FootOfFuto = 88;
+
+    public static final int SnapshotsScan_TowerOfTheGoddess = 319;
+    public static final int SnapshotsScan_TowerOfRuin = 324;
+    public static final int SnapshotsScan_Item = 724; // Extinction (mantra.exe), Graveyard (emusic.exe), Dimensional (beolamu.exe)
+
     public static final int FairyQueenFirstConversation = 215;
     public static final int FairyQueenWhenTheTimeComesConversation = 218;
     public static final int XelpudTalismanConversation = 369;
     public static final int XelpudPillarConversation = 370;
+    public static final int XelpudMSX2Conversation = 377;
     public static final int MulbrukStoneConversationBlock = 392; // 0x188; stays with Mulbruk seal door
     public static final int MulbrukWakingUpConversationBlock = 393; // 0x189; moved to flag check conversations in randomizer
     public static final int MulbrukIntroBlock = 393; // Replaced for Helloween 2019
@@ -71,6 +78,23 @@ public final class BlockConstants {
     public static final int ItemConversationBookOfTheDead = 397;
     public static final int ItemConversationMapSurface = 716;
     public static final int ItemConversationProvocativeBathingSuit = 1012;
+
+    public static final int XelpudHeldItemConversation_DjedPillar = 378;
+    public static final int XelpudHeldItemConversation_MiniDoll = 379;
+    public static final int XelpudHeldItemConversation_MagatamaJewel = 380;
+    public static final int XelpudHeldItemConversation_CogOfTheSoul = 381;
+    public static final int XelpudHeldItemConversation_LampOfTime = 382;
+    public static final int XelpudHeldItemConversation_PochetteKey = 383;
+    public static final int XelpudHeldItemConversation_DragonBone = 384;
+    public static final int XelpudHeldItemConversation_CrystalSkull = 385;
+    public static final int XelpudHeldItemConversation_Vessel = 386;
+    public static final int XelpudHeldItemConversation_Pepper = 387;
+    public static final int XelpudHeldItemConversation_WomanStatue = 388;
+    public static final int XelpudHeldItemConversation_MaternityStatue = 389;
+    public static final int XelpudHeldItemConversation_KeyOfEternity = 390;
+    public static final int XelpudHeldItemConversation_SerpentStaff = 391;
+    public static final int XelpudHeldItemConversation_HandScanner = 986;
+    public static final int XelpudHeldItemConversation_MulanaTalisman = 987;
 
     public static final int NpcConversation_Hiner = 33; // Hiner - Surface NPC, 01-00-02
     public static final int NpcConversation_PriestZarnac = 40; // Priest Zarnac - Guidance NPC, 00-04-01
@@ -189,6 +213,19 @@ public final class BlockConstants {
     public static final int MulbrukRandomBlock1 = 489;
     public static final int MulbrukRandomBlock2 = 1078;
     public static final int MulbrukRandomBlock3 = 1079;
+
+    public static final short MulbrukRandom_DontWake = 407;
+    public static final short MulbrukRandom_Sleep100MoreYears = 1056;
+    public static final short MulbrukRandom_Dream_IgnorantFool = 1066;
+    public static final short MulbrukRandom_Dream_PutAStoneOnTopOfMulbruk = 1067;
+    public static final short MulbrukRandom_Dream_HappyHaha = 1068;
+    public static final short MulbrukRandom_Dream_Hamburger = 1069;
+    public static final short MulbrukRandom_Dream_Continue = 1070;
+    public static final short MulbrukRandom_Dream_Grr = 1071;
+    public static final short MulbrukRandom_Snort = 1072;
+    public static final short MulbrukRandom_Dream_BowBeforeMulbruk = 1073;
+
+    public static final int RepeatConversationBookOfTheDead = 643;
 
     public static final int Conversation_MulbrukEscapeRegular = 925;
     public static final int Conversation_MulbrukEscapeSwimsuit = 927;
@@ -419,6 +456,9 @@ public final class BlockConstants {
     public static final int Tablet_HT_Sleep = 1004; // Glow flag = TABLET_GLOW_HT_SLEEP_ALSO_SET_BY_RETROMAUSOLEUM_ENTRANCE
     public static final int Tablet_HT_IExistHere = 1005; // Glow flag = TABLET_GLOW_HT_I_EXIST_HERE
     public static final int Tablet_HT_ClothToMakeTheTreasure = 1009; // Glow flag = TABLET_GLOW_HT_CLOTH_TO_MAKE_THE_TREASURE
+
+    public static final int Scannable_ResearchScan_StatueOfThoth = 570;
+    public static final int Scannable_Laptop = 237; // Related flag = 0x210
 
     public static final int GrailTablet_Surface = 38;
     public static final int GrailTablet_Guidance = 41;
@@ -665,8 +705,19 @@ public final class BlockConstants {
             Tablet_HT_ClothToMakeTheTreasure
     );
 
-    public static final int Email00 = 0x1ac;
-    public static final int Email01 = 0x1ad;
+    public static final int MantraTablet_BIRTH = 1021; // 0x3fd
+    public static final int MantraTablet_DEATH = 1022; // 0x3fe
+    public static final int MantraTablet_MARDUK = 223;
+    public static final int MantraTablet_SABBAT = 200;
+    public static final int MantraTablet_MU = 172;
+    public static final int MantraTablet_VIY = 153;
+    public static final int MantraTablet_BAHRUN = 313;
+    public static final int MantraTablet_WEDJET = 115;
+    public static final int MantraTablet_ABUTO = 282;
+    public static final int MantraTablet_LAMULANA = 72;
+
+    public static final int Email00 = 428; // 0x1ac
+    public static final int Email01 = 429; // 0x1ad
     public static final int Email02 = 715;
     public static final int Email03 = 963;
     public static final int Email04 = 365;
