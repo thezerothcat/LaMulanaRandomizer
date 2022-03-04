@@ -431,6 +431,10 @@ public class FileUtils {
                         customPlacementData.setCustomized(true);
                         customPlacementData.setAutomaticMantras(true);
                     }
+                    else if (line.equals("Enable Custom Only Mode")) {
+                        customPlacementData.setCustomized(true);
+                        customPlacementData.setCustomOnlyMode(true);
+                    }
                     else if (line.equals("Alternate Mother Ankh")) {
                         customPlacementData.setCustomized(true);
                         customPlacementData.setAlternateMotherAnkh(true);

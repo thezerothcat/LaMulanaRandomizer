@@ -32,6 +32,10 @@ public class TabbedPanel extends JTabbedPane {
             eventPanel = new EventPanel(this);
             addTab(Translations.getText("settings.event.fools2021"), eventPanel);
         }
+        else if(HolidaySettings.isFools2022Mode()) {
+            eventPanel = new EventPanel(this);
+            addTab(Translations.getText("settings.event.fools2022"), eventPanel);
+        }
 
         randomizationPanel = new RandomizationPanel();
         addTab(Translations.getText("settings.items"), randomizationPanel);

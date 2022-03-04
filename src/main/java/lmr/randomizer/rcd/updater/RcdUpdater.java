@@ -747,6 +747,18 @@ public abstract class RcdUpdater {
     boolean updateBlob(GameObject blob) {
         return true;
     }
+    /*
+     * 0x45 - enemy-extinct-centimani (Object)
+     * 0- (50) (Probably non-functional, bugged drop amount)
+     * 1- (1) Drop Type
+     * 2- (0) Speed and Drop Amount
+     * 3- (50) Health
+     * 4- (20-32) Contact Damage
+     * 5- (30) Soul
+     * 6- (2-3) Proj Speed
+     * 7- (3-8) Proj Health
+     * 8- (10-16) Proj Damage
+     */
     boolean updateHekatonkheires(GameObject hekatonkheires) {
         return true;
     }

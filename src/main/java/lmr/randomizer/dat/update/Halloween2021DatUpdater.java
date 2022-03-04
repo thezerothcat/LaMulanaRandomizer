@@ -44,7 +44,7 @@ public class Halloween2021DatUpdater extends DatUpdater {
     }
 
     @Override
-    public void updateEmailBlock(Block emailBlock) {
+    public void updateEmailBlock(Block emailBlock, int mailNumber) {
         List<BlockContents> blockContents = emailBlock.getBlockContents();
 
         if(emailBlock.getBlockNumber() == BlockConstants.Email00) {

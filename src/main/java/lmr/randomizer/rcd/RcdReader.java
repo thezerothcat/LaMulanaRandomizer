@@ -277,6 +277,9 @@ public final class RcdReader {
         if(object.getId() == ObjectIdConstants.Enemy_Skeleton) {
             return new Skeleton(object);
         }
+        if(object.getId() == ObjectIdConstants.OneWayDoor) {
+            return new OneWayDoor(object);
+        }
         if(object.getId() == ObjectIdConstants.Hitbox) {
             return new Hitbox(object);
         }

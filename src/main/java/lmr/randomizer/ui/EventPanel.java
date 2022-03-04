@@ -23,7 +23,7 @@ public class EventPanel extends JPanel {
     public EventPanel(TabbedPanel tabbedPanel) {
         super(new MigLayout("fillx, wrap"));
 
-        if (HolidaySettings.isHalloween2019Mode() || HolidaySettings.isHalloween2021Mode() || HolidaySettings.isFools2020Mode()) {
+        if (HolidaySettings.isHalloween2019Mode() || HolidaySettings.isHalloween2021Mode() || HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2022Mode()) {
             holidayMode = new JCheckBox();
             holidayMode.setSelected(true);
             holidayMode.setEnabled(false);
@@ -60,7 +60,7 @@ public class EventPanel extends JPanel {
         }
 
         CheckboxContainer checkboxContainer = new CheckboxContainer(1);
-        if (HolidaySettings.isHalloween2019Mode() || HolidaySettings.isHalloween2021Mode() || HolidaySettings.isFools2020Mode()) {
+        if (HolidaySettings.isHalloween2019Mode() || HolidaySettings.isHalloween2021Mode() || HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2022Mode()) {
             checkboxContainer.add(holidayMode);
         }
         if(HolidaySettings.isHalloween2019Mode()) {
@@ -80,7 +80,7 @@ public class EventPanel extends JPanel {
         }
         add(checkboxContainer, "growx, wrap");
 
-        if(HolidaySettings.isHalloweenMode() || HolidaySettings.isFools2020Mode()) {
+        if(HolidaySettings.isHalloweenMode() || HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2022Mode()) {
             graphicsPack = new JTextField(Settings.getGraphicsPack());
             graphicsPackLabel = new JLabel(Translations.getText("settings.graphicsPack"));
 
@@ -125,7 +125,11 @@ public class EventPanel extends JPanel {
             holidayOption2.setText(Translations.getText("randomization.npc.fools2021"));
             fools2021Pt3.setText(Translations.getText("gameplay.fools2021"));
         }
-        if(HolidaySettings.isHalloweenMode() || HolidaySettings.isFools2020Mode()) {
+        else if(HolidaySettings.isFools2022Mode()) {
+            holidayMode.setText(Translations.getText("event.fools2022"));
+        }
+
+        if(HolidaySettings.isHalloweenMode() || HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2022Mode()) {
             graphicsPackLabel.setText(Translations.getText("settings.graphicsPack"));
             chooseGraphicsButton.setText(Translations.getText("button.browse"));
         }

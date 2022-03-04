@@ -86,6 +86,10 @@ public class ItemRandomizer {
     }
 
     public boolean placeNoRequirementItems(List<String> items, Random random) {
+        if(DataFromFile.getCustomPlacementData().isCustomOnlyMode()) {
+            return true;
+        }
+
         List<String> initialUnassignedNonShopLocations = new ArrayList<>(DataFromFile.getInitialNonShopItemLocations());
         initialUnassignedNonShopLocations.removeAll(Settings.getCurrentCursedChests());
         initialUnassignedNonShopLocations.removeAll(mapOfItemLocationToItem.keySet());
@@ -238,12 +242,15 @@ public class ItemRandomizer {
     }
 
     public boolean placeAllItems(Random random) {
-        while(!unplacedItems.isEmpty()) {
-            int availableLocations = unassignedNonShopItemLocations.size() + shopRandomizer.getUnassignedShopItemLocations().size();
-            if(!placeItem(getRandomItem(unplacedItems, random), availableLocations, random)) {
-                return false;
+        if(!DataFromFile.getCustomPlacementData().isCustomOnlyMode()) {
+            while(!unplacedItems.isEmpty()) {
+                int availableLocations = unassignedNonShopItemLocations.size() + shopRandomizer.getUnassignedShopItemLocations().size();
+                if(!placeItem(getRandomItem(unplacedItems, random), availableLocations, random)) {
+                    return false;
+                }
             }
         }
+
         shopRandomizer.updateNeburShop();
         return true;
     }

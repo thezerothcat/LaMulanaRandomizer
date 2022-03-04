@@ -19,12 +19,12 @@ public class Fools2021DatUpdater extends DatUpdater {
 
     @Override
     public void updateFootOfFutoScannableBlock(ScannableBlock scannableBlock) {
-        String hintText = String.format(Translations.getText("event.fools2021.giants"), Settings.getCurrentGiant(), Settings.getCurrentGiant());
+        String hintText = String.format(Translations.getText("hintText.giants"), Settings.getCurrentGiant(), Settings.getCurrentGiant());
         scannableBlock.setScanText(buildTextEntry(hintText));
     }
 
     @Override
-    public void updateEmailBlock(Block emailBlock) {
+    public void updateEmailBlock(Block emailBlock, int mailNumber) {
         List<BlockContents> blockContents = emailBlock.getBlockContents();
         blockContents.clear();
         for (Short singleCharacter : FileUtils.stringToData(Translations.getText("event.fools2021.mailTitle"))) {

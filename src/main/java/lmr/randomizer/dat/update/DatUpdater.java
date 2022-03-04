@@ -29,6 +29,8 @@ public abstract class DatUpdater {
         updateGrailPoints(datFileData.getGrailPointBlock());
         updateHTMapNamesLimitedBlock(datFileData.getHTMapNamesLimitedBlock());
         updateFootOfFutoScannableBlock(datFileData.getFootOfFutoScannableBlock());
+        updateTowerOfTheGoddessSnapshotsScanBlock(datFileData.getTowerOfTheGoddessSnapshotsScanBlock());
+        updateTowerOfRuinSnapshotsScanBlock(datFileData.getTowerOfRuinSnapshotsScanBlock());
 
         updateFairyQueenFirstConversationBlock(datFileData.getFairyQueenFirstConversationBlock());
         updateFairyQueenWhenTheTimeComesConversationBlock(datFileData.getFairyQueenWhenTheTimeComesConversationBlock());
@@ -44,10 +46,13 @@ public abstract class DatUpdater {
         updatePepperConversationBlock(datFileData.getPepperConversationBlock());
         updateAnchorConversationBlock(datFileData.getAnchorConversationBlock());
         updateXmailerConversationBlock(datFileData.getXmailerConversationBlock());
+        updateXelpudHeldItemPepperBlock(datFileData.getXelpudHeldItemPepperBlock());
         updateXelpudTalismanConversationBlock(datFileData.getXelpudTalismanConversationBlock());
         updateXelpudPillarConversationBlock(datFileData.getXelpudPillarConversationBlock());
+        updateXelpudMSX2ConversationBlock(datFileData.getXelpudMSX2ConversationBlock());
         updateMulanaTalismanConversationBlock(datFileData.getMulanaTalismanConversationBlock());
         updateBookOfTheDeadConversationBlock(datFileData.getBookOfTheDeadConversationBlock());
+        updateBookOfTheDeadRepeatConversationBlock(datFileData.getBookOfTheDeadRepeatConversationBlock());
         updateProvocativeBathingSuitConversationBlock(datFileData.getProvocativeBathingSuitConversationBlock());
 
         updateHinerConversationBlock(datFileData.getHinerConversationBlock());
@@ -154,8 +159,9 @@ public abstract class DatUpdater {
         updateMulbrukScoreCheckBlock(datFileData.getMulbrukScoreCheckBlock());
         updateMulbrukRandomBlocks(datFileData.getMulbrukRandomBlocks());
         updateMulbrukSpriteBlock(datFileData.getMulbrukSpriteBlock());
-        for(Block emailBlock : datFileData.getEmailBlocks()) {
-            updateEmailBlock(emailBlock);
+        for(int mailNumber = 0; mailNumber < datFileData.getOrderedEmailBlocks().size(); mailNumber++) {
+            Block emailBlock = datFileData.getOrderedEmailBlocks().get(mailNumber);
+            updateEmailBlock(emailBlock, mailNumber);
         }
         for(MapGraphicsBlock mapGraphicsBlock : datFileData.getMapGraphicsBlocks()) {
             updateMapGraphicsBlock(mapGraphicsBlock);
@@ -164,6 +170,7 @@ public abstract class DatUpdater {
         for(ScannableBlock customizableTabletBlock : datFileData.getCustomizableTabletBlocks()) {
             updateScannableBlock(customizableTabletBlock);
         }
+        updateLaptopScannableBlock(datFileData.getLaptopScannableBlock());
         updateSurfaceMapScannableBlock(datFileData.getSurfaceMapScannableBlock());
     }
 
@@ -179,7 +186,7 @@ public abstract class DatUpdater {
         return textEntry;
     }
 
-    protected TextEntry buildTextEntryWithCommands(String textToUse) {
+    protected static TextEntry buildTextEntryWithCommands(String textToUse) {
         TextEntry textEntry = new TextEntry();
         for(String section : extractSections(textToUse)) {
             if(section.startsWith("{COLOR=")) {
@@ -189,6 +196,9 @@ public abstract class DatUpdater {
             else if(section.startsWith("{MANTRA=")) {
                 textEntry.getData().addAll(
                         getMantra(section.replaceAll("\\{MANTRA=", "").replaceAll("}", "")).getRawData());
+            }
+            else if(section.equals("{PAGE}")) {
+                textEntry.getData().add(BlockDataConstants.Cls);
             }
             else if(section.startsWith("{ITEM=")) {
                 BlockItemData itemData = getItem(section.replaceAll("\\{ITEM=", "").replaceAll("}", ""));
@@ -203,12 +213,15 @@ public abstract class DatUpdater {
         return textEntry;
     }
 
-    protected List<Short> buildRawDataWithCommands(String textToUse) {
+    protected static List<Short> buildRawDataWithCommands(String textToUse) {
         List<Short> rawData = new ArrayList<>();
         for(String section : extractSections(textToUse)) {
             if(section.startsWith("{COLOR=")) {
                 rawData.addAll(
                         getColor(section.replaceAll("\\{COLOR=", "").replaceAll("}", "")).getRawData());
+            }
+            else if(section.equals("{PAGE}")) {
+                rawData.add(BlockDataConstants.Cls);
             }
             else if(section.startsWith("{MANTRA=")) {
                 rawData.addAll(
@@ -220,6 +233,12 @@ public abstract class DatUpdater {
                     rawData.addAll(itemData.getRawData());
                 }
             }
+            else if(section.startsWith("{FLAG ")) {
+                BlockFlagData flagData = getFlag(section.replaceAll("\\{FLAG ", "").replaceAll("}", ""));
+                if(flagData != null) {
+                    rawData.addAll(flagData.getRawData());
+                }
+            }
             else {
                 rawData.addAll(FileUtils.stringToData(section));
             }
@@ -227,7 +246,7 @@ public abstract class DatUpdater {
         return rawData;
     }
 
-    private List<String> extractSections(String originalText) {
+    private static List<String> extractSections(String originalText) {
         List<String> tokens = new ArrayList<>();
         int specialDataStartIndex;
         int specialDataEndIndex;
@@ -246,7 +265,7 @@ public abstract class DatUpdater {
         return tokens;
     }
 
-    private BlockColorsData getColor(String color) {
+    private static BlockColorsData getColor(String color) {
         if(color != null) {
             color = color.toUpperCase();
             if("MANTRA".equals(color)) {
@@ -264,11 +283,29 @@ public abstract class DatUpdater {
             if(color.contains("SOFTWARE") || "YELLOW".equals(color)) {
                 return BlockColorsData.COLOR_SOFTWARE_YELLOW;
             }
+            String[] rgb = color.split("-");
+            if(rgb.length == 3) {
+                return new BlockColorsData(getDecimalOrHex(rgb[0]), getDecimalOrHex(rgb[1]), getDecimalOrHex(rgb[2]));
+            }
         }
         return BlockColorsData.COLOR_DEFAULT;
     }
 
-    private BlockMantraData getMantra(String mantra) {
+    private static int getDecimalOrHex(String decimalOrHex) {
+        if(decimalOrHex.startsWith("0x")) {
+            decimalOrHex = decimalOrHex.replaceAll("^0x", "");
+            return Integer.parseInt(decimalOrHex, 16);
+        }
+
+        try {
+            return Integer.parseInt(decimalOrHex);
+        }
+        catch(NumberFormatException ex) {
+            return Integer.parseInt(decimalOrHex, 16);
+        }
+    }
+
+    private static BlockMantraData getMantra(String mantra) {
         if(mantra != null) {
             mantra = mantra.toUpperCase();
             if("BIRTH".equals(mantra) || "0".equals(mantra)) {
@@ -305,7 +342,7 @@ public abstract class DatUpdater {
         return new BlockMantraData(MantraConstants.BIRTH);
     }
 
-    private BlockItemData getItem(String item) {
+    private static BlockItemData getItem(String item) {
         if(item != null) {
             GameObjectId itemInfo = DataFromFile.getMapOfItemToUsefulIdentifyingRcdData().get(item);
             if(itemInfo != null) {
@@ -315,7 +352,17 @@ public abstract class DatUpdater {
         return null;
     }
 
-    protected void replaceText(List<BlockContents> blockContentsList, String textToReplace, String replacement) {
+    private static BlockFlagData getFlag(String flag) {
+        if(flag != null) {
+            String[] indexAndValue = flag.split("=");
+            if(indexAndValue.length == 2) {
+                return new BlockFlagData(getDecimalOrHex(indexAndValue[0]), getDecimalOrHex(indexAndValue[1]));
+            }
+        }
+        return null;
+    }
+
+    protected static void replaceText(List<BlockContents> blockContentsList, String textToReplace, String replacement) {
         List<BlockContents> keptBlockContents = new ArrayList<>();
         String temp = "";
         for(BlockContents blockContents : blockContentsList) {
@@ -405,16 +452,21 @@ public abstract class DatUpdater {
     void updateHTMapNamesLimitedBlock(MapNamesLimitedBlock mapNamesLimitedBlock) { }
 
     void updateFootOfFutoScannableBlock(ScannableBlock scannableBlock) { }
+    void updateTowerOfTheGoddessSnapshotsScanBlock(Block snapshotsScanBlock) { }
+    void updateTowerOfRuinSnapshotsScanBlock(Block snapshotsScanBlock) { }
 
     void updateMekuriConversationBlock(Block conversationBlock) { }
     void updateMiniDollConversationBlock(Block conversationBlock) { }
     void updatePepperConversationBlock(Block conversationBlock) { }
     void updateAnchorConversationBlock(Block conversationBlock) { }
     void updateXmailerConversationBlock(Block conversationBlock) { }
+    void updateXelpudHeldItemPepperBlock(Block conversationBlock) { }
     void updateXelpudTalismanConversationBlock(Block conversationBlock) { }
     void updateXelpudPillarConversationBlock(Block conversationBlock) { }
+    void updateXelpudMSX2ConversationBlock(Block conversationBlock) { }
     void updateMulanaTalismanConversationBlock(Block conversationBlock) { }
     void updateBookOfTheDeadConversationBlock(Block conversationBlock) { }
+    void updateBookOfTheDeadRepeatConversationBlock(Block conversationBlock) { }
     void updateProvocativeBathingSuitConversationBlock(Block conversationBlock) { }
 
     void updateNeburShopBlock(ShopBlock shopBlock) { }
@@ -528,9 +580,10 @@ public abstract class DatUpdater {
     void updateMulbrukRandomBlocks(List<Block> randomBlocks) { }
     void updateMulbrukSpriteBlock(Block spriteBlock) { }
 
-    void updateEmailBlock(Block emailBlock) { }
+    void updateEmailBlock(Block emailBlock, int mailNumber) { }
     void updateMapGraphicsBlock(MapGraphicsBlock mapGraphicsBlock) { }
     void updateScannableBlock(ScannableBlock scannableBlock) { }
+    void updateLaptopScannableBlock(Block scannableBlock) { }
     void updateSurfaceMapScannableBlock(Block scannableBlock) { }
 
     protected void updateShopBlock(ShopBlock shopBlock, ShopInventory shopInventory) {

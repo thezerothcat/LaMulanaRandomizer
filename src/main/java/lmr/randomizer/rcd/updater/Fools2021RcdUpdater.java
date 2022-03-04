@@ -39,6 +39,29 @@ public class Fools2021RcdUpdater extends RcdUpdater {
             return true;
         }
         Screen screen = (Screen)objectContainer;
+        updateDaisForGiantsPuzzle(dais, screen);
+
+        if (screen.getZoneIndex() == 10 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 0) {
+            // Adjust dais for Illusion skeleton
+            if(dais.getY() == 340) {
+                dais.getTestByteOperations().clear();
+                dais.getWriteByteOperations().clear();
+
+                if(dais.getX() == 280) {
+                    dais.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_0, ByteOp.FLAG_EQUALS, 0));
+                    dais.getTestByteOperations().add(new TestByteOperation(FlagConstants.ILLUSION_PROGRESS_SKELETON_DAIS_TO_ELEVATOR, ByteOp.FLAG_EQUALS, 0));
+                    dais.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_0, ByteOp.ASSIGN_FLAG, 1));
+                    dais.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.ILLUSION_PROGRESS_SKELETON_DAIS_TO_ELEVATOR, ByteOp.ASSIGN_FLAG, 1));
+                }
+                else {
+                    dais.getArgs().set(2, (short)0);
+                }
+            }
+        }
+        return true;
+    }
+
+    private void updateDaisForGiantsPuzzle(GameObject dais, Screen screen) {
         if(screen.getZoneIndex() == 2) {
             // Adjust dais for "foot of Futo" puzzle. Zebu handled separately.
             if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
@@ -152,25 +175,6 @@ public class Fools2021RcdUpdater extends RcdUpdater {
                 }
             }
         }
-
-        if (screen.getZoneIndex() == 10 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 0) {
-            // Adjust dais for Illusion skeleton
-            if(dais.getY() == 340) {
-                dais.getTestByteOperations().clear();
-                dais.getWriteByteOperations().clear();
-
-                if(dais.getX() == 280) {
-                    dais.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_0, ByteOp.FLAG_EQUALS, 0));
-                    dais.getTestByteOperations().add(new TestByteOperation(FlagConstants.ILLUSION_PROGRESS_SKELETON_DAIS_TO_ELEVATOR, ByteOp.FLAG_EQUALS, 0));
-                    dais.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.SCREEN_FLAG_0, ByteOp.ASSIGN_FLAG, 1));
-                    dais.getWriteByteOperations().add(new WriteByteOperation(FlagConstants.ILLUSION_PROGRESS_SKELETON_DAIS_TO_ELEVATOR, ByteOp.ASSIGN_FLAG, 1));
-                }
-                else {
-                    dais.getArgs().set(2, (short)0);
-                }
-            }
-        }
-        return true;
     }
 
     @Override
@@ -455,6 +459,10 @@ public class Fools2021RcdUpdater extends RcdUpdater {
             return true;
         }
         Screen screen = (Screen)objectContainer;
+        return updateExtendableSpikesForGiantsPuzzle(extendableSpikes, screen);
+    }
+
+    private boolean updateExtendableSpikesForGiantsPuzzle(GameObject extendableSpikes, Screen screen) {
         // Adjust spikes for "foot of Futo" puzzle, if using a different giant. Zebu and Futo handled separately.
         if(screen.getZoneIndex() == 2) {
             if(screen.getRoomIndex() == 7 && screen.getScreenIndex() == 0) {
@@ -696,7 +704,7 @@ public class Fools2021RcdUpdater extends RcdUpdater {
     @Override
     void addUntrackedCustomPositionObjects(Screen screen, int zoneIndex, int roomIndex, int screenIndex) {
         AddObject.addCustomItemGives(screen, ItemConstants.SOFTWARE_XMAILER,
-                FlagConstants.CUSTOM_ESCAPE_TIMER_STATE, 0, FlagConstants.CUSTOM_XMAILER_RECEIVED, 1);
+                FlagConstants.CUSTOM_FOOLS2021_ESCAPE_TIMER_STATE, 0, FlagConstants.CUSTOM_FOOLS2021_XMAILER_RECEIVED, 1);
 
         if(zoneIndex == 0) {
             if(roomIndex == 0 && screenIndex == 0) {
@@ -863,46 +871,50 @@ public class Fools2021RcdUpdater extends RcdUpdater {
             }
         }
         else if(zoneIndex == 2) {
-            // Add success sound to any screen except Futo/Migela (who already have one) or Zebu (who is addressed separately)
-            if(roomIndex == 7 && screenIndex == 1) {
-                if("Bado".equals(Settings.getCurrentGiant())) {
-                    AddObject.addSuccessSound(screen, Arrays.asList(
-                            new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
-                            new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
-                            new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
-                }
+            addSuccessSoundsForGiantsPuzzle(screen, roomIndex, screenIndex);
+        }
+    }
+
+    private void addSuccessSoundsForGiantsPuzzle(Screen screen, int roomIndex, int screenIndex) {
+        // Add success sound to any screen except Futo/Migela (who already have one) or Zebu (who is addressed separately)
+        if(roomIndex == 7 && screenIndex == 1) {
+            if("Bado".equals(Settings.getCurrentGiant())) {
+                AddObject.addSuccessSound(screen, Arrays.asList(
+                        new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
+                        new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
             }
-            else if(roomIndex == 7 && screenIndex == 2) {
-                if("Ledo".equals(Settings.getCurrentGiant())) {
-                    AddObject.addSuccessSound(screen, Arrays.asList(
-                            new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
-                            new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
-                            new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
-                }
+        }
+        else if(roomIndex == 7 && screenIndex == 2) {
+            if("Ledo".equals(Settings.getCurrentGiant())) {
+                AddObject.addSuccessSound(screen, Arrays.asList(
+                        new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
+                        new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
             }
-            else if(roomIndex == 8 && screenIndex == 0) {
-                if("Abuto".equals(Settings.getCurrentGiant())) {
-                    AddObject.addSuccessSound(screen, Arrays.asList(
-                            new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
-                            new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
-                            new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
-                }
+        }
+        else if(roomIndex == 8 && screenIndex == 0) {
+            if("Abuto".equals(Settings.getCurrentGiant())) {
+                AddObject.addSuccessSound(screen, Arrays.asList(
+                        new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
+                        new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
             }
-            else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
-                if("Sakit".equals(Settings.getCurrentGiant()) || "Ji".equals(Settings.getCurrentGiant())) {
-                    AddObject.addSuccessSound(screen, Arrays.asList(
-                            new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
-                            new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
-                            new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
-                }
+        }
+        else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 1) {
+            if("Sakit".equals(Settings.getCurrentGiant()) || "Ji".equals(Settings.getCurrentGiant())) {
+                AddObject.addSuccessSound(screen, Arrays.asList(
+                        new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
+                        new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
             }
-            else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 2) {
-                if("Ribu".equals(Settings.getCurrentGiant())) {
-                    AddObject.addSuccessSound(screen, Arrays.asList(
-                            new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
-                            new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
-                            new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
-                }
+        }
+        else if(screen.getRoomIndex() == 8 && screen.getScreenIndex() == 2) {
+            if("Ribu".equals(Settings.getCurrentGiant())) {
+                AddObject.addSuccessSound(screen, Arrays.asList(
+                        new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2),
+                        new TestByteOperation(FlagConstants.MAUSOLEUM_PUZZLE_ORB_CHEST, ByteOp.FLAG_EQUALS, 1),
+                        new TestByteOperation(FlagConstants.SCREEN_FLAG_B, ByteOp.FLAG_EQUALS, 1)));
             }
         }
     }

@@ -254,6 +254,33 @@ public class FlagTimerUpdates {
         return false;
     }
 
+    private static boolean isMail43Timer(GameObject flagTimer) {
+        for(WriteByteOperation flagUpdate : flagTimer.getWriteByteOperations()) {
+            int flagIndex = flagUpdate.getIndex();
+            if(flagIndex == FlagConstants.MAIL_43) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isBossDefeatedTimer(GameObject flagTimer) {
+        for(WriteByteOperation flagUpdate : flagTimer.getWriteByteOperations()) {
+            int flagIndex = flagUpdate.getIndex();
+            if(flagIndex == FlagConstants.BOSSES_DEFEATED_COUNT_AMPHISBAENA
+                    || flagIndex == FlagConstants.BOSSES_DEFEATED_COUNT_SAKIT
+                    || flagIndex == FlagConstants.BOSSES_DEFEATED_COUNT_ELLMAC
+                    || flagIndex == FlagConstants.BOSSES_DEFEATED_COUNT_BAHAMUT
+                    || flagIndex == FlagConstants.BOSSES_DEFEATED_COUNT_VIY
+                    || flagIndex == FlagConstants.BOSSES_DEFEATED_COUNT_PALENQUE
+                    || flagIndex == FlagConstants.BOSSES_DEFEATED_COUNT_BAPHOMET
+                    || flagIndex == FlagConstants.BOSSES_DEFEATED_COUNT_TIAMAT) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static boolean isMapCountUpdateTimer(GameObject flagTimer) {
         for(WriteByteOperation flagUpdate : flagTimer.getWriteByteOperations()) {
             int flagIndex = flagUpdate.getIndex();

@@ -15,10 +15,10 @@ public final class Translations {
 
     public static void initTranslations() throws IOException {
         baseTranslations = new Properties();
-        loadTranslations(baseTranslations, "en");
+        loadInternalTranslations(baseTranslations, "lang", "en");
         if("jp".equals(Settings.getLanguage())) {
             Properties jpTranslations = new Properties(baseTranslations);
-            loadTranslations(jpTranslations, "jp");
+            loadInternalTranslations(jpTranslations, "lang", "jp");
             loadCustomTranslations(jpTranslations);
         }
         else {
@@ -30,7 +30,7 @@ public final class Translations {
         if("jp".equals(Settings.getLanguage())) {
             Properties jpTranslations = new Properties(baseTranslations);
             try {
-                loadTranslations(jpTranslations, "jp");
+                loadInternalTranslations(jpTranslations, "lang", "jp");
                 loadCustomTranslations(jpTranslations);
             }
             catch(IOException ex) {
@@ -68,21 +68,24 @@ public final class Translations {
         return baseTranslations.getProperty("npcl." + locationKey) + "" + baseTranslations.getProperty("npc." + npcKey);
     }
 
-    protected static void loadTranslations(Properties toLoad, String langCode) throws IOException {
+    protected static void loadInternalTranslations(Properties toLoad, String baseFilename, String langCode) throws IOException {
         try {
             toLoad.load(new InputStreamReader(new FileInputStream(String.format(
-                    "src/main/resources/lmr/randomizer/lang/lang_%s.properties", langCode)), "UTF-8"));
+                    "src/main/resources/lmr/randomizer/lang/%s_%s.properties", baseFilename, langCode)), "UTF-8"));
         }
         catch (Exception ex) {
             toLoad.load(new InputStreamReader(FileUtils.class.getResourceAsStream(
-                    String.format("lang/lang_%s.properties", langCode)), "UTF-8"));
+                    String.format("lang/%s_%s.properties", baseFilename, langCode)), "UTF-8"));
         }
     }
 
     protected static void loadCustomTranslations(Properties defaultProperties) throws IOException {
         try {
             allTranslations = new Properties(defaultProperties);
-            if ((new File("custom-text.properties").exists())) {
+            if(HolidaySettings.isFools2022Mode()) {
+                loadInternalTranslations(allTranslations, "fools2022", "en");
+            }
+            else if ((new File("custom-text.properties").exists())) {
                 allTranslations.load(new InputStreamReader(new FileInputStream("custom-text.properties"), "UTF-8"));
             }
         }

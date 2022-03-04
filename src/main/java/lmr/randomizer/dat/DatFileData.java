@@ -36,6 +36,12 @@ public class DatFileData {
     public ScannableBlock getFootOfFutoScannableBlock() {
         return (ScannableBlock)datFileEntries.get(BlockConstants.FootOfFuto);
     }
+    public Block getTowerOfTheGoddessSnapshotsScanBlock() {
+        return datFileEntries.get(BlockConstants.SnapshotsScan_TowerOfTheGoddess);
+    }
+    public Block getTowerOfRuinSnapshotsScanBlock() {
+        return datFileEntries.get(BlockConstants.SnapshotsScan_TowerOfRuin);
+    }
     public Block getFairyQueenFirstConversationBlock() {
         return datFileEntries.get(BlockConstants.FairyQueenFirstConversation);
     }
@@ -57,11 +63,17 @@ public class DatFileData {
     public Block getXmailerConversationBlock() {
         return datFileEntries.get(BlockConstants.ItemConversationXmailer);
     }
+    public Block getXelpudHeldItemPepperBlock() {
+        return datFileEntries.get(BlockConstants.XelpudHeldItemConversation_Pepper);
+    }
     public Block getXelpudTalismanConversationBlock() {
         return datFileEntries.get(BlockConstants.XelpudTalismanConversation);
     }
     public Block getXelpudPillarConversationBlock() {
         return datFileEntries.get(BlockConstants.XelpudPillarConversation);
+    }
+    public Block getXelpudMSX2ConversationBlock() {
+        return datFileEntries.get(BlockConstants.XelpudMSX2Conversation);
     }
     public Block getMulanaTalismanConversationBlock() {
         return datFileEntries.get(BlockConstants.ItemConversationMulanaTalisman);
@@ -86,6 +98,9 @@ public class DatFileData {
     }
     public Block getBookOfTheDeadConversationBlock() {
         return datFileEntries.get(BlockConstants.ItemConversationBookOfTheDead);
+    }
+    public Block getBookOfTheDeadRepeatConversationBlock() {
+        return datFileEntries.get(BlockConstants.RepeatConversationBookOfTheDead);
     }
     public Block getHinerConversationBlock() {
         return datFileEntries.get(BlockConstants.NpcConversation_Hiner);
@@ -152,6 +167,9 @@ public class DatFileData {
     }
     public Block getSurfaceMapScannableBlock() {
         return datFileEntries.get(BlockConstants.ItemConversationMapSurface);
+    }
+    public Block getLaptopScannableBlock() {
+        return datFileEntries.get(BlockConstants.Scannable_Laptop);
     }
     public ShopBlock getNeburShopBlock() {
         return (ShopBlock)datFileEntries.get(BlockConstants.ShopBlockNebur);
@@ -393,7 +411,7 @@ public class DatFileData {
     public Block getMulbrukSpriteBlock() {
         return datFileEntries.get(BlockConstants.Sprite_Mulbruk);
     }
-    public List<Block> getEmailBlocks() {
+    public List<Block> getOrderedEmailBlocks() {
         List<Block> emailBlocks = new ArrayList<>();
         emailBlocks.add(datFileEntries.get(BlockConstants.Email00));
         emailBlocks.add(datFileEntries.get(BlockConstants.Email01));

@@ -1413,13 +1413,13 @@ public class BaseRcdUpdater extends RcdUpdater {
                     int zone = screen.getZoneIndex();
                     if(zone == ZoneConstants.SURFACE) {
                         // Surface => Tower of the Goddess ("Door: F5")
-                        AddObject.addMissingBacksideDoorCover(warpDoor, FlagConstants.VIY_GATE_OPEN);
+                        AddObject.addMissingBacksideDoorGate(warpDoor, FlagConstants.VIY_GATE_OPEN);
                     }
                     else if(zone == ZoneConstants.EXTINCTION) {
                         if(screen.getRoomIndex() != 7) {
                             // Chamber of Extinction [Magatama Left] => Chamber of Birth [Northeast] ("Door: F6")
-                            AddObject.addMissingBacksideDoorTimerAndSound(screen, FlagConstants.PALENQUE_STATE, FlagConstants.PALENQUE_GATE_OPEN);
-                            AddObject.addMissingBacksideDoorCover(warpDoor, FlagConstants.PALENQUE_GATE_OPEN);
+                            AddObject.addMissingBacksideDoorGateTimerAndSound(screen, FlagConstants.PALENQUE_STATE, FlagConstants.PALENQUE_GATE_OPEN);
+                            AddObject.addMissingBacksideDoorGate(warpDoor, FlagConstants.PALENQUE_GATE_OPEN);
                             AddObject.addMissingBacksideMirrorTimerAndSound(warpDoor.getObjectContainer(), FlagConstants.PALENQUE_GATE_MIRROR_COVER);
                             AddObject.addMissingBacksideDoorMirrorCoverGraphic(warpDoor, FlagConstants.PALENQUE_GATE_MIRROR_COVER, true);
                         }
@@ -1427,8 +1427,8 @@ public class BaseRcdUpdater extends RcdUpdater {
                     else if(zone == ZoneConstants.RUIN) {
                         if(screen.getRoomIndex() != 2) {
                             // Tower of Ruin [Top] => Inferno Cavern [Spikes] ("Door: B7")
-                            AddObject.addMissingBacksideDoorTimerAndSound(screen, FlagConstants.BAPHOMET_STATE, FlagConstants.BAPHOMET_GATE_OPEN);
-                            AddObject.addMissingBacksideDoorCover(warpDoor, FlagConstants.BAPHOMET_GATE_OPEN);
+                            AddObject.addMissingBacksideDoorGateTimerAndSound(screen, FlagConstants.BAPHOMET_STATE, FlagConstants.BAPHOMET_GATE_OPEN);
+                            AddObject.addMissingBacksideDoorGate(warpDoor, FlagConstants.BAPHOMET_GATE_OPEN);
                             AddObject.addMissingBacksideMirrorTimerAndSound(warpDoor.getObjectContainer(), FlagConstants.BAPHOMET_GATE_MIRROR_COVER);
                             AddObject.addMissingBacksideDoorMirrorCoverGraphic(warpDoor, FlagConstants.BAPHOMET_GATE_MIRROR_COVER, false);
                         }

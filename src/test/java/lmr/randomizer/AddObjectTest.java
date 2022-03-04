@@ -5221,7 +5221,7 @@ public class AddObjectTest {
     }
 
     @Test
-    public void testAddMissingBacksideDoorCover() {
+    public void testAddMissingBacksideDoorGate() {
         int x = 540;
         int y = 300;
         int gateFlag = 123;
@@ -5232,7 +5232,7 @@ public class AddObjectTest {
         backsideDoor.setY(y);
         screen.getObjects().add(backsideDoor);
 
-        AddObject.addMissingBacksideDoorCover(backsideDoor, gateFlag);
+        AddObject.addMissingBacksideDoorGate(backsideDoor, gateFlag);
 
         GameObject gameObject = screen.getObjects().get(0);
         Assert.assertTrue(gameObject == backsideDoor, "Positioned object should be added to end of objects list");
@@ -5274,12 +5274,12 @@ public class AddObjectTest {
     }
 
     @Test
-    public void testAddMissingBacksideDoorTimerAndSound() {
+    public void testAddMissingBacksideDoorGateTimerAndSound() {
         int bossFlag = 123;
         int gateFlag = 321;
         Screen screen = new Screen();
 
-        AddObject.addMissingBacksideDoorTimerAndSound(screen, bossFlag, gateFlag);
+        AddObject.addMissingBacksideDoorGateTimerAndSound(screen, bossFlag, gateFlag);
 
         GameObject gameObject = screen.getObjects().get(0);
         Assert.assertEquals(gameObject.getId(), 0x0b);
@@ -5884,10 +5884,9 @@ public class AddObjectTest {
         Assert.assertTrue(containsTest(gameObject, new TestByteOperation(0x102, ByteOp.FLAG_EQUALS, 8)));
         Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x102, ByteOp.ASSIGN_FLAG, 9)));
         Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x07b, ByteOp.ASSIGN_FLAG, 200)));
-        Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x06c, ByteOp.ASSIGN_FLAG, 0)));
         Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x2e1, ByteOp.ASSIGN_FLAG, 1)));
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 1);
-        Assert.assertEquals(gameObject.getWriteByteOperations().size(), 4);
+        Assert.assertEquals(gameObject.getWriteByteOperations().size(), 3);
 
         gameObject = screen.getObjects().get(1);
         Assert.assertEquals(gameObject.getId(), 0x0b);
@@ -5920,10 +5919,9 @@ public class AddObjectTest {
         Assert.assertTrue(containsTest(gameObject, new TestByteOperation(0x102, ByteOp.FLAG_EQUALS, 8)));
         Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x102, ByteOp.ASSIGN_FLAG, 9)));
         Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x07b, ByteOp.ASSIGN_FLAG, 200)));
-        Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x06c, ByteOp.ASSIGN_FLAG, 0)));
         Assert.assertTrue(containsUpdate(gameObject, new WriteByteOperation(0x2e1, ByteOp.ASSIGN_FLAG, 1)));
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 1);
-        Assert.assertEquals(gameObject.getWriteByteOperations().size(), 4);
+        Assert.assertEquals(gameObject.getWriteByteOperations().size(), 3);
 
         gameObject = screen.getObjects().get(1);
         Assert.assertEquals(gameObject.getId(), 0x0b);

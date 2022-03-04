@@ -897,7 +897,8 @@ public class Validation {
 
     private static boolean isValidContents(String contents) {
         if(DataFromFile.getAllItems().contains(contents)
-                || "Whip".equals(contents) || "Ankh Jewel (Extra)".equals(contents)) {
+                || "Whip".equals(contents) || "Ankh Jewel (Extra)".equals(contents)
+                || "Unlit Lamp of Time".equals(contents)) {
             return true;
         }
         if(DataFromFile.getAllCoinChests().contains(contents)

@@ -65,12 +65,18 @@ public final class AddObject {
     }
 
     public static void addFloatingItem(Screen screen, int x, int y, int itemArg, boolean realItem, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
-        FloatingItem obj = new FloatingItem(screen, x, y);
-        obj.setInventoryWord(itemArg);
-        obj.setRealItem(realItem);
+        FloatingItem obj = addFloatingItem(screen, x, y, itemArg, realItem);
         obj.getTestByteOperations().addAll(tests);
         obj.getWriteByteOperations().addAll(updates);
         screen.getObjects().add(obj);
+    }
+
+    public static FloatingItem addFloatingItem(Screen screen, int x, int y, int itemArg, boolean realItem) {
+        FloatingItem obj = new FloatingItem(screen, x, y);
+        obj.setInventoryWord(itemArg);
+        obj.setRealItem(realItem);
+        screen.getObjects().add(obj);
+        return obj;
     }
 
     /**
@@ -814,12 +820,18 @@ public final class AddObject {
         objectContainer.getObjects().add(0, mirrorTimer);
     }
 
-    public static GameObject addAnimatedDoorTimerAndSound(ObjectContainer objectContainer, int bossFlag, int gateFlag) {
+    public static GameObject addAnimatedDoorTimerAndSound(ObjectContainer objectContainer, Integer bossFlag, int gateFlag) {
+        return addAnimatedDoorTimerAndSound(objectContainer, new TestByteOperation(bossFlag, ByteOp.FLAG_GTEQ, 3), gateFlag, true);
+    }
+
+    public static GameObject addAnimatedDoorTimerAndSound(ObjectContainer objectContainer, TestByteOperation gateCondition, int gateFlag, boolean bronzeMirrorRequired) {
         FlagTimer doorTimer = new FlagTimer(objectContainer);
         doorTimer.setDelaySeconds(1);
 
-        doorTimer.getTestByteOperations().add(new TestByteOperation(bossFlag, ByteOp.FLAG_GTEQ, 3));
-        doorTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_BRONZE_MIRROR, ByteOp.FLAG_EQUALS, 2));
+        doorTimer.getTestByteOperations().add(gateCondition);
+        if(bronzeMirrorRequired) {
+            doorTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_BRONZE_MIRROR, ByteOp.FLAG_EQUALS, 2));
+        }
         doorTimer.getTestByteOperations().add(new TestByteOperation(gateFlag, ByteOp.FLAG_EQUALS, 0));
 
         doorTimer.getWriteByteOperations().add(new WriteByteOperation(gateFlag, ByteOp.ASSIGN_FLAG, 1));
@@ -1215,6 +1227,12 @@ public final class AddObject {
      * @param updates
      */
     public static void addPot(ObjectContainer screen, int x, int y, PotGraphic graphic, DropType dropType, int dropQuantity, List<TestByteOperation> tests, List<WriteByteOperation> updates) {
+        Pot addedPot = addPot(screen, x, y, graphic, dropType, dropQuantity);
+        addedPot.getTestByteOperations().addAll(tests);
+        addedPot.getWriteByteOperations().addAll(updates);
+    }
+
+    public static Pot addPot(ObjectContainer screen, int x, int y, PotGraphic graphic, DropType dropType, int dropQuantity) {
         Pot addedPot = new Pot(screen, x, y);
         addedPot.setDrops(dropType, dropQuantity);
         addedPot.setFlag(-1, 1);
@@ -1222,10 +1240,8 @@ public final class AddObject {
         addedPot.setSoundEffects(105, 35, 17);
         addedPot.setPitchShift(0);
 
-        addedPot.getTestByteOperations().addAll(tests);
-        addedPot.getWriteByteOperations().addAll(updates);
-
         screen.getObjects().add(addedPot);
+        return addedPot;
     }
 
     public static void addMoonlightFeatherlessPlatform(Screen screen) {
@@ -1507,7 +1523,7 @@ public final class AddObject {
         return grailTablet;
     }
 
-    public static GameObject addWarp(Screen screen, int warpX, int warpY, int width, int height, int destZone, int destRoom, int destScreen, int destX, int destY) {
+    public static WarpPortal addWarp(Screen screen, int warpX, int warpY, int width, int height, int destZone, int destRoom, int destScreen, int destX, int destY) {
         WarpPortal warp = new WarpPortal(screen, warpX, warpY);
         warp.setDestination(destZone, destRoom, destScreen, destX, destY);
         warp.setDimensions(width, height);
@@ -2188,7 +2204,7 @@ public final class AddObject {
         screen.getObjects().add(itemGive);
     }
 
-    public static GameObject addMissingBacksideDoorCover(GameObject backsideDoor, int gateFlag) {
+    public static GameObject addMissingBacksideDoorGate(GameObject backsideDoor, int gateFlag) {
         GraphicsTextureDraw doorCoverGraphic = new GraphicsTextureDraw(backsideDoor.getObjectContainer(), backsideDoor.getX(), backsideDoor.getY());
 
         doorCoverGraphic.setLayer(-1);
@@ -2213,7 +2229,7 @@ public final class AddObject {
         return doorCoverGraphic;
     }
 
-    public static GameObject addMissingBacksideDoorTimerAndSound(ObjectContainer objectContainer, int bossFlag, int gateFlag) {
+    public static GameObject addMissingBacksideDoorGateTimerAndSound(ObjectContainer objectContainer, int bossFlag, int gateFlag) {
         SoundEffect doorSoundEffect = new SoundEffect(objectContainer);
         doorSoundEffect.setSoundEffect(95);
         doorSoundEffect.setVolume(127, 127, 0);
@@ -2230,13 +2246,13 @@ public final class AddObject {
         objectContainer.getObjects().add(0, doorSoundEffect);
 
         return addSecondsTimer(objectContainer, 1,
-                Arrays.asList(
-                        new TestByteOperation(bossFlag, ByteOp.FLAG_GTEQ, 3),
-                        new TestByteOperation(FlagConstants.WF_BRONZE_MIRROR, ByteOp.FLAG_EQUALS, 2),
-                        new TestByteOperation(gateFlag, ByteOp.FLAG_EQUALS, 0)),
-                Arrays.asList(
-                        new WriteByteOperation(gateFlag, ByteOp.ASSIGN_FLAG, 1),
-                        new WriteByteOperation(FlagConstants.SCREEN_FLAG_29, ByteOp.ASSIGN_FLAG, 1)));
+            Arrays.asList(
+                    new TestByteOperation(bossFlag, ByteOp.FLAG_GTEQ, 3),
+                    new TestByteOperation(FlagConstants.WF_BRONZE_MIRROR, ByteOp.FLAG_EQUALS, 2),
+                    new TestByteOperation(gateFlag, ByteOp.FLAG_EQUALS, 0)),
+            Arrays.asList(
+                    new WriteByteOperation(gateFlag, ByteOp.ASSIGN_FLAG, 1),
+                    new WriteByteOperation(FlagConstants.SCREEN_FLAG_29, ByteOp.ASSIGN_FLAG, 1)));
     }
 
     public static GameObject addMissingBacksideMirrorTimerAndSound(ObjectContainer objectContainer, int mirrorCoverFlag) {
@@ -3376,7 +3392,6 @@ public final class AddObject {
                 Arrays.asList(
                         new WriteByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.ASSIGN_FLAG, 9),
                         new WriteByteOperation(FlagConstants.SCORE, ByteOp.ASSIGN_FLAG, 200),
-                        new WriteByteOperation(FlagConstants.TABLET_GRAIL_SHRINE_FRONT, ByteOp.ASSIGN_FLAG, 0),
                         new WriteByteOperation(FlagConstants.SURFACE_TRANSFORM_WIND_HOWLING, ByteOp.ASSIGN_FLAG, 1)));
     }
 
@@ -3449,7 +3464,7 @@ public final class AddObject {
     /**
      * Add 0x96 object
      */
-    public static void addExtendingSpikes(ObjectContainer objectContainer, int x, int y, int flagIndex) {
+    public static ExtendableSpikes addExtendingSpikes(ObjectContainer objectContainer, int x, int y, int flagIndex) {
         ExtendableSpikes extendingSpikes = new ExtendableSpikes(objectContainer, x, y);
 
         extendingSpikes.setLayer(0);
@@ -3497,6 +3512,8 @@ public final class AddObject {
         failPuzzleSound.getTestByteOperations().add(new TestByteOperation(flagIndex, ByteOp.FLAG_EQUALS, 1));
 
         objectContainer.getObjects().add(0, failPuzzleSound);
+
+        return extendingSpikes;
     }
 
     public static void addZebuDais(ObjectContainer screen) {
@@ -3579,17 +3596,36 @@ public final class AddObject {
         objectContainer.getObjects().add(0, successSound);
     }
 
+    public static SoundEffect addShellHornFailureSound(ObjectContainer objectContainer, boolean requireShellHorn) {
+        SoundEffect failPuzzleSound = new SoundEffect(objectContainer);
+        failPuzzleSound.setSoundEffect(SoundEffect.ShellHornFailure);
+        failPuzzleSound.setVolumeBalancePitch(120, 64, 0);
+        failPuzzleSound.setPriority(25);
+        failPuzzleSound.setArg8(1);
+        failPuzzleSound.setFramesDelay(5);
+//        failPuzzleSound.setControllerRumble(false);
+        failPuzzleSound.setRumbleStrength(10);
+
+        if(requireShellHorn) {
+            failPuzzleSound.getTestByteOperations().add(new TestByteOperation(FlagConstants.WF_SHELL_HORN, ByteOp.FLAG_EQUALS, 2));
+        }
+
+        objectContainer.getObjects().add(0, failPuzzleSound);
+        return failPuzzleSound;
+    }
+
     /**
      * Add 0x98 object
      * @param screen to add to
      * @param x position
      * @param y position
      */
-    public static void addWarpDoor(Screen screen, int x, int y, int destZone, int destRoom, int destScreen, int destX, int destY, List<TestByteOperation> tests) {
+    public static WarpDoor addWarpDoor(Screen screen, int x, int y, int destZone, int destRoom, int destScreen, int destX, int destY, List<TestByteOperation> tests) {
         WarpDoor warpDoor = new WarpDoor(screen, x, y);
         warpDoor.setDestination(destZone, destRoom, destScreen, destX, destY);
         warpDoor.getTestByteOperations().addAll(tests);
         screen.getObjects().add(warpDoor);
+        return warpDoor;
     }
 
     /**
@@ -3605,7 +3641,7 @@ public final class AddObject {
     }
 
     /**
-     * Add MantraDetector
+     * Add UseItemDetector
      * @param screen to add to
      * @param itemName to detect usage of
      */
@@ -3616,6 +3652,23 @@ public final class AddObject {
         useItemDetector.setHeight(height);
         screen.getObjects().add(useItemDetector);
         return useItemDetector;
+    }
+
+    /**
+     * Add SnapshotsScan
+     * @param screen to add to
+     * @param textBlock
+     * @param itemArg
+     * @param highlightX
+     * @param highlightY
+     */
+    public static SnapshotsScan addSnapshotsScan(Screen screen, int textBlock, int itemArg, int highlightX, int highlightY) {
+        SnapshotsScan snapshotsScan = new SnapshotsScan(screen);
+        snapshotsScan.setTextCard(textBlock);
+        snapshotsScan.setInventoryWord(itemArg);
+        snapshotsScan.setLocation(highlightX, highlightY);
+        screen.getObjects().add(0, snapshotsScan);
+        return snapshotsScan;
     }
 
     /**
@@ -3808,6 +3861,15 @@ public final class AddObject {
         addSpikesGraphic(spikes, spikeDirection);
 
         return spikes;
+    }
+
+    public static PressurePlate addPressurePlate(Screen screen, int x, int y, int detectionType) {
+        PressurePlate pressurePlate = new PressurePlate(screen, x, y);
+        pressurePlate.setGraphicsFromZone(screen.getZoneIndex());
+        pressurePlate.setDetectionType(detectionType);
+        screen.getObjects().add(pressurePlate);
+
+        return pressurePlate;
     }
 
     public static PressurePlate addPressurePlate(Screen screen, int x, int y) {
