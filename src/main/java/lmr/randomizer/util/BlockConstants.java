@@ -160,6 +160,15 @@ public final class BlockConstants {
     public static final short Master_FairyQueen_TrueShrine2 = 985; // The Fairy Queen - Endless NPC, 08-01-00
     public static final int Master_Mulbruk_ProvocativeBathingSuitReaction = 1013;
 
+    public static final int EmptyConversation = 471;
+    public static final int Master_Philosopher_Stone = 676; // References EmptyConversation / 471
+    public static final int Master_Philosopher_Stone_Unused1 = 699; // References EmptyConversation / 471
+    public static final int Master_Philosopher_Stone_Unused2 = 703; // References EmptyConversation / 471
+    public static final int Master_Xelpud_Missing = 913; // References EmptyConversation / 471
+    public static final int Master_duplex_Missing = 919; // References EmptyConversation / 471
+    public static final int Master_Unlabeled_Missing = 920; // References EmptyConversation / 471
+    public static final int Master_Mulbruk_Empty = 1014; // Conversation after showing Provocative Bathing Suit; removed in randomizer; references EmptyConversation / 471
+
     public static final int Master_Dracuet_WaitForNightfall = 726; // Tailor Dracuet - Guidance NPC, 00-06-00
     public static final int Master_Dracuet_BackInTime = 991; // Tailor Dracuet - Illusion NPC, 10-07-00
     public static final int Master_Dracuet_HugeCasket = 993; // Tailor Dracuet - Gate of Time NPC, 20-03-01
@@ -232,7 +241,6 @@ public final class BlockConstants {
 
     public static final int Removed_XelpudScoreWindHowling = 373;
     public static final int Removed_MulbrukLowScore = 719;
-    public static final int Removed_MulbrukEmptyAfterProvocativeBathingSuit = 1014;
     public static final int Removed_WindHowlingSwimsuit = 1049;
 
     public static final int Tablet_Guidance_DeathAwaitsThePowerless = 43; // Glow flag = TABLET_GLOW_GUIDANCE_DEATH_AWAITS_THE_POWERLESS
@@ -297,7 +305,7 @@ public final class BlockConstants {
     public static final int Tablet_Spring_SailAway = 143; // Glow flag = TABLET_GLOW_SPRING_SAIL_AWAY
     public static final int Tablet_Spring_CollectTheFourSigils = 144; // Glow flag = TABLET_GLOW_SPRING_COLLECT_THE_FOUR_SIGILS
     public static final int DamagedTablet_Spring_WaterMovesTheTower = 145; // Glow flag = TABLET_GLOW_SPRING_WATER_MOVES_THE_TOWER_DAMAGED
-    public static final int DamagedTablet_Spring_MothersWrath = 146; // Glow flag = TABLET_GLOW_SPRING_MOTHERS_WRATH
+    public static final int Tablet_Spring_MothersWrath = 146; // Glow flag = TABLET_GLOW_SPRING_MOTHERS_WRATH
     public static final int Tablet_Spring_ThoseSeekingEden = 147; // Glow flag = TABLET_GLOW_SPRING_THOSE_SEEKING_EDEN
     public static final int Tablet_Inferno_SnakesAreEnraged = 150; // Glow flag = TABLET_GLOW_INFERNO_SNAKES_ARE_ENRAGED
     public static final int Tablet_Extinction_Gatekeepers = 154; // Glow flag = TABLET_GLOW_EXTINCTION_GATEKEEPERS
@@ -415,8 +423,8 @@ public final class BlockConstants {
     public static final int Tablet_Ruin_FaceTheLastTrial = 327; // Glow flag = TABLET_GLOW_RUIN_FACE_THE_LAST_TRIAL
     public static final int Tablet_Ruin_GlowingRedCrucifixBeacon = 328; // Glow flag = TABLET_GLOW_RUIN_GLOWING_RED_CRUCIFIX_BEACON
     public static final int Tablet_Ruin_TheOnesThatCreatedNuwa = 329; // Glow flag = TABLET_GLOW_RUIN_THE_ONES_THAT_CREATED_NUWA
-    public static final int Tablet_Ruin_GreatBirdMercyCrushingThatHand = 330; // Glow flag = TABLET_GLOW_RUIN_TOO_QUICK_FOR_THE_EYES
-    public static final int Tablet_Ruin_TooQuickForTheEyes = 331; // Glow flag = TABLET_GLOW_RUIN_GREAT_BIRD_MERCY_CRUSHING_THAT_HAND
+    public static final int Tablet_Ruin_GreatBirdMercyCrushingThatHand = 330; // Glow flag = TABLET_GLOW_RUIN_GREAT_BIRD_MERCY_CRUSHING_THAT_HAND
+    public static final int Tablet_Ruin_TooQuickForTheEyes = 331; // Glow flag = TABLET_GLOW_RUIN_TOO_QUICK_FOR_THE_EYES
     public static final int Tablet_Ruin_Skanda = 332; // Glow flag = TABLET_GLOW_RUIN_SKANDA
 //    public static final int Tablet_Ruin_Rosetta = 333; // Glow flag = TABLET_GLOW_RUIN_ROSETTA
     public static final int Tablet_Ruin_UnintentionalMischief = 334; // Glow flag = TABLET_GLOW_RUIN_UNINTENTIONAL_MISCHIEF
@@ -545,7 +553,7 @@ public final class BlockConstants {
             Tablet_Spring_SailAway,
             Tablet_Spring_CollectTheFourSigils,
             DamagedTablet_Spring_WaterMovesTheTower,
-            DamagedTablet_Spring_MothersWrath,
+            Tablet_Spring_MothersWrath,
             Tablet_Spring_ThoseSeekingEden,
             Tablet_Inferno_SnakesAreEnraged,
             Tablet_Extinction_Gatekeepers,
@@ -958,7 +966,7 @@ public final class BlockConstants {
             return BlockConstants.DamagedTablet_Spring_WaterMovesTheTower;
         }
         if(tabletGlowFlag == FlagConstants.TABLET_GLOW_SPRING_MOTHERS_WRATH) {
-            return BlockConstants.DamagedTablet_Spring_MothersWrath;
+            return BlockConstants.Tablet_Spring_MothersWrath;
         }
         if(tabletGlowFlag == FlagConstants.TABLET_GLOW_SPRING_ABOVE_THE_SUN) {
             return BlockConstants.Tablet_Spring_AboveTheSun;

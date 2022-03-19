@@ -253,10 +253,12 @@ public class Validation {
                     return false;
                 }
                 if(placedTargetAndDestination.values().contains(customTransitionPlacement.getDestinationTransition())) {
-                    JOptionPane.showMessageDialog(randomizerUI,
-                            "Multiple transitions cannot lead to destination transition " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", ""),
-                            "Custom placement error", JOptionPane.ERROR_MESSAGE);
-                    return false;
+                    if(!customTransitionPlacement.getTargetTransition().contains("Endless L1")) {
+                        JOptionPane.showMessageDialog(randomizerUI,
+                                "Multiple transitions cannot lead to destination transition " + customTransitionPlacement.getDestinationTransition().replaceAll("^Transition:? ", ""),
+                                "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
                 }
                 if(customTransitionPlacement.getTargetTransition().equals(customTransitionPlacement.getDestinationTransition())) {
                     JOptionPane.showMessageDialog(randomizerUI,
@@ -300,7 +302,10 @@ public class Validation {
                         return false;
                     }
                 }
-                placedTargetAndDestination.put(customTransitionPlacement.getTargetTransition(), customTransitionPlacement.getDestinationTransition());
+                if(!customTransitionPlacement.getTargetTransition().replaceAll("^Transition:? ", "").equals("Endless L1")) {
+                    // Don't bother tracking Endless L1
+                    placedTargetAndDestination.put(customTransitionPlacement.getTargetTransition(), customTransitionPlacement.getDestinationTransition());
+                }
             }
         }
         if(!customPlacementData.getCustomNPCPlacements().isEmpty()) {
@@ -445,6 +450,19 @@ public class Validation {
                     && !customItemPlacement.getContents().endsWith(" Ammo")) {
                 JOptionPane.showMessageDialog(randomizerUI,
                         "Item placed in multiple locations: " + customItemPlacement.getContents(),
+                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(items.contains("Vessel") && customItemPlacement.getContents().contains("Medicine of the Mind")) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        "Cannot place Vessel and Medicine of the Mind in separate locations",
+                        "Custom placement error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(customItemPlacement.getContents().contains("Vessel")
+                    && (items.contains("Medicine of the Mind (Green)") ||  items.contains("Medicine of the Mind (Red)") || items.contains("Medicine of the Mind (Yellow)"))) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        "Cannot place Vessel and Medicine of the Mind in separate locations",
                         "Custom placement error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
@@ -898,7 +916,8 @@ public class Validation {
     private static boolean isValidContents(String contents) {
         if(DataFromFile.getAllItems().contains(contents)
                 || "Whip".equals(contents) || "Ankh Jewel (Extra)".equals(contents)
-                || "Unlit Lamp of Time".equals(contents)) {
+                || "Unlit Lamp of Time".equals(contents) || "Medicine of the Mind (Green)".equals(contents)
+                || "Medicine of the Mind (Red)".equals(contents) || "Medicine of the Mind (Yellow)".equals(contents)) {
             return true;
         }
         if(DataFromFile.getAllCoinChests().contains(contents)

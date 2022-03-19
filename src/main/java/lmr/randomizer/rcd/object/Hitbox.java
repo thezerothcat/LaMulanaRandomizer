@@ -76,6 +76,10 @@ public class Hitbox extends GameObject {
         getArgs().set(3, (short)direction);
     }
 
+    public int getBreakableBy() {
+        return getArgs().get(4);
+    }
+
     public void setBreakableBy(int weaponType) {
         getArgs().set(4, (short)weaponType);
     }

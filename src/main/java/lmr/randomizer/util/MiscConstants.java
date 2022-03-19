@@ -192,8 +192,8 @@ public final class MiscConstants {
         if(blockNumber == BlockConstants.DamagedTablet_Spring_WaterMovesTheTower) {
             return "DamagedTablet_Spring_WaterMovesTheTower";
         }
-        if(blockNumber == BlockConstants.DamagedTablet_Spring_MothersWrath) {
-            return "DamagedTablet_Spring_MothersWrath";
+        if(blockNumber == BlockConstants.Tablet_Spring_MothersWrath) {
+            return "Tablet_Spring_MothersWrath";
         }
         if(blockNumber == BlockConstants.Tablet_Spring_ThoseSeekingEden) {
             return "Tablet_Spring_ThoseSeekingEden";

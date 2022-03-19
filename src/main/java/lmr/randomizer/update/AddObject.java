@@ -68,7 +68,6 @@ public final class AddObject {
         FloatingItem obj = addFloatingItem(screen, x, y, itemArg, realItem);
         obj.getTestByteOperations().addAll(tests);
         obj.getWriteByteOperations().addAll(updates);
-        screen.getObjects().add(obj);
     }
 
     public static FloatingItem addFloatingItem(Screen screen, int x, int y, int itemArg, boolean realItem) {
@@ -3942,2334 +3941,1740 @@ public final class AddObject {
     public static void addCustomItemGives(Screen screen, int inventoryArg,
                                           int itemGiveTriggerFlag, int itemGiveTriggerFlagValue,
                                           int itemGiveStateFlag, int itemGiveStateFlagValue) {
+        addToAllScreens(screen, new AddToAllScreens() {
+            @Override
+            public void addToScreen(Screen screen, int leftmostX, int topmostY) {
+                AddObject.addItemGive(screen, leftmostX, topmostY, inventoryArg,
+                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
+                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+            }
+        });
+    }
+
+    /**
+     * Add an item give to every screen in the game, with the appropriate coordinates.
+     * @param screen to add to
+     * @param addToAllScreens receives screen reference and coordinates and adds the needed object(s)
+     */
+    public static void addToAllScreens(Screen screen, AddToAllScreens addToAllScreens) {
         int zoneIndex = screen.getZoneIndex();
         int roomIndex = screen.getRoomIndex();
         int screenIndex = screen.getScreenIndex();
         if(zoneIndex == 0) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
             }
             else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
         }
         else if(zoneIndex == 1) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 0 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
             }
             else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
             }
             else if(roomIndex == 5 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
             }
             else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 10 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 10 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
             }
             else if(roomIndex == 10 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 1920, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1920, 0);
             }
             else if(roomIndex == 11 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 11 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
         }
         else if(zoneIndex == 2) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
             }
             else if(roomIndex == 5 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 7 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 8 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
         }
         else if(zoneIndex == 3) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 4 && screenIndex == 4) {
-                AddObject.addItemGive(screen, 640, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 480);
             }
             else if(roomIndex == 4 && screenIndex == 5) {
-                AddObject.addItemGive(screen, 1280, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 480);
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
         }
         else if(zoneIndex == 4) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 0 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 3 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
+
             }
             else if(roomIndex == 3 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 0, 1440, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 1440);
             }
             else if(roomIndex == 3 && screenIndex == 4) {
-                AddObject.addItemGive(screen, 0, 1920, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 1920);
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 11 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 12 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 13 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 17 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 24 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 35 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
         }
         else if (zoneIndex == 5) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 2 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
         }
         else if(zoneIndex == 6) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
         }
         else if(zoneIndex == 7) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 3 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 10 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 11 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 11 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 11 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 12 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 12 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 12 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
+
             }
             else if(roomIndex == 13 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 13 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 14 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 14 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 15 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 15 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 16 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 16 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 16 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
+
             }
         }
         else if(zoneIndex == 8) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 1920, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1920, 0);
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 1920, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1920, 0);
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 1920, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1920, 0);
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 1920, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1920, 0);
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 11 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 12 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
         }
         else if(zoneIndex == 9) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
         }
         else if(zoneIndex == 10) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 2 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 11 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
         }
         else if(zoneIndex == 11) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
+
             }
             else if(roomIndex == 4 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 0, 1440, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 1440);
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
         }
         else if(zoneIndex == 12) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 480);
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
+
             }
             else if(roomIndex == 4 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 0, 1440, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 1440);
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
         }
         else if(zoneIndex == 13) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 2 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 6 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
+
             }
             else if(roomIndex == 6 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 0, 1440, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 1440);
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 14 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 15 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 16 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 26 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
         }
         else if(zoneIndex == 14) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
         }
         else if(zoneIndex == 15) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
         }
         else if(zoneIndex == 16) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
         }
         else if(zoneIndex == 17) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 10 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
         }
         else if(zoneIndex == 18) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
         }
         else if(zoneIndex == 19) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
         }
         else if(zoneIndex == 20) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 1 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
         }
         else if(zoneIndex == 21) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
         }
         else if(zoneIndex == 22) {
             if(roomIndex == 0 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 0 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 1280, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 1280, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 1 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 2 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 2 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 3 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 4 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 4 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
+
             }
             else if(roomIndex == 5 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 5 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 5 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 960, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 960);
+
             }
             else if(roomIndex == 6 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 6 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 7 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 8 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
             else if(roomIndex == 9 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 9 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 10 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 10 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
+
             }
             else if(roomIndex == 10 && screenIndex == 2) {
-                AddObject.addItemGive(screen, 0, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 480);
             }
             else if(roomIndex == 10 && screenIndex == 3) {
-                AddObject.addItemGive(screen, 640, 480, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 480);
             }
             else if(roomIndex == 11 && screenIndex == 0) {
-                AddObject.addItemGive(screen, 0, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 0, 0);
+
             }
             else if(roomIndex == 11 && screenIndex == 1) {
-                AddObject.addItemGive(screen, 640, 0, inventoryArg,
-                        Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                        Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+                addToAllScreens.addToScreen(screen, 640, 0);
+
             }
         }
         else if(zoneIndex == 25) {
-            AddObject.addItemGive(screen, 0, 480 * screenIndex, 86,
-                    Arrays.asList(new TestByteOperation(itemGiveTriggerFlag, ByteOp.FLAG_GT, itemGiveTriggerFlagValue), new TestByteOperation(itemGiveStateFlag, ByteOp.FLAG_EQUALS, 0)),
-                    Arrays.asList(new WriteByteOperation(itemGiveStateFlag, ByteOp.ASSIGN_FLAG, itemGiveStateFlagValue)));
+            addToAllScreens.addToScreen(screen, 0, 480 * screenIndex);
         }
     }
 }

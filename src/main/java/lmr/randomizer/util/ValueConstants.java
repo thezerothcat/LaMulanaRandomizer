@@ -17,9 +17,19 @@ public class ValueConstants {
     public static final int NON_WALKABLE_SPIKE_THRESHOLD = 40;
     public static final int GHOST_THRESHOLD3 = 45;
 
+    public static final int INSTAKILL_WITH_FAIRY_CLOTHES = 503;
+
     public static final int TOTAL_MAPS = 17;
     public static final int ITEM_COLLECTED = 2;
 
+    public static final int ANKH_BOSS_AMPHISBAENA = 0;
+    public static final int ANKH_BOSS_SAKIT = 1;
+    public static final int ANKH_BOSS_ELLMAC = 2;
+    public static final int ANKH_BOSS_BAHAMUT = 3;
+    public static final int ANKH_BOSS_VIY = 4;
+    public static final int ANKH_BOSS_PALENQUE = 5;
+    public static final int ANKH_BOSS_BAPHOMET = 6;
+    public static final int ANKH_BOSS_TIAMAT = 7;
     public static final int ANKH_BOSS_MOTHER = 8;
 
     public static final int CHEST_ITEM_OFFSET = 11;

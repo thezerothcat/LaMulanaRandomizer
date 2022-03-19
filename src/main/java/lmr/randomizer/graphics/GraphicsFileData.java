@@ -2364,4 +2364,36 @@ public class GraphicsFileData {
     public static Map<Integer, GraphicsFileEntry> getEveg18GraphicsFileEntries() {
         return getEveg01GraphicsFileEntries();
     }
+
+    public static final int SLATE0_CROSS_THE_SACRED_LAKE = 0;
+    public static final int SLATE0_PATH_THAT_CONNECTS_TWO_PYRAMIDS = 1;
+    public static final int SLATE0_CHI_YOU = 2;
+    public static final int SLATE0_RED_LIGHT = 3;
+    public static final int SLATE0_HOLY_GRAIL_MEMORIES = 4;
+    public static final int SLATE0_8_ANKHS = 5;
+    public static final int SLATE0_FAIRY = 6;
+    public static final int SLATE0_DANCE_OF_LIFE = 7;
+    public static final int SLATE0_SKULD_VERDANDI = 8;
+
+    public static Map<Integer, GraphicsFileEntry> getSlate00GraphicsFileEntries() {
+        Map<Integer, GraphicsFileEntry> graphicsFileEntries = new HashMap<>();
+//        graphicsFileEntries.put(SLATE0_CROSS_THE_SACRED_LAKE, new GraphicsFileEntry(0, 0, 180, 200));
+//        graphicsFileEntries.put(SLATE0_PATH_THAT_CONNECTS_TWO_PYRAMIDS, new GraphicsFileEntry(180, 0, 160, 180));
+//        graphicsFileEntries.put(SLATE0_CHI_YOU, new GraphicsFileEntry(340, 0, 160, 160));
+//        graphicsFileEntries.put(SLATE0_RED_LIGHT, new GraphicsFileEntry(500, 0, 140, 160));
+//        graphicsFileEntries.put(SLATE0_HOLY_GRAIL_MEMORIES, new GraphicsFileEntry(640, 0, 100, 160));
+//        graphicsFileEntries.put(SLATE0_8_ANKHS, new GraphicsFileEntry(740, 0, 280, 160));
+        graphicsFileEntries.put(SLATE0_FAIRY, new GraphicsFileEntry(180, 180, 100, 180));
+        graphicsFileEntries.put(SLATE0_DANCE_OF_LIFE, new GraphicsFileEntry(140, 500, 480, 140));
+        graphicsFileEntries.put(SLATE0_SKULD_VERDANDI, new GraphicsFileEntry(840, 620, 180, 200));
+        return graphicsFileEntries;
+    }
+
+    public static final int SLATE1_MU = 0;
+
+    public static Map<Integer, GraphicsFileEntry> getSlate01GraphicsFileEntries() {
+        Map<Integer, GraphicsFileEntry> graphicsFileEntries = new HashMap<>();
+        graphicsFileEntries.put(SLATE1_MU, new GraphicsFileEntry(0, 0, 100, 320));
+        return graphicsFileEntries;
+    }
 }

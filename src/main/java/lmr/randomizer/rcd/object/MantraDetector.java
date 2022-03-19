@@ -3,6 +3,8 @@ package lmr.randomizer.rcd.object;
 /**
  * 0xc2 - detection-mantra (Effect)
  * 0- mantraNumber?
+ *
+ * Does not despawn when tests are no longer passing.
  */
 public class MantraDetector extends GameObject {
     public MantraDetector(ObjectContainer objectContainer) {

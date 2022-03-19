@@ -926,7 +926,7 @@ public class BaseRcdUpdater extends RcdUpdater {
             // To be removed and re-added for NPC shuffling simplicity.
             return false;
         }
-        else if(blockNumber == BlockConstants.Removed_MulbrukEmptyAfterProvocativeBathingSuit) {
+        else if(blockNumber == BlockConstants.Master_Mulbruk_Empty) {
             return false;
         }
         else if(blockNumber == BlockConstants.MultiMaster_ElderXelpudRandomSetC_Rug

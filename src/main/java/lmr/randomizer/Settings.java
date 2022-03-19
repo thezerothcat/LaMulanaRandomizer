@@ -805,6 +805,10 @@ public final class Settings {
         }
     }
 
+    public static boolean isRemoveSpaulder() {
+        return singleton.removeSpaulder;
+    }
+
     public static void setRemoveSpaulder(boolean removeSpaulder, boolean update) {
         if(update && removeSpaulder != singleton.removeSpaulder) {
             singleton.changed = true;
