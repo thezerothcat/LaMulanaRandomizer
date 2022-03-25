@@ -66,6 +66,25 @@ public class FileUtils {
         }
     }
 
+    public static BufferedReader getResourceReader(String file, String resourceSubfolder) {
+        if(resourceSubfolder == null) {
+            return getFileReader(file, false);
+        }
+
+        try {
+            return new BufferedReader(new FileReader("src/main/resources/lmr/randomizer/%s/" + file));
+        } catch (IOException ex) {
+            try {
+                return new BufferedReader(new InputStreamReader(FileUtils.class.getResourceAsStream(resourceSubfolder + '/' + file)));
+            }
+            catch (Exception ex2) {
+                System.out.println("unable to get resource reader for " + file);
+                ex.printStackTrace();
+                return null;
+            }
+        }
+    }
+
     public static byte[] getBytes(String path) throws IOException {
         try {
             return getBytesInner(path);
@@ -297,7 +316,7 @@ public class FileUtils {
         if (!(new File("custom-placement.txt").exists())) {
             return customPlacementData;
         }
-        try(BufferedReader reader = getFileReader("custom-placement.txt", false)) {
+        try(BufferedReader reader = getResourceReader("custom-placement.txt", HolidaySettings.getResourcePath())) {
             if(reader == null) {
                 return customPlacementData;
             }

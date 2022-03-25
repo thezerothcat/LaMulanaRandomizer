@@ -239,6 +239,12 @@ public abstract class DatUpdater {
                     rawData.addAll(flagData.getRawData());
                 }
             }
+            else if(section.startsWith("{POSE=")) {
+                BlockPoseData poseData = getPose(section.replaceAll("\\{POSE=", "").replaceAll("}", ""));
+                if(poseData != null) {
+                    rawData.addAll(poseData.getRawData());
+                }
+            }
             else {
                 rawData.addAll(FileUtils.stringToData(section));
             }
@@ -358,6 +364,13 @@ public abstract class DatUpdater {
             if(indexAndValue.length == 2) {
                 return new BlockFlagData(getDecimalOrHex(indexAndValue[0]), getDecimalOrHex(indexAndValue[1]));
             }
+        }
+        return null;
+    }
+
+    private static BlockPoseData getPose(String pose) {
+        if(pose != null) {
+            return new BlockPoseData(getDecimalOrHex(pose));
         }
         return null;
     }
@@ -702,15 +715,15 @@ public abstract class DatUpdater {
                 newBlockData.addAll(FileUtils.stringToData(Translations.getText("items.Scriptures")));
             }
             else {
-                addShrinePrefixIfNeeded(newBlockData, shopInventoryData);
                 newBlockData.add(BlockDataConstants.ItemName);
                 newBlockData.add(shopInventoryData.getInventoryArg());
+                addMapAreaIfNeeded(newBlockData, shopInventoryData);
             }
         }
         else {
-            addShrinePrefixIfNeeded(newBlockData, shopInventoryData);
             newBlockData.add(BlockDataConstants.ItemName);
             newBlockData.add(shopInventoryData.getInventoryArg());
+            addMapAreaIfNeeded(newBlockData, shopInventoryData);
         }
         newBlockData.addAll(blockStringData.getData().subList(blockStringData.getItemNameEndIndex(), blockStringData.getData().size()));
         blockStringData.getData().clear();
@@ -754,24 +767,72 @@ public abstract class DatUpdater {
                 bunemonData.addAll(FileUtils.stringToData(Translations.getText("items.Scriptures")));
             }
             else {
-                addShrinePrefixIfNeeded(bunemonData, shopInventoryData);
                 bunemonData.add(BlockDataConstants.ItemName);
                 bunemonData.add(shopInventoryData.getInventoryArg());
+                addMapAreaIfNeeded(bunemonData, shopInventoryData);
             }
         }
         else {
-            addShrinePrefixIfNeeded(bunemonData, shopInventoryData);
             bunemonData.add(BlockDataConstants.ItemName);
             bunemonData.add(shopInventoryData.getInventoryArg());
+            addMapAreaIfNeeded(bunemonData, shopInventoryData);
         }
 
         bunemonData.add(BlockDataConstants.Space);
         bunemonData.addAll(FileUtils.stringToData(Short.toString(itemPrice)));
     }
 
-    private void addShrinePrefixIfNeeded(List<Short> bunemonData, ShopInventoryData shopInventoryData) {
+    private void addMapAreaIfNeeded(List<Short> bunemonData, ShopInventoryData shopInventoryData) {
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_SURFACE) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.surfaceSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_GUIDANCE) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.guidanceSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_MAUSOLEUM) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.mausoleumSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_SUN) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.sunSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_SPRING) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.springSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_INFERNO) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.infernoSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_EXTINCTION) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.extinctionSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_TWIN) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.twinSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_ENDLESS) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.endlessSuffix")));
+        }
         if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_SHRINE) {
-            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.shrinePrefix")));
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.shrineSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_ILLUSION) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.illusionSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_GRAVEYARD) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.graveyardSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_MOONLIGHT) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.moonlightSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_GODDESS) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.goddessSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_RUIN) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.ruinSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_BIRTH) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.birthSuffix")));
+        }
+        if(shopInventoryData.getWorldFlag() == FlagConstants.WF_MAP_DIMENSIONAL) {
+            bunemonData.addAll(FileUtils.stringToData(Translations.getText("shop.dimensionalSuffix")));
         }
     }
 }

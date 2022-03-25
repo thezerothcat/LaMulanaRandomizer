@@ -162,6 +162,7 @@ public final class ObjectIdConstants {
     public static final short HotSpring = 0xad;
     public static final short Shawn = 0xaf;
     public static final short ToggleBlock = 0xb0;
+    public static final short ScalePuzzle = 0xb3;
     public static final short Explosion = 0xb4;
     public static final short ItemGive = 0xb5;
     public static final short SavePoint = 0xb6;

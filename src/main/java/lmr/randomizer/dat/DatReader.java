@@ -774,7 +774,7 @@ public final class DatReader {
 //                    cmd = "{POSE %d}" % ord(b[0])
 //                    b = b[1:]
 
-                    block.getBlockContents().add(new BlockPoseData(data, dataInputStream.readShort()));
+                    block.getBlockContents().add(new BlockPoseData(dataInputStream.readShort()));
                     ++dataIndex;
                 }
                 else if (data == BlockDataConstants.Mantra) {

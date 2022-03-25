@@ -858,6 +858,28 @@ public final class AddObject {
         return doorTimer;
     }
 
+    public static GameObject addAnimatedDoorSound(ObjectContainer objectContainer) {
+        int zoneIndex = ((Screen)objectContainer).getZoneIndex();
+        int roomIndex = ((Screen)objectContainer).getRoomIndex();
+        int soundBalance = getAnimatedDoorSoundBalance(zoneIndex, roomIndex);
+
+        SoundEffect doorSoundEffect = new SoundEffect(objectContainer);
+        doorSoundEffect.setSoundEffect(95);
+        doorSoundEffect.setVolume(127, 127, 0);
+        doorSoundEffect.setBalance(soundBalance, soundBalance, 0);
+        doorSoundEffect.setPitch(-400, 0, 0);
+        doorSoundEffect.setPriority(15);
+//        doorSoundEffect.setArg8(0);
+//        doorSoundEffect.setFramesDelay(0);
+//        doorSoundEffect.setControllerRumble(false);
+        doorSoundEffect.setRumbleStrength(10);
+
+        doorSoundEffect.getTestByteOperations().add(new TestByteOperation(FlagConstants.SCREEN_FLAG_29, ByteOp.FLAG_EQUALS, 1));
+
+        objectContainer.getObjects().add(0, doorSoundEffect);
+        return doorSoundEffect;
+    }
+
     public static void addKeyFairyDoorTimerAndSounds(ObjectContainer objectContainer) {
         // todo: fix and test this?
         GameObject keyFairyTimer = new GameObject(objectContainer);
@@ -2958,8 +2980,8 @@ public final class AddObject {
             foolsEarlyExitBlock.getBlockContents().add(new BlockSingleData(shortCharacter));
         }
 
-        foolsEarlyExitBlock.getBlockContents().add(new BlockPoseData(BlockDataConstants.Pose, (short)8));
-        foolsEarlyExitBlock.getBlockContents().add(new BlockPoseData(BlockDataConstants.Pose, (short)9));
+        foolsEarlyExitBlock.getBlockContents().add(new BlockPoseData(8));
+        foolsEarlyExitBlock.getBlockContents().add(new BlockPoseData(9));
         foolsEarlyExitBlock.getBlockContents().add(new BlockSceneData(BlockDataConstants.Anime, (short)0)); // Scene 0 (credits)
         return foolsEarlyExitBlock;
     }
@@ -3593,6 +3615,21 @@ public final class AddObject {
         successSound.getTestByteOperations().addAll(tests);
 
         objectContainer.getObjects().add(0, successSound);
+    }
+
+    public static void addMantraRecitedSound(ObjectContainer objectContainer, List<TestByteOperation> tests) {
+        SoundEffect mantraRecitedSound = new SoundEffect(objectContainer);
+        mantraRecitedSound.setSoundEffect(SoundEffect.MantraRecited);
+        mantraRecitedSound.setVolumeBalancePitch(127, 64, 1000);
+        mantraRecitedSound.setPriority(20);
+        mantraRecitedSound.setArg8(0);
+        mantraRecitedSound.setFramesDelay(0);
+        mantraRecitedSound.setControllerRumble(true);
+        mantraRecitedSound.setRumbleStrength(4);
+
+        mantraRecitedSound.getTestByteOperations().addAll(tests);
+
+        objectContainer.getObjects().add(0, mantraRecitedSound);
     }
 
     public static SoundEffect addShellHornFailureSound(ObjectContainer objectContainer, boolean requireShellHorn) {

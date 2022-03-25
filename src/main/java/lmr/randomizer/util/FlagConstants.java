@@ -169,6 +169,7 @@ public final class FlagConstants {
     public static final int DIMENSIONAL_USHUM_MARKED_DEAD = 0x3db; // Set to 1 by FlagTimer in rooms adjacent to Ushum's room; used for enemy spawns in that room to ensure the don't appear until you leave and come back
     public static final int DIMENSIONAL_LAHAMU_MARKED_DEAD = 0x3dc; // Set to 1 by FlagTimer in rooms adjacent to Lahamu's room; used for enemy spawns in that room to ensure the don't appear until you leave and come back
     public static final int DIMENSIONAL_URMAHLULLU_MARKED_DEAD = 0x3dd; // Set to 1 by FlagTimer in rooms adjacent to Lahamu's room; used for enemy spawns in that room to ensure the don't appear until you leave and come back
+    public static final int DIMENSIONAL_PUZZLE_FOBOS_DAIS = 0x3e3; // Set to 1 for killing Kuusarikku, spawns the dais that uncovers Fobos's door
     public static final int DIMENSIONAL_CHILDREN_DEAD_POST_KEY_RESET = 0x3e7; // Set to 1 first time visiting Dimensional corridor with Dimensional Key
     public static final int KILL_FLAG = 0x3e9; // Instant death when set
     public static final int LAMP_STATION_UNKNOWN = 0x3ed; // Gets set on the Lemeza detector that lights Lamp of Time. Probably to despawn the flame graphic
@@ -178,6 +179,7 @@ public final class FlagConstants {
     public static final int ESCAPE_TRIGGERED = 0x403; // Value 0 > 1 alongside triggering the escape timer and screenshake.
     public static final int PALENQUE_SMALL_MURAL_ANIMATION_TRIGGERED = 0x40e; // Value 0 > 1 when Palenque's small mural is triggered to animate sliding into place.
     public static final int SURFACE_RUINS_FRONT_DOOR_OPEN = 0x414; // For the crusher covering the transition from Surface to Gate of Guidance
+    public static final int GODDESS_HATCHES_UNLOCKED = 0x41c; // Set to 1 by the dais that allows flooding Tower of the Goddess
     public static final int MAUSOLEUM_HARDMODE_SKULL_ANIMATION = 0x420; // Goes 0 > 1 by timer when HARDMODE (16a) set to 2, sets screen flag 0x28, and goes 1 > 2 by timer 40 frames later (after animation). Tested on RoomSpawner animation for == 1
     public static final int HT_SOLVED_ROOM33_PILLARS = 0x70d;
     public static final int HT_ROOM19_SPAWNS = 0x7dd; // Value 0 > 1 via FlagTimer based on the flag set when Mushussu is defeated; used for the test to spawn Mushussu and the tests for some enemies on that screen.
@@ -732,7 +734,7 @@ public final class FlagConstants {
     public static final int TABLET_GLOW_MOONLIGHT_EDEN_SEARCH_OUT_THE_PLACE = 0x517; // Tablet block 191; room 12-09-01
 
     public static final int TABLET_GLOW_GODDESS_FLY_WITH_THE_GOLDEN_WINGS = 0x518; // Tablet block 312; room 13-00-00
-//    public static final int TABLET_GLOW_GODDESS_WATER_TO_THE_TOWER = 0x519; // Tablet block 310; room 13-01-00
+    public static final int TABLET_GLOW_GODDESS_WATER_TO_THE_TOWER = 0x519; // Tablet block 310; room 13-01-00
     public static final int TABLET_GLOW_GODDESS_MAGATAMA_JEWEL = 0x51a; // Tablet block 314; room 13-01-01
     public static final int TABLET_GLOW_GODDESS_HUNK_OF_FLYING_IRON = 0x51b; // Tablet block 306; room 13-02-01
     public static final int TABLET_GLOW_GODDESS_A_BAO_A_QU = 0x51c; // Tablet block 309; room 13-02-02

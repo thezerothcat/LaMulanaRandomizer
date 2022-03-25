@@ -44,8 +44,9 @@ package lmr.randomizer.rcd.object;
  */
 public class SoundEffect extends GameObject {
     public static final int HardmodeActivated = 0;
-    public static final int ItemCollected = 39;
+    public static final int MantraRecited = 15;
     public static final int ShellHornSuccess = 30;
+    public static final int ItemCollected = 39;
     public static final int ShellHornFailure = 80;
 
     public SoundEffect(ObjectContainer objectContainer) {
