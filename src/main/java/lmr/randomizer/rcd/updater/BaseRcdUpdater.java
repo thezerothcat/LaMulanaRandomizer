@@ -1719,7 +1719,13 @@ public class BaseRcdUpdater extends RcdUpdater {
         }
         else if(zoneIndex == 18) {
             if (roomIndex == 0 && screenIndex == 0) {
-                AddObject.addUpperUntrueShrineBackupDoor(screen);
+                if(HolidaySettings.isFools2022Mode()) {
+                    AddObject.addUpperUntrueShrineBackupDoor(screen);
+                }
+                else {
+                    AddObject.addUpperUntrueShrineBackupDoor(screen,
+                            new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9));
+                }
             }
             if (roomIndex == 1 && screenIndex == 1) {
                 if(Settings.isFeatherlessMode()) {
@@ -1741,10 +1747,22 @@ public class BaseRcdUpdater extends RcdUpdater {
                 AddObject.addGrailUntrueShrineBackupDoor(screen);
             }
             else if (roomIndex == 8 && screenIndex == 1) {
-                AddObject.addLowerUntrueShrineBackupDoor(screen);
+                if(HolidaySettings.isFools2022Mode()) {
+                    AddObject.addLowerUntrueShrineBackupDoor(screen);
+                }
+                else {
+                    AddObject.addLowerUntrueShrineBackupDoor(screen,
+                            new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9));
+                }
             }
             else if (roomIndex == 9 && screenIndex == 0) {
-                AddObject.addSealUntrueShrineBackupDoor(screen);
+                if(HolidaySettings.isFools2022Mode()) {
+                    AddObject.addSealUntrueShrineBackupDoor(screen);
+                }
+                else {
+                    AddObject.addSealUntrueShrineBackupDoor(screen,
+                            new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9));
+                }
             }
         }
     }
