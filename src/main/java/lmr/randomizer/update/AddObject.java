@@ -320,13 +320,12 @@ public final class AddObject {
      * Add a backup door from Chamber of Extinction to untransformed Shrine of the Mother.
      * @param screen the screen to add the objects to
      */
-    public static void addLowerUntrueShrineBackupDoor(Screen screen) {
-        addWarpDoor(screen, 260, 800,9, 8, 1, 300, 320,
-                Arrays.asList(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9)));
+    public static void addLowerUntrueShrineBackupDoor(Screen screen, TestByteOperation... additionalTests) {
+        WarpDoor warpDoor = addWarpDoor(screen, 260, 800,9, 8, 1, 300, 320, new ArrayList<>(0));
+        warpDoor.addTests(additionalTests);
 
         GraphicsTextureDraw backupShrineDoorGraphic = new GraphicsTextureDraw(screen, 240, 760);
-
-        backupShrineDoorGraphic.getTestByteOperations().add(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9));
+        backupShrineDoorGraphic.addTests(additionalTests);
 
         backupShrineDoorGraphic.setLayer(-1);
         backupShrineDoorGraphic.setImageFile("01effect.png");
@@ -398,13 +397,12 @@ public final class AddObject {
      * Add a backup door from Chamber of Extinction to untransformed Shrine of the Mother.
      * @param screen the screen to add the objects to
      */
-    public static void addUpperUntrueShrineBackupDoor(Screen screen) {
-        addWarpDoor(screen, 340, 80,9, 0, 0, 340, 92,
-                Arrays.asList(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9)));
+    public static void addUpperUntrueShrineBackupDoor(Screen screen, TestByteOperation... additionalTests) {
+        WarpDoor warpDoor = addWarpDoor(screen, 340, 80,9, 0, 0, 340, 92, new ArrayList<>(0));
+        warpDoor.addTests(additionalTests);
 
         GraphicsTextureDraw backupShrineDoorGraphic = new GraphicsTextureDraw(screen, 320, 40);
-
-        backupShrineDoorGraphic.getTestByteOperations().add(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9));
+        backupShrineDoorGraphic.addTests(additionalTests);
 
         backupShrineDoorGraphic.setLayer(-1);
         backupShrineDoorGraphic.setImageFile("01effect.png");
@@ -424,9 +422,9 @@ public final class AddObject {
      * Add a backup door from Endless Corridor to untransformed Shrine of the Mother.
      * @param screen the screen to add the objects to
      */
-    public static void addSealUntrueShrineBackupDoor(Screen screen) {
-        addWarpDoor(screen, 500, 400,9, 9, 0, 300, 332,
-                Arrays.asList(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9)));
+    public static void addSealUntrueShrineBackupDoor(Screen screen, TestByteOperation... additionalTests) {
+        WarpDoor warpDoor = addWarpDoor(screen, 500, 400,9, 9, 0, 300, 332, new ArrayList<>(0));
+        warpDoor.addTests(additionalTests);
 
         GraphicsTextureDraw backupShrineDoorGraphic = new GraphicsTextureDraw(screen, 480, 360);
 
@@ -973,51 +971,51 @@ public final class AddObject {
         int zoneIndex = ((Screen)backsideDoor.getObjectContainer()).getZoneIndex();
 
         if(zoneIndex == 0) {
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)1, (short)600, (short)160, (short)80, (short)40, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)1, (short)680, (short)160, (short)80, (short)40, backsideDoor.getX() - 20, backsideDoor.getY());
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)1, (short)600, (short)160, (short)80, (short)40, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)1, (short)680, (short)160, (short)80, (short)40, backsideDoor.getX() - 20, backsideDoor.getY());
         }
         else if(zoneIndex == 1) {
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)1, (short)900, (short)60, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)1, (short)900, (short)60, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
         }
         else if(zoneIndex == 2) {
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)0, (short)280, (short)580, (short)80, (short)40, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)0, (short)360, (short)580, (short)80, (short)40, backsideDoor.getX() - 20, backsideDoor.getY());
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)0, (short)280, (short)580, (short)80, (short)40, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)0, (short)360, (short)580, (short)80, (short)40, backsideDoor.getX() - 20, backsideDoor.getY());
         }
         else if(zoneIndex == 3) {
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)1, (short)700, (short)80, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)1, (short)700, (short)80, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
         }
         else if(zoneIndex == 5) {
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)1, (short)940, (short)0, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)1, (short)940, (short)0, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
         }
         else if(zoneIndex == 6) {
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)1, (short)940, (short)120, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)1, (short)940, (short)120, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
         }
         else if(zoneIndex == 10) {
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)1, (short)620, (short)0, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)1, (short)620, (short)0, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
         }
         else if(zoneIndex == 11) {
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)1, (short)940, (short)120, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)1, (short)940, (short)120, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
         }
         else if(zoneIndex == 12) {
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)1, (short)540, (short)80, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)1, (short)540, (short)80, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
         }
         else if(zoneIndex == 13) {
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)1, (short)940, (short)220, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)1, (short)940, (short)220, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
         }
         else if(zoneIndex == 14) {
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)1, (short)540, (short)0, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)1, (short)540, (short)0, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
         }
         else if(zoneIndex == 15) {
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)1, (short)340, (short)0, (short)80, (short)40, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)1, (short)460, (short)60, (short)80, (short)40, backsideDoor.getX() - 20, backsideDoor.getY());
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)1, (short)340, (short)0, (short)80, (short)40, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)1, (short)460, (short)60, (short)80, (short)40, backsideDoor.getX() - 20, backsideDoor.getY());
         }
         else if(zoneIndex == 19) {
-            addMirrorCoverGraphic(backsideDoor, mirrorCoverFlag, (short)0, (short)-1, (short)760, (short)512, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
+            addMirrorCoverGraphic(backsideDoor.getObjectContainer(), mirrorCoverFlag, (short)0, (short)-1, (short)760, (short)512, (short)80, (short)80, backsideDoor.getX() - 20, backsideDoor.getY() - 40);
         }
     }
 
-    private static void addMirrorCoverGraphic(GameObject backsideDoor, int mirrorCoverFlag, short layer, short fileEnum, short imageX, short imageY, short width, short height, int xPos, int yPos) {
-        GraphicsTextureDraw mirrorCoverGraphic = new GraphicsTextureDraw(backsideDoor.getObjectContainer(), xPos, yPos);
+    public static void addMirrorCoverGraphic(ObjectContainer objectContainer, Integer mirrorCoverFlag, short layer, short fileEnum, short imageX, short imageY, short width, short height, int xPos, int yPos) {
+        GraphicsTextureDraw mirrorCoverGraphic = new GraphicsTextureDraw(objectContainer, xPos, yPos);
         mirrorCoverGraphic.setLayer(layer);
         mirrorCoverGraphic.setImageFile(fileEnum);
         mirrorCoverGraphic.setImageX(imageX);
@@ -1030,9 +1028,11 @@ public final class AddObject {
         mirrorCoverGraphic.setRGBAMax(0, 0, 0, 255);
         mirrorCoverGraphic.setArg23(1);
 
-        mirrorCoverGraphic.addTests(new TestByteOperation(mirrorCoverFlag, ByteOp.FLAG_EQUALS, 0));
+        if(mirrorCoverFlag != null) {
+            mirrorCoverGraphic.addTests(new TestByteOperation(mirrorCoverFlag, ByteOp.FLAG_EQUALS, 0));
+        }
 
-        backsideDoor.getObjectContainer().getObjects().add(mirrorCoverGraphic);
+        objectContainer.getObjects().add(mirrorCoverGraphic);
     }
 
     public static void addGrailToggle(ObjectContainer objectContainer, boolean enableGrail, TestByteOperation... tests) {
@@ -5708,6 +5708,133 @@ public final class AddObject {
             else if(roomIndex == 11 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
 
+            }
+        }
+        else if(zoneIndex == 23) {
+            if(roomIndex == 0 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 1 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 1 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 640, 0);
+            }
+            else if(roomIndex == 2 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 2 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 0, 480);
+            }
+            else if(roomIndex == 3 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 4 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 4 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 640, 0);
+            }
+            else if(roomIndex == 5 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 5 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 0, 480);
+            }
+            else if(roomIndex == 6 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 6 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 640, 0);
+            }
+            else if(roomIndex == 7 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 8 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 8 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 640, 0);
+            }
+            else if(roomIndex == 9 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 9 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 640, 0);
+            }
+            else if(roomIndex == 10 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 10 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 0, 480);
+            }
+            else if(roomIndex == 11 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 12 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 12 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 0, 480);
+            }
+            else if(roomIndex == 13 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 14 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 14 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 640, 0);
+            }
+            else if(roomIndex == 15 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 15 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 0, 480);
+            }
+            else if(roomIndex == 16 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 17 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 18 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 18 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 640, 0);
+            }
+            else if(roomIndex == 19 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 20 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 21 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 22 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 22 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 640, 0);
+            }
+        }
+        else if(zoneIndex == 24) {
+            if(roomIndex == 0 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 0 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 0, 480);
+            }
+            else if(roomIndex == 1 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 2 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 2 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 0, 480);
             }
         }
         else if(zoneIndex == 25) {

@@ -121,6 +121,7 @@ public final class FlagConstants {
     public static final int RUIN_SPIRITS_DAKINI = 0x293; // 0 = no mantra, 1 = recited birth, 2 = recited death
     public static final int RUIN_PUZZLE_NUWA = 0x298; // 0 > 1 when hitting the seal, 2 when pressing the dais at the bottom of the philosopher ladder, 3 when Nuwa is dead?
     public static final int RUIN_CRUSHER_MEDICINE_STATUE_SCREEN = 0x29a;
+    public static final int RUIN_MEDICINE_UNKNOWN = 0x29b;
     public static final int MOONLIGHT_SCAN_HANDS = 0x29c; // Set to 1 after scanning the hands of the four
     public static final int MOONLIGHT_SCAN_TRAP = 0x29d; // Set to 1 after scanning the phenomenal trap
     public static final int MOONLIGHT_SCAN_FACE = 0x29e; // Set to 1 after scanning the face of highest rank
@@ -182,8 +183,11 @@ public final class FlagConstants {
     public static final int GODDESS_HATCHES_UNLOCKED = 0x41c; // Set to 1 by the dais that allows flooding Tower of the Goddess
     public static final int MAUSOLEUM_HARDMODE_SKULL_ANIMATION = 0x420; // Goes 0 > 1 by timer when HARDMODE (16a) set to 2, sets screen flag 0x28, and goes 1 > 2 by timer 40 frames later (after animation). Tested on RoomSpawner animation for == 1
     public static final int HT_SOLVED_ROOM33_PILLARS = 0x70d;
+    public static final int HT_SOLVED_ROOM5 = 0x7d4; // Value 0 > 1 via FlagTimer when both daises in Amphisbaena's room are activated
+    public static final int HT_SOLVED_ROOM12 = 0x7db;
     public static final int HT_ROOM19_SPAWNS = 0x7dd; // Value 0 > 1 via FlagTimer based on the flag set when Mushussu is defeated; used for the test to spawn Mushussu and the tests for some enemies on that screen.
     public static final int HT_SOLVED_ROOM19 = 0x7e2; // Value 0 > 1 when Mushussu is defeated, used on the crushers.
+    public static final int HT_PHANTOM_TABLET = 0x7ec;
     public static final int HT_SOLVED_ROOM30 = 0x7ed; // Value 0 > 1 via FlagTimer when all 3 daises in room 30 (witches) are pressed.
     public static final int HT_SOLVED_ROOM35 = 0x710; // Value 0 > 1 when reading the tablet in room 35, 1 > 2 via FlagTimer to also set a screen flag for sound effects, etc. Allows talking to Dracuet in the final room.
     public static final int HT_ROOM1_SHORTCUT_OPEN = 0x7f4; // Value 0 > 1 via FlagTimer when all 3 daises in room 30 (witches) are pressed.
@@ -281,6 +285,7 @@ public final class FlagConstants {
     public static final int WF_KNIFE = 0x07f;
     public static final int WF_KEY_SWORD = 0x080;
     public static final int WF_FLARE_GUN = 0x086;
+    public static final int WF_PISTOL = 0x08a;
     public static final int WF_ANGEL_SHIELD = 0x08d;
     public static final int WF_ANKH_JEWEL_GUIDANCE = 0x08e;
     public static final int WF_ANKH_JEWEL_MAUSOLEUM = 0x08f;
@@ -311,6 +316,7 @@ public final class FlagConstants {
     public static final int WF_HOLY_GRAIL = 0x0a9;
     public static final int WF_ISIS_PENDANT = 0x0aa;
     public static final int WF_CRUCIFIX = 0x0ab;
+    public static final int WF_HELMET = 0x0ac;
     public static final int WF_GRAPPLE_CLAW = 0x0ad;
     public static final int WF_BRONZE_MIRROR = 0x0ae;
     public static final int WF_EYE_OF_TRUTH = 0x0af;
@@ -322,6 +328,7 @@ public final class FlagConstants {
     public static final int WF_FEATHER = 0x0b6;
     public static final int WF_FAIRY_CLOTHES = 0x0b8;
     public static final int WF_SCRIPTURES = 0x0b9;
+    public static final int WF_HERMES_BOOTS = 0x0ba;
     public static final int WF_FRUIT_OF_EDEN = 0x0bb;
     public static final int WF_TWIN_STATUE = 0x0bc;
     public static final int WF_PERFUME = 0x0be;
@@ -1131,7 +1138,7 @@ public final class FlagConstants {
     public static final int SCREEN_FLAG_30 = 0x030;
     public static final int SCREEN_FLAG_31 = 0x031;
 
-    public static final int ROOM_FLAG_32 = 0x032; // Used by shortcut from Gate of Time (Mausoleum)/Retromausoleum to Tower of the Goddess
+    public static final int ROOM_FLAG_32 = 0x032; // Used by shortcut from Gate of Time (Mausoleum)/Retromausoleum to Tower of the Goddess; used for HT fall rooms to spawn the ladder at >= 1.
     public static final int ROOM_FLAG_33 = 0x033; // Used by Ankh Jewel (Temple of the Sun) chest puzzle / wedjet to fail the puzzle if the dais is pressed.
     public static final int ROOM_FLAG_35 = 0x035; // Used by fake Ankh Jewel trap in Twin Labyrinths for non-random traps.
     public static final int ROOM_FLAG_37 = 0x037; // Used for a weight door during the escape.

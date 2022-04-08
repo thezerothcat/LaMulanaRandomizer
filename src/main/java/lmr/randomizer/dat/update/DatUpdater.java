@@ -38,6 +38,7 @@ public abstract class DatUpdater {
         updateMulbrukWakingUpConversationBlock(datFileData.getMulbrukWakingUpConversationBlock());
         updateMulbrukIntroConversationBlock(datFileData.getMulbrukIntroConversationBlock());
         updateMulbrukHTConversationBlock(datFileData.getMulbrukHTConversationBlock());
+        updateMulbrukFatherLocationConversationBlock(datFileData.getMulbrukFatherLocationConversationBlock());
         updateRegularEscapeConversationBlock(datFileData.getRegularEscapeConversationBlock());
         updateSwimsuitEscapeConversationBlock(datFileData.getSwimsuitEscapeConversationBlock());
 
@@ -515,6 +516,7 @@ public abstract class DatUpdater {
     void updateMulbrukWakingUpConversationBlock(Block conversationBlock) { }
     void updateMulbrukIntroConversationBlock(Block conversationBlock) { }
     void updateMulbrukHTConversationBlock(Block conversationBlock) { }
+    void updateMulbrukFatherLocationConversationBlock(Block conversationBlock) { }
     void updateRegularEscapeConversationBlock(Block conversationBlock) { }
     void updateSwimsuitEscapeConversationBlock(Block conversationBlock) { }
 

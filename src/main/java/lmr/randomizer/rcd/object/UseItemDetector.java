@@ -81,6 +81,9 @@ public class UseItemDetector extends GameObject {
         if("Maternity Statue".equals(itemName)) {
             setItem(15);
         }
+        if(itemName.startsWith("Medicine of the Mind")) {
+            setItem(16);
+        }
     }
 
     public void setGroundOnly(boolean groundOnly) {

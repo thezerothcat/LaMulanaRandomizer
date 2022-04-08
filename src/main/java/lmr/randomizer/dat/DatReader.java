@@ -1016,6 +1016,8 @@ public final class DatReader {
                 block = buildMapNamesLimitedBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             else if(blockIndex == BlockConstants.FootOfFuto
+                    || blockIndex == BlockConstants.MegaTablet_HT_Entrance
+                    || blockIndex == BlockConstants.MegaTablet_HT_BecameAPhantom
                     || BlockConstants.TABLET_BLOCKS.contains(blockIndex)) {
                 block = buildScannableBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }

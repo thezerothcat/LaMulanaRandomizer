@@ -61,5 +61,9 @@ public class DynamicWall extends GameObject {
             setImageX(540);
             setImageY(0);
         }
+        if(zoneIndex == ZoneConstants.MOONLIGHT) {
+            setImageX(540);
+            setImageY(0);
+        }
     }
 }

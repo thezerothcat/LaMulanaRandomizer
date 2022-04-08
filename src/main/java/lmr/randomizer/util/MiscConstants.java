@@ -234,8 +234,8 @@ public final class MiscConstants {
         if(blockNumber == BlockConstants.Tablet_Extinction_TwoAngelShield) {
             return "Tablet_Extinction_TwoAngelShield";
         }
-        if(blockNumber == BlockConstants.Tablet_Extinction_ShellInTheLeftHandPoints) {
-            return "Tablet_Extinction_ShellInTheLeftHandPoints";
+        if(blockNumber == BlockConstants.DamagedTablet_Extinction_ShellInTheLeftHandPoints) {
+            return "DamagedTablet_Extinction_ShellInTheLeftHandPoints";
         }
         if(blockNumber == BlockConstants.Tablet_Extinction_LetTheLightBurnHere) {
             return "Tablet_Extinction_LetTheLightBurnHere";
@@ -264,8 +264,8 @@ public final class MiscConstants {
         if(blockNumber == BlockConstants.Tablet_Inferno_LastJewelLiesWithin) {
             return "Tablet_Inferno_LastJewelLiesWithin";
         }
-        if(blockNumber == BlockConstants.Tablet_Extinction_NuwaSleeps) {
-            return "Tablet_Extinction_NuwaSleeps";
+        if(blockNumber == BlockConstants.DamagedTablet_Extinction_NuwaSleeps) {
+            return "DamagedTablet_Extinction_NuwaSleeps";
         }
         if(blockNumber == BlockConstants.Tablet_Twin_BlackOnyxPurpleAmethyst) {
             return "Tablet_Twin_BlackOnyxPurpleAmethyst";
@@ -665,6 +665,12 @@ public final class MiscConstants {
         }
         if(blockNumber == BlockConstants.Tablet_HT_ClothToMakeTheTreasure) {
             return "Tablet_HT_ClothToMakeTheTreasure";
+        }
+        if(blockNumber == BlockConstants.MegaTablet_HT_Entrance) {
+            return "MegaTablet_HT_Entrance";
+        }
+        if(blockNumber == BlockConstants.MegaTablet_HT_BecameAPhantom) {
+            return "MegaTablet_HT_BecameAPhantom";
         }
         if(HolidaySettings.isFools2022Mode()) {
             if(blockNumber == BlockConstants.MantraTablet_MARDUK) {

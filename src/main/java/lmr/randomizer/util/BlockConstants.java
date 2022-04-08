@@ -26,6 +26,7 @@ public final class BlockConstants {
     public static final int MulbrukWakingUpConversationBlock = 393; // 0x189; moved to flag check conversations in randomizer
     public static final int MulbrukIntroBlock = 393; // Replaced for Helloween 2019
     public static final int MulbrukHTConversationBlock = 414; // 0x19e; Replaced for Halloween 2021
+    public static final int MulbrukFatherLocationConversationBlock = 415; // 0x19f
 
     public static final int MapText_GateOfGuidance = 10;
     public static final int MapText_Surface = 11;
@@ -161,6 +162,7 @@ public final class BlockConstants {
     public static final int Master_Mulbruk_ProvocativeBathingSuitReaction = 1013;
 
     public static final int EmptyConversation = 471;
+    public static final int Master_Naramura_Empty = 921;
     public static final int Master_Philosopher_Stone = 676; // References EmptyConversation / 471
     public static final int Master_Philosopher_Stone_Unused1 = 699; // References EmptyConversation / 471
     public static final int Master_Philosopher_Stone_Unused2 = 703; // References EmptyConversation / 471
@@ -319,7 +321,7 @@ public final class BlockConstants {
     public static final int Tablet_Inferno_ThoseSeekingEden = 163; // Glow flag = TABLET_GLOW_INFERNO_THOSE_SEEKING_EDEN
     public static final int Tablet_Extinction_SeekTheRighteousSpirit = 171; // Glow flag = TABLET_GLOW_EXTINCTION_SEEK_THE_RIGHTEOUS_SPIRIT
     public static final int Tablet_Extinction_TwoAngelShield = 173; // Glow flag = TABLET_GLOW_EXTINCTION_TWO_ANGEL_SHIELD
-    public static final int Tablet_Extinction_ShellInTheLeftHandPoints = 174; // Glow flag = TABLET_GLOW_EXTINCTION_SHELL_IN_THE_LEFT_HAND_POINTS
+    public static final int DamagedTablet_Extinction_ShellInTheLeftHandPoints = 174; // Glow flag = TABLET_GLOW_EXTINCTION_SHELL_IN_THE_LEFT_HAND_POINTS
     public static final int Tablet_Extinction_LetTheLightBurnHere = 175; // Glow flag = TABLET_GLOW_EXTINCTION_LET_THE_LIGHT_BURN_HERE
     public static final int Tablet_Extinction_SprigganStatue = 176; // Glow flag = TABLET_GLOW_EXTINCTION_SPRIGGAN_STATUE
     public static final int Tablet_Extinction_DragonBone = 177; // Glow flag = TABLET_GLOW_EXTINCTION_DRAGON_BONE
@@ -329,7 +331,7 @@ public final class BlockConstants {
     public static final int Tablet_Extinction_ProceedThroughTheWall = 181; // Glow flag = TABLET_GLOW_EXTINCTION_PROCEED_THROUGH_THE_WALL
     public static final int Tablet_Extinction_EveryHeartHasAColor = 182; // Glow flag = TABLET_GLOW_EXTINCTION_EVERY_HEART_HAS_A_COLOR
     public static final int Tablet_Inferno_LastJewelLiesWithin = 183; // Glow flag = TABLET_GLOW_INFERNO_LAST_JEWEL_LIES_WITHIN
-    public static final int Tablet_Extinction_NuwaSleeps = 184; // Glow flag = TABLET_GLOW_EXTINCTION_NUWA_SLEEPS
+    public static final int DamagedTablet_Extinction_NuwaSleeps = 184; // Glow flag = TABLET_GLOW_EXTINCTION_NUWA_SLEEPS
     public static final int Tablet_Twin_BlackOnyxPurpleAmethyst = 189; // Glow flag = TABLET_GLOW_TWIN_BLACK_ONYX_PURPLE_AMETHYST
     public static final int DamagedTablet_Twin_FrontAndBack = 190; // Glow flag = TABLET_GLOW_TWIN_FRONT_AND_BACK_DAMAGED
     public static final int Tablet_Moonlight_EdenSearchOutThePlace = 191; // Glow flag = TABLET_GLOW_MOONLIGHT_EDEN_SEARCH_OUT_THE_PLACE
@@ -465,6 +467,9 @@ public final class BlockConstants {
     public static final int Tablet_HT_IExistHere = 1005; // Glow flag = TABLET_GLOW_HT_I_EXIST_HERE
     public static final int Tablet_HT_ClothToMakeTheTreasure = 1009; // Glow flag = TABLET_GLOW_HT_CLOTH_TO_MAKE_THE_TREASURE
 
+    public static final int MegaTablet_HT_Entrance = 918;
+    public static final int MegaTablet_HT_BecameAPhantom = 1029;
+
     public static final int Scannable_ResearchScan_StatueOfThoth = 570;
     public static final int Scannable_Laptop = 237; // Related flag = 0x210
 
@@ -567,7 +572,7 @@ public final class BlockConstants {
             Tablet_Inferno_ThoseSeekingEden,
             Tablet_Extinction_SeekTheRighteousSpirit,
             Tablet_Extinction_TwoAngelShield,
-            Tablet_Extinction_ShellInTheLeftHandPoints,
+            DamagedTablet_Extinction_ShellInTheLeftHandPoints,
             Tablet_Extinction_LetTheLightBurnHere,
             Tablet_Extinction_SprigganStatue,
             Tablet_Extinction_DragonBone,
@@ -577,7 +582,7 @@ public final class BlockConstants {
             Tablet_Extinction_ProceedThroughTheWall,
             Tablet_Extinction_EveryHeartHasAColor,
             Tablet_Inferno_LastJewelLiesWithin,
-            Tablet_Extinction_NuwaSleeps,
+            DamagedTablet_Extinction_NuwaSleeps,
             Tablet_Twin_BlackOnyxPurpleAmethyst,
             DamagedTablet_Twin_FrontAndBack,
             Tablet_Moonlight_EdenSearchOutThePlace,
@@ -1011,7 +1016,7 @@ public final class BlockConstants {
             return BlockConstants.Tablet_Extinction_SeekTheRighteousSpirit;
         }
         if(tabletGlowFlag == FlagConstants.TABLET_GLOW_EXTINCTION_NUWA_SLEEPS) {
-            return BlockConstants.Tablet_Extinction_NuwaSleeps;
+            return BlockConstants.DamagedTablet_Extinction_NuwaSleeps;
         }
         if(tabletGlowFlag == FlagConstants.TABLET_GLOW_EXTINCTION_LARGE_CRUCIFIX_SUMMON_PALENQUE) {
             return BlockConstants.Tablet_Extinction_LargeCrucifixSummonPalenque;
@@ -1041,7 +1046,7 @@ public final class BlockConstants {
             return BlockConstants.Tablet_Extinction_Gatekeepers;
         }
         if(tabletGlowFlag == FlagConstants.TABLET_GLOW_EXTINCTION_SHELL_IN_THE_LEFT_HAND_POINTS) {
-            return BlockConstants.Tablet_Extinction_ShellInTheLeftHandPoints;
+            return BlockConstants.DamagedTablet_Extinction_ShellInTheLeftHandPoints;
         }
         if(tabletGlowFlag == FlagConstants.TABLET_GLOW_EXTINCTION_PROCEED_THROUGH_THE_WALL) {
             return BlockConstants.Tablet_Extinction_ProceedThroughTheWall;

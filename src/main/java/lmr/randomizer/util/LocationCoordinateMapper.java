@@ -829,6 +829,9 @@ public final class LocationCoordinateMapper {
         if(zone == 22) {
             return getImageIndex(1, front);
         }
+        if(zone == 23) {
+            return 19;
+        }
         return 1;
     }
 
