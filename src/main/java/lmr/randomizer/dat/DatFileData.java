@@ -90,6 +90,9 @@ public class DatFileData {
     public Block getMulbrukHTConversationBlock() {
         return datFileEntries.get(BlockConstants.MulbrukHTConversationBlock);
     }
+    public Block getMulbrukFatherLocationConversationBlock() {
+        return datFileEntries.get(BlockConstants.MulbrukFatherLocationConversationBlock);
+    }
     public Block getRegularEscapeConversationBlock() {
         return datFileEntries.get(BlockConstants.Conversation_MulbrukEscapeRegular);
     }
