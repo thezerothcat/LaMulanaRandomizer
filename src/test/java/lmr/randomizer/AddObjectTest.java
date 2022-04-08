@@ -486,7 +486,8 @@ public class AddObjectTest {
     public void testAddLowerUntrueShrineBackupDoor() {
         Screen screen = new Screen();
 
-        AddObject.addLowerUntrueShrineBackupDoor(screen);
+        TestByteOperation testToAdd = new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9);
+        AddObject.addLowerUntrueShrineBackupDoor(screen, testToAdd);
 
         // Functional door object
         GameObject gameObject = screen.getObjects().get(0);
@@ -500,7 +501,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(4), 300);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 320);
         Assert.assertEquals(gameObject.getArgs().size(), 6);
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9)));
+        Assert.assertTrue(containsTest(gameObject, testToAdd));
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 1);
         Assert.assertEquals(gameObject.getWriteByteOperations().size(), 0);
 
@@ -534,7 +535,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(22), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(23), 1);
         Assert.assertEquals(gameObject.getArgs().size(), 24);
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9)));
+        Assert.assertTrue(containsTest(gameObject, testToAdd));
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 1);
         Assert.assertEquals(gameObject.getWriteByteOperations().size(), 0);
     }
@@ -543,7 +544,8 @@ public class AddObjectTest {
     public void testAddUpperUntrueShrineBackupDoor() {
         Screen screen = new Screen();
 
-        AddObject.addUpperUntrueShrineBackupDoor(screen);
+        TestByteOperation testToAdd = new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9);
+        AddObject.addUpperUntrueShrineBackupDoor(screen, testToAdd);
 
         // Functional door object
         GameObject gameObject = screen.getObjects().get(0);
@@ -557,7 +559,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(4), 340);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 92);
         Assert.assertEquals(gameObject.getArgs().size(), 6);
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9)));
+        Assert.assertTrue(containsTest(gameObject, testToAdd));
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 1);
         Assert.assertEquals(gameObject.getWriteByteOperations().size(), 0);
 
@@ -591,7 +593,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(22), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(23), 1);
         Assert.assertEquals(gameObject.getArgs().size(), 24);
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9)));
+        Assert.assertTrue(containsTest(gameObject, testToAdd));
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 1);
         Assert.assertEquals(gameObject.getWriteByteOperations().size(), 0);
     }
@@ -600,7 +602,8 @@ public class AddObjectTest {
     public void testAddSealUntrueShrineBackupDoor() {
         Screen screen = new Screen();
 
-        AddObject.addSealUntrueShrineBackupDoor(screen);
+        TestByteOperation testToAdd = new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9);
+        AddObject.addSealUntrueShrineBackupDoor(screen, testToAdd);
 
         // Functional door object
         GameObject gameObject = screen.getObjects().get(0);
@@ -614,7 +617,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(4), 300);
         Assert.assertEquals((int)gameObject.getArgs().get(5), 332);
         Assert.assertEquals(gameObject.getArgs().size(), 6);
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9)));
+        Assert.assertTrue(containsTest(gameObject, testToAdd));
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 1);
         Assert.assertEquals(gameObject.getWriteByteOperations().size(), 0);
 
@@ -648,7 +651,7 @@ public class AddObjectTest {
         Assert.assertEquals((int)gameObject.getArgs().get(22), 0);
         Assert.assertEquals((int)gameObject.getArgs().get(23), 1);
         Assert.assertEquals(gameObject.getArgs().size(), 24);
-        Assert.assertTrue(containsTest(gameObject, new TestByteOperation(258, ByteOp.FLAG_EQUALS, 9)));
+        Assert.assertTrue(containsTest(gameObject, testToAdd));
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 1);
         Assert.assertEquals(gameObject.getWriteByteOperations().size(), 0);
     }

@@ -427,8 +427,7 @@ public final class AddObject {
         warpDoor.addTests(additionalTests);
 
         GraphicsTextureDraw backupShrineDoorGraphic = new GraphicsTextureDraw(screen, 480, 360);
-
-        backupShrineDoorGraphic.getTestByteOperations().add(new TestByteOperation(FlagConstants.BOSSES_SHRINE_TRANSFORM, ByteOp.FLAG_EQUALS, 9));
+        backupShrineDoorGraphic.addTests(additionalTests);
 
         backupShrineDoorGraphic.setLayer(-1);
         backupShrineDoorGraphic.setImageFile("01effect.png");
@@ -5707,7 +5706,6 @@ public final class AddObject {
             }
             else if(roomIndex == 11 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
         }
         else if(zoneIndex == 23) {
