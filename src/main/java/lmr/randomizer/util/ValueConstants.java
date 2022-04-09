@@ -38,6 +38,7 @@ public class ValueConstants {
 
     public static final int NPC_BACKGROUND_TENT_CONVERSATION = 0; // 0x000;
     public static final int NPC_BACKGROUND_TENT_SHOP = 4; // 0x004;
+    public static final short NPC_BACKGROUND_GODDESS = 19; // 0x013
     public static final short NPC_BACKGROUND_SUN = 25; // 0x019
     public static final int NPC_BACKGROUND_STATUE = 26; // 0x01a
     public static final int NPC_BACKGROUND_TENT_RETRO = 27; // 0x01b
@@ -51,6 +52,8 @@ public class ValueConstants {
     public static final short NPC_MUSIC_MULBRUK = 15; // 0x00f;
     public static final int NPC_MUSIC_STONE_PHILOSOPHER = 18; // 0x012;
     public static final short NPC_MUSIC_FAIRY_QUEEN = 24; // 0x018;
+    public static final short NPC_MUSIC_GODDESS = 32;
+    public static final short NPC_MUSIC_BIRTH = 33; // 0x021;
 
     public static final short DAT_CHARACTER_SPACE = 32;
 
