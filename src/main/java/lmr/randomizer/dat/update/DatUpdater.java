@@ -26,6 +26,7 @@ public abstract class DatUpdater {
         updateItemDescriptions(datFileData.getItemDescriptionBlock());
         updateMenuData(datFileData.getMenuBlock());
         updateSoftwareData(datFileData.getSoftwareBlock());
+        updateEmailData(datFileData.getEmailBlock());
         updateGrailPoints(datFileData.getGrailPointBlock());
         updateHTMapNamesLimitedBlock(datFileData.getHTMapNamesLimitedBlock());
         updateFootOfFutoScannableBlock(datFileData.getFootOfFutoScannableBlock());
@@ -461,6 +462,7 @@ public abstract class DatUpdater {
     void updateItemDescriptions(ItemDescriptionBlock itemDescriptionBlock) { }
     void updateMenuData(MenuBlock menuBlock) { }
     void updateSoftwareData(SoftwareBlock softwareBlock) { }
+    void updateEmailData(EmailBlock emailBlock) { }
     void updateGrailPoints(GrailPointBlock grailPointBlock) { }
 
     void updateHTMapNamesLimitedBlock(MapNamesLimitedBlock mapNamesLimitedBlock) { }

@@ -165,8 +165,8 @@ public class GameObject {
             writeByteOperations.add(update);
         }
         if(writeByteOperations.size() > 4) {
-            FileUtils.logFlush("Attempted to add more than 4 tests to object:\n" + toString());
-            throw new RuntimeException("Too many tests on rcd object");
+            FileUtils.logFlush("Attempted to add more than 4 updates to object:\n" + toString());
+            throw new RuntimeException("Too many updates on rcd object");
         }
         return this;
     }

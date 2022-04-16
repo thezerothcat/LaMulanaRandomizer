@@ -27,6 +27,9 @@ public class DatFileData {
     public SoftwareBlock getSoftwareBlock() {
         return (SoftwareBlock)datFileEntries.get(BlockConstants.SoftwareBlock);
     }
+    public EmailBlock getEmailBlock() {
+        return (EmailBlock)datFileEntries.get(BlockConstants.EmailBlock);
+    }
     public GrailPointBlock getGrailPointBlock() {
         return (GrailPointBlock)datFileEntries.get(BlockConstants.GrailPointBlock);
     }

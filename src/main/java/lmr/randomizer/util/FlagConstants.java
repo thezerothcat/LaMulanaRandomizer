@@ -59,6 +59,7 @@ public final class FlagConstants {
     public static final int INFERNO_CHAIN_WHIP_CRUSHER_RIGHT = 0x1b2; // Vanilla sets this when the right crusher starts going up. Randomizer swaps this for a screen flag so it can't perma-fail.
     public static final int INFERNO_PUZZLE_FLARE_GUN = 0x1b3; // Value 0 > 1 for breaking the wall to enter; 1 > 2 when puzzle solved, 2 > 3 when the weapon cover finishes de-spawning.
     public static final int INFERNO_PUZZLE_ICE_CAPE_CHEST = 0x1b7; // Value 0 > 2 when solving push block puzzle.
+    public static final int INFERNO_HOT_BLOODED_NEMESISTWO_SHOP_POT_BROKEN = 0x1bf;
     public static final int EXTINCTION_PERMA_LIGHT = 0x1c2; // Value 3 when perma-light is in effect (1 is probably for the seal in Birth and 2 for the seal in Extinction spawning the supertorch).
     public static final int EXTINCTION_MAGATAMA_PLACED = 0x1c7; // Value 0 > 1 when using Magatama Jewel on the screen with Ox-head and horse-face, 2+ are for mural animation.
     public static final int EXTINCTION_PALENQUE_SCREEN_MURAL = 0x1ca; // Value 0 > 1 after placing the weight in the Extinction <> Birth teleport area, 2 and 3 for animation of mural falling
@@ -115,6 +116,7 @@ public final class FlagConstants {
     public static final int GODDESS_PUZZLE_FLAIL_WHIP = 0x27b; // Value 0 > 1 when reading the tablet, 1 > 2 when solved, 2 > 3 when weapon cover is gone
     public static final int GODDESS_STATUE_SHIELD_ANIMATION = 0x284; // Goes to 2 when activated; 2 > 3 when gone
     public static final int RUIN_PUZZLE_ANKH_JEWEL_CHEST = 0x28c; // Set to 2 by FlagTimer to unlock Ankh Jewel (Tower of Ruin) chest
+    public static final int RUIN_USED_EARTH_SPEAR = 0x28d; // Set to 1 when hitting the red face with Earth Spear to unlock the pushable block on upper Tower of Babel screen
     public static final int RUIN_MEDICINE_STATUE_UNCOVERED = 0x28f; // Skyfish puzzle
     public static final int RUIN_SPIRITS_RUSALII = 0x291; // 0 = no mantra, 1 = recited birth, 2 = recited death
     public static final int RUIN_SPIRITS_YAKSI = 0x292; // 0 = no mantra, 1 = recited birth, 2 = recited death
@@ -150,6 +152,7 @@ public final class FlagConstants {
     public static final int DIMENSIONAL_UPPER_STATE = 0x352; // 2 = cleared?
     public static final int SACRED_ORB_COUNT = 0x354; // Value += 1 for each orb collected; incremented via FlagTimer so may not reflect actual HP if cheating with orb duplication.
     public static final int ORB_COUNT_INCREMENTED_GUIDANCE = 0x355; // Value 0 > 1 when updating 0x355 to ensure it only happens once. One for each orb, spanning 0x355 through 0x35e
+    public static final int VIY_FLOOR_BROKEN = 0x360; // Set by Viy's ankh
     public static final int RUIN_LADDER_NUWA = 0x369; // 0 > 1 from the dais, may go to 2 somehow?
     public static final int MULBRUK_BIKINI_ENDING = 0x36a; // Set via conversations, affects escape door/may be tested for Mulbruk bikini credits
     public static final int GODDESS_PIPES_SHORTCUT = 0x36d; // Goes to 2 when activated; 2 > 3 when gone

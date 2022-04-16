@@ -4,10 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class BlockConstants {
+    public static final int MapsBlock = 0;
     public static final int ItemNameBlock = 1;
     public static final int ItemDescriptionBlock = 2;
     public static final int MenuBlock = 4;
     public static final int SoftwareBlock = 5;
+    public static final int EmailBlock = 6;
     public static final int GrailPointBlock = 7;
     public static final int HTMapNamesLimitedBlock = 28;
 

@@ -127,6 +127,22 @@ public final class DatReader {
         return softwareBlock;
     }
 
+    private static Block buildEmailBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        int dataIndex = 0;
+        EmailBlock emailBlock = new EmailBlock(blockIndex);
+
+        while(dataIndex < numberOfShortsInThisBlock) {
+            EmailEntry emailEntry = buildEmailEntry(dataInputStream);
+            dataIndex += emailEntry.getSize() / 2;
+            if(dataIndex < numberOfShortsInThisBlock) {
+                dataInputStream.readShort(); // 0x000a
+                dataIndex += 1;
+            }
+            emailBlock.getBlockContents().add(emailEntry);
+        }
+        return emailBlock;
+    }
+
     private static Block buildGrailPointBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         int dataIndex = 0;
         GrailPointBlock grailPointsBlock = new GrailPointBlock(blockIndex);
@@ -885,6 +901,12 @@ public final class DatReader {
         return softwareListEntry;
     }
 
+    private static EmailEntry buildEmailEntry(DataInputStream dataInputStream) throws IOException {
+        dataInputStream.readShort(); // 0x004e
+        dataInputStream.readShort(); // list length, should be 2
+        return new EmailEntry(dataInputStream.readShort(), dataInputStream.readShort());
+    }
+
     private static DefaultGrailPointEntry buildDefaultGrailPointEntry(DataInputStream dataInputStream) throws IOException {
         dataInputStream.readShort(); // 0x004e
         short listSize = dataInputStream.readShort(); // list length, should be 6
@@ -1008,6 +1030,9 @@ public final class DatReader {
             }
             else if(blockIndex == BlockConstants.SoftwareBlock) {
                 block = buildSoftwareBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
+            else if(blockIndex == BlockConstants.EmailBlock) {
+                block = buildEmailBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             else if(blockIndex == BlockConstants.GrailPointBlock) {
                 block = buildGrailPointBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
