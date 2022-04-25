@@ -724,7 +724,8 @@ public class Fools2021RcdUpdater extends RcdUpdater {
             }
             else if(roomIndex == 8 && screenIndex == 1) {
                 // Amphisbaena boss room
-                AddObject.addEyeOfDivineRetribution(screen, 300, 500);
+                AddObject.addEyeOfDivineRetribution(screen, 300, 500).setPercentDamage(100);
+
                 AddObject.addHitbox(screen, 0, 480, 32, 24, new ArrayList<>(0), Arrays.asList(new WriteByteOperation(FlagConstants.SCREEN_FLAG_A, ByteOp.ADD_FLAG, 1)));
 
                 for (int i = 1; i <= 10; i++) {

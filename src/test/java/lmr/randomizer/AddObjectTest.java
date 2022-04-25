@@ -5979,7 +5979,7 @@ public class AddObjectTest {
         Assert.assertEquals(gameObject.getY(), y);
         Assert.assertEquals((int)gameObject.getArgs().get(0), 10);
         Assert.assertEquals((int)gameObject.getArgs().get(1), 0);
-        Assert.assertEquals((int)gameObject.getArgs().get(2), 100);
+        Assert.assertEquals((int)gameObject.getArgs().get(2), 30);
         Assert.assertEquals(gameObject.getArgs().size(), 3);
         Assert.assertEquals(gameObject.getTestByteOperations().size(), 0);
         Assert.assertEquals(gameObject.getWriteByteOperations().size(), 0);

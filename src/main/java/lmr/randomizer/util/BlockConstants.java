@@ -469,6 +469,8 @@ public final class BlockConstants {
     public static final int Tablet_HT_IExistHere = 1005; // Glow flag = TABLET_GLOW_HT_I_EXIST_HERE
     public static final int Tablet_HT_ClothToMakeTheTreasure = 1009; // Glow flag = TABLET_GLOW_HT_CLOTH_TO_MAKE_THE_TREASURE
 
+    public static final int ResearchMode_CrossOfLight = 552;
+
     public static final int MegaTablet_HT_Entrance = 918;
     public static final int MegaTablet_HT_BecameAPhantom = 1029;
 

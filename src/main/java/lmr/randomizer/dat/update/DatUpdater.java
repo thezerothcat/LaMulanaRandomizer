@@ -208,6 +208,12 @@ public abstract class DatUpdater {
                     textEntry.getData().addAll(itemData.getRawData());
                 }
             }
+            else if(section.startsWith("{SCENE=")) {
+                BlockSceneData sceneData = new BlockSceneData(0);
+                if(sceneData != null) {
+                    textEntry.getData().addAll(sceneData.getRawData());
+                }
+            }
             else {
                 textEntry.getData().addAll(FileUtils.stringToData(section));
             }
@@ -245,6 +251,12 @@ public abstract class DatUpdater {
                 BlockPoseData poseData = getPose(section.replaceAll("\\{POSE=", "").replaceAll("}", ""));
                 if(poseData != null) {
                     rawData.addAll(poseData.getRawData());
+                }
+            }
+            else if(section.startsWith("{SCENE=")) {
+                BlockSceneData sceneData = new BlockSceneData(0);
+                if(sceneData != null) {
+                    rawData.addAll(sceneData.getRawData());
                 }
             }
             else {
@@ -621,26 +633,13 @@ public abstract class DatUpdater {
         updateSoldText(shopBlock.getString(8), shopInventory.getItem3());
 
         List<Short> bunemonData = shopBlock.getBunemonText().getData();
-        List<Short> postText = new ArrayList<>();
-        int newlineIndex = -1;
-        for(int i = 0; i < bunemonData.size(); i++) {
-            Short data = bunemonData.get(i);
-            if(data == BlockDataConstants.Newline) {
-                newlineIndex = i;
-                break;
-            }
-        }
-        if(newlineIndex != -1) {
-            postText.addAll(bunemonData.subList(newlineIndex + 1, bunemonData.size()));
-        }
+
         bunemonData.clear();
         updateBunemonText(bunemonData, shopInventory.getItem1(), shopBlock.getItem1Price());
         bunemonData.addAll(FileUtils.stringToData(" , "));
         updateBunemonText(bunemonData, shopInventory.getItem2(), shopBlock.getItem2Price());
         bunemonData.addAll(FileUtils.stringToData(" , "));
         updateBunemonText(bunemonData, shopInventory.getItem3(), shopBlock.getItem3Price());
-        bunemonData.add(BlockDataConstants.Newline);
-        bunemonData.addAll(postText);
 
         shopBlock.setBunemonLocation(new BlockStringData(Translations.getLocationAndNpc(shopInventory.getNpcLocation(), shopInventory.getNpcName())));
     }

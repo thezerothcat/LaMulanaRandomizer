@@ -17,6 +17,12 @@ public class WriteByteOperation {
         this.value = value;
     }
 
+    public WriteByteOperation(WriteByteOperation toCopy) {
+        this.index = toCopy.getIndex();
+        this.op = toCopy.getOp();
+        this.value = toCopy.getValue();
+    }
+
     public int getIndex() {
         return index;
     }

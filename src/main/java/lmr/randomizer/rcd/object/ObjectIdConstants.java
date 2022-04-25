@@ -141,6 +141,7 @@ public final class ObjectIdConstants {
     public static final short FairyPoint = 0x91;
     public static final short Fog = 0x92;
     public static final short GraphicsTextureDraw = 0x93;
+    public static final short CollapsingFloor = 0x94;
     public static final short EyeOfRetribution = 0x95;
     public static final short ExtendableSpikes = 0x96;
     public static final short WarpPortal = 0x97;

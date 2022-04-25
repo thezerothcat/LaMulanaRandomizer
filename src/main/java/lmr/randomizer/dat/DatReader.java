@@ -296,10 +296,17 @@ public final class DatReader {
 
         blockStringData = new BlockStringData();
         while(dataIndex < numberOfShortsInThisBlock) {
-            blockStringData.getData().add(dataInputStream.readShort());
+            short data = dataInputStream.readShort();
+            if(data == BlockDataConstants.Newline) {
+                shopBlock.setBunemonText(blockStringData);
+                blockStringData = new BlockStringData();
+            }
+            else {
+                blockStringData.getData().add(data);
+            }
             ++dataIndex;
         }
-        shopBlock.setBunemonText(blockStringData);
+        shopBlock.setBunemonIntroText(blockStringData);
         return shopBlock;
     }
 
@@ -832,7 +839,7 @@ public final class DatReader {
                 else if (data == BlockDataConstants.Anime) {
 //                    cmd = "{SCENE %d}" % ord(b[0])
 //                    b = b[1:]
-                    block.getBlockContents().add(new BlockSceneData(data, dataInputStream.readShort()));
+                    block.getBlockContents().add(new BlockSceneData(dataInputStream.readShort()));
                     ++dataIndex;
                 }
                 else {

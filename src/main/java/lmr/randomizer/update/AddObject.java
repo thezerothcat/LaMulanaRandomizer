@@ -1189,17 +1189,21 @@ public final class AddObject {
         return spikesGraphic;
     }
 
-    public static void addBat(ObjectContainer objectContainer, int xPos, int yPos, int screenFlag) {
+    public static Bat addBat(ObjectContainer objectContainer, int xPos, int yPos, int screenFlag) {
+        Bat bat = addBat(objectContainer, xPos, yPos);
+        bat.addTests(new TestByteOperation(screenFlag, ByteOp.FLAG_GTEQ, 1));
+        return bat;
+    }
+
+    public static Bat addBat(ObjectContainer objectContainer, int xPos, int yPos) {
         Bat bat = new Bat(objectContainer, xPos, yPos);
         bat.setFrontsideBat(true);
         bat.setInitiallyFlying(true);
         bat.setDropType(1);
         bat.setArg2(2);
         bat.setDamage(3);
-
-        bat.addTests(new TestByteOperation(screenFlag, ByteOp.FLAG_GTEQ, 1));
-
         objectContainer.getObjects().add(bat);
+        return bat;
     }
 
     public static void addTrapItemBats(GameObject gameObject, short flagIndex) {
@@ -2981,7 +2985,7 @@ public final class AddObject {
 
         foolsEarlyExitBlock.getBlockContents().add(new BlockPoseData(8));
         foolsEarlyExitBlock.getBlockContents().add(new BlockPoseData(9));
-        foolsEarlyExitBlock.getBlockContents().add(new BlockSceneData(BlockDataConstants.Anime, (short)0)); // Scene 0 (credits)
+        foolsEarlyExitBlock.getBlockContents().add(new BlockSceneData(0)); // Scene 0 (credits)
         return foolsEarlyExitBlock;
     }
 
@@ -3436,10 +3440,11 @@ public final class AddObject {
      * @param x position
      * @param y position
      */
-    public static void addEyeOfDivineRetribution(Screen screen, int x, int y) {
+    public static EyeOfRetribution addEyeOfDivineRetribution(Screen screen, int x, int y) {
         EyeOfRetribution eyeOfDivineRetribution = new EyeOfRetribution(screen, x, y);
         eyeOfDivineRetribution.setPercentDamage(100);
         screen.getObjects().add(eyeOfDivineRetribution);
+        return eyeOfDivineRetribution;
     }
 
     /**
@@ -4218,18 +4223,15 @@ public final class AddObject {
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
@@ -4239,15 +4241,12 @@ public final class AddObject {
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 3) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 4 && screenIndex == 4) {
                 addToAllScreens.addToScreen(screen, 640, 480);
@@ -4263,14 +4262,12 @@ public final class AddObject {
             }
             else if(roomIndex == 6 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 7 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
@@ -4282,11 +4279,9 @@ public final class AddObject {
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 0 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 960);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
@@ -4296,18 +4291,15 @@ public final class AddObject {
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 3 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 3 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 960);
-
             }
             else if(roomIndex == 3 && screenIndex == 3) {
                 addToAllScreens.addToScreen(screen, 0, 1440);
@@ -4323,28 +4315,24 @@ public final class AddObject {
             }
             else if(roomIndex == 5 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 6 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 6 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 7 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 7 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 8 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 8 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 10 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
@@ -4374,36 +4362,30 @@ public final class AddObject {
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 2 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 960);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 3 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
@@ -4413,7 +4395,6 @@ public final class AddObject {
             }
             else if(roomIndex == 5 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 6 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
@@ -4423,21 +4404,18 @@ public final class AddObject {
             }
             else if(roomIndex == 7 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 8 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 9 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 9 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
         }
         else if(zoneIndex == 6) {
@@ -4446,70 +4424,60 @@ public final class AddObject {
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 3 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 5 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 6 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 6 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 7 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 7 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 8 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 9 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 9 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
         }
         else if(zoneIndex == 7) {
@@ -4518,139 +4486,117 @@ public final class AddObject {
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 3 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 3 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 960);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 5 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 6 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 6 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 7 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 8 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 9 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 9 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 10 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 10 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 11 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 11 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 11 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 12 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 12 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 12 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 960);
-
             }
             else if(roomIndex == 13 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 13 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 14 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 14 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 15 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 15 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 16 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 16 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 16 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 960);
-
             }
         }
         else if(zoneIndex == 8) {
@@ -4659,25 +4605,21 @@ public final class AddObject {
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 3) {
                 addToAllScreens.addToScreen(screen, 1920, 0);
@@ -4687,11 +4629,9 @@ public final class AddObject {
             }
             else if(roomIndex == 3 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 3) {
                 addToAllScreens.addToScreen(screen, 1920, 0);
@@ -4701,11 +4641,9 @@ public final class AddObject {
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 3) {
                 addToAllScreens.addToScreen(screen, 1920, 0);
@@ -4715,11 +4653,9 @@ public final class AddObject {
             }
             else if(roomIndex == 5 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 3) {
                 addToAllScreens.addToScreen(screen, 1920, 0);
@@ -4729,183 +4665,139 @@ public final class AddObject {
             }
             else if(roomIndex == 10 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 11 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 12 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
         }
         else if(zoneIndex == 9) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 6 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 6 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 7 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 9 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 9 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
         }
         else if(zoneIndex == 10) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 2 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 960);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 5 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 6 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 9 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 9 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 10 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 11 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
@@ -4914,785 +4806,601 @@ public final class AddObject {
         else if(zoneIndex == 11) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 4 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 960);
-
             }
             else if(roomIndex == 4 && screenIndex == 3) {
                 addToAllScreens.addToScreen(screen, 0, 1440);
             }
             else if(roomIndex == 5 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 6 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 8 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 9 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 9 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
         }
         else if(zoneIndex == 12) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 480);
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 4 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 960);
-
             }
             else if(roomIndex == 4 && screenIndex == 3) {
                 addToAllScreens.addToScreen(screen, 0, 1440);
             }
             else if(roomIndex == 5 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 6 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 6 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 7 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 9 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 9 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 10 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
         }
         else if(zoneIndex == 13) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 2 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 960);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 5 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 6 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 6 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 6 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 960);
-
             }
             else if(roomIndex == 6 && screenIndex == 3) {
                 addToAllScreens.addToScreen(screen, 0, 1440);
             }
             else if(roomIndex == 7 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 14 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 15 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 16 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 26 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
         }
         else if(zoneIndex == 14) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
+            }
+            else if(roomIndex == 6 && screenIndex == 0) {
+                addToAllScreens.addToScreen(screen, 0, 0);
             }
             else if(roomIndex == 7 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
         }
         else if(zoneIndex == 15) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
         }
         else if(zoneIndex == 16) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
         }
         else if(zoneIndex == 17) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 5 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 6 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 9 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 9 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 10 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 10 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
         }
         else if(zoneIndex == 18) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 6 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 6 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 7 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 9 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 9 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
         }
         else if(zoneIndex == 19) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
         }
         else if(zoneIndex == 20) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 1 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 960);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
         }
         else if(zoneIndex == 21) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
         }
         else if(zoneIndex == 22) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 0 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 1 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 2 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 2 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 3 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 4 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 4 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 960);
-
             }
             else if(roomIndex == 5 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 5 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 5 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 960);
-
             }
             else if(roomIndex == 6 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 6 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 7 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 8 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);
-
             }
             else if(roomIndex == 9 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 9 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 10 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 10 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 0, 480);
-
             }
             else if(roomIndex == 10 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 0, 480);
@@ -5702,7 +5410,6 @@ public final class AddObject {
             }
             else if(roomIndex == 11 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
-
             }
             else if(roomIndex == 11 && screenIndex == 1) {
                 addToAllScreens.addToScreen(screen, 640, 0);

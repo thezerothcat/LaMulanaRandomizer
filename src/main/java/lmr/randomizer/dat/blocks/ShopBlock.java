@@ -52,6 +52,7 @@ public class ShopBlock extends Block {
 
     private BlockStringData bunemonLocation;
     private BlockStringData bunemonText;
+    private BlockStringData bunemonIntroText;
 
     public ShopBlock() {
         super();
@@ -82,6 +83,7 @@ public class ShopBlock extends Block {
 
         bunemonLocation = new BlockStringData(blockToCopy.getBunemonLocation());
         bunemonText = new BlockStringData(blockToCopy.getBunemonText());
+        bunemonIntroText = new BlockStringData(blockToCopy.getBunemonIntroText());
     }
 
     public ShopBlock(ShopBlock blockToCopy) {
@@ -105,6 +107,7 @@ public class ShopBlock extends Block {
 
         bunemonLocation = new BlockStringData(blockToCopy.getBunemonLocation());
         bunemonText = new BlockStringData(blockToCopy.getBunemonText());
+        bunemonIntroText = new BlockStringData(blockToCopy.getBunemonIntroText());
     }
 
     public BlockStringData getString(int index) {
@@ -302,6 +305,14 @@ public class ShopBlock extends Block {
         this.bunemonText = bunemonText;
     }
 
+    public BlockStringData getBunemonIntroText() {
+        return bunemonIntroText;
+    }
+
+    public void setBunemonIntroText(BlockStringData bunemonIntroText) {
+        this.bunemonIntroText = bunemonIntroText;
+    }
+
     public short getItem1Price() {
         return inventoryPriceList.getData().get(0);
     }
@@ -360,7 +371,8 @@ public class ShopBlock extends Block {
         size += music.getSize();
 
         size += bunemonLocation.getSize() + 2;
-        size += bunemonText.getSize(); // No 0x000a after this one
+        size += bunemonText.getSize() + 2; // Newline
+        size += bunemonIntroText.getSize(); // No 0x000a after this one
         return size;
     }
 
@@ -398,6 +410,8 @@ public class ShopBlock extends Block {
         rawData.add(BlockDataConstants.EndOfEntry);
 
         rawData.addAll(bunemonText.getRawData());
+        rawData.add(BlockDataConstants.Newline);
+        rawData.addAll(bunemonIntroText.getRawData());
         return rawData;
     }
 
@@ -406,33 +420,35 @@ public class ShopBlock extends Block {
         dataOutputStream.writeShort(getBlockSize());
 
         inventoryItemArgsList.writeBytes(dataOutputStream);
-        dataOutputStream.writeShort(0x000a);
+        dataOutputStream.writeShort(BlockDataConstants.EndOfEntry);
 
         inventoryPriceList.writeBytes(dataOutputStream);
-        dataOutputStream.writeShort(0x000a);
+        dataOutputStream.writeShort(BlockDataConstants.EndOfEntry);
 
         inventoryCountList.writeBytes(dataOutputStream);
-        dataOutputStream.writeShort(0x000a);
+        dataOutputStream.writeShort(BlockDataConstants.EndOfEntry);
 
         flagList.writeBytes(dataOutputStream);
-        dataOutputStream.writeShort(0x000a);
+        dataOutputStream.writeShort(BlockDataConstants.EndOfEntry);
 
         for(int i = 0; i < 18; i++) {
             getString(i).writeBytes(dataOutputStream);
-            dataOutputStream.writeShort(0x000a);
+            dataOutputStream.writeShort(BlockDataConstants.EndOfEntry);
         }
 
         background.writeBytes(dataOutputStream);
         sprite.writeBytes(dataOutputStream);
 
         exitFlagList.writeBytes(dataOutputStream);
-        dataOutputStream.writeShort(0x000a);
+        dataOutputStream.writeShort(BlockDataConstants.EndOfEntry);
 
         music.writeBytes(dataOutputStream);
 
         bunemonLocation.writeBytes(dataOutputStream);
-        dataOutputStream.writeShort(0x000a);
+        dataOutputStream.writeShort(BlockDataConstants.EndOfEntry);
 
         bunemonText.writeBytes(dataOutputStream);
+        dataOutputStream.writeShort(BlockDataConstants.Newline);
+        bunemonIntroText.writeBytes(dataOutputStream);
     }
 }

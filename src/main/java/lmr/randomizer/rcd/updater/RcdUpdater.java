@@ -486,6 +486,9 @@ public abstract class RcdUpdater {
         else if(gameObject.getId() == ObjectIdConstants.GraphicsTextureDraw) {
             return updateGraphicsTextureDraw(gameObject);
         }
+        else if(gameObject.getId() == ObjectIdConstants.CollapsingFloor) {
+            return updateCollapsingFloor(gameObject);
+        }
         else if(gameObject.getId() == ObjectIdConstants.EyeOfRetribution) {
             return updateEyeOfRetribution(gameObject);
         }
@@ -982,6 +985,9 @@ public abstract class RcdUpdater {
         return true;
     }
     boolean updateGraphicsTextureDraw(GameObject graphicsTextureDraw) {
+        return true;
+    }
+    boolean updateCollapsingFloor(GameObject collapsingFloor) {
         return true;
     }
     boolean updateEyeOfRetribution(GameObject eyeOfRetribution) {
