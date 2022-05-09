@@ -3442,7 +3442,6 @@ public final class AddObject {
      */
     public static EyeOfRetribution addEyeOfDivineRetribution(Screen screen, int x, int y) {
         EyeOfRetribution eyeOfDivineRetribution = new EyeOfRetribution(screen, x, y);
-        eyeOfDivineRetribution.setPercentDamage(100);
         screen.getObjects().add(eyeOfDivineRetribution);
         return eyeOfDivineRetribution;
     }
@@ -4585,6 +4584,9 @@ public final class AddObject {
             }
             else if(roomIndex == 15 && screenIndex == 0) {
                 addToAllScreens.addToScreen(screen, 0, 0);
+            }
+            else if(roomIndex == 15 && screenIndex == 1) {
+                addToAllScreens.addToScreen(screen, 640, 0);
             }
             else if(roomIndex == 15 && screenIndex == 2) {
                 addToAllScreens.addToScreen(screen, 1280, 0);

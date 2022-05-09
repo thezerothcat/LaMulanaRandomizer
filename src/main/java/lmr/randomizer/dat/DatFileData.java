@@ -96,6 +96,9 @@ public class DatFileData {
     public Block getMulbrukFatherLocationConversationBlock() {
         return datFileEntries.get(BlockConstants.MulbrukFatherLocationConversationBlock);
     }
+    public Block getMulbrukSwimsuitReactionConversationBlock() {
+        return datFileEntries.get(BlockConstants.MulbrukSwimsuitReactionConversationBlock);
+    }
     public Block getRegularEscapeConversationBlock() {
         return datFileEntries.get(BlockConstants.Conversation_MulbrukEscapeRegular);
     }

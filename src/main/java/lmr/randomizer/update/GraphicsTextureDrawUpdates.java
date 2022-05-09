@@ -271,9 +271,9 @@ public class GraphicsTextureDrawUpdates {
      * way to get into a state where itemFlagMekuri is >= 2 is to have talked to Former Mekuri Master, which requires
      * the door to have been usable in the first place.
      * @param conversationDoor the door to use as a reference for adding the cover graphic
-     * @param itemFlagMekuri the flag to test for whether or not the door cover should be visible
+     * @param doorCloseTests tests for whether or not the door cover should be visible
      */
-    public static void addNpcDoorCover(ConversationDoor conversationDoor, int itemFlagMekuri) {
+    public static void addNpcDoorCover(ConversationDoor conversationDoor, TestByteOperation... doorCloseTests) {
         Screen screen = (Screen)conversationDoor.getObjectContainer();
         if(screen.getZoneIndex() == ZoneConstants.GUIDANCE) {
             GraphicsTextureDraw graphicsTextureDraw = new GraphicsTextureDraw(screen, conversationDoor.getX(), conversationDoor.getY());
@@ -290,7 +290,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.SURFACE) {
@@ -319,7 +319,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.MAUSOLEUM) {
@@ -337,7 +337,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.SUN) {
@@ -355,7 +355,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.SPRING) {
@@ -373,7 +373,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.INFERNO) {
@@ -391,7 +391,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.EXTINCTION) {
@@ -409,7 +409,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.TWIN_FRONT) {
@@ -427,7 +427,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.ENDLESS) {
@@ -445,7 +445,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.ILLUSION) {
@@ -463,7 +463,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.GRAVEYARD) {
@@ -481,7 +481,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.MOONLIGHT) {
@@ -510,7 +510,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.GODDESS) {
@@ -529,7 +529,7 @@ public class GraphicsTextureDrawUpdates {
                 graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
                 graphicsTextureDraw.setBlendMode(0);
                 graphicsTextureDraw.setArg23(1);
-                graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+                graphicsTextureDraw.addTests(doorCloseTests);
                 conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
             }
         }
@@ -548,7 +548,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.BIRTH_SKANDA) {
@@ -573,7 +573,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.DIMENSIONAL) {
@@ -591,7 +591,7 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAMax(0, 0, 0, 255);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
         else if(screen.getZoneIndex() == ZoneConstants.RETRO_SURFACE) {
@@ -608,7 +608,24 @@ public class GraphicsTextureDrawUpdates {
             graphicsTextureDraw.setRGBAPerFrame(0, 0, 0, 0);
             graphicsTextureDraw.setBlendMode(0);
             graphicsTextureDraw.setArg23(1);
-            graphicsTextureDraw.addTests(new TestByteOperation(itemFlagMekuri, ByteOp.FLAG_GTEQ, 2));
+            graphicsTextureDraw.addTests(doorCloseTests);
+            conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
+        }
+        else if(screen.getZoneIndex() == ZoneConstants.NIGHT_SURFACE) {
+            GraphicsTextureDraw graphicsTextureDraw = new GraphicsTextureDraw(screen, conversationDoor.getX(), conversationDoor.getY() - 20);
+            graphicsTextureDraw.setLayer(0);
+            graphicsTextureDraw.setImageFile(GraphicsTextureDraw.ImageFile_map);
+            graphicsTextureDraw.setImagePosition(0, 100);
+            graphicsTextureDraw.setImageSize(40, 60);
+            graphicsTextureDraw.setAnimation(0, 1, 4, 1);
+            graphicsTextureDraw.setCollision(HitTile.Air);
+            graphicsTextureDraw.setEntryEffect(0);
+            graphicsTextureDraw.setExitEffect(0);
+            graphicsTextureDraw.setCycleColors(false);
+            graphicsTextureDraw.setRGBAPerFrame(0, 0, 0, 0);
+            graphicsTextureDraw.setBlendMode(0);
+            graphicsTextureDraw.setArg23(1);
+            graphicsTextureDraw.addTests(doorCloseTests);
             conversationDoor.getObjectContainer().getObjects().add(graphicsTextureDraw);
         }
     }

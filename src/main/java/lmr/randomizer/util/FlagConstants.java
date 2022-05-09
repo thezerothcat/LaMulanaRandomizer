@@ -14,6 +14,7 @@ public final class FlagConstants {
     public static final int FAIRY_POINTS_ACTIVE = 0x118; // Value 0 > 1 when talking to The Fairy Queen after collecting Isis' Pendant, activates fairy points
     public static final int GUIDANCE_PUZZLE_CRUCIFIX_CHEST = 0x12d; // Value > 1 when hitting the seal, value > 3 when all 3 torches are lit
     public static final int GUIDANCE_PUZZLE_MAP_CHEST = 0x12e; // Value > 1 when using the dais
+    public static final int GUIDANCE_PUZZLE_RED_SKELETONS = 0x130;
     public static final int GUIDANCE_ELEVATOR = 0x134; // Value 0 > 1 when hitting the elevator block in the Guidance mouth (where Dracuet's door is), other increments via FlagTimer for animation
     public static final int GUIDANCE_PUZZLE_TREASURES_CHEST = 0x137; // Value 0 > 1 when using Pepper on the statue, 1 > 2 when the chest is done animating to make it possible to open.
     public static final int GUIDANCE_PUZZLE_ANKH_JEWEL_TABLETS_LADDER = 0x13f; // Value 0 > 1 when destroying the 4 tablets, which causes the ladder to spawn in the room to the right, for access to the isolated dais.
@@ -157,6 +158,7 @@ public final class FlagConstants {
     public static final int BIRTH_MURAL_INSIDE_VISIBLE = 0x2ac;
     public static final int BIRTH_PUZZLE_SOUTHEAST_COIN_CHEST = 0x2b0;
     public static final int BIRTH_PUZZLE_DANCE_COIN_CHEST = 0x2b2;
+    public static final int TRUE_SHRINE_MOTHER_ANKH_SEAL_COUNT = 0x2b6; // Incremented by one for each of the four Mother ankh seals broken
     public static final int TRUE_SHRINE_TENTACLE = 0x2b7; // Set to 1 after hitting the tentacle to move it out of the way on the path to the Mother ankh
     public static final int GATE_OF_TIME_FAIRY_UNKNOWN = 0x2b8; // Presumably related to puzzle reset conversations for 8bit fairy
     public static final int DIMENSIONAL_PUZZLE_COIN_CHEST = 0x2be;

@@ -29,6 +29,7 @@ public final class BlockConstants {
     public static final int MulbrukIntroBlock = 393; // Replaced for Helloween 2019
     public static final int MulbrukHTConversationBlock = 414; // 0x19e; Replaced for Halloween 2021
     public static final int MulbrukFatherLocationConversationBlock = 415; // 0x19f
+    public static final int MulbrukSwimsuitReactionConversationBlock = 418; // 0x1a2
 
     public static final int MapText_GateOfGuidance = 10;
     public static final int MapText_Surface = 11;

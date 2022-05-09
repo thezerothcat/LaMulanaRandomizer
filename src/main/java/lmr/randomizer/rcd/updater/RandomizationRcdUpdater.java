@@ -679,7 +679,7 @@ public class RandomizationRcdUpdater extends RcdUpdater {
         }
         if("NPC: Former Mekuri Master".equals(npcAssigned)) {
             int itemFlag = getNpcItemFlag("mekuri.exe");
-            GraphicsTextureDrawUpdates.addNpcDoorCover(conversationDoor, itemFlag);
+            GraphicsTextureDrawUpdates.addNpcDoorCover(conversationDoor, new TestByteOperation(itemFlag, ByteOp.FLAG_GTEQ, 2));
             conversationDoor.getTestByteOperations().add(new TestByteOperation(itemFlag, ByteOp.FLAG_EQUALS, 0));
             AddObject.addSpecialItemObjects(conversationDoor.getObjectContainer(), itemRandomizer.getNewContents("mekuri.exe"));
         }
