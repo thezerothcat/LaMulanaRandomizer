@@ -348,7 +348,10 @@ public class Main {
 
         private boolean backupRcd() {
             File rcdFile = new File("script.rcd.bak");
-            if(!rcdFile.exists()) {
+            if(rcdFile.exists()) {
+                FileUtils.hashRcdFileSetVersion(rcdFile);
+            }
+            else {
                 File existingRcd = new File(Settings.getLaMulanaBaseDir(), "data/mapdata/script.rcd");
                 if(!existingRcd.exists()) {
                     JOptionPane.showMessageDialog(this,
@@ -356,7 +359,7 @@ public class Main {
                             "Randomizer error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
-                else if (!FileUtils.hashRcdFile(existingRcd)) {
+                else if (!FileUtils.hashRcdFileSetVersion(existingRcd)) {
                     JOptionPane.showMessageDialog(this,
                             "The data/mapdata/script.rcd file in the game directory is not original! Please restore it from a backup / clean install!",
                             "Randomizer error", JOptionPane.ERROR_MESSAGE);

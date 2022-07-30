@@ -88,4 +88,20 @@ public final class HolidaySettings {
     public static boolean isSaveFileNeeded() {
         return isHalloweenMode() || isFools2020Mode() ||isFools2021Mode() || isFools2022Mode();
     }
+
+    public static String getResourcePath() {
+        if(HolidaySettings.isHalloween2019Mode()) {
+            return "halloween";
+        }
+        if(HolidaySettings.isHalloween2021Mode()) {
+            return "halloween2021";
+        }
+        if(HolidaySettings.isFools2020Mode()) {
+            return "fools2020";
+        }
+        if(HolidaySettings.isFools2022Mode()) {
+            return "fools2022";
+        }
+        return null;
+    }
 }

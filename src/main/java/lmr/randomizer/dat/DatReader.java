@@ -200,7 +200,8 @@ public final class DatReader {
         dataIndex += listEntry.getSize() / 2;
         scannableBlock.getBlockContents().add(listEntry);
 
-        if(scannableBlock.getSlate() > 0) {
+        if(scannableBlock.getSlate() > 0
+                || (blockIndex == BlockConstants.Tablet_Inferno_TuneOfThineOcarina && DataFromFile.isLaMulanaVersionBefore("1.3"))) {
             dataInputStream.readShort(); // 0x000a
             dataIndex += 2;
             listEntry.setIncludeEndRecordIndicator(true);
@@ -212,6 +213,14 @@ public final class DatReader {
             listEntry = buildListEntry(dataInputStream, false);
             dataIndex += listEntry.getSize() / 2;
             scannableBlock.getBlockContents().add(listEntry);
+        }
+        if(dataIndex < numberOfShortsInThisBlock
+                && (blockIndex == BlockConstants.GrailTablet_Surface
+                || blockIndex == BlockConstants.Tablet_Inferno_StickToTheWalls
+                || blockIndex == BlockConstants.Tablet_Moonlight_EdenSearchOutThePlace
+                || blockIndex == BlockConstants.Tablet_Graveyard_MeaningsAreInfusedIntoTheGemstones)) {
+            // Deal with some irregular tablets that have a trailing end-of-entry indicator for no apparent reason.
+            dataInputStream.readShort(); // 0x000a
         }
         return scannableBlock;
     }
