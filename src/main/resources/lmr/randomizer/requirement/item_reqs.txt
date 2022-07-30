@@ -79,6 +79,7 @@ Death Seal => Location: Shrine of the Mother [Seal], Glitch: Raindrop, Attack: C
 Death Seal => Location: Shrine of the Mother [Seal], Glitch: Raindrop, Attack: Chest, Grapple Claw
 Death Seal => Location: Shrine of the Mother [Seal], Event: Shrine Transformed, Attack: Chest, Feather
 deathv.exe => Location: Surface [Main], Attack: Forward, NPC: Elder Xelpud
+deathv.exe => Location: Surface [Main], Attack: Forward, Glitch: Raindrop
 Diary => Location: Shrine of the Mother [Main], Event: Remove Shrine Skulls, NPC: Elder Xelpud, Talisman, Attack: Chest
 Dimensional Key => Location: Chamber of Birth [Grail], State: Maternity Statue, Dragon Bone, Key of Eternity, Attack: Forward, Cog of the Soul
 Dimensional Key => Location: Chamber of Birth [Grail], State: Maternity Statue, Dragon Bone, Key of Eternity, Attack: Forward, Glitch: Pot Clip
