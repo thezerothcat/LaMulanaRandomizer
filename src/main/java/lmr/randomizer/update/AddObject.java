@@ -2451,6 +2451,10 @@ public final class AddObject {
         shopBlock.setBunemonText(blockStringData);
 
         blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("text.secretShop")));
+        shopBlock.setBunemonIntroText(blockStringData);
+
+        blockStringData = new BlockStringData();
         blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText(
                 "shop0.screenName.zone" + LocationCoordinateMapper.getStartingZone() + (LocationCoordinateMapper.isFrontsideStart() ? ".front" : ".back"))));
         shopBlock.setBunemonLocation(blockStringData);

@@ -1,6 +1,10 @@
 Please see the wiki page on github for information on how to use the randomizer, and other things you may need to know about it.
 https://github.com/thezerothcat/LaMulanaRandomizer/wiki
 
+2.36
+-----------------------------
+Fixed a bug with non-Surface starting location, and updated harder boss difficulty logic for Viy.
+
 2.35
 -----------------------------
 Logic updates and fix for users of La-Mulana version 1.0.

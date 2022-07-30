@@ -122,6 +122,10 @@ public final class AddBlock {
         shopBlock.setBunemonLocation(blockStringData);
 
         blockStringData = new BlockStringData();
+        blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("text.intro")));
+        shopBlock.setBunemonIntroText(blockStringData);
+
+        blockStringData = new BlockStringData();
         blockStringData.getData().addAll(FileUtils.stringToData(Translations.getText("shop0.yesPurchaseString")));
         shopBlock.setString(blockStringData, 0);
 
