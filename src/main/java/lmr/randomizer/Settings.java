@@ -162,11 +162,11 @@ public final class Settings {
         // Added by Nat the Chicken, March 2023.
         String linuxUserPath = System.getenv("HOME");
         if (linuxUserPath != null) {
-            for (String filename : Arrays.asList(linuxUserPath + "/.steam/debian-installation/steamapps/common/La-Mulana", //the usual location
-                    linuxUserPath + "/.steam/root/steamapps/common/La-Mulana", //this is usually a symlink to the real install and serves as a catch-all
-                    linuxUserPath + "/.local/share/Steam/steamapps/common/La-Mulana")) { //just in case they have an ANCIENT installation
-                if (new File(filename).exists()) {
-                    laMulanaBaseDir = filename;
+            for (String filename : Arrays.asList("/.steam/debian-installation/steamapps/common/La-Mulana", //the usual location
+                    "/.steam/root/steamapps/common/La-Mulana", //this is usually a symlink to the real install and serves as a catch-all
+                    "/.local/share/Steam/steamapps/common/La-Mulana")) { //just in case they have an ANCIENT installation
+                if (new File(linuxUserPath + filename).exists()) {
+                    laMulanaBaseDir = linuxUserPath + filename;
                     break;
                 }
             }
