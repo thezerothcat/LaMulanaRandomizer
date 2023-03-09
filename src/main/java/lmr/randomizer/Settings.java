@@ -156,11 +156,26 @@ public final class Settings {
         minRandomRemovedItems = 0;
         maxRandomRemovedItems = 0;
 
+        // Check for Linux Steam installs. The "HOME" environment variable typically only exists on Linux and returns "/home/[user]".
+        // If requested on Windows it'll return null, hence the null check.
+        // The Linux GOG check could possibly be moved up here as well.
+        // Added by Nat the Chicken, March 2023.
+        String linuxUserPath = System.getenv("HOME");
+        if (linuxUserPath != null) {
+            for (String filename : Arrays.asList("/.steam/debian-installation/steamapps/common/La-Mulana", //the usual location
+                    "/.steam/root/steamapps/common/La-Mulana", //this is usually a symlink to the real install and serves as a catch-all
+                    "/.local/share/Steam/steamapps/common/La-Mulana")) { //just in case they have an ANCIENT installation
+                if (new File(linuxUserPath + filename).exists()) {
+                    laMulanaBaseDir = linuxUserPath + filename;
+                    break;
+                }
+            }
+        }
+
         for (String filename : Arrays.asList("C:\\Games\\La-Mulana Remake 1.3.3.1", "C:\\GOG Games\\La-Mulana", "C:\\GOG Games\\La-Mulana",
                 "C:\\Steam\\steamapps\\common\\La-Mulana", "C:\\Program Files (x86)\\Steam\\steamapps\\common\\La-Mulana",
                 "C:\\Program Files\\Steam\\steamapps\\common\\La-Mulana", "C:\\Program Files (x86)\\GOG Galaxy\\Games\\La Mulana",
-                "C:\\Program Files (x86)\\GOG.com\\La-Mulana"
-                /* Steam on Linux path? */)) {
+                "C:\\Program Files (x86)\\GOG.com\\La-Mulana")) {
             if (new File(filename).exists()) {
                 laMulanaBaseDir = filename;
                 break;
