@@ -91,7 +91,7 @@ public class Main {
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             setResizable(true);
 
-            mainPanel = new MainPanel();
+            mainPanel = new MainPanel(this);
             add(mainPanel, "growx, wrap");
 
             tabbedPanel = new TabbedPanel(mainPanel);
@@ -275,6 +275,16 @@ public class Main {
                 } catch (Exception ex) {
                     FileUtils.log("Error: " + ex.getMessage());
                     FileUtils.logException(ex);
+                }
+            }
+            else if("rerollSeed".equals(e.getActionCommand())) {
+                try {
+                    mainPanel.rerollRandomSeed();
+                }
+                catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this,
+                            ex.getMessage(),
+                            "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
