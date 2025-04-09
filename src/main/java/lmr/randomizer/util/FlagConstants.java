@@ -1245,6 +1245,9 @@ public final class FlagConstants {
     public static final short CUSTOM_HALLOWEEN2021_ESCAPE_SPECIAL = 0xab2; // Triggers a different escape sequence door for 111% completion.
     public static final short CUSTOM_HALLOWEEN2021_ESCAPE_CHEST = 0xab3; // Replaces escape chest world flag for autotracker consistency between random and nonrandom coin chests
 
+    // Easter 2025
+    public static final int CUSTOM_EASTER2025_TOTAL_EGGS = 0xadd;
+
     // Steam achievements?
     public static final int TALKED_TO_AWAKENED_MULBRUK = 0xaf0;
     public static final int ACHIEVEMENT_ENTERED_RUINS = 0xbb8; // Set to 1 when opening the ruins
@@ -1453,7 +1456,7 @@ public final class FlagConstants {
         throw new RuntimeException("Unable to find flag for Map with world flag " + mapWorldFlag);
     }
 
-    public static int getNpcConversationFlag(int conversationBlockNumber) {
+    public static int getHalloweenNpcConversationFlag(int conversationBlockNumber) {
         if(conversationBlockNumber == BlockConstants.Master_Hiner) {
             return 0xac9;
         }

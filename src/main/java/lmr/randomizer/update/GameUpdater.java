@@ -44,6 +44,9 @@ public class GameUpdater {
         if(HolidaySettings.isFools2022Mode()) {
             datUpdaters.add(new Fools2022DatUpdater(datFileData));
         }
+        if(HolidaySettings.isEaster2025Mode()) {
+            datUpdaters.add(new Easter2025DatUpdater(datFileData));
+        }
         if(HolidaySettings.isHalloween2019Mode()) {
             datUpdaters.add(new Halloween2019DatUpdater(datFileData));
         }
@@ -54,6 +57,9 @@ public class GameUpdater {
 
         for(DatUpdater datUpdater : datUpdaters) {
             datUpdater.addCustomBlocks(datFileData);
+        }
+        for(DatUpdater datUpdater : datUpdaters) {
+            datUpdater.addItemNames(datFileData);
         }
         for(DatUpdater datUpdater : datUpdaters) {
             datUpdater.updateBlocks();
@@ -75,6 +81,9 @@ public class GameUpdater {
         }
         if(HolidaySettings.isFools2022Mode()) {
             rcdUpdaters.add(new Fools2022RcdUpdater(rcdFileData, datFileData));
+        }
+        if(HolidaySettings.isEaster2025Mode()) {
+            rcdUpdaters.add(new Easter2025RcdUpdater(rcdFileData, datFileData));
         }
         if(HolidaySettings.isHalloween2019Mode()) {
             rcdUpdaters.add(new Halloween2019RcdUpdater(rcdFileData, datFileData));

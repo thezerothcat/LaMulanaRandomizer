@@ -13,7 +13,8 @@ public final class BlockConstants {
     public static final int GrailPointBlock = 7;
     public static final int HTMapNamesLimitedBlock = 28;
 
-    public static final int FootOfFuto = 88;
+    public static final int Skeleton_RedOneTooStrong = 69;
+    public static final int Skeleton_FootOfFuto = 88;
 
     public static final int SnapshotsScan_TowerOfTheGoddess = 319;
     public static final int SnapshotsScan_TowerOfRuin = 324;
@@ -266,6 +267,8 @@ public final class BlockConstants {
     public static final int Tablet_Mausoleum_CelestialBodies = 76; // Glow flag = TABLET_GLOW_MAUSOLEUM_CELESTIAL_BODIES
     public static final int Tablet_Mausoleum_Abuto = 79; // Glow flag = TABLET_GLOW_MAUSOLEUM_ABUTO
     public static final int Tablet_Mausoleum_ThouArtTiny = 80; // Glow flag = TABLET_GLOW_MAUSOLEUM_THOU_ART_TINY
+    public static final int Tablet_Mausoleum_Hardmode_Warning = 81;
+    public static final int Tablet_Mausoleum_Hardmode_Activation = 82;
     public static final int Tablet_Mausoleum_Ribu = 83; // Glow flag = TABLET_GLOW_MAUSOLEUM_RIBU
     public static final int DamagedTablet_Mausoleum_GhostLord = 85; // Glow flag = TABLET_GLOW_MAUSOLEUM_GHOST_LORD_DAMAGED
     public static final int Tablet_Mausoleum_Migela = 86; // Glow flag = TABLET_GLOW_MAUSOLEUM_MIGELA
@@ -460,6 +463,7 @@ public final class BlockConstants {
     public static final int Tablet_Surface_RuinsEntrance = 473; // Glow flag = TABLET_GLOW_SURFACE_RUINS_ENTRANCE
     public static final int Tablet_Inferno_SwingYourWeapon = 474; // Glow flag = TABLET_GLOW_INFERNO_SWING_YOUR_WEAPON
     public static final int Tablet_Retromausoleum_An8BitWorld = 516; // Glow flag = TABLET_GLOW_HT_SLEEP_ALSO_SET_BY_RETROMAUSOLEUM_ENTRANCE
+    public static final int Tablet_Retromausoleum_BeholdGateOfTime = 521;
     public static final int Tablet_Guidance_PushTheWhiteBox = 550; // Glow flag = TABLET_GLOW_GUIDANCE_PUSH_THE_WHITE_BOX
     public static final int Tablet_Endless_MapColor = 612; // Glow flag = TABLET_GLOW_ENDLESS_MAP_COLOR
     public static final int Tablet_Shrine_ChosenOnly = 615; // Glow flag = TABLET_GLOW_SHRINE_CHOSEN_ONLY
@@ -470,7 +474,14 @@ public final class BlockConstants {
     public static final int Tablet_HT_IExistHere = 1005; // Glow flag = TABLET_GLOW_HT_I_EXIST_HERE
     public static final int Tablet_HT_ClothToMakeTheTreasure = 1009; // Glow flag = TABLET_GLOW_HT_CLOTH_TO_MAKE_THE_TREASURE
 
+    public static final int Scannable_HotSprings = 546;
     public static final int ResearchMode_CrossOfLight = 552;
+    public static final int RuinsDictionary_EyeofRetribution = 558;
+    public static final int ArchaeologyDictionary_MayanAirship = 561;
+    public static final int ResearchMode_Waterweed = 588;
+    public static final int ArchaeologyDictionary_AjantaCaves = 592;
+    public static final int ResearchMode_Volcano = 606;
+    public static final int ResearchMode_Endless_Keyhole = 922;
 
     public static final int MegaTablet_HT_Entrance = 918;
     public static final int MegaTablet_HT_BecameAPhantom = 1029;

@@ -992,6 +992,9 @@ public class FileUtils {
             if(HolidaySettings.isFools2020Mode()) {
                 GraphicsFileUpdater.updateGraphicsFilesForFools2020(Settings.getGraphicsPack());
             }
+            if(HolidaySettings.isEaster2025Mode()) {
+                GraphicsFileUpdater.updateGraphicsFilesForEaster2025(Settings.getGraphicsPack());
+            }
 
             FileUtils.logFlush("Save file copy complete");
         }

@@ -2065,7 +2065,7 @@ public final class AddObject {
         return itemGive;
     }
 
-    public static void addItemGive(Screen screen, int startingX, int startingY, int inventoryArg,
+    public static ItemGive addItemGive(Screen screen, int startingX, int startingY, int inventoryArg,
                                    List<TestByteOperation> tests, List<WriteByteOperation> updates) {
         ItemGive itemGive = new ItemGive(screen, startingX, startingY);
 
@@ -2078,6 +2078,7 @@ public final class AddObject {
         itemGive.getWriteByteOperations().addAll(updates);
 
         screen.getObjects().add(itemGive);
+        return itemGive;
     }
 
     public static void addGrailDetector(GameObject gameObject, int grailFlag) {
@@ -2613,89 +2614,89 @@ public final class AddObject {
         int npcConversationFlag = 0;
         String textPart2Key = "event.halloween.text2";
         if(CustomBlockEnum.HalloweenCandyConversationBlock_Hiner.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_Hiner);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_Hiner);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_Moger.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_Moger);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_Moger);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_FormerMekuriMaster.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_FormerMekuriMaster_Mekuri);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_FormerMekuriMaster_Mekuri);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestZarnac.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestZarnac);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PriestZarnac);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestXanado.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestXanado);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PriestXanado);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PhilosopherGiltoriyo.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PhilosopherGiltoriyo);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PhilosopherGiltoriyo);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestHidlyda.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestHidlyda);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PriestHidlyda);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestRomancis.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestRomancis);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PriestRomancis);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestAramo.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestAramo);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PriestAramo);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestTriton.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestTriton);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PriestTriton);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestJaguarfiv.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestJaguarfiv);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PriestJaguarfiv);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_MrSlushfund.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper);
             textPart2Key = "event.halloween.fraud";
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestAlest.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestAlest);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PriestAlest);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_StrayFairy.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_StrayFairy);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_StrayFairy);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_GiantThexde.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_GiantThexde);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_GiantThexde);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PhilosopherAlsedana.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PhilosopherAlsedana);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PhilosopherAlsedana);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PhilosopherSamaranta.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PhilosopherSamaranta);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PhilosopherSamaranta);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestLaydoc.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestLaydoc);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PriestLaydoc);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestAshgine.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestAshgine);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PriestAshgine);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PhilosopherFobos.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PhilosopherFobos_Ladder);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PhilosopherFobos_Ladder);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_8BitElder.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_8BitElder);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_8BitElder);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_duplex.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_duplex);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_duplex);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_Samieru.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_Samieru);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_Samieru);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_Naramura.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_Naramura);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_Naramura);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_8bitFairy.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_8BitFairy);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_8BitFairy);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestMadomono.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestMadomono);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PriestMadomono);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_PriestGailious.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_PriestGailious);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_PriestGailious);
         }
         else if(CustomBlockEnum.HalloweenCandyConversationBlock_NightSurfaceFairy.equals(customBlockEnum)) {
-            npcConversationFlag = FlagConstants.getNpcConversationFlag(BlockConstants.Master_Fairy_NightSurface);
+            npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_Fairy_NightSurface);
         }
 
         if(npcConversationFlag > 0) {

@@ -8,9 +8,6 @@ import lmr.randomizer.randomization.data.GameObjectId;
 import java.util.*;
 
 public class FlagManager {
-    private static final int FIRST_AVAILABLE_RANDOM_GRAPHICS_FLAG = (HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2021Mode()) ? 2762 : 2730;
-    private static final int LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG = (HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2021Mode()) ? 2765 : 2760;
-
     private Map<Integer, Integer> mapOfItemLocationWorldFlagToAssignedReplacementFlag;
     private List<Integer> availableFlags;
 
@@ -49,43 +46,38 @@ public class FlagManager {
                 availableFlags.add(nameToDataMap.get(removedItem).getWorldFlag());
             }
         }
-        availableFlags.add(2781);
-        availableFlags.add(FlagConstants.REMOVED_MAP_SURFACE);
-        availableFlags.add(FlagConstants.REMOVED_MAP_GUIDANCE);
-        availableFlags.add(FlagConstants.REMOVED_MAP_MAUSOLEUM);
-        availableFlags.add(FlagConstants.REMOVED_MAP_SUN);
-        availableFlags.add(FlagConstants.REMOVED_MAP_SPRING);
-        availableFlags.add(FlagConstants.REMOVED_MAP_INFERNO);
-        availableFlags.add(FlagConstants.REMOVED_MAP_EXTINCTION);
-        availableFlags.add(FlagConstants.REMOVED_MAP_TWIN);
-        availableFlags.add(FlagConstants.REMOVED_MAP_ENDLESS);
-        availableFlags.add(FlagConstants.REMOVED_MAP_ILLUSION);
-        availableFlags.add(FlagConstants.REMOVED_MAP_GRAVEYARD);
-        availableFlags.add(FlagConstants.REMOVED_MAP_MOONLIGHT);
-        availableFlags.add(FlagConstants.REMOVED_MAP_GODDESS);
-        availableFlags.add(FlagConstants.REMOVED_MAP_RUIN);
-        availableFlags.add(FlagConstants.REMOVED_MAP_BIRTH);
-        availableFlags.add(FlagConstants.REMOVED_MAP_DIMENSIONAL);
-        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_RIGHT_OF_POISON_2_BROKEN);
-        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_FAKE_ANKH_JEWEL_BROKEN);
-        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_ABOVE_YIEAR_BROKEN);
-        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_ARROGANT_STURDY_SNAKE_BROKEN);
-        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_LEFT_OF_BACKSIDE_GRAIL_BROKEN);
-        availableFlags.add(FlagConstants.TABLET_GLOW_ENDLESS_FAIRY_SCREEN_BROKEN);
-        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_CHILDS_ROOM_BROKEN);
-        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_BACKSIDE_DOOR_BROKEN);
-        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_MOVER_ATHLELAND_SCREEN_BROKEN);
-        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_FOOLS_CONFUSION_CORRIDOR_BROKEN);
-        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_FOOLS_CONFUSION_CORRIDOR_SCAN_ROOM_BROKEN);
-        availableFlags.add(FlagConstants.TABLET_GLOW_GRAVEYARD_GIANT_THEXDE_SCREEN_BROKEN);
-        availableFlags.add(FlagConstants.TABLET_GLOW_BIRTH_SKANDA_ASURAS_ROOM_BROKEN);
-        availableFlags.add(FlagConstants.OBSOLETE_FREE_FLAG);
-
-        for(int flag = FIRST_AVAILABLE_RANDOM_GRAPHICS_FLAG; flag < LAST_AVAILABLE_RANDOM_GRAPHICS_FLAG; flag++) {
-            availableFlags.add(flag);
+        if (!HolidaySettings.isEaster2025Mode()) {
+            for(int flag = 2699; flag >= 2600; flag--) {
+                availableFlags.add(flag);
+            }
+            availableFlags.add(0xadd); // 2781
         }
-        for(int flag = 2699; flag >= 2600; flag--) {
-            availableFlags.add(flag);
+        for(int flag = FlagConstants.REMOVED_MAP_SURFACE; flag <= FlagConstants.REMOVED_MAP_DIMENSIONAL; flag++) {
+            availableFlags.add(flag); // 2708-2723 / 0xa94-0xaa3
+        }
+        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_RIGHT_OF_POISON_2_BROKEN); // 0x4c5
+        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_FAKE_ANKH_JEWEL_BROKEN); // 0x4ca
+        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_ABOVE_YIEAR_BROKEN); // 0x4cb
+        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_ARROGANT_STURDY_SNAKE_BROKEN); // 0x4cf
+        availableFlags.add(FlagConstants.TABLET_GLOW_TWIN_LEFT_OF_BACKSIDE_GRAIL_BROKEN); // 0x4d0
+        availableFlags.add(FlagConstants.TABLET_GLOW_ENDLESS_FAIRY_SCREEN_BROKEN); // 0x4d6
+        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_CHILDS_ROOM_BROKEN); // 0x4e9
+        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_BACKSIDE_DOOR_BROKEN); // 0x551
+        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_MOVER_ATHLELAND_SCREEN_BROKEN); // 0x4f2
+        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_FOOLS_CONFUSION_CORRIDOR_BROKEN); // 0x4f4
+        availableFlags.add(FlagConstants.TABLET_GLOW_ILLUSION_FOOLS_CONFUSION_CORRIDOR_SCAN_ROOM_BROKEN); // 0x4f7
+        availableFlags.add(FlagConstants.TABLET_GLOW_GRAVEYARD_GIANT_THEXDE_SCREEN_BROKEN); // 0x508
+        availableFlags.add(FlagConstants.TABLET_GLOW_BIRTH_SKANDA_ASURAS_ROOM_BROKEN); // 0x53d
+        availableFlags.add(FlagConstants.OBSOLETE_FREE_FLAG); // 0xad4
+
+        if(HolidaySettings.isFools2020Mode() || HolidaySettings.isFools2021Mode()) {
+            for(int flag = 2762; flag < 2765; flag++) {
+                availableFlags.add(flag);
+            }
+        } else {
+            for(int flag = 2730; flag < 2760; flag++) { // 0xaaa through 0xac8 and beyond
+                availableFlags.add(flag);
+            }
         }
         return availableFlags;
     }

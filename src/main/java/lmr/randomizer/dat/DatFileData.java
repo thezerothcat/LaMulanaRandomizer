@@ -37,7 +37,7 @@ public class DatFileData {
         return (MapNamesLimitedBlock)datFileEntries.get(BlockConstants.HTMapNamesLimitedBlock);
     }
     public ScannableBlock getFootOfFutoScannableBlock() {
-        return (ScannableBlock)datFileEntries.get(BlockConstants.FootOfFuto);
+        return (ScannableBlock)datFileEntries.get(BlockConstants.Skeleton_FootOfFuto);
     }
     public Block getTowerOfTheGoddessSnapshotsScanBlock() {
         return datFileEntries.get(BlockConstants.SnapshotsScan_TowerOfTheGoddess);

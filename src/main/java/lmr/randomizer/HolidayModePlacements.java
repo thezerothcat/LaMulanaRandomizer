@@ -21,6 +21,9 @@ public class HolidayModePlacements {
         else if(HolidaySettings.isFools2021Mode()) {
             addCustomPlacementsFools2021();
         }
+        else if(HolidaySettings.isEaster2025Mode()) {
+            addCustomPlacementsEaster2025();
+        }
         else if(HolidaySettings.isHalloween2019Mode()) {
             addCustomPlacementsHalloween2019();
         }
@@ -727,5 +730,9 @@ public class HolidayModePlacements {
             transitions.add(new CustomTransitionPlacement("Transition: Sun U1", "Transition: Shrine D3"));
             doors.add(new CustomDoorPlacement("Door: F3", "Door: F8", null));
         }
+    }
+
+    private static void addCustomPlacementsEaster2025() {
+//        DataFromFile.getCustomPlacementData().setStartingLocation(ZoneConstants.GRAVEYARD);
     }
 }

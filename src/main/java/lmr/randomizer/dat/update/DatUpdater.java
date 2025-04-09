@@ -179,6 +179,8 @@ public abstract class DatUpdater {
 
     public void addCustomBlocks(DatFileData datFileData) { }
 
+    public void addItemNames(DatFileData datFileData) { }
+
     protected Short getCustomBlockIndex(CustomBlockEnum customBlockEnum) {
         return datFileData.getCustomBlockIndex(customBlockEnum);
     }

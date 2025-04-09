@@ -79,7 +79,7 @@ public class Halloween2019RcdUpdater extends RcdUpdater {
             TestByteOperation flagTest = flagTimer.getTestByteOperations().get(i);
             if(flagTest.getIndex() == FlagConstants.GATE_OF_TIME_FAIRY_UNKNOWN && flagTest.getValue() == 0) {
                 // 8bit Fairy timer - conversation needs added test
-                flagTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag((short)710), ByteOp.FLAG_GT, 0));
+                flagTimer.getTestByteOperations().add(new TestByteOperation(FlagConstants.getHalloweenNpcConversationFlag((short)710), ByteOp.FLAG_GT, 0));
             }
         }
         return true;
@@ -546,20 +546,20 @@ public class Halloween2019RcdUpdater extends RcdUpdater {
             conversationDoor.getWriteByteOperations().clear();
         }
         else if(blockNumber == BlockConstants.Master_MrSlushfund_WaitingForTreasures) {
-            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper), ByteOp.FLAG_GT, 0));
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper), ByteOp.FLAG_GT, 0));
         }
         else if(blockNumber == BlockConstants.Master_MrSlushfund_Anchor) {
-            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper), ByteOp.FLAG_GT, 0));
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper), ByteOp.FLAG_GT, 0));
         }
         else if(blockNumber == BlockConstants.Master_MrSlushfund_NeverComeBack) {
-            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper), ByteOp.FLAG_GT, 0));
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getHalloweenNpcConversationFlag(BlockConstants.Master_MrSlushfund_Pepper), ByteOp.FLAG_GT, 0));
         }
         else if(blockNumber == BlockConstants.Master_PhilosopherFobos_MedicineCheck) {
-            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag((short)704), ByteOp.FLAG_GT, 0));
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getHalloweenNpcConversationFlag((short)704), ByteOp.FLAG_GT, 0));
         }
         else if(blockNumber == 714) {
             // 8bit Fairy - conversation needs added test
-            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getNpcConversationFlag((short)710), ByteOp.FLAG_GT, 0));
+            conversationDoor.getTestByteOperations().add(new TestByteOperation(FlagConstants.getHalloweenNpcConversationFlag((short)710), ByteOp.FLAG_GT, 0));
         }
         return true;
     }
@@ -1668,7 +1668,7 @@ public class Halloween2019RcdUpdater extends RcdUpdater {
             ConversationDoor newConversationDoor = new ConversationDoor(oldConversationDoor.getObjectContainer(), oldConversationDoor.getX(), oldConversationDoor.getY());
             newConversationDoor.setDoorType(ConversationDoor.SingleConversation);
 
-            int npcConversationFlag = FlagConstants.getNpcConversationFlag(npcBlock);
+            int npcConversationFlag = FlagConstants.getHalloweenNpcConversationFlag(npcBlock);
             if(npcConversationFlag > 0) {
                 if(npcBlock == BlockConstants.Master_Hiner) {
                     newConversationDoor.setBlockNumber(getCustomBlockIndex(CustomBlockEnum.HalloweenCandyReferenceBlock_Hiner));

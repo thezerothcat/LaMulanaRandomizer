@@ -3,6 +3,7 @@ package lmr.randomizer.graphics;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.HolidaySettings;
 import lmr.randomizer.Settings;
+import lmr.randomizer.util.EggConstants;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,8 +12,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class GraphicsFileUpdater {
     public static final int EXISTING_FILE_WIDTH = 1024;
@@ -323,6 +326,92 @@ public class GraphicsFileUpdater {
         return true;
     }
 
+    public static boolean updateGraphicsFilesForEaster2025(String graphicsPack) {
+        String graphicsBase = Settings.getLaMulanaBaseDir() + "/data/graphics";
+        String newFolderPath = graphicsBase + "/EASTER2025";
+        File newGraphicsFolder = new File(newFolderPath);
+        File graphicsBaseFolder = new File(graphicsBase, graphicsPack);
+        if(newGraphicsFolder.exists()) {
+            newGraphicsFolder.delete();
+        }
+        newGraphicsFolder.mkdir();
+
+        if(!copyGraphicsFiles(graphicsBaseFolder, newGraphicsFolder)) {
+            FileUtils.logFlush("Problem copying graphics from source folder " + graphicsPack);
+            newGraphicsFolder.delete();
+            return false;
+        }
+
+        final List<String> modifiedFilesToCopy = Arrays.asList("_banner.png");
+        for(String file : modifiedFilesToCopy) {
+            try {
+                File graphicsFileToWrite = new File(newFolderPath, file);
+                BufferedImage modified;
+                try {
+                    modified = ImageIO.read(FileUtils.class.getResource("graphics/easter2025/" + file));
+                }
+                catch (IOException ex) {
+                    FileUtils.logFlush("Problem copying graphics file " + file);
+                    newGraphicsFolder.delete();
+                    return false;
+                }
+                BufferedImage existingImage = ImageIO.read(graphicsFileToWrite);
+                BufferedImage newImage = new BufferedImage(existingImage.getWidth(), existingImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                Graphics2D graphics2D = newImage.createGraphics();
+                graphics2D.drawImage(modified, null, 0, 0); // Use backup to ensure no duplication of file
+                graphics2D.dispose();
+
+                ImageIO.write(newImage, "png", graphicsFileToWrite);
+            }
+            catch(IOException ex) {
+                FileUtils.logFlush("Problem copying graphics file " + file);
+                newGraphicsFolder.delete();
+                return false;
+            }
+        }
+
+        if(!update01Menu_Easter2025(newFolderPath)) {
+            return false;
+        }
+        if(!update01Effect_Easter2025(newFolderPath)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static boolean update01Effect_Easter2025(String folderPath) {
+        try {
+            File graphicsFileToWrite = new File(folderPath, "01effect.png");
+            BufferedImage existingImage = ImageIO.read(graphicsFileToWrite);
+            BufferedImage newImage = new BufferedImage(existingImage.getWidth(), existingImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D graphics2D = newImage.createGraphics();
+
+            BufferedImage subimage = existingImage.getSubimage(0, 0, EXISTING_FILE_WIDTH, 712);
+            graphics2D.drawImage(subimage, null, 0, 0);
+
+            int yOffset = 0;
+            int xOffset = 0;
+            for(int eggNumber = 1; eggNumber <= EggConstants.getEggsWithGraphics(); eggNumber++) {
+                graphics2D.drawImage(getCustomGraphic(EggConstants.getEggGraphic(eggNumber)), null, xOffset + EggConstants.getEggInnerXOffset(eggNumber), 712 + yOffset + EggConstants.getEggInnerYOffset(eggNumber));
+                xOffset += 40;
+                if(xOffset + 40 >= EXISTING_FILE_WIDTH) {
+                    xOffset = 0;
+                    yOffset += 40;
+                }
+            }
+
+            graphics2D.dispose();
+
+            ImageIO.write(newImage, "png", graphicsFileToWrite);
+        }
+        catch(IOException ex) {
+            FileUtils.logFlush("Problem copying graphics file 01menu.png");
+            return false;
+        }
+        return true;
+    }
+
     private static boolean updateTitle01(String folderPath) {
         String file = "title01.png";
         try {
@@ -444,6 +533,34 @@ public class GraphicsFileUpdater {
             BufferedImage redMedicineSubimage = existingImage.getSubimage(redMedicine.getX(), redMedicine.getY(), redMedicine.getWidth(), redMedicine.getHeight());
             graphics2D.drawImage(yellowMedicineSubimage, null, redMedicine.getX(), redMedicine.getY());
             graphics2D.drawImage(redMedicineSubimage, null, yellowMedicine.getX(), yellowMedicine.getY());
+
+            for(GraphicsFileEntry graphicsFileEntry : graphicsFileEntries.values()) {
+                BufferedImage subimage = existingImage.getSubimage(graphicsFileEntry.getX(), graphicsFileEntry.getY(), graphicsFileEntry.getWidth(), graphicsFileEntry.getHeight());
+                graphics2D.drawImage(subimage, null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            }
+
+            graphics2D.dispose();
+
+            ImageIO.write(newImage, "png", graphicsFileToWrite);
+        }
+        catch(IOException ex) {
+            FileUtils.logFlush("Problem copying graphics file 01menu.png");
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean update01Menu_Easter2025(String folderPath) {
+        try {
+            File graphicsFileToWrite = new File(folderPath, "01menu.png");
+            BufferedImage existingImage = ImageIO.read(graphicsFileToWrite);
+            BufferedImage newImage = new BufferedImage(existingImage.getWidth(), existingImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D graphics2D = newImage.createGraphics();
+
+            Map<Integer, GraphicsFileEntry> graphicsFileEntries = GraphicsFileData.getMenuGraphicsFileEntries();
+
+            GraphicsFileEntry existingGraphicsFileEntry = graphicsFileEntries.remove(GraphicsFileData.WATERPROOF_CASE);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup.png"), null, existingGraphicsFileEntry.getX(), existingGraphicsFileEntry.getY());
 
             for(GraphicsFileEntry graphicsFileEntry : graphicsFileEntries.values()) {
                 BufferedImage subimage = existingImage.getSubimage(graphicsFileEntry.getX(), graphicsFileEntry.getY(), graphicsFileEntry.getWidth(), graphicsFileEntry.getHeight());
@@ -1247,6 +1364,9 @@ public class GraphicsFileUpdater {
         }
         if(HolidaySettings.isFools2020Mode()) {
             return "graphics/fools2020/" + file;
+        }
+        if(HolidaySettings.isEaster2025Mode()) {
+            return "graphics/easter2025/" + file;
         }
         return  "";
     }

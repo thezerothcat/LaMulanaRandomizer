@@ -1056,7 +1056,7 @@ public final class DatReader {
             else if(blockIndex == BlockConstants.HTMapNamesLimitedBlock) {
                 block = buildMapNamesLimitedBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
-            else if(blockIndex == BlockConstants.FootOfFuto
+            else if(blockIndex == BlockConstants.Skeleton_FootOfFuto
                     || blockIndex == BlockConstants.MegaTablet_HT_Entrance
                     || blockIndex == BlockConstants.MegaTablet_HT_BecameAPhantom
                     || BlockConstants.TABLET_BLOCKS.contains(blockIndex)) {

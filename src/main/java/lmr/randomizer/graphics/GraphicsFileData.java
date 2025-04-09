@@ -128,6 +128,106 @@ public class GraphicsFileData {
     public static final int MENU_LEFT = 110;
     public static final int MENU_BOTTOM = 111;
 
+    public static final int MISC_GRAPHICS_AFTER_INV_ITEMS = 112;
+
+    public static final int CUSTOM_ITEM_161 = 161;
+    public static final int CUSTOM_ITEM_162 = 162;
+    public static final int CUSTOM_ITEM_163 = 163;
+    public static final int CUSTOM_ITEM_164 = 164;
+    public static final int CUSTOM_ITEM_165 = 165;
+    public static final int CUSTOM_ITEM_166 = 166;
+    public static final int CUSTOM_ITEM_167 = 167;
+    public static final int CUSTOM_ITEM_168 = 168;
+    public static final int CUSTOM_ITEM_169 = 169;
+
+    public static final int CUSTOM_ITEM_170 = 170;
+    public static final int CUSTOM_ITEM_171 = 171;
+    public static final int CUSTOM_ITEM_172 = 172;
+    public static final int CUSTOM_ITEM_173 = 173;
+    public static final int CUSTOM_ITEM_174 = 174;
+    public static final int CUSTOM_ITEM_175 = 175;
+    public static final int CUSTOM_ITEM_176 = 176;
+    public static final int CUSTOM_ITEM_177 = 177;
+    public static final int CUSTOM_ITEM_178 = 178;
+    public static final int CUSTOM_ITEM_179 = 179;
+
+    public static final int CUSTOM_ITEM_180 = 180;
+    public static final int CUSTOM_ITEM_181 = 181;
+    public static final int CUSTOM_ITEM_182 = 182;
+    public static final int CUSTOM_ITEM_183 = 183;
+    public static final int CUSTOM_ITEM_184 = 184;
+    public static final int CUSTOM_ITEM_185 = 185;
+    public static final int CUSTOM_ITEM_186 = 186;
+    public static final int CUSTOM_ITEM_187 = 187;
+    public static final int CUSTOM_ITEM_188 = 188;
+    public static final int CUSTOM_ITEM_189 = 189;
+
+    public static final int CUSTOM_ITEM_190 = 190;
+    public static final int CUSTOM_ITEM_191 = 191;
+    public static final int CUSTOM_ITEM_192 = 192;
+    public static final int CUSTOM_ITEM_193 = 193;
+    public static final int CUSTOM_ITEM_194 = 194;
+    public static final int CUSTOM_ITEM_195 = 195;
+    public static final int CUSTOM_ITEM_196 = 196;
+    public static final int CUSTOM_ITEM_197 = 197;
+    public static final int CUSTOM_ITEM_198 = 198;
+    public static final int CUSTOM_ITEM_199 = 199;
+
+    public static final int CUSTOM_ITEM_200 = 200;
+    public static final int CUSTOM_ITEM_201 = 201;
+    public static final int CUSTOM_ITEM_202 = 202;
+    public static final int CUSTOM_ITEM_203 = 203;
+    public static final int CUSTOM_ITEM_204 = 204;
+    public static final int CUSTOM_ITEM_205 = 205;
+    public static final int CUSTOM_ITEM_206 = 206;
+    public static final int CUSTOM_ITEM_207 = 207;
+    public static final int CUSTOM_ITEM_208 = 208;
+    public static final int CUSTOM_ITEM_209 = 209;
+
+    public static final int CUSTOM_ITEM_210 = 210;
+    public static final int CUSTOM_ITEM_211 = 211;
+    public static final int CUSTOM_ITEM_212 = 212;
+    public static final int CUSTOM_ITEM_213 = 213;
+    public static final int CUSTOM_ITEM_214 = 214;
+    public static final int CUSTOM_ITEM_215 = 215;
+    public static final int CUSTOM_ITEM_216 = 216;
+    public static final int CUSTOM_ITEM_217 = 217;
+    public static final int CUSTOM_ITEM_218 = 218;
+    public static final int CUSTOM_ITEM_219 = 219;
+
+    public static final int CUSTOM_ITEM_220 = 220;
+    public static final int CUSTOM_ITEM_221 = 221;
+    public static final int CUSTOM_ITEM_222 = 222;
+    public static final int CUSTOM_ITEM_223 = 223;
+    public static final int CUSTOM_ITEM_224 = 224;
+    public static final int CUSTOM_ITEM_225 = 225;
+    public static final int CUSTOM_ITEM_226 = 226;
+    public static final int CUSTOM_ITEM_227 = 227;
+    public static final int CUSTOM_ITEM_228 = 228;
+    public static final int CUSTOM_ITEM_229 = 229;
+
+    public static final int CUSTOM_ITEM_230 = 230;
+    public static final int CUSTOM_ITEM_231 = 231;
+    public static final int CUSTOM_ITEM_232 = 232;
+    public static final int CUSTOM_ITEM_233 = 233;
+    public static final int CUSTOM_ITEM_234 = 234;
+    public static final int CUSTOM_ITEM_235 = 235;
+    public static final int CUSTOM_ITEM_236 = 236;
+    public static final int CUSTOM_ITEM_237 = 237;
+    public static final int CUSTOM_ITEM_238 = 238;
+    public static final int CUSTOM_ITEM_239 = 239;
+
+    public static final int CUSTOM_ITEM_240 = 240;
+    public static final int CUSTOM_ITEM_241 = 241;
+    public static final int CUSTOM_ITEM_242 = 242;
+    public static final int CUSTOM_ITEM_243 = 243;
+    public static final int CUSTOM_ITEM_244 = 244;
+    public static final int CUSTOM_ITEM_245 = 245;
+    public static final int CUSTOM_ITEM_246 = 246;
+    public static final int CUSTOM_ITEM_247 = 247;
+    public static final int CUSTOM_ITEM_248 = 248;
+    public static final int CUSTOM_ITEM_249 = 249;
+
     public static Map<Integer, GraphicsFileEntry> getMenuGraphicsFileEntries() {
         Map<Integer, GraphicsFileEntry> graphicsFileEntries = new HashMap<>();
         graphicsFileEntries.put(MENU_LEFT, new GraphicsFileEntry(0, 0, 620, 1024));
@@ -253,6 +353,125 @@ public class GraphicsFileData {
         graphicsFileEntries.put(SOFTWARE_MIRACLE, new GraphicsFileEntry(900, 400, 40, 40));
         graphicsFileEntries.put(SOFTWARE_MIRAI, new GraphicsFileEntry(940, 400, 40, 40));
         graphicsFileEntries.put(SOFTWARE_LAMULANA, new GraphicsFileEntry(980, 400, 40, 40));
+        return graphicsFileEntries;
+    }
+
+    public static Map<Integer, GraphicsFileEntry> getMenuCustomItemGraphicsEntries() {
+        Map<Integer, GraphicsFileEntry> graphicsFileEntries = new HashMap<>();
+        graphicsFileEntries.put(MENU_LEFT, new GraphicsFileEntry(0, 0, 620, 1024));
+        graphicsFileEntries.put(MENU_BOTTOM, new GraphicsFileEntry(620, 440, 1024 - 620, 1024 - 440));
+
+        graphicsFileEntries.put(WHIP, new GraphicsFileEntry(620, 0, 40, 40));
+        graphicsFileEntries.put(CHAIN_WHIP, new GraphicsFileEntry(660, 0, 40, 40));
+        graphicsFileEntries.put(FLAIL_WHIP, new GraphicsFileEntry(700, 0, 40, 40));
+        graphicsFileEntries.put(KNIFE, new GraphicsFileEntry(740, 0, 40, 40));
+        graphicsFileEntries.put(KEY_SWORD, new GraphicsFileEntry(780, 0, 40, 40));
+        graphicsFileEntries.put(AXE, new GraphicsFileEntry(820, 0, 40, 40));
+        graphicsFileEntries.put(KATANA, new GraphicsFileEntry(860, 0, 40, 40));
+        graphicsFileEntries.put(EMPOWERED_KEY_SWORD, new GraphicsFileEntry(900, 0, 40, 40));
+        graphicsFileEntries.put(SHURIKEN, new GraphicsFileEntry(940, 0, 40, 40));
+        graphicsFileEntries.put(ROLLING_SHURIKEN, new GraphicsFileEntry(980, 0, 40, 40));
+
+        graphicsFileEntries.put(SOFTWARE_BEOLAMU, new GraphicsFileEntry(620, 400, 40, 40));
+
+        graphicsFileEntries.put(MISC_GRAPHICS_AFTER_INV_ITEMS, new GraphicsFileEntry(620, 440, 400, 200));
+        graphicsFileEntries.put(CUSTOM_ITEM_161, new GraphicsFileEntry(660, 640, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_162, new GraphicsFileEntry(700, 640, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_163, new GraphicsFileEntry(740, 640, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_164, new GraphicsFileEntry(780, 640, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_165, new GraphicsFileEntry(820, 640, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_166, new GraphicsFileEntry(860, 640, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_167, new GraphicsFileEntry(900, 640, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_168, new GraphicsFileEntry(940, 640, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_169, new GraphicsFileEntry(980, 640, 40, 40));
+
+        graphicsFileEntries.put(CUSTOM_ITEM_170, new GraphicsFileEntry(620, 680, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_171, new GraphicsFileEntry(660, 680, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_172, new GraphicsFileEntry(700, 680, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_173, new GraphicsFileEntry(740, 680, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_174, new GraphicsFileEntry(780, 680, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_175, new GraphicsFileEntry(820, 680, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_176, new GraphicsFileEntry(860, 680, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_177, new GraphicsFileEntry(900, 680, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_178, new GraphicsFileEntry(940, 680, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_179, new GraphicsFileEntry(980, 680, 40, 40));
+
+        graphicsFileEntries.put(CUSTOM_ITEM_180, new GraphicsFileEntry(620, 720, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_181, new GraphicsFileEntry(660, 720, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_182, new GraphicsFileEntry(700, 720, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_183, new GraphicsFileEntry(740, 720, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_184, new GraphicsFileEntry(780, 720, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_185, new GraphicsFileEntry(820, 720, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_186, new GraphicsFileEntry(860, 720, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_187, new GraphicsFileEntry(900, 720, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_188, new GraphicsFileEntry(940, 720, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_189, new GraphicsFileEntry(980, 720, 40, 40));
+
+        graphicsFileEntries.put(CUSTOM_ITEM_190, new GraphicsFileEntry(620, 760, 40, 40)); // 190
+        graphicsFileEntries.put(CUSTOM_ITEM_191, new GraphicsFileEntry(660, 760, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_192, new GraphicsFileEntry(700, 760, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_193, new GraphicsFileEntry(740, 760, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_194, new GraphicsFileEntry(780, 760, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_195, new GraphicsFileEntry(820, 760, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_196, new GraphicsFileEntry(860, 760, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_197, new GraphicsFileEntry(900, 760, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_198, new GraphicsFileEntry(940, 760, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_199, new GraphicsFileEntry(980, 760, 40, 40));
+
+        graphicsFileEntries.put(CUSTOM_ITEM_200, new GraphicsFileEntry(620, 800, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_201, new GraphicsFileEntry(660, 800, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_202, new GraphicsFileEntry(700, 800, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_203, new GraphicsFileEntry(740, 800, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_204, new GraphicsFileEntry(780, 800, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_205, new GraphicsFileEntry(820, 800, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_206, new GraphicsFileEntry(860, 800, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_207, new GraphicsFileEntry(900, 800, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_208, new GraphicsFileEntry(940, 800, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_209, new GraphicsFileEntry(980, 800, 40, 40));
+
+        graphicsFileEntries.put(CUSTOM_ITEM_210, new GraphicsFileEntry(620, 840, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_211, new GraphicsFileEntry(660, 840, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_212, new GraphicsFileEntry(700, 840, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_213, new GraphicsFileEntry(740, 840, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_214, new GraphicsFileEntry(780, 840, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_215, new GraphicsFileEntry(820, 840, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_216, new GraphicsFileEntry(860, 840, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_217, new GraphicsFileEntry(900, 840, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_218, new GraphicsFileEntry(940, 840, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_219, new GraphicsFileEntry(980, 840, 40, 40));
+
+        graphicsFileEntries.put(CUSTOM_ITEM_220, new GraphicsFileEntry(620, 880, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_221, new GraphicsFileEntry(660, 880, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_222, new GraphicsFileEntry(700, 880, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_223, new GraphicsFileEntry(740, 880, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_224, new GraphicsFileEntry(780, 880, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_225, new GraphicsFileEntry(820, 880, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_226, new GraphicsFileEntry(860, 880, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_227, new GraphicsFileEntry(900, 880, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_228, new GraphicsFileEntry(940, 880, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_229, new GraphicsFileEntry(980, 880, 40, 40));
+
+        graphicsFileEntries.put(CUSTOM_ITEM_230, new GraphicsFileEntry(620, 920, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_231, new GraphicsFileEntry(660, 920, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_232, new GraphicsFileEntry(700, 920, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_233, new GraphicsFileEntry(740, 920, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_234, new GraphicsFileEntry(780, 920, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_235, new GraphicsFileEntry(820, 920, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_236, new GraphicsFileEntry(860, 920, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_237, new GraphicsFileEntry(900, 920, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_238, new GraphicsFileEntry(940, 920, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_239, new GraphicsFileEntry(980, 920, 40, 40));
+
+        graphicsFileEntries.put(CUSTOM_ITEM_240, new GraphicsFileEntry(620, 960, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_241, new GraphicsFileEntry(660, 960, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_242, new GraphicsFileEntry(700, 960, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_243, new GraphicsFileEntry(740, 960, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_244, new GraphicsFileEntry(780, 960, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_245, new GraphicsFileEntry(820, 960, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_246, new GraphicsFileEntry(860, 960, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_247, new GraphicsFileEntry(900, 960, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_248, new GraphicsFileEntry(940, 960, 40, 40));
+        graphicsFileEntries.put(CUSTOM_ITEM_249, new GraphicsFileEntry(980, 960, 40, 40));
         return graphicsFileEntries;
     }
 

@@ -189,5 +189,6 @@ public enum CustomBlockEnum {
     XelpudConversationBlock_MapCount16,
     XelpudConversationBlock_MapCount17,
     Halloween2021ConversationBlock_ExtraCandy1,
-    Halloween2021ConversationBlock_ExtraCandy2;
+    Halloween2021ConversationBlock_ExtraCandy2,
+    Easter2025_Snapshots1;
 }

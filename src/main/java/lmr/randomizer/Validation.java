@@ -679,21 +679,33 @@ public class Validation {
     }
 
     public static boolean validateGraphicsPack(Main.RandomizerUI randomizerUI) {
-        if("HALLOWEEN".equals(Settings.getGraphicsPack())) {
-            JOptionPane.showMessageDialog(randomizerUI,
-                    String.format("HALLOWEEN cannot be used as %s. Please select a folder from which the HALLOWEEN graphics should be created.", Translations.getText("settings.graphicsPack")),
-                    "Randomizer error", JOptionPane.ERROR_MESSAGE);
-            return false;
+        if (HolidaySettings.isHalloween2019Mode()) {
+            if("HALLOWEEN".equals(Settings.getGraphicsPack())) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("HALLOWEEN cannot be used as %s and will be overwritten. Please select a folder from which the HALLOWEEN graphics should be created.", Translations.getText("settings.graphicsPack")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
         }
-        if("HALLOWEEN21".equals(Settings.getGraphicsPack())) {
-            JOptionPane.showMessageDialog(randomizerUI,
-                    String.format("HALLOWEEN cannot be used as %s. Please select a folder from which the HALLOWEEN graphics should be created.", Translations.getText("settings.graphicsPack")),
-                    "Randomizer error", JOptionPane.ERROR_MESSAGE);
-            return false;
+        if (HolidaySettings.isHalloween2021Mode()) {
+            if("HALLOWEEN21".equals(Settings.getGraphicsPack())) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("HALLOWEEN cannot be used as %s and will be overwritten. Please select a folder from which the HALLOWEEN graphics should be created.", Translations.getText("settings.graphicsPack")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
         }
-        if("FOOLS2020".equals(Settings.getGraphicsPack())) {
+        if (HolidaySettings.isFools2020Mode()) {
+            if("FOOLS2020".equals(Settings.getGraphicsPack())) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        String.format("FOOLS2020 cannot be used as %s and will be overwritten. Please select a folder from which the FOOLS2020 graphics should be created.", Translations.getText("settings.graphicsPack")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        if("EASTER2025".equals(Settings.getGraphicsPack())) {
             JOptionPane.showMessageDialog(randomizerUI,
-                    String.format("FOOLS2020 cannot be used as %s. Please select a folder from which the FOOLS2020 graphics should be created.", Translations.getText("settings.graphicsPack")),
+                    String.format("EASTER2025 cannot be used as %s and will be overwritten. Please select a folder from which the EASTER2025 graphics should be created.", Translations.getText("settings.graphicsPack")),
                     "Randomizer error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -880,6 +892,36 @@ public class Validation {
                 JOptionPane.showMessageDialog(randomizerUI,
                         String.format("The setting \"%s\" is cannot be used in this mode",
                                 Translations.getText("gameplay.alternateMotherAnkh")),
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean validateEaster2025(Main.RandomizerUI randomizerUI) {
+        if(HolidaySettings.isEaster2025Mode()) {
+            if(Settings.getMinRandomRemovedItems() > 0 || Settings.getMaxRandomRemovedItems() > 0) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        "Removing items is not supported for this mode",
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(Settings.isReplaceMapsWithWeights()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        "Removing items is not supported for this mode",
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(Settings.isRemoveSpaulder()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        "Removing items is not supported for this mode",
+                        "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(Settings.isRemoveMainWeapons()) {
+                JOptionPane.showMessageDialog(randomizerUI,
+                        "Removing items is not supported for this mode",
                         "Randomizer error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }

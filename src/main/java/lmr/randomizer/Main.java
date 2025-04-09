@@ -22,7 +22,6 @@ import lmr.randomizer.ui.ProgressDialog;
 import lmr.randomizer.ui.TabbedPanel;
 import lmr.randomizer.update.AddObject;
 import lmr.randomizer.update.GameUpdater;
-import lmr.randomizer.update.SaveFileUpdates;
 import lmr.randomizer.util.FlagManager;
 import lmr.randomizer.util.LocationCoordinateMapper;
 import lmr.randomizer.util.ZoneConstants;
@@ -632,6 +631,9 @@ public class Main {
             if(!Validation.validateFools2021(this)) {
                 return false;
             }
+            if(!Validation.validateEaster2025(this)) {
+                return false;
+            }
             if(!Validation.validateCustomPlacements(this)) {
                 return false;
             }
@@ -909,6 +911,13 @@ public class Main {
                     if(!GraphicsFileUpdater.updateGraphicsFilesForFools2020(Settings.getGraphicsPack())) {
                         JOptionPane.showMessageDialog(f,
                                 Translations.getText("Unable to create Fools 2020 graphics"),
+                                "Randomizer error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                if(HolidaySettings.isEaster2025Mode()) {
+                    if(!GraphicsFileUpdater.updateGraphicsFilesForEaster2025(Settings.getGraphicsPack())) {
+                        JOptionPane.showMessageDialog(f,
+                                Translations.getText("Unable to create Easter 2025 graphics"),
                                 "Randomizer error", JOptionPane.ERROR_MESSAGE);
                     }
                 }

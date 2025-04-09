@@ -31,6 +31,10 @@ public final class HolidaySettings {
         return false;
     }
 
+    public static boolean isEaster2025Mode() {
+        return true;
+    }
+
     public static boolean isFools2022Mode() {
         return false;
     }
@@ -45,7 +49,7 @@ public final class HolidaySettings {
 
     public static boolean isHolidayMode() {
         return isFools2019Mode() || isFools2020Mode() || isFools2021Mode() || isFools2022Mode()
-                || isHalloween2019Mode() || isHalloween2021Mode();
+                || isEaster2025Mode() || isHalloween2019Mode() || isHalloween2021Mode();
     }
 
     public static boolean isHalloweenMode() {

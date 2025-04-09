@@ -63,7 +63,7 @@
                                         <include>**/min/**/*</include>
                                         <include>**/rcd/**/*</include>
                                         <include>**/requirement/**/*</include>
-                                        <include>**/graphics/halloween2021/**/*</include>
+                                        <include>**/graphics/easter2025/**/*</include>
                                         <include>**/01effect-custom.png</include>
                                     </includes>
                                 </resource>
