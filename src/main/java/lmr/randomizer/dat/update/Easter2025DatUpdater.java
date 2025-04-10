@@ -6,6 +6,7 @@ import lmr.randomizer.dat.DatFileData;
 import lmr.randomizer.dat.blocks.Block;
 import lmr.randomizer.dat.blocks.ItemDescriptionBlock;
 import lmr.randomizer.dat.blocks.ItemNameBlock;
+import lmr.randomizer.dat.blocks.ScannableBlock;
 import lmr.randomizer.dat.blocks.contents.BlockContents;
 import lmr.randomizer.dat.blocks.contents.BlockFlagData;
 import lmr.randomizer.dat.blocks.contents.BlockSingleData;
@@ -32,6 +33,12 @@ public class Easter2025DatUpdater extends DatUpdater {
     }
 
     @Override
+    public void updateFootOfFutoScannableBlock(ScannableBlock scannableBlock) {
+        String hintText = Translations.getText("event.easter2025.hintText.giants");
+        scannableBlock.setScanText(buildTextEntry(hintText));
+    }
+
+    @Override
     void updateXmailerConversationBlock(Block conversationBlock) {
         List<BlockContents> blockContents = conversationBlock.getBlockContents();
         blockContents.clear();
@@ -55,9 +62,14 @@ public class Easter2025DatUpdater extends DatUpdater {
     public void addItemNames(DatFileData datFileData) {
         ItemNameBlock itemNameBlock = datFileData.getItemNameBlock();
         TextEntry textEntry;
-        for (int i = 1; i < EggConstants.TOTAL_HIDDEN_EGGS; i++) {
+        String name;
+        for (int i = 170; i <= EggConstants.LAST_CUSTOM_INVENTORY_ITEM; i++) {
             textEntry = new TextEntry();
-            textEntry.getData().addAll(FileUtils.stringToData(Translations.getText("event.easter2025.egg.name." + i)));
+            name = Translations.getText("event.easter2025.egg.name." + i);
+            if (name == null) {
+                break;
+            }
+            textEntry.getData().addAll(FileUtils.stringToData(name));
             textEntry.setIncludeEndRecordIndicator(true);
             itemNameBlock.getBlockContents().add(textEntry);
         }

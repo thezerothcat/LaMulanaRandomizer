@@ -140,12 +140,7 @@ public class Easter2025RcdUpdater extends RcdUpdater {
         }
         if(zoneIndex == ZoneConstants.INFERNO) {
             if(roomIndex == 3 && screenIndex == 0) {
-//                addTablet(screen, 40, 160, -1, getCustomBlockIndex(CustomBlockEnum.Easter2025_Tablet1),
-//                        FlagConstants.CUSTOM_EASTER2025_PUZZLE_EGG_01,
-//                        new TestByteOperation(FlagConstants.CUSTOM_EASTER2025_PUZZLE_EGG_01, ByteOp.FLAG_LTEQ, 2));
-//                addHiddenEgg(screen, 40, 160, -1, getCustomBlockIndex(CustomBlockEnum.Easter2025_Tablet1),
-//                        FlagConstants.CUSTOM_EASTER2025_PUZZLE_EGG_01,
-//                        new TestByteOperation(FlagConstants.CUSTOM_EASTER2025_PUZZLE_EGG_01, ByteOp.FLAG_LTEQ, 2));
+                addHiddenEgg(screen, 40, 160, 27);
             }
             if(roomIndex == 4 && screenIndex == 0) {
                 addHiddenEgg(screen, 360, 80, 39);
@@ -328,10 +323,12 @@ public class Easter2025RcdUpdater extends RcdUpdater {
         }
         if(zoneIndex == ZoneConstants.RETRO_SURFACE) {
             if(roomIndex == 0 && screenIndex == 0) {
-                addHiddenEgg(screen, 240, 320, 25);
+                addHiddenEgg(screen, 240, 320, 25)
+                        .addUpdates(new WriteByteOperation(FlagConstants.SCREEN_FLAG_C, ByteOp.ASSIGN_FLAG, 1));
             }
             if(roomIndex == 0 && screenIndex == 0) {
-                addHiddenEgg(screen, 340, 140, 1, 26);
+                addHiddenEgg(screen, 340, 140, 1, 26)
+                        .addUpdates(new WriteByteOperation(FlagConstants.SCREEN_FLAG_C, ByteOp.ASSIGN_FLAG, 2));
             }
         }
         if(zoneIndex == ZoneConstants.HT_1) {
@@ -384,11 +381,11 @@ public class Easter2025RcdUpdater extends RcdUpdater {
         floatingItem.addUpdates(new WriteByteOperation(eggFlag, ByteOp.ASSIGN_FLAG, 2));
     }
 
-    private void addHiddenEgg(Screen screen, int x, int y, int eggNumber) {
-        addHiddenEgg(screen, x, y, 0, eggNumber);
+    private UseItemDetector addHiddenEgg(Screen screen, int x, int y, int eggNumber) {
+        return addHiddenEgg(screen, x, y, 0, eggNumber);
     }
 
-    private void addHiddenEgg(Screen screen, int x, int y, int layer, int eggNumber) {
+    private UseItemDetector addHiddenEgg(Screen screen, int x, int y, int layer, int eggNumber) {
         int eggFlag = EggConstants.getEggFlag(eggNumber);
 
         GraphicsTextureDraw eggGraphic = new GraphicsTextureDraw(screen, x, y);
@@ -405,10 +402,10 @@ public class Easter2025RcdUpdater extends RcdUpdater {
         eggGraphic.addTests(new TestByteOperation(eggFlag, ByteOp.FLAG_LT, 1));
         screen.getObjects().add(eggGraphic);
 
-        addEggDetection(screen, x, y, eggNumber);
+        return addEggDetection(screen, x, y, eggNumber);
     }
 
-    private void addEggDetection(Screen screen, int x, int y, int eggNumber) {
+    private UseItemDetector addEggDetection(Screen screen, int x, int y, int eggNumber) {
         int offsetX = EggConstants.getEggInnerXOffset(eggNumber);
         int detectionX = x;
         int xWidth = 4;
@@ -444,14 +441,15 @@ public class Easter2025RcdUpdater extends RcdUpdater {
         }
 
         int eggFlag = EggConstants.getEggFlag(eggNumber);
+        UseItemDetector useItemDetector;
         if(eggNumber == 34) {
-            AddObject.addUseItemDetector(screen, detectionX, detectionY, xWidth, yHeight, "Hand Scanner")
+            useItemDetector = (UseItemDetector)AddObject.addUseItemDetector(screen, detectionX, detectionY, xWidth, yHeight, "Hand Scanner")
                     .addTests(new TestByteOperation(eggFlag, ByteOp.FLAG_EQUALS, 0),
                     new TestByteOperation(FlagConstants.HARDMODE, ByteOp.FLAG_NOT_EQUAL, 0))
                     .addUpdates(new WriteByteOperation(eggFlag, ByteOp.ASSIGN_FLAG, 1));
         }
         else {
-            AddObject.addUseItemDetector(screen, detectionX, detectionY, xWidth, yHeight, "Hand Scanner")
+            useItemDetector = (UseItemDetector)AddObject.addUseItemDetector(screen, detectionX, detectionY, xWidth, yHeight, "Hand Scanner")
                     .addTests(new TestByteOperation(eggFlag, ByteOp.FLAG_EQUALS, 0))
                     .addUpdates(new WriteByteOperation(eggFlag, ByteOp.ASSIGN_FLAG, 1));
         }
@@ -463,6 +461,6 @@ public class Easter2025RcdUpdater extends RcdUpdater {
                         new WriteByteOperation(eggFlag, ByteOp.ASSIGN_FLAG, 2),
                         new WriteByteOperation(FlagConstants.CUSTOM_EASTER2025_TOTAL_EGGS, ByteOp.ADD_FLAG, 1)))
                 .setSoundEffect(0);
+        return useItemDetector;
     }
-
 }

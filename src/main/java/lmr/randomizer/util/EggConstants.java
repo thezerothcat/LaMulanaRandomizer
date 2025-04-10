@@ -5,6 +5,7 @@ import java.util.*;
 public final class EggConstants {
     public static final int TOTAL_HIDDEN_EGGS = 69;
     public static final int NON_GRAPHIC_EGGS = 1;
+    public static final int LAST_CUSTOM_INVENTORY_ITEM = 249;
 
     private static Map<Integer, Integer> mapOfEggNumberToCustomFlag;
     private static List<Integer> availableFlags;
@@ -64,71 +65,71 @@ public final class EggConstants {
             case 7:
                 return "egg17.png"; // Goddess hand, might swap with the Spring egg
             case 8:
-                return "egg13.png";
+                return "egg13.png"; // Spike pit - DNEgg?
             case 9:
-                return "egg16.png";
+                return "egg16.png"; // Dancing man v2
             case 10:
-                return "egg37.png";
+                return "egg37.png"; // Punchy fist
             case 11:
-                return "egg02.png";
+                return "egg02.png"; // Foot of Abuto
             case 12:
-                return "egg04.png";
+                return "egg04.png"; // Behind pillar in Guidance
             case 13:
-                return "egg17.png";
+                return "egg17.png"; // Statue nose
             case 14:
-                return "egg14.png";
+                return "egg07.png"; // Spring behind block // todo: check
             case 15:
-                return "egg03.png";
+                return "egg03.png"; // Lizard's Room
             case 16:
-                return "egg13.png";
+                return "egg18.png"; // Behind pot in Ruin - formerly egg13
             case 17:
-                return "egg19.png";
+                return "egg19.png"; // Behind pot in Birth
             case 18:
-                return "egg11.png";
+                return "egg11.png"; // Flame in Dimensional
             case 19:
-                return "egg06.png";
+                return "egg11.png"; // Endless ceiling - formerly egg06
             case 20:
-                return "egg27.png";
+                return "egg24.png"; // Endless keyhole // todo: check
             case 21:
-                return "egg12.png";
+                return "egg12.png"; // Shrine crusher
             case 22:
-                return "egg10.png";
+                return "egg10.png"; // True Shrine crusher
             case 23:
-                return "egg22.png";
+                return "egg22.png"; // Shrine other crusher - may decide to swap to Mulbruk Egg or something
             case 24:
-                return "egg21.png";
+                return "egg21.png"; // Birth near grail tablet
             case 25:
-                return "egg25.png";
+                return "egg25.png"; // Retro green egg
             case 26:
-                return "egg24.png";
+                return "egg24.png"; // Dark egg
             case 27:
-                return "egg04.png";
+                return "egg08.png"; // Chain whip room
             case 28:
-                return "egg26.png"; // Same as egg12
+                return "egg26.png"; // Mausoleum retribution tablet; swap to Mulbruk egg?
             case 29:
-                return "egg15.png";
+                return "egg15.png"; // Moonlight among spikes
             case 30:
-                return "egg02.png";
+                return "egg02.png"; // Endless lamp recharge
             case 31:
-                return "egg29.png";
+                return "egg29.png"; // Sun retribution eye
             case 32:
-                return "egg30.png";
+                return "egg30.png"; // Guidance mural
             case 33:
-                return "egg31.png";
+                return "egg31.png"; // Guidance skeleton
             case 34:
-                return "egg18.png";
+                return "egg27.png"; // Hardmode tablet
             case 35:
-                return "egg01.png";
+                return "egg01.png"; // Sun trap
             case 36:
-                return "egg07.png";
+                return "egg07.png";  // Fish tank
             case 37:
-                return "egg07.png";
+                return "egg07.png"; // Top of Spring
             case 38:
-                return "egg32.png";
+                return "egg32.png"; // Inferno statue
             case 39:
-                return "egg08.png";
+                return "egg08.png"; // Cat pause room
             case 40:
-                return "egg09.png";
+                return "egg09.png"; // Extinction hand
             case 41:
                 return "egg20.png";
             case 42:
