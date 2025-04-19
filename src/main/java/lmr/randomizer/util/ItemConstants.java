@@ -104,6 +104,17 @@ public final class ItemConstants {
     public static final int SOFTWARE_LAMULANA = 104;
     public static final short WEIGHT = 105;
     public static final short COIN = 106;
+    public static final short SHURIKEN_AMMO = 107;
+    public static final short ROLLING_SHURIKEN_AMMO = 108;
+    public static final short EARTH_SPEAR_AMMO = 109;
+    public static final short FLARE_GUN_AMMO = 110;
+    public static final short BOMB_AMMO = 111;
+    public static final short CHAKRAM_AMMO = 112;
+    public static final short CALTROPS_AMMO = 113;
+    public static final short PISTOL_AMMO = 114;
+    public static final short SOUL_STONE = 115;
+    public static final short FIRST_USABLE_CUSTOM_INVENTORY_ITEM = 170;
+    public static final short LAST_USABLE_CUSTOM_INVENTORY_ITEM = 249;
     public static final short MANTRA_MARDUK = 223;
 
     private ItemConstants() { }

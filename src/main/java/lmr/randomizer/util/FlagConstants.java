@@ -18,6 +18,7 @@ public final class FlagConstants {
     public static final int GUIDANCE_ELEVATOR = 0x134; // Value 0 > 1 when hitting the elevator block in the Guidance mouth (where Dracuet's door is), other increments via FlagTimer for animation
     public static final int GUIDANCE_PUZZLE_TREASURES_CHEST = 0x137; // Value 0 > 1 when using Pepper on the statue, 1 > 2 when the chest is done animating to make it possible to open.
     public static final int GUIDANCE_PUZZLE_ANKH_JEWEL_TABLETS_LADDER = 0x13f; // Value 0 > 1 when destroying the 4 tablets, which causes the ladder to spawn in the room to the right, for access to the isolated dais.
+    public static final int GUIDANCE_PUZZLE_TRAP_FACE = 0x142;
     public static final int SURFACE_RUINS_OPENED = 0x145; // Set in vanilla first conversation with Xelpud, changed in randomizer to use 0xad0. For some reason, warp graphics sometimes test this flag.
     public static final int SURFACE_ARGUS_DEFEATED = 0x148;
     public static final int SURFACE_PUZZLE_WATERFALL_WALL_SACRED_ORB = 0x14b; // Value 0 > 1 when the wall/Hitbox is broken for the wall that has bats behind it, also used as the puzzle flag for the chest

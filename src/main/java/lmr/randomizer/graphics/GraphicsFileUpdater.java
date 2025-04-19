@@ -392,7 +392,7 @@ public class GraphicsFileUpdater {
 
             int yOffset = 0;
             int xOffset = 0;
-            for(int eggNumber = 1; eggNumber <= EggConstants.getEggsWithGraphics(); eggNumber++) {
+            for(int eggNumber = 1; eggNumber <= EggConstants.TOTAL_HIDDEN_EGGS - 1; eggNumber++) {
                 graphics2D.drawImage(getCustomGraphic(EggConstants.getEggGraphic(eggNumber)), null, xOffset + EggConstants.getEggInnerXOffset(eggNumber), 712 + yOffset + EggConstants.getEggInnerYOffset(eggNumber));
                 xOffset += 40;
                 if(xOffset + 40 >= EXISTING_FILE_WIDTH) {
@@ -400,6 +400,10 @@ public class GraphicsFileUpdater {
                     yOffset += 40;
                 }
             }
+            // Special case for final egg
+            graphics2D.drawImage(getCustomGraphic(EggConstants.getEggGraphic(EggConstants.TOTAL_HIDDEN_EGGS)), null, xOffset + EggConstants.getEggInnerXOffset(EggConstants.TOTAL_HIDDEN_EGGS), 712 + yOffset + EggConstants.getEggInnerYOffset(EggConstants.TOTAL_HIDDEN_EGGS));
+            // Extra graphic
+            graphics2D.drawImage(getCustomGraphic("nest.png"), null, 840, 512);
 
             graphics2D.dispose();
 
@@ -574,7 +578,7 @@ public class GraphicsFileUpdater {
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_172);
             graphics2D.drawImage(getCustomGraphic("egg_pickup_mausoleum.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_173);
-            graphics2D.drawImage(getCustomGraphic("egg_pickup.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_striped.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_174);
             graphics2D.drawImage(getCustomGraphic("egg_pickup_catball.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_175);
@@ -586,7 +590,7 @@ public class GraphicsFileUpdater {
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_178);
             graphics2D.drawImage(getCustomGraphic("egg_pickup_naramura.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_179);
-            graphics2D.drawImage(getCustomGraphic("egg_pickup.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_spotted.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_180);
             graphics2D.drawImage(getCustomGraphic("egg_pickup_guidance.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_181);
@@ -602,21 +606,21 @@ public class GraphicsFileUpdater {
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_186);
             graphics2D.drawImage(getCustomGraphic("egg_pickup_mother.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_187);
-            graphics2D.drawImage(getCustomGraphic("egg_pickup.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_trueshrine.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_188);
-            graphics2D.drawImage(getCustomGraphic("egg_pickup.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_retro_s.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_189);
             graphics2D.drawImage(getCustomGraphic("egg_pickup_inferno.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_190);
             graphics2D.drawImage(getCustomGraphic("egg_pickup_mulbruk.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_191);
-            graphics2D.drawImage(getCustomGraphic("egg_pickup.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_vividblue.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_192);
-            graphics2D.drawImage(getCustomGraphic("egg_pickup.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_guidance_s.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_193);
-            graphics2D.drawImage(getCustomGraphic("egg_pickup.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_bone.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_194);
-            graphics2D.drawImage(getCustomGraphic("egg_pickup.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_inferno_s.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_195);
             graphics2D.drawImage(getCustomGraphic("egg_pickup_extinction.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_196);
@@ -626,7 +630,7 @@ public class GraphicsFileUpdater {
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_198);
             graphics2D.drawImage(getCustomGraphic("egg_pickup_illusion.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_199);
-            graphics2D.drawImage(getCustomGraphic("egg_pickup.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_backbeard.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_200);
             graphics2D.drawImage(getCustomGraphic("egg_pickup_dimensional.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_201);
@@ -634,9 +638,43 @@ public class GraphicsFileUpdater {
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_202);
             graphics2D.drawImage(getCustomGraphic("egg_pickup_retro.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_203);
-            graphics2D.drawImage(getCustomGraphic("egg_pickup.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_burning.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
             graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_204);
-            graphics2D.drawImage(getCustomGraphic("egg_pickup.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_regret.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_205);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_eir.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_206);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_alruna.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_207);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_kara.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_208);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_herja.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_209);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_onyx.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_210);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_white.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_211);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_guidance_s.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_212);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_sun.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_213);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_graveyard.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_214);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_spring.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_215);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_tog.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_216);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_mausoleum.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_217);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_behemoth.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_218);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_pink.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_219);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_enkidu.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_220);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_eye.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
+            graphicsFileEntry = graphicsFileEntries.get(GraphicsFileData.CUSTOM_ITEM_221);
+            graphics2D.drawImage(getCustomGraphic("egg_pickup_spotted.png"), null, graphicsFileEntry.getX(), graphicsFileEntry.getY());
 
             graphics2D.dispose();
 

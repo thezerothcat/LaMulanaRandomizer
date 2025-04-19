@@ -157,7 +157,7 @@ public class TransitionGateRandomizer {
             transitionGateDestinationMap.put("Transition: Goddess L1", "Transition: Illusion R1");
         }
 
-        if(Settings.isRequireFullAccess()) {
+        if(Settings.isRequireFullAccess() || HolidaySettings.isEaster2025Mode()) {
             unsafeRightTransitions.add("Transition: Retrosurface R1");
         }
         else {

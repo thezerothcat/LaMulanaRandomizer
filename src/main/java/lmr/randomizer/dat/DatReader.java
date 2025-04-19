@@ -93,6 +93,157 @@ public final class DatReader {
         return menuBlock;
     }
 
+    private static Block buildOpeningTextBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
+        int dataIndex = 0;
+        OpeningTextBlock openingTextBlock = new OpeningTextBlock(blockIndex);
+
+        TextEntry textEntry;
+        ListEntry listEntry;
+
+        // List entry 1
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // Text entry 1
+        textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        openingTextBlock.getBlockContents().add(textEntry);
+
+        // List entry 2
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // List entry 3
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // List entry 4
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // Text entry 2
+        textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        openingTextBlock.getBlockContents().add(textEntry);
+
+        // List entry 5
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // Text entry 3
+        textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        openingTextBlock.getBlockContents().add(textEntry);
+
+        // List entry 6
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // Text entry 4
+        textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        openingTextBlock.getBlockContents().add(textEntry);
+
+        // List entry 7
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // Text entry 5
+        textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        openingTextBlock.getBlockContents().add(textEntry);
+
+        // List entry 8
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // Text entry 6
+        textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        openingTextBlock.getBlockContents().add(textEntry);
+
+        // List entry 9
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // Text entry 7
+        textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        openingTextBlock.getBlockContents().add(textEntry);
+
+
+        // List entry 10
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // Text entry 8
+        textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        openingTextBlock.getBlockContents().add(textEntry);
+
+        // List entry 11
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // Text entry 9
+        textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        openingTextBlock.getBlockContents().add(textEntry);
+
+        // List entry 12
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // Text entry 10
+        textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        openingTextBlock.getBlockContents().add(textEntry);
+
+        // List entry 13
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // Weird text entry 1?
+        textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        openingTextBlock.getBlockContents().add(textEntry);
+
+        // List entry 14
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // Text entry 11 (long)
+        textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        openingTextBlock.getBlockContents().add(textEntry);
+
+        // List entry 15
+        listEntry = buildListEntry(dataInputStream, true);
+        dataIndex += listEntry.getSize() / 2;
+        openingTextBlock.getBlockContents().add(listEntry);
+
+        // Weird text entry 2?
+        textEntry = new TextEntry();
+        dataIndex += populateTextEntry(textEntry, dataInputStream);
+        openingTextBlock.getBlockContents().add(textEntry);
+
+        return openingTextBlock;
+    }
+
     private static Block buildSoftwareBlock(int blockIndex, DataInputStream dataInputStream, int numberOfShortsInThisBlock) throws IOException {
         int dataIndex = 0;
         SoftwareBlock softwareBlock = new SoftwareBlock(blockIndex);
@@ -1059,6 +1210,7 @@ public final class DatReader {
             else if(blockIndex == BlockConstants.Skeleton_FootOfFuto
                     || blockIndex == BlockConstants.MegaTablet_HT_Entrance
                     || blockIndex == BlockConstants.MegaTablet_HT_BecameAPhantom
+                    || blockIndex == BlockConstants.Tablet_Mausoleum_Hardmode_Warning
                     || BlockConstants.TABLET_BLOCKS.contains(blockIndex)) {
                 block = buildScannableBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
@@ -1068,6 +1220,9 @@ public final class DatReader {
             else if(blockIndex == BlockConstants.XelpudFlagCheckBlock || blockIndex == BlockConstants.XelpudScoreCheckBlock
                     || blockIndex == BlockConstants.MulbrukFlagCheckBlock || blockIndex == BlockConstants.MulbrukScoreCheckBlock) {
                 block = buildCheckBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
+            }
+            else if(blockIndex == BlockConstants.OpeningText) {
+                block = buildOpeningTextBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);
             }
             else if(isMasterNpcBlock(blockIndex)) {
                 block = buildMasterNpcBlock(blockIndex, dataInputStream, numberOfBytesInThisBlock / 2);

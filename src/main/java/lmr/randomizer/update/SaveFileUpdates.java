@@ -83,6 +83,9 @@ public final class SaveFileUpdates {
         if(HolidaySettings.isHalloween2021Mode()) {
             setInventoryCount(saveData, ItemConstants.MAP, 1);
         }
+        if(HolidaySettings.isEaster2025Mode()) {
+            setInventoryCount(saveData, ItemConstants.WATERPROOF_CASE, 1);
+        }
         if(Settings.isFeatherlessMode()) {
             // Ice block puzzle forced.
             saveData[0x11 + 0x243] = 3;

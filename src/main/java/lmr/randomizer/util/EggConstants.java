@@ -1,43 +1,10 @@
 package lmr.randomizer.util;
 
-import java.util.*;
-
 public final class EggConstants {
-    public static final int TOTAL_HIDDEN_EGGS = 69;
-    public static final int NON_GRAPHIC_EGGS = 1;
-    public static final int LAST_CUSTOM_INVENTORY_ITEM = 249;
-
-    private static Map<Integer, Integer> mapOfEggNumberToCustomFlag;
-    private static List<Integer> availableFlags;
-
-    static {
-        mapOfEggNumberToCustomFlag = new HashMap<>();
-        availableFlags = new ArrayList<>(getAvailableFlags());
-    }
+    public static final int TOTAL_HIDDEN_EGGS = 100;
 
     public static short getEggFlag(int eggNumber) {
-        Integer eggFlag = mapOfEggNumberToCustomFlag.get(eggNumber);
-        if (eggFlag == null) {
-            eggFlag = getNextFlag();
-            mapOfEggNumberToCustomFlag.put(eggNumber, eggFlag);
-        }
-        return eggFlag.shortValue();
-    }
-
-    private static int getNextFlag() {
-        return availableFlags.remove(0);
-    }
-
-    private static Set<Integer> getAvailableFlags() {
-        Set<Integer> availableFlags = new HashSet<>();
-        for(int flag = 2699; flag >= 2600; flag--) {
-            availableFlags.add(flag);
-        }
-        return availableFlags;
-    }
-
-    public static int getEggsWithGraphics() {
-        return TOTAL_HIDDEN_EGGS - NON_GRAPHIC_EGGS;
+        return (short)(2600 + eggNumber - 1);
     }
 
     public static int getEggImageX(int eggNumber) {
@@ -51,143 +18,207 @@ public final class EggConstants {
     public static String getEggGraphic(int eggNumber) {
         switch(eggNumber) {
             case 1:
-                return "egg03.png"; // Left of Xelpud
+                return "egg_green.png"; // Left of Xelpud
             case 2:
-                return "egg03.png"; // Surface Hot Spring
+                return "egg_green.png"; // Surface Hot Spring
             case 3:
-                return "egg15.png"; // Graveyard Hot Spring
+                return "egg_ice.png"; // Graveyard Hot Spring
             case 4:
-                return "egg05.png"; // Volcano
+                return "egg_mausoleum.png"; // Volcano
             case 5:
-                return "egg23.png"; // Striped egg
+                return "egg_striped.png"; // Striped egg
             case 6:
-                return "egg04.png"; // Guidance striped egg behind statue, may need to swap out graphic
+                return "egg_herja.png"; // Guidance striped egg behind statue, may need to swap out graphic
             case 7:
-                return "egg17.png"; // Goddess hand, might swap with the Spring egg
+                return "egg_blue.png"; // Goddess hand, might swap with the Spring egg
             case 8:
-                return "egg13.png"; // Spike pit - DNEgg?
+                return "egg_dna.png"; // Spike pit
             case 9:
-                return "egg16.png"; // Dancing man v2
+                return "egg_moonlight.png"; // Dancing man v2
             case 10:
-                return "egg37.png"; // Punchy fist
+                return "egg_naramura.png"; // Punchy fist
             case 11:
-                return "egg02.png"; // Foot of Abuto
+                return "egg_spotted.png"; // Foot of Abuto
             case 12:
-                return "egg04.png"; // Behind pillar in Guidance
+                return "egg_guidance.png"; // Behind pillar in Guidance
             case 13:
-                return "egg17.png"; // Statue nose
+                return "egg_blue.png"; // Statue nose
             case 14:
-                return "egg07.png"; // Spring behind block // todo: check
+                return "egg_kara.png"; // Spring behind block
             case 15:
-                return "egg03.png"; // Lizard's Room
+                return "egg_green.png"; // Lizard's Room
             case 16:
-                return "egg18.png"; // Behind pot in Ruin - formerly egg13
+                return "egg_pink.png"; // Behind pot in Ruin - formerly egg13
             case 17:
-                return "egg19.png"; // Behind pot in Birth
+                return "egg_behemoth.png"; // Behind pot in Birth
             case 18:
-                return "egg11.png"; // Flame in Dimensional
+                return "egg_herja.png"; // Flame in Dimensional
             case 19:
-                return "egg11.png"; // Endless ceiling - formerly egg06
+                return "egg_endless.png"; // Endless ceiling - formerly egg06
             case 20:
-                return "egg24.png"; // Endless keyhole // todo: check
+                return "egg_dark.png"; // Endless keyhole
             case 21:
-                return "egg12.png"; // Shrine crusher
+                return "egg_shrine.png"; // Shrine crusher
             case 22:
-                return "egg10.png"; // True Shrine crusher
+                return "egg_true_shrine.png"; // True Shrine crusher
             case 23:
-                return "egg22.png"; // Shrine other crusher - may decide to swap to Mulbruk Egg or something
+                return "egg_mulbruk.png"; // Shrine other crusher
             case 24:
-                return "egg21.png"; // Birth near grail tablet
+                return "egg_skanda.png"; // Birth near grail tablet
             case 25:
-                return "egg25.png"; // Retro green egg
+                return "egg_retro_s.png"; // Retro green egg
             case 26:
-                return "egg24.png"; // Dark egg
+                return "egg_dark.png"; // Dark egg
             case 27:
-                return "egg08.png"; // Chain whip room
+                return "egg_inferno.png"; // Chain whip room
             case 28:
-                return "egg26.png"; // Mausoleum retribution tablet; swap to Mulbruk egg?
+                return "egg_skull_s.png"; // Mausoleum retribution tablet; swap to Mulbruk egg?
             case 29:
-                return "egg15.png"; // Moonlight among spikes
+                return "egg_ice.png"; // Moonlight among spikes
             case 30:
-                return "egg02.png"; // Endless lamp recharge
+                return "egg_backbeard.png"; // Endless lamp recharge
             case 31:
-                return "egg29.png"; // Sun retribution eye
+                return "egg_vividblue.png"; // Sun retribution eye
             case 32:
-                return "egg30.png"; // Guidance mural
+                return "egg_guidance_s.png"; // Guidance mural
             case 33:
-                return "egg31.png"; // Guidance skeleton
+                return "egg_bone.png"; // Guidance skeleton
             case 34:
-                return "egg27.png"; // Hardmode tablet
+                return "egg_mulbruk.png"; // Hardmode tablet
             case 35:
-                return "egg01.png"; // Sun trap
+                return "egg_sun.png"; // Sun trap
             case 36:
-                return "egg07.png";  // Fish tank
+                return "egg_blue.png";  // Fish tank
             case 37:
-                return "egg07.png"; // Top of Spring
+                return "egg_spring.png"; // Top of Spring
             case 38:
-                return "egg32.png"; // Inferno statue
+                return "egg_inferno_s.png"; // Inferno statue
             case 39:
-                return "egg08.png"; // Cat pause room
+                return "egg_inferno.png"; // Cat pause room
             case 40:
-                return "egg09.png"; // Extinction hand
+                return "egg_extinction.png"; // Extinction hand
             case 41:
-                return "egg20.png";
+                return "egg_twin.png";
             case 42:
-                return "egg10.png";
+                return "egg_twin.png";
             case 43:
-                return "egg33.png";
+                return "egg_xelpud.png";
             case 44:
-                return "egg14.png";
+                return "egg_illusion.png";
             case 45:
-                return "egg29.png";
+                return "egg_burning.png";
             case 46:
-                return "egg16.png";
+                return "egg_eir.png";
             case 47:
-                return "egg02.png";
+                return "egg_kara.png";
             case 48:
-                return "egg17.png";
+                return "egg_onyx.png";
             case 49:
-                return "egg16.png";
+                return "egg_moonlight.png";
             case 50:
-                return "egg16.png";
+                return "egg_moonlight.png";
             case 51:
-                return "egg15.png";
+                return "egg_ruin.png";
             case 52:
-                return "egg34.png";
+                return "egg_dna.png";
             case 53:
-                return "egg21.png";
+                return "egg_dimensional.png";
             case 54:
-                return "egg35.png";
+                return "egg_creation.png";
             case 55:
-                return "egg21.png";
+                return "egg_dimensional.png";
             case 56:
-                return "egg12.png"; // Mulbruk egg?
+                return "egg_shrine.png";
             case 57:
-                return "egg22.png";
+                return "egg_true_shrine.png";
             case 58:
-                return "egg36.png"; // better graphic if possible
+                return "egg_retro.png";
             case 59:
-                return "egg36.png";
+                return "egg_retro.png";
             case 60:
-                return "egg36.png";
+                return "egg_retro.png";
             case 61:
-                return "egg36.png"; // burning cavern egg
+                return "egg_burning.png";
             case 62:
-                return "egg36.png"; // burning cavern egg
+                return "egg_burning.png";
             case 63:
-                return "egg13.png";
+                return "egg_regret.png";
             case 64:
-                return "egg37.png";
+                return "egg_naramura.png";
             case 65:
-                return "egg37.png";
+                return "egg_naramura.png";
             case 66:
-                return "egg13.png";
+                return "egg_regret.png";
             case 67:
-                return "egg33.png";
+                return "egg_xelpud.png";
             case 68:
-                return "egg15.png";
+                return "egg_ice.png";
+            case 69:
+                return "egg_bone.png";
+            case 70:
+                return "egg_alruna.png";
+            case 71:
+                return "egg_bone.png";
+            case 72:
+                return "egg_regret.png";
+            case 73:
+                return "egg_catball.png";
+            case 74:
+                return "egg_mulbruk.png";
+            case 75:
+                return "egg_tog.png";
+            case 76:
+                return "egg_mausoleum.png";
+            case 77:
+                return "egg_skanda.png";
+            case 78:
+                return "egg_eir.png";
+            case 79:
+                return "egg_mulbruk.png";
+            case 80:
+                return "egg_alruna.png";
+            case 81:
+                return "egg_onyx.png";
+            case 82:
+                return "egg_tog.png";
+            case 83:
+                return "egg_ruin.png";
+            case 84:
+                return "egg_pink.png";
+            case 85:
+                return "egg_enkidu.png";
+            case 86:
+                return "egg_pink.png";
+            case 87:
+                return "egg_illusion.png";
+            case 88:
+                return "egg_twin.png";
+            case 89:
+                return "egg_guidance.png";
+            case 90:
+                return "egg_eye.png";
+            case 91:
+                return "egg_enkidu.png";
+            case 92:
+                return "egg_eye.png";
+            case 93:
+                return "egg_spotted.png";
+            case 94:
+                return "egg_green.png";
+            case 95:
+                return "egg_kara.png";
+            case 96:
+                return "egg_spring.png";
+            case 97:
+                return "egg_retro.png";
+            case 98:
+                return "egg_dimensional.png";
+            case 99:
+                return "egg_vividblue.png";
+            case 100:
+                return "egg_pickup_guidance_s.png";
             default:
-                return "egg01.png";
+                return "egg_spotted.png";
         }
     }
 
@@ -220,7 +251,7 @@ public final class EggConstants {
             case 13:
                 return 16;
             case 14:
-                return 18;
+                return 16;
             case 15:
                 return 16;
             case 16:
@@ -228,7 +259,7 @@ public final class EggConstants {
             case 17:
                 return 16;
             case 18:
-                return 4;
+                return 6;
             case 19:
                 return 14;
             case 20:
@@ -307,8 +338,6 @@ public final class EggConstants {
                 return 0;
             case 57:
                 return 20;
-//            case 58: // retromaus
-//                return 0;
             case 58:
                 return 16;
             case 59:
@@ -328,9 +357,71 @@ public final class EggConstants {
             case 67:
                 return 16;
             case 68:
+                return 16;
+            case 69:
+                return 17;
+            case 70:
+                return 16;
+            case 71:
+                return 26;
+            case 72:
+                return 16;
+            case 73:
                 return 32;
-            case 100:
+            case 74:
+                return 16;
+            case 75:
+                return 16;
+            case 76:
+                return 20;
+            case 77:
+                return 18;
+            case 78:
+                return 16;
+            case 79:
+                return 16;
+            case 80:
+                return 25;
+            case 81:
+                return 22;
+            case 82:
+                return 16;
+            case 83:
+                return 16;
+            case 84:
+                return 16;
+            case 85:
+                return 15;
+            case 86:
+                return 16;
+            case 87:
+                return 14;
+            case 88:
+                return 16;
+            case 89:
+                return 16;
+            case 90:
+                return 18;
+            case 91:
+                return 32;
+            case 92:
+                return 10;
+            case 93:
                 return 0;
+            case 94:
+                return 6;
+            case 95:
+                return 0;
+            case 96:
+                return 20;
+            case 97:
+                return 16;
+            case 98:
+                return 16;
+            case 99:
+                return 16;
+            case 100:
+                return 18;
             default:
                 return 0;
         }
@@ -383,7 +474,7 @@ public final class EggConstants {
             case 22:
                 return 30;
             case 23:
-                return 14;
+                return 16;
             case 24:
                 return 30;
             case 25:
@@ -452,8 +543,6 @@ public final class EggConstants {
                 return 30;
             case 57:
                 return 30;
-//            case 58: // retromaus
-//                return 0;
             case 58:
                 return 10;
             case 59:
@@ -476,21 +565,72 @@ public final class EggConstants {
                 return 30;
             case 68:
                 return 30;
-            case 100:
+            case 69:
+                return 11;
+            case 70:
+                return 6;
+            case 71:
+                return 16;
+            case 72:
+                return 16;
+            case 73:
+                return 6;
+            case 74:
                 return 30;
+            case 75:
+                return 24;
+            case 76:
+                return 0;
+            case 77:
+                return 30;
+            case 78:
+                return 30;
+            case 79:
+                return 30;
+            case 80:
+                return 20;
+            case 81:
+                return 30;
+            case 82:
+                return 24;
+            case 83:
+                return 30;
+            case 84:
+                return 30;
+            case 85:
+                return 20;
+            case 86:
+                return 0;
+            case 87:
+                return 16;
+            case 88:
+                return 30;
+            case 89:
+                return 16;
+            case 90:
+                return 30;
+            case 91:
+                return 30;
+            case 92:
+                return 24;
+            case 93:
+                return 13;
+            case 94:
+                return 8;
+            case 95:
+                return 30;
+            case 96:
+                return 16;
+            case 97:
+                return 30;
+            case 98:
+                return 30;
+            case 99:
+                return 13;
+            case 100:
+                return 0;
             default:
                 return 30;
         }
     }
-
-//    public String getEggName(int eggNumber) {
-//        switch(eggNumber) {
-//            case 1:
-//                return "Grassy Egg";
-//            case 2:
-//                return "Algae Egg";
-//            default:
-//                return "Easter Egg";
-//        }
-//    }
 }

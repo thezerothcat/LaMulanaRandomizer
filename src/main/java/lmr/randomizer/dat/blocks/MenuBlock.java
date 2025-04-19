@@ -169,9 +169,8 @@ public class MenuBlock extends Block {
 //    public static final int Credit_PlayTime = 258;
 
 //    public static final int ListData_Intro = 268;
-//    public static final int IntroText_AdventureStartsHere = 269;
+    public static final int IntroText_AdventureStartsHere = 269;
     public static final int LastEntry = 293;
-
     public MenuBlock(int blockNumber) {
         super(blockNumber);
     }
@@ -191,6 +190,10 @@ public class MenuBlock extends Block {
 
     public void setXmailerAppHeader(TextEntry newAppHeader) {
         getBlockContents().set(XelpudMailer_AppHeaderText, newAppHeader);
+    }
+
+    public void setAdventureStartsHereText(TextEntry newStartText) {
+        getBlockContents().set(IntroText_AdventureStartsHere, newStartText);
     }
 
     public void setMantraName(int mantra, TextEntry newMantraName) {

@@ -3,17 +3,14 @@ package lmr.randomizer.dat.update;
 import lmr.randomizer.FileUtils;
 import lmr.randomizer.Translations;
 import lmr.randomizer.dat.DatFileData;
-import lmr.randomizer.dat.blocks.Block;
-import lmr.randomizer.dat.blocks.ItemDescriptionBlock;
-import lmr.randomizer.dat.blocks.ItemNameBlock;
-import lmr.randomizer.dat.blocks.ScannableBlock;
+import lmr.randomizer.dat.blocks.*;
 import lmr.randomizer.dat.blocks.contents.BlockContents;
 import lmr.randomizer.dat.blocks.contents.BlockFlagData;
 import lmr.randomizer.dat.blocks.contents.BlockSingleData;
 import lmr.randomizer.dat.blocks.contents.entries.TextEntry;
 import lmr.randomizer.util.BlockDataConstants;
-import lmr.randomizer.util.EggConstants;
 import lmr.randomizer.util.FlagConstants;
+import lmr.randomizer.util.ItemConstants;
 
 import java.util.List;
 
@@ -33,9 +30,8 @@ public class Easter2025DatUpdater extends DatUpdater {
     }
 
     @Override
-    public void updateFootOfFutoScannableBlock(ScannableBlock scannableBlock) {
-        String hintText = Translations.getText("event.easter2025.hintText.giants");
-        scannableBlock.setScanText(buildTextEntry(hintText));
+    void updateHardmodeWarningScannableBlock(ScannableBlock scannableBlock) {
+        scannableBlock.setLanguage(ScannableBlock.Language_Native);
     }
 
     @Override
@@ -59,11 +55,37 @@ public class Easter2025DatUpdater extends DatUpdater {
     }
 
     @Override
+    void updateOpeningText(OpeningTextBlock openingTextBlock) {
+        openingTextBlock.setTextEntry1(buildTextEntry(Translations.getText("event.easter2025.opening1")));
+        openingTextBlock.setTextEntry2(buildTextEntry(Translations.getText("event.easter2025.opening2")));
+        openingTextBlock.setTextEntry3(buildTextEntry(Translations.getText("event.easter2025.opening3")));
+        openingTextBlock.setTextEntry4(buildTextEntry(Translations.getText("event.easter2025.opening4")));
+        openingTextBlock.setTextEntry5(buildTextEntry(Translations.getText("event.easter2025.opening5")));
+        openingTextBlock.setTextEntry6(buildTextEntry(Translations.getText("event.easter2025.opening6")));
+        openingTextBlock.setTextEntry7(buildTextEntry(Translations.getText("event.easter2025.opening7")));
+        openingTextBlock.setTextEntry8(buildTextEntry(Translations.getText("event.easter2025.opening8")));
+        openingTextBlock.setTextEntry9(buildTextEntry(Translations.getText("event.easter2025.opening9")));
+        openingTextBlock.setTextEntry10(buildTextEntry(Translations.getText("event.easter2025.opening10")));
+        openingTextBlock.setTextEntry11(buildTextEntry(Translations.getText("event.easter2025.opening11")));
+    }
+
+    @Override
     public void addItemNames(DatFileData datFileData) {
         ItemNameBlock itemNameBlock = datFileData.getItemNameBlock();
+        ((TextEntry)itemNameBlock.getBlockContents().get(itemNameBlock.getBlockContents().size() - 1)).setIncludeEndRecordIndicator(true);
+
         TextEntry textEntry;
         String name;
-        for (int i = 170; i <= EggConstants.LAST_CUSTOM_INVENTORY_ITEM; i++) {
+        // Add placeholders for unused inventory items
+        for (int i = ItemConstants.SOUL_STONE + 1; i < ItemConstants.FIRST_USABLE_CUSTOM_INVENTORY_ITEM; i++) {
+            textEntry = new TextEntry();
+            name = Translations.getText("event.easter2025.egg.name");
+                    textEntry.getData().addAll(FileUtils.stringToData(name));
+            textEntry.setIncludeEndRecordIndicator(true);
+            itemNameBlock.getBlockContents().add(textEntry);
+        }
+        // Add custom inventory items
+        for (int i = 170; i <= ItemConstants.LAST_USABLE_CUSTOM_INVENTORY_ITEM; i++) {
             textEntry = new TextEntry();
             name = Translations.getText("event.easter2025.egg.name." + i);
             if (name == null) {
@@ -73,5 +95,6 @@ public class Easter2025DatUpdater extends DatUpdater {
             textEntry.setIncludeEndRecordIndicator(true);
             itemNameBlock.getBlockContents().add(textEntry);
         }
+        ((TextEntry)itemNameBlock.getBlockContents().get(itemNameBlock.getBlockContents().size() - 1)).setIncludeEndRecordIndicator(false);
     }
 }

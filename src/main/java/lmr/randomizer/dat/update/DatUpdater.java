@@ -30,6 +30,7 @@ public abstract class DatUpdater {
         updateGrailPoints(datFileData.getGrailPointBlock());
         updateHTMapNamesLimitedBlock(datFileData.getHTMapNamesLimitedBlock());
         updateFootOfFutoScannableBlock(datFileData.getFootOfFutoScannableBlock());
+        updateHardmodeWarningScannableBlock(datFileData.getHardmodeWarningScannableBlock());
         updateTowerOfTheGoddessSnapshotsScanBlock(datFileData.getTowerOfTheGoddessSnapshotsScanBlock());
         updateTowerOfRuinSnapshotsScanBlock(datFileData.getTowerOfRuinSnapshotsScanBlock());
 
@@ -175,6 +176,7 @@ public abstract class DatUpdater {
         }
         updateLaptopScannableBlock(datFileData.getLaptopScannableBlock());
         updateSurfaceMapScannableBlock(datFileData.getSurfaceMapScannableBlock());
+        updateOpeningText(datFileData.getOpeningTextBlock());
     }
 
     public void addCustomBlocks(DatFileData datFileData) { }
@@ -483,6 +485,7 @@ public abstract class DatUpdater {
     void updateHTMapNamesLimitedBlock(MapNamesLimitedBlock mapNamesLimitedBlock) { }
 
     void updateFootOfFutoScannableBlock(ScannableBlock scannableBlock) { }
+    void updateHardmodeWarningScannableBlock(ScannableBlock scannableBlock) { }
     void updateTowerOfTheGoddessSnapshotsScanBlock(Block snapshotsScanBlock) { }
     void updateTowerOfRuinSnapshotsScanBlock(Block snapshotsScanBlock) { }
 
@@ -618,6 +621,7 @@ public abstract class DatUpdater {
     void updateScannableBlock(ScannableBlock scannableBlock) { }
     void updateLaptopScannableBlock(Block scannableBlock) { }
     void updateSurfaceMapScannableBlock(Block scannableBlock) { }
+    void updateOpeningText(OpeningTextBlock openingTextBlock) { }
 
     protected void updateShopBlock(ShopBlock shopBlock, ShopInventory shopInventory) {
         shopBlock.getInventoryItemArgsList().getData().clear();

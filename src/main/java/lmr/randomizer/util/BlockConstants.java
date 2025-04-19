@@ -13,6 +13,8 @@ public final class BlockConstants {
     public static final int GrailPointBlock = 7;
     public static final int HTMapNamesLimitedBlock = 28;
 
+    public static final int OpeningText = 976;
+
     public static final int Skeleton_RedOneTooStrong = 69;
     public static final int Skeleton_FootOfFuto = 88;
 
@@ -482,6 +484,7 @@ public final class BlockConstants {
     public static final int ArchaeologyDictionary_AjantaCaves = 592;
     public static final int ResearchMode_Volcano = 606;
     public static final int ResearchMode_Endless_Keyhole = 922;
+    public static final int ArchaeologyDictionary_MuralDepictingAFace = 980;
 
     public static final int MegaTablet_HT_Entrance = 918;
     public static final int MegaTablet_HT_BecameAPhantom = 1029;

@@ -733,6 +733,11 @@ public class HolidayModePlacements {
     }
 
     private static void addCustomPlacementsEaster2025() {
-//        DataFromFile.getCustomPlacementData().setStartingLocation(ZoneConstants.GRAVEYARD);
+        DataFromFile.clearCustomPlacementData();
+        DataFromFile.getCustomPlacementData().setStartingLocation(ZoneConstants.SURFACE);
+        DataFromFile.getCustomPlacementData().getRemovedItems().add("Waterproof Case");
+
+        CustomItemPlacement customItemPlacement = new CustomItemPlacement("xmailer.exe", "Hand Scanner", null);
+        DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
     }
 }

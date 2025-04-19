@@ -1089,6 +1089,17 @@ public class AccessChecker {
                 // Don't put removed item in torude scan spots, for now.
                 return false;
             }
+            if(HolidaySettings.isEaster2025Mode() && "Waterproof Case".equals(item)) {
+                if(location.contains("Shop")) {
+                    return false;
+                }
+                if(isFloatingItemLocation(location)) {
+                    return false;
+                }
+                if(isSnapshotsScanLocation(location)) {
+                    return false;
+                }
+            }
         }
 
         if(Settings.isRandomizeCursedChests() && Settings.getMaxRandomRemovedItems() == 0

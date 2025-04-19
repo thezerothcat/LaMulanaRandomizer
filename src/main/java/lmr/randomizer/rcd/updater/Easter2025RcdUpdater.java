@@ -15,6 +15,22 @@ public class Easter2025RcdUpdater extends RcdUpdater {
     }
 
     @Override
+    boolean updateWarpPortal(GameObject warpPortal) {
+        ObjectContainer objectContainer = warpPortal.getObjectContainer();
+        if(!(objectContainer instanceof Screen)) {
+            return true;
+        }
+        Screen screen = (Screen)objectContainer;
+        if (screen.getZoneIndex() == ZoneConstants.EXTINCTION && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 1) {
+            warpPortal.getTestByteOperations().clear();
+            warpPortal.addTests(new TestByteOperation(FlagConstants.HT_UNLOCK_CHAIN_PRIMARY, ByteOp.FLAG_GTEQ, 8),
+                    new TestByteOperation(FlagConstants.MULBRUK_CONVERSATION_HT, ByteOp.FLAG_NOT_EQUAL, 0),
+                    new TestByteOperation(FlagConstants.PALENQUE_STATE, ByteOp.FLAG_NOT_EQUAL, 2));
+        }
+        return true;
+    }
+
+    @Override
     boolean updateScannable(Scannable scannable) {
         ObjectContainer objectContainer = scannable.getObjectContainer();
         if(!(objectContainer instanceof Screen)) {
@@ -51,9 +67,17 @@ public class Easter2025RcdUpdater extends RcdUpdater {
         if(scannable.getTextBlock() == BlockConstants.ArchaeologyDictionary_AjantaCaves) {
             scannable.addTests(new TestByteOperation(EggConstants.getEggFlag(38), ByteOp.FLAG_GTEQ, 1));
         }
+        if(scannable.getTextBlock() == BlockConstants.Scannable_Laptop) {
+            scannable.addTests(new TestByteOperation(EggConstants.getEggFlag(93), ByteOp.FLAG_GTEQ, 1));
+        }
         if(scannable.getTextBlock() == BlockConstants.RuinsDictionary_EyeofRetribution) {
             if(screen.getZoneIndex() == ZoneConstants.SUN && screen.getRoomIndex() == 4 && screen.getScreenIndex() == 5) {
                 scannable.addTests(new TestByteOperation(EggConstants.getEggFlag(31), ByteOp.FLAG_GTEQ, 1));
+            }
+        }
+        if(scannable.getTextBlock() == BlockConstants.ArchaeologyDictionary_MuralDepictingAFace) {
+            if(screen.getZoneIndex() == ZoneConstants.GUIDANCE && screen.getRoomIndex() == 3 && screen.getScreenIndex() == 1) {
+                scannable.addTests(new TestByteOperation(EggConstants.getEggFlag(89), ByteOp.FLAG_GTEQ, 1));
             }
         }
         if(scannable.getTextBlock() == BlockConstants.Tablet_Retromausoleum_BeholdGateOfTime) {
@@ -72,7 +96,7 @@ public class Easter2025RcdUpdater extends RcdUpdater {
         Screen screen = (Screen)objectContainer;
         if (screen.getZoneIndex() == ZoneConstants.HT_1 && screen.getRoomIndex() == 9 && screen.getScreenIndex() == 0) {
             if(lemezaDetector.hasTest(new TestByteOperation(FlagConstants.SCREEN_FLAG_E, ByteOp.FLAG_EQUALS, 0))) {
-                lemezaDetector.getArgs().set(1, (short)30); // Add a few frames of delay before the animation is activated
+                lemezaDetector.getArgs().set(1, (short)5); // Add a few frames of delay before the animation is activated
             }
         }
         return true;
@@ -84,19 +108,45 @@ public class Easter2025RcdUpdater extends RcdUpdater {
             if(roomIndex == 1 && screenIndex == 1) {
                 addHiddenEgg(screen, 40, 840, 2);
             }
-            if(roomIndex == 2 && screenIndex == 0) {
-                addHiddenEgg(screen, 300, 160, 1);
+//            if(roomIndex == 2 && screenIndex == 0) {
+//                addHiddenEgg(screen, 300, 160, 1);
+//            }
+            if(roomIndex == 2 && screenIndex == 1) {
+                addHiddenEgg(screen, 940, 160, 1);
+            }
+            if(roomIndex == 5 && screenIndex == 2) {
+                addHiddenEgg(screen, 440, 1040, 94);
+            }
+            if(roomIndex == 7 && screenIndex == 1) {
+                addHiddenEgg(screen, 840, 240, 71);
+
+                GraphicsTextureDraw nest = new GraphicsTextureDraw(screen, 840, 240);
+                nest.setLayer(1);
+                nest.setImageFile(GraphicsTextureDraw.ImageFile_01effect);
+                nest.setImageX(840);
+                nest.setImageY(512);
+                nest.setImageWidth(40);
+                nest.setImageHeight(40);
+                nest.setAnimation(0, 1, 0, 0);
+                nest.setCollision(HitTile.Air);
+                nest.setRGBAMax(0, 0, 0, 255);
+                nest.setArg23(1);
+                screen.getObjects().add(nest);
             }
             if(roomIndex == 10 && screenIndex == 3) {
                 addHiddenEgg(screen, 1120, 800, 67);
-            }
-            if(roomIndex == 2 && screenIndex == 1) {
-//                addHiddenEgg(screen, 940, 160, 46);
             }
         }
         if(zoneIndex == ZoneConstants.GUIDANCE) {
             if(roomIndex == 0 && screenIndex == 0) {
                 addHiddenEgg(screen, 200, 320, 12);
+            }
+            if(roomIndex == 3 && screenIndex == 1) {
+                addHiddenEgg(screen, 980, 180, 89,
+                        new TestByteOperation(FlagConstants.GUIDANCE_PUZZLE_TRAP_FACE, ByteOp.FLAG_EQUALS, 2));
+            }
+            if(roomIndex == 4 && screenIndex == 1) {
+                addHiddenEgg(screen, 380, 520, 82);
             }
             if(roomIndex == 6 && screenIndex == 1) {
                 addHiddenEgg(screen, 1020, 160, 32);
@@ -115,10 +165,19 @@ public class Easter2025RcdUpdater extends RcdUpdater {
             if(roomIndex == 4 && screenIndex == 0) {
                 addHiddenEgg(screen, 240, 140, 13);
             }
+            if(roomIndex == 8 && screenIndex == 2) {
+                addHiddenEgg(screen, 1780, 20, 76);
+            }
         }
         if(zoneIndex == ZoneConstants.SUN) {
             if(roomIndex == 0 && screenIndex == 1) {
                 addHiddenEgg(screen, 1140, 400, 6);
+            }
+            if(roomIndex == 1 && screenIndex == 0) {
+                addHiddenEgg(screen, 320, 340, 73);
+            }
+            if(roomIndex == 3 && screenIndex == 0) {
+                addHiddenEgg(screen,  100, 80, 74);
             }
             if(roomIndex == 4 && screenIndex == 5) {
                 addHiddenEgg(screen, 1280, 520, 31);
@@ -129,7 +188,10 @@ public class Easter2025RcdUpdater extends RcdUpdater {
         }
         if(zoneIndex == ZoneConstants.SPRING) {
             if(roomIndex == 2 && screenIndex == 0) {
-                addHiddenEgg(screen, 300, 400, 14);
+                addHiddenEgg(screen, 320, 400, 14);
+            }
+            if(roomIndex == 2 && screenIndex == 1) {
+                addHiddenEgg(screen, 0, 560, 96);
             }
             if(roomIndex == 3 && screenIndex == 0) {
                 addHiddenEgg(screen, 560, 120, 37);
@@ -141,6 +203,9 @@ public class Easter2025RcdUpdater extends RcdUpdater {
         if(zoneIndex == ZoneConstants.INFERNO) {
             if(roomIndex == 3 && screenIndex == 0) {
                 addHiddenEgg(screen, 40, 160, 27);
+            }
+            if(roomIndex == 3 && screenIndex == 2) {
+                addHiddenEgg(screen, 1580, 160, 79);
             }
             if(roomIndex == 4 && screenIndex == 0) {
                 addHiddenEgg(screen, 360, 80, 39);
@@ -154,7 +219,10 @@ public class Easter2025RcdUpdater extends RcdUpdater {
         }
         if(zoneIndex == ZoneConstants.EXTINCTION) {
             if(roomIndex == 0 && screenIndex == 0) {
-                addSimpleEgg(screen, 0, 400, EggConstants.getEggFlag(100)); // todo: non-graphic
+                addHiddenEgg(screen, 0, 400, 100);
+            }
+            if(roomIndex == 3 && screenIndex == 0) {
+                addHiddenEgg(screen, 300, 80, 70);
             }
             if(roomIndex == 7 && screenIndex == 1) {
                 addHiddenEgg(screen, 900, 240, 40);
@@ -167,16 +235,28 @@ public class Easter2025RcdUpdater extends RcdUpdater {
             if(roomIndex == 1 && screenIndex == 0) {
                 addHiddenEgg(screen, 300, 260, 4);
             }
+            if(roomIndex == 2 && screenIndex == 0) {
+                addHiddenEgg(screen, 480, 320, 88);
+            }
             if(roomIndex == 8 && screenIndex == 1) {
                 addHiddenEgg(screen, 1220, 400, 42);
             }
             if(roomIndex == 9 && screenIndex == 0) {
                 addHiddenEgg(screen, 240, 400, 41);
             }
+            if(roomIndex == 12 && screenIndex == 2) {
+                addHiddenEgg(screen, 60, 1100, 99);
+            }
+            if(roomIndex == 15 && screenIndex == 1) {
+                addHiddenEgg(screen, 1140, 280, 84);
+            }
         }
         if(zoneIndex == ZoneConstants.ENDLESS) {
             if(roomIndex == 1 && screenIndex == 1) {
                 addHiddenEgg(screen, 900, 320, 20);
+            }
+            if(roomIndex == 3 && screenIndex == 2) {
+                addHiddenEgg(screen, 1500, 400, 90);
             }
             if(roomIndex == 4 && screenIndex == 3) {
                 addHiddenEgg(screen, 2400, 120, 19);
@@ -192,8 +272,14 @@ public class Easter2025RcdUpdater extends RcdUpdater {
             if(roomIndex == 2 && screenIndex == 1) {
                 addHiddenEgg(screen, 1040, 40, 43);
             }
+            if(roomIndex == 3 && screenIndex == 0) {
+                addHiddenEgg(screen, 300, 400, 93);
+            }
             if(roomIndex == 5 && screenIndex == 0) {
                 addHiddenEgg(screen, 180, 240, 23);
+            }
+            if(roomIndex == 9 && screenIndex == 1) {
+                addHiddenEgg(screen, 940, 80, 86);
             }
         }
         if(zoneIndex == ZoneConstants.ILLUSION) {
@@ -203,8 +289,14 @@ public class Easter2025RcdUpdater extends RcdUpdater {
             if(roomIndex == 5 && screenIndex == 1) {
                 addHiddenEgg(screen, 1000, 60, 15);
             }
+            if(roomIndex == 6 && screenIndex == 0) {
+                addHiddenEgg(screen, 20, 220, 75);
+            }
             if(roomIndex == 9 && screenIndex == 0) {
                 addHiddenEgg(screen, 280, 320, 44);
+            }
+            if(roomIndex == 9 && screenIndex == 1) {
+                addHiddenEgg(screen, 1160, 200, 87);
             }
         }
         if(zoneIndex == ZoneConstants.GRAVEYARD) {
@@ -214,13 +306,19 @@ public class Easter2025RcdUpdater extends RcdUpdater {
             if(roomIndex == 3 && screenIndex == 0) {
                 addHiddenEgg(screen, 480, 400, 11);
             }
+            if(roomIndex == 4 && screenIndex == 2) {
+                addHiddenEgg(screen, 20, 1360, 95);
+            }
             if(roomIndex == 7 && screenIndex == 1) {
-                addHiddenEgg(screen, 500, 900, 68);
+                addHiddenEgg(screen, 520, 900, 68);
             }
         }
         if(zoneIndex == ZoneConstants.MOONLIGHT) {
             if(roomIndex == 0 && screenIndex == 1) {
-                addHiddenEgg(screen, 540, 640, 9);
+                addHiddenEgg(screen, 540, 640, 9)
+                        .addUpdates(new WriteByteOperation(FlagConstants.SCREEN_FLAG_C, ByteOp.ASSIGN_FLAG, 1));
+                addHiddenEgg(screen, 40, 760, 69)
+                        .addUpdates(new WriteByteOperation(FlagConstants.SCREEN_FLAG_C, ByteOp.ASSIGN_FLAG, 2));
             }
             if(roomIndex == 3 && screenIndex == 0) {
                 addHiddenEgg(screen, 0, 80, 46);
@@ -236,6 +334,12 @@ public class Easter2025RcdUpdater extends RcdUpdater {
             }
         }
         if(zoneIndex == ZoneConstants.GODDESS) {
+            if(roomIndex == 0 && screenIndex == 1) {
+                addHiddenEgg(screen, 100, 720, 1, 81);
+            }
+            if(roomIndex == 1 && screenIndex == 1) {
+                addHiddenEgg(screen, 560, 760, 92);
+            }
             if(roomIndex == 2 && screenIndex == 1) {
                 int eggFlag = EggConstants.getEggFlag(48);
                 GraphicsTextureDraw eggGraphic = new GraphicsTextureDraw(screen, 300, 700);
@@ -258,6 +362,9 @@ public class Easter2025RcdUpdater extends RcdUpdater {
             if(roomIndex == 4 && screenIndex == 0) {
                 addHiddenEgg(screen, 580, 80, 47);
             }
+            if(roomIndex == 5 && screenIndex == 0) {
+                addHiddenEgg(screen, 180, 220, 80);
+            }
             if(roomIndex == 8 && screenIndex == 0) {
                 addHiddenEgg(screen, 300, 220, 48);
             }
@@ -265,6 +372,9 @@ public class Easter2025RcdUpdater extends RcdUpdater {
         if(zoneIndex == ZoneConstants.RUIN) {
             if(roomIndex == 1 && screenIndex == 1) {
                 addHiddenEgg(screen, 820, 60, 51);
+            }
+            if(roomIndex == 2 && screenIndex == 1) {
+                addHiddenEgg(screen, 300, 880, 83);
             }
             if(roomIndex == 5 && screenIndex == 0) {
                 addHiddenEgg(screen, 140, 320, 16);
@@ -285,10 +395,16 @@ public class Easter2025RcdUpdater extends RcdUpdater {
             if(roomIndex == 0 && screenIndex == 0) {
                 addHiddenEgg(screen, 380, 400, 24);
             }
+            if(roomIndex == 3 && screenIndex == 1) {
+                addHiddenEgg(screen, 640, 160, 77);
+            }
         }
         if(zoneIndex == ZoneConstants.DIMENSIONAL) {
             if(roomIndex == 1 && screenIndex == 0) {
                 addHiddenEgg(screen, 560, 100, 18);
+            }
+            if(roomIndex == 4 && screenIndex == 0) {
+                addHiddenEgg(screen, 540, 400, 98);
             }
             if(roomIndex == 8 && screenIndex == 0) {
                 addHiddenEgg(screen, 300, 20, 53);
@@ -307,10 +423,19 @@ public class Easter2025RcdUpdater extends RcdUpdater {
             if(roomIndex == 3 && screenIndex == 1) {
                 addHiddenEgg(screen, 980, 320, 57);
             }
+            if(roomIndex == 5 && screenIndex == 1) {
+                addHiddenEgg(screen, 1220, 100, 91);
+            }
+            if(roomIndex == 8 && screenIndex == 1) {
+                addHiddenEgg(screen, 20, 700, 85);
+            }
         }
         if(zoneIndex == ZoneConstants.RETRO_MAUSOLEUM) {
             if(roomIndex == 2 && screenIndex == 1) {
                 addHiddenEgg(screen, 800, 300, 58);
+            }
+            if(roomIndex == 3 && screenIndex == 1) {
+                addHiddenEgg(screen, 40, 560, 97);
             }
         }
         if(zoneIndex == ZoneConstants.RETRO_GUIDANCE) {
@@ -325,8 +450,6 @@ public class Easter2025RcdUpdater extends RcdUpdater {
             if(roomIndex == 0 && screenIndex == 0) {
                 addHiddenEgg(screen, 240, 320, 25)
                         .addUpdates(new WriteByteOperation(FlagConstants.SCREEN_FLAG_C, ByteOp.ASSIGN_FLAG, 1));
-            }
-            if(roomIndex == 0 && screenIndex == 0) {
                 addHiddenEgg(screen, 340, 140, 1, 26)
                         .addUpdates(new WriteByteOperation(FlagConstants.SCREEN_FLAG_C, ByteOp.ASSIGN_FLAG, 2));
             }
@@ -341,6 +464,9 @@ public class Easter2025RcdUpdater extends RcdUpdater {
             if(roomIndex == 9 && screenIndex == 0) {
                 addHiddenEgg(screen, 560, 240, 10);
             }
+            if(roomIndex == 14 && screenIndex == 1) {
+                addHiddenEgg(screen, 1120, 260, 72);
+            }
             if(roomIndex == 22 && screenIndex == 0) {
                 addHiddenEgg(screen, 40, 240, 65);
             }
@@ -349,11 +475,9 @@ public class Easter2025RcdUpdater extends RcdUpdater {
 
     @Override
     public void doPostShuffleUpdates() {
-        // Add Burning Cavern RNG eggs.
-        Screen viyScreen = rcdFileData.getScreen(5, 8 , 1);
-        viyScreen.getScreenExit(ScreenExit.DOWN).setDestination(25, 0, 0);
-
         Random variableEggRandom = new Random();
+
+        // Add Burning Cavern RNG eggs.
         int roomIndex = variableEggRandom.nextInt(4);
         int screenIndex = roomIndex == 0
                 ? (variableEggRandom.nextInt(4) + 1)
@@ -373,19 +497,19 @@ public class Easter2025RcdUpdater extends RcdUpdater {
         x = 140 + 80 * variableEggRandom.nextInt(5);
         y = 400;
         addHiddenEgg(pillarScreen, x, y, 64);
+
+        // Add Inferno random egg
+        Screen infernoEntranceScreen = rcdFileData.getScreen(ZoneConstants.INFERNO, 0 , 1);
+        x = 800 + 120 * variableEggRandom.nextInt(3);
+        y = 180;
+        addHiddenEgg(infernoEntranceScreen, x, y, 78);
     }
 
-    private void addSimpleEgg(Screen screen, int x, int y, int eggFlag) {
-        FloatingItem floatingItem = AddObject.addFloatingItem(screen, x, y, ItemConstants.MAP, true);
-        floatingItem.addTests(new TestByteOperation(eggFlag, ByteOp.FLAG_LT, 1));
-        floatingItem.addUpdates(new WriteByteOperation(eggFlag, ByteOp.ASSIGN_FLAG, 2));
+    private UseItemDetector addHiddenEgg(Screen screen, int x, int y, int eggNumber, TestByteOperation... tests) {
+        return addHiddenEgg(screen, x, y, 0, eggNumber, tests);
     }
 
-    private UseItemDetector addHiddenEgg(Screen screen, int x, int y, int eggNumber) {
-        return addHiddenEgg(screen, x, y, 0, eggNumber);
-    }
-
-    private UseItemDetector addHiddenEgg(Screen screen, int x, int y, int layer, int eggNumber) {
+    private UseItemDetector addHiddenEgg(Screen screen, int x, int y, int layer, int eggNumber, TestByteOperation... tests) {
         int eggFlag = EggConstants.getEggFlag(eggNumber);
 
         GraphicsTextureDraw eggGraphic = new GraphicsTextureDraw(screen, x, y);
@@ -393,19 +517,22 @@ public class Easter2025RcdUpdater extends RcdUpdater {
         eggGraphic.setImageFile(GraphicsTextureDraw.ImageFile_01effect);
         eggGraphic.setImageX(EggConstants.getEggImageX(eggNumber));
         eggGraphic.setImageY(EggConstants.getEggImageY(eggNumber));
-        eggGraphic.setImageWidth(40);
+        eggGraphic.setImageWidth(eggNumber == EggConstants.TOTAL_HIDDEN_EGGS ? 60 : 40);
         eggGraphic.setImageHeight(40);
         eggGraphic.setAnimation(0, 1, 0, 0);
         eggGraphic.setCollision(HitTile.Air);
         eggGraphic.setRGBAMax(0, 0, 0, 255);
         eggGraphic.setArg23(1);
         eggGraphic.addTests(new TestByteOperation(eggFlag, ByteOp.FLAG_LT, 1));
+        for(TestByteOperation test : tests) {
+            eggGraphic.addTests(test);
+        }
         screen.getObjects().add(eggGraphic);
 
-        return addEggDetection(screen, x, y, eggNumber);
+        return addEggDetection(screen, x, y, eggNumber, tests);
     }
 
-    private UseItemDetector addEggDetection(Screen screen, int x, int y, int eggNumber) {
+    private UseItemDetector addEggDetection(Screen screen, int x, int y, int eggNumber, TestByteOperation... tests) {
         int offsetX = EggConstants.getEggInnerXOffset(eggNumber);
         int detectionX = x;
         int xWidth = 4;
@@ -436,7 +563,10 @@ public class Easter2025RcdUpdater extends RcdUpdater {
             }
         }
 
-        if (eggNumber == 64) {
+        if (eggNumber == 10) {
+            yHeight = 2;
+        }
+        else if (eggNumber == 64 || eggNumber == 100) {
             xWidth = 2;
         }
 
@@ -453,6 +583,9 @@ public class Easter2025RcdUpdater extends RcdUpdater {
                     .addTests(new TestByteOperation(eggFlag, ByteOp.FLAG_EQUALS, 0))
                     .addUpdates(new WriteByteOperation(eggFlag, ByteOp.ASSIGN_FLAG, 1));
         }
+        for(TestByteOperation test : tests) {
+            useItemDetector.addTests(test);
+        }
 
         AddObject.addItemGive(screen, x / 640 * 640, y / 480 * 480, ItemConstants.WATERPROOF_CASE,
                 Arrays.asList(
@@ -460,7 +593,7 @@ public class Easter2025RcdUpdater extends RcdUpdater {
                 Arrays.asList(
                         new WriteByteOperation(eggFlag, ByteOp.ASSIGN_FLAG, 2),
                         new WriteByteOperation(FlagConstants.CUSTOM_EASTER2025_TOTAL_EGGS, ByteOp.ADD_FLAG, 1)))
-                .setSoundEffect(0);
+                .setSoundEffect(SoundEffect.ItemCollected);
         return useItemDetector;
     }
 }

@@ -39,6 +39,9 @@ public class DatFileData {
     public ScannableBlock getFootOfFutoScannableBlock() {
         return (ScannableBlock)datFileEntries.get(BlockConstants.Skeleton_FootOfFuto);
     }
+    public ScannableBlock getHardmodeWarningScannableBlock() {
+        return (ScannableBlock)datFileEntries.get(BlockConstants.Tablet_Mausoleum_Hardmode_Warning);
+    }
     public Block getTowerOfTheGoddessSnapshotsScanBlock() {
         return datFileEntries.get(BlockConstants.SnapshotsScan_TowerOfTheGoddess);
     }
@@ -500,6 +503,10 @@ public class DatFileData {
         mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_Dimensional));
         mapGraphicsBlocks.add((MapGraphicsBlock)datFileEntries.get(BlockConstants.MapGraphics_HT));
         return mapGraphicsBlocks;
+    }
+
+    public OpeningTextBlock getOpeningTextBlock() {
+        return (OpeningTextBlock)datFileEntries.get(BlockConstants.OpeningText);
     }
 
     public void addCustomBlock(CustomBlockEnum customBlockId, Block block) {
