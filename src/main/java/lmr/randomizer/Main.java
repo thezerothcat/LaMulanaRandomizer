@@ -22,6 +22,7 @@ import lmr.randomizer.ui.ProgressDialog;
 import lmr.randomizer.ui.TabbedPanel;
 import lmr.randomizer.update.AddObject;
 import lmr.randomizer.update.GameUpdater;
+import lmr.randomizer.update.SaveFileUpdates;
 import lmr.randomizer.util.FlagManager;
 import lmr.randomizer.util.LocationCoordinateMapper;
 import lmr.randomizer.util.ZoneConstants;

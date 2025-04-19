@@ -90,7 +90,7 @@ public final class HolidaySettings {
     }
 
     public static boolean isSaveFileNeeded() {
-        return isHalloweenMode() || isFools2020Mode() ||isFools2021Mode() || isFools2022Mode();
+        return isHalloweenMode() || isFools2020Mode() ||isFools2021Mode() || isFools2022Mode() || isEaster2025Mode();
     }
 
     public static String getResourcePath() {

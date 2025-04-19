@@ -739,5 +739,7 @@ public class HolidayModePlacements {
 
         CustomItemPlacement customItemPlacement = new CustomItemPlacement("xmailer.exe", "Hand Scanner", null);
         DataFromFile.getCustomPlacementData().getCustomItemPlacements().add(customItemPlacement);
+        CustomNPCPlacement customNPCPlacement = new CustomNPCPlacement("Elder Xelpud", "Elder Xelpud");
+        DataFromFile.getCustomPlacementData().getCustomNPCPlacements().add(customNPCPlacement);
     }
 }

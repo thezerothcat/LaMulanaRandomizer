@@ -108,12 +108,12 @@ public class Easter2025RcdUpdater extends RcdUpdater {
             if(roomIndex == 1 && screenIndex == 1) {
                 addHiddenEgg(screen, 40, 840, 2);
             }
-//            if(roomIndex == 2 && screenIndex == 0) {
-//                addHiddenEgg(screen, 300, 160, 1);
-//            }
-            if(roomIndex == 2 && screenIndex == 1) {
-                addHiddenEgg(screen, 940, 160, 1);
+            if(roomIndex == 2 && screenIndex == 0) {
+                addHiddenEgg(screen, 300, 160, 1);
             }
+//            if(roomIndex == 2 && screenIndex == 1) {
+//                addHiddenEgg(screen, 940, 160, 1);
+//            }
             if(roomIndex == 5 && screenIndex == 2) {
                 addHiddenEgg(screen, 440, 1040, 94);
             }

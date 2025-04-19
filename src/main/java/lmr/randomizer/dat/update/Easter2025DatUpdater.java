@@ -50,6 +50,10 @@ public class Easter2025DatUpdater extends DatUpdater {
         for(Short rawDataEntry : buildRawDataWithCommands(Translations.getText("event.easter2025.XelpudIntro3"))) {
             blockContents.add(new BlockSingleData(rawDataEntry));
         }
+        blockContents.add(new BlockSingleData(BlockDataConstants.Cls));
+        for(Short rawDataEntry : buildRawDataWithCommands(Translations.getText("event.easter2025.XelpudIntro4"))) {
+            blockContents.add(new BlockSingleData(rawDataEntry));
+        }
         blockContents.add(new BlockFlagData(FlagConstants.XELPUD_CONVERSATION_INTRO, 1));
         blockContents.add(new BlockFlagData(FlagConstants.CONVERSATION_CANT_LEAVE, 0));
     }
