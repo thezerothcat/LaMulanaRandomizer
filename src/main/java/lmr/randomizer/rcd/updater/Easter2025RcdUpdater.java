@@ -485,11 +485,16 @@ public class Easter2025RcdUpdater extends RcdUpdater {
         Screen burningCavernEggScreen = rcdFileData.getScreen(ZoneConstants.BURNING_CAVERN, roomIndex, screenIndex);
 
         int x = 80;
-        int y = 20 * variableEggRandom.nextInt(30) + 480 * screenIndex;
+        int y = 20 * variableEggRandom.nextInt(22) + 480 * screenIndex;
         addHiddenEgg(burningCavernEggScreen, x, y, 61);
 
+        roomIndex = variableEggRandom.nextInt(4);
+        screenIndex = roomIndex == 0
+                ? (variableEggRandom.nextInt(4) + 1)
+                : variableEggRandom.nextInt(5);
+        burningCavernEggScreen = rcdFileData.getScreen(ZoneConstants.BURNING_CAVERN, roomIndex, screenIndex);
         x = 520;
-        y = 20 * variableEggRandom.nextInt(30) + 480 * screenIndex;
+        y = 20 * variableEggRandom.nextInt(20) + 480 * screenIndex;
         addHiddenEgg(burningCavernEggScreen, x, y, 62);
 
         // Add HT random egg
