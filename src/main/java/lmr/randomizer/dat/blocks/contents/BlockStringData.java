@@ -1,5 +1,7 @@
 package lmr.randomizer.dat.blocks.contents;
 
+import lmr.randomizer.FileUtils;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
