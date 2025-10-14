@@ -421,7 +421,7 @@ public class FileUtils {
                             customPlacementData.getRemovedItems().add(removeItem.substring(1).trim());
                         }
                     }
-                    else if (line.startsWith("Remove")) {
+                    else if (line.startsWith("Remove") && !line.startsWith("Remove Logic:")) {
                         customPlacementData.setCustomized(true);
                         customPlacementData.getRemovedItems().add(line.replace("Remove", "").trim());
                     }
